@@ -1,0 +1,6 @@
+resource "aws_iam_role" "{{.Item}}" {
+  vpc_id     = "{{.Resource.Vpc}}"
+  cidr_block = "{{.Resource.CidrBlock}}"
+
+  tags =  "{{ if .Resource.Tags}}{{.Resource.Tags}}{{end}}"
+}
