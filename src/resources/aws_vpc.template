@@ -1,4 +1,10 @@
 resource "aws_vpc" "{{.item}}" {
   cidr_block="{{.resource.CidrBlock}}"
-  tags =  "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
+  {{- if .resource.Tags}}
+  tags       = {
+      "{{range .resource.Tags}}{{.}}{{end}}"
+    }
+    {{- end}}
 }
+
+

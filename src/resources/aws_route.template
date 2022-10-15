@@ -2,5 +2,4 @@ resource "aws_route" "{{.item}}" {
   route_table_id            = "{{.resource.RouteTableId}}"
   destination_cidr_block    = "{{.resource.DestinationCidrBlock}}"
   vpc_peering_connection_id = "{{.resource.VpcPeeringConnectionId}}"
-  tags =  "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
 }

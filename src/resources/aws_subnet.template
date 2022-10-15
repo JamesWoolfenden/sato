@@ -1,5 +1,33 @@
 resource "aws_subnet" "{{.item}}" {
+  {{- if .resource.AssignIpv6AddressOnCreation}}
+  assign_ipv6_address_on_creation="{{.resource.AssignIpv6AddressOnCreation}}"
+  {{- end}}
+  {{- if .resource.AvailabilityZone}}
+  availability_zone= "{{.resource.AvailabilityZone}}"
+  {{- end}}
+  {{- if .resource.AvailabilityZoneId}}
+  availability_zone_id="{{.resource.AvailabilityZoneId}}"
+  {{- end}}
+  {{- if .resource.EnableDns64}}
+  enable_dns64= "{{.resource.EnableDns64}}"
+  {{- end}}
+  {{- if .resource.Ipv6CidrBlock}}
+  ipv6_cidr_block= "{{.resource.Ipv6CidrBlock}}"
+  {{- end}}
+  {{- if .resource.Ipv6Native}}
+  ipv6_native= "{{.resource.Ipv6Native}}"
+  {{- end}}
+  {{- if .resource.MapPublicIpOnLaunch}}
+  map_public_ip_on_launch= "{{.resource.MapPublicIpOnLaunch}}"
+  {{- end}}
+  {{- if .resource.PrivateDnsNameOptionsOnLaunch}}
+  private_dns_hostname_type_on_launch= "{{.resource.PrivateDnsNameOptionsOnLaunch}}"
+  {{- end}}
   vpc_id     = "{{.resource.VpcId}}"
   cidr_block = "{{.resource.CidrBlock}}"
-  tags       = "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
+  {{- if .resource.Tags}}
+  tags       = {
+    "{{range .resource.Tags}}{{.}}{{end}}"
+  }
+  {{- end}}
 }

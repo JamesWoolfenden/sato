@@ -5,6 +5,6 @@ resource "aws_network_acl_rule" "{{.item}}" {
   protocol       = "{{.resource.Protocol}}"
   rule_action    = "{{.resource.RuleAction}}"
   cidr_block     = "{{.resource.CidrBlock}}"
-  from_port      = "{{.resource.FromPort}}"
-  to_port        = "{{.resource.ToPort}}"
+  from_port      = "{{.resource.PortRange}}"
+  to_port        = "{{.resource.PortRange}}"
 }

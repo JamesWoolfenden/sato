@@ -1,11 +1,13 @@
 resource "aws_iam_role" "{{.item}}" {
-  description=""
+  description="{{.resource.Description}}"
   force_detach_policies=""
-  vpc_id     = "{{.resource.Vpc}}"
-  cidr_block = "{{.resource.CidrBlock}}"
   inline_policy=""
   managed_policy_arns=[{{range $i, $v := .resource.ManagedPolicyArns}}{{if $i}}, {{end}}"{{.}}"{{end}}]
-
-  assume_role_policy = "{{.resource.AssumeRolePolicy}}"
-  tags =  "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
+  path="{{.resource.Path}}"
+  assume_role_policy = "{{.resource.AssumeRolePolicyDocument}}"
+  {{- if .resource.Tags}}
+  tags       = {
+      "{{range .resource.Tags}}{{.}}{{end}}"
+    }
+    {{- end}}
 }
