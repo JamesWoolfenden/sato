@@ -1,0 +1,4 @@
+resource "aws_vpc" "{{.item}}" {
+  cidr_block="{{.resource.CidrBlock}}"
+  tags =  "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
+}

@@ -32,8 +32,25 @@ func Parse(file string, destination string) {
 		myType := resources[item].AWSCloudFormationType()
 
 		TFLookup := map[string]interface{}{
-			"AWS::SNS::Topic": awsSNSTopic,
-			"AWS::IAM::Role":  awsIamRole,
+			"AWS::SNS::Topic":                       awsSNSTopic,
+			"AWS::IAM::Role":                        awsIamRole,
+			"AWS::EC2::Route":                       awsRoute,
+			"AWS::EC2::RouteTable":                  awsRouteTable,
+			"AWS::EC2::NatGateway":                  awsNatGateway,
+			"AWS::EC2::VPCGatewayAttachment":        awsVpnGatewayAttachment,
+			"AWS::EC2::NetworkAclEntry":             awsNetworkAclRule,
+			"AWS::EC2::NetworkAcl":                  awsNetworkAcl,
+			"AWS::EC2::EIP":                         awsEIP,
+			"AWS::EC2::SubnetRouteTableAssociation": awsRouteTableAssociation,
+			"AWS::EC2::Subnet":                      awsSubnet,
+			"AWS::Logs::LogGroup":                   awsCloudwatchLogGroup,
+			"AWS::EC2::VPCDHCPOptionsAssociation":   awsVpcDhcpOptionsAssociation,
+			"AWS::EC2::DHCPOptions":                 awsVpcDhcpOptions,
+			"AWS::EC2::SubnetNetworkAclAssociation": awsNetworkAclAssociation,
+			"AWS::EC2::FlowLog":                     awsFlowLog,
+			"AWS::EC2::VPCEndpoint":                 awsVpcEndpoint,
+			"AWS::EC2::InternetGateway":             awsInternetGateway,
+			"AWS::EC2::VPC":                         awsVpc,
 		}
 
 		var myContent []byte
@@ -54,7 +71,10 @@ func Parse(file string, destination string) {
 			"resource": resource,
 			"item":     item,
 		})
-		Write(output.String(), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+		err = Write(output.String(), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }
 

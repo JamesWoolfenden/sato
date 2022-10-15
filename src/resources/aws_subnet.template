@@ -1,0 +1,5 @@
+resource "aws_subnet" "{{.item}}" {
+  vpc_id     = "{{.resource.VpcId}}"
+  cidr_block = "{{.resource.CidrBlock}}"
+  tags       = "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
+}

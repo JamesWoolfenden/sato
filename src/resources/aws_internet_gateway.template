@@ -1,0 +1,4 @@
+resource "aws_internet_gateway" "{{.item}}" {
+  vpc_id = "{{ if .resource.VpcId}}{{.resource.VpcId}}{{end}}"
+  tags = "{{ if .resource.Tags}}{{.resource.Tags}}{{end}}"
+}
