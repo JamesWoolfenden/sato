@@ -2,8 +2,8 @@ resource "aws_iam_role" "{{.item}}" {
   {{- if .resource.Description}}
   description="{{.resource.Description}}"
   {{- end}}
-  force_detach_policies=""
-  inline_policy=""
+  force_detach_policies=false
+  inline_policy {}
   {{- if .resource.ManagedPolicyArns}}
   managed_policy_arns=[{{range $i, $v := .resource.ManagedPolicyArns}}{{if $i}}, {{end}}"{{.}}"{{end}}]
   {{- end}}
@@ -19,7 +19,7 @@ resource "aws_iam_role" "{{.item}}" {
   path="{{.resource.Path}}"
   assume_role_policy = jsonencode({{ Marshal .resource.AssumeRolePolicyDocument}})
   {{- if .resource.Tags}}
-  tags       = {
+  tags = {
        {{Tags .resource.Tags}}
     }
     {{- end}}

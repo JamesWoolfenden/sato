@@ -1,10 +1,14 @@
 resource "aws_nat_gateway" "{{.item}}" {
   allocation_id = "{{.resource.AllocationId}}"
   subnet_id     = "{{.resource.SubnetId}}"
+{{- if .resource.ConnectivityType}}
   connectivity_type = "{{.resource.ConnectivityType}}"
-  {{- if .resource.Tags}}
-  tags       = {
-       {{Tags .resource.Tags}}
+{{- else }}
+   connectivity_type = "public"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
     }
-    {{- end}}
+{{- end}}
 }

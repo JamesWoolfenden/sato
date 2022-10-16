@@ -25,9 +25,9 @@ resource "aws_subnet" "{{.item}}" {
   {{- end}}
   vpc_id     = "{{.resource.VpcId}}"
   cidr_block = "{{.resource.CidrBlock}}"
-  {{- if .resource.Tags}}
-  tags       = {
+{{- if .resource.Tags}}
+  tags = {
      {{Tags .resource.Tags}}
   }
-  {{- end}}
+{{- end}}
 }

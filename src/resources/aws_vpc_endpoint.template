@@ -1,2 +1,18 @@
 resource "aws_vpc_endpoint" "{{.item}}" {
+   service_name="{{ .resource.ServiceName}}"
+   vpc_id="{{ .resource.VpcId}}"
+   policy=jsonencode({{ Marshal .resource.PolicyDocument}})
+{{- if .resource.PrivateDnsEnabled}}
+   private_dns_enabled=true
+{{- else }}
+   private_dns_enabled=false
+{{- end }}
+   route_table_ids=[{{range $i, $v := .resource.RouteTableIds}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+   subnet_ids=[{{range $i, $v := .resource.SubnetIds}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+   security_group_ids=[{{range $i, $v := .resource.SecurityGroupIds}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if .resource.VpcEndpointType}}
+   vpc_endpoint_type="{{ .resource.VpcEndpointType}}"
+{{- else }}
+   vpc_endpoint_type="Gateway"
+{{- end }}
 }

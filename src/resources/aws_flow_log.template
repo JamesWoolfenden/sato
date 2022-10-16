@@ -1,11 +1,30 @@
 resource "aws_flow_log" "{{.item}}" {
-  iam_role_arn        = ""
+{{- if .resource.DestinationOptions}}
+   destination_options="{{.resource.DestinationOptions}}"
+{{- end}}
+{{- if .resource.MaxAggregationInterval}}
+  max_aggregation_interval="{{.resource.MaxAggregationInterval}}"
+{{- end}}
+
+{{- if .resource.DeliverLogsPermissionArn}}
+  iam_role_arn        = "{{.resource.DeliverLogsPermissionArn}}"
+{{- end}}
   {{- if .resource.LogDestination}}
   log_destination     = "{{.resource.LogDestination}}"
   {{- end}}
   log_destination_type= "{{.resource.LogDestinationType}}"
   traffic_type        = "{{.resource.TrafficType}}"
-  log_format          = "{{.resource.LogFormat}}"
-  max_aggregation_interval= "{{.resource.MaxAggregationInterval}}"
-  vpc_id              = ""
+  log_format          = "{{replace .resource.LogFormat "$" "$$" }}"
+{{- if eq .resource.ResourceId "VPC"}}
+  vpc_id              = "{{.resource.ResourceId}}"
+{{- end}}
+{{- if eq .resource.ResourceId "NetworkInterface"}}
+  eni_id              = "{{.resource.ResourceId}}"
+{{- end}}
+{{- if eq .resource.ResourceId "Subnet"}}
+  subnet_id              = "{{.resource.ResourceId}}"
+{{- end}}
+{{- if not .resource.ResourceId }}
+  vpc_id              = "{{.resource.ResourceId}}"
+{{- end}}
 }

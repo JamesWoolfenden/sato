@@ -1,8 +1,20 @@
 resource "aws_vpc_dhcp_options" "{{.item}}" {
+{{- if .resource.DomainName}}
+  domain_name="{{.resource.DomainName}}"
+{{- end}}
+{{- if .resource.NetbiosNameServers}}
+  netbios_name_servers ="{{.resource.NetbiosNameServers}}"
+{{- end}}
+{{- if .resource.NetbiosNodeType}}
+  netbios_node_type   ="{{.resource.NetbiosNodeType}}"
+{{- end}}
+{{- if .resource.NtpServers}}
+  ntp_servers          ="{{.resource.NtpServers}}"
+{{- end}}
   domain_name_servers = [{{range $i, $v := .resource.DomainNameServers}}{{if $i}}, {{end}}"{{.}}"{{end}}]
-  {{- if .resource.Tags}}
-  tags       = {
+{{- if .resource.Tags}}
+  tags = {
        {{Tags .resource.Tags}}
     }
-    {{- end}}
+{{- end}}
 }

@@ -70,6 +70,7 @@ func Parse(file string, destination string) {
 				a, _ := json.Marshal(v)
 				return string(a)
 			},
+			"replace": replace,
 			"Tags": func(v []tags.Tag) string {
 				var temp string
 				for _, item := range v {
@@ -130,4 +131,8 @@ func Test() {
 	fudge = append(fudge, temp)
 
 	log.Print(fudge)
+}
+
+func replace(input, from, to string) string {
+	return strings.Replace(input, from, to, -1)
 }

@@ -49,7 +49,7 @@ var awsVpcDhcpOptionsAssociation []byte
 //go:embed resources/aws_vpc_dhcp_options.template
 var awsVpcDhcpOptions []byte
 
-//go:embed resources/aws_vpc_dhcp_options_association.template
+//go:embed resources/aws_network_acl_association.template
 var awsNetworkAclAssociation []byte
 
 //go:embed resources/aws_vpc_endpoint.template

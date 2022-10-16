@@ -1,7 +1,7 @@
 resource "aws_route" "{{.item}}" {
   route_table_id            = "{{.resource.RouteTableId}}"
   destination_cidr_block    = "{{.resource.DestinationCidrBlock}}"
-  {{- if .resource.VpcPeeringConnectionId}}"
+{{- if .resource.VpcPeeringConnectionId}}"
   vpc_peering_connection_id = "{{.resource.VpcPeeringConnectionId}}"
-  {{- end}}
+{{- end}}
 }

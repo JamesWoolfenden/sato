@@ -1,10 +1,25 @@
 resource "aws_vpc" "{{.item}}" {
   cidr_block="{{.resource.CidrBlock}}"
-  {{- if .resource.Tags}}
-  tags       = {
+  {{- if .resource.EnableDnsHostnames}}
+  enable_dns_hostnames="{{.resource.EnableDnsHostnames}}"
+  {{- end}}
+  {{- if .resource.EnableDnsSupport}}
+  enable_dns_support="{{.resource.EnableDnsSupport}}"
+  {{- end}}
+  {{- if .resource.InstanceTenancy}}
+  instance_tenancy="{{.resource.InstanceTenancy}}"
+  {{- end}}
+  {{- if .resource.Ipv4IpamPoolId}}
+  ipv4_ipam_pool_id="{{.resource.Ipv4IpamPoolId}}"
+  {{- end}}
+  {{- if .resource.Ipv4NetmaskLength}}
+  ipv4_netmask_length="{{.resource.Ipv4NetmaskLength}}"
+  {{- end}}
+{{- if .resource.Tags}}
+  tags = {
        {{Tags .resource.Tags}}
     }
-    {{- end}}
+{{- end}}
 }
 
 
