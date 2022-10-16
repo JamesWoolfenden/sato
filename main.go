@@ -2,10 +2,13 @@ package main
 
 import (
 	_ "embed" //required for embed
+	"fmt"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
 	sato "sato/src"
+	"sort"
+	"time"
 )
 
 func main() {
@@ -15,8 +18,6 @@ func main() {
 	app := &cli.App{
 		EnableBashCompletion: true,
 		Flags:                []cli.Flag{},
-		Name:                 "sato",
-		Usage:                "translate CFN to Terraform",
 		Commands: []*cli.Command{
 			{
 				Name:  "parse",
@@ -42,8 +43,25 @@ func main() {
 					},
 				},
 			},
+			{
+				Name:      "version",
+				Aliases:   []string{"v"},
+				Usage:     "Outputs the application version",
+				UsageText: "sato version",
+				Action: func(*cli.Context) error {
+					fmt.Println(sato.Version)
+					return nil
+				},
+			},
 		},
+		Name:     "sato",
+		Usage:    "Translate Cloudformation to Terraform",
+		Compiled: time.Time{},
+		Authors:  []*cli.Author{{Name: "James Woolfenden", Email: "support@bridgecrew.io"}},
+		Version:  sato.Version,
 	}
+	sort.Sort(cli.FlagsByName(app.Flags))
+	sort.Sort(cli.CommandsByName(app.Commands))
 
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal(err)
