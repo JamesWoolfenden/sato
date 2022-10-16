@@ -2,7 +2,7 @@ resource "aws_vpc_dhcp_options" "{{.item}}" {
   domain_name_servers = [{{range $i, $v := .resource.DomainNameServers}}{{if $i}}, {{end}}"{{.}}"{{end}}]
   {{- if .resource.Tags}}
   tags       = {
-      "{{range .resource.Tags}}{{.}}{{end}}"
+       {{Tags .resource.Tags}}
     }
     {{- end}}
 }

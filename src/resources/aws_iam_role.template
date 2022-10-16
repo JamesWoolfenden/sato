@@ -1,13 +1,35 @@
 resource "aws_iam_role" "{{.item}}" {
+  {{- if .resource.Description}}
   description="{{.resource.Description}}"
+  {{- end}}
   force_detach_policies=""
   inline_policy=""
+  {{- if .resource.ManagedPolicyArns}}
   managed_policy_arns=[{{range $i, $v := .resource.ManagedPolicyArns}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+  {{- end}}
+  {{- if .resource.MaxSessionDuration}}
+  max_session_duration="{{.resource.MaxSessionDuration}}"
+  {{- end}}
+  {{- if .resource.PermissionsBoundary}}
+  permissions_boundary="{{.resource.PermissionsBoundary}}"
+  {{- end}}
+  {{- if .resource.RoleName}}
+  name="{{.resource.RoleName}}"
+  {{- end}}
   path="{{.resource.Path}}"
-  assume_role_policy = "{{.resource.AssumeRolePolicyDocument}}"
+  assume_role_policy = jsonencode({{ Marshal .resource.AssumeRolePolicyDocument}})
   {{- if .resource.Tags}}
   tags       = {
-      "{{range .resource.Tags}}{{.}}{{end}}"
+       {{Tags .resource.Tags}}
     }
     {{- end}}
 }
+
+
+{{if .resource.Policies}}
+resource "aws_iam_role_policy" "" {
+  name=""
+  role=aws_iam_role.{{.item}}
+  policy=jsonencode()
+}
+{{end }}

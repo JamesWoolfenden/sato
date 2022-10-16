@@ -2,8 +2,10 @@ package sato
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"github.com/awslabs/goformation/v7"
+	"github.com/awslabs/goformation/v7/cloudformation/tags"
 	"log"
 	"os"
 	"path/filepath"
@@ -62,7 +64,23 @@ func Parse(file string, destination string) {
 		}
 
 		//needs to pivot on policy template from resource
-		tmpl, err := tftemplate.New("test").Parse(string(myContent))
+		tmpl, err := tftemplate.New("test").Funcs(tftemplate.FuncMap{
+			"Deref": func(str *string) string { return *str },
+			"Marshal": func(v interface{}) string {
+				a, _ := json.Marshal(v)
+				return string(a)
+			},
+			"Tags": func(v []tags.Tag) string {
+				var temp string
+				for _, item := range v {
+					if item.Key != "" {
+						temp = temp + "\"" + item.Key + "\"" + "=" + "\"" + item.Value + "\"" + "\n"
+					}
+				}
+				return temp
+			},
+		}).Parse(string(myContent))
+
 		if err != nil {
 			panic(err)
 		}
@@ -101,4 +119,15 @@ func Write(output string, location string, name string) error {
 
 func ToTFName(CFN string) string {
 	return strings.ToLower(strings.ReplaceAll(CFN, "::", "_"))
+}
+
+func Test() {
+
+	var fudge []tags.Tag
+	var temp tags.Tag
+	temp.Value = "timmy"
+
+	fudge = append(fudge, temp)
+
+	log.Print(fudge)
 }

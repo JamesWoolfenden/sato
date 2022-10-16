@@ -27,7 +27,7 @@ resource "aws_subnet" "{{.item}}" {
   cidr_block = "{{.resource.CidrBlock}}"
   {{- if .resource.Tags}}
   tags       = {
-    "{{range .resource.Tags}}{{.}}{{end}}"
+     {{Tags .resource.Tags}}
   }
   {{- end}}
 }

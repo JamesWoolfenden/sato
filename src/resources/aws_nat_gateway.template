@@ -4,7 +4,7 @@ resource "aws_nat_gateway" "{{.item}}" {
   connectivity_type = "{{.resource.ConnectivityType}}"
   {{- if .resource.Tags}}
   tags       = {
-      "{{range .resource.Tags}}{{.}}{{end}}"
+       {{Tags .resource.Tags}}
     }
     {{- end}}
 }

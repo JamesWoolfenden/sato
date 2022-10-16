@@ -1,7 +1,7 @@
 resource "aws_internet_gateway" "{{.item}}" {
   {{- if .resource.Tags}}
   tags       = {
-      "{{range .resource.Tags}}{{.}}{{end}}"
+       {{Tags .resource.Tags}}
     }
     {{- end}}
 }

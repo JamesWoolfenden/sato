@@ -2,7 +2,7 @@ resource "aws_route_table" "{{.item}}" {
   vpc_id = "{{ .resource.VpcId}}"
   {{- if .resource.Tags}}
   tags       = {
-      "{{range .resource.Tags}}{{.}}{{end}}"
+       {{Tags .resource.Tags}}
     }
     {{- end}}
 }

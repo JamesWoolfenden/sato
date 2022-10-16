@@ -1,9 +1,16 @@
 resource "aws_eip" "{{.item}}" {
+  {{- if .resource.InstanceId}}
   instance =  "{{.resource.InstanceId}}"
-  vpc      =  "{{.resource.Domain}}"
+  {{- end}}
+  {{- if eq (Deref .resource.Domain) "vpc"}}
+  vpc      =  true
+  {{- end}}
+
   {{- if .resource.Tags}}
   tags       = {
-      "{{range .resource.Tags}}{{.}}{{end}}"
+      {{Tags .resource.Tags}}
     }
     {{- end}}
 }
+
+
