@@ -4,14 +4,14 @@
 # https://docs.github.com/en/actions/reference/environment-variables#default-environment-variables
 if [[ $GITHUB_ACTIONS != "true" ]]
 then
-  /usr/bin/pike "$@"
+  /usr/bin/sato "$@"
   exit $?
 fi
 
 flags=""
 
 echo "running command:"
-echo pike -d "$INPUT_DIRECTORY" scan "$flags"
+echo sato parse -f "$INPUT_FILE" "$flags"
 
-/usr/bin/pike -d "$INPUT_DIRECTORY" scan "$flags"
-export pike_EXIT_CODE=$?
+/usr/bin/sato parse -f "$INPUT_FILE" "$flags"
+export sato_EXIT_CODE=$?
