@@ -14,7 +14,7 @@ resource "aws_flow_log" "{{.item}}" {
   {{- end}}
   log_destination_type= "{{.resource.LogDestinationType}}"
   traffic_type        = "{{.resource.TrafficType}}"
-  log_format          = "{{replace .resource.LogFormat "$" "$$" }}"
+  log_format          = "{{Replace .resource.LogFormat "$" "$$" }}"
 {{- if eq .resource.ResourceId "VPC"}}
   vpc_id              = "{{.resource.ResourceId}}"
 {{- end}}

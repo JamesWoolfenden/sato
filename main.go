@@ -22,8 +22,8 @@ func main() {
 				Name:  "parse",
 				Usage: "translate CFN to Terraform",
 				Action: func(*cli.Context) error {
-					sato.Parse(file, destination)
-					return nil
+					err := sato.Parse(file, destination)
+					return err
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
