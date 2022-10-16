@@ -1,0 +1,8 @@
+resource "aws_s3_bucket" "{{.item}}" {
+
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

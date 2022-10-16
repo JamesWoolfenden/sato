@@ -4,25 +4,29 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/awslabs/goformation/v7"
-	"github.com/awslabs/goformation/v7/cloudformation"
-	"github.com/awslabs/goformation/v7/cloudformation/tags"
 	"log"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
+
+	"github.com/awslabs/goformation/v7"
+	"github.com/awslabs/goformation/v7/cloudformation"
+	"github.com/awslabs/goformation/v7/cloudformation/tags"
 )
 
+// M is a wrapper object to help pass in multiple object to template
 type M map[string]interface{}
 
+// Variable describes a terraform variable
 type Variable struct {
 	Description string
 	Type        string
 	Default     string
 }
 
+// Parse turn CFN into Terraform
 func Parse(file string, destination string) error {
 	// Open a template from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
@@ -67,6 +71,7 @@ func Parse(file string, destination string) error {
 	return nil
 }
 
+// ParseVariables convert CFN Parameters into terraform variables
 func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMap, destination string) error {
 	var All string
 	for Name, param := range template.Parameters {
@@ -132,6 +137,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 	return nil
 }
 
+// StringToMap converts maps in strings(for tags)
 func StringToMap(param cloudformation.Parameter, myVariable Variable) Variable {
 	temp := strings.Split(param.Default.(string), "=")
 	var myMap string
@@ -150,6 +156,7 @@ func StringToMap(param cloudformation.Parameter, myVariable Variable) Variable {
 	return myVariable
 }
 
+// ParseResources converts resource to Terraform
 func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncMap, destination string) error {
 	for item, resource := range resources {
 		var output bytes.Buffer
@@ -163,19 +170,20 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::EC2::RouteTable":                  awsRouteTable,
 			"AWS::EC2::NatGateway":                  awsNatGateway,
 			"AWS::EC2::VPCGatewayAttachment":        awsVpnGatewayAttachment,
-			"AWS::EC2::NetworkAclEntry":             awsNetworkAclRule,
-			"AWS::EC2::NetworkAcl":                  awsNetworkAcl,
+			"AWS::EC2::NetworkAclEntry":             awsNetworkACLRule,
+			"AWS::EC2::NetworkAcl":                  awsNetworkACL,
 			"AWS::EC2::EIP":                         awsEIP,
 			"AWS::EC2::SubnetRouteTableAssociation": awsRouteTableAssociation,
 			"AWS::EC2::Subnet":                      awsSubnet,
 			"AWS::Logs::LogGroup":                   awsCloudwatchLogGroup,
 			"AWS::EC2::VPCDHCPOptionsAssociation":   awsVpcDhcpOptionsAssociation,
 			"AWS::EC2::DHCPOptions":                 awsVpcDhcpOptions,
-			"AWS::EC2::SubnetNetworkAclAssociation": awsNetworkAclAssociation,
+			"AWS::EC2::SubnetNetworkAclAssociation": awsNetworkACLAssociation,
 			"AWS::EC2::FlowLog":                     awsFlowLog,
 			"AWS::EC2::VPCEndpoint":                 awsVpcEndpoint,
 			"AWS::EC2::InternetGateway":             awsInternetGateway,
 			"AWS::EC2::VPC":                         awsVpc,
+			"AWS::S3::Bucket":                       awsS3Bucket,
 		}
 
 		var myContent []byte
@@ -226,6 +234,7 @@ func Write(output string, location string, name string) error {
 	return nil
 }
 
+// ToTFName creates a terraform resource name from a CFN type (approximates)
 func ToTFName(CFN string) string {
 	return strings.ToLower(strings.ReplaceAll(CFN, "::", "_"))
 }

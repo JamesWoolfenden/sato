@@ -29,10 +29,10 @@ var awsVpnGatewayAttachment []byte
 var awsSubnet []byte
 
 //go:embed resources/aws_network_acl_rule.template
-var awsNetworkAclRule []byte
+var awsNetworkACLRule []byte
 
 //go:embed resources/aws_network_acl.template
-var awsNetworkAcl []byte
+var awsNetworkACL []byte
 
 //go:embed resources/aws_eip.template
 var awsEIP []byte
@@ -50,7 +50,7 @@ var awsVpcDhcpOptionsAssociation []byte
 var awsVpcDhcpOptions []byte
 
 //go:embed resources/aws_network_acl_association.template
-var awsNetworkAclAssociation []byte
+var awsNetworkACLAssociation []byte
 
 //go:embed resources/aws_vpc_endpoint.template
 var awsVpcEndpoint []byte
@@ -60,3 +60,6 @@ var awsFlowLog []byte
 
 //go:embed resources/aws_internet_gateway.template
 var awsInternetGateway []byte
+
+//go:embed resources/aws_s3_bucket.template
+var awsS3Bucket []byte

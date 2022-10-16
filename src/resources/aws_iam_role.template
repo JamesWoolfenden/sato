@@ -26,10 +26,12 @@ resource "aws_iam_role" "{{.item}}" {
 }
 
 
-{{if .resource.Policies}}
-resource "aws_iam_role_policy" "" {
-  name=""
-  role=aws_iam_role.{{.item}}
-  policy=jsonencode()
+{{- if .resource.Policies}}
+{{- $p := .item}}{{range $i, $a := .resource.Policies}}
+resource "aws_iam_role_policy" "{{ $a.PolicyName}}" {
+  name="{{ $a.PolicyName}}"
+  role=aws_iam_role.{{ $p}}.id
+  policy = jsonencode({{ Marshal $a.PolicyDocument}})
 }
-{{end }}
+{{end}}
+{{end}}
