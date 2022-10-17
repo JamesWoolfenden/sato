@@ -1,0 +1,20 @@
+resource "aws_cloudformation_stack" "{{.item}}" {
+  name="{{.item}}"
+{{- if .resource.NotificationARNs}}
+  notification_arns=[{{range $i, $v := .resource.NotificationARNs}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- end}}
+{{- if .resource.Parameters}}
+  parameters= {{Map .resource.Parameters}}
+{{- end}}
+{{- if .resource.TemplateURL}}
+  template_url="{{ .resource.TemplateURL}}"
+{{- end}}
+{{- if .resource.TimeoutInMinutes}}
+  timeout_in_minutes="{{ .resource.TimeoutInMinutes}}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

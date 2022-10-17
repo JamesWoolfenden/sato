@@ -68,6 +68,15 @@ func Parse(file string, destination string) error {
 			}
 			return string(b)
 		},
+		"Map": func(myMap map[string]string) string {
+			result := "{ \n"
+			for item, stuff := range myMap {
+				result = result + "\t\"" + item + "\"" + "=" + "\"" + stuff + "\"\n"
+			}
+			result = result + " }"
+
+			return result
+		},
 	}
 
 	err = ParseResources(template.Resources, funcMap, destination)
@@ -98,7 +107,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 
 		case "List<AWS::EC2::AvailabilityZone::Name>":
 			myVariable.Type = "list(string)"
-		case "AWS::EC2::Subnet::Id":
+		case "AWS::EC2::Subnet::Id", "AWS::EC2::KeyPair::KeyName":
 			myVariable.Type = "string"
 		default:
 			log.Print(param.Type)
@@ -201,6 +210,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::StepFunctions::StateMachine":      awsStepfunctionStateMachine,
 			"AWS::DynamoDB::Table":                  awsDynamodbTable,
 			"AWS::IAM::InstanceProfile":             awsIamInstanceProfile,
+			"AWS::CloudFormation::Stack":            awsCloudformationStack,
 		}
 
 		var myContent []byte

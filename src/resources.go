@@ -75,3 +75,6 @@ var awsDynamodbTable []byte
 
 //go:embed resources/aws_iam_instance_profile.template
 var awsIamInstanceProfile []byte
+
+//go:embed resources/aws_cloudformation_stack.template
+var awsCloudformationStack []byte
