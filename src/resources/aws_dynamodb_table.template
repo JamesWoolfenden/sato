@@ -1,0 +1,13 @@
+resource "aws_dynamodb_table" "{{.item}}" {
+  name             = "{{.resource.TableName}}"
+  hash_key         = ""
+{{- if .resource.BillingMode}}"
+  billing_mode     = "{{.resource.BillingMode}}"
+{{- end }}
+
+{{- if .resource.Tags}}
+tags = {
+   {{Tags .resource.Tags}}
+}
+{{- end}}
+}

@@ -1,0 +1,74 @@
+resource "aws_lambda_function" "{{.item}}" {
+{{- if .resource.FunctionName}}
+  function_name="{{ .resource.FunctionName}}"
+{{- else}}
+  function_name="{{ .item }}"
+{{- end}}
+{{- if .resource.Role}}
+  role="{{ .resource.Role}}"
+{{- else}}
+  role=""
+{{- end}}
+{{- if .resource.Architectures}}
+  architectures="{{ .resource.Architectures}}"
+{{- end}}
+{{- if .resource.CodeSigningConfigArn}}
+  code_signing_config_arn="{{ .resource.CodeSigningConfigArn}}"
+{{- end}}
+{{- if .resource.DeadLetterConfig}}
+  dead_letter_config="{{ .resource.DeadLetterConfig}}"
+{{- end}}
+{{- if .resource.Description}}
+  description="{{ .resource.Description}}"
+{{- end}}
+{{- if .resource.Environment }}
+  environment {
+    variables={}
+  }
+{{- end}}
+{{- if .resource.EphemeralStorage}}
+  ephemeral_storage="{{ .resource.EphemeralStorage}}"
+{{- end}}
+{{- if .resource.FileSystemConfigs}}
+  file_system_config="{{ .resource.FileSystemConfigs}}"
+{{- end}}
+{{- if .resource.Handler}}
+  handler="{{ .resource.Handler}}"
+{{- end}}
+{{- if .resource.ImageConfig}}
+  image_config {
+  }
+{{- end}}
+{{- if .resource.KmsKeyArn}}
+  kms_key_arn="{{ .resource.KmsKeyArn}}"
+{{- end}}
+  layers={{ .resource.Layers}}
+{{- if .resource.MemorySize}}
+  memory_size={{ .resource.MemorySize}}
+{{- end}}
+{{- if .resource.PackageType}}
+  package_type="{{ .resource.PackageType}}"
+{{- end}}
+{{- if  .resource.ReservedConcurrentExecutions}}
+  reserved_concurrent_executions={{ .resource.ReservedConcurrentExecutions}}
+{{- end}}
+  runtime="{{ .resource.Runtime}}"
+  timeout={{ .resource.Timeout}}
+{{- if .resource.TracingConfig}}
+  tracing_config {
+    mode="Active"
+  }
+{{- end}}
+{{- if .resource.VpcConfig}}
+  vpc_config {
+    security_group_ids=[]
+    subnet_ids=[]
+  }
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
+}
+

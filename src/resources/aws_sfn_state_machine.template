@@ -1,0 +1,23 @@
+resource "aws_sfn_state_machine" "{{.item}}" {
+{{- if .resource.StateMachineName}}
+  name     = "{{ .resource.StateMachineName}}"
+{{- else}}
+  name     = "{{ .item}}"
+{{- end}}
+{{- if .resource.RoleArn}}
+  role_arn = "{{ .resource.RoleArn}}"
+{{- else}}
+  role_arn=""
+{{- end}}
+{{- if .resource.DefinitionString}}
+  definition = jsonencode({{ Marshal .resource.DefinitionString}})
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
+{{- if .resource.TracingConfiguration}}
+  tracing_configuration="{{.resource.TracingConfiguration}}"
+{{- end}}
+}

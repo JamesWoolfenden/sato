@@ -4,7 +4,7 @@ import (
 	_ "embed" //required for embed"
 )
 
-//go:embed resources/aws_sns_topic.policy.template
+//go:embed resources/aws_sns_topic.template
 var awsSNSTopic []byte
 
 //go:embed resources/aws_iam_role.template
@@ -63,3 +63,15 @@ var awsInternetGateway []byte
 
 //go:embed resources/aws_s3_bucket.template
 var awsS3Bucket []byte
+
+//go:embed resources/aws_lambda_function.template
+var awsLambdaFunction []byte
+
+//go:embed resources/aws_sfn_state_machine.template
+var awsStepfunctionStateMachine []byte
+
+//go:embed resources/aws_dynamodb_table.template
+var awsDynamodbTable []byte
+
+//go:embed resources/aws_iam_instance_profile.template
+var awsIamInstanceProfile []byte

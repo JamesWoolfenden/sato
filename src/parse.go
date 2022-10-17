@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
+	"time"
 
 	"github.com/awslabs/goformation/v7"
 	"github.com/awslabs/goformation/v7/cloudformation"
@@ -57,6 +59,15 @@ func Parse(file string, destination string) error {
 			}
 			return temp
 		},
+		"RandomString": func(n int) string {
+			rand.Seed(time.Now().UnixNano())
+			var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+			b := make([]rune, n)
+			for i := range b {
+				b[i] = letters[rand.Intn(len(letters))]
+			}
+			return string(b)
+		},
 	}
 
 	err = ParseResources(template.Resources, funcMap, destination)
@@ -87,6 +98,8 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 
 		case "List<AWS::EC2::AvailabilityZone::Name>":
 			myVariable.Type = "list(string)"
+		case "AWS::EC2::Subnet::Id":
+			myVariable.Type = "string"
 		default:
 			log.Print(param.Type)
 		}
@@ -184,6 +197,10 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::EC2::InternetGateway":             awsInternetGateway,
 			"AWS::EC2::VPC":                         awsVpc,
 			"AWS::S3::Bucket":                       awsS3Bucket,
+			"AWS::Lambda::Function":                 awsLambdaFunction,
+			"AWS::StepFunctions::StateMachine":      awsStepfunctionStateMachine,
+			"AWS::DynamoDB::Table":                  awsDynamodbTable,
+			"AWS::IAM::InstanceProfile":             awsIamInstanceProfile,
 		}
 
 		var myContent []byte

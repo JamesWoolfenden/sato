@@ -1,0 +1,28 @@
+resource "aws_sns_topic" "{{.item}}" {
+  name = "{{ .resource.TopicName}}"
+  display_name= "{{ .resource.DisplayName}}"
+{{- if .resource.DataProtectionPolicy}}
+  policy=jsonencode({{ Marshal .resource.DataProtectionPolicy}})
+{{- end}}
+{{- if .resource.FifoTopic}}
+  fifo_topic={{ .resource.FifoTopic}}
+{{- else }}
+  fifo_topic=false
+{{- end}}
+{{- if .resource.ContentBasedDeduplication}}
+  content_based_deduplication ={{ .resource.ContentBasedDeduplication}}
+{{- end}}
+{{- if .resource.KmsMasterKeyId}}
+  kms_master_key_id = "{{.resource.KmsMasterKeyId}}"
+{{- end}}
+}
+
+{{- if .resource.Subscription}}
+{{- $p := .item}}{{range $i, $a := .resource.Subscription}}
+resource "aws_sns_topic_subscription" "{{ $p}}" {
+  endpoint="{{ $a.Endpoint}}"
+  topic_arn = aws_sns_topic.{{ $p}}.arn
+  protocol="{{ $a.Protocol}}"
+}
+{{- end}}
+{{- end}}

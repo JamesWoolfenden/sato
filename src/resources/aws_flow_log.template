@@ -9,9 +9,9 @@ resource "aws_flow_log" "{{.item}}" {
 {{- if .resource.DeliverLogsPermissionArn}}
   iam_role_arn        = "{{.resource.DeliverLogsPermissionArn}}"
 {{- end}}
-  {{- if .resource.LogDestination}}
+{{- if .resource.LogDestination}}
   log_destination     = "{{.resource.LogDestination}}"
-  {{- end}}
+{{- end}}
   log_destination_type= "{{.resource.LogDestinationType}}"
   traffic_type        = "{{.resource.TrafficType}}"
   log_format          = "{{Replace .resource.LogFormat "$" "$$" }}"
