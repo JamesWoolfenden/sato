@@ -68,6 +68,12 @@ resource "aws_lambda_function" "{{.item}}" {
     subnet_ids=[]
   }
 {{- end}}
+{{- if .resource.Code.S3Key}}
+  s3_key="{{.resource.Code.S3Key}}"
+{{- end}}
+{{- if .resource.Code.S3Bucket}}
+  s3_bucket="{{.resource.Code.S3Bucket}}"
+{{- end}}
 {{- if .resource.Tags}}
   tags = {
     {{Tags .resource.Tags}}

@@ -45,7 +45,7 @@ func Parse(file string, destination string) error {
 	}
 
 	funcMap := tftemplate.FuncMap{
-		"Dequote": Dequote,
+		"Dequote": dequote,
 		"Demap": func(str string) []string {
 			str = strings.Replace(str, "{", "", -1)
 			str = strings.Replace(str, "}", "", -1)
@@ -140,10 +140,6 @@ func Parse(file string, destination string) error {
 	return nil
 }
 
-func Dequote(target string) string {
-	return strings.Replace(target, "\"", "", -1)
-}
-
 // ParseVariables convert CFN Parameters into terraform variables
 func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMap, destination string) error {
 	var All string
@@ -172,7 +168,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 			DataResources, m = add(dataSubnet, DataResources, m)
 		case "AWS::EC2::KeyPair::KeyName":
 			myVariable.Type = "string"
-			DataResources, m = add(dataSubnet, DataResources, m)
+			DataResources, m = add(dataKeyPair, DataResources, m)
 		case "AWS::EC2::VPC::Id":
 			myVariable.Type = "string"
 			DataResources, m = add(dataVpc, DataResources, m)
@@ -224,7 +220,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		return err
 	}
 
-	err = Write(strings.Join(DataResources, "/n"), destination, "data")
+	err = Write(strings.Join(DataResources, "\n"), destination, "data")
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,63 @@
 resource "aws_security_group" "{{.item}}" {
+  description="{{.resource.GroupDescription}}"
+{{- if .resource.GroupName}}
+  name="{{.resource.GroupName}}"
+{{- else}}
+  name= "{{ .item}}"
+{{- end}}
+{{- range $i, $a := .resource.SecurityGroupEgress}}
+  egress {
+    cidr_ip="{{$a.CidrIp}}"
+{{- if $a.CidrIpv6}}
+    ipv6_cidr_blocks="{{$a.CidrIpv6}}"
+{{- end}}
+    description="{{$a.Description}}"
+{{- if $a.DestinationPrefixListId}}
+    prefix_list_ids="{{$a.DestinationPrefixListId}}"
+{{- end}}
+{{- if $a.DestinationSecurityGroupId}}
+    security_groups="{{$a.DestinationSecurityGroupId}}"
+{{- end}}
+{{- if $a.FromPort}}"
+    from_port="{{$a.FromPort}}"
+{{- end}}
+{{- if $a.IpProtocol}}
+    protocol="{{$a.IpProtocol}}"
+{{- end}}
+{{- if $a.ToPort}}
+    to_port="{{$a.ToPort}}"
+{{- end}}
+  }
+{{- end}}
+{{- range $i, $a := .resource.SecurityGroupIngress}}
+  ingress {
+    cidr_ip="{{$a.CidrIp}}"
+{{- if $a.CidrIpv6}}
+    ipv6_cidr_blocks="{{$a.CidrIpv6}}"
+{{- end}}
+    description="{{$a.Description}}"
+{{- if $a.SourcePrefixListId}}
+    prefix_list_ids="{{$a.SourcePrefixListId}}"
+{{- end}}
+{{- if $a.SourceSecurityGroupId}}
+    security_groups="{{$a.SourceSecurityGroupId}}"
+{{- end}}
+{{- if $a.FromPort}}"
+    from_port="{{$a.FromPort}}"
+{{- end}}
+{{- if $a.IpProtocol}}
+    protocol="{{$a.IpProtocol}}"
+{{- end}}
+{{- if $a.ToPort}}
+    to_port="{{$a.ToPort}}"
+{{- end}}
+  }
+{{- end}}
+{{- if.VpcId}}
+  vpc_id="{{.VpcId}}"
+{{ else}}
+  vpc_id=""
+{{- end}}
 {{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}

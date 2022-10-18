@@ -18,3 +18,7 @@ func add(s string, a []string, m map[string]bool) ([]string, map[string]bool) {
 func split(source string, separator string) []string {
 	return strings.Split(source, separator)
 }
+
+func dequote(target string) string {
+	return strings.Replace(target, "\"", "", -1)
+}
