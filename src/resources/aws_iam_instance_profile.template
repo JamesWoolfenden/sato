@@ -1,4 +1,6 @@
 resource "aws_iam_instance_profile" "{{ .item}}" {
   name = "{{ .item}}"
-  role = {{.resource.Roles}}
+{{- range $i, $a := .resource.Roles}}
+  role = "{{$a}}"
+{{- end}}
 }
