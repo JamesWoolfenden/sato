@@ -45,6 +45,15 @@ func Parse(file string, destination string) error {
 	}
 
 	funcMap := tftemplate.FuncMap{
+		"Dequote": Dequote,
+		"Demap": func(str string) []string {
+			str = strings.Replace(str, "{", "", -1)
+			str = strings.Replace(str, "}", "", -1)
+			str = strings.Replace(str, "\"", "", -1)
+			str = strings.Replace(str, ":", "", -1)
+			str = strings.Replace(str, " ", "", -1)
+			return strings.Split(str, ",")
+		},
 		"ToUpper": strings.ToUpper,
 		"ToLower": strings.ToLower,
 		"Deref":   func(str *string) string { return *str },
@@ -52,6 +61,7 @@ func Parse(file string, destination string) error {
 			a, _ := json.Marshal(v)
 			return string(a)
 		},
+		"Split":   split,
 		"Replace": replace,
 		"Tags": func(v []tags.Tag) string {
 			var temp string
@@ -130,10 +140,19 @@ func Parse(file string, destination string) error {
 	return nil
 }
 
+func Dequote(target string) string {
+	return strings.Replace(target, "\"", "", -1)
+}
+
 // ParseVariables convert CFN Parameters into terraform variables
 func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMap, destination string) error {
 	var All string
-	var Data string
+
+	var (
+		m             = make(map[string]bool)
+		DataResources []string
+	)
+
 	for Name, param := range template.Parameters {
 		var myVariable Variable
 
@@ -147,13 +166,16 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 
 		case "List<AWS::EC2::AvailabilityZone::Name>":
 			myVariable.Type = "list(string)"
-			Data = Data + dataAvailabilityZone
+			DataResources, m = add(dataAvailabilityZone, DataResources, m)
 		case "AWS::EC2::Subnet::Id":
 			myVariable.Type = "string"
-			Data = Data + dataSubnet
+			DataResources, m = add(dataSubnet, DataResources, m)
 		case "AWS::EC2::KeyPair::KeyName":
 			myVariable.Type = "string"
-			Data = Data + dataKeyPair
+			DataResources, m = add(dataSubnet, DataResources, m)
+		case "AWS::EC2::VPC::Id":
+			myVariable.Type = "string"
+			DataResources, m = add(dataVpc, DataResources, m)
 		default:
 			log.Print(param.Type)
 		}
@@ -202,7 +224,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		return err
 	}
 
-	err = Write(Data, destination, "data")
+	err = Write(strings.Join(DataResources, "/n"), destination, "data")
 	if err != nil {
 		return err
 	}
@@ -262,6 +284,8 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::DynamoDB::Table":                  awsDynamodbTable,
 			"AWS::IAM::InstanceProfile":             awsIamInstanceProfile,
 			"AWS::CloudFormation::Stack":            awsCloudformationStack,
+			"AWS::EC2::SecurityGroup":               awsSecurityGroup,
+			"AWS::SecretsManager::Secret":           awsSecretsManagerSecret,
 		}
 
 		var myContent []byte
@@ -316,10 +340,6 @@ func Write(output string, location string, name string) error {
 // ToTFName creates a Terraform resource name from a CFN type (approximates)
 func ToTFName(CFN string) string {
 	return strings.ToLower(strings.ReplaceAll(CFN, "::", "_"))
-}
-
-func replace(input, from, to string) string {
-	return strings.Replace(input, from, to, -1)
 }
 
 // ReplaceVariables looks to see if u can translate CFN vars into terraform

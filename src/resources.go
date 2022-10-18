@@ -78,3 +78,9 @@ var awsIamInstanceProfile []byte
 
 //go:embed resources/aws_cloudformation_stack.template
 var awsCloudformationStack []byte
+
+//go:embed resources/aws_secretsmanager_secret.template
+var awsSecretsManagerSecret []byte
+
+//go:embed resources/aws_security_group.template
+var awsSecurityGroup []byte

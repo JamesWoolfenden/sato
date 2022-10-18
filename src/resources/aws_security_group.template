@@ -1,0 +1,7 @@
+resource "aws_security_group" "{{.item}}" {
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}
