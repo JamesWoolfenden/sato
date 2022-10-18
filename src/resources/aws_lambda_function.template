@@ -27,7 +27,7 @@ resource "aws_lambda_function" "{{.item}}" {
   }
 {{- end}}
 {{- if .resource.Code.ZipFile }}
-  filename="{{ZipFile .resource.Code.ZipFile .item .resource.Runtime}}"
+  filename="{{ZipFile .resource.Code.ZipFile .item (Deref .resource.Runtime)}}"
 {{- end}}
 {{- if .resource.EphemeralStorage}}
   ephemeral_storage="{{ .resource.EphemeralStorage}}"

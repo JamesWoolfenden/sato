@@ -81,10 +81,9 @@ func Parse(file string, destination string) error {
 			return result
 		},
 		"ZipFile": func(code string, filename string, runtime string) string {
-
 			var extension string
 			switch runtime {
-			case "nodejs16.x", "Nodejs14.x", "Nodejs12.x":
+			case "nodejs16.x", "nodejs14.x", "nodejs12.x":
 				extension = ".js"
 			case "python3.9", "python3.8", "python3.7", "python3.6":
 				extension = ".py"
