@@ -1,13 +1,16 @@
 package sato
 
 import (
+	"archive/zip"
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
@@ -54,7 +57,7 @@ func Parse(file string, destination string) error {
 			var temp string
 			for _, item := range v {
 				if item.Key != "" {
-					temp = temp + "\"" + item.Key + "\"" + "=" + "\"" + item.Value + "\"" + "\n"
+					temp = temp + "\t\"" + item.Key + "\"" + "=" + "\"" + item.Value + "\"" + "\n"
 				}
 			}
 			return temp
@@ -77,6 +80,43 @@ func Parse(file string, destination string) error {
 
 			return result
 		},
+		"ZipFile": func(code string, filename string, runtime string) string {
+
+			var extension string
+			switch runtime {
+			case "nodejs16.x", "Nodejs14.x", "Nodejs12.x":
+				extension = ".js"
+			case "python3.9", "python3.8", "python3.7":
+				extension = ".py"
+			case "go1.x":
+				extension = ".go"
+			default:
+				extension = ".txt"
+			}
+
+			codefile := filename + extension
+			d1 := []byte(code)
+			_ = os.WriteFile(codefile, d1, 0644)
+
+			output := filename + ".zip"
+			archive, _ := os.Create(output)
+			defer func(archive *os.File) {
+				_ = archive.Close()
+			}(archive)
+			zipWriter := zip.NewWriter(archive)
+
+			f1, _ := os.Open(filename)
+
+			defer func(f1 *os.File) {
+				_ = f1.Close()
+			}(f1)
+
+			w1, _ := zipWriter.Create(filename)
+			_, _ = io.Copy(w1, f1)
+			_ = zipWriter.Close()
+
+			return output
+		},
 	}
 
 	err = ParseResources(template.Resources, funcMap, destination)
@@ -94,6 +134,7 @@ func Parse(file string, destination string) error {
 // ParseVariables convert CFN Parameters into terraform variables
 func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMap, destination string) error {
 	var All string
+	var Data string
 	for Name, param := range template.Parameters {
 		var myVariable Variable
 
@@ -107,8 +148,13 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 
 		case "List<AWS::EC2::AvailabilityZone::Name>":
 			myVariable.Type = "list(string)"
-		case "AWS::EC2::Subnet::Id", "AWS::EC2::KeyPair::KeyName":
+			Data = Data + dataAvailabilityZone
+		case "AWS::EC2::Subnet::Id":
 			myVariable.Type = "string"
+			Data = Data + dataSubnet
+		case "AWS::EC2::KeyPair::KeyName":
+			myVariable.Type = "string"
+			Data = Data + dataKeyPair
 		default:
 			log.Print(param.Type)
 		}
@@ -156,6 +202,12 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 	if err != nil {
 		return err
 	}
+
+	err = Write(Data, destination, "data")
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -232,7 +284,8 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"resource": resource,
 			"item":     item,
 		})
-		err = Write(output.String(), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+
+		err = Write(ReplaceVariables(output.String()), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 		if err != nil {
 			return err
 		}
@@ -242,30 +295,45 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 
 // Write out terraform
 func Write(output string, location string, name string) error {
+	if output != "" {
+		newPath, _ := filepath.Abs(location)
+		err := os.MkdirAll(newPath, os.ModePerm)
+		if err != nil {
+			return err
+		}
 
-	newPath, _ := filepath.Abs(location)
-	err := os.MkdirAll(newPath, os.ModePerm)
-	if err != nil {
-		return err
+		d1 := []byte(output)
+
+		destination, _ := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
+		err = os.WriteFile(destination, d1, 0644)
+
+		if err != nil {
+			return err
+		}
 	}
-
-	d1 := []byte(output)
-
-	destination, _ := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
-	err = os.WriteFile(destination, d1, 0644)
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
-// ToTFName creates a terraform resource name from a CFN type (approximates)
+// ToTFName creates a Terraform resource name from a CFN type (approximates)
 func ToTFName(CFN string) string {
 	return strings.ToLower(strings.ReplaceAll(CFN, "::", "_"))
 }
 
 func replace(input, from, to string) string {
 	return strings.Replace(input, from, to, -1)
+}
+
+// ReplaceVariables looks to see if u can translate CFN vars into terraform
+func ReplaceVariables(str1 string) string {
+	re := regexp.MustCompile(`\${.*?}`)
+	submatch := re.FindAllString(str1, -1)
+
+	for _, target := range submatch {
+		if strings.Contains(target, "::") {
+		} else {
+			brReplace := strings.Replace(target, "${", "${var.", 1)
+			str1 = strings.Replace(str1, target, brReplace, 1)
+		}
+	}
+	return str1
 }

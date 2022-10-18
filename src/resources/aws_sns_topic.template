@@ -1,6 +1,12 @@
 resource "aws_sns_topic" "{{.item}}" {
+{{- if .resource.TopicName}}
   name = "{{ .resource.TopicName}}"
+{{- else}}
+  name = ""
+{{- end}}
+{{- if .resource.DisplayName}}"
   display_name= "{{ .resource.DisplayName}}"
+{{- end}}
 {{- if .resource.DataProtectionPolicy}}
   policy=jsonencode({{ Marshal .resource.DataProtectionPolicy}})
 {{- end}}

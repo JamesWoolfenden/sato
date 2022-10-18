@@ -157,3 +157,23 @@ func Test_replace(t *testing.T) {
 		})
 	}
 }
+func TestReplaceVariables(t *testing.T) {
+	type args struct {
+		str1 string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"pass", args{"Im ${good}"}, "Im ${var.good}"},
+		{"do nothing", args{"Im ${good::aws}"}, "Im ${good::aws}"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := ReplaceVariables(tt.args.str1); got != tt.want {
+				t.Errorf("ReplaceVariables() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

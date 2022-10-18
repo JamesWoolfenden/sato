@@ -22,7 +22,7 @@ resource "aws_iam_role" "{{.item}}" {
   assume_role_policy = jsonencode({{ Marshal .resource.AssumeRolePolicyDocument}})
 {{- if .resource.Tags}}
   tags = {
-    {{Tags .resource.Tags}}
+  {{Tags .resource.Tags}}
   }
 {{- end}}
 }

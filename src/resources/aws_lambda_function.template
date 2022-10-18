@@ -23,8 +23,11 @@ resource "aws_lambda_function" "{{.item}}" {
 {{- end}}
 {{- if .resource.Environment }}
   environment {
-    variables={}
+    variables={{Map .resource.Environment.Variables }}
   }
+{{- end}}
+{{- if .resource.Code.ZipFile }}
+  filename="{{ZipFile .resource.Code.ZipFile .item .resource.Runtime}}"
 {{- end}}
 {{- if .resource.EphemeralStorage}}
   ephemeral_storage="{{ .resource.EphemeralStorage}}"
@@ -71,4 +74,3 @@ resource "aws_lambda_function" "{{.item}}" {
   }
 {{- end}}
 }
-

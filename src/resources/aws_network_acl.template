@@ -2,7 +2,7 @@ resource "aws_network_acl" "{{.item}}" {
   vpc_id = "{{.resource.VpcId}}"
 {{- if .resource.Tags}}
   tags = {
-    {{Tags .resource.Tags}}
+  {{Tags .resource.Tags}}
     }
 {{- end}}
 }

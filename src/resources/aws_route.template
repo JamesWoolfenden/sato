@@ -4,4 +4,36 @@ resource "aws_route" "{{.item}}" {
 {{- if .resource.VpcPeeringConnectionId}}"
   vpc_peering_connection_id = "{{.resource.VpcPeeringConnectionId}}"
 {{- end}}
+{{- if .resource.CarrierGatewayId}}
+  carrier_gateway_id="{{ .resource.CarrierGatewayId}}"
+{{- end}}
+{{- if .resource.EgressOnlyInternetGatewayId}}
+  egress_onlyInternet_gateway_id="{{ .resource.EgressOnlyInternetGatewayId}}"
+{{- end}}
+{{- if .resource.GatewayId}}
+  gateway_id="{{ .resource.GatewayId}}"
+{{- end}}
+{{- if .resource.InstanceId}}
+  instance_id="{{.resource.InstanceId}}"
+{{- end}}
+{{- if .resource.LocalGatewayId}}
+  local_gateway_id="{{.resource.LocalGatewayId}}"
+{{- end}}
+{{- if .resource.NatGatewayId}}
+  nat_gateway_id="{{ .resource.NatGatewayId}}"
+{{- end}}
+{{- if .resource.NetworkInterfaceId}}
+  network_interface_id="{{.resource.NetworkInterfaceId}}"
+{{- end}}
+{{- if .resource.TransitGatewayId}}
+  transit_gateway_id="{{.resource.TransitGatewayId}}"
+{{- end}}
+{{- if .resource.VpcEndpointId}}
+  vpc_endpoint_id="{{.resource.VpcEndpointId}}"
+{{- end}}
+{{- if and (not .resource.VpcPeeringConnectionId) (not .resource.CarrierGatewayId) (not .resource.EgressOnlyInternetGatewayId)
+(not .resource.GatewayId) (not .resource.InstanceId) (not .resource.LocalGatewayId) (not .resource.NatGatewayId) (not .resource.NetworkInterfaceId)
+ (not .resource.TransitGatewayId) (not .resource.VpcEndpointId)}}
+  nat_gateway_id = ""
+{{- end}}
 }
