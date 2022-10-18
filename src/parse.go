@@ -86,7 +86,7 @@ func Parse(file string, destination string) error {
 			switch runtime {
 			case "nodejs16.x", "Nodejs14.x", "Nodejs12.x":
 				extension = ".js"
-			case "python3.9", "python3.8", "python3.7":
+			case "python3.9", "python3.8", "python3.7", "python3.6":
 				extension = ".py"
 			case "go1.x":
 				extension = ".go"
