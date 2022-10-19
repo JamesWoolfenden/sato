@@ -31,10 +31,12 @@ resource "aws_iam_role" "{{.item}}" {
 {{- if .resource.Policies}}
 {{- $p := .item}}
 {{- $q := RandomString 6}}{{range $i, $a := .resource.Policies}}
+{{if $a.PolicyName}}
 resource "aws_iam_role_policy" "{{ $a.PolicyName}}{{$q}}" {
   name="{{ $a.PolicyName}}{{$q}}"
   role=aws_iam_role.{{ $p}}.id
   policy = jsonencode({{ Marshal $a.PolicyDocument}})
 }
-{{end}}
-{{end}}
+{{- end}}
+{{- end}}
+{{- end}}

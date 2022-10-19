@@ -7,3 +7,5 @@ const dataSubnet = "data \"aws_subnet\" \"selected\" {\n  id = \"\"\n}\n"
 const dataKeyPair = "data \"aws_key_pair\" \"example\" {\n  key_name           = \"\"\n  include_public_key = true\n\n  filter {\n    name   = \"tag:Component\"\n    values = [\"web\"]\n  }\n}\n"
 
 const dataVpc = "data \"aws_vpc\" \"selected\" {\n  id = \"\"\n}\n"
+
+const dataRegion = "data \"aws_region\" \"current\" {}"

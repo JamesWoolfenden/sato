@@ -1,6 +1,9 @@
 package sato
 
-import "strings"
+import (
+	"encoding/base64"
+	"strings"
+)
 
 func replace(input, from, to string) string {
 	return strings.Replace(input, from, to, -1)
@@ -21,4 +24,16 @@ func split(source string, separator string) []string {
 
 func dequote(target string) string {
 	return strings.Replace(target, "\"", "", -1)
+}
+
+func boolean(test *bool) bool {
+	if test == nil {
+		return false
+	}
+	return *test
+}
+
+func decode64(str string) string {
+	temp, _ := base64.StdEncoding.DecodeString(str)
+	return string(temp)
 }

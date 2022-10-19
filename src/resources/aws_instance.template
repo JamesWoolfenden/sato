@@ -1,0 +1,91 @@
+resource "aws_instance" "{{.item}}" {
+{{- if .resource.IamInstanceProfile}}
+  iam_instance_profile="{{.resource.IamInstanceProfile}}"
+{{- end}}
+{{- if .resource.ImageId}}
+  ami="{{.resource.ImageId}}"
+{{- end}}
+{{- if .resource.InstanceType}}
+  instance_type="{{.resource.InstanceType}}"
+{{- end}}
+{{- if .resource.UserData}}
+  user_data=<<-EOF
+{{ Decode64 .resource.UserData}}
+EOF
+{{- end}}
+{{- if .resource.AvailabilityZone}}"
+  availability_zone="{{.resource.AvailabilityZone}}"
+{{- end}}
+{{- if .resource.BlockDeviceMappings}}
+  block_device_mapping ={{.resource.BlockDeviceMappings}}
+{{- end}}
+{{- if .resource.CpuOptions}}
+  cpu_options = "{{.resource.CpuOptions}}"
+{{- end}}
+{{- if .resource.CreditSpecification}}
+  credit_specification ={{.resource.CreditSpecification}}
+{{- end}}
+  disable_api_stop= {{ Boolean .resource.DisableApiTermination }}
+  ebs_optimized = {{ Boolean .resource.EbsOptimized }}
+{{- if .resource.EnclaveOptions}}
+  enclave_options {
+  }
+{{- end}}
+{{- if .resource.HibernationOptions}}
+  hibernation=?
+{{- end}}
+{{- if .resource.HostId}}
+  host_id="{{.resource.HostId}}"
+{{- end}}
+{{- if .resource.HostResourceGroupArn}}
+  host_resource_group_arn="{{ .resource.HostResourceGroupArn}}"
+{{- end}}
+{{- if .resource.InstanceInitiatedShutdownBehavior}}
+  instance_initiated_shutdown_behavior="{{ .resource.InstanceInitiatedShutdownBehavior}}"
+{{- end}}
+{{- if .resource.Ipv6AddressCount}}
+  ipv6_address_count={{ .resource.Ipv6AddressCount}}
+{{- end}}
+{{- if .resource.Ipv6Addresses}}
+  ipv6_addresses={{ .resource.Ipv6Addresses}}
+{{- end}}
+{{- if .resource.KeyName}}
+  key_name="{{ .resource.KeyName}}"
+{{- end}}
+{{- if .resource.LaunchTemplate}}
+  launch_template="{{ .resource.LaunchTemplate}}"
+{{- end}}
+  monitoring = {{ Boolean .resource.Monitoring }}
+{{- if .resource.NetworkInterfaces}}
+  network_interface={{ .resource.NetworkInterfaces}}
+{{- end}}
+{{- if .resource.PlacementGroupName}}
+  placement_group="{{ .resource.PlacementGroupName}}"
+{{- end}}
+{{- if .resource.PrivateDnsNameOptions}}
+  private_dns_name_options="{{.resource.PrivateDnsNameOptions}}"
+{{- end}}
+{{- if  .resource.PrivateIpAddress}}
+  private_ip="{{ .resource.PrivateIpAddress}}"
+{{- end}}
+{{- if .resource.PropagateTagsToVolumeOnCreation }}
+  volume_tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+{{- if .resource.SecurityGroupIds}}
+  security_groups={{ .resource.SecurityGroupIds}}
+{{- end}}
+  source_dest_check = {{ Boolean .resource.SourceDestCheck }}
+{{- if .resource.SubnetId}}
+  subnet_id="{{ .resource.SubnetId}}"
+{{- end}}
+{{- if .resource.Tenancy}}
+  tenancy = "{{ .resource.Tenancy}}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+    }
+{{- end}}
+}

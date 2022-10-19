@@ -45,7 +45,9 @@ func Parse(file string, destination string) error {
 	}
 
 	funcMap := tftemplate.FuncMap{
-		"Dequote": dequote,
+		"Decode64": decode64,
+		"Boolean":  boolean,
+		"Dequote":  dequote,
 		"Demap": func(str string) []string {
 			str = strings.Replace(str, "{", "", -1)
 			str = strings.Replace(str, "}", "", -1)
@@ -172,6 +174,11 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		case "AWS::EC2::VPC::Id":
 			myVariable.Type = "string"
 			DataResources, m = add(dataVpc, DataResources, m)
+		case "AWS::EC2::Image::Id":
+			myVariable.Type = "string"
+		case "AWS::Region":
+			myVariable.Type = "string"
+			DataResources, m = add(dataRegion, DataResources, m)
 		default:
 			log.Print(param.Type)
 		}
@@ -282,6 +289,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::CloudFormation::Stack":            awsCloudformationStack,
 			"AWS::EC2::SecurityGroup":               awsSecurityGroup,
 			"AWS::SecretsManager::Secret":           awsSecretsManagerSecret,
+			"AWS::EC2::Instance":                    awsInstance,
 		}
 
 		var myContent []byte

@@ -84,3 +84,6 @@ var awsSecretsManagerSecret []byte
 
 //go:embed resources/aws_security_group.template
 var awsSecurityGroup []byte
+
+//go:embed resources/aws_instance.template
+var awsInstance []byte

@@ -1,8 +1,80 @@
 resource "aws_s3_bucket" "{{.item}}" {
-
 {{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}
   }
 {{- end}}
 }
+
+{{- if .resource.LifecycleConfiguration}}
+resource "aws_s3_bucket_lifecycle_configuration" "{{.item}}" {
+  bucket = aws_s3_bucket.{{.item}}.id
+
+  rule {
+  }
+}
+{{- end}}
+
+{{- if .resource.BucketEncryption }}
+resource "aws_s3_bucket_server_side_encryption_configuration" "{{.item}}" {
+  bucket = aws_s3_bucket.{{.item}}.bucket
+{{- range $i, $a := .resource.BucketEncryption.ServerSideEncryptionConfiguration}}
+  rule {
+    apply_server_side_encryption_by_default {
+{{- if $a.ServerSideEncryptionByDefault.KMSMasterKeyID}}
+       kms_key_id= {{ $a.ServerSideEncryptionByDefault.KMSMasterKeyID}}
+{{- end}}
+       sse_algorithm     = "{{ $a.ServerSideEncryptionByDefault.SSEAlgorithm}}"
+    }
+  }
+}
+{{- end}}
+{{- end}}
+
+
+{{- if .resource.ReplicationConfiguration}}
+resource "aws_s3_bucket_replication_configuration" "{{ .item }}" {
+  provider =
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.{{ .item }}]
+
+  role   =
+  bucket = aws_s3_bucket.{{ .item }}.id
+
+  rule {
+    id = "foobar"
+
+    filter {
+      prefix = "foo"
+    }
+
+    status = "Enabled"
+
+    destination {
+      bucket        = aws_s3_bucket.{{ .item }}.arn
+      storage_class = "STANDARD"
+    }
+  }
+}
+{{- end}}
+
+
+{{- if .resource.VersioningConfiguration}}
+resource "aws_s3_bucket_versioning" "{{.item}}" {
+  bucket = aws_s3_bucket.{{.item}}.id
+  versioning_configuration {
+    status = "{{ .resource.VersioningConfiguration.Status}}"
+  }
+}
+{{- end}}
+
+{{- if .resource.PublicAccessBlockConfiguration}}
+resource "aws_s3_bucket_public_access_block" "{{.item}}" {
+  bucket = aws_s3_bucket.{{.item}}.id
+
+  block_public_acls       = {{ Boolean .resource.PublicAccessBlockConfiguration.BlockPublicAcls}}
+  block_public_policy     = {{ Boolean .resource.PublicAccessBlockConfiguration.BlockPublicPolicy}}
+  ignore_public_acls      = {{ Boolean .resource.PublicAccessBlockConfiguration.IgnorePublicAcls}}
+  restrict_public_buckets = {{ Boolean .resource.PublicAccessBlockConfiguration.RestrictPublicBuckets}}
+}
+{{- end}}
