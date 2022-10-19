@@ -3,12 +3,13 @@ package main
 import (
 	_ "embed" //required for embed
 	"fmt"
-	"github.com/urfave/cli/v2"
 	"log"
 	"os"
 	sato "sato/src"
 	"sort"
 	"time"
+
+	"github.com/urfave/cli/v2"
 )
 
 func main() {

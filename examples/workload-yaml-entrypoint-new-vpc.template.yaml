@@ -270,9 +270,9 @@ Resources:
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
-        QSS3BucketName: 
+        QSS3BucketName:
           Ref: QSS3BucketName
-        QSS3BucketRegion: 
+        QSS3BucketRegion:
           Ref: QSS3BucketRegion
         QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/quickstart-linux-bastion/'
         BastionAMIOS:
