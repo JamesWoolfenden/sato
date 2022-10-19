@@ -290,6 +290,10 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::EC2::SecurityGroup":               awsSecurityGroup,
 			"AWS::SecretsManager::Secret":           awsSecretsManagerSecret,
 			"AWS::EC2::Instance":                    awsInstance,
+			"AWS::S3::BucketPolicy":                 awsS3BucketPolicy,
+			"AWS::IAM::ManagedPolicy":               awsIamManagedPolicy,
+			"AWS::KMS::Key":                         awsKmsKey,
+			"AWS::KMS::Alias":                       awskmsAlias,
 		}
 
 		var myContent []byte

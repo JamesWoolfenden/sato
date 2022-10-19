@@ -87,3 +87,15 @@ var awsSecurityGroup []byte
 
 //go:embed resources/aws_instance.template
 var awsInstance []byte
+
+//go:embed resources/aws_kms_key.template
+var awsKmsKey []byte
+
+//go:embed resources/aws_kms_alias.template
+var awskmsAlias []byte
+
+//go:embed resources/aws_s3_bucket_policy.template
+var awsS3BucketPolicy []byte
+
+//go:embed resources/aws_iam_policy.template
+var awsIamManagedPolicy []byte

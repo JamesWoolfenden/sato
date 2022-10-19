@@ -1,0 +1,4 @@
+resource "aws_s3_bucket_policy" "{{.item}}" {
+  bucket = "{{.resource.Bucket}}"
+  policy = jsonencode({{ Marshal .resource.PolicyDocument}})
+}

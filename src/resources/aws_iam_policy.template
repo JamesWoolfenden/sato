@@ -1,0 +1,10 @@
+resource "aws_iam_policy" "{{.item}}" {
+{{- if .resource.Description}}
+  description="{{ .resource.Description}}"
+{{- end}}
+  name="{{ .resource.ManagedPolicyName}}"
+{{- if .resource.Path}}
+  path="{{.resource.Path}}"
+{{- end}}
+  policy = jsonencode({{ Marshal .resource.PolicyDocument}})
+}

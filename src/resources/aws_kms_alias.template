@@ -1,0 +1,10 @@
+resource "aws_kms_alias" "{{.item}}" {
+{{- if .resource.AliasName}}
+  name="{{ .resource.AliasName}}"
+{{- end}}
+{{- if .resource.TargetKeyId}}
+  target_key_id="{{ .resource.TargetKeyId}}"
+{{- else}}
+  target_key_id=""
+{{- end}}
+}

@@ -1,0 +1,20 @@
+resource "aws_kms_key" "{{.item}}" {
+{{- if .resource.Description}}
+  description="{{.resource.Description}}"
+{{- end}}
+  enable_key_rotation= {{Boolean .resource.EnableKeyRotation}}
+  enabled            = {{Boolean .resource.Enabled}}
+  policy=jsonencode({{Marshal .resource.KeyPolicy}})
+{{- if .resource.KeySpec}}
+  customer_master_key_spec="{{.resource.KeySpec}}"
+{{- end}}
+  multi_region={{Boolean .resource.MultiRegion}}
+{{- if .resource.PendingWindowInDays}}
+  deletion_windows_in_days={{.resource.PendingWindowInDays}}
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+}
