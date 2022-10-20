@@ -1,7 +1,7 @@
 package sato
 
 import (
-	_ "embed" //required for embed"
+	_ "embed" //required for embed
 )
 
 //go:embed resources/aws_sns_topic.template
@@ -99,3 +99,6 @@ var awsS3BucketPolicy []byte
 
 //go:embed resources/aws_iam_policy.template
 var awsIamManagedPolicy []byte
+
+//go:embed resources/aws_ssm_association.template
+var awsSsmAssociation []byte

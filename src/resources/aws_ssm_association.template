@@ -1,0 +1,43 @@
+resource "aws_ssm_association" "{{.item}}" {
+  name = "{{ .resource.Name}}"
+  apply_only_at_cron_interval={{Boolean .resource.ApplyOnlyAtCronInterval}}
+  association_name="{{ .resource.AssociationName}}"
+{{- if .resource.DocumentVersion}}
+  document_version="{{ .resource.DocumentVersion}}"
+{{- end}}
+{{- if .resource.OutputLocation.S3Location}}
+  output_location {
+    s3_bucket_name="{{ .resource.OutputLocation.S3Location}}"
+    s3_key_prefix="{{ .resource.OutputLocation.S3Location}}"
+    s3_region="{{ .resource.OutputLocation.S3Location}}"
+    }
+{{- end}}
+  parameters = {
+{{- range $i, $a := .resource.Parameters}}
+   {{$i}}={{Sprint $a}},{{- end}}
+   }
+{{- if .resource.ScheduleExpression}}
+  schedule_expression="{{ .resource.ScheduleExpression}}"
+{{- end}}
+{{- range $i, $a := .resource.Targets}}
+  targets {
+    key    ="{{ $a.Key}}"
+    values = {{ $a.Values}}
+  }
+{{- end}}
+{{- if .resource.ComplianceSeverity}}
+  compliance_severity="{{ .resource.ComplianceSeverity}}"
+{{- end}}
+{{- if .resource.MaxConcurrency}}
+  max_concurrency="{{ .resource.MaxConcurrency}}"
+{{- end}}
+{{- if .resource.MaxErrors}}
+  max_errors="{{ .resource.MaxErrors}}"
+{{- end}}
+{{- if .resource.AutomationTargetParameterName}}
+  automation_target_parameter_name="{{ .resource.AutomationTargetParameterName}}"
+{{- end}}
+{{- if .resource.WaitForSuccessTimeoutSeconds}}
+  wait_for_success_timeout_seconds="{{ .resource.WaitForSuccessTimeoutSeconds}}"
+{{- end}}
+}

@@ -8,4 +8,6 @@ const dataKeyPair = "data \"aws_key_pair\" \"example\" {\n  key_name           =
 
 const dataVpc = "data \"aws_vpc\" \"selected\" {\n  id = \"\"\n}\n"
 
-const dataRegion = "data \"aws_region\" \"current\" {}"
+const dataRegion = "data \"aws_region\" \"current\" {}\n"
+
+const dataSecurityGroup = "data \"aws_security_group\" \"selected\" {\n  id = \"\"\n}\n"

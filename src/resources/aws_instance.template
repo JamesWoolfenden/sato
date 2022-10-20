@@ -17,7 +17,24 @@ EOF
   availability_zone="{{.resource.AvailabilityZone}}"
 {{- end}}
 {{- if .resource.BlockDeviceMappings}}
-  block_device_mapping ={{.resource.BlockDeviceMappings}}
+{{range $i, $a := .resource.BlockDeviceMappings}}
+  ebs_block_device {
+    delete_on_termination={{ Boolean $a.Ebs.DeleteOnTermination}}
+    device_name="{{$a.DeviceName}}"
+    encrypted={{ Boolean $a.Ebs.Encrypted}}
+{{- if $a.Ebs.Iops}}
+    iops= {{$a.Ebs.Iops}}
+{{- end}}
+{{- if $a.Ebs.KmsKeyId}}
+    kms_key_id="{{$a.Ebs.KmsKeyId}}"
+{{- end}}
+{{- if $a.Ebs.SnapshotId}}
+    snapshot_id= "{{$a.Ebs.SnapshotId}}"
+{{- end}}
+    volume_size={{$a.Ebs.VolumeSize}}
+    volume_type="{{$a.Ebs.VolumeType}}"
+  }
+{{- end}}
 {{- end}}
 {{- if .resource.CpuOptions}}
   cpu_options = "{{.resource.CpuOptions}}"

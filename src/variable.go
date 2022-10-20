@@ -1,7 +1,7 @@
 package sato
 
 import (
-	_ "embed" //required for embed"
+	_ "embed" //required for embed
 )
 
 //go:embed variable.template

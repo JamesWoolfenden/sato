@@ -45,6 +45,7 @@ func Parse(file string, destination string) error {
 	}
 
 	funcMap := tftemplate.FuncMap{
+		"Sprint":   sprint,
 		"Decode64": decode64,
 		"Boolean":  boolean,
 		"Dequote":  dequote,
@@ -174,7 +175,10 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		case "AWS::EC2::VPC::Id":
 			myVariable.Type = "string"
 			DataResources, m = add(dataVpc, DataResources, m)
-		case "AWS::EC2::Image::Id":
+		case "AWS::EC2::SecurityGroup::Id":
+			myVariable.Type = "string"
+			DataResources, m = add(dataSecurityGroup, DataResources, m)
+		case "AWS::EC2::Image::Id", "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>":
 			myVariable.Type = "string"
 		case "AWS::Region":
 			myVariable.Type = "string"
@@ -294,6 +298,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::IAM::ManagedPolicy":               awsIamManagedPolicy,
 			"AWS::KMS::Key":                         awsKmsKey,
 			"AWS::KMS::Alias":                       awskmsAlias,
+			"AWS::SSM::Association":                 awsSsmAssociation,
 		}
 
 		var myContent []byte
@@ -324,7 +329,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 	return nil
 }
 
-// Write out terraform
+// Write out Terraform
 func Write(output string, location string, name string) error {
 	if output != "" {
 		newPath, _ := filepath.Abs(location)

@@ -2,6 +2,7 @@ package sato
 
 import (
 	"encoding/base64"
+	"fmt"
 	"strings"
 )
 
@@ -36,4 +37,12 @@ func boolean(test *bool) bool {
 func decode64(str string) string {
 	temp, _ := base64.StdEncoding.DecodeString(str)
 	return string(temp)
+}
+
+func sprint(unknown interface{}) string {
+	temp := strings.Replace(strings.Replace(fmt.Sprint(unknown), "[", "", 1), "]", "", 1)
+	if temp == "<nil>" {
+		return "\"\""
+	}
+	return temp
 }
