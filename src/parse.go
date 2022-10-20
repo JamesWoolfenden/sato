@@ -183,6 +183,10 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		case "AWS::Region":
 			myVariable.Type = "string"
 			DataResources, m = add(dataRegion, DataResources, m)
+		case "List<AWS::EC2::Subnet::Id>":
+			myVariable.Type = "list(string)"
+		case "Number":
+			myVariable.Type = "number"
 		default:
 			log.Print(param.Type)
 		}
@@ -299,6 +303,9 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::KMS::Key":                         awsKmsKey,
 			"AWS::KMS::Alias":                       awskmsAlias,
 			"AWS::SSM::Association":                 awsSsmAssociation,
+			"AWS::SSM::Document":                    awsSsmDocument,
+			"AWS::AutoScaling::LaunchConfiguration": awsLaunchConfiguration,
+			"AWS::AutoScaling::AutoScalingGroup":    awsAutoscalingGroup,
 		}
 
 		var myContent []byte

@@ -1,0 +1,29 @@
+resource "aws_ssm_document" "{{.item}}" {
+{{- if .resource.Attachments }}
+  attachment_source={{.resource.Attachments }}
+{{- end }}
+  content = jsonencode({{ Marshal .resource.Content}})
+{{- if .resource.DocumentFormat }}
+  document_format = "{{.resource.DocumentFormat }}"
+{{- end }}
+  document_type   = "{{.resource.DocumentType }}"
+{{- if .resource.Name }}
+  name            = "{{.resource.Name }}"
+{{- else}}
+  name = "{{.item}}"
+{{- end }}
+{{- if .resource.Requires }}
+  permissions={{.resource.Requires }}
+{{- end }}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+{{- if .resource.TargetType}}
+  target_type = "{{ .resource.TargetType}}"
+{{- end }}
+{{- if .resource.VersionName}}
+  version_name = "{{ .resource.VersionName}}"
+{{- end }}
+}

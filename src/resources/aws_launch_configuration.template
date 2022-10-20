@@ -1,0 +1,32 @@
+resource "aws_launch_configuration" "{{.item}}" {
+  image_id      = "{{ .resource.ImageId }}"
+  instance_type = "{{ .resource.InstanceType }}"
+{{- if .resource.LaunchConfigurationName}}
+  name="{{ .resource.LaunchConfigurationName}}"
+{{- else}}
+  name="{{ .item}}"
+{{- end}}
+  associate_public_ip_address={{ Boolean .resource.AssociatePublicIpAddress }}
+  ebs_block_device= {{ .resource.BlockDeviceMappings}}
+  ebs_optimized= {{ Boolean .resource.EbsOptimized }}
+{{- if .resource.IamInstanceProfile}}
+  iam_instance_profile="{{ .resource.IamInstanceProfile}}"
+{{- end}}
+  enable_monitoring={{ Boolean .resource.InstanceMonitoring}}
+{{- if .resource.KeyName}}
+  key_name="{{ .resource.KeyName}}"
+{{- end}}
+{{- if .resource.MetadataOptions }}
+  metadata_options={{ .resource.MetadataOptions }}
+{{- end}}
+{{- if .resource.PlacementTenancy}}
+  placement_tenancy="{{ .resource.PlacementTenancy}}"
+{{- end}}
+  security_groups={{ .resource.SecurityGroups}}
+{{- if .resource.SpotPrice}}
+  spot_price ="{{ .resource.SpotPrice}}"
+{{- end}}
+{{- if  .resource.UserData}}
+  user_data="{{ Decode64 .resource.UserData}}"
+{{- end}}
+}

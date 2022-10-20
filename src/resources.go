@@ -102,3 +102,12 @@ var awsIamManagedPolicy []byte
 
 //go:embed resources/aws_ssm_association.template
 var awsSsmAssociation []byte
+
+//go:embed resources/aws_ssm_document.template
+var awsSsmDocument []byte
+
+//go:embed resources/aws_autoscaling_group.template
+var awsAutoscalingGroup []byte
+
+//go:embed resources/aws_launch_configuration.template
+var awsLaunchConfiguration []byte
