@@ -1,4 +1,51 @@
 resource "aws_autoscaling_group" "{{.item}}" {
-  max_size = 0
-  min_size = 0
+{{- if .resource.MaxSize }}
+  max_size ={{ .resource.MaxSize }}
+{{- end}}
+{{- if.resource.MinSize}}
+  min_size = {{ .resource.MinSize}}
+{{- end}}
+{{- if .resource.AutoScalingGroupName}}
+  name= "{{.resource.AutoScalingGroupName}}"
+{{- else}}
+  name="{{.item}}"
+{{- end}}
+{{- if  .resource.AvailabilityZones}}
+  availability_zones  = {{ .resource.AvailabilityZones}}
+{{- end}}
+  capacity_rebalance= {{ Boolean .resource.CapacityRebalance }}
+{{- if .resource.Context}}
+  context= "{{.resource.Context}}"
+{{- end}}
+{{- if .resource.Cooldown }}
+  default_cooldown={{.resource.Cooldown }}
+{{- end}}
+{{- if .resource.DefaultInstanceWarmup}}
+  default_instance_warmup = {{.resource.DefaultInstanceWarmup}}
+{{- if .resource.DesiredCapacity}}
+  desired_capacity = {{.resource.DesiredCapacity}}
+{{- end }}
+{{- if .resource.HealthCheckGracePeriod}}
+  health_check_grace_period= {{.resource.HealthCheckGracePeriod}}
+{{- else}}
+  health_check_grace_period=300
+{{- end}}
+  health_check_type={{.resource.HealthCheckType}}
+  launch_configuration={{ .resource.LaunchConfigurationName}}
+  launch_template={{ .resource.LaunchTemplate}}
+  initial_lifecycle_hook={{ .resource.LifecycleHookSpecificationList}}
+  load_balancers= {{ .resource.LoadBalancerNames}}
+  max_instance_lifetime={{ .resource.MaxInstanceLifetime}}
+  enabled_metrics={{ .resource.MetricsCollection}}
+  mixed_instances_policy={{.resource.MixedInstancesPolicy}}
+  protect_from_scale_in={{ Boolean .resource.NewInstancesProtectedFromScaleIn}}
+  placement_group={{.resource.PlacementGroup}}
+  service_linked_role_arn={{.resource.ServiceLinkedRoleARN }}
+  tags = {
+  {{Tags .resource.Tags}}
+    }
+  {{- end}}
+  target_group_arns={{.resource.TargetGroupARNs}}
+  termination_policies={{.resource.TerminationPolicies}}
+  vpc_zone_identifier={{.resource.VPCZoneIdentifier}}
 }
