@@ -29,7 +29,7 @@ Get yourself some valid cloudformation*
 
 ```bash
  git clone https://github.com/JamesWoolfenden/aws-cloudformation-templates
- aws-cloudformation-templates/community/codestar/custom-ci-cd-pipeline
+ >cd aws-cloudformation-templates/community/codestar/custom-ci-cd-pipeline
  ❯ ls
  README.md    template.yml
  >sato parse -f template.yml
