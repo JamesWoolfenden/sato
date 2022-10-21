@@ -1,0 +1,34 @@
+resource "aws_security_group_rule" "{{.item}}" {
+  type              = "egress"
+  security_group_id = ""
+{{- if .resource.CidrIp}}
+  cidr_blocks=["{{.resource.CidrIp}}"]
+{{- else}}
+  cidr_blocks=[]
+{{- end}}
+{{- if .resource.CidrIpv6}}
+  ipv6_cidr_blocks=["{{.resource.CidrIpv6}}"]
+{{- end}}
+{{- if .resource.Description}}
+  description="{{.resource.Description}}"
+{{- end}}
+{{- if .resource.DestinationPrefixListId}}
+  prefix_list_ids="{{.resource.DestinationPrefixListId}}"
+{{- end}}
+{{- if .resource.DestinationSecurityGroupId}}
+  security_groups="{{.resource.DestinationSecurityGroupId}}"
+{{- end}}
+{{- if .resource.FromPort}}
+  from_port={{.resource.FromPort}}
+{{- else}}
+  from_port=0
+{{- end}}
+{{- if .resource.IpProtocol}}
+  protocol="{{.resource.IpProtocol}}"
+{{- end}}
+{{- if .resource.ToPort}}
+  to_port={{.resource.ToPort}}
+{{- else}}
+  to_port=0
+{{- end}}
+}

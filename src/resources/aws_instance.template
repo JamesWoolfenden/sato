@@ -13,7 +13,7 @@ resource "aws_instance" "{{.item}}" {
 {{ Decode64 .resource.UserData}}
 EOF
 {{- end}}
-{{- if .resource.AvailabilityZone}}"
+{{- if .resource.AvailabilityZone}}
   availability_zone="{{.resource.AvailabilityZone}}"
 {{- end}}
 {{- if .resource.BlockDeviceMappings}}

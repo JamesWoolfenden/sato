@@ -3,7 +3,7 @@ resource "aws_kms_key" "{{.item}}" {
   description="{{.resource.Description}}"
 {{- end}}
   enable_key_rotation= {{Boolean .resource.EnableKeyRotation}}
-  enabled            = {{Boolean .resource.Enabled}}
+  is_enabled            = {{Boolean .resource.Enabled}}
   policy=jsonencode({{Marshal .resource.KeyPolicy}})
 {{- if .resource.KeySpec}}
   customer_master_key_spec="{{.resource.KeySpec}}"

@@ -132,3 +132,9 @@ var awsCodebuildProject []byte
 
 //go:embed resources/aws_codepipeline.template
 var awsCodepipeline []byte
+
+//go:embed resources/aws_security_group_rule_ingress.template
+var awsSecurityGroupRuleIngress []byte
+
+//go:embed resources/aws_security_group_rule_egress.template
+var awsSecurityGroupRuleEgress []byte

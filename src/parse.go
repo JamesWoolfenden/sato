@@ -157,7 +157,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 
 		switch param.Type {
 		case "String":
-			if param.Default == "false" || param.Default == "true" {
+			if param.Default == "false" || param.Default == "true" || param.Default == true || param.Default == false {
 				myVariable.Type = "bool"
 			} else {
 				myVariable.Type = strings.ToLower(param.Type)
@@ -188,7 +188,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		case "Number":
 			myVariable.Type = "number"
 		default:
-			log.Print(param.Type)
+			log.Printf("Variable %s", param.Type)
 		}
 
 		myVariable.Description = strings.Replace(param.Description, "${", "$${", -1)
@@ -213,6 +213,8 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		case float64:
 			myVariable.Type = "number"
 			myVariable.Default = fmt.Sprintf("%v", param.Default.(float64))
+		case bool:
+			myVariable.Default = strconv.FormatBool(param.Default.(bool))
 		case interface{}:
 			myVariable.Default = "[]"
 		default:
@@ -313,6 +315,8 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::DirectoryService::MicrosoftAD":    awsDirectoryServiceDirectory,
 			"AWS::CodeBuild::Project":               awsCodebuildProject,
 			"AWS::CodePipeline::Pipeline":           awsCodepipeline,
+			"AWS::EC2::SecurityGroupIngress":        awsSecurityGroupRuleIngress,
+			"AWS::EC2::SecurityGroupEgress":         awsSecurityGroupRuleEgress,
 		}
 
 		var myContent []byte
@@ -335,7 +339,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"item":     item,
 		})
 
-		err = Write(ReplaceVariables(output.String()), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+		err = Write(ReplaceDependant(ReplaceVariables(output.String())), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 		if err != nil {
 			return err
 		}
@@ -382,4 +386,11 @@ func ReplaceVariables(str1 string) string {
 		}
 	}
 	return str1
+}
+
+// ReplaceDependant is fancy!
+func ReplaceDependant(str1 string) string {
+	replacer := strings.NewReplacer(
+		"AWS::Region", "data.aws_region.current.name")
+	return replacer.Replace(str1)
 }
