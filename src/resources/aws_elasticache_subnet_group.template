@@ -1,0 +1,14 @@
+resource "aws_elasticache_subnet_group" "{{.item}}" {
+{{- if .resource.CacheSubnetGroupName}}
+  name = "{{.resource.CacheSubnetGroupName}}"
+{{- else}}
+  name = "{{.item}}"
+{{- end}}
+  description = "{{ .resource.Description}}"
+  subnet_ids= {{.resource.SubnetIds}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

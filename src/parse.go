@@ -96,7 +96,7 @@ func Parse(file string, destination string) error {
 		"ZipFile": func(code string, filename string, runtime string) string {
 			var extension string
 			switch runtime {
-			case "nodejs16.x", "nodejs14.x", "nodejs12.x":
+			case "nodejs16.x", "nodejs14.x", "nodejs12.x", "nodejs":
 				extension = ".js"
 			case "python3.9", "python3.8", "python3.7", "python3.6":
 				extension = ".py"
@@ -306,6 +306,10 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::SSM::Document":                    awsSsmDocument,
 			"AWS::AutoScaling::LaunchConfiguration": awsLaunchConfiguration,
 			"AWS::AutoScaling::AutoScalingGroup":    awsAutoscalingGroup,
+			"AWS::Lambda::Permission":               awsLambdaPermission,
+			"AWS::ElastiCache::SubnetGroup":         awsElasticacheSubnetGroup,
+			"AWS::ElastiCache::ParameterGroup":      awsElasticacheParameterGroup,
+			"AWS::ElastiCache::ReplicationGroup":    awsElasticacheReplicationGroup,
 			"AWS::DirectoryService::MicrosoftAD":    awsDirectoryServiceDirectory,
 			"AWS::CodeBuild::Project":               awsCodebuildProject,
 			"AWS::CodePipeline::Pipeline":           awsCodepipeline,

@@ -7,9 +7,13 @@ resource "aws_security_group" "{{.item}}" {
 {{- end}}
 {{- range $i, $a := .resource.SecurityGroupEgress}}
   egress {
-    cidr_blocks="{{$a.CidrIp}}"
+{{- if $a.CidrIp}}
+    cidr_blocks=["{{$a.CidrIp}}"]
+{{- else}}
+    cidr_blocks=[]
+{{- end}}
 {{- if $a.CidrIpv6}}
-    ipv6_cidr_blocks="{{$a.CidrIpv6}}"
+    ipv6_cidr_blocks=["{{$a.CidrIpv6}}"]
 {{- end}}
 {{- if $a.Description}}
     description="{{$a.Description}}"
@@ -37,9 +41,13 @@ resource "aws_security_group" "{{.item}}" {
 {{- end}}
 {{- range $i, $a := .resource.SecurityGroupIngress}}
   ingress {
-    cidr_blocks="{{$a.CidrIp}}"
+{{- if $a.CidrIp}}
+    cidr_blocks=["{{$a.CidrIp}}"]
+{{- else}}
+    cidr_blocks=[]
+{{- end}}
 {{- if $a.CidrIpv6}}
-    ipv6_cidr_blocks="{{$a.CidrIpv6}}"
+    ipv6_cidr_blocks=["{{$a.CidrIpv6}}"]
 {{- end}}
 {{- if $a.Description}}
     description="{{$a.Description}}"

@@ -1,0 +1,16 @@
+resource "aws_elasticache_parameter_group" "{{.item}}" {
+  family="{{ .resource.CacheParameterGroupFamily}}"
+  description="{{ .resource.Description}}"
+  name="{{ .item}}"
+{{- range $i, $a := .resource.Properties}}
+  parameter {
+    name="{{ $i}}"
+    value="{{ $a}}"
+  }
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

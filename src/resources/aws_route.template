@@ -1,5 +1,9 @@
 resource "aws_route" "{{.item}}" {
+{{- if .resource.RouteTableId}}
   route_table_id            = "{{.resource.RouteTableId}}"
+{{- else}}
+  route_table_id            = aws_route_table.{{Replace .item "Route" ""}}.id
+{{- end}}
   destination_cidr_block    = "{{.resource.DestinationCidrBlock}}"
 {{- if .resource.VpcPeeringConnectionId}}"
   vpc_peering_connection_id = "{{.resource.VpcPeeringConnectionId}}"

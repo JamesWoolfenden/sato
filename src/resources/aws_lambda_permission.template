@@ -1,0 +1,24 @@
+resource "aws_lambda_permission" "{{.item}}" {
+{{- if .resource.Action}}
+  action="{{ .resource.Action}}"
+{{- end}}
+{{- if .resource.EventSourceToken}}
+  event_source_token="{{ .resource.EventSourceToken}}"
+{{- end}}
+  function_name="{{ .resource.FunctionName}}"
+{{- if .resource.FunctionUrlAuthType}}
+  function_url_auth_type="{{ .resource.FunctionUrlAuthType}}"
+{{- end}}
+{{- if .resource.Principal}}
+  principal="{{ .resource.Principal}}"
+{{- end}}
+{{- if .resource.PrincipalOrgID}}
+  principal_org_id="{{ .resource.PrincipalOrgID}}"
+{{- end}}
+{{- if .resource.SourceAccount}}
+  source_account="{{ .resource.SourceAccount}}"
+{{- end}}
+{{- if .resource.SourceArn}}
+  source_arn="{{ .resource.SourceArn}}"
+{{- end}}
+}

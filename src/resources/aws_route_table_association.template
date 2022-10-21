@@ -1,4 +1,8 @@
 resource "aws_route_table_association" "{{.item}}" {
+{{- if .resource.SubnetId}}
   subnet_id      = "{{.resource.SubnetId}}"
+{{- else }}
+  subnet_id= aws_subnet.{{Replace .item "RouteTableAssociation" ""}}.id
+{{- end}}
   route_table_id = "{{.resource.RouteTableId}}"
 }

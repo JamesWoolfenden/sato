@@ -38,22 +38,34 @@ resource "aws_codepipeline" "{{.item}}" {
     action {
       category = "{{$b.ActionTypeId.Category}}"
       owner    = "{{$b.ActionTypeId.Owner}}"
-      name     =  "{{$b.Name}}"
+      name     = "{{$b.Name}}"
       provider = "{{$b.ActionTypeId.Provider}}"
       version  = "{{$b.ActionTypeId.Version}}"
 {{- if $b.Configuration}}
-      configuration {
+      configuration = {
 {{- range $i, $c := $b.Configuration}}
-        "{{$i}}" = "{{$c}}"
-{{- end }}
+        {{$i}} = "{{$c}}"
+{{- end}}
       }
 {{- end}}
-      inputs_artifacts="{{$b.InputArtifacts}}"
-      output_artifacts="{{$b.OutputArtifacts}}"
+{{- if .InputArtifacts}}
+      inputs_artifacts=[{{- range $j, $c := $b.InputArtifacts}}"{{$c.Name}}",]{{- end}}
+{{- end}}
+{{- if $b.OutputArtifacts}}
+      output_artifacts=[{{- range $j, $c := $b.OutputArtifacts}}"{{$c.Name}}",]{{- end}}
+{{- end}}
+{{- if $b.Namespace}}
       namespace="{{$b.Namespace}}"
+{{- end}}
+{{- if $b.Region}}
       region="{{$b.Region}}"
-      role_arn="{{$b.RoleArn}}"
+{{- end}}
+{{- if $b.RoleArn}}
+     role_arn="{{$b.RoleArn}}"
+{{- end}}
+{{- if $b.RunOrder}}
       run_order="{{$b.RunOrder}}"
+{{- end}}
     }
 {{- end}}
   }

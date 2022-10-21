@@ -1,99 +1,210 @@
 resource "aws_codebuild_project" "{{.item}}" {
-Artifacts = {*codebuild.Project_Artifacts | 0xc0002b5540}
-BadgeEnabled = {*bool | 0x0} nil
-BuildBatchConfig = {*codebuild.Project_ProjectBuildBatchConfig | 0x0} nil
-Cache = {*codebuild.Project_ProjectCache | 0x0} nil
-ConcurrentBuildLimit = {*int | 0x0} nil
-Description = {*string | 0x0} nil
-EncryptionKey = {*string | 0x0} nil
-Environment = {*codebuild.Project_Environment | 0xc0002af800}
-FileSystemLocations = {[]codebuild.Project_ProjectFileSystemLocation} nil
-LogsConfig = {*codebuild.Project_LogsConfig | 0x0} nil
-Name = {*string | 0xc00027ae10} "goformation-stackStagingBuild"
-QueuedTimeoutInMinutes = {*int | 0x0} nil
-ResourceAccessRole = {*string | 0x0} nil
-SecondaryArtifacts = {[]codebuild.Project_Artifacts} nil
-SecondarySourceVersions = {[]codebuild.Project_ProjectSourceVersion} nil
-SecondarySources = {[]codebuild.Project_Source} nil
-ServiceRole = {string} ""
-Source = {*codebuild.Project_Source | 0xc0002ad8c0}
-SourceVersion = {*string | 0x0} nil
-Tags = {[]tags.Tag} nil
-TimeoutInMinutes = {*int | 0x0} nil
-Triggers = {*codebuild.Project_ProjectTriggers | 0x0} nil
-Visibility = {*string | 0x0} nil
-VpcConfig = {*codebuild.Project_VpcConfig | 0x0} nil
-  name          = "test-project"
-  description   = "test_codebuild_project"
-  build_timeout = "5"
-  service_role  = aws_iam_role.example.arn
-
+{{- if .resource.Artifacts}}
   artifacts {
-    type = "NO_ARTIFACTS"
+    type    = "{{.resource.Artifacts.Type}}"
+{{- if .resource.Artifacts.ArtifactIdentifier}}
+    artifact_identifier="{{.resource.Artifacts.ArtifactIdentifier}}"
+{{- end}}
+    encryption_disabled= {{ Boolean .resource.Artifacts.EncryptionDisabled}}
+{{- if .resource.Artifacts.Location}}
+    location = "{{.resource.Artifacts.Location}}"
+{{- end}}
+{{- if .resource.Artifacts.Name}}
+    name = "{{.resource.Artifacts.Name}}"
+{{- end}}
+{{- if .resource.Artifacts.NamespaceType}}
+    namespace_type="{{.resource.Artifacts.NamespaceType}}"
+{{- end}}
+    override_artifact_name = {{Boolean .resource.Artifacts.OverrideArtifactName }}
+{{- if .resource.Artifacts.Packaging}}
+    packaging="{{.resource.Artifacts.Packaging}}"
+{{- end}}
+{{- if .resource.Artifacts.Path}}
+    path="{{.resource.Artifacts.Path}}"
+{{- end}}
   }
-
+{{- end}}
+  badge_enabled={{Boolean .resource.BadgeEnabled}}
+{{- if .resource.BuildBatchConfig}}
+  batch_build_config {
+    combine_artifacts= "{{.resource.BuildBatchConfig.CombineArtifacts}}"
+    restrictions {
+      compute_types_allowed="{{.resource.BuildBatchConfig.ComputeTypesAllowed}}"
+      maximum_builds_allowed="{{.resource.BuildBatchConfig.MaximumBuildAllowed}}"
+    }
+    service_role= "{{.resource.BuildBatchConfig.ServiceRole}}"
+    timeout_in_mins= "{{.resource.BuildBatchConfig.TimeoutInMins}}"
+  }
+{{- end}}
+{{- if .resource.Cache}}
   cache {
-    type     = "S3"
-    location = aws_s3_bucket.example.bucket
+    location="{{.resource.Cache.Location}}"
+    modes="{{.resource.Cache.Modes}}"
+    type="{{.resource.Cache.Type}}"
   }
-
+{{- end}}
+{{- if .resource.ConcurrentBuildLimit}}
+  concurrent_build_limit={{ .resource.ConcurrentBuildLimit}}
+{{- end}}
+{{- if .resource.Description}}
+  description="{{.resource.Description}}"
+{{- end}}
+{{- if  .resource.EncryptionKey}}
+  encryption_key="{{.resource.EncryptionKey}}"
+{{- end}}
+{{- if .resource.Environment}}
   environment {
-    compute_type                = "BUILD_GENERAL1_SMALL"
-    image                       = "aws/codebuild/standard:1.0"
-    type                        = "LINUX_CONTAINER"
-    image_pull_credentials_type = "CODEBUILD"
-
+{{- if  .resource.Environment.Certificate}}
+    certificate   = "{{ .resource.Environment.Certificate}}"
+{{- end}}
+    compute_type = "{{ .resource.Environment.ComputeType}}"
+{{- range $j, $c := .resource.Environment.EnvironmentVariables}}
     environment_variable {
-      name  = "SOME_KEY1"
-      value = "SOME_VALUE1"
+      name  = "{{$c.Name}}"
+      type  = "{{$c.Type}}"
+      value = "{{$c.Value}}"
     }
-
-    environment_variable {
-      name  = "SOME_KEY2"
-      value = "SOME_VALUE2"
-      type  = "PARAMETER_STORE"
+{{- end}}
+    image ="{{.resource.Environment.Image}}"
+{{- if .resource.Environment.ImagePullCredentialsType}}
+    image_pull_credentials_type ="{{.resource.Environment.ImagePullCredentialsType}}"
+{{- end}}
+    privileged_mode={{Boolean .resource.Environment.PrivilegedMode}}
+{{- if .resource.Environment.RegistryCredential}}
+    registry_credential {
+      credential="{{.resource.Environment.RegistryCredential.Credential}}"
+      credential_provider="{{.resource.Environment.RegistryCredential.CredentialProvider}}"
     }
+{{- end}}
+    type="{{.resource.Environment.Type}}"
   }
-
+{{- end}}
+{{- if .resource.FileSystemLocations}}
+  file_system_locations   {
+    identifier="{{.resource.FileSystemLocations.Identifier}}"
+    location="{{.resource.FileSystemLocations.Location}}"
+    mount_options="{{.resource.FileSystemLocations.MountOptions}}"
+    mount_point="{{.resource.FileSystemLocations.MountPoint}}"
+    type="{{.resource.FileSystemLocations.Type}}"
+  }
+{{- end}}
+{{- if .resource.LogsConfig}}
   logs_config {
+{{- if  .resource.LogsConfig.CloudwatchLogs}}
     cloudwatch_logs {
-      group_name  = "log-group"
-      stream_name = "log-stream"
+      group_name  = "{{ .resource.LogsConfig.CloudwatchLogs.GroupName}}"
+      status      = "{{ .resource.LogsConfig.CloudwatchLogs.Status}}"
+      stream_name = "{{ .resource.LogsConfig.CloudwatchLogs.StreamName}}"
     }
-
+{{- end}}
+{{- if  .resource.LogsConfig.S3Logs}}
     s3_logs {
-      status   = "ENABLED"
-      location = "${aws_s3_bucket.example.id}/build-log"
+      encryption_disabled = {{.resource.LogsConfig.S3Logs.EncryptionDisabled}}
+      location = "{{.resource.LogsConfig.S3Logs.Location}}"
+      status = "{{.resource.LogsConfig.S3Logs.Status}}"
+      bucket_owner_access  = "{{.resource.LogsConfig.S3Logs.BucketOwnerAccess}}"
     }
+{{- end}}
   }
-
+{{- end}}
+  name = "{{.resource.Name}}"
+{{- if .resource.QueuedTimeoutInMinutes}}
+  queued_timeout          = "{{.resource.QueuedTimeoutInMinutes}}"
+{{- end}}
+{{- if .resource.ResourceAccessRole}}
+  resource_access_role    = "{{.resource.ResourceAccessRole}}"
+{{- end}}
+{{- if .resource.SecondaryArtifacts}}
+  secondary_artifacts    {
+       type    = "{{.resource.SecondaryArtifacts.Type}}"
+   {{- if .resource.Artifacts.SecondaryArtifactIdentifier}}
+       artifact_identifier="{{.resource.SecondaryArtifacts.ArtifactIdentifier}}"
+   {{- end}}
+       encryption_disabled= {{ Boolean .resource.SecondaryArtifacts.EncryptionDisabled}}
+   {{- if .resource.SecondaryArtifacts.Location}}
+       location = "{{.resource.SecondaryArtifacts.Location}}"
+   {{- end}}
+   {{- if .resource.SecondaryArtifacts.Name}}
+       name     = "{{.resource.SecondaryArtifacts.Name}}"
+   {{- end}}
+   {{- if .resource.SecondaryArtifacts.NamespaceType}}
+       namespace_type="{{.resource.SecondaryArtifacts.NamespaceType}}"
+   {{- end}}
+       override_artifact_name = {{Boolean .resource.SecondaryArtifacts.OverrideArtifactName }}
+   {{- if .resource.SecondaryArtifacts.Packaging}}
+       packaging="{{.resource.SecondaryArtifacts.Packaging}}"
+   {{- end}}
+   {{- if .resource.SecondaryArtifacts.Path}}
+       path="{{.resource.SecondaryArtifacts.Path}}"
+   {{- end}}
+  }
+{{- end}}
+{{- if .resource.SecondarySourceVersions }}
+  secondary_source_version {
+    source_indentifier="{{.resource.SecondarySourceVersions.SourceIdentifier }}"
+    source_version="{{.resource.SecondarySourceVersions.SourceVersion }}"
+  }
+{{- end}}
+{{- if .resource.SecondarySources}}
+  secondary_sources{
+{{- if .resource.SecondarySources.BuildSpec}}
+      buildspec="{{.resource.SecondarySources.BuildSpec}}"
+{{- else}}
+      buildspec=""
+{{- end}}
+{{- if .resource.SecondarySources.GitCloneDepth}}
+      git_clone_depth={{.resource.SecondarySources.GitCloneDepth}}
+{{- end}}
+  {{- if  .resource.SecondarySources.GitSubmodulesConfig}}
+      git_submodules_config {
+        fetch_submodules="{{.resource.SecondarySources.GitSubmodulesConfig.FetchSubmodules}}"
+  {{- end}}
+      insecure_ssl={{Boolean .resource.SecondarySources.InsecureSsl}}
+      location="{{.resource.SecondarySources.Location}}"
+      report_build_status={{Boolean .resource.SecondarySources.ReportBuildStatus}}
+      type="{{.resource.SecondarySources.Type}}"
+  }
+{{- end}}
+  service_role="{{.resource.ServiceRole}}"
+{{- if .resource.Source}}
   source {
-    type            = "GITHUB"
-    location        = "https://github.com/mitchellh/packer.git"
-    git_clone_depth = 1
-
+{{- if .resource.Source.BuildSpec}}
+    buildspec="{{.resource.Source.BuildSpec}}"
+{{- end}}
+{{- if .resource.Source.GitCloneDepth}}
+    git_clone_depth={{.resource.Source.GitCloneDepth}}
+{{- end}}
+{{- if  .resource.Source.GitSubmodulesConfig}}
     git_submodules_config {
-      fetch_submodules = true
-    }
+      fetch_submodules="{{.resource.Source.GitSubmodulesConfig.FetchSubmodules}}"
+{{- end}}
+    insecure_ssl={{Boolean .resource.Source.InsecureSsl}}
+{{- if .resource.Source.Location}}
+    location="{{.resource.Source.Location}}"
+{{- end}}
+    report_build_status={{Boolean .resource.Source.ReportBuildStatus}}
+    type="{{.resource.Source.Type}}"
   }
-
-  source_version = "master"
-
-  vpc_config {
-    vpc_id = aws_vpc.example.id
-
-    subnets = [
-      aws_subnet.example1.id,
-      aws_subnet.example2.id,
-    ]
-
-    security_group_ids = [
-      aws_security_group.example1.id,
-      aws_security_group.example2.id,
-    ]
-  }
-
+{{- end}}
+{{- if .source.SourceVersion}}
+  source_version={{.source.SourceVersion}}
+{{- end}}
+{{- if .resource.Tags}}
   tags = {
-    Environment = "Test"
+    {{Tags .resource.Tags}}
   }
+{{- end}}
+{{- if .resource.TimeoutInMinutes}}
+  build_timeout={{.resource.TimeoutInMinutes}}
+{{- end}}
+{{- if .resource.Visibility}}
+  project_visibility="{{.resource.Visibility}}"
+{{- end}}
+{{- if .resource.VpcConfig}}
+  vpc_config {
+    security_group_ids={{.resource.VpcConfig.SecurityGroupIds}}
+    subnets={{.resource.VpcConfig.Subnets}}
+    vpc_id="{{.resource.VpcConfig.VpcId}}"
+  }
+{{- end}}
 }

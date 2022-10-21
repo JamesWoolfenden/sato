@@ -112,6 +112,18 @@ var awsAutoscalingGroup []byte
 //go:embed resources/aws_launch_configuration.template
 var awsLaunchConfiguration []byte
 
+//go:embed resources/aws_lambda_permission.template
+var awsLambdaPermission []byte
+
+//go:embed resources/aws_elasticache_parameter_group.template
+var awsElasticacheParameterGroup []byte
+
+//go:embed resources/aws_elasticache_replication_group.template
+var awsElasticacheReplicationGroup []byte
+
+//go:embed resources/aws_elasticache_subnet_group.template
+var awsElasticacheSubnetGroup []byte
+
 //go:embed resources/aws_directory_service_directory.template
 var awsDirectoryServiceDirectory []byte
 

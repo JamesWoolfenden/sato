@@ -1,0 +1,91 @@
+resource "aws_elasticache_replication_group" "{{.item}}" {
+  at_rest_encryption_enabled={{ Boolean .resource.AtRestEncryptionEnabled}}
+  description="{{.resource.ReplicationGroupDescription}}"
+{{- if .resource.AuthToken}}
+  auth_token="{{ .resource.AuthToken}}"
+{{- end}}
+  auto_minor_version_upgrade= {{ Boolean .resource.AutoMinorVersionUpgrade}}
+  automatic_failover_enabled= {{Boolean .resource.AutomaticFailoverEnabled}}
+{{- if .resource.CacheNodeType}}
+  node_type="{{.resource.CacheNodeType}}"
+{{- end}}
+{{- if .resource.CacheParameterGroupName}}
+  parameter_group_name ="{{.resource.CacheParameterGroupName}}"
+{{- end}}
+  data_tiering_enabled= {{ Boolean .resource.DataTieringEnabled }}
+{{- if  .resource.Engine}}
+  engine="{{ .resource.Engine}}"
+{{- end}}
+{{- if .resource.EngineVersion}}
+  engine_version="{{.resource.EngineVersion}}"
+{{- end}}
+{{- if .resource.GlobalReplicationGroupId}}
+  global_replication_group_id="{{.resource.GlobalReplicationGroupId}}"
+{{- end}}
+{{- if .resource.KmsKeyId}}
+  kms_key_id="{{.resource.KmsKeyId}}"
+{{- end}}
+{{- if .resource.LogDeliveryConfigurations}}
+{{range $i, $v := .resource.LogDeliveryConfigurations}}
+  log_delivery_configuration {
+    destination      = ""
+    destination_type = ""
+    log_format       = ""
+    log_type         = ""
+  }
+{{- end}}
+{{- end}}
+  multi_az_enabled={{Boolean .resource.MultiAZEnabled}}
+{{- if  .resource.NotificationTopicArn}}
+  notification_topic_arn="{{.resource.NotificationTopicArn}}"
+{{- end}}
+{{- if .resource.NumCacheClusters}}
+  num_cache_clusters={{.resource.NumCacheClusters}}
+{{- end}}
+{{- if .resource.NumNodeGroups}}
+  num_node_groups={{.resource.NumNodeGroups}}
+{{- end}}
+{{- if .resource.Port}}
+  port={{.resource.Port}}
+{{- end}}
+  preferred_cache_cluster_azs=[{{range $i, $v := .resource.PreferredCacheClusterAZs}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if .resource.PreferredMaintenanceWindow}}
+  maintenance_window="{{.resource.PreferredMaintenanceWindow}}"
+{{- end}}
+{{- if .resource.ReplicasPerNodeGroup}}
+  replicas_per_node_group={{.resource.ReplicasPerNodeGroup}}
+{{- end}}
+{{- if .resource.ReplicationGroupId}}
+  replication_group_id="{{.resource.ReplicationGroupId}}"
+{{- else}}
+  replication_group_id="{{.item}}"
+{{- end}}
+  security_group_ids={{.resource.SecurityGroupIds}}
+{{- if .resource.SnapshotArns}}
+  snapshot_arns={{.resource.SnapshotArns}}
+{{- end}}
+  {{- if .resource.SnapshotName}}
+    snapshot_name ="{{ .resource.SnapshotName}}"
+{{- end}}
+  {{- if .resource.SnapshotRetentionLimit}}
+    snapshot_retention_limit="{{ .resource.SnapshotRetentionLimit}}"
+{{- end}}
+  {{- if .resource.SnapshotWindow}}
+    snapshot_window="{{ .resource.SnapshotWindow}}"
+{{- end}}
+ {{- if .resource.SnapshottingClusterId}}
+    final_snapshot_identifier="{{.resource.SnapshottingClusterId}}"
+{{- end}}
+{{- if  .resource.CacheSubnetGroupName}}
+    subnet_group_name="{{.resource.CacheSubnetGroupName}}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+  transit_encryption_enabled = {{ Boolean .resource.TransitEncryptionEnabled}}
+{{- if .resource.UserGroupIds}}
+  user_group_ids="{{Deref.resource.UserGroupIds}}"
+{{- end}}
+}
