@@ -1,0 +1,99 @@
+resource "aws_codebuild_project" "{{.item}}" {
+Artifacts = {*codebuild.Project_Artifacts | 0xc0002b5540}
+BadgeEnabled = {*bool | 0x0} nil
+BuildBatchConfig = {*codebuild.Project_ProjectBuildBatchConfig | 0x0} nil
+Cache = {*codebuild.Project_ProjectCache | 0x0} nil
+ConcurrentBuildLimit = {*int | 0x0} nil
+Description = {*string | 0x0} nil
+EncryptionKey = {*string | 0x0} nil
+Environment = {*codebuild.Project_Environment | 0xc0002af800}
+FileSystemLocations = {[]codebuild.Project_ProjectFileSystemLocation} nil
+LogsConfig = {*codebuild.Project_LogsConfig | 0x0} nil
+Name = {*string | 0xc00027ae10} "goformation-stackStagingBuild"
+QueuedTimeoutInMinutes = {*int | 0x0} nil
+ResourceAccessRole = {*string | 0x0} nil
+SecondaryArtifacts = {[]codebuild.Project_Artifacts} nil
+SecondarySourceVersions = {[]codebuild.Project_ProjectSourceVersion} nil
+SecondarySources = {[]codebuild.Project_Source} nil
+ServiceRole = {string} ""
+Source = {*codebuild.Project_Source | 0xc0002ad8c0}
+SourceVersion = {*string | 0x0} nil
+Tags = {[]tags.Tag} nil
+TimeoutInMinutes = {*int | 0x0} nil
+Triggers = {*codebuild.Project_ProjectTriggers | 0x0} nil
+Visibility = {*string | 0x0} nil
+VpcConfig = {*codebuild.Project_VpcConfig | 0x0} nil
+  name          = "test-project"
+  description   = "test_codebuild_project"
+  build_timeout = "5"
+  service_role  = aws_iam_role.example.arn
+
+  artifacts {
+    type = "NO_ARTIFACTS"
+  }
+
+  cache {
+    type     = "S3"
+    location = aws_s3_bucket.example.bucket
+  }
+
+  environment {
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "aws/codebuild/standard:1.0"
+    type                        = "LINUX_CONTAINER"
+    image_pull_credentials_type = "CODEBUILD"
+
+    environment_variable {
+      name  = "SOME_KEY1"
+      value = "SOME_VALUE1"
+    }
+
+    environment_variable {
+      name  = "SOME_KEY2"
+      value = "SOME_VALUE2"
+      type  = "PARAMETER_STORE"
+    }
+  }
+
+  logs_config {
+    cloudwatch_logs {
+      group_name  = "log-group"
+      stream_name = "log-stream"
+    }
+
+    s3_logs {
+      status   = "ENABLED"
+      location = "${aws_s3_bucket.example.id}/build-log"
+    }
+  }
+
+  source {
+    type            = "GITHUB"
+    location        = "https://github.com/mitchellh/packer.git"
+    git_clone_depth = 1
+
+    git_submodules_config {
+      fetch_submodules = true
+    }
+  }
+
+  source_version = "master"
+
+  vpc_config {
+    vpc_id = aws_vpc.example.id
+
+    subnets = [
+      aws_subnet.example1.id,
+      aws_subnet.example2.id,
+    ]
+
+    security_group_ids = [
+      aws_security_group.example1.id,
+      aws_security_group.example2.id,
+    ]
+  }
+
+  tags = {
+    Environment = "Test"
+  }
+}

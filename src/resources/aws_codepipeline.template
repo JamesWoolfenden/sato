@@ -1,0 +1,66 @@
+resource "aws_codepipeline" "{{.item}}" {
+{{- if .resource.ArtifactStore}}
+  artifact_store {
+    location = "{{ .resource.ArtifactStore.Location}}"
+    type     = "{{ .resource.ArtifactStore.Type}}"
+{{- if .resource.ArtifactStore.EncryptionKey}}
+    encryption_key {
+      id   = "{{ .resource.ArtifactStore.EncryptionKey.Id}}"
+      type = "{{ .resource.ArtifactStore.EncryptionKey.Type}}"
+    }
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.ArtifactStores}}
+{{- range $i, $a := .resource.ArtifactStores}}
+  artifact_store {
+    location = "{{ $a.Location}}"
+    type     = "{{ $a.resource.ArtifactStore.Type}}"
+{{- if $a.EncryptionKey}}
+    encryption_key {
+      id   = "{{ $a.EncryptionKey.Id}}"
+      type = "{{ $a.EncryptionKey.Type}}"
+    }
+{{- end}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.Name}}
+  name = "{{.resource.Name}}"
+{{- else}}
+  name = "{{.item}}"
+{{- end}}
+  role_arn = "{{.resource.RoleArn}}"
+{{- range $i, $a := .resource.Stages}}
+  stage {
+    name = "{{$a.Name}}"
+{{- range $j, $b := $a.Actions}}
+    action {
+      category = "{{$b.ActionTypeId.Category}}"
+      owner    = "{{$b.ActionTypeId.Owner}}"
+      name     =  "{{$b.Name}}"
+      provider = "{{$b.ActionTypeId.Provider}}"
+      version  = "{{$b.ActionTypeId.Version}}"
+{{- if $b.Configuration}}
+      configuration {
+{{- range $i, $c := $b.Configuration}}
+        "{{$i}}" = "{{$c}}"
+{{- end }}
+      }
+{{- end}}
+      inputs_artifacts="{{$b.InputArtifacts}}"
+      output_artifacts="{{$b.OutputArtifacts}}"
+      namespace="{{$b.Namespace}}"
+      region="{{$b.Region}}"
+      role_arn="{{$b.RoleArn}}"
+      run_order="{{$b.RunOrder}}"
+    }
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

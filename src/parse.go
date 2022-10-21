@@ -306,6 +306,9 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::SSM::Document":                    awsSsmDocument,
 			"AWS::AutoScaling::LaunchConfiguration": awsLaunchConfiguration,
 			"AWS::AutoScaling::AutoScalingGroup":    awsAutoscalingGroup,
+			"AWS::DirectoryService::MicrosoftAD":    awsDirectoryServiceDirectory,
+			"AWS::CodeBuild::Project":               awsCodebuildProject,
+			"AWS::CodePipeline::Pipeline":           awsCodepipeline,
 		}
 
 		var myContent []byte
@@ -317,7 +320,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		}
 
 		//needs to pivot on policy template from resource
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(myContent))
+		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
 
 		if err != nil {
 			return err

@@ -111,3 +111,12 @@ var awsAutoscalingGroup []byte
 
 //go:embed resources/aws_launch_configuration.template
 var awsLaunchConfiguration []byte
+
+//go:embed resources/aws_directory_service_directory.template
+var awsDirectoryServiceDirectory []byte
+
+//go:embed resources/aws_codebuild_project.template
+var awsCodebuildProject []byte
+
+//go:embed resources/aws_codepipeline.template
+var awsCodepipeline []byte

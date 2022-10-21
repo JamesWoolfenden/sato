@@ -1,0 +1,13 @@
+resource "aws_directory_service_directory" "{{.item}}" {
+  name     = "{{.resource.Name}}"
+  password = "{{.resource.Password}}"
+{{- if .resource.VpcSettings}}
+  vpc_settings {
+    vpc_id     = "{{.resource.VpcSettings.VpcId}}"
+    subnet_ids = {{.resource.VpcSettings.SubnetIds}}
+  }
+{{- end}}
+  edition = "{{ .resource.Edition}}"
+  enable_sso={{ Boolean .resource.EnableSso}}
+  shortname="{{ .resource.ShortName}}"
+}
