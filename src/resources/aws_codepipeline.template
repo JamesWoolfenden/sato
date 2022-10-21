@@ -49,7 +49,7 @@ resource "aws_codepipeline" "{{.item}}" {
       }
 {{- end}}
 {{- if .InputArtifacts}}
-      inputs_artifacts=[{{- range $j, $c := $b.InputArtifacts}}"{{$c.Name}}",]{{- end}}
+      input_artifacts=[{{- range $j, $c := $b.InputArtifacts}}"{{$c.Name}}",]{{- end}}
 {{- end}}
 {{- if $b.OutputArtifacts}}
       output_artifacts=[{{- range $j, $c := $b.OutputArtifacts}}"{{$c.Name}}",]{{- end}}
