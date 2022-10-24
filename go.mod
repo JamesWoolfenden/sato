@@ -3,8 +3,8 @@ module sato
 go 1.19
 
 require (
-	github.com/awslabs/goformation/v7 v7.0.2
-	github.com/urfave/cli/v2 v2.19.2
+	github.com/awslabs/goformation/v7 v7.0.4
+	github.com/urfave/cli/v2 v2.20.3
 )
 
 require (

@@ -1,0 +1,106 @@
+resource "aws_lb_listener_rule" "{{.item}}" {
+  listener_arn = "{{ .resource.ListenerArn}}"
+  priority     = {{.resource.Priority}}
+{{- range $i, $a := .resource.Actions}}
+  action {
+    type = "{{$a.Type}}"
+    {{- if $a.AuthenticateCognitoConfig}}
+        authenticate_cognito {
+          user_pool_arn       = "{{$a.AuthenticateCognitoConfig.UserPoolArn}}"
+          user_pool_client_id = "{{$a.AuthenticateCognitoConfig.UserPoolClientId}}"
+          user_pool_domain    = "{{$a.AuthenticateCognitoConfig.UserPoolDomain}}"
+          authentication_request_extra_params=  "{{$a.AuthenticateCognitoConfig.AuthenticationRequestExtraParams}}"
+          on_unauthenticated_request=  "{{$a.AuthenticateCognitoConfig.OnUnauthenticatedRequest}}"
+          scope=  "{{$a.AuthenticateCognitoConfig.Scope}}"
+          session_cookie_name=  "{{$a.AuthenticateCognitoConfig.SessionCookieName}}"
+          session_timeout=  {{$a.AuthenticateCognitoConfig.SessionTimeout}}"
+        }
+    {{- end}}
+    {{- if $a.AuthenticateOidcConfig }}
+        authenticate_oidc {
+          authorization_endpoint = "{{ $a.AuthenticateOidcConfig.AuthorizationEndpoint}}"
+          client_id              = "{{ $a.AuthenticateOidcConfig.ClientId}}"
+          client_secret          = "{{ $a.AuthenticateOidcConfig.ClientSecret}}"
+          issuer                 = "{{ $a.AuthenticateOidcConfig.Issuer}}"
+          token_endpoint         = "{{ $a.AuthenticateOidcConfig.TokenEndpoint}}"
+          user_info_endpoint     = "{{ $a.AuthenticateOidcConfig.UserInfoEndpoint}}"
+          authentication_request_extra_params = "{{ $a.AuthenticateOidcConfig.AuthenticationRequestExtraParams}}"
+          on_unauthenticated_request          = "{{ $a.AuthenticateOidcConfig.OnAuthenticationRequest}}"
+          scope               = "{{ $a.AuthenticateOidcConfig.Scope}}"
+          session_cookie_name = "{{ $a.AuthenticateOidcConfig.SessionCookieName}}"
+          session_timeout     = "{{ $a.AuthenticateOidcConfig.SessionTimeout}}"
+        }
+     {{- end}}
+    {{- if  $a.FixedResponseConfig}}
+       fixed_response {
+          content_type = "{{ $a.FixedResponseConfig.ContentType}}"
+          message_body = "{{ $a.FixedResponseConfig.MessageBody}}"
+          status_code  = "{{ $a.FixedResponseConfig.StatusCode}}"
+       }
+    {{- end}}
+    {{- if $a.ForwardConfig}}
+       forward{
+         target_group = {{ $a.ForwardConfig.TargetGroup}}
+         stickiness   = {{ $a.ForwardConfig.Stickiness}}
+       }
+    {{- end }}
+    {{- if $a.Order}}
+        order = {{ $a.Order}}
+    {{- end}}
+    {{- if $a.RedirectConfig}}
+        redirect {
+           port        = "{{ $a.RedirectConfig.Port}}"
+           protocol    = "{{ $a.RedirectConfig.Protocol}}"
+           status_code = "{{ $a.RedirectConfig.StatusCode}}"
+           host        = "{{ $a.RedirectConfig.Host}}"
+           path        = "{{ $a.RedirectConfig.Path}}"
+           query       = "{{ $a.RedirectConfig.Query}}"
+        }
+    {{- end}}
+{{- if $a.TargetGroupArn}}
+    target_group_arn="{{ $a.TargetGroupArn}}"
+{{- end}}
+  }
+{{- end}}
+
+{{- range $i, $j := .resource.Conditions}}
+  condition {
+{{- if $j.HostHeaderConfig}}
+     host_header {
+       values = {{$j.HostHeaderConfig}}
+       }
+{{- end}}
+{{- if $j.HttpHeaderConfig}}
+     http_header {
+       http_header_name = {{ $j.HttpHeaderConfig.HttpHeaderName}}
+       values           = {{$j.HttpHeaderConfig.Values}}
+       }
+{{- end}}
+{{- if $j.HttpRequestMethodConfig}}
+     http_request_method {
+       values = {{ $j.HttpRequestMethodConfig}}
+       }
+{{- end}}
+{{- if $j.PathPatternConfig}}
+    path_pattern {
+      values = {{ $j.PathPatternConfig.Values}}
+      }
+{{- end}}
+{{- if $j.QueryStringConfig}}
+    query_string {
+      values =  {{ $j.QueryStringConfig.Values}}
+      }
+{{- end}}
+{{- if $j.Field}}
+  {{Replace $j.Field "-" "_"}} {
+    values=[{{range $i, $v := $j.Values}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+  }
+{{- end}}
+{{- if $j.SourceIpConfig}}
+    source_ip {
+      values="{{ $j.SourceIpConfig.Values}}"
+    }
+{{- end}}
+  }
+{{- end}}
+}

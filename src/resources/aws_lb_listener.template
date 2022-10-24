@@ -1,0 +1,74 @@
+resource "aws_lb_listener" "{{.item}}" {
+{{- if .resource.AlpnPolicy}}
+  alpn_policy="{{.resource.AlpnPolicy}}"
+{{- end}}
+{{- if .resource.Certificates}}
+  certificate_arn  = "{{ with $n := index .resource.Certificates 0 }}{{ $n.CertificateArn }}{{ end }}"
+{{- end}}
+  load_balancer_arn= "{{ .resource.LoadBalancerArn}}"
+  port             = "{{ .resource.Port}}"
+  protocol         = "{{ .resource.Protocol}}"
+  ssl_policy       = "{{ .resource.SslPolicy}}"
+{{- if .resource.DefaultActions}}
+{{- range $i, $a := .resource.DefaultActions}}
+  default_action {
+{{- if $a.AuthenticateCognitoConfig}}
+    authenticate_cognito {
+      user_pool_arn       = "{{$a.AuthenticateCognitoConfig.UserPoolArn}}"
+      user_pool_client_id =  "{{$a.AuthenticateCognitoConfig.UserPoolClientId}}"
+      user_pool_domain    =  "{{$a.AuthenticateCognitoConfig.UserPoolDomain}}"
+      authentication_request_extra_params=  "{{$a.AuthenticateCognitoConfig.AuthenticationRequestExtraParams}}""
+      on_unauthenticated_request=  "{{$a.AuthenticateCognitoConfig.OnUnauthenticatedRequest}}""
+      scope=  {{$a.AuthenticateCognitoConfig.Scope}}"
+      session_cookie_name=  {{$a.AuthenticateCognitoConfig.SessionCookieName}}"
+      session_timeout=  {{$a.AuthenticateCognitoConfig.SessionTimeout}}"
+    }
+{{- end}}
+{{- if $a.AuthenticateOidcConfig }}
+    authenticate_oidc {
+      authorization_endpoint = "{{ $a.AuthenticateOidcConfig.AuthorizationEndpoint}}"
+      client_id              = "{{ $a.AuthenticateOidcConfig.ClientId}}"
+      client_secret          = "{{ $a.AuthenticateOidcConfig.ClientSecret}}"
+      issuer                 = "{{ $a.AuthenticateOidcConfig.Issuer}}"
+      token_endpoint         = "{{ $a.AuthenticateOidcConfig.TokenEndpoint}}"
+      user_info_endpoint     = "{{ $a.AuthenticateOidcConfig.UserInfoEndpoint}}"
+      authentication_request_extra_params = "{{ $a.AuthenticateOidcConfig.AuthenticationRequestExtraParams}}"
+      on_unauthenticated_request          = "{{ $a.AuthenticateOidcConfig.OnAuthenticationRequest}}"
+      scope               = "{{ $a.AuthenticateOidcConfig.Scope}}"
+      session_cookie_name = "{{ $a.AuthenticateOidcConfig.SessionCookieName}}"
+      session_timeout     = "{{ $a.AuthenticateOidcConfig.SessionTimeout}}"
+    }
+ {{- end}}
+{{- if  $a.FixedResponseConfig}}
+   fixed_response {
+      content_type = "{{ $a.FixedResponseConfig.ContentType}}"
+      message_body = "{{ $a.FixedResponseConfig.MessageBody}}"
+      status_code  = "{{ $a.FixedResponseConfig.StatusCode}}"
+   }
+{{- end}}
+{{- if $a.ForwardConfig}}
+   forward{
+     target_group = {{ $a.ForwardConfig.TargetGroup}}
+     stickiness   = {{ $a.ForwardConfig.Stickiness}}
+   }
+{{- end }}
+{{- if $a.Order}}
+    order = {{ $a.Order}}
+{{- end}}
+{{- if $a.RedirectConfig}}
+    redirect {
+       port        = "{{ $a.RedirectConfig.Port}}"
+       protocol    = "{{ $a.RedirectConfig.Protocol}}"
+       status_code = "{{ $a.RedirectConfig.StatusCode}}"
+       host        = "{{ $a.RedirectConfig.Host}}"
+       path        = "{{ $a.RedirectConfig.Path}}"
+       query       = "{{ $a.RedirectConfig.Query}}"
+    }
+{{- end}}
+{{- if $a.TargetGroupArn}}
+    target_group_arn="{{$a.TargetGroupArn}}"
+{{- end}}
+    type ="{{$a.Type}}"
+  }
+{{- end}}{{- end}}
+}

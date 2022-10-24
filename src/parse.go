@@ -29,6 +29,7 @@ type Variable struct {
 	Description string
 	Type        string
 	Default     string
+	Name        string
 }
 
 // Parse turn CFN into Terraform
@@ -106,9 +107,9 @@ func Parse(file string, destination string) error {
 				extension = ".txt"
 			}
 
-			codefile := filename + extension
+			codeFile := filename + extension
 			d1 := []byte(code)
-			_ = os.WriteFile(codefile, d1, 0644)
+			_ = os.WriteFile(codeFile, d1, 0644)
 
 			output := filename + ".zip"
 			archive, _ := os.Create(output)
@@ -130,21 +131,21 @@ func Parse(file string, destination string) error {
 			return output
 		},
 	}
+	_, err = ParseVariables(template, funcMap, destination)
+	if err != nil {
+		return err
+	}
 
 	err = ParseResources(template.Resources, funcMap, destination)
 	if err != nil {
 		return err
 	}
 
-	err = ParseVariables(template, funcMap, destination)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
 // ParseVariables convert CFN Parameters into terraform variables
-func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMap, destination string) error {
+func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMap, destination string) ([]Variable, error) {
 	var All string
 
 	var (
@@ -152,97 +153,111 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		DataResources []string
 	)
 
+	var myVariables []Variable
 	for Name, param := range template.Parameters {
 		var myVariable Variable
 
-		switch param.Type {
-		case "String":
-			if param.Default == "false" || param.Default == "true" || param.Default == true || param.Default == false {
-				myVariable.Type = "bool"
-			} else {
-				myVariable.Type = strings.ToLower(param.Type)
-			}
-
-		case "List<AWS::EC2::AvailabilityZone::Name>":
-			myVariable.Type = "list(string)"
-			DataResources, m = add(dataAvailabilityZone, DataResources, m)
-		case "AWS::EC2::Subnet::Id":
-			myVariable.Type = "string"
-			DataResources, m = add(dataSubnet, DataResources, m)
-		case "AWS::EC2::KeyPair::KeyName":
-			myVariable.Type = "string"
-			DataResources, m = add(dataKeyPair, DataResources, m)
-		case "AWS::EC2::VPC::Id":
-			myVariable.Type = "string"
-			DataResources, m = add(dataVpc, DataResources, m)
-		case "AWS::EC2::SecurityGroup::Id":
-			myVariable.Type = "string"
-			DataResources, m = add(dataSecurityGroup, DataResources, m)
-		case "AWS::EC2::Image::Id", "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>":
-			myVariable.Type = "string"
-		case "AWS::Region":
-			myVariable.Type = "string"
-			DataResources, m = add(dataRegion, DataResources, m)
-		case "List<AWS::EC2::Subnet::Id>":
-			myVariable.Type = "list(string)"
-		case "Number":
-			myVariable.Type = "number"
-		default:
-			log.Printf("Variable %s", param.Type)
-		}
-
+		DataResources, myVariable, m = GetVariableType(param, myVariable, DataResources, m)
 		myVariable.Description = strings.Replace(param.Description, "${", "$${", -1)
-
-		switch param.Default.(type) {
-		case string:
-			_, err := strconv.Atoi(param.Default.(string))
-			if err == nil {
-				myVariable.Type = "number"
-				myVariable.Default = param.Default.(string)
-			} else {
-				if myVariable.Type == "bool" {
-					myVariable.Default = param.Default.(string)
-				} else {
-					if strings.Contains(param.Default.(string), "=") {
-						myVariable = StringToMap(param, myVariable)
-					} else {
-						myVariable.Default = "\"" + param.Default.(string) + "\""
-					}
-				}
-			}
-		case float64:
-			myVariable.Type = "number"
-			myVariable.Default = fmt.Sprintf("%v", param.Default.(float64))
-		case bool:
-			myVariable.Default = strconv.FormatBool(param.Default.(bool))
-		case interface{}:
-			myVariable.Default = "[]"
-		default:
-			myVariable.Default = "null"
-		}
+		myVariable.Name = Name
+		myVariable = GetVariableDefault(param, myVariable)
 
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
-			return err
+			return nil, err
 		}
 		_ = tmpl.Execute(&output, M{
 			"variable": myVariable,
 			"item":     Name,
 		})
 		All = All + output.String()
+		myVariables = append(myVariables, myVariable)
 	}
 	err := Write(All, destination, "variables")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	err = Write(strings.Join(DataResources, "\n"), destination, "data")
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return myVariables, nil
+}
+
+// GetVariableType determines variable types
+func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataResources []string, m map[string]bool) ([]string, Variable, map[string]bool) {
+	switch param.Type {
+	case "String":
+		if param.Default == "false" || param.Default == "true" || param.Default == true || param.Default == false {
+			myVariable.Type = "bool"
+		} else {
+			myVariable.Type = strings.ToLower(param.Type)
+		}
+
+	case "List<AWS::EC2::AvailabilityZone::Name>":
+		myVariable.Type = "list(string)"
+		DataResources, m = add(dataAvailabilityZone, DataResources, m)
+	case "AWS::EC2::Subnet::Id":
+		myVariable.Type = "string"
+		DataResources, m = add(dataSubnet, DataResources, m)
+	case "AWS::EC2::KeyPair::KeyName":
+		myVariable.Type = "string"
+		DataResources, m = add(dataKeyPair, DataResources, m)
+	case "AWS::EC2::VPC::Id":
+		myVariable.Type = "string"
+		DataResources, m = add(dataVpc, DataResources, m)
+	case "AWS::EC2::SecurityGroup::Id":
+		myVariable.Type = "string"
+		DataResources, m = add(dataSecurityGroup, DataResources, m)
+	case "AWS::EC2::Image::Id", "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>":
+		myVariable.Type = "string"
+	case "AWS::Region":
+		myVariable.Type = "string"
+		DataResources, m = add(dataRegion, DataResources, m)
+	case "List<AWS::EC2::Subnet::Id>":
+		myVariable.Type = "list(string)"
+	case "Number":
+		myVariable.Type = "number"
+	default:
+		log.Printf("Variable %s", param.Type)
+	}
+
+	return DataResources, myVariable, m
+}
+
+// GetVariableDefault determines a variables default value
+func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Variable {
+	switch param.Default.(type) {
+	case string:
+		_, err := strconv.Atoi(param.Default.(string))
+		if err == nil {
+			myVariable.Type = "number"
+			myVariable.Default = param.Default.(string)
+		} else {
+			if myVariable.Type == "bool" {
+				myVariable.Default = param.Default.(string)
+			} else {
+				if strings.Contains(param.Default.(string), "=") {
+					myVariable = StringToMap(param, myVariable)
+				} else {
+					myVariable.Default = "\"" + param.Default.(string) + "\""
+				}
+			}
+		}
+	case float64:
+		myVariable.Type = "number"
+		myVariable.Default = fmt.Sprintf("%v", param.Default.(float64))
+	case bool:
+		myVariable.Default = strconv.FormatBool(param.Default.(bool))
+	case interface{}:
+		myVariable.Default = "[]"
+	default:
+		myVariable.Default = "null"
+	}
+	return myVariable
 }
 
 // StringToMap converts maps in strings(for tags)
@@ -272,51 +287,56 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		myType := resources[item].AWSCloudFormationType()
 
 		TFLookup := map[string]interface{}{
-			"AWS::SNS::Topic":                       awsSNSTopic,
-			"AWS::IAM::Role":                        awsIamRole,
-			"AWS::EC2::Route":                       awsRoute,
-			"AWS::EC2::RouteTable":                  awsRouteTable,
-			"AWS::EC2::NatGateway":                  awsNatGateway,
-			"AWS::EC2::VPCGatewayAttachment":        awsVpnGatewayAttachment,
-			"AWS::EC2::NetworkAclEntry":             awsNetworkACLRule,
-			"AWS::EC2::NetworkAcl":                  awsNetworkACL,
-			"AWS::EC2::EIP":                         awsEIP,
-			"AWS::EC2::SubnetRouteTableAssociation": awsRouteTableAssociation,
-			"AWS::EC2::Subnet":                      awsSubnet,
-			"AWS::Logs::LogGroup":                   awsCloudwatchLogGroup,
-			"AWS::EC2::VPCDHCPOptionsAssociation":   awsVpcDhcpOptionsAssociation,
-			"AWS::EC2::DHCPOptions":                 awsVpcDhcpOptions,
-			"AWS::EC2::SubnetNetworkAclAssociation": awsNetworkACLAssociation,
-			"AWS::EC2::FlowLog":                     awsFlowLog,
-			"AWS::EC2::VPCEndpoint":                 awsVpcEndpoint,
-			"AWS::EC2::InternetGateway":             awsInternetGateway,
-			"AWS::EC2::VPC":                         awsVpc,
-			"AWS::S3::Bucket":                       awsS3Bucket,
-			"AWS::Lambda::Function":                 awsLambdaFunction,
-			"AWS::StepFunctions::StateMachine":      awsStepfunctionStateMachine,
-			"AWS::DynamoDB::Table":                  awsDynamodbTable,
-			"AWS::IAM::InstanceProfile":             awsIamInstanceProfile,
-			"AWS::CloudFormation::Stack":            awsCloudformationStack,
-			"AWS::EC2::SecurityGroup":               awsSecurityGroup,
-			"AWS::SecretsManager::Secret":           awsSecretsManagerSecret,
-			"AWS::EC2::Instance":                    awsInstance,
-			"AWS::S3::BucketPolicy":                 awsS3BucketPolicy,
-			"AWS::IAM::ManagedPolicy":               awsIamManagedPolicy,
-			"AWS::KMS::Key":                         awsKmsKey,
-			"AWS::KMS::Alias":                       awskmsAlias,
-			"AWS::SSM::Association":                 awsSsmAssociation,
-			"AWS::SSM::Document":                    awsSsmDocument,
-			"AWS::AutoScaling::LaunchConfiguration": awsLaunchConfiguration,
-			"AWS::AutoScaling::AutoScalingGroup":    awsAutoscalingGroup,
-			"AWS::Lambda::Permission":               awsLambdaPermission,
-			"AWS::ElastiCache::SubnetGroup":         awsElasticacheSubnetGroup,
-			"AWS::ElastiCache::ParameterGroup":      awsElasticacheParameterGroup,
-			"AWS::ElastiCache::ReplicationGroup":    awsElasticacheReplicationGroup,
-			"AWS::DirectoryService::MicrosoftAD":    awsDirectoryServiceDirectory,
-			"AWS::CodeBuild::Project":               awsCodebuildProject,
-			"AWS::CodePipeline::Pipeline":           awsCodepipeline,
-			"AWS::EC2::SecurityGroupIngress":        awsSecurityGroupRuleIngress,
-			"AWS::EC2::SecurityGroupEgress":         awsSecurityGroupRuleEgress,
+			"AWS::SNS::Topic":                           awsSNSTopic,
+			"AWS::IAM::Role":                            awsIamRole,
+			"AWS::EC2::Route":                           awsRoute,
+			"AWS::EC2::RouteTable":                      awsRouteTable,
+			"AWS::EC2::NatGateway":                      awsNatGateway,
+			"AWS::EC2::VPCGatewayAttachment":            awsVpnGatewayAttachment,
+			"AWS::EC2::NetworkAclEntry":                 awsNetworkACLRule,
+			"AWS::EC2::NetworkAcl":                      awsNetworkACL,
+			"AWS::EC2::EIP":                             awsEIP,
+			"AWS::EC2::SubnetRouteTableAssociation":     awsRouteTableAssociation,
+			"AWS::EC2::Subnet":                          awsSubnet,
+			"AWS::Logs::LogGroup":                       awsCloudwatchLogGroup,
+			"AWS::EC2::VPCDHCPOptionsAssociation":       awsVpcDhcpOptionsAssociation,
+			"AWS::EC2::DHCPOptions":                     awsVpcDhcpOptions,
+			"AWS::EC2::SubnetNetworkAclAssociation":     awsNetworkACLAssociation,
+			"AWS::EC2::FlowLog":                         awsFlowLog,
+			"AWS::EC2::VPCEndpoint":                     awsVpcEndpoint,
+			"AWS::EC2::InternetGateway":                 awsInternetGateway,
+			"AWS::EC2::VPC":                             awsVpc,
+			"AWS::S3::Bucket":                           awsS3Bucket,
+			"AWS::Lambda::Function":                     awsLambdaFunction,
+			"AWS::StepFunctions::StateMachine":          awsStepfunctionStateMachine,
+			"AWS::DynamoDB::Table":                      awsDynamodbTable,
+			"AWS::IAM::InstanceProfile":                 awsIamInstanceProfile,
+			"AWS::CloudFormation::Stack":                awsCloudformationStack,
+			"AWS::EC2::SecurityGroup":                   awsSecurityGroup,
+			"AWS::SecretsManager::Secret":               awsSecretsManagerSecret,
+			"AWS::EC2::Instance":                        awsInstance,
+			"AWS::S3::BucketPolicy":                     awsS3BucketPolicy,
+			"AWS::IAM::ManagedPolicy":                   awsIamManagedPolicy,
+			"AWS::KMS::Key":                             awsKmsKey,
+			"AWS::KMS::Alias":                           awskmsAlias,
+			"AWS::SSM::Association":                     awsSsmAssociation,
+			"AWS::SSM::Document":                        awsSsmDocument,
+			"AWS::AutoScaling::LaunchConfiguration":     awsLaunchConfiguration,
+			"AWS::AutoScaling::AutoScalingGroup":        awsAutoscalingGroup,
+			"AWS::Lambda::Permission":                   awsLambdaPermission,
+			"AWS::ElastiCache::SubnetGroup":             awsElasticacheSubnetGroup,
+			"AWS::ElastiCache::ParameterGroup":          awsElasticacheParameterGroup,
+			"AWS::ElastiCache::ReplicationGroup":        awsElasticacheReplicationGroup,
+			"AWS::DirectoryService::MicrosoftAD":        awsDirectoryServiceDirectory,
+			"AWS::CodeBuild::Project":                   awsCodebuildProject,
+			"AWS::CodePipeline::Pipeline":               awsCodepipeline,
+			"AWS::EC2::SecurityGroupIngress":            awsSecurityGroupRuleIngress,
+			"AWS::EC2::SecurityGroupEgress":             awsSecurityGroupRuleEgress,
+			"AWS::CloudFront::Distribution":             awsCloudfrontDistribution,
+			"AWS::ElasticLoadBalancingV2::LoadBalancer": awsLb,
+			"AWS::ElasticLoadBalancingV2::ListenerRule": awsLbListenerRule,
+			"AWS::ElasticLoadBalancingV2::TargetGroup":  awsLbTargetGroup,
+			"AWS::ElasticLoadBalancingV2::Listener":     awsLbListener,
 		}
 
 		var myContent []byte

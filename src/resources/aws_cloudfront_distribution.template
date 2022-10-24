@@ -1,0 +1,250 @@
+resource "aws_cloudfront_distribution" "{{.item}}" {
+{{- if .resource.DistributionConfig.Aliases}}
+  aliases=["{{index .resource.DistributionConfig.Aliases 0}}"]
+{{- end}}
+{{- if .resource.DistributionConfig.Comment}}
+  comment="{{.resource.DistributionConfig.Comment}}"
+{{- end}}
+{{- if .resource.DistributionConfig.CustomErrorResponses}}
+  custom_error_response {
+  }
+{{- end}}
+  default_cache_behavior {
+    allowed_methods        = [{{range $i, $v := .resource.DistributionConfig.DefaultCacheBehavior.AllowedMethods}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+    cached_methods         = [{{range $i, $v := .resource.DistributionConfig.DefaultCacheBehavior.CachedMethods}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.CachePolicyId}}
+    cache_policy_id=.resource.DistributionConfig.DefaultCacheBehavior.CachePolicyId}}"
+{{- end}}
+    compress= {{Boolean .resource.DistributionConfig.DefaultCacheBehavior.Compress}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.DefaultTTL}}
+    default_ttl = {{.resource.DistributionConfig.DefaultCacheBehavior.DefaultTTL}}
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.FieldLevelEncryptionId}}
+    field_level_encryption_id="{{.resource.DistributionConfig.DefaultCacheBehavior.FieldLevelEncryptionId}}"
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues}}
+    forwarded_values {
+      headers                = {{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Headers}}
+      query_string           = {{ Boolean .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.QueryString}}
+      query_string_cache_keys= {{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Cookies}}
+      cookies {
+        forward          = "{{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Cookies.Forward}}"
+        whitelisted_names= {{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames}}
+      }
+{{- end}}
+    }
+
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations}}
+{{- range $i, $a := .resource.DistributionConfig.DefaultCacheBehavior.LambdaFunctionAssociations}}
+    lambda_function_association {
+      event_type   = "{{$a.EventType}}"
+{{- if $a.LambdaFunctionARN}}
+      lambda_arn   = {{$a.LambdaFunctionARN}}
+{{- else}}
+      lambda_arn   = ""
+{{- end}}
+      include_body = {{Boolean $a.IncludeBody}}
+    }
+{{- end}}
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.FunctionAssociations}}
+    function_association {
+          event_type   = {{.resource.DistributionConfig.DefaultCacheBehavior.FunctionAssociations.EventType}}
+          function_arn = {{.resource.DistributionConfig.DefaultCacheBehavior.FunctionAssociations.FunctionArn}}
+        }
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.MaxTTL}}
+    max_ttl={{.resource.DistributionConfig.DefaultCacheBehavior.MaxTTL}}
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.MinTTL}}
+    min_ttl={{.resource.DistributionConfig.DefaultCacheBehavior.MinTTL}}
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.OriginRequestPolicyId}}
+    origin_request_policy_id="{{.resource.DistributionConfig.DefaultCacheBehavior.OriginRequestPolicyId}}"
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.RealtimeLogConfigArn}}
+    realtime_log_config_arn="{{.resource.DistributionConfig.DefaultCacheBehavior.RealtimeLogConfigArn}}"
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.ResponseHeadersPolicyId}}
+    response_headers_policy_id="{{.resource.DistributionConfig.DefaultCacheBehavior.ResponseHeadersPolicyId}}"
+{{- end}}
+    smooth_streaming = {{ Boolean  .resource.DistributionConfig.DefaultCacheBehavior.SmoothStreaming }}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.TrustedKeyGroups}}
+  trusted_key_groups="{{.resource.DistributionConfig.DefaultCacheBehavior.TrustedKeyGroups}}"
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.TrustedSigners}}
+    trusted_signers="{{.resource.DistributionConfig.DefaultCacheBehavior.TrustedSigners}}"
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.TargetOriginId}}
+    target_origin_id       = "{{.resource.DistributionConfig.DefaultCacheBehavior.TargetOriginId}}"
+{{- else}}
+    target_origin_id       = ""
+{{- end}}
+{{- if  .resource.DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy}}
+    viewer_protocol_policy = "{{.resource.DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy}}"
+{{- end}}
+  }
+{{- if .resource.DistributionConfig.DefaultRootObject}}
+  default_root_object="{{.resource.DistributionConfig.DefaultRootObject}}"
+{{- end}}
+  enabled = {{Boolean .resource.DistributionConfig.Enabled}}
+  is_ipv6_enabled={{ Boolean .resource.DistributionConfig.IPV6Enabled}}
+{{- if  .resource.DistributionConfig.HttpVersion}}
+  http_version="{{ .resource.DistributionConfig.HttpVersion}}"
+{{- end}}
+{{- if .resource.DistributionConfig.Logging}}
+  logging_config {
+    bucket="{{ .resource.DistributionConfig.Logging.Bucket}}"
+  }
+{{- end}}
+{{- range $i, $a := .resource.DistributionConfig.CacheBehaviors}}
+  ordered_cache_behavior {
+    allowed_methods        = {{$a.AllowedMethods}}
+    cached_methods         = {{$a.CachedMethods}}
+{{- if $a.CachePolicyId}}
+    cache_policy_id=$a.CachePolicyId}}"
+{{- end}}
+    compress= {{Boolean $a.Compress}}
+{{- if $a.DefaultTTL}}
+    default_ttl = {{$a.DefaultTTL}}
+{{- end}}
+{{- if $a.FieldLevelEncryptionId}}
+    field_level_encryption_id="{{$a.FieldLevelEncryptionId}}"
+{{- end}}
+{{- if .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues}}
+    forwarded_values {
+      headers                = {{ $a.ForwardedValues.Headers}}
+      query_string           = {{ Boolean $a.ForwardedValues.QueryString}}
+      query_string_cache_keys= {{ $a.ForwardedValues.QueryStringCacheKeys}}
+{{- if $a.ForwardedValues.Cookies}}
+      cookies {
+        forward          = "{{ $a.ForwardedValues.Cookies.Forward}}"
+        whitelisted_names= {{ $a.ForwardedValues.Cookies.WhitelistedNames}}
+      }
+{{- end}}
+    }
+{{- end}}
+{{- if $a.LambdaFunctionAssociations}}
+        lambda_function_association {
+          event_type   = "{{$a.LambdaFunctionAssociations.EventType}}"
+          lambda_arn   = {{$a.LambdaFunctionAssociations.LambdaArn}}"
+          include_body = "{{$a.LambdaFunctionAssociations.IncludeBody}}"
+        }
+{{- end}}
+{{- if $a.FunctionAssociations}}
+    function_association {
+          event_type   = "{{$a.FunctionAssociations.EventType}}"
+          function_arn = "{{$a.FunctionAssociations.FunctionArn}}"
+        }
+{{- end}}
+{{- if $a.MaxTTL}}
+    max_ttl={{$a.MaxTTL}}
+{{- end}}
+{{- if $a.MinTTL}}
+    min_ttl={{$a.MinTTL}}
+{{- end}}
+{{- if $a.OriginRequestPolicyId}}
+    origin_request_policy_id="{{$a.OriginRequestPolicyId}}"
+{{- end}}
+{{- if $a.RealtimeLogConfigArn}}
+    realtime_log_config_arn="{{$a.RealtimeLogConfigArn}}"
+{{- end}}
+{{- if $a.ResponseHeadersPolicyId}}
+    response_headers_policy_id="{{$a.ResponseHeadersPolicyId}}"
+{{- end}}
+  smooth_streaming = {{ Boolean $a.SmoothStreaming }}
+{{- if $a.TrustedKeyGroups}}
+  trusted_key_groups="{{$a.TrustedKeyGroups}}"
+{{- end}}
+{{- if $a.TrustedSigners}}
+    trusted_signers="{{$a.TrustedSigners}}"
+{{- end}}
+    target_origin_id       = {{$a.TargetOriginId}}
+    viewer_protocol_policy = "{{$a.ViewerProtocolPolicy}}"
+  }
+{{- end}}
+{{- range $i, $b := .resource.DistributionConfig.Origins}}
+  origin {
+    domain_name = "{{ $b.DomainName}}"
+{{- if $b.Id}}
+    origin_id   = "{{ $b.Id}}"
+{{ else}}
+    origin_id= "{{ RandomString 8}}"
+{{- end}}
+{{- if  $b.ConnectionAttempts }}
+    connection_attempts = {{ $b.ConnectionAttempts }}
+{{- end}}
+{{- if $b.ConnectionTimeout}}
+    connection_timeout  = {{ $b.ConnectionTimeout}}
+{{- end}}
+{{- if  $b.CustomOriginConfig}}
+    custom_origin_config{
+      http_port={{ $b.CustomOriginConfig.HTTPPort}}
+      https_port={{ $b.CustomOriginConfig.HTTPSPort}}
+      origin_protocol_policy="{{ $b.CustomOriginConfig.OriginProtocolPolicy}}"
+      origin_ssl_protocols=[{{range $i, $v := $b.CustomOriginConfig.OriginSSLProtocols}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+      origin_keepalive_timeout={{ $b.CustomOriginConfig.OriginKeepaliveTimeout}}
+      origin_read_timeout={{ $b.CustomOriginConfig.OriginReadTimeout}}
+    }
+{{- end}}
+{{- if $b.OriginAccessControlId }}
+    origin_access_control_id={{ $b.OriginAccessControlId }}
+{{- end}}
+{{- if  $b.OriginPath}}
+    origin_path={{ $b.OriginPath}}
+{{- end}}
+{{- if $b.OriginShield}}
+    origin_shield={{ $b.OriginShield}}
+{{- end}}
+{{- if $b.S3OriginConfig}}
+    s3_origin_config={{ $b.S3OriginConfig}}
+{{- end}}
+  }
+{{- end}}
+
+{{- if .resource.DistributionConfig.OriginGroups}}
+{{- range $i, $c := .resource.DistributionConfig.OriginGroups}}
+  origin_group {
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.DistributionConfig.PriceClass}}
+  price_class="{{ .resource.DistributionConfig.PriceClass}}"
+{{- end}}
+{{- if .resource.DistributionConfig.Restrictions}}
+{{- range $i, $c := .resource.DistributionConfig.Restrictions}}
+  restrictions {
+    geo_restriction {
+      restriction_type = "{{.resource.DistributionConfig.Restrictions.RestrictionType}}"
+      locations={{.resource.DistributionConfig.Restrictions.Locations}}
+    }
+  }
+{{- end}}
+{{- else}}
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+{{- end}}
+  viewer_certificate {
+    acm_certificate_arn     = "{{ .resource.DistributionConfig.ViewerCertificate.AcmCertificateArn}}"
+    cloudfront_default_certificate={{ Boolean .resource.DistributionConfig.ViewerCertificate.CloudFrontDefaultCertificate}}
+{{- if .resource.DistributionConfig.ViewerCertificate.IamCertificateId}}"
+    iam_certificate_id      = "{{ .resource.DistributionConfig.ViewerCertificate.IamCertificateId}}"
+{{- end}}
+    minimum_protocol_version= "{{ .resource.DistributionConfig.ViewerCertificate.MinimumProtocolVersion }}"
+    ssl_support_method      = "{{ .resource.DistributionConfig.ViewerCertificate.SslSupportMethod}}"
+  }
+{{- if .resource.DistributionConfig.WebACLId}}
+  web_acl_id="{{ .resource.DistributionConfig.WebACLId }}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

@@ -138,3 +138,18 @@ var awsSecurityGroupRuleIngress []byte
 
 //go:embed resources/aws_security_group_rule_egress.template
 var awsSecurityGroupRuleEgress []byte
+
+//go:embed resources/aws_lb.template
+var awsLb []byte
+
+//go:embed resources/aws_lb_listener_rule.template
+var awsLbListenerRule []byte
+
+//go:embed resources/aws_lb_target_group.template
+var awsLbTargetGroup []byte
+
+//go:embed resources/aws_lb_listener.template
+var awsLbListener []byte
+
+//go:embed resources/aws_cloudfront_distribution.template
+var awsCloudfrontDistribution []byte

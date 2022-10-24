@@ -1,5 +1,9 @@
 resource "aws_dynamodb_table" "{{.item}}" {
+{{- if .resource.TableName}}"
   name             = "{{.resource.TableName}}"
+{{- else}}
+  name = "{{.item}}"
+{{- end}}
   hash_key         = ""
 {{- if .resource.BillingMode}}"
   billing_mode     = "{{.resource.BillingMode}}"

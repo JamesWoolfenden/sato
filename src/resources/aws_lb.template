@@ -1,0 +1,29 @@
+resource "aws_lb" "{{.item}}" {
+{{- if .resource.IpAddressType}}
+  ip_address_type="{{.resource.IpAddressType}}"
+{{- end}}
+  idle_timeout= {{(index .resource.LoadBalancerAttributes 0).Value }}
+  enable_deletion_protection={{(index .resource.LoadBalancerAttributes 1).Value }}
+  enable_http2= {{(index .resource.LoadBalancerAttributes 2).Value }}
+  name        = "{{.resource.Name}}"
+{{- if eq (Deref .resource.Scheme) "internet-facing"}}
+  internal=false
+{{- else}}
+  internal=true
+{{- end}}
+  security_groups= [{{range $i, $v := .resource.SecurityGroups}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if  .resource.SubnetMappings}}
+{{range $i, $v := .resource.SubnetMappings}}
+  subnet_mapping {
+    subnet_id     = {{$v.SubnetId}}
+    allocation_id = {{$v.AllocationId}}
+  }
+{{- end }}{{- end }}
+  subnets        = [{{range $i, $v := .resource.Subnets}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+  load_balancer_type="{{.resource.Type}}"
+}

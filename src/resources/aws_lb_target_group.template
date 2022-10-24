@@ -1,0 +1,35 @@
+resource "aws_lb_target_group" "{{.item}}" {
+  health_check {
+    enabled={{ Boolean .resource.HealthCheckEnabled}}
+    interval={{ .resource.HealthCheckIntervalSeconds}}
+{{- if .resource.Matcher}}
+    matcher="{{ .resource.Matcher}}"
+{{- end}}
+    path = "{{ .resource.HealthCheckPath}}"
+    port = "{{ .resource.HealthCheckPort }}"
+    protocol="{{ .resource.HealthCheckProtocol}}"
+    timeout= {{ .resource.HealthCheckTimeoutSeconds}}
+    healthy_threshold={{ .resource.HealthyThresholdCount }}
+    unhealthy_threshold= {{ .resource.UnhealthyThresholdCount}}
+    }
+{{- if  .resource.IpAddressType }}
+  ip_address_type={{ .resource.IpAddressType }}
+{{- end}}
+  name= "{{ .resource.Name}}"
+{{- if .resource.Port}}
+  port= {{ .resource.Port}}
+{{- end}}
+  protocol= "{{ .resource.Protocol}}"
+{{- if .resource.ProtocolVersion}}
+  protocol_version="{{ .resource.ProtocolVersion}}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+  target_type= "{{ .resource.TargetType }}"
+{{- if .resource.VpcId}}
+  vpc_id="{{ .resource.VpcId}}"
+{{- end}}
+}
