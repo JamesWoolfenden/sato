@@ -97,8 +97,11 @@ var awskmsAlias []byte
 //go:embed resources/aws_s3_bucket_policy.template
 var awsS3BucketPolicy []byte
 
-//go:embed resources/aws_iam_policy.template
+//go:embed resources/aws_iam_managed_policy.template
 var awsIamManagedPolicy []byte
+
+//go:embed resources/aws_iam_policy.template
+var awsIamPolicy []byte
 
 //go:embed resources/aws_ssm_association.template
 var awsSsmAssociation []byte
@@ -153,3 +156,6 @@ var awsLbListener []byte
 
 //go:embed resources/aws_cloudfront_distribution.template
 var awsCloudfrontDistribution []byte
+
+//go:embed resources/aws_iam_user.template
+var awsIamUser []byte
