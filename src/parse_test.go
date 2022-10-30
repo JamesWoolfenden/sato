@@ -175,17 +175,21 @@ func TestGetVariableType(t *testing.T) {
 		args  args
 		want  []string
 		want1 Variable
+		want2 map[string]bool
 	}{
 		// TODO: Add test cases.
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := GetVariableType(tt.args.param, tt.args.myVariable, tt.args.DataResources, tt.args.m)
+			got, got1, got2 := GetVariableType(tt.args.param, tt.args.myVariable, tt.args.DataResources, tt.args.m)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetVariableType() got = %v, want %v", got, tt.want)
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("GetVariableType() got1 = %v, want %v", got1, tt.want1)
+			}
+			if !reflect.DeepEqual(got2, tt.want2) {
+				t.Errorf("GetVariableType() got2 = %v, want %v", got2, tt.want2)
 			}
 		})
 	}

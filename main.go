@@ -3,16 +3,18 @@ package main
 import (
 	_ "embed" //required for embed
 	"fmt"
-	"log"
 	"os"
 	sato "sato/src"
 	"sort"
 	"time"
 
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/urfave/cli/v2"
 )
 
 func main() {
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	var file string
 	var destination string
 
@@ -65,7 +67,7 @@ func main() {
 	sort.Sort(cli.CommandsByName(app.Commands))
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal(err)
+		log.Fatal().Err(err)
 	}
 
 }

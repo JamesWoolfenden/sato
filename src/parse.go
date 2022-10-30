@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -15,6 +14,8 @@ import (
 	"strings"
 	tftemplate "text/template"
 	"time"
+
+	"github.com/rs/zerolog/log"
 
 	"github.com/awslabs/goformation/v7"
 	"github.com/awslabs/goformation/v7/cloudformation"
@@ -222,7 +223,7 @@ func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataRe
 	case "Number":
 		myVariable.Type = "number"
 	default:
-		log.Printf("Variable %s", param.Type)
+		log.Info().Msgf("Variable %s", param.Type)
 	}
 
 	return DataResources, myVariable, m
@@ -343,7 +344,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		if TFLookup[myType] != nil {
 			myContent = TFLookup[myType].([]byte)
 		} else {
-			log.Printf("%s not found", myType)
+			log.Warn().Msgf("%s not found", myType)
 			continue
 		}
 
@@ -380,7 +381,7 @@ func Write(output string, location string, name string) error {
 
 		destination, _ := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
 		err = os.WriteFile(destination, d1, 0644)
-
+		log.Info().Msgf("Created %s", destination)
 		if err != nil {
 			return err
 		}
