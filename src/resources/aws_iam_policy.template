@@ -1,10 +1,39 @@
 resource "aws_iam_policy" "{{.item}}" {
-{{- if .resource.Description}}
-  description="{{ .resource.Description}}"
+{{- if .resource.PolicyDocument}}
+  policy=jsonencode({{ Marshal .resource.PolicyDocument}})
 {{- end}}
-  name="{{ .resource.ManagedPolicyName}}"
-{{- if .resource.Path}}
-  path="{{.resource.Path}}"
+{{- if .resource.PolicyName}}
+  name = "{{ .resource.PolicyName}}"
+{{- else}}
+  name = "{{.item}}"
 {{- end}}
-  policy = jsonencode({{ Marshal .resource.PolicyDocument}})
 }
+
+
+{{- $p := .item}}
+{{- if .resource.Groups}}
+{{- range $a, $i :=  .resource.Roles}}
+resource "aws_iam_group_policy_attachment" "{{$p}}-{{$i}}" {
+  group      = "{{ $i}}"
+  policy_arn = aws_iam_policy.{{$p}}.arn
+}
+{{- end}}
+{{- end}}
+
+{{- if .resource.Roles}}
+{{- range $a, $i := .resource.Roles}}
+resource "aws_iam_role_policy_attachment" "{{$p}}-{{$i}}" {
+  role       = "{{$i}}"
+  policy_arn = aws_iam_policy.{{$p}}.arn
+}
+{{- end}}
+{{- end}}
+
+{{- if .resource.Users}}
+{{- range $a, $i := .resource.Users}}
+resource "aws_iam_user_policy_attachment" "{{$p}}-{{$i}}" {
+  user       = "{{$i}}"
+  policy_arn = aws_iam_policy.{{$p}}.arn
+}
+{{- end}}
+{{- end}}

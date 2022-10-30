@@ -318,6 +318,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::EC2::Instance":                        awsInstance,
 			"AWS::S3::BucketPolicy":                     awsS3BucketPolicy,
 			"AWS::IAM::ManagedPolicy":                   awsIamManagedPolicy,
+			"AWS::IAM::Policy":                          awsIamPolicy,
 			"AWS::KMS::Key":                             awsKmsKey,
 			"AWS::KMS::Alias":                           awskmsAlias,
 			"AWS::SSM::Association":                     awsSsmAssociation,
@@ -338,6 +339,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"AWS::ElasticLoadBalancingV2::ListenerRule": awsLbListenerRule,
 			"AWS::ElasticLoadBalancingV2::TargetGroup":  awsLbTargetGroup,
 			"AWS::ElasticLoadBalancingV2::Listener":     awsLbListener,
+			"AWS::IAM::User":                            awsIamUser,
 		}
 
 		var myContent []byte
