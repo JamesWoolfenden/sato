@@ -67,7 +67,7 @@ func main() {
 	sort.Sort(cli.CommandsByName(app.Commands))
 
 	if err := app.Run(os.Args); err != nil {
-		log.Fatal().Err(err)
+		log.Fatal().Err(err).Msg("Sato failure")
 	}
 
 }

@@ -1,0 +1,19 @@
+resource "aws_codecommit_repository" "{{.item}}" {
+  repository_name = "{{.resource.RepositoryName}}"
+  description     = "{{.resource.RepositoryDescription}}"
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}
+
+{{- if .resource.Triggers}}
+{{ $repo = .resource.RepositoryName}}
+{{range $i, $a := .resource.Triggers}}
+resource "aws_codecommit_trigger" "{{ $a.Name}}" {
+  repository_name="${{ $repo }}"
+  name="{{ $a.Name}}"
+}
+{{- end}}
+{{- end}}

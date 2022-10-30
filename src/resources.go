@@ -159,3 +159,9 @@ var awsCloudfrontDistribution []byte
 
 //go:embed resources/aws_iam_user.template
 var awsIamUser []byte
+
+//go:embed resources/aws_cloud9_environment_ec2.template
+var awsCloud9EnvironmentEc2 []byte
+
+//go:embed resources/aws_codecommit_repository.template
+var awsCodecommitRepository []byte

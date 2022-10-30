@@ -1,7 +1,9 @@
 resource "aws_codebuild_project" "{{.item}}" {
 {{- if .resource.Artifacts}}
   artifacts {
+{{- if .resource.Artifacts.Type}}
     type    = "{{.resource.Artifacts.Type}}"
+{{- end}}
 {{- if .resource.Artifacts.ArtifactIdentifier}}
     artifact_identifier="{{.resource.Artifacts.ArtifactIdentifier}}"
 {{- end}}
@@ -61,7 +63,9 @@ resource "aws_codebuild_project" "{{.item}}" {
 {{- range $j, $c := .resource.Environment.EnvironmentVariables}}
     environment_variable {
       name  = "{{$c.Name}}"
+{{- if $c.Type}}
       type  = "{{$c.Type}}"
+{{- end}}
       value = "{{$c.Value}}"
     }
 {{- end}}
@@ -107,7 +111,11 @@ resource "aws_codebuild_project" "{{.item}}" {
 {{- end}}
   }
 {{- end}}
+{{- if .resource.Name}}
   name = "{{.resource.Name}}"
+{{- else}}
+  name = "{{.item}}"
+{{- end}}
 {{- if .resource.QueuedTimeoutInMinutes}}
   queued_timeout          = "{{.resource.QueuedTimeoutInMinutes}}"
 {{- end}}

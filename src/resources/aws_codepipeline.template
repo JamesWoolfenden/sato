@@ -44,7 +44,11 @@ resource "aws_codepipeline" "{{.item}}" {
 {{- if $b.Configuration}}
       configuration = {
 {{- range $i, $c := $b.Configuration}}
-        {{$i}} = "{{$c}}"
+{{- if eq $i "ParameterOverrides" }}
+        {{Snake $i}} = jsonencode({{$c}})
+{{- else }}
+        {{Snake $i}} = "{{$c}}"
+{{- end}}
 {{- end}}
       }
 {{- end}}

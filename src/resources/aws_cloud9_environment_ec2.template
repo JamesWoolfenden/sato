@@ -1,0 +1,23 @@
+resource "aws_cloud9_environment_ec2" "{{.item}}" {
+  instance_type  = "{{.resource.InstanceType}}"
+  name           = "{{.item}}"
+{{- if  .resource.AutomaticStopTimeMinutes}}
+  automatic_stop_time_minutes={{.resource.AutomaticStopTimeMinutes}}
+{{- end}}
+{{- if .resource.ConnectionType}}
+  connection_type= "{{.resource.ConnectionType}}"
+{{- end}}
+  description    = "{{.resource.Description}}"
+{{- if  .resource.ImageId}}
+  image_id       = "{{.resource.ImageId}}"
+{{- end}}
+{{- if   .resource.OwnerArn}}
+  owner_arn      = "{{.resource.OwnerArn}}"
+{{- end }}
+  subnet_id      = "{{.resource.SubnetId}}"
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

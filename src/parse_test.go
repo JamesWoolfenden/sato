@@ -50,28 +50,6 @@ func TestStringToMap(t *testing.T) {
 	}
 }
 
-func TestParseResources(t *testing.T) {
-	type args struct {
-		resources   cloudformation.Resources
-		funcMap     tftemplate.FuncMap
-		destination string
-	}
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if err := ParseResources(tt.args.resources, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
-				t.Errorf("ParseResources() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
 func TestWrite(t *testing.T) {
 	type args struct {
 		output   string
