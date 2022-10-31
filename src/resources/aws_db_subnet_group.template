@@ -1,0 +1,12 @@
+resource "aws_db_subnet_group" "{{.item}}" {
+  name       = "{{.item}}"
+  subnet_ids = {{.resource.SubnetIds}}
+{{- if  .resource.DBSubnetGroupDescription}}
+  description="{{.resource.DBSubnetGroupDescription}}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

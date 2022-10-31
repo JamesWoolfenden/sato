@@ -24,7 +24,7 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- end}}
 {{- if .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues}}
     forwarded_values {
-      headers                = {{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Headers}}
+      headers                = [{{range $i, $v := .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Headers}}{{if $i}}, {{end}}"{{.}}"{{end}}]
       query_string           = {{ Boolean .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.QueryString}}
       query_string_cache_keys= {{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.QueryStringCacheKeys}}
 {{- if .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Cookies}}
@@ -101,8 +101,8 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- end}}
 {{- range $i, $a := .resource.DistributionConfig.CacheBehaviors}}
   ordered_cache_behavior {
-    allowed_methods        = {{$a.AllowedMethods}}
-    cached_methods         = {{$a.CachedMethods}}
+    allowed_methods        = [{{range $i, $v := $a.AllowedMethods}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+    cached_methods         = [{{range $i, $v := $a.CachedMethods}}{{if $i}}, {{end}}"{{.}}"{{end}}]
 {{- if $a.CachePolicyId}}
     cache_policy_id=$a.CachePolicyId}}"
 {{- end}}
@@ -113,9 +113,9 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- if $a.FieldLevelEncryptionId}}
     field_level_encryption_id="{{$a.FieldLevelEncryptionId}}"
 {{- end}}
-{{- if .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues}}
+{{- if $a.ForwardedValues}}
     forwarded_values {
-      headers                = {{ $a.ForwardedValues.Headers}}
+      headers                = [{{range $i, $v :=  $a.ForwardedValues.Headers}}{{if $i}}, {{end}}"{{.}}"{{end}}]
       query_string           = {{ Boolean $a.ForwardedValues.QueryString}}
       query_string_cache_keys= {{ $a.ForwardedValues.QueryStringCacheKeys}}
 {{- if $a.ForwardedValues.Cookies}}
@@ -123,7 +123,12 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
         forward          = "{{ $a.ForwardedValues.Cookies.Forward}}"
         whitelisted_names= {{ $a.ForwardedValues.Cookies.WhitelistedNames}}
       }
+{{- else}}
+      cookies {
+        forward=0
+      }
 {{- end}}
+
     }
 {{- end}}
 {{- if $a.LambdaFunctionAssociations}}
@@ -148,13 +153,18 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- if $a.OriginRequestPolicyId}}
     origin_request_policy_id="{{$a.OriginRequestPolicyId}}"
 {{- end}}
+{{- if $a.PathPattern}}
+    path_pattern="{{$a.PathPattern}}"
+{{- else }}
+    path_pattern=""
+{{- end}}
 {{- if $a.RealtimeLogConfigArn}}
     realtime_log_config_arn="{{$a.RealtimeLogConfigArn}}"
 {{- end}}
 {{- if $a.ResponseHeadersPolicyId}}
     response_headers_policy_id="{{$a.ResponseHeadersPolicyId}}"
 {{- end}}
-  smooth_streaming = {{ Boolean $a.SmoothStreaming }}
+    smooth_streaming = {{ Boolean $a.SmoothStreaming }}
 {{- if $a.TrustedKeyGroups}}
   trusted_key_groups="{{$a.TrustedKeyGroups}}"
 {{- end}}
@@ -181,11 +191,21 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- end}}
 {{- if  $b.CustomOriginConfig}}
     custom_origin_config{
+{{- if  $b.CustomOriginConfig.HTTPPort}}
       http_port={{ $b.CustomOriginConfig.HTTPPort}}
+{{- else }}
+      http_port=0
+{{- end}}
+{{- if $b.CustomOriginConfig.HTTPSPort}}
       https_port={{ $b.CustomOriginConfig.HTTPSPort}}
+{{- else }}
+      https_port=0
+{{- end}}
       origin_protocol_policy="{{ $b.CustomOriginConfig.OriginProtocolPolicy}}"
       origin_ssl_protocols=[{{range $i, $v := $b.CustomOriginConfig.OriginSSLProtocols}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if $b.CustomOriginConfig.OriginKeepaliveTimeout}}
       origin_keepalive_timeout={{ $b.CustomOriginConfig.OriginKeepaliveTimeout}}
+{{- end}}
       origin_read_timeout={{ $b.CustomOriginConfig.OriginReadTimeout}}
     }
 {{- end}}

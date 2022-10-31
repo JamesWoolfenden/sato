@@ -95,6 +95,9 @@ func lookup(myType string) []byte {
 		"AWS::IAM::User":                            awsIamUser,
 		"AWS::Cloud9::EnvironmentEC2":               awsCloud9EnvironmentEc2,
 		"AWS::CodeCommit::Repository":               awsCodecommitRepository,
+		"AWS::CloudWatch::Alarm":                    awsCloudwatchMetricAlarm,
+		"AWS::Route53::RecordSet":                   awsRoute53Record,
+		"AWS::RDS::DBSubnetGroup":                   awsDbSubnetGroup,
 	}
 
 	var myContent []byte

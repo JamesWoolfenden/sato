@@ -1,0 +1,89 @@
+resource "aws_cloudwatch_metric_alarm" "{{.item}}" {
+{{- if .resource.AlarmName}}
+  alarm_name          = "{{.resource.AlarmName}}"
+{{- else}}
+  alarm_name          = "{{.item}}"
+{{- end}}
+  comparison_operator = "{{.resource.ComparisonOperator}}"
+  evaluation_periods  = {{.resource.EvaluationPeriods}}
+{{- if   .resource.MetricName}}
+  metric_name         = "{{.resource.MetricName}}"
+{{- end}}
+{{- if  .resource.Namespace}}
+  namespace           = "{{.resource.Namespace}}"
+{{- end}}
+{{- if  .resource.Period}}
+  period              = "{{.resource.Period}}"
+{{- end}}
+{{- if  .resource.Statistic}}
+  statistic           = "{{.resource.Statistic}}"
+{{- end}}
+{{- if  .resource.Threshold}}
+  threshold           = {{.resource.Threshold}}
+{{- end}}
+{{- if   .resource.ThresholdMetricId}}
+  threshold_metric_id = "{{.resource.ThresholdMetricId}}"
+{{- end}}
+  actions_enabled={{Boolean .resource.ActionsEnabled}}
+{{- if   .resource.DatapointsToAlarm}}
+  datapoints_to_alarm={{.resource.DatapointsToAlarm}}
+{{- end}}
+  insufficient_data_actions={{.resource.InsufficientDataActions}}
+  ok_actions={{.resource.OKActions}}
+{{- if  .resource.Unit}}
+  unit = {{.resource.Unit}}
+{{- end}}
+{{- if .resource.ExtendedStatistic}}
+  extended_statistic= {{.resource.ExtendedStatistic}}
+{{- end}}
+{{- if .resource.EvaluateLowSampleCountPercentile}}
+  evaluate_low_sample_count_percentiles= {{.resource.EvaluateLowSampleCountPercentile}}
+{{- end}}
+{{- if .resource.Metrics}}
+
+{{- range $i, $j := .resource.Metrics}}
+  metric_query {
+    id="{{ $j.Id }}"
+{{- if $j.AccountId }}
+    account_id={{ $j.AccountId }}
+{{- end}}
+{{- if   $j.Expression }}
+    expression="{{ $j.Expression }}"
+{{- end}}
+    label="{{ $j.Label }}"
+    return_data={{ $j.ReturnData }}
+{{- if $j.Period}}
+    period={{$j.Period}}
+{{- end}}
+{{- if   $j.MetricStat }}
+    metric {
+      {{- if $j.MetricStat.Metric.Dimensions}}
+      dimensions={
+      {{- range $a, $j := $j.MetricStat.Metric.Dimensions}}
+        {{$j.Name}} = "{{$j.Value}}"
+      }
+      {{- end}}
+      {{- end}}
+      metric_name="{{$j.MetricStat.Metric.MetricName}}"
+      namespace="{{$j.MetricStat.Metric.Namespace}}"
+      period={{$j.MetricStat.Period}}
+      stat="{{$j.MetricStat.Stat}}"
+      unit="{{$j.MetricStat.Unit}}"
+    }
+{{- end}}
+  }
+{{- end}}
+{{- end}}
+{{- if  .resource.TreatMissingData}}
+  treat_missing_data={{.resource.TreatMissingData}}
+{{- end}}
+{{- if .resource.Dimensions}}
+  dimensions = {
+{{- range $i, $a := .resource.Dimensions}}
+    {{$a.Name}} = "{{$a.Value}}"
+{{- end}}
+  }
+{{- end}}
+  alarm_description = "{{.resource.AlarmDescription}}"
+  alarm_actions     = {{.resource.AlarmActions}}
+}

@@ -19,7 +19,7 @@ resource "aws_security_group" "{{.item}}" {
     description="{{$a.Description}}"
 {{- end}}
 {{- if $a.DestinationPrefixListId}}
-    prefix_list_ids="{{$a.DestinationPrefixListId}}"
+    prefix_list_ids=["{{$a.DestinationPrefixListId}}"]
 {{- end}}
 {{- if $a.DestinationSecurityGroupId}}
     security_groups="{{$a.DestinationSecurityGroupId}}"
@@ -53,7 +53,7 @@ resource "aws_security_group" "{{.item}}" {
     description="{{$a.Description}}"
 {{- end}}
 {{- if $a.SourcePrefixListId}}
-    prefix_list_ids="{{$a.SourcePrefixListId}}"
+    prefix_list_ids=["{{$a.SourcePrefixListId}}"]
 {{- end}}
 {{- if $a.SourceSecurityGroupId}}
     security_groups="{{$a.SourceSecurityGroupId}}"

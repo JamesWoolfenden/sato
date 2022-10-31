@@ -13,7 +13,7 @@ resource "aws_security_group_rule" "{{.item}}" {
   description="{{.resource.Description}}"
 {{- end}}
 {{- if .resource.SourcePrefixListId}}
-  prefix_list_ids="{{.resource.SourcePrefixListId}}"
+  prefix_list_ids=["{{.resource.SourcePrefixListId}}"]
 {{- end}}
 {{- if .resource.SourceSecurityGroupId}}
   security_groups="{{.resource.SourceSecurityGroupId}}"

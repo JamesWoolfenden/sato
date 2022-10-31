@@ -165,3 +165,12 @@ var awsCloud9EnvironmentEc2 []byte
 
 //go:embed resources/aws_codecommit_repository.template
 var awsCodecommitRepository []byte
+
+//go:embed resources/aws_cloudwatch_metric_alarm.template
+var awsCloudwatchMetricAlarm []byte
+
+//go:embed resources/aws_route53_record.template
+var awsRoute53Record []byte
+
+//go:embed resources/aws_db_subnet_group.template
+var awsDbSubnetGroup []byte

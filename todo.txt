@@ -1,8 +1,8 @@
 variable     Type : AWS::SSM::Parameter::Value<String>
 Variable 	List<AWS::EC2::SecurityGroup::Id>
-		 AWS::Route53::HostedZone::Id
+         AWS::Route53::HostedZone::Id
 
-cobert to data look up
+convert to data look up
 
   WindowsAMIID:
     Description: The Latest Windows 2016 AMI taken from the public Systems Manager Parameter Store
@@ -16,91 +16,102 @@ cobert to data look up
 cfn comments from app when its json
 
 EFS
-2022/10/23 10:24:46 AWS::EFS::MountTarget not found
-2022/10/23 10:24:46 AWS::AutoScaling::ScalingPolicy not found
-2022/10/23 10:24:46 AWS::CloudWatch::Alarm not found
-2022/10/23 10:24:46 AWS::EFS::FileSystem not found
-2022/10/23 10:24:46 AWS::EFS::MountTarget not found
-2022/10/23 10:24:46 AWS::AutoScaling::ScalingPolicy not found
-2022/10/23 10:24:46 AWS::CloudWatch::Alarm not found
-2022/10/23 10:24:46 AWS::ElasticLoadBalancing::LoadBalancer not found
-2022/10/23 10:24:46 AWS::EFS::MountTarget not found
-2022/10/23 10:24:46 AWS::EFS::MountTarget not found
-
+AWS::EFS::MountTarget
+AWS::AutoScaling::ScalingPolicy
+AWS::EFS::FileSystem
+AWS::EFS::MountTarget
+AWS::AutoScaling::ScalingPolicy
+AWS::ElasticLoadBalancing::LoadBalancer
+AWS::EFS::MountTarget
 
 eks
-2022/10/23 10:38:52 AWS::EKS::Nodegroup not found
-2022/10/23 10:38:52 AWS::EC2::LaunchTemplate not found
-2022/10/23 10:38:52 AWS::EKS::Cluster not found
+AWS::EKS::Nodegroup
+AWS::EC2::LaunchTemplate
+AWS::EKS::Cluster
 
-aws-cloudformation-templates\community\services\RDS\aurora-serverless
+cd E:\Code\aws-cloudformation-templates\community\services\RDS\aurora-serverless
+sato parse -f Template.yml
 AWS::RDS::DBCluster
 
+cd E:\Code\aws-cloudformation-templates\community\solutions\ReadOnlyUser\
+sato parse -f Template.yaml
 
-E:\Code\aws-cloudformation-templates\community\solutions\ReadOnlyUser\Template.yaml
-2022/10/23 11:05:37 AWS::IAM::Policy not found
-2022/10/23 11:05:37 AWS::IAM::User not found
-
-E:\code\aws-cloudformation-templates\community\solutions\StaticWebSiteWithPipeline\stacks\distribution
+cd E:\code\aws-cloudformation-templates\community\solutions\StaticWebSiteWithPipeline\stacks\distribution
+sato parse -f Template.yaml
 AWS::Route53::RecordSetGroup
 
-E:\code\aws-cloudformation-templates\community\solutions\StaticWebSiteWithPipeline\stacks\pipeline.json
-2022/10/23 11:16:03 AWS::CodeCommit::Repository not found
-2022/10/23 11:16:03 AWS::Events::Rule not found
+cd E:\code\aws-cloudformation-templates\community\solutions\StaticWebSiteWithPipeline\stacks\
+sato parse -f pipeline.json
+2022/10/23 11:16:03 AWS::CodeCommit::Repository
+2022/10/23 11:16:03 AWS::Events::Rule
 
-E:\code\aws-cloudformation-templates\community\solutions [master ≡ +23 ~11 -12 !]> sato parse -f .\StaticS3Cloudfront\StaticS3CloudFront.yml
+cd E:\code\aws-cloudformation-templates\community\solutions
+sato parse -f .\StaticS3Cloudfront\StaticS3CloudFront.yml
 2022/10/23 11:17:29 AWS::CloudFront::CloudFrontOriginAccessIdentity
 
-E:\code\aws-cloudformation-templates\aws\services\AutoScaling\AutoScalingMultiAZWithNotifications.yaml
-2022/10/23 11:24:55 AWS::CloudWatch::Alarm not found
-2022/10/23 11:24:55 AWS::ElasticLoadBalancing::LoadBalancer not found
-2022/10/23 11:24:56 AWS::AutoScaling::ScalingPolicy not found
-2022/10/23 11:24:56 AWS::CloudWatch::Alarm not found
-2022/10/23 11:24:56 AWS::AutoScaling::ScalingPolicy not found
+E:\code\aws-cloudformation-templates\aws\services\AutoScaling\
+sato parse -f AutoScalingMultiAZWithNotifications.yaml
+2022/10/23 11:24:55 AWS::ElasticLoadBalancing::LoadBalancer
+2022/10/23 11:24:56 AWS::AutoScaling::ScalingPolicy
+2022/10/23 11:24:56 AWS::AutoScaling::ScalingPolicy
 
-E:\code\aws-cloudformation-templates\aws\services\AutoScaling\AutoScalingRollingUpdates.yaml
-2022/10/23 11:39:54 AWS::ElasticLoadBalancing::LoadBalancer not found
+cd E:\code\aws-cloudformation-templates\aws\services\AutoScaling\
+sato parse -f AutoScalingRollingUpdates.yaml
+2022/10/23 11:39:54 AWS::ElasticLoadBalancing::LoadBalancer
 
-E:\code\aws-cloudformation-templates\aws\services\AutoScaling\AutoScalingScheduledAction.yaml
-2022/10/23 11:49:41 AWS::AutoScaling::ScheduledAction not found
-2022/10/23 11:49:41 AWS::AutoScaling::ScheduledAction not found
-2022/10/23 11:49:41 AWS::ElasticLoadBalancing::LoadBalancer not found
+cd E:\code\aws-cloudformation-templates\aws\services\AutoScaling\
+sato parse -f AutoScalingScheduledAction.yaml
+2022/10/23 11:49:41 AWS::AutoScaling::ScheduledAction
+2022/10/23 11:49:41 AWS::AutoScaling::ScheduledAction
+2022/10/23 11:49:41 AWS::ElasticLoadBalancing::LoadBalancer
 
-E:\code\aws-cloudformation-templates\aws\services\Cloud9\C9.yaml
-2022/10/23 11:50:25 AWS::Cloud9::EnvironmentEC2 not found
 
-E:\code\aws-cloudformation-templates\aws\services.\Config\Config.yaml
-2022/10/23 12:04:44 AWS::SNS::TopicPolicy not found
-2022/10/23 12:04:44 AWS::Config::DeliveryChannel not found
-2022/10/23 12:04:44 AWS::Config::ConfigRule not found
-2022/10/23 12:04:44 AWS::Config::ConfigurationRecorder not found
-2022/10/23 12:04:44 AWS::Config::ConfigRule not found
-2022/10/23 12:04:44 AWS::EC2::Volume not found
+cd E:\code\aws-cloudformation-templates\aws\services.\Config\
+sato parse -f Config.yaml
+2022/10/23 12:04:44 AWS::SNS::TopicPolicy
+2022/10/23 12:04:44 AWS::Config::DeliveryChannel
+2022/10/23 12:04:44 AWS::Config::ConfigRule
+2022/10/23 12:04:44 AWS::Config::ConfigurationRecorder
+2022/10/23 12:04:44 AWS::Config::ConfigRule
+2022/10/23 12:04:44 AWS::EC2::Volume
 
-E:\code\aws-cloudformation-templates\aws\services\DMS\Template.yaml
-2022/10/23 12:11:08 AWS::DMS::ReplicationSubnetGroup not found
-2022/10/23 12:11:08 AWS::DMS::ReplicationTask not found
-2022/10/23 12:11:08 AWS::RDS::DBInstance not found
-2022/10/23 12:11:08 AWS::DMS::Endpoint not found
-2022/10/23 12:11:08 AWS::RDS::DBSubnetGroup not found
-2022/10/23 12:11:08 AWS::DMS::ReplicationInstance not found
-2022/10/23 12:11:08 AWS::DMS::Endpoint not found
-2022/10/23 12:11:08 AWS::RDS::DBCluster not found
-2022/10/23 12:11:08 AWS::RDS::DBClusterParameterGroup not found
+cd E:\code\aws-cloudformation-templates\aws\services\DMS\
+sato parse -f Template.yaml
+2022/10/23 12:11:08 AWS::DMS::ReplicationSubnetGroup
+2022/10/23 12:11:08 AWS::DMS::ReplicationTask
+2022/10/23 12:11:08 AWS::RDS::DBInstance
+2022/10/23 12:11:08 AWS::DMS::Endpoint
+2022/10/23 12:11:08 AWS::RDS::DBSubnetGroup
+2022/10/23 12:11:08 AWS::DMS::ReplicationInstance
+2022/10/23 12:11:08 AWS::DMS::Endpoint
+2022/10/23 12:11:08 AWS::RDS::DBCluster
+2022/10/23 12:11:08 AWS::RDS::DBClusterParameterGroup
 
 E:\code\aws-cloudformation-templates\aws\services\EC2\EIP_With_Association.yaml
-2022/10/23 13:07:54 AWS::EC2::EIPAssociation not found
+2022/10/23 13:07:54 AWS::EC2::EIPAssociation
 
 E:\code\aws-cloudformation-templates\aws\services\EC2\SingleENIwithMultipleEIPs.yaml
-2022/10/23 13:08:59 AWS::EC2::NetworkInterface not found
-2022/10/23 13:08:59 AWS::EC2::EIPAssociation not found
-2022/10/23 13:08:59 AWS::EC2::EIPAssociation not found
+2022/10/23 13:08:59 AWS::EC2::NetworkInterface
+2022/10/23 13:08:59 AWS::EC2::EIPAssociation
+2022/10/23 13:08:59 AWS::EC2::EIPAssociation
 
 E:\code\aws-cloudformation-templates\aws\services\ecs\ECS_Schedule_Example.yaml
-2022/10/23 14:01:12 AWS::CloudWatch::Alarm not found
-2022/10/23 14:01:12 AWS::ApplicationAutoScaling::ScalingPolicy not found
-2022/10/23 14:01:12 AWS::Events::Rule not found
-2022/10/23 14:01:12 AWS::ECS::Service not found
-2022/10/23 14:01:12 AWS::ECS::TaskDefinition not found
-2022/10/23 14:01:12 AWS::ApplicationAutoScaling::ScalableTarget not found
-2022/10/23 14:01:12 AWS::ECS::Cluster not found
+2022/10/23 14:01:12 AWS::ApplicationAutoScaling::ScalingPolicy
+2022/10/23 14:01:12 AWS::Events::Rule
+2022/10/23 14:01:12 AWS::ECS::Service
+2022/10/23 14:01:12 AWS::ECS::TaskDefinition
+2022/10/23 14:01:12 AWS::ApplicationAutoScaling::ScalableTarget
+2022/10/23 14:01:12 AWS::ECS::Cluster
+
+sato:
+AWS::EC2::LaunchTemplate-> aws_launch_template
+AWS::WAFv2::WebACLAssociation => aws_wafv2_web_acl_association
+AWS::Route53::RecordSet =>aws_route53_record
+AWS::AutoScaling::ScalingPolicy =>  aws_autoscaling_policy
+AWS::EFS::MountTarget =>aws_efs_mount_target
+AWS::Backup::BackupPlan =>aws_backup_plan
+AWS::ElasticLoadBalancing::LoadBalancer aws_elb
+AWS::EFS::FileSystem =>aws_efs_file_system
+AWS::Backup::BackupSelection => aws_backup_selection
+AWS::Backup::BackupVault =>aws_backup_vault
+AWS::RDS::DBInstance =>aws_db_instance

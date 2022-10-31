@@ -1,0 +1,52 @@
+resource "aws_route53_record" "{{.item}}" {
+{{- if .resource.HostedZoneId}}
+  zone_id = "{{.resource.HostedZoneId}}"
+ {{- else}}
+  zone_id = ""
+{{- end}}
+  name    = "{{.resource.Name}}"
+  type    = "{{.resource.Type}}"
+{{- if   .resource.TTL}}
+  ttl     = {{.resource.TTL}}
+{{- end}}
+{{- if .resource.ResourceRecords }}
+  records = {{.resource.ResourceRecords }}
+{{- end}}
+{{- if .resource.Weight}}
+  weighted_routing_policy {
+    weight={{.resource.Weight}}
+  }
+{{- end}}
+{{- if .resource.HealthCheckId}}
+  health_check_id = {{.resource.HealthCheckId}}
+{{- end}}
+{{- if .resource.Region}}
+  latency_routing_policy {
+    region="{{.resource.Region}}"
+  }
+{{- end}}
+{{- if .resource.SetIdentifier}}
+  set_identifier="{{ .resource.SetIdentifier}}"
+{{- end}}
+{{- if .resource.GeoLocation}}
+  geolocation_routing_policy {
+    continent   = "{{.resource.GeoLocation.Continent}}"
+    country     = "{{.resource.GeoLocation.Country}}"
+    subdivision = "{{.resource.GeoLocation.Subdivision}}"
+  }
+{{- end}}
+{{- if .resource.Failover}}
+  failover_routing_policy {
+  type="{{ .resource.Failover}}"
+  }
+{{- end}}
+  multivalue_answer_routing_policy={{Boolean .resource.MultiValueAnswer}}
+
+  {{- if .resource.AliasTarget}}
+    alias {
+      name                  = "{{.resource.AliasTarget.DNSName}}"
+      evaluate_target_health= {{Boolean  .resource.AliasTarget.EvaluateTargetHealth }}
+      zone_id               = "{{.resource.AliasTarget.HostedZoneId}}"
+    }
+  {{- end}}
+}
