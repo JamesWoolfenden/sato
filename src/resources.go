@@ -174,3 +174,6 @@ var awsRoute53Record []byte
 
 //go:embed resources/aws_db_subnet_group.template
 var awsDbSubnetGroup []byte
+
+//go:embed resources/aws_rds_cluster.template
+var awsRdsCluster []byte

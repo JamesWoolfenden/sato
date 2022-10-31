@@ -233,6 +233,7 @@ func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataRe
 		log.Info().Msgf("Variable %s", param.Type)
 	}
 
+	DataResources, m = add(provider, DataResources, m)
 	return DataResources, myVariable, m
 }
 

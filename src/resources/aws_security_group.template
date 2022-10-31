@@ -1,9 +1,9 @@
 resource "aws_security_group" "{{.item}}" {
-  description="{{.resource.GroupDescription}}"
+  description = "{{.resource.GroupDescription}}"
 {{- if .resource.GroupName}}
-  name="{{.resource.GroupName}}"
+  name        = "{{.resource.GroupName}}"
 {{- else}}
-  name= "{{ .item}}"
+  name        = "{{ .item}}"
 {{- end}}
 {{- range $i, $a := .resource.SecurityGroupEgress}}
   egress {
@@ -13,29 +13,29 @@ resource "aws_security_group" "{{.item}}" {
     cidr_blocks=[]
 {{- end}}
 {{- if $a.CidrIpv6}}
-    ipv6_cidr_blocks=["{{$a.CidrIpv6}}"]
+    ipv6_cidr_blocks= ["{{$a.CidrIpv6}}"]
 {{- end}}
 {{- if $a.Description}}
-    description="{{$a.Description}}"
+    description     = "{{$a.Description}}"
 {{- end}}
 {{- if $a.DestinationPrefixListId}}
-    prefix_list_ids=["{{$a.DestinationPrefixListId}}"]
+    prefix_list_ids = ["{{$a.DestinationPrefixListId}}"]
 {{- end}}
 {{- if $a.DestinationSecurityGroupId}}
-    security_groups="{{$a.DestinationSecurityGroupId}}"
+    security_groups = "{{$a.DestinationSecurityGroupId}}"
 {{- end}}
-{{- if $a.FromPort}}"
-    from_port={{$a.FromPort}}
+{{- if $a.FromPort}}
+    from_port= {{$a.FromPort}}
 {{- else}}
-    from_port=0
+    from_port= 0
 {{- end}}
 {{- if $a.IpProtocol}}
-    protocol="{{$a.IpProtocol}}"
+    protocol = "{{$a.IpProtocol}}"
 {{- end}}
 {{- if $a.ToPort}}
-    to_port={{$a.ToPort}}
+    to_port  = {{$a.ToPort}}
 {{- else}}
-    to_port=0
+    to_port  = 0
 {{- end}}
   }
 {{- end}}

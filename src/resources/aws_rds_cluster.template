@@ -1,0 +1,107 @@
+resource "aws_rds_cluster" "{{.item}}" {
+  cluster_identifier      = "{{.resource.DBClusterIdentifier}}"
+{{- if  .resource.DBClusterInstanceClass}}
+  global_cluster_identifier={{.resource.DBClusterInstanceClass}}
+{{- end}}
+  iam_database_authentication_enabled={{Boolean .resource.EnableIAMDatabaseAuthentication}}
+  engine                  = "{{.resource.Engine }}"
+  engine_version          = "{{.resource.EngineVersion}}"
+  availability_zones      = {{.resource.AvailabilityZones}}
+{{- if   .resource.DatabaseName}}
+  database_name           = "{{.resource.DatabaseName}}"
+{{- else}}
+  database_name           = "{{.item}}"
+{{- end}}
+  master_username         = "{{.resource.MasterUsername}}"
+  master_password         = "{{.resource.MasterUserPassword}}"
+  backup_retention_period = {{.resource.BackupRetentionPeriod}}
+{{- if .resource.PreferredBackupWindow}}
+  preferred_backup_window = "{{.resource.PreferredBackupWindow}}"
+{{- end}}
+{{- if .resource.DBClusterParameterGroupName}}
+  db_cluster_parameter_group_name = "{{.resource.DBClusterParameterGroupName}}"
+{{- end}}
+{{- if  .resource.DBInstanceParameterGroupName}}
+  db_instance_parameter_group_name= "{{.resource.DBInstanceParameterGroupName}}"
+{{- end}}
+{{- if  .resource.DBSubnetGroupName}}
+  db_subnet_group_name            = "{{.resource.DBSubnetGroupName}}"
+{{- end}}
+  allow_major_version_upgrade     = {{Boolean .resource.AutoMinorVersionUpgrade}}
+  enabled_cloudwatch_logs_exports={{.resource.EnableCloudwatchLogsExports}}
+  enable_http_endpoint={{Boolean .resource.EnableHttpEndpoint}}
+  engine_mode="{{.resource.EngineMode}}"
+  deletion_protection={{Boolean .resource.DeletionProtection }}
+{{- if .resource.BacktrackWindow }}
+  backtrack_window                = "{{.resource.BacktrackWindow }}"
+{{- end}}
+{{- if .resource.AllocatedStorage}}
+  allocated_storage={{.resource.AllocatedStorage}}
+{{- end}}
+{{- if .resource.Iops}}
+  iops={{.resource.Iops}}
+{{- end}}
+{{- if .resource.KmsKeyId}}
+  kms_key_id={{.resource.KmsKeyId}}
+{{- end}}
+{{- if .resource.NetworkType}}
+  network_type={{.resource.NetworkType}}
+{{- end}}
+{{- if .resource.Port}}
+  port={{.resource.Port}}
+{{- end}}
+{{- if .resource.PreferredMaintenanceWindow}}
+  preferred_maintenance_window={{.resource.PreferredMaintenanceWindow}}
+{{- end}}
+{{- if .resource.ReplicationSourceIdentifier}}
+  replication_source_identifier={{.resource.ReplicationSourceIdentifier}}
+{{- end}}
+{{- if .resource.ScalingConfiguration}}
+  scaling_configuration {
+    auto_pause               = {{Boolean .resource.ScalingConfiguration.AutoPause}}
+    max_capacity             = {{.resource.ScalingConfiguration.MaxCapacity}}
+    min_capacity             = {{ .resource.ScalingConfiguration.MinCapacity}}
+    seconds_until_auto_pause = {{.resource.ScalingConfiguration.SecondsUntilAutoPause}}
+    timeout_action           = "{{ .resource.ScalingConfiguration.TimeoutAction}}"
+  }
+{{- end}}
+{{- if .resource.ServerlessV2ScalingConfiguration}}
+  serverlessv2_scaling_configuration {
+    max_capacity = {{ .resource.ServerlessV2ScalingConfiguration.MaxCapacity}}
+    min_capacity = {{ .resource.ServerlessV2ScalingConfiguration.MinCapacity}}
+  }
+{{- end}}
+{{- if .resource.SnapshotIdentifier}}
+  snapshot_identifier="{{.resource.SnapshotIdentifier}}"
+{{- end}}
+{{- if .resource.SourceRegion}}
+  source_region="{{.resource.SourceRegion}}"
+{{- end}}
+  storage_encrypted={{Boolean .resource.StorageEncrypted }}
+{{- if   .resource.StorageType}}
+  storage_type="{{.resource.StorageType}}"
+{{- end}}
+  vpc_security_group_ids={{.resource.VpcSecurityGroupIds}}
+  iam_roles={{.resource.AssociatedRoles}}
+{{- if  .resource.GlobalClusterIdentifier}}
+  global_cluster_identifier="{{.resource.GlobalClusterIdentifier}}"
+{{- end}}
+  copy_tags_to_snapshot={{Boolean .resource.CopyTagsToSnapshot}}
+
+  restore_to_point_in_time {
+{{- if  .resource.SourceDBClusterIdentifier}}
+    source_cluster_identifier  = "{{.resource.SourceDBClusterIdentifier}}"
+{{- else}}
+    source_cluster_identifier  = ""
+{{- end}}
+{{- if  .resource.RestoreType}}
+    restore_type               = "{{.resource.RestoreType}}"
+{{- end}}
+    use_latest_restorable_time = {{Boolean .resource.UseLatestRestorableTime}}
+  }
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

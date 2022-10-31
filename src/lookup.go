@@ -98,6 +98,7 @@ func lookup(myType string) []byte {
 		"AWS::CloudWatch::Alarm":                    awsCloudwatchMetricAlarm,
 		"AWS::Route53::RecordSet":                   awsRoute53Record,
 		"AWS::RDS::DBSubnetGroup":                   awsDbSubnetGroup,
+		"AWS::RDS::DBCluster":                       awsRdsCluster,
 	}
 
 	var myContent []byte
