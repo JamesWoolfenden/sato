@@ -9,7 +9,7 @@
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 [![Github All Releases](https://img.shields.io/github/downloads/jameswoolfenden/sato/total.svg)](https://github.com/JamesWoolfenden/sato/releases)
 
-Converts CFN into Terraform. In Go, quickerly.
+Converts CloudFormation into Terraform. In Go, quickerly.
 
 ## Install
 
@@ -25,7 +25,7 @@ go install
 
 ## Usage
 
-Get yourself some valid cloudformation*
+Get yourself some valid CloudFormation*
 
 ```bash
  git clone https://github.com/JamesWoolfenden/aws-cloudformation-templates
@@ -45,7 +45,7 @@ Get yourself some valid cloudformation*
  9:17PM INF Created .sato\aws_s3_bucket.pipelines3bucket.tf
 ```
 
-That's it (I should make it obvious that its worked). So by default (overidable) the parsed Cloudformation (now Terraform) will be in a .sato sub directory.
+That's it (I should make it obvious that its worked). So by default (overidable) the parsed CloudFormation (now Terraform) will be in a .sato sub directory.
 So let's have a look see:
 
 ```bash
@@ -75,7 +75,7 @@ Plan: 12 to add, 0 to change, 0 to destroy.
 
 What's missing?
 
-- Lots of Cloudformation support - this is very new project
+- Lots of CloudFormation support - this is very new project
 - variables and resource relationships need work (Current limitation of a library)
 
 Extra credit?
@@ -165,9 +165,9 @@ If you use my other tool, Pike you can now apply that and get the policy require
 
 ```
 
-## Valid Cloudformation
+## Valid CloudFormation
 
-Ditch it all,Ok ok.. but some older samples can play fast and lose with the cloudformation schema and data types.
+Ditch it all,Ok ok.. but some older samples can play fast and lose with the CloudFormation schema and data types.
 The Go-formation parser is less accommodating, you may need to be stricter on your typing.
 
 - Booleans are true or false and not "false"
