@@ -177,3 +177,6 @@ var awsDbSubnetGroup []byte
 
 //go:embed resources/aws_rds_cluster.template
 var awsRdsCluster []byte
+
+//go:embed resources/aws_cloudwatch_event_rule.template
+var awsCloudwatchEventRule []byte

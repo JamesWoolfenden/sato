@@ -41,7 +41,7 @@ resource "aws_codebuild_project" "{{.item}}" {
 {{- if .resource.Cache}}
   cache {
     location="{{.resource.Cache.Location}}"
-    modes="{{.resource.Cache.Modes}}"
+    modes={{.resource.Cache.Modes}}
     type="{{.resource.Cache.Type}}"
   }
 {{- end}}

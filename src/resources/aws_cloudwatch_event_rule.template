@@ -1,0 +1,68 @@
+resource "aws_cloudwatch_event_rule" "{{.item}}" {
+  name                = "{{.resource.Name}}"
+  description         = "{{.resource.Description}}"
+{{- if  .resource.EventBusName}}
+  event_bus_name      = "{{.resource.EventBusName}}"
+{{- end}}
+{{- if .resource.RoleArn}}
+  role_arn            = "{{.resource.RoleArn}}"
+{{- end}}
+{{- if .resource.ScheduleExpression}}
+  schedule_expression = "{{.resource.ScheduleExpression}}"
+{{- end}}
+  event_pattern = jsonencode({{Marshal .resource.EventPattern}})
+}
+
+
+
+{{- if .resource.Targets}}
+{{- $p := .item}}
+{{range $a, $i := .resource.Targets}}
+resource "aws_cloudwatch_event_target" "{{$i.Id}}" {
+  arn  = "{{ $i.Arn}}"
+  rule = aws_cloudwatch_event_rule.{{$p}}.id
+{{- if   $i.RoleArn}}
+  role_arn="{{$i.RoleArn}}"
+{{- end}}
+{{- if $i.Input}}
+  input="{{$i.Input}}"
+{{- end}}
+{{- if $i.InputPath}}
+  input_path="{{$i.InputPath}}"
+{{- end}}
+{{- if $i.InputTransformer}}
+  input_transformer = {{$i.InputTransformer}}
+{{- end}}
+{{- if   $i.SqsParameters}}
+  sqs_target={{$i.SqsParameters}}
+{{- end}}
+{{- if   $i.BatchParameters}}
+  batch_target={{$i.BatchParameters}}
+{{- end}}
+{{- if  $i.KinesisParameters }}
+  kinesis_target={{$i.KinesisParameters }}
+{{- end}}
+{{- if   $i.RedshiftDataParameters}}
+  redshift_target={{$i.RedshiftDataParameters}}
+{{- end}}
+{{- if  $i.EcsParameters}}
+  ecs_target={{$i.EcsParameters}}
+{{- end}}
+{{- if  $i.HttpParameters}}
+  http_target={{$i.HttpParameters}}
+{{- end}}
+{{- if  $i.DeadLetterConfig}}
+  dead_letter_config={{$i.DeadLetterConfig}}
+{{- end}}
+{{- if  $i.InputTransformer}}
+  input_transformer={{$i.InputTransformer}}
+{{- end}}
+{{- if  $i.RetryPolicy}}
+  retry_policy={{$i.RetryPolicy}}
+{{- end}}
+{{- if $i.RunCommandParameters}}
+  run_command_targets={{$i.RunCommandParameters}}
+{{- end}}
+}
+{{- end}}
+{{- end}}

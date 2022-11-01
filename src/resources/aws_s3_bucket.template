@@ -1,10 +1,28 @@
 resource "aws_s3_bucket" "{{.item}}" {
+{{- if .resource.BucketName}}
+  bucket="{{.resource.BucketName}}"
+{{- else}}
+  bucket="{{.item}}"
+{{- end}}
+
+{{- if .resource.ObjectLockConfiguration}}
+  object_lock_configuration {
+    object_lock_enabled = "{{.resource.ObjectLockConfiguration}}"
+  }}
+{{- end}}
 {{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}
   }
 {{- end}}
 }
+
+{{- if .resource.AccessControl}}
+resource "aws_s3_bucket_acl" "{{.item}}" {
+  bucket = aws_s3_bucket.{{.item}}.id
+  acl    = "{{.resource.AccessControl}}"
+}
+{{- end}}
 
 {{- if .resource.LifecycleConfiguration}}
 resource "aws_s3_bucket_lifecycle_configuration" "{{.item}}" {

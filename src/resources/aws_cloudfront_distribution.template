@@ -32,6 +32,10 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
         forward          = "{{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Cookies.Forward}}"
         whitelisted_names= {{ .resource.DistributionConfig.DefaultCacheBehavior.ForwardedValues.Cookies.WhitelistedNames}}
       }
+{{- else}}
+     cookies {
+       forward = ""
+     }
 {{- end}}
     }
 
@@ -180,7 +184,7 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
     domain_name = "{{ $b.DomainName}}"
 {{- if $b.Id}}
     origin_id   = "{{ $b.Id}}"
-{{ else}}
+{{- else}}
     origin_id= "{{ RandomString 8}}"
 {{- end}}
 {{- if  $b.ConnectionAttempts }}
@@ -219,7 +223,9 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
     origin_shield={{ $b.OriginShield}}
 {{- end}}
 {{- if $b.S3OriginConfig}}
-    s3_origin_config={{ $b.S3OriginConfig}}
+    s3_origin_config {
+      origin_access_identity="{{ $b.S3OriginConfig.OriginAccessIdentity}}"
+    }
 {{- end}}
   }
 {{- end}}
@@ -251,12 +257,18 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 
 {{- end}}
   viewer_certificate {
+{{- if.resource.DistributionConfig.ViewerCertificate.AcmCertificateArn}}
     acm_certificate_arn     = "{{ .resource.DistributionConfig.ViewerCertificate.AcmCertificateArn}}"
+{{- end}}
     cloudfront_default_certificate={{ Boolean .resource.DistributionConfig.ViewerCertificate.CloudFrontDefaultCertificate}}
 {{- if .resource.DistributionConfig.ViewerCertificate.IamCertificateId}}"
     iam_certificate_id      = "{{ .resource.DistributionConfig.ViewerCertificate.IamCertificateId}}"
 {{- end}}
+{{- if .resource.DistributionConfig.ViewerCertificate.MinimumProtocolVersion }}
     minimum_protocol_version= "{{ .resource.DistributionConfig.ViewerCertificate.MinimumProtocolVersion }}"
+{{- else}}
+    minimum_protocol_version= "TLSv1.2_2021"
+{{- end}}
     ssl_support_method      = "{{ .resource.DistributionConfig.ViewerCertificate.SslSupportMethod}}"
   }
 {{- if .resource.DistributionConfig.WebACLId}}
