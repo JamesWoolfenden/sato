@@ -15,8 +15,6 @@ import (
 	tftemplate "text/template"
 	"time"
 
-	stringy "github.com/gobeam/stringy"
-
 	"github.com/rs/zerolog/log"
 
 	"github.com/awslabs/goformation/v7"
@@ -97,11 +95,8 @@ func Parse(file string, destination string) error {
 
 			return result
 		},
-		"Snake": func(Camel string) string {
-			str := stringy.New(Camel)
-			snakeStr := str.SnakeCase()
-			return snakeStr.ToLower()
-		},
+		"Snake": snake,
+		"Kebab": kebab,
 		"ZipFile": func(code string, filename string, runtime string) string {
 			var extension string
 			switch runtime {

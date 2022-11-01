@@ -1,0 +1,38 @@
+resource "aws_autoscaling_policy" "{{.item}}" {
+{{- if .resource.AdjustmentType}}
+  adjustment_type        = "{{.resource.AdjustmentType}}"
+{{- end}}
+{{- if .resource.AutoScalingGroupName}}
+  autoscaling_group_name = "{{.resource.AutoScalingGroupName}}"
+{{- else}}
+  autoscaling_group_name = ""
+{{- end}}
+  name                   = "{{.item}}"
+{{- if .resource.Cooldown}}
+  cooldown               = {{.resource.Cooldown}}
+{{- end}}
+{{- if .resource.EstimatedInstanceWarmup}}
+  estimated_instance_warmup= {{.resource.EstimatedInstanceWarmup}}
+{{- end}}
+{{- if .resource.MetricAggregationType}}
+  metric_aggregation_type="{{.resource.MetricAggregationType}}"
+{{- end}}
+{{- if .resource.MinAdjustmentMagnitude}}
+  min_adjustment_magnitude = "{{.resource.MinAdjustmentMagnitude}}"
+{{- end}}
+{{- if .resource.PolicyType}}
+  policy_type = "{{.resource.PolicyType}}"
+{{- end}}
+{{- if .resource.PredictiveScalingConfiguration}}
+  predictive_scaling_configuration="{{.resource.PredictiveScalingConfiguration}}"
+{{- end}}
+{{- if .resource.ScalingAdjustment}}
+  scaling_adjustment     = {{.resource.ScalingAdjustment}}
+{{- end}}
+{{- if .resource.StepAdjustments}}
+  step_adjustment="{{.resource.StepAdjustments}}"
+{{- end}}
+{{- if .resource.TargetTrackingConfiguration}}
+  target_tracking_configuration = "{{.resource.TargetTrackingConfiguration}}"
+{{- end}}
+}

@@ -1,0 +1,13 @@
+resource "aws_config_configuration_recorder" "{{.item}}" {
+  name     = "{{.resource.Name}}"
+  role_arn = "{{.resource.RoleARN}}"
+{{- if .resource.RecordingGroup}}
+  recording_group{
+    all_supported    = {{Boolean .resource.RecordingGroup.AllSupported}}
+{{- if  .resource.RecordingGroup.IncludeGlobalResourceTypes}}
+    include_global_resource_types="{{.resource.RecordingGroup.IncludeGlobalResourceTypes}}"
+{{- end}}
+    resource_types   = [{{range $i, $v := .resource.RecordingGroup.ResourceTypes}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+  }
+{{- end}}
+}

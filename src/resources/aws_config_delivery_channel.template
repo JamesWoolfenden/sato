@@ -1,0 +1,17 @@
+resource "aws_config_delivery_channel" "{{.item}}" {
+{{- if .resource.Name}}
+  name           = "{{.resource.Name}}"
+{{- else}}
+  name           = "{{.item}}"
+{{- end}}
+  s3_bucket_name = "{{.resource.S3BucketName}}"
+{{- if   .resource.S3KeyPrefix}}"
+  s3_key_prefix   = "{{.resource.S3KeyPrefix}}"
+{{- end}}
+{{- if .resource.SnsTopicARN}}
+  sns_topic_arn  = "{{.resource.SnsTopicARN}}"
+{{- end}}
+  snapshot_delivery_properties {
+    delivery_frequency = "{{.resource.ConfigSnapshotDeliveryProperties.DeliveryFrequency}}"
+  }
+}

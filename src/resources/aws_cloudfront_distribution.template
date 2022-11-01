@@ -34,7 +34,7 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
       }
 {{- else}}
      cookies {
-       forward = ""
+       forward = "all"
      }
 {{- end}}
     }
@@ -88,6 +88,8 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- end}}
 {{- if  .resource.DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy}}
     viewer_protocol_policy = "{{.resource.DistributionConfig.DefaultCacheBehavior.ViewerProtocolPolicy}}"
+{{- else}}
+    viewer_protocol_policy = "https-only"
 {{- end}}
   }
 {{- if .resource.DistributionConfig.DefaultRootObject}}
@@ -257,7 +259,8 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 
 {{- end}}
   viewer_certificate {
-{{- if.resource.DistributionConfig.ViewerCertificate.AcmCertificateArn}}
+{{- if .resource.DistributionConfig.ViewerCertificate}}
+{{- if .resource.DistributionConfig.ViewerCertificate.AcmCertificateArn}}
     acm_certificate_arn     = "{{ .resource.DistributionConfig.ViewerCertificate.AcmCertificateArn}}"
 {{- end}}
     cloudfront_default_certificate={{ Boolean .resource.DistributionConfig.ViewerCertificate.CloudFrontDefaultCertificate}}
@@ -270,7 +273,9 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
     minimum_protocol_version= "TLSv1.2_2021"
 {{- end}}
     ssl_support_method      = "{{ .resource.DistributionConfig.ViewerCertificate.SslSupportMethod}}"
+{{- end}}
   }
+
 {{- if .resource.DistributionConfig.WebACLId}}
   web_acl_id="{{ .resource.DistributionConfig.WebACLId }}"
 {{- end}}

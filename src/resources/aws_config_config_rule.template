@@ -1,0 +1,44 @@
+resource "aws_config_config_rule" "{{.item}}" {
+  name = "{{.resource.ConfigRuleName}}"
+  source {
+    owner             = "{{.resource.Source.Owner}}"
+{{- if     .resource.Source.SourceIdentifier}}
+    source_identifier = "{{.resource.Source.SourceIdentifier}}"
+{{- end}}
+{{- if .resource.Source.CustomPolicyDetails}}
+     .resource.Source.CustomPolicyDetails = {*config.ConfigRule_CustomPolicyDetails | 0x0} nil
+{{- end}}
+{{- range $a, $i := .resource.Source.SourceDetails}}
+    source_detail {
+      event_source = "{{$i.EventSource}}"
+{{- if  $i.MaximumExecutionFrequency}}
+      maximum_execution_frequency="{{$i.MaximumExecutionFrequency}}"
+{{- end}}
+      message_type = "{{$i.MessageType }}"
+    }
+{{- end}}
+  }
+{{- if  .resource.Description }}
+  description="{{.resource.Description }}"
+{{- end}}
+{{- if .resource.InputParameters }}
+  input_parameters = "{{.resource.InputParameters }}"
+{{- end}}
+{{- if .resource.MaximumExecutionFrequency }}
+  maximum_execution_frequency="{{.resource.MaximumExecutionFrequency }}"
+{{- end}}
+{{- if .resource.Scope}}
+  scope {
+{{- if  .resource.Scope.ComplianceResourceId}}
+   compliance_resource_id="{{.resource.Scope.ComplianceResourceId}}"
+{{- end}}
+   compliance_resource_types=[{{range $i, $v := .resource.Scope.ComplianceResourceTypes}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- if .resource.Scope.TagKey}}
+   tag_key="{{.resource.Scope.TagKey}}"
+{{- end}}
+{{- if .resource.Scope.TagValue}}
+   tag_value="{{.resource.Scope.TagValue}}"
+{{- end}}
+  }
+{{- end}}
+}

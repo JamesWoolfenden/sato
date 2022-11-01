@@ -1,12 +1,12 @@
 resource "aws_cloudwatch_log_group" "{{.item}}" {
 {{- if .resource.KmsKeyId}}
-  kms_key_id="{{.resource.KmsKeyId}}"
+  kms_key_id        = "{{.resource.KmsKeyId}}"
 {{- end}}
 {{- if .resource.LogGroupName}}
-  name="{{.resource.LogGroupName}}"
+  name              = "{{.resource.LogGroupName}}"
 {{- end}}
 {{- if .resource.RetentionInDays}}
-  retention_in_days="{{.resource.RetentionInDays}}"
+  retention_in_days = "{{.resource.RetentionInDays}}"
 {{- end}}
 {{- if .resource.Tags}}
   tags = {

@@ -11,7 +11,7 @@ resource "aws_autoscaling_group" "{{.item}}" {
   name="{{.item}}"
 {{- end}}
 {{- if  .resource.AvailabilityZones}}
-  availability_zones  = {{ .resource.AvailabilityZones}}
+  availability_zones  = [{{range $i, $v := .resource.AvailabilityZones}}{{if $i}}, {{end}}"{{.}}"{{end}}]
 {{- end}}
   capacity_rebalance= {{ Boolean .resource.CapacityRebalance }}
 {{- if .resource.Context}}
@@ -47,5 +47,7 @@ resource "aws_autoscaling_group" "{{.item}}" {
   {{- end}}
   target_group_arns={{.resource.TargetGroupARNs}}
   termination_policies={{.resource.TerminationPolicies}}
+{{- if   .resource.VPCZoneIdentifier}}
   vpc_zone_identifier={{.resource.VPCZoneIdentifier}}
+{{- end}}
 }

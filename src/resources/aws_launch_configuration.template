@@ -7,7 +7,13 @@ resource "aws_launch_configuration" "{{.item}}" {
   name="{{ .item}}"
 {{- end}}
   associate_public_ip_address={{ Boolean .resource.AssociatePublicIpAddress }}
-  ebs_block_device= {{ .resource.BlockDeviceMappings}}
+{{- if .resource.BlockDeviceMappings}}
+{{- range $a, $i:= .resource.BlockDeviceMappings}}
+  ebs_block_device {
+    device_name={{$i.DeviceName}}
+  }
+{{- end}}
+{{- end}}
   ebs_optimized= {{ Boolean .resource.EbsOptimized }}
 {{- if .resource.IamInstanceProfile}}
   iam_instance_profile="{{ .resource.IamInstanceProfile}}"
@@ -27,6 +33,8 @@ resource "aws_launch_configuration" "{{.item}}" {
   spot_price ="{{ .resource.SpotPrice}}"
 {{- end}}
 {{- if  .resource.UserData}}
-  user_data="{{ Decode64 .resource.UserData}}"
+  user_data=<<EOF
+{{ Decode64 .resource.UserData}}
+EOF
 {{- end}}
 }

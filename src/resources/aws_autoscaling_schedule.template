@@ -1,0 +1,21 @@
+resource "aws_autoscaling_schedule" "{{.item}}" {
+  scheduled_action_name  = "{{.item}}"
+  min_size               = {{.resource.MinSize}}
+  max_size               = {{.resource.MaxSize}}
+{{- if  .resource.DesiredCapacity}}
+  desired_capacity       = {{.resource.DesiredCapacity}}
+{{- end}}
+{{- if .resource.StartTime}}
+  start_time             = "{{.resource.StartTime}}"
+{{- end}}
+{{- if .resource.EndTime}}
+  end_time               = "{{.resource.EndTime}}"
+{{- end}}
+  autoscaling_group_name = "{{.resource.AutoScalingGroupName}}"
+{{- if .resource.TimeZone}}
+  time_zone="{{.resource.TimeZone}}"
+{{- end}}
+{{- if .resource.Recurrence}}
+  time_zone="{{.resource.Recurrence}}"
+{{- end}}
+}

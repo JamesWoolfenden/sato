@@ -180,3 +180,30 @@ var awsRdsCluster []byte
 
 //go:embed resources/aws_cloudwatch_event_rule.template
 var awsCloudwatchEventRule []byte
+
+//go:embed resources/aws_cloudfront_origin_access_identity.template
+var awsCloudfrontOriginAccessIdentity []byte
+
+//go:embed resources/aws_elb.template
+var awsElb []byte
+
+//go:embed resources/aws_autoscaling_policy.template
+var awsAutoscalingPolicy []byte
+
+//go:embed resources/aws_autoscaling_schedule.template
+var awsAutoscalingSchedule []byte
+
+//go:embed resources/aws_ebs_volume.template
+var awsEbsVolume []byte
+
+//go:embed resources/aws_sns_topic_policy.template
+var awsSNSTopicPolicy []byte
+
+//go:embed resources/aws_config_delivery_channel.template
+var awsConfigDeliveryChannel []byte
+
+//go:embed resources/aws_config_configuration_recorder.template
+var awsConfigConfigurationRecorder []byte
+
+//go:embed resources/aws_config_config_rule.template
+var awsConfigConfigRule []byte

@@ -20,7 +20,7 @@ resource "aws_s3_bucket" "{{.item}}" {
 {{- if .resource.AccessControl}}
 resource "aws_s3_bucket_acl" "{{.item}}" {
   bucket = aws_s3_bucket.{{.item}}.id
-  acl    = "{{.resource.AccessControl}}"
+  acl    = "{{Kebab .resource.AccessControl}}"
 }
 {{- end}}
 

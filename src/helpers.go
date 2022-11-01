@@ -4,6 +4,8 @@ import (
 	"encoding/base64"
 	"fmt"
 	"strings"
+
+	"github.com/gobeam/stringy"
 )
 
 func replace(input, from, to string) string {
@@ -45,4 +47,16 @@ func sprint(unknown interface{}) string {
 		return "\"\""
 	}
 	return temp
+}
+
+func snake(Camel string) string {
+	str := stringy.New(Camel)
+	snakeStr := str.SnakeCase()
+	return snakeStr.ToLower()
+}
+
+func kebab(Camel string) string {
+	str := stringy.New(Camel)
+	KebabStr := str.KebabCase()
+	return KebabStr.ToLower()
 }
