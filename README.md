@@ -33,6 +33,16 @@ Get yourself some valid cloudformation*
  ❯ ls
  README.md    template.yml
  >sato parse -f template.yml
+ 9:17PM INF Created .sato\variables.tf
+ 9:17PM INF Created .sato\data.tf
+ 9:17PM INF Created .sato\aws_codebuild_project.productionbuild.tf
+ 9:17PM INF Created .sato\aws_codebuild_project.productiondeploy.tf
+ 9:17PM INF Created .sato\aws_codebuild_project.stagingbuild.tf
+ 9:17PM INF Created .sato\aws_codebuild_project.stagingdeploy.tf
+ 9:17PM INF Created .sato\aws_iam_role.codebuildrole.tf
+ 9:17PM INF Created .sato\aws_codepipeline_pipeline.pipeline.tf
+ 9:17PM INF Created .sato\aws_iam_role.pipelinerole.tf
+ 9:17PM INF Created .sato\aws_s3_bucket.pipelines3bucket.tf
 ```
 
 That's it (I should make it obvious that its worked). So by default (overidable) the parsed Cloudformation (now Terraform) will be in a .sato sub directory.
