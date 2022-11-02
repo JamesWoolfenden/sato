@@ -1,20 +1,24 @@
 resource "aws_rds_cluster" "{{.item}}" {
-  cluster_identifier      = "{{.resource.DBClusterIdentifier}}"
+{{- if .resource.DBClusterIdentifier}}
+  cluster_identifier      = {{Nil .resource.DBClusterIdentifier|Quote}}
+{{- end}}
 {{- if  .resource.DBClusterInstanceClass}}
   global_cluster_identifier={{.resource.DBClusterInstanceClass}}
 {{- end}}
   iam_database_authentication_enabled={{Boolean .resource.EnableIAMDatabaseAuthentication}}
   engine                  = "{{.resource.Engine }}"
-  engine_version          = "{{.resource.EngineVersion}}"
+  engine_version          = "{{Nil .resource.EngineVersion}}"
   availability_zones      = {{.resource.AvailabilityZones}}
 {{- if   .resource.DatabaseName}}
   database_name           = "{{.resource.DatabaseName}}"
 {{- else}}
   database_name           = "{{.item}}"
 {{- end}}
-  master_username         = "{{.resource.MasterUsername}}"
-  master_password         = "{{.resource.MasterUserPassword}}"
+  master_username         = "{{Nil .resource.MasterUsername}}"
+  master_password         = "{{Nil .resource.MasterUserPassword}}"
+{{- if .resource.BackupRetentionPeriod}}
   backup_retention_period = {{.resource.BackupRetentionPeriod}}
+{{- end}}
 {{- if .resource.PreferredBackupWindow}}
   preferred_backup_window = "{{.resource.PreferredBackupWindow}}"
 {{- end}}
@@ -30,7 +34,9 @@ resource "aws_rds_cluster" "{{.item}}" {
   allow_major_version_upgrade     = {{Boolean .resource.AutoMinorVersionUpgrade}}
   enabled_cloudwatch_logs_exports={{.resource.EnableCloudwatchLogsExports}}
   enable_http_endpoint={{Boolean .resource.EnableHttpEndpoint}}
-  engine_mode="{{.resource.EngineMode}}"
+{{- if  .resource.EngineMode}}
+  engine_mode={{Nil .resource.EngineMode|Quote}}
+{{- end}}
   deletion_protection={{Boolean .resource.DeletionProtection }}
 {{- if .resource.BacktrackWindow }}
   backtrack_window                = "{{.resource.BacktrackWindow }}"
@@ -87,7 +93,7 @@ resource "aws_rds_cluster" "{{.item}}" {
   global_cluster_identifier="{{.resource.GlobalClusterIdentifier}}"
 {{- end}}
   copy_tags_to_snapshot={{Boolean .resource.CopyTagsToSnapshot}}
-
+{{- if .resource.SourceDBClusterIdentifier}}
   restore_to_point_in_time {
 {{- if  .resource.SourceDBClusterIdentifier}}
     source_cluster_identifier  = "{{.resource.SourceDBClusterIdentifier}}"
@@ -99,6 +105,7 @@ resource "aws_rds_cluster" "{{.item}}" {
 {{- end}}
     use_latest_restorable_time = {{Boolean .resource.UseLatestRestorableTime}}
   }
+{{- end}}
 {{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}

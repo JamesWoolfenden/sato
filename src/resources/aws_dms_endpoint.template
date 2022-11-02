@@ -1,19 +1,136 @@
 resource "aws_dms_endpoint" "{{.item}}" {
-  certificate_arn             = "arn:aws:acm:us-east-1:123456789012:certificate/12345678-1234-1234-1234-123456789012"
-  database_name               = "test"
-  endpoint_id                 = "test-dms-endpoint-tf"
-  endpoint_type               = "source"
-  engine_name                 = "aurora"
-  extra_connection_attributes = ""
-  kms_key_arn                 = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
-  password                    = "test"
-  port                        = 3306
-  server_name                 = "test"
+{{- if .resource.CertificateArn}}
+  certificate_arn             = "{{.resource.CertificateArn}}"
+{{- end}}
+{{- if .resource.DatabaseName}}
+  database_name               = "{{.resource.DatabaseName}}"
+{{- else}}
+  database_name               = "{{.item}}"
+{{- end}}
+{{- if .resource.EndpointIdentifier}}
+  endpoint_id                 = "{{Nil .resource.EndpointIdentifier}}"
+{{- else }}
+  endpoint_id                 = "{{RandomString 10}}"
+{{- end}}
+  endpoint_type               = "{{.resource.EndpointType}}"
+  engine_name                 = "{{ToLower .resource.EngineName}}"
+{{- if .resource.ExtraConnectionAttributes}}
+  extra_connection_attributes = "{{.resource.ExtraConnectionAttributes}}"
+{{- end}}
+{{- if .resource.KmsKeyId}}
+  kms_key_arn                 = "{{.resource.KmsKeyId}}"
+{{- end}}
+{{- if .resource.Password}}
+  password                    = "{{.resource.Password}}"
+{{- end}}
+{{- if .resource.Port}}
+  port                        = {{.resource.Port}}
+{{- end}}
+  server_name                 = "{{ Nil .resource.ServerName}}"
+{{- if  .resource.SslMode}}
+  ssl_mode                    = "{{.resource.SslMode}}"
+{{- else}}
   ssl_mode                    = "none"
-
+{{- end}}
+{{- if .resource.Tags}}
   tags = {
-    Name = "test"
+    {{Tags .resource.Tags}}
   }
-
-  username = "test"
+{{- end}}
+  username                    = "{{.resource.Username}}"
+{{- if .resource.ElasticsearchSettings }}
+  elasticsearch_settings {
+    endpoint_uri = ""
+    error_retry_duration = ""
+    full_load_error_percentage = ""
+    service_access_role_arn = ""
+  }
+{{- end}}
+{{- if .resource.KafkaSettings}}
+  kafka_settings   {
+   broker=
+  }
+{{- end}}
+{{- if .resource.KinesisSettings}}
+  kinesis_settings {}
+{{- end}}
+{{- if .resource.MongoDbSettings}}
+  mongodb_settings {}
+{{- end}}
+{{- if .resource.RedshiftSettings}}
+  redshift_settings {}
+{{- end}}
+{{- if .resource.S3Settings}}
+  s3_settings {
+    add_column_name={{Boolean .resource.S3Settings.AddColumnName}}
+    bucket_folder= "{{Nil .resource.S3Settings.BucketFolder }}"
+    bucket_name= "{{Nil .resource.S3Settings.BucketName}}"
+{{- if  .resource.S3Settings.CannedAclForObjects}}
+    canned_acl_for_objects= "{{Nil .resource.S3Settings.CannedAclForObjects}}"
+{{- end}}
+    cdc_inserts_and_updates= {{Boolean .resource.S3Settings.CdcInsertsAndUpdates}}
+    cdc_inserts_only= {{Boolean .resource.S3Settings.CdcInsertsOnly}}
+{{- if .resource.S3Settings.CdcMaxBatchInterval}}
+    cdc_max_batch_interval = {{.resource.S3Settings.CdcMaxBatchInterval}}
+{{- end}}
+{{- if  .resource.S3Settings.CdcMinFileSize}}
+    cdc_min_file_size= {{.resource.S3Settings.CdcMinFileSize}}
+{{- end}}
+    cdc_path        = "{{Nil .resource.S3Settings.CdcPath}}"
+ {{- if  .resource.S3Settings.CompressionType}}
+    compression_type= "{{Nil .resource.S3Settings.CompressionType}}"
+ {{- end}}
+    csv_delimiter   ="{{Nil .resource.S3Settings.CsvDelimiter}}"
+    csv_no_sup_value="{{Nil .resource.S3Settings.CsvNoSupValue}}"
+    csv_null_value="{{Nil .resource.S3Settings.CsvNullValue}}"
+    csv_row_delimiter="{{Nil .resource.S3Settings.CsvRowDelimiter}}"
+{{- if .resource.S3Settings.DataFormat}}
+    data_format="{{Nil .resource.S3Settings.DataFormat}}"
+{{- end}}
+{{- if .resource.S3Settings.DataPageSize}}
+    data_page_size={{.resource.S3Settings.DataPageSize}}
+{{- end}}
+{{- if  .resource.S3Settings.DatePartitionDelimiter}}
+    date_partition_delimiter="{{Nil .resource.S3Settings.DatePartitionDelimiter}}"
+{{- end}}
+    date_partition_enabled= {{Boolean .resource.S3Settings.DatePartitionEnabled}}
+{{- if .resource.S3Settings.DatePartitionSequence}}
+    date_partition_sequence="{{Nil .resource.S3Settings.DatePartitionSequence}}"
+{{- end}}
+{{- if .resource.S3Settings.DictPageSizeLimit}}
+    dict_page_size_limit={{.resource.S3Settings.DictPageSizeLimit}}
+{{- end}}
+    enable_statistics       = {{Boolean .resource.S3Settings.EnableStatistics}}
+{{- if  .resource.S3Settings.EncodingType}}
+    encoding_type           = "{{Nil .resource.S3Settings.EncodingType}}"
+{{- end}}
+{{- if  .resource.S3Settings.EncryptionMode}}
+    encryption_mode         = "{{Nil .resource.S3Settings.EncryptionMode}}"
+{{- end}}
+    external_table_definition= "{{Nil .resource.S3Settings.ExternalTableDefinition}}"
+{{- if .resource.S3Settings.IgnoreHeaderRows}}
+    ignore_header_rows      = {{.resource.S3Settings.IgnoreHeaderRows}}
+{{- end}}
+    include_op_for_full_load= {{Boolean .resource.S3Settings.IncludeOpForFullLoad}}
+{{- if .resource.S3Settings.MaxFileSize}}
+    max_file_size            = {{.resource.S3Settings.MaxFileSize}}
+{{- end}}
+    parquet_timestamp_in_millisecond= {{Boolean .resource.S3Settings.ParquetTimestampInMillisecond}}
+{{- if  .resource.S3Settings.ParquetVersion}}
+    parquet_version="{{Nil .resource.S3Settings.ParquetVersion}}"
+{{- else}}
+    parquet_version="parquet-2-0"
+{{- end}}
+    preserve_transactions= {{Boolean .resource.S3Settings.PreserveTransactions}}
+    rfc_4180= {{Boolean .resource.S3Settings.Rfc4180 }}
+{{- if   .resource.S3Settings.RowGroupLength}}
+    row_group_length={{.resource.S3Settings.RowGroupLength}}
+{{- end}}
+    server_side_encryption_kms_key_id="{{Nil .resource.S3Settings.ServerSideEncryptionKmsKeyId}}"
+    service_access_role_arn="{{Nil .resource.S3Settings.ServiceAccessRoleArn}}"
+    timestamp_column_name="{{Nil .resource.S3Settings.TimestampColumnName}}"
+    use_csv_no_sup_value= {{Boolean .resource.S3Settings.UseCsvNoSupValue}}
+    use_task_start_time_for_full_load_timestamp= {{Boolean .resource.S3Settings.UseTaskStartTimeForFullLoadTimestamp}}
+  }
+{{- end}}
 }

@@ -1,28 +1,25 @@
 resource "aws_dms_replication_instance" "{{.item}}" {
-  allocated_storage            = 20
+{{- if .resource.AllocatedStorage}}
+  allocated_storage            = {{.resource.AllocatedStorage}}
+{{- end}}
   apply_immediately            = true
-  auto_minor_version_upgrade   = true
-  availability_zone            = "us-west-2c"
-  engine_version               = "3.1.4"
-  kms_key_arn                  = "arn:aws:kms:us-east-1:123456789012:key/12345678-1234-1234-1234-123456789012"
-  multi_az                     = false
-  preferred_maintenance_window = "sun:10:30-sun:14:30"
-  publicly_accessible          = true
-  replication_instance_class   = "dms.t2.micro"
-  replication_instance_id      = "test-dms-replication-instance-tf"
-  replication_subnet_group_id  = aws_dms_replication_subnet_group.test-dms-replication-subnet-group-tf.id
-
+  allow_major_version_upgrade  = {{ Boolean .resource.AllowMajorVersionUpgrade}}
+  auto_minor_version_upgrade   = {{ Boolean .resource.AutoMinorVersionUpgrade}}
+{{- if  .resource.AvailabilityZone}}
+  availability_zone            = "{{.resource.AvailabilityZone}}"
+{{- end}}
+  engine_version               = "{{Nil .resource.EngineVersion}}"
+  kms_key_arn                  = "{{Nil .resource.KmsKeyId}}"
+  multi_az                     = {{Boolean .resource.MultiAZ}}
+  preferred_maintenance_window = "{{Nil .resource.PreferredMaintenanceWindow}}"
+  publicly_accessible          = {{Boolean .resource.PubliclyAccessible}}
+  replication_instance_class   = "{{.resource.ReplicationInstanceClass}}"
+  replication_instance_id      = "{{.resource.ReplicationInstanceIdentifier}}"
+  replication_subnet_group_id  = "{{Nil .resource.ReplicationSubnetGroupIdentifier}}"
+{{- if .resource.Tags}}
   tags = {
-    Name = "test"
+    {{Tags .resource.Tags}}
   }
-
-  vpc_security_group_ids = [
-    "sg-12345678",
-  ]
-
-  depends_on = [
-    aws_iam_role_policy_attachment.dms-access-for-endpoint-AmazonDMSRedshiftS3Role,
-    aws_iam_role_policy_attachment.dms-cloudwatch-logs-role-AmazonDMSCloudWatchLogsRole,
-    aws_iam_role_policy_attachment.dms-vpc-role-AmazonDMSVPCManagementRole
-  ]
+{{- end}}
+  vpc_security_group_ids={{Array .resource.VpcSecurityGroupIds}}
 }

@@ -21,7 +21,6 @@ resource "aws_s3_bucket" "{{.item}}" {
 resource "aws_s3_bucket_acl" "{{.item}}" {
   bucket = aws_s3_bucket.{{.item}}.id
   acl    = "{{Kebab (ToLower .resource.AccessControl)}}"
-  ,
 }
 {{- end}}
 

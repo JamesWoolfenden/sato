@@ -47,10 +47,12 @@ func Parse(file string, destination string) error {
 	}
 
 	funcMap := tftemplate.FuncMap{
+		"Array":    array,
 		"Sprint":   sprint,
 		"Decode64": decode64,
 		"Boolean":  boolean,
 		"Dequote":  dequote,
+		"Quote":    quote,
 		"Demap": func(str string) []string {
 			str = strings.Replace(str, "{", "", -1)
 			str = strings.Replace(str, "}", "", -1)
@@ -60,8 +62,9 @@ func Parse(file string, destination string) error {
 			return strings.Split(str, ",")
 		},
 		"ToUpper": strings.ToUpper,
-		"ToLower": tolower,
+		"ToLower": lower,
 		"Deref":   func(str *string) string { return *str },
+		"Nil":     nill,
 		"Marshal": func(v interface{}) string {
 			a, _ := json.Marshal(v)
 			return string(a)

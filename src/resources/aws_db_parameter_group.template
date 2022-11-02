@@ -1,14 +1,17 @@
 resource "aws_db_parameter_group" "{{.item}}" {
-  name   = "rds-pg"
-  family = "mysql5.6"
+  name   = {{Replace (ToLower .item) "ParameterGroup" ""|Quote}}
+  family =  {{.resource.Family|Quote}}
 
+{{- if .resource.Parameters}}
+{{- range $a, $i:=  .resource.Parameters}}
   parameter {
-    name  = "character_set_server"
-    value = "utf8"
+    name  = {{$a|Quote}}
+    value = {{$i|Quote}}
   }
-
-  parameter {
-    name  = "character_set_client"
-    value = "utf8"
+{{- end}}{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+     {{Tags .resource.Tags}}
   }
+{{- end}}
 }

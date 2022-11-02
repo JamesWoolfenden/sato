@@ -29,6 +29,10 @@ func dequote(target string) string {
 	return strings.Replace(target, "\"", "", -1)
 }
 
+func quote(target string) string {
+	return "\"" + target + "\""
+}
+
 func boolean(test *bool) bool {
 	if test == nil {
 		return false
@@ -61,6 +65,21 @@ func kebab(Camel string) string {
 	return KebabStr.ToLower()
 }
 
-func tolower(target string) string {
+func lower(target string) string {
 	return strings.ToLower(target)
+}
+
+func nill(str *string) string {
+	if str == nil {
+		return ""
+	}
+	return *str
+}
+
+func array(mySlice []string) string {
+	if mySlice == nil || mySlice[0] == "" {
+		return "[]"
+	}
+	newString := "[\n" + strings.Join(mySlice[:], ",") + "\n]\n"
+	return newString
 }

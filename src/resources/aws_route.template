@@ -1,8 +1,13 @@
 resource "aws_route" "{{.item}}" {
+{{- $name:= Replace .item "Route" ""}}
 {{- if .resource.RouteTableId}}
   route_table_id            = "{{.resource.RouteTableId}}"
 {{- else}}
-  route_table_id            = aws_route_table.{{Replace .item "Route" ""}}.id
+{{- if $name}}
+  route_table_id            = aws_route_table.{{$name}}.id
+  {{- else}}
+  route_table_id            = ""
+{{- end}}
 {{- end}}
   destination_cidr_block    = "{{.resource.DestinationCidrBlock}}"
 {{- if .resource.VpcPeeringConnectionId}}"

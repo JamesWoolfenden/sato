@@ -1,11 +1,100 @@
 resource "aws_db_instance" "{{.item}}" {
-  allocated_storage    = 10
-  db_name              = "mydb"
-  engine               = "mysql"
-  engine_version       = "5.7"
-  instance_class       = "db.t3.micro"
-  username             = "foo"
-  password             = "foobarbaz"
-  parameter_group_name = "default.mysql5.7"
-  skip_final_snapshot  = true
+{{- if .resource.AllocatedStorage}}
+  allocated_storage    = {{.resource.AllocatedStorage}}
+{{- end}}
+  allow_major_version_upgrade= {{ Boolean .resource.AllowMajorVersionUpgrade}}
+  auto_minor_version_upgrade= {{ Boolean .resource.AutoMinorVersionUpgrade }}
+{{- if .resource.DBName}}
+  db_name              = {{.resource.DBName|Quote}}
+{{- else}}
+  db_name              = {{.resource.DBInstanceIdentifier|Quote}}
+{{- end}}
+  engine               = {{Nil .resource.Engine|Quote}}
+  engine_version       = {{Nil .resource.EngineVersion|Quote}}
+  instance_class       = {{Nil .resource.DBInstanceClass|Quote}}
+  username             = {{Nil .resource.MasterUsername|Quote}}
+  password             = {{Nil .resource.MasterUserPassword|Quote}}
+{{- if   .resource.DBParameterGroupName}}
+  parameter_group_name = {{Nil .resource.DBParameterGroupName|Quote}}
+{{- end}}
+{{- if .resource.BackupRetentionPeriod }}
+  backup_retention_period= {{ .resource.BackupRetentionPeriod }}
+{{- end}}
+{{- if .resource.CACertificateIdentifier}}
+  ca_cert_identifier={{Nil .resource.CACertificateIdentifier|Quote}}
+{{- end}}
+{{- if .resource.CharacterSetName}}
+  character_set_name={{Nil .resource.CharacterSetName |Quote}}
+{{- end}}
+  copy_tags_to_snapshot={{Boolean .resource.CopyTagsToSnapshot}}
+{{- if .resource.AvailabilityZone}}
+  availability_zone={{.resource.AvailabilityZone}}
+{{- end}}
+{{- if .resource.CustomIAMInstanceProfile}}
+  custom_iam_instance_profile="{{.resource.CustomIAMInstanceProfile}}"
+{{- end}}
+{{- if  .resource.DBSecurityGroups}}
+  security_group_names={{Array .resource.DBSecurityGroups}}
+{{- end}}
+{{- if .resource.DBSnapshotIdentifier}}
+  snapshot_identifier={{Nil .resource.DBSnapshotIdentifier|Quote}}
+{{- end}}
+{{- if .resource.DBSubnetGroupName}}
+  db_subnet_group_name={{.resource.DBSubnetGroupName}}
+{{- end}}
+  delete_automated_backups= {{ Boolean .resource.DeleteAutomatedBackups }}
+  deletion_protection= {{ Boolean .resource.DeletionProtection}}
+{{- if .resource.Domain}}  domain={{Nil .resource.Domain| Quote}}{{- end}}
+{{- if .resource.DomainIAMRoleName}}  domain_iam_role_name={{Nil .resource.DomainIAMRoleName|Quote}}{{- end}}
+  enabled_cloudwatch_logs_exports={{.resource.EnableCloudwatchLogsExports}}
+  iam_database_authentication_enabled= {{ Boolean .resource.EnableIAMDatabaseAuthentication}}
+  performance_insights_enabled= {{ Boolean .resource.EnablePerformanceInsights}}
+{{- if .resource.Iops}}
+  iops={{.resource.Iops}}
+{{- end}}
+{{- if   .resource.KmsKeyId}}
+  kms_key_id={{Nil .resource.KmsKeyId |Quote}}
+{{- end}}
+{{- if .resource.LicenseModel }}
+  license_model={{Nil .resource.LicenseModel |Quote}}
+{{- end}}
+{{- if   .resource.MaxAllocatedStorage }}
+  max_allocated_storage={{.resource.MaxAllocatedStorage }}
+{{- end}}
+{{- if  .resource.MonitoringInterval}}  monitoring_interval={{.resource.MonitoringInterval}}{{- end}}
+{{- if  .resource.MonitoringRoleArn}}  monitoring_role_arn={{.resource.MonitoringRoleArn}}{{- end}}
+  multi_az= {{ Boolean .resource.MultiAZ }}
+{{- if .resource.CharacterSetName }}
+    character_set_name={{.resource.CharacterSetName }}
+{{- end}}
+{{- if  .resource.NetworkType}}
+ network_type={{.resource.NetworkType}}{
+ {{- end}}
+{{- if .resource.OptionGroupName}}
+  option_group_name={{.resource.OptionGroupName}}
+{{- end}}
+{{- if .resource.PerformanceInsightsKMSKeyId}}
+  performance_insights_kms_key_id={{.resource.PerformanceInsightsKMSKeyId}} {{- end}}
+{{- if .resource.PerformanceInsightsRetentionPeriod}}
+  performance_insights_retention_period={{.resource.PerformanceInsightsRetentionPeriod}} {{- end}}
+{{- if .resource.Port}}
+  port={{.resource.Port}} {{- end}}
+{{- if .resource.PreferredBackupWindow}}backup_window={{.resource.PreferredBackupWindow}} {{- end}}
+{{- if .resource.PreferredMaintenanceWindow }}
+  maintenance_window="{{.resource.PreferredMaintenanceWindow }}"
+{{- end}}
+  publicly_accessible= {{ Boolean .resource.PubliclyAccessible}}
+{{- if  .resource.SourceDBInstanceIdentifier}}
+  replicate_source_db="{{.resource.SourceDBInstanceIdentifier}}"
+{{- end}}
+  storage_encrypted = {{Boolean .resource.StorageEncrypted}}
+{{- if  .resource.Timezone}}
+  timezone="{{.resource.Timezone}}"
+{{- end}}
+  vpc_security_group_ids={{Array .resource.VPCSecurityGroups }}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
 }

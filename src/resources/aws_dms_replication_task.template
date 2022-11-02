@@ -1,15 +1,21 @@
 resource "aws_dms_replication_task" "{{.item}}" {
-  cdc_start_time            = 1484346880
-  migration_type            = "full-load"
-  replication_instance_arn  = aws_dms_replication_instance.test-dms-replication-instance-tf.replication_instance_arn
-  replication_task_id       = "test-dms-replication-task-tf"
-  replication_task_settings = "..."
-  source_endpoint_arn       = aws_dms_endpoint.test-dms-source-endpoint-tf.endpoint_arn
-  table_mappings            = "{\"rules\":[{\"rule-type\":\"selection\",\"rule-id\":\"1\",\"rule-name\":\"1\",\"object-locator\":{\"schema-name\":\"%\",\"table-name\":\"%\"},\"rule-action\":\"include\"}]}"
-
+{{- if .resource.CdcStartTime}}
+  cdc_start_time            = {{.resource.CdcStartTime}}
+{{- end}}
+  migration_type            = {{.resource.MigrationType | Quote}}
+  replication_instance_arn  = {{.resource.ReplicationInstanceArn| Quote}}
+{{- if   .resource.ReplicationTaskIdentifier}}
+  replication_task_id       = {{Nil .resource.ReplicationTaskIdentifier| Quote}}
+{{- else}}
+  replication_task_id       = {{RandomString 6| Quote}}
+{{- end}}
+  replication_task_settings = {{Marshal .resource.ReplicationTaskSettings}}
+  source_endpoint_arn       = {{.resource.SourceEndpointArn| Quote}}
+  table_mappings            = {{Marshal .resource.TableMappings }}
+{{- if .resource.Tags}}
   tags = {
-    Name = "test"
-  }
-
-  target_endpoint_arn = aws_dms_endpoint.test-dms-target-endpoint-tf.endpoint_arn
+  {{Tags .resource.Tags}}
+    }
+{{- end}}
+  target_endpoint_arn = {{.resource.TargetEndpointArn |Quote}}
 }

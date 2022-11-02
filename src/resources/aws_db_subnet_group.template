@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "{{.item}}" {
-  name       = "{{.item}}"
+  name       = "{{ToLower .item}}"
   subnet_ids = {{.resource.SubnetIds}}
 {{- if  .resource.DBSubnetGroupDescription}}
   description="{{.resource.DBSubnetGroupDescription}}"

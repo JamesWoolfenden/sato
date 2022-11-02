@@ -22,6 +22,7 @@ resource "aws_autoscaling_group" "{{.item}}" {
 {{- end}}
 {{- if .resource.DefaultInstanceWarmup}}
   default_instance_warmup = {{.resource.DefaultInstanceWarmup}}
+{{- end}}
 {{- if .resource.DesiredCapacity}}
   desired_capacity = {{.resource.DesiredCapacity}}
 {{- end }}
@@ -41,13 +42,14 @@ resource "aws_autoscaling_group" "{{.item}}" {
   protect_from_scale_in={{ Boolean .resource.NewInstancesProtectedFromScaleIn}}
   placement_group={{.resource.PlacementGroup}}
   service_linked_role_arn={{.resource.ServiceLinkedRoleARN }}
+{{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}
     }
-  {{- end}}
+{{- end}}
   target_group_arns={{.resource.TargetGroupARNs}}
   termination_policies={{.resource.TerminationPolicies}}
-{{- if   .resource.VPCZoneIdentifier}}
+{{- if .resource.VPCZoneIdentifier}}
   vpc_zone_identifier={{.resource.VPCZoneIdentifier}}
 {{- end}}
 }
