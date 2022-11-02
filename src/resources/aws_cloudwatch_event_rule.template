@@ -46,7 +46,7 @@ resource "aws_cloudwatch_event_target" "{{$i.Id}}" {
   redshift_target={{$i.RedshiftDataParameters}}
 {{- end}}
 {{- if  $i.EcsParameters}}
-  ecs_target={{$i.EcsParameters}}
+  ecs_target={{Array $i.EcsParameters}}
 {{- end}}
 {{- if  $i.HttpParameters}}
   http_target={{$i.HttpParameters}}

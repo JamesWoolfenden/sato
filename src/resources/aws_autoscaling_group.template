@@ -1,6 +1,6 @@
 resource "aws_autoscaling_group" "{{.item}}" {
 {{- if .resource.MaxSize }}
-  max_size ={{ .resource.MaxSize }}
+  max_size = {{ .resource.MaxSize }}
 {{- end}}
 {{- if.resource.MinSize}}
   min_size = {{ .resource.MinSize}}
@@ -31,17 +31,31 @@ resource "aws_autoscaling_group" "{{.item}}" {
 {{- else}}
   health_check_grace_period=300
 {{- end}}
-  health_check_type={{.resource.HealthCheckType}}
-  launch_configuration={{ .resource.LaunchConfigurationName}}
-  launch_template={{ .resource.LaunchTemplate}}
-  initial_lifecycle_hook={{ .resource.LifecycleHookSpecificationList}}
-  load_balancers= {{ .resource.LoadBalancerNames}}
-  max_instance_lifetime={{ .resource.MaxInstanceLifetime}}
-  enabled_metrics={{ .resource.MetricsCollection}}
-  mixed_instances_policy={{.resource.MixedInstancesPolicy}}
-  protect_from_scale_in={{ Boolean .resource.NewInstancesProtectedFromScaleIn}}
-  placement_group={{.resource.PlacementGroup}}
+  health_check_type      = {{Nil .resource.HealthCheckType|Quote}}
+  launch_configuration   = {{Nil .resource.LaunchConfigurationName|Quote}}
+{{- if .resource.LaunchTemplate}}
+  launch_template        = {{ .resource.LaunchTemplate}}
+{{- end}}
+{{- if .resource.LifecycleHookSpecificationList}}
+  initial_lifecycle_hook {
+   {{ .resource.LifecycleHookSpecificationList}}
+  }
+{{- end}}
+  load_balancers         = {{ .resource.LoadBalancerNames}}
+{{- if .resource.MaxInstanceLifetime}}
+  max_instance_lifetime  = {{.resource.MaxInstanceLifetime}}
+{{- end}}
+  enabled_metrics        = {{ .resource.MetricsCollection}}
+{{- if .resource.MixedInstancesPolicy}}
+  mixed_instances_policy = {{.resource.MixedInstancesPolicy}}
+{{- end}}
+  protect_from_scale_in  = {{ Boolean .resource.NewInstancesProtectedFromScaleIn}}
+{{- if   .resource.PlacementGroup}}
+  placement_group={{Nil .resource.PlacementGroup|Quote}}
+{{- end}}
+{{- if .resource.ServiceLinkedRoleARN }}
   service_linked_role_arn={{.resource.ServiceLinkedRoleARN }}
+{{- end}}
 {{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}

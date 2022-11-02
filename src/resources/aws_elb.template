@@ -42,7 +42,8 @@ resource "aws_elb" "{{.item}}" {
 {{- if $i.InstanceProtocol}}
     instance_protocol= "{{$i.InstanceProtocol}}"
 {{- else}}
-    instance_protocol= ""
+    #guessed
+    instance_protocol= "HTTP"
 {{- end}}
     lb_port          = {{$i.LoadBalancerPort}}
     lb_protocol      = "{{$i.Protocol}}"
