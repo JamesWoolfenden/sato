@@ -13,7 +13,7 @@ Converts CloudFormation into Terraform. In Go, quickerly.
 
 ## Install
 
-Download from latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.9> or:
+Download from latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.14> or:
 
 Compile locally:
 
@@ -45,7 +45,7 @@ Get yourself some valid CloudFormation*
  9:17PM INF Created .sato\aws_s3_bucket.pipelines3bucket.tf
 ```
 
-That's it (I should make it obvious that its worked). So by default (overidable) the parsed CloudFormation (now Terraform) will be in a .sato sub directory.
+That's it. So by default (overidable) the parsed CloudFormation (now Terraform) will be in a .sato sub directory.
 So let's have a look see:
 
 ```bash
