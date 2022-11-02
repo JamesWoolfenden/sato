@@ -1,8 +1,33 @@
 resource "aws_ebs_volume" "{{.item}}" {
-  availability_zone = "us-west-2a"
-  size              = 40
-
+  availability_zone = "{{.resource.AvailabilityZone}}"
+  encrypted         = {{Boolean .resource.Encrypted}}
+{{- if .resource.Iops}}
+  iops= {{.resource.Iops}}
+{{- end}}
+{{- if.resource.MultiAttachEnabled}}
+  multi_attach_enabled= {{Boolean .resource.MultiAttachEnabled}}
+{{- end}}
+{{- if  .resource.SnapshotId}}
+  snapshot_id       = "{{.resource.SnapshotId}}"
+{{- end}}
+{{- if .resource.OutpostArn}}
+  outpost_arn       = "{{.resource.OutpostArn}}"
+{{- end}}
+{{- if .resource.VolumeType}}
+  type              = "{{.resource.VolumeType}}"
+{{- end}}
+{{- if .resource.KmsKeyId}}
+  kms_key_id        = "{{.resource.KmsKeyId}}"
+{{- end}}
+{{- if .resource.Throughput}}
+  throughput        = {{.resource.Throughput}}
+{{- end}}
+{{- if  .resource.Size}}
+  size              = {{.resource.Size}}
+{{- end}}
+{{- if .resource.Tags}}
   tags = {
-    Name = "HelloWorld"
+  {{Tags .resource.Tags}}
   }
+{{- end}}
 }

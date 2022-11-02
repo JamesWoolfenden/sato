@@ -60,7 +60,7 @@ func Parse(file string, destination string) error {
 			return strings.Split(str, ",")
 		},
 		"ToUpper": strings.ToUpper,
-		"ToLower": strings.ToLower,
+		"ToLower": tolower,
 		"Deref":   func(str *string) string { return *str },
 		"Marshal": func(v interface{}) string {
 			a, _ := json.Marshal(v)

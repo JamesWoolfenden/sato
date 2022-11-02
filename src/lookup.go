@@ -109,6 +109,12 @@ func lookup(myType string) []byte {
 		"AWS::EC2::Volume":                                awsEbsVolume,
 		"AWS::Config::ConfigurationRecorder":              awsConfigConfigurationRecorder,
 		"AWS::Config::ConfigRule":                         awsConfigConfigRule,
+		"AWS::DMS::ReplicationTask":                       awsDmsReplicationTask,
+		"AWS::RDS::DBClusterParameterGroup":               awsDbParameterGroup,
+		"AWS::DMS::Endpoint":                              awsDmsEndpoint,
+		"AWS::DMS::ReplicationInstance":                   awsDmsReplicationinstance,
+		"AWS::DMS::ReplicationSubnetGroup":                awsDmsReplicationSubnetGroup,
+		"AWS::RDS::DBInstance":                            awsDbInstance,
 	}
 
 	var myContent []byte

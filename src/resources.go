@@ -207,3 +207,21 @@ var awsConfigConfigurationRecorder []byte
 
 //go:embed resources/aws_config_config_rule.template
 var awsConfigConfigRule []byte
+
+//go:embed resources/aws_dms_replication_task.template
+var awsDmsReplicationTask []byte
+
+//go:embed resources/aws_db_parameter_group.template
+var awsDbParameterGroup []byte
+
+//go:embed resources/aws_dms_endpoint.template
+var awsDmsEndpoint []byte
+
+//go:embed resources/aws_dms_replication_instance.template
+var awsDmsReplicationinstance []byte
+
+//go:embed resources/aws_dms_replication_subnet_group.template
+var awsDmsReplicationSubnetGroup []byte
+
+//go:embed resources/aws_db_instance.template
+var awsDbInstance []byte

@@ -22,7 +22,7 @@ resource "aws_config_config_rule" "{{.item}}" {
   description="{{.resource.Description }}"
 {{- end}}
 {{- if .resource.InputParameters }}
-  input_parameters = "{{.resource.InputParameters }}"
+  input_parameters = jsonencode({{Marshal .resource.InputParameters }})
 {{- end}}
 {{- if .resource.MaximumExecutionFrequency }}
   maximum_execution_frequency="{{.resource.MaximumExecutionFrequency }}"

@@ -60,3 +60,7 @@ func kebab(Camel string) string {
 	KebabStr := str.KebabCase()
 	return KebabStr.ToLower()
 }
+
+func tolower(target string) string {
+	return strings.ToLower(target)
+}

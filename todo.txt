@@ -17,11 +17,8 @@ cfn comments from app when its json
 
 EFS
 AWS::EFS::MountTarget
-AWS::AutoScaling::ScalingPolicy
 AWS::EFS::FileSystem
 AWS::EFS::MountTarget
-AWS::AutoScaling::ScalingPolicy
-AWS::ElasticLoadBalancing::LoadBalancer
 AWS::EFS::MountTarget
 
 eks
@@ -33,24 +30,7 @@ cd E:\code\aws-cloudformation-templates\community\solutions\StaticWebSiteWithPip
 sato parse -f distribution.yml
 AWS::Route53::RecordSetGroup
 
-cd E:\code\aws-cloudformation-templates\aws\services\AutoScaling\
-sato parse -f AutoScalingRollingUpdates.yaml
-2022/10/23 11:39:54 AWS::ElasticLoadBalancing::LoadBalancer
-
-cd E:\code\aws-cloudformation-templates\aws\services\AutoScaling\
-sato parse -f AutoScalingScheduledAction.yaml
-2022/10/23 11:49:41 AWS::AutoScaling::ScheduledAction
-2022/10/23 11:49:41 AWS::ElasticLoadBalancing::LoadBalancer
-
-cd E:\code\aws-cloudformation-templates\aws\services.\Config\
-sato parse -f Config.yaml
-2022/10/23 12:04:44 AWS::SNS::TopicPolicy
-2022/10/23 12:04:44 AWS::Config::DeliveryChannel
-2022/10/23 12:04:44 AWS::Config::ConfigRule
-2022/10/23 12:04:44 AWS::Config::ConfigurationRecorder
-2022/10/23 12:04:44 AWS::EC2::Volume
-
-cd E:\code\aws-cloudformation-templates\aws\services\DMS\
+e:\code\aws-cloudformation-templates\aws\services\DMS\
 sato parse -f Template.yaml
 2022/10/23 12:11:08 AWS::DMS::ReplicationSubnetGroup
 2022/10/23 12:11:08 AWS::DMS::ReplicationTask
@@ -77,11 +57,8 @@ E:\code\aws-cloudformation-templates\aws\services\ecs\ECS_Schedule_Example.yaml
 sato:
 AWS::EC2::LaunchTemplate-> aws_launch_template
 AWS::WAFv2::WebACLAssociation => aws_wafv2_web_acl_association
-AWS::Route53::RecordSet =>aws_route53_record
-AWS::AutoScaling::ScalingPolicy =>  aws_autoscaling_policy
 AWS::EFS::MountTarget =>aws_efs_mount_target
 AWS::Backup::BackupPlan =>aws_backup_plan
-AWS::ElasticLoadBalancing::LoadBalancer aws_elb
 AWS::EFS::FileSystem =>aws_efs_file_system
 AWS::Backup::BackupSelection => aws_backup_selection
 AWS::Backup::BackupVault =>aws_backup_vault
