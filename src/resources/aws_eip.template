@@ -1,19 +1,21 @@
 resource "aws_eip" "{{.item}}" {
-  {{- if .resource.InstanceId}}
+{{- if .resource.InstanceId}}
   instance =  "{{.resource.InstanceId}}"
-  {{- end}}
-  {{- if eq (Deref .resource.Domain) "vpc"}}
-  vpc      =  true
-  {{- end}}
-  {{- if .resource.NetworkBorderGroup}}
+{{- end}}
+{{- if .resource.NetworkBorderGroup}}
   network_border_group="{{.resource.NetworkBorderGroup}}"
-  {{- end}}
-  {{- if .resource.PublicIpv4Pool}}
+{{- end}}
+{{- if .resource.PublicIpv4Pool}}
    public_ipv4_pool="{{.resource.PublicIpv4Pool}}"
-  {{- end}}
-  {{- if .resource.Tags}}
+{{- end}}
+{{- if .resource.Domain}}
+{{- if eq (Deref .resource.Domain) "vpc"}}
+  vpc      =  true
+{{- end}}
+{{- end}}
+{{- if .resource.Tags}}
   tags = {
   {{Tags .resource.Tags}}
     }
-  {{- end}}
+{{- end}}
 }

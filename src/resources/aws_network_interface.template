@@ -1,0 +1,20 @@
+resource "aws_network_interface" "{{.item}}" {
+  subnet_id         = {{Nil .resource.SubnetId|Quote}}
+{{- if  .resource.Description}}
+  description       = {{Nil .resource.Description|Quote}}
+{{- end}}
+{{- if  .resource.InterfaceType}}
+  interface_type    = {{Nil .resource.InterfaceType|Quote}}
+{{- end}}
+{{- if .resource.Ipv6AddressCount}}
+  ipv6_address_count= {{.resource.Ipv6AddressCount}}
+{{- end}}
+  ipv6_addresses    = {{.resource.Ipv6Addresses}}
+  private_ips       = {{.resource.PrivateIpAddresses}}
+  source_dest_check = {{Boolean .resource.SourceDestCheck}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

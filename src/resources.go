@@ -225,3 +225,9 @@ var awsDmsReplicationSubnetGroup []byte
 
 //go:embed resources/aws_db_instance.template
 var awsDbInstance []byte
+
+//go:embed resources/aws_eip_association.template
+var awsEipAssociation []byte
+
+//go:embed resources/aws_network_interface.template
+var awsNetworkInterface []byte

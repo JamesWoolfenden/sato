@@ -1,0 +1,17 @@
+resource "aws_eip_association" "{{.item}}" {
+{{- if .resource.AllocationId}}
+  allocation_id = {{Nil .resource.AllocationId|Quote}}
+{{- end}}
+{{- if .resource.InstanceId}}
+  instance_id = {{Nil .resource.InstanceId|Quote}}
+{{- end}}
+{{- if .resource.NetworkInterfaceId}}
+  network_interface_id={{Nil .resource.NetworkInterfaceId|Quote}}
+{{- end}}
+{{- if .resource.PrivateIpAddress }}
+  private_ip_address={{Nil .resource.PrivateIpAddress |Quote}}
+{{- end}}
+{{- if .resource.EIP}}
+  public_ip={{Nil .resource.EIP|Quote}}
+{{- end}}
+}

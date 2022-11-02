@@ -115,6 +115,8 @@ func lookup(myType string) []byte {
 		"AWS::DMS::ReplicationInstance":                   awsDmsReplicationinstance,
 		"AWS::DMS::ReplicationSubnetGroup":                awsDmsReplicationSubnetGroup,
 		"AWS::RDS::DBInstance":                            awsDbInstance,
+		"AWS::EC2::EIPAssociation":                        awsEipAssociation,
+		"AWS::EC2::NetworkInterface":                      awsNetworkInterface,
 	}
 
 	var myContent []byte
