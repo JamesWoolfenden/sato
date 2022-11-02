@@ -13,7 +13,7 @@ Converts CloudFormation into Terraform. In Go, quickerly.
 
 ## Install
 
-Download from latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.9> or:
+Download from latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.14> or:
 
 Compile locally:
 
