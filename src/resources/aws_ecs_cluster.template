@@ -1,0 +1,46 @@
+resource "aws_ecs_cluster" "{{.item}}" {
+{{- if .resource.CapacityProviders}}
+  capacity_providers={{Array .resource.CapacityProviders}}
+{{- end}}
+{{- if .resource.ClusterName}}
+  name={{.resource.ClusterName}}
+{{- else}}
+  name="{{.item}}"
+{{- end}}
+{{- if .resource.ClusterSettings}}
+{{range $a, $i:= .resource.ClusterSettings}}
+  setting {
+    name  =
+    value =
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.Configuration}}
+{{range $a, $i:= .resource.Configuration}}
+  configuration {
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
+}
+
+
+{{- if .resource.DefaultCapacityProviderStrategy }}
+{{range $a, $i:= .resource.DefaultCapacityProviderStrategy }}
+resource "aws_ecs_cluster_capacity_providers" "example" {
+  cluster_name = aws_ecs_cluster.example.name
+
+  capacity_providers = ["FARGATE"]
+
+  default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
+    capacity_provider = "FARGATE"
+  }
+}
+{{- end}}
+{{- end}}

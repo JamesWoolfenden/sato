@@ -1,0 +1,85 @@
+resource "aws_ecs_service" "{{.item}}" {
+{{- if .resource.ServiceName}}
+  name            = "{{.resource.ServiceName}}"
+{{- else}}
+  name            = "{{.item}}"
+{{- end}}
+  cluster         = {{Nil .resource.Cluster|Quote}}
+  desired_count   = {{.resource.DesiredCount}}
+  enable_ecs_managed_tags={{Boolean .resource.EnableECSManagedTags}}
+  launch_type     = {{Nil .resource.LaunchType|Quote}}
+  propagate_tags  = {{Nil .resource.PropagateTags|Quote}}
+  iam_role        = {{Nil .resource.Role|Quote}}
+{{- if .resource.DeploymentController}}
+{{range $a, $i := .resource.DeploymentController}}
+  deployment_controller {
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.CapacityProviderStrategy}}
+{{- range $a, $i := .resource.CapacityProviderStrategy}}
+  capacity_provider_strategy {
+    base             = {{$i.Base}}
+    capacity_provider= {{$i.CapacityProvider}}
+    weight           = {{$i.Weight}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.NetworkConfiguration}}
+{{- range $a, $i := .resource.NetworkConfiguration}}
+  network_configuration {
+    subnets = {{Array $i.Subnets}}
+    security_groups  = {{Array $i.SecurityGroups}}
+    assign_public_ip  = {{Boolean  $i.AssignPublicIp}}
+  }
+{{- end}}
+{{- end}}
+{{- if  .resource.LoadBalancers }}
+{{- range $a, $i := .resource.LoadBalancers }}
+  load_balancer {
+    container_name= {{$i.ContainerName}}
+    container_port= {{$i.ContainerPort}}
+    elb_name      = {{Nil $i.LoadBalancerName|Quote}}
+    target_group_arn= {{Nil $i.TargetGroupArn|Quote }}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.PlacementConstraints }}
+{{range $a, $i :=.resource.PlacementConstraints }}
+  placement_constraints {
+    type       = "{{$i.Type}}"
+    expression = "{{$i.Expression}}"
+  }
+{{- end}} {{- end}}
+{{- if .resource.ServiceRegistries}}
+{{- range $a, $i := .resource.ServiceRegistries}}
+  service_registries {
+    registry_arn = {{ $i.RegistryArn}}
+    port  = {{ $i.Port}}
+    container_port  = {{ $i.ContainerPort}}
+    container_name  = {{ $i.ContainerName}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
+  task_definition={{Nil .resource.TaskDefinition|Quote}}
+{{- if .resource.DeploymentConfiguration }}
+  deployment_controller {
+    type={{.resource.DeploymentConfiguration.Type}}
+  }
+{{- end}}
+  enable_execute_command = {{Boolean .resource.EnableExecuteCommand}}
+{{- if  .resource.HealthCheckGracePeriodSeconds}}
+  health_check_grace_period_seconds = {{.resource.HealthCheckGracePeriodSeconds}}
+{{- end }}
+{{- if .resource.PlacementStrategies}}
+{{range $a, $i :=.resource.PlacementStrategies}}
+  ordered_placement_strategies {}
+{{- end}}{{- end}}
+  platform_version={{Nil .resource.PlatformVersion|Quote}}
+  scheduling_strategy ={{Nil .resource.SchedulingStrategy|Quote}}
+}

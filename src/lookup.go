@@ -117,6 +117,11 @@ func lookup(myType string) []byte {
 		"AWS::RDS::DBInstance":                            awsDbInstance,
 		"AWS::EC2::EIPAssociation":                        awsEipAssociation,
 		"AWS::EC2::NetworkInterface":                      awsNetworkInterface,
+		"AWS::ApplicationAutoScaling::ScalingPolicy":      awsAppAutoscalingPolicy,
+		"AWS::ECS::Service":                               awsEcsService,
+		"AWS::ECS::TaskDefinition":                        awsEcsTaskDefinition,
+		"AWS::ApplicationAutoScaling::ScalableTarget":     awsAppAutoscalingTarget,
+		"AWS::ECS::Cluster":                               awsEcsCluster,
 	}
 
 	var myContent []byte

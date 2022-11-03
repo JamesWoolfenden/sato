@@ -231,3 +231,18 @@ var awsEipAssociation []byte
 
 //go:embed resources/aws_network_interface.template
 var awsNetworkInterface []byte
+
+//go:embed resources/aws_appautoscaling_policy.template
+var awsAppAutoscalingPolicy []byte
+
+//go:embed resources/aws_appautoscaling_target.template
+var awsAppAutoscalingTarget []byte
+
+//go:embed resources/aws_ecs_task_definition.template
+var awsEcsTaskDefinition []byte
+
+//go:embed resources/aws_ecs_cluster.template
+var awsEcsCluster []byte
+
+//go:embed resources/aws_ecs_service.template
+var awsEcsService []byte

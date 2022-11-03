@@ -1,0 +1,7 @@
+resource "aws_appautoscaling_target" "{{.item}}" {
+  max_capacity       = 100
+  min_capacity       = 5
+  resource_id        = "table/${aws_dynamodb_table.example.name}"
+  scalable_dimension = "dynamodb:table:ReadCapacityUnits"
+  service_namespace  = "dynamodb"
+}
