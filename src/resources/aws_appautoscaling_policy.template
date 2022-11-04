@@ -1,16 +1,61 @@
 
-resource "aws_appautoscaling_policy" "dynamodb_table_read_policy" {
-  name               = "DynamoDBReadCapacityUtilization:${aws_appautoscaling_target.dynamodb_table_read_target.resource_id}"
-  policy_type        = "TargetTrackingScaling"
-  resource_id        = aws_appautoscaling_target.dynamodb_table_read_target.resource_id
-  scalable_dimension = aws_appautoscaling_target.dynamodb_table_read_target.scalable_dimension
-  service_namespace  = aws_appautoscaling_target.dynamodb_table_read_target.service_namespace
-
+resource "aws_appautoscaling_policy" "{{.item}}" {
+{{- if .resource.PolicyName}}
+  name               = "{{.resource.PolicyName}}"
+{{- end}}
+{{- if .resource.PolicyType}}
+  policy_type        = "{{.resource.PolicyType}}"
+{{- end}}
+  resource_id        = {{Nil .resource.ResourceId|Quote}}
+  scalable_dimension = {{Nil .resource.ScalableDimension|Quote}}
+  service_namespace  = {{Nil .resource.ServiceNamespace|Quote}}
+{{- if .resource.StepScalingPolicyConfiguration}}
+  step_scaling_policy_configuration {
+    adjustment_type= {{Nil .resource.StepScalingPolicyConfiguration.AdjustmentType|Quote}}
+{{- if .resource.StepScalingPolicyConfiguration.Cooldown}}
+    cooldown={{.resource.StepScalingPolicyConfiguration.Cooldown}}
+{{- end}}
+    metric_aggregation_type={{Nil .resource.StepScalingPolicyConfiguration.MetricAggregationType|Quote}}
+ {{- if .resource.StepScalingPolicyConfiguration.MinAdjustmentMagnitude}}
+ min_adjustment_type={{.resource.StepScalingPolicyConfiguration.MinAdjustmentMagnitude}}
+{{- end}}
+{{- if .resource.StepScalingPolicyConfiguration.StepAdjustments}}
+    step_adjustment {
+{{- range $a, $i := .resource.StepScalingPolicyConfiguration.StepAdjustments}}
+{{- if $i.MetricIntervalLowerBound}}
+      metric_interval_lower_bound={{$i.MetricIntervalLowerBound}}
+{{- end}}
+{{- if $i.MetricIntervalUpperBound}}
+      metric_interval_upper_bound={{$i.MetricIntervalUpperBound}}
+{{- end}}
+{{- if  $i.ScalingAdjustment}}
+      scaling_adjustment={{  $i.ScalingAdjustment}}
+{{- end}}
+{{- end}}
+    }
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.TargetTrackingScalingPolicyConfiguration}}
   target_tracking_scaling_policy_configuration {
     predefined_metric_specification {
-      predefined_metric_type = "DynamoDBReadCapacityUtilization"
+      predefined_metric_type
+      resource_label=
     }
-
-    target_value = 70
+    disable_scale_in
+    scale_in_cooldown
+    scale_out_cooldown
+    customized_metric_specification {
+      dimensions {
+        name
+        value
+      }
+      metric_name
+      namespace
+      statistic
+      unit
+    }
+    target_value =
   }
+  {{- end}}
 }
