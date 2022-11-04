@@ -2,9 +2,11 @@ resource "aws_lb" "{{.item}}" {
 {{- if .resource.IpAddressType}}
   ip_address_type="{{.resource.IpAddressType}}"
 {{- end}}
-  idle_timeout= {{(index .resource.LoadBalancerAttributes 0).Value }}
-  enable_deletion_protection={{(index .resource.LoadBalancerAttributes 1).Value }}
-  enable_http2= {{(index .resource.LoadBalancerAttributes 2).Value }}
+{{- if  .resource.LoadBalancerAttributes}}
+{{- range $a, $i:=.resource.LoadBalancerAttributes}}
+ {{Replace $i.Key ".timeout_seconds" ""}}= "{{$i.Value }}"
+{{- end}}
+{{- end}}
   name        = "{{.resource.Name}}"
 {{- if eq (Deref .resource.Scheme) "internet-facing"}}
   internal=false

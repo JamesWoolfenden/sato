@@ -1,83 +1,174 @@
 resource "aws_ecs_task_definition" "{{.item}}" {
-
 {{- if .resource.ContainerDefinitions}}
   container_definitions = jsonencode([
   {{- range $a,$i := .resource.ContainerDefinitions}}
 {
 {{- if $i.Command}}
-  command =<<CODE
-{{$i.Command}}
-CODE,
+  command ={{$i.Command}}
 {{- end}}
   cpu={{ $i.Cpu}}
+{{- if $i.DependsOnProp}}
   dependsOn={{$i.DependsOnProp}}
+{{- end}}
   disableNetworking={{Boolean $i.DisableNetworking }}
   dnsSearchDomains={{Array $i.DnsSearchDomains}}
   dnsServers={{Array $i.DnsServers}}
 {{- if  $i.DockerLabels}}
-  dockerLabels={{$i.DockerLabels}}
+  dockerLabels={{Demap $i.DockerLabels}}
 {{- end}}
   dockerSecurityOptions={{$i.DockerSecurityOptions}}
-  entryPoint={{$i.EntryPoint }}
+  entryPoint={{ $i.EntryPoint }}
+{{- if .Environment }}
   environment={{$i.Environment }}
+{{- end}}
+{{- if $i.EnvironmentFiles }}
   environmentFiles={{$i.EnvironmentFiles }}
+{{- end}}
   essential={{Boolean $i.Essential }}
+{{- if $i.ExtraHosts }}
   extraHosts={{$i.ExtraHosts }}
+{{- end}}
+{{- if   $i.FirelensConfiguration}}
   firelensConfiguration={{$i.FirelensConfiguration}}
+{{- end}}
+{{- if $i.HealthCheck}}
   healthCheck={{$i.HealthCheck}}
+{{- end}}
   hostname={{Nil $i.Hostname|Quote }}
   image={{Nil $i.Image|Quote}}
   interactive={{Boolean $i.Interactive}}
-  links={{$i.Links}}
+  links={{Array $i.Links}}
+{{- if $i.LinuxParameters}}
   linuxParameters={{$i.LinuxParameters}}
+{{- end}}
+{{- if $i.LogConfiguration}}
+  logConfiguration=[{
+    LogDriver = "{{$i.LogConfiguration.LogDriver}}"
+{{- if $i.LogConfiguration.Options}}
+    Options={
+      {{- range $g, $z:= $i.LogConfiguration.Options}}
+      {{$g}}="{{$z}}" {{- end}}
+    }
+{{- end}}
+    SecretOptions ={{$i.LogConfiguration.SecretOptions}}
+  }]
+{{- end}}
   memory={{$i.Memory}}
+{{- if $i.MemoryReservation }}
   memoryReservation={{$i.MemoryReservation }}
+{{- end}}
+
 {{- if  $i.MountPoints }}
-  mountPoints {
+  mountPoints=[
 {{- range $b, $k:=  $i.MountPoints }}
-    container_path= {{$k.ContainerPath }}
+  {
+    container_path= {{Nil $k.ContainerPath|Quote }}
     read_only     = {{Boolean $k.ReadOnly}}
-    source_volume = {{$k.SourceVolume}}
+    source_volume = {{Nil $k.SourceVolume|Quote}}
+  },
 {{- end}}
-  }
+]
 {{- end}}
-  name={{$i.Name}}
-  portMappings={{$i.PortMappings}}
+  name="{{$i.Name}}"
+{{- if $i.PortMappings}}
+  portMappings = [{{- range $c, $l:= $i.PortMappings}}
+  {
+    ContainerPort = {{$l.ContainerPort}}
+{{- if  $l.HostPort}}
+    HostPort = {{$l.HostPort}}
+{{- end}}
+    Protocol = {{Nil $l.Protocol|Quote}}
+  },
+{{- end}}
+  ]
+{{- end}}
   privileged={{Boolean $i.Privileged}}
   pseudoTerminal={{Boolean $i.PseudoTerminal}}
   readonlyRootFilesystem={{Boolean $i.ReadonlyRootFilesystem}}
-  repositoryCredentials={{Nil $i.RepositoryCredentials|Quote}}
+{{- if  $i.RepositoryCredentials}}
+  repositoryCredentials={{ $i.RepositoryCredentials}}
+{{- end}}
+{{- if $i.ResourceRequirements}}
   resourceRequirements={{$i.ResourceRequirements}}
+{{- end}}
+{{- if $i.Secrets}}
   secrets={{$i.Secrets}}
+{{- end}}
 {{- if $i.StartTimeout}}
   startTimeout={{$i.StartTimeout}}
 {{- end}}
 {{- if $i.StopTimeout}}
   stopTimeout={{$i.StopTimeout}}
 {{- end}}
+{{- if $i.SystemControls}}
   systemControls={{$i.SystemControls}}
+{{- end}}
+{{- if $i.Ulimits}}
   ulimits={{$i.Ulimits}}
+{{- end}}
   user={{Nil $i.User|Quote}}
-  volumes_from={{$i.VolumesFrom}}
-  working_directory={{Nil $i.WorkingDirectory|Quote}}
+{{- if $i.VolumesFrom}}
+  VolumesFrom=[
+{{ range $b, $j:= $i.VolumesFrom}}
+    {
+      SourceContainer = "{{$j.SourceContainer}}"
+      ReadOnly = {{Boolean $j.ReadOnly}}
+    },
+{{- end}}
+  ]
+{{- end}}
+  workingDirectory={{Nil $i.WorkingDirectory|Quote}}
 },{{- end}}])
 {{- end}}
-Cpu = {*string | 0x0} nil
-EphemeralStorage = {*ecs.TaskDefinition_EphemeralStorage | 0x0} nil
-ExecutionRoleArn = {*string | 0x0} nil
-Family = {*string | 0xc000405b00} "goformation-stack-ecs-demo-app"
-InferenceAccelerators = {[]ecs.TaskDefinition_InferenceAccelerator} nil
-IpcMode = {*string | 0x0} nil
-Memory = {*string | 0x0} nil
-NetworkMode = {*string | 0x0} nil
-PidMode = {*string | 0x0} nil
-PlacementConstraints = {[]ecs.TaskDefinition_TaskDefinitionPlacementConstraint} nil
-ProxyConfiguration = {*ecs.TaskDefinition_ProxyConfiguration | 0x0} nil
-RequiresCompatibilities = {[]string} nil
-RuntimePlatform = {*ecs.TaskDefinition_RuntimePlatform | 0x0} nil
-Tags = {[]tags.Tag} nil
-TaskRoleArn = {*string | 0x0} nil
+  cpu= {{Nil .resource.Cpu|Quote}}
+{{- if   .resource.EphemeralStorage}}
+  ephemeral_storage= {{ .resource.EphemeralStorage}}
+{{- end}}
+  execution_role_arn= {{Nil .resource.ExecutionRoleArn|Quote}}
+  family={{Nil .resource.Family|Quote}}
+  inference_accelerator={{.resource.InferenceAccelerators}}
+{{- if   .resource.IpcMode}}
+  ipc_mode={{.resource.IpcMode}}
+{{- end}}
+{{- if   .resource.Memory}}
+  memory={{.resource.Memory}}
+{{- end}}
+{{- if .resource.NetworkMode}}
+  network_mode={{.resource.NetworkMode}}
+{{- end}}
+{{- if .resource.PidMode }}
+  pid_mode={{.resource.PidMode }}
+{{- end}}
+  placement_constraints={{.resource.PlacementConstraints}}
+{{- if .resource.ProxyConfiguration}}
+  proxy_configuration={{.resource.ProxyConfiguration}}
+{{- end}}
+  requires_compatibilities={{.resource.RequiresCompatibilities}}
+{{- if .resource.RuntimePlatform}}
+  runtime_platform{}
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+    }
+{{- end}}
+{{- if .resource.TaskRoleArn}}
+  task_role_arn={{.resource.TaskRoleArn}}
+{{- end}}
 {{- if .resource.Volumes}}
-  volumes={{.resource.Volumes}}
+{{- range $a, $i:= .resource.Volumes}}
+  volume {
+{{- if $i.DockerVolumeConfiguration }}
+    docker_volume_configuration= {{$i.DockerVolumeConfiguration }}
+{{- end}}
+{{- if $i.EFSVolumeConfiguration}}
+    efs_volume_configuration={{$i.EFSVolumeConfiguration}}
+{{- end}}
+{{- if $i.Host}}
+    host_path = {{$i.Host}}
+{{- end}}
+    name= {{Nil $i.Name|Quote }}
+  }
+{{- end}}
 {{- end}}
 }

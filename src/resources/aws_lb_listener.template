@@ -8,7 +8,9 @@ resource "aws_lb_listener" "{{.item}}" {
   load_balancer_arn= "{{ .resource.LoadBalancerArn}}"
   port             = "{{ .resource.Port}}"
   protocol         = "{{ .resource.Protocol}}"
+{{- if .resource.SslPolicy}}
   ssl_policy       = "{{ .resource.SslPolicy}}"
+{{- end}}
 {{- if .resource.DefaultActions}}
 {{- range $i, $a := .resource.DefaultActions}}
   default_action {

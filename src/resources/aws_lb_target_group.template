@@ -28,7 +28,9 @@ resource "aws_lb_target_group" "{{.item}}" {
   {{Tags .resource.Tags}}
   }
 {{- end}}
+{{- if .resource.TargetType }}
   target_type= "{{ .resource.TargetType }}"
+{{- end}}
 {{- if .resource.VpcId}}
   vpc_id="{{ .resource.VpcId}}"
 {{- end}}

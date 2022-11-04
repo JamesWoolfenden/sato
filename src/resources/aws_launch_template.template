@@ -1,167 +1,142 @@
 resource "aws_launch_template" "{{.item}}" {
-  name = "foo"
-
+  name = "{{.resource.LaunchTemplateName}}"
+{{- if .resource.LaunchTemplateData.BlockDeviceMappings}}
+{{- range $a, $i:= .resource.LaunchTemplateData.BlockDeviceMappings}}
   block_device_mappings {
-    device_name = "/dev/sda1"
-
+{{- if $i.Ebs}}
     ebs {
-      volume_size = 20
+      volume_size={{$i.Ebs.VolumeSize}}
     }
+{{- end}}
+    no_device={{Nil $i.NoDevice|Quote}}
+    virtual_name={{Nil $i.VirtualName|Quote}}
+    device_name = {{Nil $i.DeviceName|Quote}}
   }
-
+{{- end}}
+{{- end}}
+{{- if  .resource.LaunchTemplateData.CapacityReservationSpecification}}1
   capacity_reservation_specification {
-    capacity_reservation_preference = "open"
+    capacity_reservation_preference = {{Nil .resource.LaunchTemplateData.CapacityReservationSpecification.CapacityReservationPreference|Quote}}
+    capacity_reservation_target     = {{Nil .resource.LaunchTemplateData.CapacityReservationSpecification.CapacityReservationTarget|Quote}}
   }
-
+{{- end}}
+{{- if .resource.LaunchTemplateData.CpuOptions}}
   cpu_options {
-    core_count       = 4
-    threads_per_core = 2
+    core_count       = {{.resource.LaunchTemplateData.CpuOptions.CoreCount}}
+    threads_per_core = {{.resource.LaunchTemplateData.CpuOptions.ThreadsPerCore}}
   }
-
+{{- end}}
+{{- if  .resource.LaunchTemplateData.CreditSpecification}}
   credit_specification {
-    cpu_credits = "standard"
+    cpu_credits = {{Nil .resource.LaunchTemplateData.CreditSpecification.CpuCredit|Quote}}
   }
-
-  disable_api_stop        = true
-  disable_api_termination = true
-
-  ebs_optimized = true
-
+{{- end}}
+  disable_api_stop        = {{Boolean .resource.LaunchTemplateData.DisableApiStop}}
+  disable_api_termination = {{Boolean .resource.LaunchTemplateData.DisableApiTermination}}
+  ebs_optimized           = {{Boolean .resource.LaunchTemplateData.EbsOptimized}}
+{{- if  .resource.LaunchTemplateData.ElasticGpuSpecifications}}
+{{- range $a, $i:= .resource.LaunchTemplateData.ElasticGpuSpecifications}}
   elastic_gpu_specifications {
-    type = "test"
+    type = {{Nil $i.type|Quote}}
   }
-
+{{- end}}
+{{- end}}
+{{- if  .resource.LaunchTemplateData.ElasticInferenceAccelerators}}
+{{- range $a, $i := .resource.LaunchTemplateData.ElasticInferenceAccelerators}}
   elastic_inference_accelerator {
-    type = "eia1.medium"
+    type = {{Nil $i.type|Quote}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.LaunchTemplateData.IamInstanceProfile}}
   iam_instance_profile {
-    name = "test"
+    name = {{Nil .resource.LaunchTemplateData.IamInstanceProfile|Quote}}
   }
-
-  image_id = "ami-test"
-
-  instance_initiated_shutdown_behavior = "terminate"
-
+{{- end}}
+  image_id =  {{Nil .resource.LaunchTemplateData.ImageId|Quote}}
+  instance_initiated_shutdown_behavior = {{Nil .resource.LaunchTemplateData.InstanceInitiatedShutdownBehavior|Quote}}
+{{- if .resource.LaunchTemplateData.InstanceMarketOptions}}
   instance_market_options {
-    market_type = "spot"
+    market_type = {{Nil .resource.LaunchTemplateData.InstanceMarketOptions.MarketType|Quote}}
   }
-
-  instance_type = "t2.micro"
-
-  kernel_id = "test"
-
-  key_name = "test"
-
+{{- end}}
+  instance_type = {{Nil  .resource.LaunchTemplateData.InstanceType|Quote}}
+  kernel_id = {{Nil .resource.LaunchTemplateData.KernelId|Quote}}
+  key_name = {{Nil .resource.LaunchTemplateData.KeyName|Quote}}
+{{- if .resource.LaunchTemplateData.LicenseSpecifications}}
   license_specification {
-    license_configuration_arn = "arn:aws:license-manager:eu-west-1:123456789012:license-configuration:lic-0123456789abcdef0123456789abcdef"
+    license_configuration_arn = {{Nil .resource.LaunchTemplateData.LicenseSpecifications.LicenseConfigurationArn|Quote}}
   }
-
+{{- end}}
+{{- if .resource.LaunchTemplateData.MetadataOptions}}
   metadata_options {
-    http_endpoint               = "enabled"
-    http_tokens                 = "required"
-    http_put_response_hop_limit = 1
-    instance_metadata_tags      = "enabled"
+    http_protocol_ipv6          = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpProtocolIpv6|Quote}}
+    http_endpoint               = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpEndpoint|Quote}}
+    http_tokens                 = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpTokens|Quote}}
+    http_put_response_hop_limit = {{.resource.LaunchTemplateData.MetadataOptions.HttpPutResponseHopLimit}}
+    instance_metadata_tags      = {{Nil .resource.LaunchTemplateData.MetadataOptions.InstanceMetadataTags|Quote}}
   }
-
+{{- end}}
+{{- if  .resource.LaunchTemplateData.Monitoring}}
   monitoring {
-    enabled = true
+    enabled = {{Boolean .resource.LaunchTemplateData.Monitoring.Enabled}}
   }
-
+{{- end}}
+{{- if  .resource.LaunchTemplateData.NetworkInterfaces}}
+{{- range $a, $i:= .resource.LaunchTemplateData.NetworkInterfaces}}
   network_interfaces {
-    associate_public_ip_address = true
+    associate_public_ip_address = {{Boolean $i.AssociatePublicIpAddress}}
   }
-
+{{- end}}
+{{- end}}
+{{- if  .resource.LaunchTemplateData.Placement}}
   placement {
-    availability_zone = "us-west-2a"
+    availability_zone = {{Nil .resource.LaunchTemplateData.Placement.AvailabilityZone|Quote}}
   }
+{{- end}}
+  ram_disk_id = {{Nil .resource.LaunchTemplateData.RamDiskId| Quote}}
+  vpc_security_group_ids = {{Array  .resource.LaunchTemplateData.SecurityGroupIds }}
 
-  ram_disk_id = "test"
-
-  vpc_security_group_ids = ["sg-12345678"]
-
+{{- if .resource.TagSpecifications}}
+{{- range $a, $i:= .resource.TagSpecifications}}
   tag_specifications {
-    resource_type = "instance"
-
+    resource_type = {{$i.ResourceType}}
     tags = {
-      Name = "test"
+      {{Tags $i.ResourceType.Tags}}
     }
   }
-
-  user_data = filebase64("${path.module}/example.sh")
+{{- end}}
+{{- end}}
+{{- if .resource.LaunchTemplateData.UserData }}
+  user_data = {{Decode64 .resource.LaunchTemplateData.UserData }}
+{{- end}}
+ {{- if .resource.LaunchTemplateData.EnclaveOptions }}
+   enclave_options {
+     enabled = {{Boolean .resource.LaunchTemplateData.EnclaveOptions}}
+   }
+ {{- end}}
+ {{- if  .resource.LaunchTemplateData.HibernationOptions }}
+   hibernation_options {
+     configured = {{Boolean .resource.LaunchTemplateData.HibernationOptions.Configured}}
+   }
+ {{- end}}
+{{- if   .resource.LaunchTemplateData.InstanceRequirements}}
+  instance_requirements {
+    add shizzle
+  }
+{{- end}}
+{{- if  .resource.LaunchTemplateData.MaintenanceOptions}}
+  maintenance_options {
+    auto_recovery={{Nil .resource.LaunchTemplateData.MaintenanceOptions.AutoRecovery|Quote}}
+  }
+{{- end}}
+{{- if  .resource.LaunchTemplateData.PrivateDnsNameOptions}}
+  private_dns_name_options {
+    enable_resource_name_dns_aaaa_record={{Nil .resource.LaunchTemplateData.PrivateDnsNameOptions.EnableResourceNameDnsAaaaRecord|Quote}}
+    enable_resource_name_dns_a_record={{Nil .resource.LaunchTemplateData.PrivateDnsNameOptions.EnableResourceNameDnsARecord|Quote}}
+    hostname_type={{.resource.LaunchTemplateData.PrivateDnsNameOptions.HostnameType}}
+  }
+{{- end}}
+  security_groups={{Array .resource.LaunchTemplateData.SecurityGroups}}
+  default_version ={{Nil .resource.VersionDescription|Quote}}
 }
-
-LaunchTemplateData = {*ec2.LaunchTemplate_LaunchTemplateData | 0xc0001430e0}
- BlockDeviceMappings = {[]ec2.LaunchTemplate_BlockDeviceMapping} len:1, cap:4
-  0 = {ec2.LaunchTemplate_BlockDeviceMapping}
-   DeviceName = {*string | 0xc000455be0} "/dev/xvda"
-   Ebs = {*ec2.LaunchTemplate_Ebs | 0xc0002fca20}
-   NoDevice = {*string | 0x0} nil
-   VirtualName = {*string | 0x0} nil
-   AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
-   AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
-   AWSCloudFormationDependsOn = {[]string} nil
-   AWSCloudFormationMetadata = {map[string]interface{}} nil
-   AWSCloudFormationCondition = {string} ""
- CapacityReservationSpecification = {*ec2.LaunchTemplate_CapacityReservationSpecification | 0x0} nil
- CpuOptions = {*ec2.LaunchTemplate_CpuOptions | 0x0} nil
- CreditSpecification = {*ec2.LaunchTemplate_CreditSpecification | 0x0} nil
- DisableApiStop = {*bool | 0x0} nil
- DisableApiTermination = {*bool | 0x0} nil
- EbsOptimized = {*bool | 0x0} nil
- ElasticGpuSpecifications = {[]ec2.LaunchTemplate_ElasticGpuSpecification} nil
- ElasticInferenceAccelerators = {[]ec2.LaunchTemplate_LaunchTemplateElasticInferenceAccelerator} nil
- EnclaveOptions = {*ec2.LaunchTemplate_EnclaveOptions | 0x0} nil
- HibernationOptions = {*ec2.LaunchTemplate_HibernationOptions | 0x0} nil
- IamInstanceProfile = {*ec2.LaunchTemplate_IamInstanceProfile | 0x0} nil
- ImageId = {*string | 0x0} nil
- InstanceInitiatedShutdownBehavior = {*string | 0x0} nil
- InstanceMarketOptions = {*ec2.LaunchTemplate_InstanceMarketOptions | 0x0} nil
- InstanceRequirements = {*ec2.LaunchTemplate_InstanceRequirements | 0x0} nil
- InstanceType = {*string | 0x0} nil
- KernelId = {*string | 0x0} nil
- KeyName = {*string | 0x0} nil
- LicenseSpecifications = {[]ec2.LaunchTemplate_LicenseSpecification} nil
- MaintenanceOptions = {*ec2.LaunchTemplate_MaintenanceOptions | 0x0} nil
- MetadataOptions = {*ec2.LaunchTemplate_MetadataOptions | 0xc0002ee300}
-  HttpEndpoint = {*string | 0x0} nil
-  HttpProtocolIpv6 = {*string | 0x0} nil
-  HttpPutResponseHopLimit = {*int | 0xc000302980} 2
-  HttpTokens = {*string | 0xc000455c00} "optional"
-  InstanceMetadataTags = {*string | 0x0} nil
-  AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
-  AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
-  AWSCloudFormationDependsOn = {[]string} nil
-  AWSCloudFormationMetadata = {map[string]interface{}} nil
-  AWSCloudFormationCondition = {string} ""
- Monitoring = {*ec2.LaunchTemplate_Monitoring | 0x0} nil
- NetworkInterfaces = {[]ec2.LaunchTemplate_NetworkInterface} nil
- Placement = {*ec2.LaunchTemplate_Placement | 0x0} nil
- PrivateDnsNameOptions = {*ec2.LaunchTemplate_PrivateDnsNameOptions | 0x0} nil
- RamDiskId = {*string | 0x0} nil
- SecurityGroupIds = {[]string} len:1, cap:4
-  0 = {string} ""
- SecurityGroups = {[]string} nil
- TagSpecifications = {[]ec2.LaunchTemplate_TagSpecification} len:3, cap:4
-  0 = {ec2.LaunchTemplate_TagSpecification}
-   ResourceType = {*string | 0xc000455c10} "instance"
-   Tags = {[]tags.Tag} len:3, cap:4
-    0 = {tags.Tag}
-    1 = {tags.Tag}
-    2 = {tags.Tag}
-   AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
-   AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
-   AWSCloudFormationDependsOn = {[]string} nil
-   AWSCloudFormationMetadata = {map[string]interface{}} nil
-   AWSCloudFormationCondition = {string} ""
-  1 = {ec2.LaunchTemplate_TagSpecification}
-  2 = {ec2.LaunchTemplate_TagSpecification}
- UserData = {*string | 0x0} nil
- AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
- AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
- AWSCloudFormationDependsOn = {[]string} nil
- AWSCloudFormationMetadata = {map[string]interface{}} nil
- AWSCloudFormationCondition = {string} ""
-LaunchTemplateName = {*string | 0xc000455c40} "goformation-stack-LaunchTemplate"
-TagSpecifications = {[]ec2.LaunchTemplate_LaunchTemplateTagSpecification} nil
-VersionDescription = {*string | 0x0} nil

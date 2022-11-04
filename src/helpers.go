@@ -80,6 +80,10 @@ func array(mySlice []string) string {
 	if mySlice == nil || mySlice[0] == "" {
 		return "[]"
 	}
-	newString := "[\n" + strings.Join(mySlice[:], ",") + "\n]\n"
+	var newSlice []string
+	for _, item := range mySlice {
+		newSlice = append(newSlice, "\t\""+item+"\"")
+	}
+	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
 	return newString
 }

@@ -1,51 +1,68 @@
 resource "aws_eks_node_group" "{{.item}}" {
-  cluster_name    = aws_eks_cluster.example.name
-  node_group_name = "example"
-  node_role_arn   = aws_iam_role.example.arn
-  subnet_ids      = aws_subnet.example[*].id
-
+{{- if .resource.ClusterName}}
+  cluster_name    = {{Nil .resource.ClusterName|Quote}}
+{{- else}}
+  cluster_name    ="{{.item}}"
+{{- end}}
+  node_group_name = {{Nil .resource.NodegroupName|Quote}}
+  node_role_arn   = {{Nil .resource.NodeRole|Quote}}
+{{- if .resource.ScalingConfig }}
   scaling_config {
-    desired_size = 1
-    max_size     = 2
-    min_size     = 1
+    desired_size= {{.resource.ScalingConfig.DesiredSize}}
+    max_size    = {{.resource.ScalingConfig.MaxSize}}
+    min_size    = {{.resource.ScalingConfig.MinSize}}
   }
-
-  update_config {
-    max_unavailable = 1
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{- range $a, $i := .resource.Tags}}
+    {{$a}} = "{{$i}}"
+  {{- end}}
   }
+{{- end}}
+  subnet_ids    = {{Array .resource.Subnets}}
+  ami_type      = {{Nil .resource.AmiType|Quote}}
+  capacity_type = {{Nil .resource.CapacityType|Quote}}
+{{- if .resource.DiskSize}}
+  disk_size     = {{ .resource.DiskSize}}
+{{- end}}
+  force_update_version= {{Boolean .resource.ForceUpdateEnabled}}
+  instance_types={{Array .resource.InstanceTypes}}
+{{- if .resource.Labels}}
+  labels {
+{{- range $a, $i :=.resource.Labels}}
+   {{$a}}="{{$i}}"
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.LaunchTemplate}}
+  launch_template {
+    Id      = {{Nil .resource.LaunchTemplate.Id|Quote}}
+    Name    = {{Nil .resource.LaunchTemplate.Name|Quote}}
+    Version = {{Nil  .resource.LaunchTemplate.Version|Quote}}
+  }
+{{- end}}
+  release_version={{Nil .resource.ReleaseVersion|Quote}}
+{{- if .resource.RemoteAccess}}
+  remote_access {
+    ec2_ssh_key={{.resource.RemoteAccess.Ec2SshKey}}
+    source_security_group_ids={{.resource.RemoteAccess.SourceSecurityGroupIds}}
+  }
+{{- end}}
+{{- if .resource.Taints}}
+  taint {
+{{- range $a, $i:= .resource.Taints}}
+    key={{$i.Key}}
+    value={{$i.Value}}
+    effect={{$i.Effect}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.UpdateConfig}}
+ update_config {
+   max_unavailable={{.resource.UpdateConfig.MaxUnavailable}}
+   max_unavailable_percentage={{.resource.UpdateConfig.MaxUnavailablePercentage}}
+ }
+{{- end}}
+  version={{Nil .resource.Version|Quote }}
 }
-
-AmiType = {*string | 0xc000454900} "AL2_x86_64"
-CapacityType = {*string | 0x0} nil
-ClusterName = {string} ""
-DiskSize = {*int | 0x0} nil
-ForceUpdateEnabled = {*bool | 0x0} nil
-InstanceTypes = {[]string} len:1, cap:4
-Labels = {interface{} | map[string]interface{}}
-LaunchTemplate = {*eks.Nodegroup_LaunchTemplateSpecification | 0xc000507d50}
- Id = {*string | 0x0} nil
- Name = {*string | 0x0} nil
- Version = {*string | 0x0} nil
- AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
- AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
- AWSCloudFormationDependsOn = {[]string} nil
- AWSCloudFormationMetadata = {map[string]interface{}} nil
- AWSCloudFormationCondition = {string} ""
-NodeRole = {string} ""
-NodegroupName = {*string | 0xc000454920} "ng-goformation-stack"
-ReleaseVersion = {*string | 0x0} nil
-RemoteAccess = {*eks.Nodegroup_RemoteAccess | 0x0} nil
-ScalingConfig = {*eks.Nodegroup_ScalingConfig | 0xc000507dc0}
- DesiredSize = {*int | 0xc00003d6c0} 2
- MaxSize = {*int | 0xc00003d6c8} 2
- MinSize = {*int | 0xc00003d6d0} 2
- AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
- AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
- AWSCloudFormationDependsOn = {[]string} nil
- AWSCloudFormationMetadata = {map[string]interface{}} nil
- AWSCloudFormationCondition = {string} ""
-Subnets = {[]string} len:3, cap:4
-Tags = {interface{} | map[string]interface{}}
-Taints = {[]eks.Nodegroup_Taint} nil
-UpdateConfig = {*eks.Nodegroup_UpdateConfig | 0x0} nil
-Version = {*string | 0x0} nil

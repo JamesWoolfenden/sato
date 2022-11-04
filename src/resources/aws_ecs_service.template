@@ -37,7 +37,7 @@ resource "aws_ecs_service" "{{.item}}" {
 {{- if  .resource.LoadBalancers }}
 {{- range $a, $i := .resource.LoadBalancers }}
   load_balancer {
-    container_name= {{$i.ContainerName}}
+    container_name= "{{$i.ContainerName}}"
     container_port= {{$i.ContainerPort}}
     elb_name      = {{Nil $i.LoadBalancerName|Quote}}
     target_group_arn= {{Nil $i.TargetGroupArn|Quote }}

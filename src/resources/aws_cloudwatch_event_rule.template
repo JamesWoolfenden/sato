@@ -1,5 +1,9 @@
 resource "aws_cloudwatch_event_rule" "{{.item}}" {
+{{- if .resource.Name}}
   name                = "{{.resource.Name}}"
+{{ else }}
+  name="{{.item}}"
+{{- end}}
   description         = "{{.resource.Description}}"
 {{- if  .resource.EventBusName}}
   event_bus_name      = "{{.resource.EventBusName}}"
@@ -46,7 +50,42 @@ resource "aws_cloudwatch_event_target" "{{$i.Id}}" {
   redshift_target={{$i.RedshiftDataParameters}}
 {{- end}}
 {{- if  $i.EcsParameters}}
-  ecs_target={{Array $i.EcsParameters}}
+  ecs_target {
+{{- if $i.EcsParameters.CapacityProviderStrategy}}
+     capacity_provider_strategy {
+       base=    {{$i.EcsParameters.CapacityProviderStrategy.Base}}
+       capacity={{$i.EcsParameters.CapacityProviderStrategy.Capacity}}
+       weight=  {{$i.EcsParameters.CapacityProviderStrategy.Weight}}
+     }
+{{- end}}
+     enable_ecs_managed_tags={{Boolean $i.EcsParameters.EnableECSManagedTags}}
+     enable_execute_command={{Boolean $i.EcsParameters.EnableExecuteCommand}}
+{{- if $i.EcsParameters.Group}}
+     group      = {{$i.EcsParameters.Group}}
+{{- end}}
+{{- if $i.EcsParameters.LaunchType}}
+     launch_type= {{$i.EcsParameters.LaunchType}}
+{{- end}}
+{{- if $i.EcsParameters.NetworkConfiguration}}
+     network_configuration={{$i.EcsParameters.NetworkConfiguration}}
+{{- end}}
+{{- if $i.EcsParameters.PlacementConstraints}}
+     placement_constraint {
+       type      = "{{$i.EcsParameters.PlacementConstraints}}"
+       expression= "{{$i.EcsParameters.PlacementConstraints}}"
+     }
+{{- end}}
+{{- if $i.EcsParameters.PlatformVersion}}
+     platform_version={{$i.EcsParameters.PlatformVersion}}
+{{- end}}
+{{- if $i.EcsParameters.TagList}}
+     tags={
+     {{Tags $i.EcsParameters.TagList}}
+     }
+{{- end}}
+     task_count = {{$i.EcsParameters.TaskCount}}
+     task_definition_arn = "{{$i.EcsParameters.TaskDefinitionArn}}"
+   }
 {{- end}}
 {{- if  $i.HttpParameters}}
   http_target={{$i.HttpParameters}}
