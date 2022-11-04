@@ -202,7 +202,8 @@ func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataRe
 		} else {
 			myVariable.Type = strings.ToLower(param.Type)
 		}
-
+	case "CommaDelimitedList":
+		myVariable.Type = "list(string)"
 	case "List<AWS::EC2::AvailabilityZone::Name>":
 		myVariable.Type = "list(string)"
 		DataResources, m = add(dataAvailabilityZone, DataResources, m)

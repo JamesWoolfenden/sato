@@ -1,0 +1,44 @@
+resource "aws_eks_cluster" "{{.item}}" {
+  name     = "{{.resource.Name}}"
+{{- if .resource.EncryptionConfig}}
+{{- range $a, $i:= .resource.EncryptionConfig}}
+  encryption_config {
+    provider {
+      key_arn={{$i.Provider.KeyArn}}
+    }
+    resources={{Array $i.Resources}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.KubernetesNetworkConfig}}
+  kubernetes_network_config {
+    service_ipv4_cidr={{Nil .resource.KubernetesNetworkConfig.ServiceIpv4Cidr|Quote}}
+    ip_family={{Nil .resource.KubernetesNetworkConfig.IpFamily|Quote}}
+  }
+{{- end}}
+{{- if .resource.Logging}}
+  enabled_cluster_log_types={{.resource.Logging}}
+{{- end}}
+{{- if .resource.OutpostConfig}}
+  outpost_config{
+    control_plane_instance_type= {{Nil .resource.OutpostConfig.ControlPlaneInstanceType|Quote}}
+    outpost_arns={{Array .resource.OutpostConfig.OutpostArns}}
+  }
+{{- end}}
+{{- if .resource.ResourcesVpcConfig}}
+  vpc_config {
+    endpoint_private_access = {{Boolean .resource.ResourcesVpcConfig.EndpointPrivateAccess }}
+    endpoint_public_access  = {{Boolean .resource.ResourcesVpcConfig.EndpointPublicAccess}}
+    public_access_cidrs     = {{Array .resource.ResourcesVpcConfig.PublicAccessCidrs }}
+    security_group_ids      = {{Array .resource.ResourcesVpcConfig.SecurityGroupIds }}
+    subnet_ids              = {{Array .resource.ResourcesVpcConfig.SubnetIds }}
+ }
+{{- end}}
+  role_arn={{Nil .resource.RoleArn|Quote}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+  version={{Nil .resource.Version|Quote}}
+}

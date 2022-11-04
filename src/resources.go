@@ -246,3 +246,18 @@ var awsEcsCluster []byte
 
 //go:embed resources/aws_ecs_service.template
 var awsEcsService []byte
+
+//go:embed resources/aws_efs_file_system.template
+var awsEfsFileSystem []byte
+
+//go:embed resources/aws_efs_mount_target.template
+var awsEfsMountTarget []byte
+
+//go:embed resources/aws_eks_node_group.template
+var awsEksNodeGroup []byte
+
+//go:embed resources/aws_launch_template.template
+var awsLaunchTemplate []byte
+
+//go:embed resources/aws_eks_cluster.template
+var awsEksCluster []byte

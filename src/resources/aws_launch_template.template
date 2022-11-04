@@ -1,0 +1,167 @@
+resource "aws_launch_template" "{{.item}}" {
+  name = "foo"
+
+  block_device_mappings {
+    device_name = "/dev/sda1"
+
+    ebs {
+      volume_size = 20
+    }
+  }
+
+  capacity_reservation_specification {
+    capacity_reservation_preference = "open"
+  }
+
+  cpu_options {
+    core_count       = 4
+    threads_per_core = 2
+  }
+
+  credit_specification {
+    cpu_credits = "standard"
+  }
+
+  disable_api_stop        = true
+  disable_api_termination = true
+
+  ebs_optimized = true
+
+  elastic_gpu_specifications {
+    type = "test"
+  }
+
+  elastic_inference_accelerator {
+    type = "eia1.medium"
+  }
+
+  iam_instance_profile {
+    name = "test"
+  }
+
+  image_id = "ami-test"
+
+  instance_initiated_shutdown_behavior = "terminate"
+
+  instance_market_options {
+    market_type = "spot"
+  }
+
+  instance_type = "t2.micro"
+
+  kernel_id = "test"
+
+  key_name = "test"
+
+  license_specification {
+    license_configuration_arn = "arn:aws:license-manager:eu-west-1:123456789012:license-configuration:lic-0123456789abcdef0123456789abcdef"
+  }
+
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
+
+  monitoring {
+    enabled = true
+  }
+
+  network_interfaces {
+    associate_public_ip_address = true
+  }
+
+  placement {
+    availability_zone = "us-west-2a"
+  }
+
+  ram_disk_id = "test"
+
+  vpc_security_group_ids = ["sg-12345678"]
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "test"
+    }
+  }
+
+  user_data = filebase64("${path.module}/example.sh")
+}
+
+LaunchTemplateData = {*ec2.LaunchTemplate_LaunchTemplateData | 0xc0001430e0}
+ BlockDeviceMappings = {[]ec2.LaunchTemplate_BlockDeviceMapping} len:1, cap:4
+  0 = {ec2.LaunchTemplate_BlockDeviceMapping}
+   DeviceName = {*string | 0xc000455be0} "/dev/xvda"
+   Ebs = {*ec2.LaunchTemplate_Ebs | 0xc0002fca20}
+   NoDevice = {*string | 0x0} nil
+   VirtualName = {*string | 0x0} nil
+   AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
+   AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
+   AWSCloudFormationDependsOn = {[]string} nil
+   AWSCloudFormationMetadata = {map[string]interface{}} nil
+   AWSCloudFormationCondition = {string} ""
+ CapacityReservationSpecification = {*ec2.LaunchTemplate_CapacityReservationSpecification | 0x0} nil
+ CpuOptions = {*ec2.LaunchTemplate_CpuOptions | 0x0} nil
+ CreditSpecification = {*ec2.LaunchTemplate_CreditSpecification | 0x0} nil
+ DisableApiStop = {*bool | 0x0} nil
+ DisableApiTermination = {*bool | 0x0} nil
+ EbsOptimized = {*bool | 0x0} nil
+ ElasticGpuSpecifications = {[]ec2.LaunchTemplate_ElasticGpuSpecification} nil
+ ElasticInferenceAccelerators = {[]ec2.LaunchTemplate_LaunchTemplateElasticInferenceAccelerator} nil
+ EnclaveOptions = {*ec2.LaunchTemplate_EnclaveOptions | 0x0} nil
+ HibernationOptions = {*ec2.LaunchTemplate_HibernationOptions | 0x0} nil
+ IamInstanceProfile = {*ec2.LaunchTemplate_IamInstanceProfile | 0x0} nil
+ ImageId = {*string | 0x0} nil
+ InstanceInitiatedShutdownBehavior = {*string | 0x0} nil
+ InstanceMarketOptions = {*ec2.LaunchTemplate_InstanceMarketOptions | 0x0} nil
+ InstanceRequirements = {*ec2.LaunchTemplate_InstanceRequirements | 0x0} nil
+ InstanceType = {*string | 0x0} nil
+ KernelId = {*string | 0x0} nil
+ KeyName = {*string | 0x0} nil
+ LicenseSpecifications = {[]ec2.LaunchTemplate_LicenseSpecification} nil
+ MaintenanceOptions = {*ec2.LaunchTemplate_MaintenanceOptions | 0x0} nil
+ MetadataOptions = {*ec2.LaunchTemplate_MetadataOptions | 0xc0002ee300}
+  HttpEndpoint = {*string | 0x0} nil
+  HttpProtocolIpv6 = {*string | 0x0} nil
+  HttpPutResponseHopLimit = {*int | 0xc000302980} 2
+  HttpTokens = {*string | 0xc000455c00} "optional"
+  InstanceMetadataTags = {*string | 0x0} nil
+  AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
+  AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
+  AWSCloudFormationDependsOn = {[]string} nil
+  AWSCloudFormationMetadata = {map[string]interface{}} nil
+  AWSCloudFormationCondition = {string} ""
+ Monitoring = {*ec2.LaunchTemplate_Monitoring | 0x0} nil
+ NetworkInterfaces = {[]ec2.LaunchTemplate_NetworkInterface} nil
+ Placement = {*ec2.LaunchTemplate_Placement | 0x0} nil
+ PrivateDnsNameOptions = {*ec2.LaunchTemplate_PrivateDnsNameOptions | 0x0} nil
+ RamDiskId = {*string | 0x0} nil
+ SecurityGroupIds = {[]string} len:1, cap:4
+  0 = {string} ""
+ SecurityGroups = {[]string} nil
+ TagSpecifications = {[]ec2.LaunchTemplate_TagSpecification} len:3, cap:4
+  0 = {ec2.LaunchTemplate_TagSpecification}
+   ResourceType = {*string | 0xc000455c10} "instance"
+   Tags = {[]tags.Tag} len:3, cap:4
+    0 = {tags.Tag}
+    1 = {tags.Tag}
+    2 = {tags.Tag}
+   AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
+   AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
+   AWSCloudFormationDependsOn = {[]string} nil
+   AWSCloudFormationMetadata = {map[string]interface{}} nil
+   AWSCloudFormationCondition = {string} ""
+  1 = {ec2.LaunchTemplate_TagSpecification}
+  2 = {ec2.LaunchTemplate_TagSpecification}
+ UserData = {*string | 0x0} nil
+ AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
+ AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
+ AWSCloudFormationDependsOn = {[]string} nil
+ AWSCloudFormationMetadata = {map[string]interface{}} nil
+ AWSCloudFormationCondition = {string} ""
+LaunchTemplateName = {*string | 0xc000455c40} "goformation-stack-LaunchTemplate"
+TagSpecifications = {[]ec2.LaunchTemplate_LaunchTemplateTagSpecification} nil
+VersionDescription = {*string | 0x0} nil

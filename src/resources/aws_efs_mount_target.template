@@ -1,0 +1,10 @@
+resource "aws_efs_mount_target" "{{.item}}" {
+{{- if .resource.FileSystemId}}
+  file_system_id ={{Nil .resource.FileSystemId|Quote}}
+{{- else}}
+  file_system_id = "{{ .item}}"
+{{- end}}
+  subnet_id      ={{Nil .resource.SubnetId|Quote}}
+  ip_address     ={{Nil .resource.IpAddress|Quote}}
+  security_groups={{Array .resource.SecurityGroups}}
+}

@@ -1,0 +1,19 @@
+resource "aws_efs_file_system" "{{.item}}" {
+  availability_zone_name= {{Nil .resource.AvailabilityZoneName|Quote}}
+  encrypted        = {{Boolean .resource.Encrypted}}
+  kms_key_id       = {{Nil .resource.KmsKeyId|Quote}}
+{{- if  .resource.LifecyclePolicies}}
+{{- range $a, $j:= .resource.LifecyclePolicies}}
+  lifecycle_policy {
+    transition_to_ia={{$j.TransitionToIa}}
+    transition_to_primary_storage_class={{$j.TransitionToPrimaryStorageClass}}
+  }
+{{- end}}
+{{- end}}
+  performance_mode = {{Nil .resource.PerformanceMode|Quote}}
+{{- $test:= .resource.ProvisionedThroughputInMibps}}
+{{- if $test}}
+  provisioned_throughput_in_mibps= {{ $test}}
+{{- end}}
+  throughput_mode = {{Nil .resource.ThroughputMode|Quote }}
+}

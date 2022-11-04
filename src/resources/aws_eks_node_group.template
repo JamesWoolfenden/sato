@@ -1,0 +1,51 @@
+resource "aws_eks_node_group" "{{.item}}" {
+  cluster_name    = aws_eks_cluster.example.name
+  node_group_name = "example"
+  node_role_arn   = aws_iam_role.example.arn
+  subnet_ids      = aws_subnet.example[*].id
+
+  scaling_config {
+    desired_size = 1
+    max_size     = 2
+    min_size     = 1
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+}
+
+AmiType = {*string | 0xc000454900} "AL2_x86_64"
+CapacityType = {*string | 0x0} nil
+ClusterName = {string} ""
+DiskSize = {*int | 0x0} nil
+ForceUpdateEnabled = {*bool | 0x0} nil
+InstanceTypes = {[]string} len:1, cap:4
+Labels = {interface{} | map[string]interface{}}
+LaunchTemplate = {*eks.Nodegroup_LaunchTemplateSpecification | 0xc000507d50}
+ Id = {*string | 0x0} nil
+ Name = {*string | 0x0} nil
+ Version = {*string | 0x0} nil
+ AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
+ AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
+ AWSCloudFormationDependsOn = {[]string} nil
+ AWSCloudFormationMetadata = {map[string]interface{}} nil
+ AWSCloudFormationCondition = {string} ""
+NodeRole = {string} ""
+NodegroupName = {*string | 0xc000454920} "ng-goformation-stack"
+ReleaseVersion = {*string | 0x0} nil
+RemoteAccess = {*eks.Nodegroup_RemoteAccess | 0x0} nil
+ScalingConfig = {*eks.Nodegroup_ScalingConfig | 0xc000507dc0}
+ DesiredSize = {*int | 0xc00003d6c0} 2
+ MaxSize = {*int | 0xc00003d6c8} 2
+ MinSize = {*int | 0xc00003d6d0} 2
+ AWSCloudFormationDeletionPolicy = {policies.DeletionPolicy} ""
+ AWSCloudFormationUpdateReplacePolicy = {policies.UpdateReplacePolicy} ""
+ AWSCloudFormationDependsOn = {[]string} nil
+ AWSCloudFormationMetadata = {map[string]interface{}} nil
+ AWSCloudFormationCondition = {string} ""
+Subnets = {[]string} len:3, cap:4
+Tags = {interface{} | map[string]interface{}}
+Taints = {[]eks.Nodegroup_Taint} nil
+UpdateConfig = {*eks.Nodegroup_UpdateConfig | 0x0} nil
+Version = {*string | 0x0} nil

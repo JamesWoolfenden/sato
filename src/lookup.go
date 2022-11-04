@@ -122,6 +122,12 @@ func lookup(myType string) []byte {
 		"AWS::ECS::TaskDefinition":                        awsEcsTaskDefinition,
 		"AWS::ApplicationAutoScaling::ScalableTarget":     awsAppAutoscalingTarget,
 		"AWS::ECS::Cluster":                               awsEcsCluster,
+		"AWS::EFS::FileSystem":                            awsEfsFileSystem,
+		"AWS::EFS::MountTarget":                           awsEfsMountTarget,
+		"AWS::EKS::Nodegroup":                             awsEksNodeGroup,
+		"AWS::EC2::LaunchTemplate":                        awsLaunchTemplate,
+		"AWS::EKS::Cluster":                               awsEksCluster,
+		//"AWS::Backup::BackupPlan": awsBackupPlan,
 	}
 
 	var myContent []byte
