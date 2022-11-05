@@ -1,5 +1,5 @@
 resource "aws_config_config_rule" "{{.item}}" {
-  name = "{{.resource.ConfigRuleName}}"
+  name = {{Nild .resource.ConfigRuleName (.item)|quote}}
   source {
     owner             = "{{.resource.Source.Owner}}"
 {{- if     .resource.Source.SourceIdentifier}}
