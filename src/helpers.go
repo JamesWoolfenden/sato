@@ -94,3 +94,17 @@ func array(mySlice []string) string {
 	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
 	return newString
 }
+
+func arrayReplace(mySlice []string, target string, replacement string) string {
+	if mySlice == nil || mySlice[0] == "" {
+		return "[]"
+	}
+	var newSlice []string
+
+	for _, item := range mySlice {
+		item = strings.Replace(item, target, replacement, 1)
+		newSlice = append(newSlice, "\t\""+item+"\"")
+	}
+	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
+	return newString
+}

@@ -54,7 +54,9 @@ resource "aws_launch_template" "{{.item}}" {
   }
 {{- end}}
   image_id =  {{Nil .resource.LaunchTemplateData.ImageId|Quote}}
+{{- if  .resource.LaunchTemplateData.InstanceInitiatedShutdownBehavior}}
   instance_initiated_shutdown_behavior = {{Nil .resource.LaunchTemplateData.InstanceInitiatedShutdownBehavior|Quote}}
+{{- end}}
 {{- if .resource.LaunchTemplateData.InstanceMarketOptions}}
   instance_market_options {
     market_type = {{Nil .resource.LaunchTemplateData.InstanceMarketOptions.MarketType|Quote}}
@@ -70,11 +72,17 @@ resource "aws_launch_template" "{{.item}}" {
 {{- end}}
 {{- if .resource.LaunchTemplateData.MetadataOptions}}
   metadata_options {
+{{- if .resource.LaunchTemplateData.MetadataOptions.HttpProtocolIpv6}}
     http_protocol_ipv6          = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpProtocolIpv6|Quote}}
+{{- end}}
+{{- if .resource.LaunchTemplateData.MetadataOptions.HttpEndpoint}}
     http_endpoint               = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpEndpoint|Quote}}
+{{- end}}
     http_tokens                 = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpTokens|Quote}}
     http_put_response_hop_limit = {{.resource.LaunchTemplateData.MetadataOptions.HttpPutResponseHopLimit}}
+{{- if     .resource.LaunchTemplateData.MetadataOptions.InstanceMetadataTags}}
     instance_metadata_tags      = {{Nil .resource.LaunchTemplateData.MetadataOptions.InstanceMetadataTags|Quote}}
+{{- end}}
   }
 {{- end}}
 {{- if  .resource.LaunchTemplateData.Monitoring}}
@@ -137,6 +145,8 @@ resource "aws_launch_template" "{{.item}}" {
     hostname_type={{.resource.LaunchTemplateData.PrivateDnsNameOptions.HostnameType}}
   }
 {{- end}}
-  security_groups={{Array .resource.LaunchTemplateData.SecurityGroups}}
+  security_group_names={{Array .resource.LaunchTemplateData.SecurityGroups}}
+{{- if   .resource.VersionDescription
   default_version ={{Nil .resource.VersionDescription|Quote}}
+{{- end}}
 }

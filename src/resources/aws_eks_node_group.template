@@ -16,13 +16,15 @@ resource "aws_eks_node_group" "{{.item}}" {
 {{- if .resource.Tags}}
   tags = {
   {{- range $a, $i := .resource.Tags}}
-    {{$a}} = "{{$i}}"
+    "{{$a}}"= "{{$i}}"
   {{- end}}
   }
 {{- end}}
   subnet_ids    = {{Array .resource.Subnets}}
   ami_type      = {{Nil .resource.AmiType|Quote}}
+{{- if    .resource.CapacityType}}
   capacity_type = {{Nil .resource.CapacityType|Quote}}
+{{- end}}
 {{- if .resource.DiskSize}}
   disk_size     = {{ .resource.DiskSize}}
 {{- end}}
@@ -37,9 +39,13 @@ resource "aws_eks_node_group" "{{.item}}" {
 {{- end}}
 {{- if .resource.LaunchTemplate}}
   launch_template {
-    Id      = {{Nil .resource.LaunchTemplate.Id|Quote}}
-    Name    = {{Nil .resource.LaunchTemplate.Name|Quote}}
-    Version = {{Nil  .resource.LaunchTemplate.Version|Quote}}
+{{- if .resource.LaunchTemplate.Id}}
+    id      = {{Nil .resource.LaunchTemplate.Id}}
+{{- end}}
+{{- if   .resource.LaunchTemplate.Name}}
+    name    = {{Nil .resource.LaunchTemplate.Name|Quote}}
+{{- end}}
+    version = {{Nild  .resource.LaunchTemplate.Version "1"|Quote}}
   }
 {{- end}}
   release_version={{Nil .resource.ReleaseVersion|Quote}}
@@ -64,5 +70,5 @@ resource "aws_eks_node_group" "{{.item}}" {
    max_unavailable_percentage={{.resource.UpdateConfig.MaxUnavailablePercentage}}
  }
 {{- end}}
-  version={{Nil .resource.Version|Quote }}
+  version={{Nil .resource.Version |Quote }}
 }
