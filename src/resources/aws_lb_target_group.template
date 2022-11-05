@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "{{.item}}" {
     matcher="{{ .resource.Matcher}}"
 {{- end}}
     path = "{{ .resource.HealthCheckPath}}"
-    port = "{{ .resource.HealthCheckPort }}"
+    port = {{ Nild .resource.HealthCheckPort (.resource.Port)|Quote}}
     protocol="{{ .resource.HealthCheckProtocol}}"
     timeout= {{ .resource.HealthCheckTimeoutSeconds}}
     healthy_threshold={{ .resource.HealthyThresholdCount }}

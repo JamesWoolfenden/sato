@@ -27,5 +27,7 @@ resource "aws_lb" "{{.item}}" {
   {{Tags .resource.Tags}}
   }
 {{- end}}
+{{- if .resource.Type}}
   load_balancer_type="{{.resource.Type}}"
+{{- end}}
 }

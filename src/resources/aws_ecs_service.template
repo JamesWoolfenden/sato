@@ -81,5 +81,7 @@ resource "aws_ecs_service" "{{.item}}" {
   ordered_placement_strategies {}
 {{- end}}{{- end}}
   platform_version={{Nil .resource.PlatformVersion|Quote}}
+{{- if   .resource.SchedulingStrategy}}
   scheduling_strategy ={{Nil .resource.SchedulingStrategy|Quote}}
+{{- end}}
 }

@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "{{.item}}" {
   dockerLabels={{Demap $i.DockerLabels}}
 {{- end}}
   dockerSecurityOptions={{$i.DockerSecurityOptions}}
-  entryPoint={{ $i.EntryPoint }}
+  entryPoint={{Array $i.EntryPoint }}
 {{- if .Environment }}
   environment={{$i.Environment }}
 {{- end}}
@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "{{.item}}" {
   linuxParameters={{$i.LinuxParameters}}
 {{- end}}
 {{- if $i.LogConfiguration}}
-  logConfiguration=[{
+  logConfiguration={
     LogDriver = "{{$i.LogConfiguration.LogDriver}}"
 {{- if $i.LogConfiguration.Options}}
     Options={
@@ -51,7 +51,7 @@ resource "aws_ecs_task_definition" "{{.item}}" {
     }
 {{- end}}
     SecretOptions ={{$i.LogConfiguration.SecretOptions}}
-  }]
+  }
 {{- end}}
   memory={{$i.Memory}}
 {{- if $i.MemoryReservation }}
@@ -126,7 +126,14 @@ resource "aws_ecs_task_definition" "{{.item}}" {
 {{- end}}
   execution_role_arn= {{Nil .resource.ExecutionRoleArn|Quote}}
   family={{Nil .resource.Family|Quote}}
-  inference_accelerator={{.resource.InferenceAccelerators}}
+{{- if   .resource.InferenceAccelerators}}
+{{- range $a, $i:= .resource.InferenceAccelerators}}
+  inference_accelerator {
+    device_name="{{$i.DeviceName}}"
+    device_type="{{$i.DeviceType}}"
+  }
+{{- end}}
+{{- end}}
 {{- if   .resource.IpcMode}}
   ipc_mode={{.resource.IpcMode}}
 {{- end}}
@@ -139,7 +146,13 @@ resource "aws_ecs_task_definition" "{{.item}}" {
 {{- if .resource.PidMode }}
   pid_mode={{.resource.PidMode }}
 {{- end}}
-  placement_constraints={{.resource.PlacementConstraints}}
+{{- if .resource.PlacementConstraints}}
+{{ range $a, $i:= PlacementConstraints}}
+  placement_constraints{
+    type      = "{{$i.type}}"
+    expression= "{{$i.expression}}"
+  }
+{{- end}}
 {{- if .resource.ProxyConfiguration}}
   proxy_configuration={{.resource.ProxyConfiguration}}
 {{- end}}
