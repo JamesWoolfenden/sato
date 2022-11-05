@@ -5,7 +5,7 @@ resource "aws_iam_role" "{{.item}}" {
   force_detach_policies=false
   inline_policy {}
   {{- if .resource.ManagedPolicyArns}}
-  managed_policy_arns=[{{range $i, $v := .resource.ManagedPolicyArns}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+  managed_policy_arns={{Array .resource.ManagedPolicyArns}}
   {{- end}}
   {{- if .resource.MaxSessionDuration}}
   max_session_duration="{{.resource.MaxSessionDuration}}"
