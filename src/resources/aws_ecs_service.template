@@ -7,8 +7,12 @@ resource "aws_ecs_service" "{{.item}}" {
   cluster         = {{Nil .resource.Cluster|Quote}}
   desired_count   = {{.resource.DesiredCount}}
   enable_ecs_managed_tags={{Boolean .resource.EnableECSManagedTags}}
+{{- if .resource.LaunchType}}
   launch_type     = {{Nil .resource.LaunchType|Quote}}
+{{- end}}
+{{- if   .resource.PropagateTags}}
   propagate_tags  = {{Nil .resource.PropagateTags|Quote}}
+{{- end}}
   iam_role        = {{Nil .resource.Role|Quote}}
 {{- if .resource.DeploymentController}}
 {{range $a, $i := .resource.DeploymentController}}
@@ -80,7 +84,9 @@ resource "aws_ecs_service" "{{.item}}" {
 {{range $a, $i :=.resource.PlacementStrategies}}
   ordered_placement_strategies {}
 {{- end}}{{- end}}
+{{- if  .resource.PlatformVersion}}
   platform_version={{Nil .resource.PlatformVersion|Quote}}
+{{- end}}
 {{- if   .resource.SchedulingStrategy}}
   scheduling_strategy ={{Nil .resource.SchedulingStrategy|Quote}}
 {{- end}}
