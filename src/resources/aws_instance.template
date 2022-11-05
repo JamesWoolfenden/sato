@@ -74,7 +74,13 @@ EOF
 {{- end}}
   monitoring = {{ Boolean .resource.Monitoring }}
 {{- if .resource.NetworkInterfaces}}
-  network_interface={{ .resource.NetworkInterfaces}}
+{{- range $a, $i:= .resource.NetworkInterfaces}}
+  network_interface {
+    delete_on_termination= {{Boolean $i.DeleteOnTermination}}
+    device_index         = {{$i.DeviceIndex}}
+    network_interface_id = {{Nil $i.NetworkInterfaceId|Quote}}
+  }
+{{- end}}
 {{- end}}
 {{- if .resource.PlacementGroupName}}
   placement_group="{{ .resource.PlacementGroupName}}"
@@ -93,7 +99,9 @@ EOF
 {{- if .resource.SecurityGroupIds}}
   security_groups={{ .resource.SecurityGroupIds}}
 {{- end}}
+{{- if .resource.SourceDestCheck}}
   source_dest_check = {{ Boolean .resource.SourceDestCheck }}
+{{- end}}
 {{- if .resource.SubnetId}}
   subnet_id="{{ .resource.SubnetId}}"
 {{- end}}

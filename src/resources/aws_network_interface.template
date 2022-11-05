@@ -10,7 +10,9 @@ resource "aws_network_interface" "{{.item}}" {
   ipv6_address_count= {{.resource.Ipv6AddressCount}}
 {{- end}}
   ipv6_addresses    = {{.resource.Ipv6Addresses}}
-  private_ips       = {{.resource.PrivateIpAddresses}}
+{{- if .resource.PrivateIpAddresses}}
+  private_ips=[{{- range $a , $i:= .resource.PrivateIpAddresses}}"{{$i.PrivateIpAddress}}",{{end}}]
+{{- end}}
   source_dest_check = {{Boolean .resource.SourceDestCheck}}
 {{- if .resource.Tags}}
   tags = {

@@ -127,6 +127,7 @@ func lookup(myType string) []byte {
 		"AWS::EKS::Nodegroup":                             awsEksNodeGroup,
 		"AWS::EC2::LaunchTemplate":                        awsLaunchTemplate,
 		"AWS::EKS::Cluster":                               awsEksCluster,
+		"AWS::SQS::Queue":                                 awsSqsQueue,
 		//"AWS::Backup::BackupPlan": awsBackupPlan,
 	}
 

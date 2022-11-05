@@ -1,0 +1,48 @@
+resource "aws_sqs_queue" "{{.item}}" {
+  name                      = {{Nil .resource.QueueName|Quote}}
+{{- if   .resource.DelaySeconds}}
+  delay_seconds             = {{.resource.DelaySeconds}}
+{{- end}}
+{{- if .resource.MaximumMessageSize}}
+  max_message_size          = {{.resource.MaximumMessageSize}}
+{{- end}}
+{{- if .resource.MessageRetentionPeriod}}
+  message_retention_seconds = {{.resource.MessageRetentionPeriod}}
+{{- end}}
+{{- if .resource.ReceiveMessageWaitTimeSeconds}}
+  receive_wait_time_seconds = {{.resource.ReceiveMessageWaitTimeSeconds}}
+{{- end}}
+{{- if .resource.RedrivePolicy}}
+  redrive_policy = jsonencode({{Marshal .resource.RedrivePolicy}})
+{{- end}}
+  content_based_deduplication = {{Boolean .resource.ContentBasedDeduplication}}
+{{- if  .resource.DeduplicationScope}}
+  deduplication_scope       = {{.resource.DeduplicationScope}}
+{{- end}}
+{{- if .resource.FifoQueue}}
+  fifo_queue                = {{Boolean .resource.FifoQueue}}
+{{- end}}
+{{- if .resource.FifoThroughputLimit }}
+  fifo_throughput_limit             = {{.resource.FifoThroughputLimit }}
+{{- end}}
+{{- if .resource.KmsDataKeyReusePeriodSeconds }}
+  kms_data_key_reuse_period_seconds ={{.resource.KmsDataKeyReusePeriodSeconds }}
+{{- end}}
+{{- if .resource.KmsMasterKeyId }}
+  kms_master_key_id         = {{ .resource.KmsMasterKeyId }}
+{{- end}}
+{{- if .resource.RedriveAllowPolicy}}
+  redrive_allow_policy      = {{ Marshal .resource.RedriveAllowPolicy}}
+{{- end}}
+{{- if .resource.SqsManagedSseEnabled}}
+  sqs_managed_sse_enabled   = {{Boolean .resource.SqsManagedSseEnabled}}
+{{- end}}
+{{- if .resource.VisibilityTimeout }}
+  visibility_timeout_seconds={{.resource.VisibilityTimeout }}
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

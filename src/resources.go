@@ -261,3 +261,6 @@ var awsLaunchTemplate []byte
 
 //go:embed resources/aws_eks_cluster.template
 var awsEksCluster []byte
+
+//go:embed resources/aws_sqs_queue.template
+var awsSqsQueue []byte
