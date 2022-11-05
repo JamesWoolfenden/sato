@@ -1,5 +1,7 @@
 resource "aws_efs_file_system" "{{.item}}" {
+{{- if .resource.AvailabilityZoneName}}
   availability_zone_name= {{Nil .resource.AvailabilityZoneName|Quote}}
+{{- end}}
   encrypted        = {{Boolean .resource.Encrypted}}
   kms_key_id       = {{Nil .resource.KmsKeyId|Quote}}
 {{- if  .resource.LifecyclePolicies}}
@@ -15,5 +17,7 @@ resource "aws_efs_file_system" "{{.item}}" {
 {{- if $test}}
   provisioned_throughput_in_mibps= {{ $test}}
 {{- end}}
+{{- if .resource.ThroughputMode}}
   throughput_mode = {{Nil .resource.ThroughputMode|Quote }}
+{{- end}}
 }

@@ -5,6 +5,10 @@ resource "aws_efs_mount_target" "{{.item}}" {
   file_system_id = "{{ .item}}"
 {{- end}}
   subnet_id      ={{Nil .resource.SubnetId|Quote}}
+{{- if  .resource.IpAddress}}
   ip_address     ={{Nil .resource.IpAddress|Quote}}
+{{- end}}
+{{- if .resource.SecurityGroups}}
   security_groups={{Array .resource.SecurityGroups}}
+{{- end}}
 }
