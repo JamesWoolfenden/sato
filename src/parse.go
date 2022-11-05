@@ -65,6 +65,7 @@ func Parse(file string, destination string) error {
 		"ToLower": lower,
 		"Deref":   func(str *string) string { return *str },
 		"Nil":     nill,
+		"Nild":    nild,
 		"Marshal": func(v interface{}) string {
 			a, _ := json.Marshal(v)
 			return string(a)

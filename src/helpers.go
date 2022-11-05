@@ -76,6 +76,13 @@ func nill(str *string) string {
 	return *str
 }
 
+func nild(str *string, myDefault string) string {
+	if str == nil || *str == "" {
+		return myDefault
+	}
+	return *str
+}
+
 func array(mySlice []string) string {
 	if mySlice == nil || mySlice[0] == "" {
 		return "[]"

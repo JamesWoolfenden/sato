@@ -147,7 +147,7 @@ resource "aws_ecs_task_definition" "{{.item}}" {
   pid_mode={{.resource.PidMode }}
 {{- end}}
 {{- if .resource.PlacementConstraints}}
-{{ range $a, $i:= PlacementConstraints}}
+{{ range $a, $i:= .resource.PlacementConstraints}}
   placement_constraints{
     type      = "{{$i.type}}"
     expression= "{{$i.expression}}"
