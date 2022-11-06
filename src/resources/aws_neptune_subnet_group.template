@@ -1,0 +1,10 @@
+resource "aws_neptune_subnet_group" "{{.item}}" {
+  name       = {{ToLower (Nild .resource.DBSubnetGroupName (.item))|Quote}}
+  description= {{Nil .resource.DBSubnetGroupDescription|Quote}}
+  subnet_ids = {{Array .resource.SubnetIds}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

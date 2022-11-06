@@ -1,0 +1,17 @@
+resource "aws_neptune_parameter_group" "{{.item}}" {
+  family     = {{Nil .resource.Family|Quote}}
+  name       = {{Nild .resource.Name (.item)|Quote}}
+  description= "{{.resource.Description}}"
+{{- if .resource.Parameters}}
+{{- range $a, $i:=  .resource.Parameters}}
+  parameter {
+    name  = {{$a|Quote}}
+    value = "{{$i}}"
+  }
+{{- end}}{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

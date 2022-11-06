@@ -1,0 +1,24 @@
+resource "aws_neptune_cluster" "{{.item}}" {
+  cluster_identifier                  = {{ToLower(Nild .resource.DBClusterIdentifier (.item))|Quote}}
+  engine                              = "neptune"
+  backup_retention_period             = {{.resource.BackupRetentionPeriod }}
+  preferred_backup_window             = {{Nil .resource.PreferredBackupWindow|Quote}}
+  iam_database_authentication_enabled = {{Boolean .resource.IamAuthEnabled}}
+  iam_roles={{.resource.AssociatedRoles}}
+  availability_zones= {{Array .resource.AvailabilityZones }}
+  neptune_cluster_parameter_group_name={{Nil .resource.DBClusterParameterGroupName |Quote}}
+  neptune_subnet_group_name={{Nil .resource.DBSubnetGroupName|Quote}}
+  deletion_protection={{Boolean .resource.DeletionProtection}}
+  enable_cloudwatch_logs_exports={{Array .resource.EnableCloudwatchLogsExports}}
+  kms_key_arn ={{Nil .resource.KmsKeyId|Quote}}
+  port = {{.resource.Port}}
+  preferred_maintenance_window={{Nil .resource.PreferredMaintenanceWindow|Quote}}
+  snapshot_identifier={{Nil .resource.SnapshotIdentifier|Quote }}
+  storage_encrypted ={{Boolean .resource.StorageEncrypted }}
+  vpc_security_group_ids={{Array .resource.VpcSecurityGroupIds}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

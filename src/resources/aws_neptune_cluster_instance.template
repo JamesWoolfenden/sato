@@ -1,0 +1,18 @@
+resource "aws_neptune_cluster_instance" "{{.item}}" {
+  auto_minor_version_upgrade={{Boolean .resource.AutoMinorVersionUpgrade}}
+  availability_zone={{Nil .resource.AvailabilityZone|Quote}}
+{{- if  .resource.DBInstanceIdentifier}}
+  identifier={{Nil .resource.DBInstanceIdentifier|Quote}}
+{{- end}}
+  neptune_parameter_group_name= {{Nil .resource.DBParameterGroupName|Quote}}
+  neptune_subnet_group_name = {{Nil .resource.DBSubnetGroupName|Quote}}
+  preferred_maintenance_window={{Nil .resource.PreferredMaintenanceWindow|Quote}}
+  cluster_identifier = {{Nil .resource.DBClusterIdentifier|Quote}}
+  engine             = "neptune"
+  instance_class     = {{Nil .resource.DBInstanceClass|Quote}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

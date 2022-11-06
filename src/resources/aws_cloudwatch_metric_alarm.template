@@ -31,7 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "{{.item}}" {
   insufficient_data_actions={{.resource.InsufficientDataActions}}
   ok_actions={{.resource.OKActions}}
 {{- if  .resource.Unit}}
-  unit = {{.resource.Unit}}
+  unit = {{Nil .resource.Unit|Quote}}
 {{- end}}
 {{- if .resource.ExtendedStatistic}}
   extended_statistic= {{.resource.ExtendedStatistic}}

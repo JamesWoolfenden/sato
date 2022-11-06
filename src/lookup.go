@@ -42,6 +42,7 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 func lookup(myType string) []byte {
 	TFLookup := map[string]interface{}{
 		"AWS::SNS::Topic":                                 awsSNSTopic,
+		"AWS::SNS::Subscription":                          awsSNSSubscription,
 		"AWS::IAM::Role":                                  awsIamRole,
 		"AWS::EC2::Route":                                 awsRoute,
 		"AWS::EC2::RouteTable":                            awsRouteTable,
@@ -128,6 +129,12 @@ func lookup(myType string) []byte {
 		"AWS::EC2::LaunchTemplate":                        awsLaunchTemplate,
 		"AWS::EKS::Cluster":                               awsEksCluster,
 		"AWS::SQS::Queue":                                 awsSqsQueue,
+		"AWS::RDS::DBParameterGroup":                      awsDbParameterGroup,
+		"AWS::Neptune::DBInstance":                        awsNeptuneDbInstance,
+		"AWS::Neptune::DBCluster":                         awsNeptuneCluster,
+		"AWS::Neptune::DBParameterGroup":                  awsNeptuneDBParameterGroup,
+		"AWS::Neptune::DBSubnetGroup":                     awsNeptuneDnSubnetGroup,
+		"AWS::Neptune::DBClusterParameterGroup":           awsNeptuneClusterDBParameterGroup,
 		//"AWS::Backup::BackupPlan": awsBackupPlan,
 	}
 

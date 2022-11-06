@@ -1,6 +1,6 @@
 resource "aws_sns_topic" "{{.item}}" {
   name = {{Nild .resource.TopicName (.item)|Quote}}
-{{- if .resource.DisplayName}}"
+{{- if .resource.DisplayName}}
   display_name= "{{ .resource.DisplayName}}"
 {{- end}}
 {{- if .resource.DataProtectionPolicy}}

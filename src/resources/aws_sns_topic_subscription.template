@@ -1,0 +1,12 @@
+resource "aws_sns_topic_subscription" "{{.item}}" {
+  topic_arn = {{Nil .resource.TopicArn|Quote}}
+  protocol  = {{Nil .resource.Protocol|Quote}}
+  endpoint  = {{Nil .resource.Endpoint|Quote}}
+{{- if   .resource.SubscriptionRoleArn}}
+  subscription_role_arn={{Nil .resource.SubscriptionRoleArn|Quote}}
+{{- end}}
+  delivery_policy       ="{{.resource.DeliveryPolicy}}"
+  filter_policy         ="{{.resource.FilterPolicy}}"
+  raw_message_delivery  ={{Boolean .resource.RawMessageDelivery}}
+  redrive_policy        ="{{.resource.RedrivePolicy}}"
+}

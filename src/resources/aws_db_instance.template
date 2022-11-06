@@ -5,9 +5,9 @@ resource "aws_db_instance" "{{.item}}" {
   allow_major_version_upgrade= {{ Boolean .resource.AllowMajorVersionUpgrade}}
   auto_minor_version_upgrade= {{ Boolean .resource.AutoMinorVersionUpgrade }}
 {{- if .resource.DBName}}
-  db_name              = {{.resource.DBName|Quote}}
+  db_name              = {{Nil .resource.DBName|Quote}}
 {{- else}}
-  db_name              = {{.resource.DBInstanceIdentifier|Quote}}
+  db_name              = {{Nil .resource.DBInstanceIdentifier|Quote}}
 {{- end}}
   engine               = {{Nil .resource.Engine|Quote}}
   engine_version       = {{Nil .resource.EngineVersion|Quote}}

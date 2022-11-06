@@ -212,7 +212,9 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- if $b.CustomOriginConfig.OriginKeepaliveTimeout}}
       origin_keepalive_timeout={{ $b.CustomOriginConfig.OriginKeepaliveTimeout}}
 {{- end}}
+{{- if $b.CustomOriginConfig.OriginReadTimeout}}
       origin_read_timeout={{ $b.CustomOriginConfig.OriginReadTimeout}}
+{{- end}}
     }
 {{- end}}
 {{- if $b.OriginAccessControlId }}

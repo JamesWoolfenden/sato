@@ -7,6 +7,9 @@ import (
 //go:embed resources/aws_sns_topic.template
 var awsSNSTopic []byte
 
+//go:embed resources/aws_sns_topic_subscription.template
+var awsSNSSubscription []byte
+
 //go:embed resources/aws_iam_role.template
 var awsIamRole []byte
 
@@ -264,3 +267,18 @@ var awsEksCluster []byte
 
 //go:embed resources/aws_sqs_queue.template
 var awsSqsQueue []byte
+
+//go:embed resources/aws_neptune_cluster.template
+var awsNeptuneCluster []byte
+
+//go:embed resources/aws_neptune_cluster_instance.template
+var awsNeptuneDbInstance []byte
+
+//go:embed resources/aws_neptune_parameter_group.template
+var awsNeptuneDBParameterGroup []byte
+
+//go:embed resources/aws_neptune_cluster_parameter_group.template
+var awsNeptuneClusterDBParameterGroup []byte
+
+//go:embed resources/aws_neptune_subnet_group.template
+var awsNeptuneDnSubnetGroup []byte
