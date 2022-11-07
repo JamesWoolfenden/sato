@@ -1,11 +1,13 @@
 resource "aws_launch_template" "{{.item}}" {
-  name = "{{.resource.LaunchTemplateName}}"
+  name = {{Nild .resource.LaunchTemplateName (.item)|Quote}}
 {{- if .resource.LaunchTemplateData.BlockDeviceMappings}}
 {{- range $a, $i:= .resource.LaunchTemplateData.BlockDeviceMappings}}
   block_device_mappings {
 {{- if $i.Ebs}}
     ebs {
+{{- if $i.Ebs.VolumeSize}}
       volume_size={{$i.Ebs.VolumeSize}}
+{{- end}}
     }
 {{- end}}
     no_device={{Nil $i.NoDevice|Quote}}
@@ -50,7 +52,8 @@ resource "aws_launch_template" "{{.item}}" {
 {{- end}}
 {{- if .resource.LaunchTemplateData.IamInstanceProfile}}
   iam_instance_profile {
-    name = {{Nil .resource.LaunchTemplateData.IamInstanceProfile|Quote}}
+    name = {{Nil .resource.LaunchTemplateData.IamInstanceProfile.Name|Quote}}
+    arn  = {{Nil .resource.LaunchTemplateData.IamInstanceProfile.Arn|Quote}}
   }
 {{- end}}
   image_id =  {{Nil .resource.LaunchTemplateData.ImageId|Quote}}
@@ -79,7 +82,9 @@ resource "aws_launch_template" "{{.item}}" {
     http_endpoint               = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpEndpoint|Quote}}
 {{- end}}
     http_tokens                 = {{Nil .resource.LaunchTemplateData.MetadataOptions.HttpTokens|Quote}}
+{{- if .resource.LaunchTemplateData.MetadataOptions.HttpPutResponseHopLimit}}
     http_put_response_hop_limit = {{.resource.LaunchTemplateData.MetadataOptions.HttpPutResponseHopLimit}}
+{{- end}}
 {{- if     .resource.LaunchTemplateData.MetadataOptions.InstanceMetadataTags}}
     instance_metadata_tags      = {{Nil .resource.LaunchTemplateData.MetadataOptions.InstanceMetadataTags|Quote}}
 {{- end}}
@@ -103,8 +108,9 @@ resource "aws_launch_template" "{{.item}}" {
   }
 {{- end}}
   ram_disk_id = {{Nil .resource.LaunchTemplateData.RamDiskId| Quote}}
+{{- if not .resource.LaunchTemplateData.SecurityGroups}}
   vpc_security_group_ids = {{Array  .resource.LaunchTemplateData.SecurityGroupIds }}
-
+{{- end}}
 {{- if .resource.TagSpecifications}}
 {{- range $a, $i:= .resource.TagSpecifications}}
   tag_specifications {
@@ -116,7 +122,9 @@ resource "aws_launch_template" "{{.item}}" {
 {{- end}}
 {{- end}}
 {{- if .resource.LaunchTemplateData.UserData }}
-  user_data = {{Decode64 .resource.LaunchTemplateData.UserData }}
+  user_data = <<-EOF
+{{ Decode64 .resource.LaunchTemplateData.UserData }}
+EOF
 {{- end}}
  {{- if .resource.LaunchTemplateData.EnclaveOptions }}
    enclave_options {
@@ -145,8 +153,10 @@ resource "aws_launch_template" "{{.item}}" {
     hostname_type={{.resource.LaunchTemplateData.PrivateDnsNameOptions.HostnameType}}
   }
 {{- end}}
+{{- if .resource.LaunchTemplateData.SecurityGroups}}
   security_group_names={{Array .resource.LaunchTemplateData.SecurityGroups}}
-{{- if   .resource.VersionDescription
+{{- end}}
+{{- if   .resource.VersionDescription}}
   default_version ={{Nil .resource.VersionDescription|Quote}}
 {{- end}}
 }

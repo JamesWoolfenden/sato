@@ -49,6 +49,7 @@ func Parse(file string, destination string) error {
 	funcMap := tftemplate.FuncMap{
 		"Array":        array,
 		"ArrayReplace": arrayReplace,
+		"Contains":     contains,
 		"Sprint":       sprint,
 		"Decode64":     decode64,
 		"Boolean":      boolean,

@@ -108,3 +108,7 @@ func arrayReplace(mySlice []string, target string, replacement string) string {
 	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
 	return newString
 }
+
+func contains(target string, substring string) bool {
+	return strings.Contains(target, substring)
+}

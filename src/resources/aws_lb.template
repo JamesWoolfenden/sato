@@ -2,11 +2,6 @@ resource "aws_lb" "{{.item}}" {
 {{- if .resource.IpAddressType}}
   ip_address_type= "{{.resource.IpAddressType}}"
 {{- end}}
-{{- if  .resource.LoadBalancerAttributes}}
-{{- range $a, $i:=.resource.LoadBalancerAttributes}}
- {{Replace $i.Key ".timeout_seconds" ""}}= "{{$i.Value }}"
-{{- end}}
-{{- end}}
   name           = {{Nild .resource.Name (.item)|Quote}}
 {{- if .resource.Scheme}}
 {{- if eq (Deref .resource.Scheme) "internet-facing"}}
@@ -31,5 +26,26 @@ resource "aws_lb" "{{.item}}" {
 {{- end}}
 {{- if .resource.Type}}
   load_balancer_type="{{.resource.Type}}"
+{{- end}}
+{{- if  .resource.LoadBalancerAttributes}}
+{{- range $a, $i:=.resource.LoadBalancerAttributes}}
+{{- if $i.Key}}
+{{- if (Contains $i.Key "http2")}}
+  http_enabled={{$i.Value}}
+{{- end}}
+{{- if (Contains $i.Key "idle_timeout")}}
+  idle_timeout={{$i.Value}}
+{{- end}}
+{{- if (Contains $i.Key "access_logs")}}
+  access_logs {
+  {{- if  $i.Value}}
+    enabled ="{{ $i.Value}}
+  {{- else}}
+    enabled = false
+  {{- end}}
+  }
+{{- end}}
+{{- end}}
+{{- end}}
 {{- end}}
 }
