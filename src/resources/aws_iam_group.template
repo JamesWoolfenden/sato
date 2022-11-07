@@ -1,0 +1,28 @@
+resource "aws_iam_group" "{{.item}}" {
+  name = {{Nild .resource.GroupName (Replace .item "CFN" "")|Quote}}
+  path = {{Nil .resource.Path |Quote}}
+}
+
+
+{{- if .resource.Policies}}
+{{- $p := .item}}
+{{- $q := RandomString 6}}{{range $i, $a := .resource.Policies}}
+{{if $a.PolicyName}}
+resource "aws_iam_group_policy" "{{ $a.PolicyName}}{{$q}}" {
+  name   = "{{ $a.PolicyName}}{{$q}}"
+  group   = aws_iam_group.{{ $p}}.id
+  policy = jsonencode({{ Marshal $a.PolicyDocument}})
+}
+{{- end}}
+{{- end}}
+{{- end}}
+
+{{- if .resource.ManagedPolicyArns}}
+{{- $p := .item}}
+{{range $i, $a := .resource.ManagedPolicyArns}}
+resource "aws_iam_group_policy_attachment" "{{$p}}{{RandomString 6}}" {
+  group      = aws_iam_group.{{.item}}.name
+  policy_arn = {{Nil $a|Quote}}
+}
+{{- end}}
+{{- end}}

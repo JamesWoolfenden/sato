@@ -1,0 +1,4 @@
+resource "aws_iam_access_key" "{{.item}}" {
+  user  = {{Nild .resource.UserName (Replace .item "Keys" "")|Quote}}
+  status= {{Nild .resource.Status "Active"|Quote}}
+}

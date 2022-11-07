@@ -135,6 +135,9 @@ func lookup(myType string) []byte {
 		"AWS::Neptune::DBParameterGroup":                  awsNeptuneDBParameterGroup,
 		"AWS::Neptune::DBSubnetGroup":                     awsNeptuneDnSubnetGroup,
 		"AWS::Neptune::DBClusterParameterGroup":           awsNeptuneClusterDBParameterGroup,
+		"AWS::IAM::AccessKey":                             awsIamAccessKey,
+		"AWS::IAM::Group":                                 awsIamGroup,
+		"AWS::IAM::UserToGroupAddition":                   awsIamGroupMembership,
 		//"AWS::Backup::BackupPlan": awsBackupPlan,
 	}
 

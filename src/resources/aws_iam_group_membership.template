@@ -1,0 +1,5 @@
+resource "aws_iam_group_membership" "{{.item}}" {
+  name = {{Nild .resource.GroupName (.item)|Quote}}
+  users = {{Array .resource.Users}}
+  group = {{Nild .resource.GroupName (.item)|Quote}}
+}

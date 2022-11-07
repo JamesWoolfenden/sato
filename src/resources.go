@@ -282,3 +282,12 @@ var awsNeptuneClusterDBParameterGroup []byte
 
 //go:embed resources/aws_neptune_subnet_group.template
 var awsNeptuneDnSubnetGroup []byte
+
+//go:embed resources/aws_iam_group.template
+var awsIamGroup []byte
+
+//go:embed resources/aws_iam_access_key.template
+var awsIamAccessKey []byte
+
+//go:embed resources/aws_iam_group_membership.template
+var awsIamGroupMembership []byte
