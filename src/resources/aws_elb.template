@@ -32,8 +32,8 @@ resource "aws_elb" "{{.item}}" {
     }
 {{- end}}
 {{- if .resource.ConnectionDrainingPolicy}}
-  connection_draining="{{.resource.ConnectionDrainingPolicy}}
-  connection_draining_timeout="{{.resource.ConnectionDrainingPolicy}}
+  connection_draining= {{Boolean .resource.ConnectionDrainingPolicy.Enabled}}
+  connection_draining_timeout={{.resource.ConnectionDrainingPolicy.Timeout}}
 {{- end}}
 {{- if .resource.Listeners}}
 {{- range $a, $i:= .resource.Listeners}}

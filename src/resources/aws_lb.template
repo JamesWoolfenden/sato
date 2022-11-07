@@ -1,24 +1,26 @@
 resource "aws_lb" "{{.item}}" {
 {{- if .resource.IpAddressType}}
-  ip_address_type="{{.resource.IpAddressType}}"
+  ip_address_type= "{{.resource.IpAddressType}}"
 {{- end}}
 {{- if  .resource.LoadBalancerAttributes}}
 {{- range $a, $i:=.resource.LoadBalancerAttributes}}
  {{Replace $i.Key ".timeout_seconds" ""}}= "{{$i.Value }}"
 {{- end}}
 {{- end}}
-  name        = "{{.resource.Name}}"
+  name           = {{Nild .resource.Name (.item)|Quote}}
+{{- if .resource.Scheme}}
 {{- if eq (Deref .resource.Scheme) "internet-facing"}}
   internal=false
 {{- else}}
   internal=true
 {{- end}}
-  security_groups= [{{range $i, $v := .resource.SecurityGroups}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- end}}
+  security_groups = [{{range $i, $v := .resource.SecurityGroups}}{{if $i}}, {{end}}"{{.}}"{{end}}]
 {{- if  .resource.SubnetMappings}}
 {{range $i, $v := .resource.SubnetMappings}}
   subnet_mapping {
-    subnet_id     = {{$v.SubnetId}}
-    allocation_id = {{$v.AllocationId}}
+    subnet_id     = {{Nil $v.SubnetId|Quote}}
+    allocation_id = {{Nil $v.AllocationId|Quote}}
   }
 {{- end }}{{- end }}
   subnets        = [{{range $i, $v := .resource.Subnets}}{{if $i}}, {{end}}"{{.}}"{{end}}]

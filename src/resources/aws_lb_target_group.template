@@ -1,16 +1,32 @@
 resource "aws_lb_target_group" "{{.item}}" {
   health_check {
     enabled={{ Boolean .resource.HealthCheckEnabled}}
+{{- if .resource.HealthCheckIntervalSeconds}}
     interval={{ .resource.HealthCheckIntervalSeconds}}
+{{- end}}
 {{- if .resource.Matcher}}
     matcher="{{ .resource.Matcher}}"
 {{- end}}
-    path = "{{ .resource.HealthCheckPath}}"
-    port = {{ Nild .resource.HealthCheckPort (.resource.Port)|Quote}}
-    protocol="{{ .resource.HealthCheckProtocol}}"
+{{- if .resource.HealthCheckPath}}
+    path = {{Nil .resource.HealthCheckPath|Quote}}
+{{- end}}
+{{- if  .resource.HealthCheckPort}}
+    port = {{ Nil .resource.HealthCheckPort|Quote}}
+{{- else}}
+    port = "{{.resource.Port}}"
+{{- end}}
+{{- if .resource.HealthCheckProtocol}}
+    protocol={{Nil .resource.HealthCheckProtocol|Quote }}
+{{- end}}
+{{- if  .resource.HealthCheckTimeoutSeconds}}
     timeout= {{ .resource.HealthCheckTimeoutSeconds}}
+{{- end}}
+{{- if .resource.HealthyThresholdCount }}
     healthy_threshold={{ .resource.HealthyThresholdCount }}
+{{- end}}
+{{- if .resource.UnhealthyThresholdCount}}
     unhealthy_threshold= {{ .resource.UnhealthyThresholdCount}}
+{{- end}}
     }
 {{- if  .resource.IpAddressType }}
   ip_address_type={{ .resource.IpAddressType }}

@@ -215,7 +215,7 @@ func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataRe
 	case "AWS::EC2::KeyPair::KeyName":
 		myVariable.Type = "string"
 		DataResources, m = add(dataKeyPair, DataResources, m)
-	case "AWS::EC2::VPC::Id":
+	case "AWS::EC2::VPC::Id", "List<AWS::EC2::VPC::Id>":
 		myVariable.Type = "string"
 		DataResources, m = add(dataVpc, DataResources, m)
 	case "AWS::EC2::SecurityGroup::Id":
