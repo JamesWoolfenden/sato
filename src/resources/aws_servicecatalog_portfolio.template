@@ -1,0 +1,10 @@
+resource "aws_servicecatalog_portfolio" "{{.item}}" {
+  name          = {{Nil .resource.DisplayName|Quote}}
+  description   = {{Nil .resource.Description|Quote}}
+  provider_name = {{Nil .resource.ProviderName|Quote}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end}}
+}

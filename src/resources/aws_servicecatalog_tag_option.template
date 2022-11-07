@@ -1,0 +1,5 @@
+resource "aws_servicecatalog_tag_option" "{{.item}}" {
+  key   = {{ .resource.Key|Quote}}
+  value = {{ .resource.Value|Quote}}
+  active ={{Boolean .resource.Active}}
+}

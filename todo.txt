@@ -1,17 +1,17 @@
-variable     Type : AWS::SSM::Parameter::Value<String>
-Variable 	List<AWS::EC2::SecurityGroup::Id>
-         AWS::Route53::HostedZone::Id
+variable Type : AWS::SSM::Parameter::Value<String>
+Variable List<AWS::EC2::SecurityGroup::Id>
+ AWS::Route53::HostedZone::Id
 
 convert to data look up
 
-  WindowsAMIID:
-    Description: The Latest Windows 2016 AMI taken from the public Systems Manager Parameter Store
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base
-  LinuxAMIID:
-    Description: The Latest Amazon Linux 2 AMI taken from the public Systems Manager Parameter Store
-    Type : AWS::SSM::Parameter::Value<String>
-    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+ WindowsAMIID:
+ Description: The Latest Windows 2016 AMI taken from the public Systems Manager Parameter Store
+ Type: AWS::SSM::Parameter::Value<String>
+ Default: /aws/service/ami-windows-latest/Windows_Server-2016-English-Full-Base
+ LinuxAMIID:
+ Description: The Latest Amazon Linux 2 AMI taken from the public Systems Manager Parameter Store
+ Type : AWS::SSM::Parameter::Value<String>
+ Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
 
 cfn comments from app when its json
 
@@ -20,36 +20,18 @@ sato parse -f distribution.yml
 AWS::Route53::RecordSetGroup
 
 E:\Code\aws-cloudformation-templates\aws\services\ServiceCatalog/Product.yaml
-10:34PM WRN AWS::ServiceCatalog::TagOptionAssociation not found
-10:34PM WRN AWS::ServiceCatalog::PortfolioProductAssociation not found
 10:34PM WRN AWS::ServiceCatalog::CloudFormationProduct not found
-
-E:\Code\aws-cloudformation-templates\aws\services\ServiceCatalog/portfolio.yaml
-10:36PM WRN AWS::ServiceCatalog::Portfolio not found
-10:36PM WRN AWS::ServiceCatalog::PortfolioShare not found
-10:36PM WRN AWS::ServiceCatalog::TagOption not found
-
-
 sato:
 AWS::WAFv2::WebACLAssociation => aws_wafv2_web_acl_association
 AWS::Backup::BackupPlan =>aws_backup_plan
 AWS::Backup::BackupSelection => aws_backup_selection
 AWS::Backup::BackupVault =>aws_backup_vault
 
-E:\code\aws-cloudformation-templates\aws\services\iam\IAM_Users_Groups_and_Policies.yaml
-9:20PM WRN AWS::IAM::UserToGroupAddition not found
-9:20PM WRN AWS::IAM::Group not found
-9:20PM WRN AWS::IAM::AccessKey not found
-9:20PM WRN AWS::IAM::Group not found
-9:20PM WRN AWS::IAM::UserToGroupAddition not found
-
-
 E:\code\aws-cloudformation-templates\aws\services\emr [master ≡ +5 ~2 -0 !]> sato parse -f .\EMRCLusterGangliaWithSparkOrS3backedHbase.json
 9:29PM WRN AWS::EMR::Cluster not found
 
 sato
 AWS::Lambda::Version iot has example
-
 
 E:\code\aws-cloudformation-templates\aws\services\iot\iotanalytics.yml
 
@@ -66,6 +48,5 @@ E:\code\aws-cloudformation-templates\aws\services\iot\lambda-iot-topicrule.yml
 8:23PM WRN AWS::IoT::PolicyPrincipalAttachment not found
 8:23PM WRN AWS::IoT::TopicRule not found
 8:23PM WRN AWS::IoT::Policy not found
-
 
 E:\code\aws-cloudformation-templates\aws\services\ecs\FargateLaunchType\services\private-subnet-private-service.yml

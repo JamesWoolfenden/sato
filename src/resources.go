@@ -291,3 +291,18 @@ var awsIamAccessKey []byte
 
 //go:embed resources/aws_iam_group_membership.template
 var awsIamGroupMembership []byte
+
+//go:embed resources/aws_servicecatalog_tag_option_resource_association.template
+var awsServiceCatalogTagOptionAssociation []byte
+
+//go:embed resources/aws_servicecatalog_product_portfolio_association.template
+var awsServiceCatalogProductPortfolioAssociation []byte
+
+//go:embed resources/aws_servicecatalog_portfolio.template
+var awsServiceCatalogPortfolio []byte
+
+//go:embed resources/aws_servicecatalog_portfolio_share.template
+var awsServiceCatalogPortfolioShare []byte
+
+//go:embed resources/aws_servicecatalog_tag_option.template
+var awsServiceCatalogTagOption []byte

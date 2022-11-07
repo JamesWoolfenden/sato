@@ -1,0 +1,7 @@
+resource "aws_servicecatalog_portfolio_share" "{{.item}}" {
+  principal_id = {{Nil .resource.AccountId |Quote}}
+  portfolio_id = {{Nil .resource.PortfolioId |Quote}}
+  accept_language    = {{Nil .resource.AcceptLanguage |Quote}}
+  share_tag_options  = {{Boolean .resource.ShareTagOptions }}
+  type               = "ACCOUNT"
+}
