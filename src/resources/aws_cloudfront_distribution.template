@@ -131,7 +131,7 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
       }
 {{- else}}
       cookies {
-        forward=0
+        forward="none"
       }
 {{- end}}
 
@@ -177,7 +177,7 @@ resource "aws_cloudfront_distribution" "{{.item}}" {
 {{- if $a.TrustedSigners}}
     trusted_signers="{{$a.TrustedSigners}}"
 {{- end}}
-    target_origin_id       = {{$a.TargetOriginId}}
+    target_origin_id       = {{Nil $a.TargetOriginId|Quote}}
     viewer_protocol_policy = "{{$a.ViewerProtocolPolicy}}"
   }
 {{- end}}

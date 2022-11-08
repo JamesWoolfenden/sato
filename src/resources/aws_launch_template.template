@@ -52,8 +52,11 @@ resource "aws_launch_template" "{{.item}}" {
 {{- end}}
 {{- if .resource.LaunchTemplateData.IamInstanceProfile}}
   iam_instance_profile {
+  {{- if .resource.LaunchTemplateData.IamInstanceProfile.Name}}
     name = {{Nil .resource.LaunchTemplateData.IamInstanceProfile.Name|Quote}}
+  {{- else}}
     arn  = {{Nil .resource.LaunchTemplateData.IamInstanceProfile.Arn|Quote}}
+  {{- end}}
   }
 {{- end}}
   image_id =  {{Nil .resource.LaunchTemplateData.ImageId|Quote}}

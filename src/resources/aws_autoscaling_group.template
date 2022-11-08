@@ -32,7 +32,9 @@ resource "aws_autoscaling_group" "{{.item}}" {
   health_check_grace_period=300
 {{- end}}
   health_check_type      = {{Nil .resource.HealthCheckType|Quote}}
+{{- if .resource.LaunchConfigurationName}}
   launch_configuration   = {{Nil .resource.LaunchConfigurationName|Quote}}
+{{- else }}
 {{- if .resource.LaunchTemplate}}
   launch_template     {
 {{- if  .resource.LaunchTemplate.LaunchTemplateId}}
@@ -40,8 +42,9 @@ resource "aws_autoscaling_group" "{{.item}}" {
 {{- else    }}
     name   = {{Nil  .resource.LaunchTemplate.LaunchTemplateName|Quote}}
 {{- end}}
-    version= {{Nil .resource.LaunchTemplate.Version|Quote }}
+    version= {{Nild .resource.LaunchTemplate.Version 1 |Quote }}
   }
+{{- end}}
 {{- end}}
 {{- if .resource.LifecycleHookSpecificationList}}
   initial_lifecycle_hook {
@@ -64,7 +67,7 @@ resource "aws_autoscaling_group" "{{.item}}" {
   service_linked_role_arn={{.resource.ServiceLinkedRoleARN }}
 {{- end}}
 {{- if .resource.Tags}}
-  tag = {
+  tag {
   {{- range $a, $i:= .resource.Tags}}
     key="{{$i.Key}}"
     propagate_at_launch={{$i.PropagateAtLaunch}}
