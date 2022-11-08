@@ -306,3 +306,18 @@ var awsServiceCatalogPortfolioShare []byte
 
 //go:embed resources/aws_servicecatalog_tag_option.template
 var awsServiceCatalogTagOption []byte
+
+//go:embed resources/aws_backup_plan.template
+var awsBackupPlan []byte
+
+//go:embed resources/aws_backup_selection.template
+var awsBackupSelection []byte
+
+//go:embed resources/aws_backup_vault.template
+var awsBackupVault []byte
+
+//go:embed resources/aws_ssm_maintenance_window_task.template
+var awsSsmMaintenanceWindowTask []byte
+
+//go:embed resources/aws_ssm_maintenance_window_target.template
+var awsSsmMaintenanceWindowTarget []byte

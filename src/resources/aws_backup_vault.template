@@ -1,0 +1,9 @@
+resource "aws_backup_vault" "{{.item}}" {
+  name        = {{Nil .resource.BackupVaultName|Quote}}
+  kms_key_arn = {{Nil .resource.EncryptionKeyArn|Quote}}
+{{- if .resource.BackupVaultTags}}
+  tags = {
+    {{Tags .resource.BackupVaultTags}}
+  }
+{{- end}}
+}

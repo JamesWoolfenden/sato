@@ -1,11 +1,11 @@
 resource "aws_ssm_association" "{{.item}}" {
   name = "{{ .resource.Name}}"
   apply_only_at_cron_interval={{Boolean .resource.ApplyOnlyAtCronInterval}}
-  association_name="{{ .resource.AssociationName}}"
+  association_name={{Nil .resource.AssociationName|Quote}}
 {{- if .resource.DocumentVersion}}
-  document_version="{{ .resource.DocumentVersion}}"
+  document_version={{Nil .resource.DocumentVersion|Quote}}
 {{- end}}
-{{- if .resource.OutputLocation.S3Location}}
+{{- if .resource.OutputLocation}}
   output_location {
     s3_bucket_name="{{ .resource.OutputLocation.S3Location}}"
     s3_key_prefix="{{ .resource.OutputLocation.S3Location}}"
@@ -14,7 +14,7 @@ resource "aws_ssm_association" "{{.item}}" {
 {{- end}}
   parameters = {
 {{- range $i, $a := .resource.Parameters}}
-   {{$i}}={{Sprint $a}},{{- end}}
+   {{$i}}="{{Sprint $a}}",{{- end}}
    }
 {{- if .resource.ScheduleExpression}}
   schedule_expression="{{ .resource.ScheduleExpression}}"

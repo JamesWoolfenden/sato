@@ -143,7 +143,11 @@ func lookup(myType string) []byte {
 		"AWS::ServiceCatalog::Portfolio":                   awsServiceCatalogPortfolio,
 		"AWS::ServiceCatalog::PortfolioShare":              awsServiceCatalogPortfolioShare,
 		"AWS::ServiceCatalog::TagOption":                   awsServiceCatalogTagOption,
-		//"AWS::Backup::BackupPlan": awsBackupPlan,
+		"AWS::Backup::BackupPlan":                          awsBackupPlan,
+		"AWS::Backup::BackupSelection":                     awsBackupSelection,
+		"AWS::Backup::BackupVault":                         awsBackupVault,
+		"AWS::SSM::MaintenanceWindowTask":                  awsSsmMaintenanceWindowTask,
+		"AWS::SSM::MaintenanceWindowTarget":                awsSsmMaintenanceWindowTarget,
 	}
 
 	var myContent []byte

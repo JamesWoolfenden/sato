@@ -1,0 +1,30 @@
+resource "aws_backup_selection" "{{.item}}" {
+  iam_role_arn = {{Nil .resource.BackupSelection.IamRoleArn|Quote}}
+  name         = {{Nil .resource.BackupSelection.SelectionName|Quote}}
+  plan_id      = {{Nil .resource.BackupPlanId|Quote}}
+  resources={{Array .resource.BackupSelection.Resources}}
+{{- if .resource.BackupSelection.ListOfTags}}
+{{- range $a, $i:= .resource.BackupSelection.ListOfTags}}
+  selection_tag {
+    type  = {{Nil $i.Type|Quote}}
+    key   = {{Nil $i.Key|Quote}}
+    value = {{Nil $i.Value|Quote}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.BackupSelection.Conditions}}
+   condition {
+      string_equals {
+        key   =
+        value =
+      }
+   }
+{{- end}}
+{{- if .resource.BackupSelection.NotResources}}
+     not_resources = [
+       aws_db_instance.example.arn,
+       aws_ebs_volume.example.arn,
+       aws_efs_file_system.example.arn,
+     ]
+{{- end}}
+}

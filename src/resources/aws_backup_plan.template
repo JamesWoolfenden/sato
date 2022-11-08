@@ -1,0 +1,50 @@
+resource "aws_backup_plan" "{{.item}}" {
+  name = {{.item|Quote}}
+
+{{- if .resource.BackupPlan.BackupPlanRule}}
+{{- range $a, $i:=.resource.BackupPlan.BackupPlanRule}}
+  rule {
+    rule_name         = {{Nil $i.RuleName|Quote}}
+    target_vault_name = {{Nil $i.TargetBackupVault|Quote}}
+    schedule          = {{Nil $i.ScheduleExpression|Quote}}
+    enable_continuous_backup={{Boolean $i.EnableContinuousBackup}}
+    start_window      = {{$i.StartWindowMinutes}}
+    completion_window = {{$i.CompletionWindowMinutes}}
+{{- if $i.Lifecycle}}
+    lifecycle {
+      delete_after = {{$i.Lifecycle.DeleteAfterDays}}
+{{- if  $i.Lifecycle.MoveToColdStorageAfterDays}}
+      cold_storage_after={{$i.Lifecycle.MoveToColdStorageAfterDays}}
+{{- end}}
+    }
+{{- end}}
+    recovery_point_tags= {
+    {{- range $b, $j:=  $i.RecoveryPointTags}}
+    {{$b}}={{$j}}
+    {{- end}}
+    }
+{{- if $i.CopyActions}}
+{{- range $b, $j:=   $i.CopyActions}}
+    copy_action {
+      lifecycle={{Nil $j.Lifecycle|Quote}}
+      destination_vault_arn={{Nil $j.DestinationVaultArn|Quote}}
+    }
+{{- end}}
+{{- end}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.BackupPlan.AdvancedBackupSettings}}
+  advanced_backup_setting {
+    backup_options = {
+      WindowsVSS = xx
+    }
+    resource_type = xx
+  }
+{{- end}}
+{{- if .resource.BackupPlanTags}}
+  tags = {
+    {{Tags .resource.BackupPlanTags}}
+  }
+{{- end}}
+}
