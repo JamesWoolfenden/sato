@@ -1,24 +1,77 @@
 resource "aws_ssm_maintenance_window_task" "{{.item}}" {
-  max_concurrency = 2
-  max_errors      = 1
-  priority        = 1
-  task_arn        = "AWS-RestartEC2Instance"
-  task_type       = "AUTOMATION"
-  window_id       = aws_ssm_maintenance_window.example.id
-
+  name            = {{Nild .resource.Name (.item)|Quote}}
+  max_concurrency = {{ .resource.MaxConcurrency}}
+  max_errors      = {{ .resource.MaxErrors}}
+  cutoff_behavior = {{Nil .resource.CutoffBehavior|Quote}}
+  description     = {{Nil .resource.Description|Quote}}
+  priority        = {{.resource.Priority}}
+  task_arn        = {{Nil .resource.TaskArn |Quote}}
+  task_type       = {{Nil .resource.TaskType|Quote}}
+  window_id       = {{Nil .resource.WindowId|Quote}}
+  service_role_arn= {{Nil .resource.ServiceRoleArn|Quote}}
+{{- if .resource.Targets}}
+{{- range $a, $i:= .resource.Targets}}
   targets {
-    key    = "InstanceIds"
-    values = [aws_instance.example.id]
+    key    = {{Nil $i.Key|Quote}}
+    values = {{Array $i.Values}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.LoggingInfo}}
+  {{- .resource.LoggingInfo}}
+{{- end}}
+{{- if .resource.TaskParameters}}
+{{ .resource.TaskParameters}}
+{{- end}}
+{{- if .resource.TaskInvocationParameters}}
   task_invocation_parameters {
+{{- if .resource.TaskInvocationParameters.MaintenanceWindowAutomationParameters}}
     automation_parameters {
-      document_version = "$LATEST"
-
-      parameter {
-        name   = "InstanceId"
-        values = [aws_instance.example.id]
-      }
+            update
     }
+{{- end}}
+{{- if .resource.TaskInvocationParameters.MaintenanceWindowLambdaParameters}}
+    MaintenanceWindowLambdaParameters
+{{- end}}
+{{- end}}
+{{- if .resource.TaskInvocationParameters.MaintenanceWindowRunCommandParameters}}
+{{- $a := .resource.TaskInvocationParameters.MaintenanceWindowRunCommandParameters}}
+    run_command_parameters   {
+{{- if $a.CloudWatchOutputConfig}}
+      cloudwatch_config {
+        cloudwatch_log_group_name=
+        cloudwatch_output_enabled=
+      }
+{{- end}}
+      comment            = {{Nil $a.Comment|Quote}}
+      document_hash      = {{Nil $a.DocumentHash|Quote}}
+      document_hash_type = {{Nil $a.DocumentHashType|Quote}}
+      document_version   = {{Nil $a.DocumentVersion|Quote}}
+{{- if  $a.NotificationConfig}}
+      notification_config {
+      {{$a.NotificationConfig}}
+      }
+{{- end}}
+      output_s3_bucket   = {{Nil $a.OutputS3BucketName|Quote}}
+      output_s3_key_prefix= {{Nil $a.OutputS3KeyPrefix|Quote}}
+{{- if $a.Parameters}}
+{{- range $b, $j:=  $a.Parameters}}
+      parameter   {
+         name  = "{{$b}}"
+         values=  [{{range $a, $l:=$j}}"{{$l}}",{{- end}}]
+      }
+{{- end}}
+{{- end}}
+      service_role_arn    = {{Nil $a.ServiceRoleArn|Quote}}
+{{- if  $a.TimeoutSeconds}}
+      timeout_seconds     = {{ $a.TimeoutSeconds}}
+{{- end}}
+    }
+{{- end}}
+{{- if .resource.TaskInvocationParameters.MaintenanceWindowStepFunctionsParameters }}
+    step_functions_parameters {
+      {{.resource.TaskInvocationParameters.MaintenanceWindowStepFunctionsParameters}}
+    }
+{{- end}}
   }
 }

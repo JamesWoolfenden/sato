@@ -3,7 +3,9 @@ resource "aws_instance" "{{.item}}" {
   iam_instance_profile="{{.resource.IamInstanceProfile}}"
 {{- end}}
 {{- if .resource.ImageId}}
-  ami="{{.resource.ImageId}}"
+  ami={{Nil .resource.ImageId|Quote}}
+{{- else}}
+  launch_template={{Nil .resource.LaunchTemplate|Quote}}
 {{- end}}
 {{- if .resource.InstanceType}}
   instance_type="{{.resource.InstanceType}}"
@@ -68,9 +70,6 @@ EOF
 {{- end}}
 {{- if .resource.KeyName}}
   key_name="{{ .resource.KeyName}}"
-{{- end}}
-{{- if .resource.LaunchTemplate}}
-  launch_template="{{ .resource.LaunchTemplate}}"
 {{- end}}
   monitoring = {{ Boolean .resource.Monitoring }}
 {{- if .resource.NetworkInterfaces}}
