@@ -1,0 +1,19 @@
+resource "aws_ssm_maintenance_window" "{{.item}}" {
+  name     = {{Nil .resource.Name|Quote}}
+  schedule = {{Nil .resource.Schedule|Quote}}
+  duration = {{.resource.Duration}}
+  cutoff   = {{.resource.Cutoff}}
+  description               = {{Nil .resource.Description|Quote}}
+  allow_unassociated_targets= {{Boolean .resource.AllowUnassociatedTargets}}
+  end_date                  = {{Nil .resource.EndDate|Quote}}
+  schedule_timezone         = {{Nil .resource.Schedule|Quote}}
+{{- if .resource.ScheduleOffset}}
+  schedule_offset           = {{.resource.ScheduleOffset}}
+{{- end}}
+  start_date                = {{Nil .resource.StartDate|Quote}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+    }
+{{- end}}
+}

@@ -5,7 +5,7 @@ resource "aws_instance" "{{.item}}" {
 {{- if .resource.ImageId}}
   ami={{Nil .resource.ImageId|Quote}}
 {{- else}}
-  launch_template={{Nil .resource.LaunchTemplate|Quote}}
+  launch_template="{{ .resource.LaunchTemplate}}"
 {{- end}}
 {{- if .resource.InstanceType}}
   instance_type="{{.resource.InstanceType}}"

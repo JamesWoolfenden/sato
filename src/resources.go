@@ -324,3 +324,6 @@ var awsSsmMaintenanceWindowTarget []byte
 
 //go:embed resources/aws_wafv2_web_acl_association.template
 var awsWAFv2WebACLAssociation []byte
+
+//go:embed resources/aws_ssm_maintenance_window.template
+var awsSsmMaintenanceWindow []byte
