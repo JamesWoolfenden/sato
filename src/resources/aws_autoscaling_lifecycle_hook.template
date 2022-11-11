@@ -1,0 +1,10 @@
+resource "aws_autoscaling_lifecycle_hook" "{{.item}}" {
+  name                    = "{{.item}}"
+  autoscaling_group_name  = {{Nil .resource.AutoScalingGroupName|Quote}}
+  default_result          = {{Nil .resource.DefaultResult |Quote}}
+  heartbeat_timeout       = {{ .resource.HeartbeatTimeout }}
+  lifecycle_transition    = {{Nil .resource.LifecycleTransition |Quote}}
+  notification_metadata    = {{Nil .resource.NotificationMetadata|Quote}}
+  notification_target_arn  = {{Nil .resource.NotificationTargetARN |Quote}}
+  role_arn                = {{Nil .resource.RoleARN |Quote}}
+}

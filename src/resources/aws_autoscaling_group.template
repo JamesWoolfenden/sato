@@ -42,7 +42,11 @@ resource "aws_autoscaling_group" "{{.item}}" {
 {{- else    }}
     name   = {{Nil  .resource.LaunchTemplate.LaunchTemplateName|Quote}}
 {{- end}}
-    version= {{Nild .resource.LaunchTemplate.Version 1 |Quote }}
+{{- if .resource.LaunchTemplate.Version}}
+    version= {{Nil .resource.LaunchTemplate.Version |Quote }}
+{{- else}}
+    version=1
+{{- end}}
   }
 {{- end}}
 {{- end}}
