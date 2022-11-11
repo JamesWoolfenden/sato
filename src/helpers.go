@@ -1,8 +1,11 @@
 package sato
 
 import (
+	"archive/zip"
 	"encoding/base64"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/gobeam/stringy"
@@ -111,4 +114,41 @@ func arrayReplace(mySlice []string, target string, replacement string) string {
 
 func contains(target string, substring string) bool {
 	return strings.Contains(target, substring)
+}
+
+func zipfile(code string, filename string, runtime string) string {
+	var extension string
+	switch runtime {
+	case "nodejs16.x", "nodejs14.x", "nodejs12.x", "nodejs":
+		extension = ".js"
+	case "python3.9", "python3.8", "python3.7", "python3.6":
+		extension = ".py"
+	case "go1.x":
+		extension = ".go"
+	default:
+		extension = ".txt"
+	}
+
+	codeFile := filename + extension
+	d1 := []byte(code)
+	_ = os.WriteFile(codeFile, d1, 0644)
+
+	output := filename + ".zip"
+	archive, _ := os.Create(output)
+	defer func(archive *os.File) {
+		_ = archive.Close()
+	}(archive)
+	zipWriter := zip.NewWriter(archive)
+
+	f1, _ := os.Open(filename)
+
+	defer func(f1 *os.File) {
+		_ = f1.Close()
+	}(f1)
+
+	w1, _ := zipWriter.Create(filename)
+	_, _ = io.Copy(w1, f1)
+	_ = zipWriter.Close()
+
+	return output
 }

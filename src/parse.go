@@ -1,11 +1,9 @@
 package sato
 
 import (
-	"archive/zip"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -101,44 +99,9 @@ func Parse(file string, destination string) error {
 
 			return result
 		},
-		"Snake": snake,
-		"Kebab": kebab,
-		"ZipFile": func(code string, filename string, runtime string) string {
-			var extension string
-			switch runtime {
-			case "nodejs16.x", "nodejs14.x", "nodejs12.x", "nodejs":
-				extension = ".js"
-			case "python3.9", "python3.8", "python3.7", "python3.6":
-				extension = ".py"
-			case "go1.x":
-				extension = ".go"
-			default:
-				extension = ".txt"
-			}
-
-			codeFile := filename + extension
-			d1 := []byte(code)
-			_ = os.WriteFile(codeFile, d1, 0644)
-
-			output := filename + ".zip"
-			archive, _ := os.Create(output)
-			defer func(archive *os.File) {
-				_ = archive.Close()
-			}(archive)
-			zipWriter := zip.NewWriter(archive)
-
-			f1, _ := os.Open(filename)
-
-			defer func(f1 *os.File) {
-				_ = f1.Close()
-			}(f1)
-
-			w1, _ := zipWriter.Create(filename)
-			_, _ = io.Copy(w1, f1)
-			_ = zipWriter.Close()
-
-			return output
-		},
+		"Snake":   snake,
+		"Kebab":   kebab,
+		"ZipFile": zipfile,
 	}
 	_, err = ParseVariables(template, funcMap, destination)
 	if err != nil {
