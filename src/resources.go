@@ -327,3 +327,6 @@ var awsWAFv2WebACLAssociation []byte
 
 //go:embed resources/aws_autoscaling_lifecycle_hook.template
 var awsAutoscalingLifecycleHook []byte
+
+//go:embed resources/aws_ssm_maintenance_window.template
+var awsSsmMaintenanceWindow []byte

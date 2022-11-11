@@ -1,11 +1,15 @@
 resource "aws_ssm_maintenance_window_target" "{{.item}}" {
-  window_id     = aws_ssm_maintenance_window.window.id
-  name          = "maintenance-window-target"
-  description   = "This is a maintenance window target"
-  resource_type = "INSTANCE"
-
+  window_id     = {{Nil .resource.WindowId|Quote}}
+  name          = {{Nild .resource.Name (.item)|Quote}}
+  description   = {{Nil .resource.Description|Quote}}
+  resource_type = {{Nil .resource.ResourceType|Quote}}
+  owner_information= {{Nil .resource.OwnerInformation |Quote}}
+{{- if .resource.Targets}}
+{{- range $a, $i:= .resource.Targets}}
   targets {
-    key    = "tag:Name"
-    values = ["acceptance_test"]
+    key    = {{Nil $i.Key|Quote}}
+    values = {{Array $i.Values}}
   }
+{{- end}}
+{{- end}}
 }
