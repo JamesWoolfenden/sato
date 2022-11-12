@@ -1,9 +1,13 @@
 resource "aws_autoscaling_group" "{{.item}}" {
 {{- if .resource.MaxSize }}
   max_size = {{ .resource.MaxSize }}
+{{- else}}
+  max_size = 1
 {{- end}}
 {{- if.resource.MinSize}}
   min_size = {{ .resource.MinSize}}
+{{- else}}
+  min_size = 1
 {{- end}}
 {{- if .resource.AutoScalingGroupName}}
   name= "{{.resource.AutoScalingGroupName}}"
@@ -59,7 +63,10 @@ resource "aws_autoscaling_group" "{{.item}}" {
 {{- if .resource.MaxInstanceLifetime}}
   max_instance_lifetime  = {{.resource.MaxInstanceLifetime}}
 {{- end}}
-  enabled_metrics        = {{ .resource.MetricsCollection}}
+{{- if .resource.MetricsCollection}}
+{{- $a:= (index .resource.MetricsCollection 0 )}}
+  enabled_metrics        = {{Array $a.Metrics}}
+{{- end}}
 {{- if .resource.MixedInstancesPolicy}}
   mixed_instances_policy = {{.resource.MixedInstancesPolicy}}
 {{- end}}

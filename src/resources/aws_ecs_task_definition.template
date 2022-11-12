@@ -6,12 +6,14 @@ resource "aws_ecs_task_definition" "{{.item}}" {
 {{- if $i.Command}}
   command ={{$i.Command}}
 {{- end}}
-  cpu={{ $i.Cpu}}
+{{- if $i.Cpu}}
+cpu={{$i.Cpu}}
+{{- end}}
 {{- if $i.DependsOnProp}}
   dependsOn={{$i.DependsOnProp}}
 {{- end}}
-  disableNetworking={{Boolean $i.DisableNetworking }}
-  dnsSearchDomains={{Array $i.DnsSearchDomains}}
+  disableNetworking= {{Boolean $i.DisableNetworking }}
+  dnsSearchDomains = {{Array $i.DnsSearchDomains}}
   dnsServers={{Array $i.DnsServers}}
 {{- if  $i.DockerLabels}}
   dockerLabels={{Demap $i.DockerLabels}}
@@ -109,7 +111,7 @@ resource "aws_ecs_task_definition" "{{.item}}" {
   user={{Nil $i.User|Quote}}
 {{- if $i.VolumesFrom}}
   VolumesFrom=[
-{{ range $b, $j:= $i.VolumesFrom}}
+{{- range $b, $j:= $i.VolumesFrom}}
     {
       SourceContainer = "{{$j.SourceContainer}}"
       ReadOnly = {{Boolean $j.ReadOnly}}
@@ -120,31 +122,31 @@ resource "aws_ecs_task_definition" "{{.item}}" {
   workingDirectory={{Nil $i.WorkingDirectory|Quote}}
 },{{- end}}])
 {{- end}}
-  cpu= {{Nil .resource.Cpu|Quote}}
+  cpu               = {{Nil .resource.Cpu|Quote}}
 {{- if   .resource.EphemeralStorage}}
-  ephemeral_storage= {{ .resource.EphemeralStorage}}
+  ephemeral_storage = {{ .resource.EphemeralStorage}}
 {{- end}}
   execution_role_arn= {{Nil .resource.ExecutionRoleArn|Quote}}
-  family={{Nil .resource.Family|Quote}}
+  family            = {{Nil .resource.Family|Quote}}
 {{- if   .resource.InferenceAccelerators}}
 {{- range $a, $i:= .resource.InferenceAccelerators}}
   inference_accelerator {
-    device_name="{{$i.DeviceName}}"
-    device_type="{{$i.DeviceType}}"
+    device_name     = "{{$i.DeviceName}}"
+    device_type     = "{{$i.DeviceType}}"
   }
 {{- end}}
 {{- end}}
 {{- if   .resource.IpcMode}}
-  ipc_mode={{.resource.IpcMode}}
+  ipc_mode          = {{.resource.IpcMode}}
 {{- end}}
 {{- if   .resource.Memory}}
-  memory={{.resource.Memory}}
+  memory            = {{.resource.Memory}}
 {{- end}}
 {{- if .resource.NetworkMode}}
-  network_mode={{.resource.NetworkMode}}
+  network_mode      = {{Nil .resource.NetworkMode|Quote}}
 {{- end}}
 {{- if .resource.PidMode }}
-  pid_mode={{.resource.PidMode }}
+  pid_mode          = {{.resource.PidMode }}
 {{- end}}
 {{- if .resource.PlacementConstraints}}
 {{ range $a, $i:= .resource.PlacementConstraints}}
@@ -152,6 +154,7 @@ resource "aws_ecs_task_definition" "{{.item}}" {
     type      = "{{$i.type}}"
     expression= "{{$i.expression}}"
   }
+{{- end}}
 {{- end}}
 {{- if .resource.ProxyConfiguration}}
   proxy_configuration={{.resource.ProxyConfiguration}}

@@ -330,3 +330,9 @@ var awsAutoscalingLifecycleHook []byte
 
 //go:embed resources/aws_ssm_maintenance_window.template
 var awsSsmMaintenanceWindow []byte
+
+//go:embed resources/aws_lambda_version.template
+var awsLambdaVersion []byte
+
+//go:embed resources/aws_lambda_event_source_mapping.template
+var awsLambdaEventSourceMapping []byte

@@ -71,9 +71,9 @@ resource "aws_ecs_service" "{{.item}}" {
   }
 {{- end}}
   task_definition={{Nil .resource.TaskDefinition|Quote}}
-{{- if .resource.DeploymentConfiguration }}
+{{- if .resource.DeploymentController }}
   deployment_controller {
-    type={{.resource.DeploymentConfiguration.Type}}
+    type={{.resource.DeploymentController.Type}}
   }
 {{- end}}
   enable_execute_command = {{Boolean .resource.EnableExecuteCommand}}
@@ -82,7 +82,10 @@ resource "aws_ecs_service" "{{.item}}" {
 {{- end }}
 {{- if .resource.PlacementStrategies}}
 {{range $a, $i :=.resource.PlacementStrategies}}
-  ordered_placement_strategies {}
+  ordered_placement_strategy {
+    field= {{Nil $i.Field|Quote}}
+    type = {{Nil $i.Type|Quote}}
+  }
 {{- end}}{{- end}}
 {{- if  .resource.PlatformVersion}}
   platform_version={{Nil .resource.PlatformVersion|Quote}}

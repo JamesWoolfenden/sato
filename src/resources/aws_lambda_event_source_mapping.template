@@ -1,0 +1,70 @@
+resource "aws_lambda_event_source_mapping" "{{.item}}" {
+  event_source_arn  = {{Nil .resource.EventSourceArn|Quote}}
+  function_name     = {{Nil .resource.FunctionName|Quote}}
+  starting_position = {{Nil .resource.StartingPosition|Quote}}
+{{- if .resource.AmazonManagedKafkaEventSourceConfig}}
+  amazon_managed_kafka_event_source_config {
+    consumer_group_id={{.resource.AmazonManagedKafkaEventSourceConfigConsumerGroupId}}
+  }
+{{- end}}
+  batch_size={{.resource.BatchSize}}
+  bisect_batch_on_function_error={{Boolean .resource.BisectBatchOnFunctionError}}
+{{- if .resource.DestinationConfig}}
+  destination_config {
+    on_failure {
+      destination_arn={{Nil .resource.DestinationConfig.OnFailure|Quote}}
+    }
+  }
+{{- end}}
+  enabled = {{Boolean .resource.Enabled}}
+{{- if .resource.FilterCriteria}}
+  filter_criteria {
+    filter{
+      pattern=
+    }
+  }
+{{- end}}
+  function_responses_types= {{.resource.FunctionResponseTypes}}
+{{- if   .resource.MaximumBatchingWindowInSeconds}}
+  maximum_batching_window_in_seconds={{.resource.MaximumBatchingWindowInSeconds}}
+{{- end}}
+{{- if .resource.MaximumRecordAgeInSeconds}}
+  maximum_record_age_in_seconds={{.resource.MaximumRecordAgeInSeconds}}
+{{- end}}
+{{- if .resource.MaximumRetryAttempts}}
+  maximum_retry_attempts={{.resource.MaximumRetryAttempts}}
+{{- end}}
+{{- if .resource.ParallelizationFactor }}
+  parallelization_factor={{.resource.ParallelizationFactor }}
+{{- end}}
+  queues={{Array .resource.Queues}}
+{{- if .resource.SelfManagedEventSource }}
+  self_managed_event_source {
+      endpoints={{.resource.SelfManagedEventSource.Endpoints}}}
+{{- end}}
+{{- if .resource.SelfManagedKafkaEventSourceConfig }}
+  self_managed_kafka_event_source_config {
+    consumer_group_id={{.resource.SelfManagedKafkaEventSourceConfig.ConsumerGroupId}}
+  }
+{{- end}}
+{{- if .resource.SourceAccessConfigurations}}
+{{- range $a , $i:= .resource.SourceAccessConfigurations}}
+  source_access_configuration{
+    type={{Nil $i.Type|Quote}}
+    uri ={{Nil $i.Uru|Quote}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.StartingPosition}}
+  starting_position={{.resource.StartingPosition}}
+{{- end}}
+{{- if .resource.StartingPositionTimestamp}}
+  starting_position_timestamp={{.resource.StartingPositionTimestamp}}
+{{- end}}
+{{- if  .resource.Topics}}
+  topics={{Array .resource.Topics}}
+{{- end}}
+{{- if .resource.TumblingWindowInSeconds}}
+  tumbling_window_in_seconds={{.resource.TumblingWindowInSeconds}}
+{{- end}}
+}

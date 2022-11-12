@@ -22,7 +22,7 @@ resource "aws_cloudwatch_event_rule" "{{.item}}" {
 {{- if .resource.Targets}}
 {{- $p := .item}}
 {{range $a, $i := .resource.Targets}}
-resource "aws_cloudwatch_event_target" "{{$i.Id}}" {
+resource "aws_cloudwatch_event_target" "{{$i.Id}}{{$a}}" {
   arn  = "{{ $i.Arn}}"
   rule = aws_cloudwatch_event_rule.{{$p}}.id
 {{- if   $i.RoleArn}}

@@ -151,6 +151,8 @@ func lookup(myType string) []byte {
 		"AWS::WAFv2::WebACLAssociation":                    awsWAFv2WebACLAssociation,
 		"AWS::AutoScaling::LifecycleHook":                  awsAutoscalingLifecycleHook,
 		"AWS::SSM::MaintenanceWindow":                      awsSsmMaintenanceWindow,
+		"AWS::Lambda::Version":                             awsLambdaVersion,
+		"AWS::Lambda::EventSourceMapping":                  awsLambdaEventSourceMapping,
 	}
 
 	var myContent []byte
