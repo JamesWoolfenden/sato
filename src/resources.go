@@ -336,3 +336,6 @@ var awsLambdaVersion []byte
 
 //go:embed resources/aws_lambda_event_source_mapping.template
 var awsLambdaEventSourceMapping []byte
+
+//go:embed resources/aws_service_discovery_service.template
+var awsServiceDiscoveryService []byte

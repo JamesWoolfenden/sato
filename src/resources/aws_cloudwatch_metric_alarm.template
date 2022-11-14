@@ -68,7 +68,7 @@ resource "aws_cloudwatch_metric_alarm" "{{.item}}" {
       namespace="{{$j.MetricStat.Metric.Namespace}}"
       period={{$j.MetricStat.Period}}
       stat="{{$j.MetricStat.Stat}}"
-      unit="{{$j.MetricStat.Unit}}"
+      unit={{Nild $j.MetricStat.Unit "Seconds"|Quote}}
     }
 {{- end}}
   }
