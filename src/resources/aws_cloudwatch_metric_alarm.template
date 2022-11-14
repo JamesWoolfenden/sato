@@ -75,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "{{.item}}" {
 {{- end}}
 {{- end}}
 {{- if  .resource.TreatMissingData}}
-  treat_missing_data={{.resource.TreatMissingData}}
+  treat_missing_data={{Nil .resource.TreatMissingData|Quote}}
 {{- end}}
 {{- if .resource.Dimensions}}
   dimensions = {

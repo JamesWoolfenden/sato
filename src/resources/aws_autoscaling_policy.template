@@ -30,7 +30,17 @@ resource "aws_autoscaling_policy" "{{.item}}" {
   scaling_adjustment     = {{.resource.ScalingAdjustment}}
 {{- end}}
 {{- if .resource.StepAdjustments}}
-  step_adjustment="{{.resource.StepAdjustments}}"
+{{- range $a, $i:= .resource.StepAdjustments}}
+  step_adjustment {
+     scaling_adjustment          = {{$i.ScalingAdjustment}}
+ {{- if  $i.MetricIntervalLowerBound}}
+     metric_interval_lower_bound = {{$i.MetricIntervalLowerBound}}
+ {{- end}}
+ {{- if  $i.MetricIntervalUpperBound}}
+     metric_interval_upper_bound = {{$i.MetricIntervalUpperBound}}
+ {{- end}}
+  }
+{{- end}}
 {{- end}}
 {{- if .resource.TargetTrackingConfiguration}}
   target_tracking_configuration = "{{.resource.TargetTrackingConfiguration}}"

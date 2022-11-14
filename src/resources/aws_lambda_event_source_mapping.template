@@ -1,7 +1,9 @@
 resource "aws_lambda_event_source_mapping" "{{.item}}" {
   event_source_arn  = {{Nil .resource.EventSourceArn|Quote}}
   function_name     = {{Nil .resource.FunctionName|Quote}}
+{{- if .resource.StartingPosition}}
   starting_position = {{Nil .resource.StartingPosition|Quote}}
+{{- end}}
 {{- if .resource.AmazonManagedKafkaEventSourceConfig}}
   amazon_managed_kafka_event_source_config {
     consumer_group_id={{.resource.AmazonManagedKafkaEventSourceConfigConsumerGroupId}}
@@ -24,7 +26,7 @@ resource "aws_lambda_event_source_mapping" "{{.item}}" {
     }
   }
 {{- end}}
-  function_responses_types= {{.resource.FunctionResponseTypes}}
+  function_response_types= {{.resource.FunctionResponseTypes}}
 {{- if   .resource.MaximumBatchingWindowInSeconds}}
   maximum_batching_window_in_seconds={{.resource.MaximumBatchingWindowInSeconds}}
 {{- end}}
