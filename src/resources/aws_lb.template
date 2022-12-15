@@ -31,13 +31,14 @@ resource "aws_lb" "{{.item}}" {
 {{- range $a, $i:=.resource.LoadBalancerAttributes}}
 {{- if $i.Key}}
 {{- if (Contains $i.Key "http2")}}
-  http_enabled={{$i.Value}}
+  enable_http2 = {{$i.Value}}
 {{- end}}
 {{- if (Contains $i.Key "idle_timeout")}}
   idle_timeout={{$i.Value}}
 {{- end}}
 {{- if (Contains $i.Key "access_logs")}}
   access_logs {
+    bucket={{Nil $.Bucket|Quote}}
   {{- if  $i.Value}}
     enabled ="{{ $i.Value}}
   {{- else}}

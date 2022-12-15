@@ -1,74 +1,77 @@
 resource "aws_ecs_task_definition" "{{.item}}" {
 {{- if .resource.ContainerDefinitions}}
   container_definitions = jsonencode([
-  {{- range $a,$i := .resource.ContainerDefinitions}}
+  {{- range $a, $i := .resource.ContainerDefinitions}}
 {
-{{- if $i.Command}}
-  command ={{$i.Command}}
-{{- end}}
-{{- if $i.Cpu}}
-cpu={{$i.Cpu}}
-{{- end}}
-{{- if $i.DependsOnProp}}
+    {{- if $i.Command}}
+  command = {{$i.Command}}
+    {{- end}}
+    {{- if $i.Cpu}}
+cpu       = {{$i.Cpu}}
+    {{- end}}
+    {{- if $i.DependsOnProp}}
   dependsOn={{$i.DependsOnProp}}
-{{- end}}
+    {{- end}}
   disableNetworking= {{Boolean $i.DisableNetworking }}
   dnsSearchDomains = {{Array $i.DnsSearchDomains}}
-  dnsServers={{Array $i.DnsServers}}
-{{- if  $i.DockerLabels}}
-  dockerLabels={{Demap $i.DockerLabels}}
-{{- end}}
+  dnsServers       = {{Array $i.DnsServers}}
+    {{- if  $i.DockerLabels}}
+  dockerLabels     = {{Demap $i.DockerLabels}}
+    {{- end}}
   dockerSecurityOptions={{$i.DockerSecurityOptions}}
   entryPoint={{Array $i.EntryPoint }}
-{{- if .Environment }}
-  environment={{$i.Environment }}
-{{- end}}
-{{- if $i.EnvironmentFiles }}
-  environmentFiles={{$i.EnvironmentFiles }}
-{{- end}}
+    {{- if .Environment }}
+  environment      = {{$i.Environment }}
+    {{- end}}
+    {{- if $i.EnvironmentFiles }}
+  environmentFiles= {{$i.EnvironmentFiles }}
+    {{- end}}
   essential={{Boolean $i.Essential }}
-{{- if $i.ExtraHosts }}
+    {{- if $i.ExtraHosts }}
   extraHosts={{$i.ExtraHosts }}
-{{- end}}
-{{- if   $i.FirelensConfiguration}}
+    {{- end}}
+    {{- if  $i.FirelensConfiguration}}
   firelensConfiguration={{$i.FirelensConfiguration}}
-{{- end}}
-{{- if $i.HealthCheck}}
+    {{- end}}
+    {{- if $i.HealthCheck}}
   healthCheck={{$i.HealthCheck}}
-{{- end}}
+    {{- end}}
   hostname={{Nil $i.Hostname|Quote }}
   image={{Nil $i.Image|Quote}}
   interactive={{Boolean $i.Interactive}}
   links={{Array $i.Links}}
-{{- if $i.LinuxParameters}}
+    {{- if $i.LinuxParameters}}
   linuxParameters={{$i.LinuxParameters}}
-{{- end}}
-{{- if $i.LogConfiguration}}
+    {{- end}}
+    {{- if $i.LogConfiguration}}
   logConfiguration={
-    LogDriver = "{{$i.LogConfiguration.LogDriver}}"
-{{- if $i.LogConfiguration.Options}}
+    LogDriver = {{Nil $i.LogConfiguration.LogDriver|Quote}}
+    {{- if $i.LogConfiguration.Options}}
     Options={
       {{- range $g, $z:= $i.LogConfiguration.Options}}
-      {{$g}}="{{$z}}" {{- end}}
+      {{$g}}="{{$z}}"
+      {{- end}}
     }
-{{- end}}
-    SecretOptions ={{$i.LogConfiguration.SecretOptions}}
+    {{- end}}
+    secretOptions ={{$i.LogConfiguration.SecretOptions}}
   }
-{{- end}}
-  memory={{$i.Memory}}
-{{- if $i.MemoryReservation }}
+  {{- end}}
+  {{- if $i.Memory}}
+  memory          = {{$i.Memory}}
+  {{- end}}
+  {{- if $i.MemoryReservation }}
   memoryReservation={{$i.MemoryReservation }}
-{{- end}}
+  {{- end}}
 
-{{- if  $i.MountPoints }}
+  {{- if  $i.MountPoints }}
   mountPoints=[
-{{- range $b, $k:=  $i.MountPoints }}
+  {{- range $b, $k:=  $i.MountPoints }}
   {
     container_path= {{Nil $k.ContainerPath|Quote }}
     read_only     = {{Boolean $k.ReadOnly}}
     source_volume = {{Nil $k.SourceVolume|Quote}}
   },
-{{- end}}
+  {{- end}}
 ]
 {{- end}}
   name="{{$i.Name}}"
@@ -84,8 +87,8 @@ cpu={{$i.Cpu}}
 {{- end}}
   ]
 {{- end}}
-  privileged={{Boolean $i.Privileged}}
-  pseudoTerminal={{Boolean $i.PseudoTerminal}}
+  privileged    = {{Boolean $i.Privileged}}
+  pseudoTerminal= {{Boolean $i.PseudoTerminal}}
   readonlyRootFilesystem={{Boolean $i.ReadonlyRootFilesystem}}
 {{- if  $i.RepositoryCredentials}}
   repositoryCredentials={{ $i.RepositoryCredentials}}
@@ -122,6 +125,7 @@ cpu={{$i.Cpu}}
   workingDirectory={{Nil $i.WorkingDirectory|Quote}}
 },{{- end}}])
 {{- end}}
+
   cpu               = {{Nil .resource.Cpu|Quote}}
 {{- if   .resource.EphemeralStorage}}
   ephemeral_storage = {{ .resource.EphemeralStorage}}

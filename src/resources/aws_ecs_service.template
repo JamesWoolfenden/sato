@@ -24,7 +24,9 @@ resource "aws_ecs_service" "{{.item}}" {
 {{- range $a, $i := .resource.CapacityProviderStrategy}}
   capacity_provider_strategy {
     base             = {{$i.Base}}
-    capacity_provider= {{$i.CapacityProvider}}
+{{- if $i.CapacityProvider}}
+    capacity_provider= {{ $i.CapacityProvider}}
+{{- end}}
     weight           = {{$i.Weight}}
   }
 {{- end}}

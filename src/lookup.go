@@ -153,6 +153,7 @@ func lookup(myType string) []byte {
 		"AWS::SSM::MaintenanceWindow":                      awsSsmMaintenanceWindow,
 		"AWS::Lambda::Version":                             awsLambdaVersion,
 		"AWS::Lambda::EventSourceMapping":                  awsLambdaEventSourceMapping,
+		"AWS::ServiceDiscovery::Service":                   awsServiceDiscoveryService,
 	}
 
 	var myContent []byte

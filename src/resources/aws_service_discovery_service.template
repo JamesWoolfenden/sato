@@ -1,0 +1,32 @@
+resource "aws_service_discovery_service" "{{.item}}" {
+  name = "example"
+  description={{Nil .resource.Description|Quote}}
+{{- if .resource.DnsConfig }}
+   dns_config {
+ {{- if .resource.DnsConfig.DnsRecords }}
+   {{- range $a , $i := .resource.DnsConfig.DnsRecords }}
+     dns_records {
+       ttl = {{$i.TTL}}
+       type= {{Nil $i.Type|Quote }}
+     }
+ {{- end}}
+ {{- end}}
+     namespace_id  = {{Nil .resource.DnsConfig.NamespaceId|Quote}}
+     routing_policy= {{Nil .resource.DnsConfig.RoutingPolicy|Quote}}
+   }
+{{- end}}
+
+{{- if .resource.HealthCheckConfig}}
+  health_check_custom_config {
+    failure_threshold = {{.resource.HealthCheckConfig.FailureThreshold}}
+  }
+{{- end}}
+{{- if .resource.NamespaceId}}
+  namespace_id={{.resource.NamespaceId}}
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+    {{Tags .resource.Tags}}
+  }
+{{- end}}
+}
