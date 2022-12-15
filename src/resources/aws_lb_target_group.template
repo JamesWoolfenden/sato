@@ -5,7 +5,7 @@ resource "aws_lb_target_group" "{{.item}}" {
     interval={{ .resource.HealthCheckIntervalSeconds}}
 {{- end}}
 {{- if .resource.Matcher}}
-    matcher="{{ .resource.Matcher}}"
+    matcher="{{ .resource.Matcher.HttpCode}}"
 {{- end}}
 {{- if .resource.HealthCheckPath}}
     path = {{Nil .resource.HealthCheckPath|Quote}}
