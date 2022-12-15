@@ -6,7 +6,7 @@ resource "aws_lb_target_group" "{{.item}}" {
 {{- end}}
 {{- if .resource.Matcher}}
 {{- if .resource.Matcher.GrpcCode}}
-    matcher   = "{{ .resource.Matcher}}"
+    matcher="{{ .resource.Matcher.GrpcCode}}"
 {{- else}}
     matcher   = "{{ .resource.Matcher.HttpCode}}"
 {{- end}}
