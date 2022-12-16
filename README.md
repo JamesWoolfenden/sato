@@ -13,7 +13,7 @@ Converts CloudFormation into Terraform. In Go, quickerly.
 
 ## Install
 
-Download from latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.14> or:
+Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.14> or:
 
 Compile locally:
 
@@ -21,6 +21,23 @@ Compile locally:
 git clone https://github.com/JamesWoolfenden/sato
 cd sato
 go install
+```
+
+## Windows
+
+I'm now using Scoop to distribute releases, it's much quicker to update and easier to manage than previous methods,
+you can install scoop from <https://scoop.sh/>.
+
+Add my scoop bucket:
+
+```shell
+scoop bucket add iac https://github.com/JamesWoolfenden/scoop.git
+```
+
+Then you can install a tool:
+
+```
+scoop install sato
 ```
 
 ## Usage
