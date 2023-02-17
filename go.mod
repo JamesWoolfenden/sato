@@ -3,14 +3,14 @@ module sato
 go 1.19
 
 require (
-	github.com/awslabs/goformation/v7 v7.3.2
+	github.com/awslabs/goformation/v7 v7.3.3
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/gobeam/stringy v0.0.6
 	github.com/hashicorp/hc-install v0.4.0
 	github.com/hashicorp/terraform-exec v0.17.3
 	github.com/rs/zerolog v1.29.0
 	github.com/stretchr/testify v1.7.0
-	github.com/urfave/cli/v2 v2.24.3
+	github.com/urfave/cli/v2 v2.24.4
 )
 
 require (
