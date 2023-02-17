@@ -17,7 +17,7 @@ Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/t
 
 Compile locally:
 
-```golang
+```bash
 git clone https://github.com/JamesWoolfenden/sato
 cd sato
 go install
@@ -36,7 +36,7 @@ scoop bucket add iac https://github.com/JamesWoolfenden/scoop.git
 
 Then you can install a tool:
 
-```
+```pwsh
 scoop install sato
 ```
 
@@ -62,7 +62,7 @@ Get yourself some valid CloudFormation*
  9:17PM INF Created .sato\aws_s3_bucket.pipelines3bucket.tf
 ```
 
-That's it. So by default (overidable) the parsed CloudFormation (now Terraform) will be in a .sato sub directory.
+That's it. So by default (overridable) the parsed CloudFormation (now Terraform) will be in a .sato subdirectory.
 So let's have a look see:
 
 ```bash
@@ -184,7 +184,7 @@ If you use my other tool, Pike you can now apply that and get the policy require
 
 ## Valid CloudFormation
 
-Ditch it all,Ok ok.. but some older samples can play fast and lose with the CloudFormation schema and data types.
+Ditch it all, Ok, ok but some older samples can play fast and lose with the CloudFormation schema and data types.
 The Go-formation parser is less accommodating, you may need to be stricter on your typing.
 
 - Booleans are true or false and not "false"
