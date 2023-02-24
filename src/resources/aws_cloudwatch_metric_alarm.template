@@ -84,6 +84,6 @@ resource "aws_cloudwatch_metric_alarm" "{{.item}}" {
 {{- end}}
   }
 {{- end}}
-  alarm_description = {{Nil .resource.AlarmDescription|Quote}}
+  alarm_description = {{Replace (Nil .resource.AlarmDescription) "\n" ""|Quote}}
   alarm_actions     = {{Array .resource.AlarmActions}}
 }

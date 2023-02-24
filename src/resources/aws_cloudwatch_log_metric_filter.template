@@ -1,0 +1,30 @@
+resource "aws_cloudwatch_log_metric_filter" "{{.item}}" {
+{{- if .resource.FilterName }}
+  name          = {{.resource.FilterName|Quote}}
+{{- else}}
+  name          = "{{.item}}"
+{{- end}}
+  pattern       = {{Replace .resource.FilterPattern "\"" "\\\x22" |Quote}}
+  log_group_name= {{Nil .resource.LogGroupName|Quote}}
+
+{{- if .resource.MetricTransformations}}
+{{- range $a, $i:= .resource.MetricTransformations}}
+  metric_transformation     {
+{{- if $i.DefaultValue}}
+    default_value= {{$i.DefaultValue}}
+{{- end}}
+{{- if $i.Dimensions }}
+    dimensions   {
+    {{$i.Dimensions}}
+    }
+{{- end}}
+    name         = {{$i.MetricName |Quote}}
+    namespace    = {{$i.MetricNamespace|Quote}}
+    value        = {{$i.MetricValue}}
+{{- if $i.Unit}}
+    unit         = {{$i.Unit |Quote}}
+{{- end}}
+  }
+{{- end}}
+{{- end}}
+}

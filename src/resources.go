@@ -339,3 +339,9 @@ var awsLambdaEventSourceMapping []byte
 
 //go:embed resources/aws_service_discovery_service.template
 var awsServiceDiscoveryService []byte
+
+//go:embed resources/aws_cloudwatch_dashboard.template
+var awsCloudwatchDashboard []byte
+
+//go:embed resources/aws_cloudwatch_log_metric_filter.template
+var awsCloudwatchLogMetricFilter []byte

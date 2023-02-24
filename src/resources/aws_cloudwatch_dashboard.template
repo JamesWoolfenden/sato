@@ -1,0 +1,8 @@
+resource "aws_cloudwatch_dashboard" "{{.item}}" {
+{{- if .resource.DashboardName}}
+  dashboard_name        = "{{.resource.DashboardName}}"
+{{- end}}
+{{- if .resource.DashboardBody}}
+  dashboard_body        = jsonencode({{Marshal .resource.DashboardBody}})
+{{- end}}
+}
