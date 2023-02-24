@@ -3,7 +3,7 @@ module sato
 go 1.19
 
 require (
-	github.com/awslabs/goformation/v7 v7.3.3
+	github.com/awslabs/goformation/v7 v7.3.4
 	github.com/go-git/go-git/v5 v5.4.2
 	github.com/gobeam/stringy v0.0.6
 	github.com/hashicorp/hc-install v0.4.0
