@@ -13,11 +13,10 @@ import (
 	tftemplate "text/template"
 	"time"
 
-	"github.com/rs/zerolog/log"
-
 	"github.com/awslabs/goformation/v7"
 	"github.com/awslabs/goformation/v7/cloudformation"
 	"github.com/awslabs/goformation/v7/cloudformation/tags"
+	"github.com/rs/zerolog/log"
 )
 
 // M is a wrapper object to help pass in multiple object to template
@@ -130,7 +129,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		var myVariable Variable
 
 		DataResources, myVariable, m = GetVariableType(param, myVariable, DataResources, m)
-		myVariable.Description = strings.Replace(param.Description, "${", "$${", -1)
+		myVariable.Description = strings.Replace(*param.Description, "${", "$${", -1)
 		myVariable.Name = Name
 		myVariable = GetVariableDefault(param, myVariable)
 
