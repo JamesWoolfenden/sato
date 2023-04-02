@@ -70,3 +70,4 @@ psbump:
 update:
 	go get -u
 	go mod tidy
+	pre-commit autoupdate
