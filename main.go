@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	sato "sato/src"
+	"sato/src/arm"
 	"sort"
 	"time"
 
@@ -56,11 +57,35 @@ func main() {
 					return nil
 				},
 			},
+			{
+				Name:  "shift",
+				Usage: "translate ARM to Terraform",
+				Action: func(*cli.Context) error {
+					err := arm.Parse(file, destination)
+					return err
+				},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:        "file",
+						Aliases:     []string{"f"},
+						Usage:       "Arm file to parse",
+						Required:    true,
+						Destination: &file,
+					},
+					&cli.StringFlag{
+						Name:        "destination",
+						Aliases:     []string{"d"},
+						Usage:       "Destination to write Terraform",
+						Value:       ".sato",
+						Destination: &destination,
+					},
+				},
+			},
 		},
 		Name:     "sato",
 		Usage:    "Translate Cloudformation to Terraform",
 		Compiled: time.Time{},
-		Authors:  []*cli.Author{{Name: "James Woolfenden", Email: "support@bridgecrew.io"}},
+		Authors:  []*cli.Author{{Name: "James Woolfenden", Email: "jim.wolf@duck.com"}},
 		Version:  sato.Version,
 	}
 	sort.Sort(cli.FlagsByName(app.Flags))

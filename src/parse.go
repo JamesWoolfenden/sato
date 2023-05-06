@@ -4,18 +4,15 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
-	"time"
 
 	"github.com/awslabs/goformation/v7"
 	"github.com/awslabs/goformation/v7/cloudformation"
-	"github.com/awslabs/goformation/v7/cloudformation/tags"
 	"github.com/rs/zerolog/log"
 )
 
@@ -44,63 +41,29 @@ func Parse(file string, destination string) error {
 	}
 
 	funcMap := tftemplate.FuncMap{
-		"Array":        array,
-		"ArrayReplace": arrayReplace,
-		"Contains":     contains,
-		"Sprint":       sprint,
-		"Decode64":     decode64,
-		"Boolean":      boolean,
-		"Dequote":      dequote,
-		"Quote":        quote,
-		"Demap": func(str string) []string {
-			str = strings.Replace(str, "{", "", -1)
-			str = strings.Replace(str, "}", "", -1)
-			str = strings.Replace(str, "\"", "", -1)
-			str = strings.Replace(str, ":", "", -1)
-			str = strings.Replace(str, " ", "", -1)
-			return strings.Split(str, ",")
-		},
-		"ToUpper": strings.ToUpper,
-		"ToLower": lower,
-		"Deref":   func(str *string) string { return *str },
-		"Nil":     nill,
-		"Nild":    nild,
+		"Array":        Array,
+		"ArrayReplace": ArrayReplace,
+		"Contains":     Contains,
+		"Sprint":       Sprint,
+		"Decode64":     Decode64,
+		"Boolean":      Boolean,
+		"Dequote":      Dequote,
+		"Quote":        Quote,
+		"Demap":        Demap,
+		"ToUpper":      strings.ToUpper,
+		"ToLower":      Lower,
+		"Deref":        func(str *string) string { return *str },
+		"Nil":          Nill,
+		"Nild":         Nild,
 		"Marshal": func(v interface{}) string {
 			a, _ := json.Marshal(v)
 			return string(a)
 		},
-		"Split":   split,
-		"Replace": replace,
-		"Tags": func(v []tags.Tag) string {
-			var temp string
-			for _, item := range v {
-				if item.Key != "" {
-					temp = temp + "\t\"" + item.Key + "\"" + "=" + "\"" + item.Value + "\"" + "\n"
-				}
-			}
-			return temp
-		},
-		"RandomString": func(n int) string {
-			rand.Seed(time.Now().UnixNano())
-			var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-			b := make([]rune, n)
-			for i := range b {
-				b[i] = letters[rand.Intn(len(letters))]
-			}
-			return string(b)
-		},
-		"Map": func(myMap map[string]string) string {
-			result := "{ \n"
-			for item, stuff := range myMap {
-				result = result + "\t\"" + item + "\"" + "=" + "\"" + stuff + "\"\n"
-			}
-			result = result + " }"
-
-			return result
-		},
-		"Snake":   snake,
-		"Kebab":   kebab,
-		"ZipFile": zipfile,
+		"Split":        Split,
+		"Replace":      Replace,
+		"Tags":         Tags,
+		"RandomString": RandomString,
+		"Map":          Map,
 	}
 	_, err = ParseVariables(template, funcMap, destination)
 	if err != nil {
@@ -134,7 +97,7 @@ func ParseVariables(template *cloudformation.Template, funcMap tftemplate.FuncMa
 		myVariable = GetVariableDefault(param, myVariable)
 
 		var output bytes.Buffer
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
+		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
 		if err != nil {
 			return nil, err
 		}
@@ -171,24 +134,24 @@ func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataRe
 		myVariable.Type = "list(string)"
 	case "List<AWS::EC2::AvailabilityZone::Name>":
 		myVariable.Type = "list(string)"
-		DataResources, m = add(dataAvailabilityZone, DataResources, m)
+		DataResources, m = Add(dataAvailabilityZone, DataResources, m)
 	case "AWS::EC2::Subnet::Id":
 		myVariable.Type = "string"
-		DataResources, m = add(dataSubnet, DataResources, m)
+		DataResources, m = Add(dataSubnet, DataResources, m)
 	case "AWS::EC2::KeyPair::KeyName":
 		myVariable.Type = "string"
-		DataResources, m = add(dataKeyPair, DataResources, m)
+		DataResources, m = Add(dataKeyPair, DataResources, m)
 	case "AWS::EC2::VPC::Id", "List<AWS::EC2::VPC::Id>":
 		myVariable.Type = "string"
-		DataResources, m = add(dataVpc, DataResources, m)
+		DataResources, m = Add(dataVpc, DataResources, m)
 	case "AWS::EC2::SecurityGroup::Id":
 		myVariable.Type = "string"
-		DataResources, m = add(dataSecurityGroup, DataResources, m)
+		DataResources, m = Add(dataSecurityGroup, DataResources, m)
 	case "AWS::EC2::Image::Id", "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>":
 		myVariable.Type = "string"
 	case "AWS::Region":
 		myVariable.Type = "string"
-		DataResources, m = add(dataRegion, DataResources, m)
+		DataResources, m = Add(dataRegion, DataResources, m)
 	case "List<AWS::EC2::Subnet::Id>":
 		myVariable.Type = "list(string)"
 	case "Number":
@@ -197,7 +160,7 @@ func GetVariableType(param cloudformation.Parameter, myVariable Variable, DataRe
 		log.Info().Msgf("Variable %s", param.Type)
 	}
 
-	DataResources, m = add(provider, DataResources, m)
+	DataResources, m = Add(provider, DataResources, m)
 	return DataResources, myVariable, m
 }
 

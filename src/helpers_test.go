@@ -20,8 +20,8 @@ func Test_replace(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := replace(tt.args.input, tt.args.from, tt.args.to); got != tt.want {
-				t.Errorf("replace() = %v, want %v", got, tt.want)
+			if got := Replace(tt.args.input, tt.args.from, tt.args.to); got != tt.want {
+				t.Errorf("Replace() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -45,17 +45,17 @@ func Test_add(t *testing.T) {
 		want  []string
 		want1 map[string]bool
 	}{
-		{"add-empty", args{"test", added, m}, after, afterMap},
+		{"Add-empty", args{"test", added, m}, after, afterMap},
 		{"no-change", args{"test", exists, afterMap}, after, afterMap},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := add(tt.args.s, tt.args.a, tt.args.m)
+			got, got1 := Add(tt.args.s, tt.args.a, tt.args.m)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("add() got = %v, want %v", got, tt.want)
+				t.Errorf("Add() got = %v, want %v", got, tt.want)
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("add() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("Add() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -76,8 +76,8 @@ func Test_split(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := split(tt.args.source, tt.args.separator); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("split() = %v, want %v", got, tt.want)
+			if got := Split(tt.args.source, tt.args.separator); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Split() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -92,12 +92,12 @@ func Test_dequote(t *testing.T) {
 		args args
 		want string
 	}{
-		{"dequote", args{"This is a \"pain\""}, "This is a pain"},
+		{"Dequote", args{"This is a \"pain\""}, "This is a pain"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := dequote(tt.args.target); got != tt.want {
-				t.Errorf("dequote() = %v, want %v", got, tt.want)
+			if got := Dequote(tt.args.target); got != tt.want {
+				t.Errorf("Dequote() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -120,8 +120,8 @@ func Test_boolean(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := boolean(tt.args.test); got != tt.want {
-				t.Errorf("boolean() = %v, want %v", got, tt.want)
+			if got := Boolean(tt.args.test); got != tt.want {
+				t.Errorf("Boolean() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -140,8 +140,8 @@ func Test_decode64(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := decode64(tt.args.str); got != tt.want {
-				t.Errorf("decode64() = %v, want %v", got, tt.want)
+			if got := Decode64(tt.args.str); got != tt.want {
+				t.Errorf("Decode64() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -171,8 +171,8 @@ func Test_sprint(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := sprint(tt.args.unknown); got != tt.want {
-				t.Errorf("sprint() = %v, want %v", got, tt.want)
+			if got := Sprint(tt.args.unknown); got != tt.want {
+				t.Errorf("Sprint() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -191,8 +191,8 @@ func Test_quote(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := quote(tt.args.target); got != tt.want {
-				t.Errorf("quote() = %v, want %v", got, tt.want)
+			if got := Quote(tt.args.target); got != tt.want {
+				t.Errorf("Quote() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -208,12 +208,12 @@ func Test_snake(t *testing.T) {
 		want string
 	}{
 		{"Camel", args{"ThisIsSnakeCasing"}, "this_is_snake_casing"},
-		{"snake", args{"This-Is-Snake-Casing"}, "this_is_snake_casing"},
+		{"Snake", args{"This-Is-Snake-Casing"}, "this_is_snake_casing"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := snake(tt.args.Camel); got != tt.want {
-				t.Errorf("snake() = %v, want %v", got, tt.want)
+			if got := Snake(tt.args.Camel); got != tt.want {
+				t.Errorf("Snake() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -229,12 +229,12 @@ func Test_kebab(t *testing.T) {
 		want string
 	}{
 		{"Camel", args{"ThisIsCamelCasing"}, "this-is-camel-casing"},
-		{"snake", args{"This_Is_Camel_Casing"}, "this-is-camel-casing"},
+		{"Snake", args{"This_Is_Camel_Casing"}, "this-is-camel-casing"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := kebab(tt.args.Camel); got != tt.want {
-				t.Errorf("kebab() = %v, want %v", got, tt.want)
+			if got := Kebab(tt.args.Camel); got != tt.want {
+				t.Errorf("Kebab() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -254,8 +254,8 @@ func Test_lower(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := lower(tt.args.target); got != tt.want {
-				t.Errorf("lower() = %v, want %v", got, tt.want)
+			if got := Lower(tt.args.target); got != tt.want {
+				t.Errorf("Lower() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -276,8 +276,8 @@ func Test_nill(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := nill(tt.args.str); got != tt.want {
-				t.Errorf("nill() = %v, want %v", got, tt.want)
+			if got := Nill(tt.args.str); got != tt.want {
+				t.Errorf("Nill() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -299,8 +299,8 @@ func Test_nild(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := nild(tt.args.str, tt.args.myDefault); got != tt.want {
-				t.Errorf("nild() = %v, want %v", got, tt.want)
+			if got := Nild(tt.args.str, tt.args.myDefault); got != tt.want {
+				t.Errorf("Nild() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -315,7 +315,7 @@ func Test_array(t *testing.T) {
 		args args
 		want string
 	}{
-		{name: "replace",
+		{name: "Replace",
 			args: args{mySlice: []string{"some", "thing", "punt"}},
 			want: "[\n\t\"some\",\t\"thing\",\t\"punt\"\n\t]\n"},
 		{name: "nil",
@@ -324,8 +324,8 @@ func Test_array(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := array(tt.args.mySlice); got != tt.want {
-				t.Errorf("array() = %v, want %v", got, tt.want)
+			if got := Array(tt.args.mySlice); got != tt.want {
+				t.Errorf("Array() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -342,7 +342,7 @@ func Test_arrayReplace(t *testing.T) {
 		args args
 		want string
 	}{
-		{name: "replace",
+		{name: "Replace",
 			args: args{mySlice: []string{"some", "thing", "punt"}, target: "pu", replacement: "ca"},
 			want: "[\n\t\"some\",\t\"thing\",\t\"cant\"\n\t]\n"},
 		{name: "nil",
@@ -351,8 +351,8 @@ func Test_arrayReplace(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := arrayReplace(tt.args.mySlice, tt.args.target, tt.args.replacement); got != tt.want {
-				t.Errorf("arrayReplace() = %v, want %v", got, tt.want)
+			if got := ArrayReplace(tt.args.mySlice, tt.args.target, tt.args.replacement); got != tt.want {
+				t.Errorf("ArrayReplace() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -373,8 +373,8 @@ func Test_contains(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := contains(tt.args.target, tt.args.substring); got != tt.want {
-				t.Errorf("contains() = %v, want %v", got, tt.want)
+			if got := Contains(tt.args.target, tt.args.substring); got != tt.want {
+				t.Errorf("Contains() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -395,8 +395,8 @@ func Test_zipfile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := zipfile(tt.args.code, tt.args.filename, tt.args.runtime); got != tt.want {
-				t.Errorf("zipfile() = %v, want %v", got, tt.want)
+			if got := Zipfile(tt.args.code, tt.args.filename, tt.args.runtime); got != tt.want {
+				t.Errorf("Zipfile() = %v, want %v", got, tt.want)
 			}
 		})
 	}

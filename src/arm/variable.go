@@ -1,4 +1,4 @@
-package sato
+package arm
 
 import (
 	_ "embed" //required for embed
