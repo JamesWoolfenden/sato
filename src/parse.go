@@ -64,6 +64,9 @@ func Parse(file string, destination string) error {
 		"Tags":         Tags,
 		"RandomString": RandomString,
 		"Map":          Map,
+		"Snake":        Snake,
+		"Kebab":        Kebab,
+		"ZipFile":      Zipfile,
 	}
 	_, err = ParseVariables(template, funcMap, destination)
 	if err != nil {

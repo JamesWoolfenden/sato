@@ -38,7 +38,7 @@ func Parse(file string, destination string) error {
 	if err != nil {
 		return err
 	}
-	
+
 	funcMap := tftemplate.FuncMap{
 		"Array":        sato.Array,
 		"ArrayReplace": sato.ArrayReplace,
