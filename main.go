@@ -6,6 +6,7 @@ import (
 	"os"
 	sato "sato/src"
 	"sato/src/arm"
+	"sato/src/see"
 	"sort"
 	"time"
 
@@ -18,6 +19,7 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	var file string
 	var destination string
+	var resource string
 
 	app := &cli.App{
 		EnableBashCompletion: true,
@@ -58,7 +60,7 @@ func main() {
 				},
 			},
 			{
-				Name:  "shift",
+				Name:  "bisect",
 				Usage: "translate ARM to Terraform",
 				Action: func(*cli.Context) error {
 					err := arm.Parse(file, destination)
@@ -78,6 +80,26 @@ func main() {
 						Usage:       "Destination to write Terraform",
 						Value:       ".sato",
 						Destination: &destination,
+					},
+				},
+			},
+			{
+				Name:  "see",
+				Usage: "shows equivalent Terraform resource",
+				Action: func(*cli.Context) error {
+					result, err := see.Lookup(resource)
+					if result != nil {
+						log.Print(*result)
+					}
+					return err
+				},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:        "resource",
+						Aliases:     []string{"r"},
+						Usage:       "target resource for conversion",
+						Required:    true,
+						Destination: &resource,
 					},
 				},
 			},
