@@ -120,6 +120,13 @@ func Lookup(resource string) (*string, error) {
 		"AWS::ServiceDiscovery::Service":                   "aws_service_discovery_service",
 		"AWS::StepFunctions::StateMachine":                 "aws_sfn_state_machine",
 		"AWS::WAFv2::WebACLAssociation":                    "aws_wafv2_webacl_association",
+		"Microsoft.Storage/storageAccounts":                "azurerm_storage_account",
+		"Microsoft.Network/publicIPAddresses":              "azurerm_public_ip",
+		"Microsoft.Network/networkSecurityGroups":          "azurerm_network_security_group",
+		"Microsoft.Network/virtualNetworks":                "azurerm_virtual_network ",
+		"Microsoft.Network/networkInterfaces":              "azurerm_network_interface",
+		"Microsoft.Compute/virtualMachines":                "azurerm_virtual_machine",
+		"Microsoft.Compute/virtualMachines/extensions":     "azurerm_virtual_machine_extension",
 	}
 	result := Lookup[resource]
 	var err error

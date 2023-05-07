@@ -9,11 +9,11 @@
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 [![Github All Releases](https://img.shields.io/github/downloads/jameswoolfenden/sato/total.svg)](https://github.com/JamesWoolfenden/sato/releases)
 
-Converts CloudFormation into Terraform. In Go, quickerly.
+Converts CloudFormation (and now also ARM) into Terraform. In Go, quickerly.
 
 ## Install
 
-Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.0.14> or:
+Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.1.1> or:
 
 Compile locally:
 
@@ -88,6 +88,28 @@ Terraform used the selected providers to generate the following execution plan. 
 ...
 Plan: 12 to add, 0 to change, 0 to destroy.
 ...
+```
+
+### See
+
+This tells you the equivalent resource required given a CF ..... or an ARM resource;
+
+```bash
+$ sato see -r Microsoft.Storage/storageAccounts
+azurerm_storage_account
+```
+
+### *ARM and Azure - bisect coming soon*
+
+What? You've got these legacy ARM templates, and you'd dearly love to drop them, but you really don't fancy Bicep
+and the rework.
+I got you covered:
+
+```bash
+$ sato bisect -f E:\code\sato\examples\arm\microsoft.compute\vm-simple-windows\azuredeploy.json
+12:08PM INF Created E:\Code\sato\.sato\variables.tf
+12:08PM INF Created E:\Code\sato\.sato\locals.tf
+
 ```
 
 What's missing?

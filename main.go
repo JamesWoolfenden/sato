@@ -89,7 +89,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					result, err := see.Lookup(resource)
 					if result != nil {
-						log.Print(*result)
+						fmt.Print(*result)
 					}
 					return err
 				},
