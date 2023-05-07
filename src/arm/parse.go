@@ -8,7 +8,9 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	sato "sato/src"
+	"sato/src/see"
 	"strings"
 	tftemplate "text/template"
 )
@@ -217,7 +219,7 @@ func parseMap(myResource map[string]interface{}, matches []string) (map[string]i
 
 		switch attribute.(type) {
 		case string:
-			myResource[name] = parseString(matches, attribute.(string))
+			myResource[name] = *parseString(matches, attribute.(string))
 		case map[string]interface{}:
 			var err error
 			myResource[name], err = parseMap(attribute.(map[string]interface{}), matches)
@@ -237,7 +239,10 @@ func parseMap(myResource map[string]interface{}, matches []string) (map[string]i
 				}
 
 			}
-			attribute = myArray
+			myResource[name] = myArray
+		case float64, bool:
+			//it's fine
+
 		default:
 			log.Print(attribute)
 		}
@@ -245,7 +250,11 @@ func parseMap(myResource map[string]interface{}, matches []string) (map[string]i
 	return myResource, nil
 }
 
-func parseString(matches []string, newAttribute string) string {
+func parseString(matches []string, newAttribute string) *string {
+	newAttribute, err := translate(newAttribute)
+	if err != nil {
+		return nil
+	}
 	if contains(matches, newAttribute) {
 		if strings.Contains(newAttribute, "parameters") {
 			newAttribute = strings.Replace(newAttribute, "parameters('", "var.", -1)
@@ -258,7 +267,7 @@ func parseString(matches []string, newAttribute string) string {
 		newAttribute = strings.Replace(newAttribute, "[", "", 1)
 		newAttribute = strings.Replace(newAttribute, "]", "", 1)
 	}
-	return newAttribute
+	return &newAttribute
 }
 
 func contains(s []string, str string) bool {
@@ -269,4 +278,43 @@ func contains(s []string, str string) bool {
 	}
 
 	return false
+}
+
+func translate(target string) (string, error) {
+	if strings.Contains(target, "reference") {
+		log.Printf("skipped %s", target)
+	} else {
+		s, err := handleResource(target)
+		if err != nil {
+			return s, err
+		}
+		return s, nil
+	}
+
+	return target, nil
+}
+
+func handleResource(target string) (string, error) {
+	if strings.Contains(target, "resourceId") {
+		var re = regexp.MustCompile(`\[resourceId\((.*)\)\]`)
+		matches := re.FindStringSubmatch(target)
+		splitten := strings.Split(matches[1], ",")
+		resourceName := splitten[1]
+		var resourceMatch []string
+		if strings.Contains(splitten[1], "parameters") {
+			var myRe = regexp.MustCompile(`parameters\('(.*)'\)`)
+			resourceMatch = myRe.FindStringSubmatch(resourceName)
+		}
+
+		if strings.Contains(splitten[1], "variables") {
+			var myRe = regexp.MustCompile(`variables\('(.*)'\)`)
+			resourceMatch = myRe.FindStringSubmatch(resourceName)
+		}
+		resource, err := see.Lookup(strings.Replace(splitten[0], "'", "", 2))
+		if err != nil {
+			return "", err
+		}
+		return *resource + "." + resourceMatch[1], nil
+	}
+	return "", nil
 }
