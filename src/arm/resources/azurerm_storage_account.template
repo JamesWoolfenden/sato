@@ -1,12 +1,12 @@
 resource "azurerm_storage_account" "{{.item}}" {
 {{- range $a, $i:= .resource.sku}}
-  account_replication_type = "{{ SplitOn $i "_" 1 }}"
-  account_tier             = "{{ SplitOn $i "_" 0 }}"
+  account_replication_type = {{ SplitOn $i "_" 1|Quote }}
+  account_tier             = {{ SplitOn $i "_" 0|Quote }}
 {{- end}}
-  location                 = {{ .resource.location }}
-  name                     = {{ .resource.name }}
+  location                 = {{ .resource.location|Quote }}
+  name                     = {{ .resource.name|Quote }}
 {{- if .resource.resourceGroupName }}
-  resource_group_name      = "{{ .resource.resourceGroupName }}"
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}

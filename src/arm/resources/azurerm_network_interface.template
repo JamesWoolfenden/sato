@@ -1,9 +1,14 @@
 resource "azurerm_network_interface" "{{ .item}}" {
-  location                 = {{ .resource.location }}
-  name                     = {{ .resource.name }}
+  location                 = {{ .resource.location|Quote }}
+  name                     = {{ .resource.name|Quote }}
 {{- if .resource.resourceGroupName }}
-  resource_group_name      = "{{ .resource.resourceGroupName }}"
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
+  ip_configuration {
+    name                          = "internal"
+    subnet_id                     = azurerm_subnet.example.id
+    private_ip_address_allocation = "Dynamic"
+  }
 }

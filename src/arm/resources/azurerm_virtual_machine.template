@@ -1,10 +1,9 @@
-
 resource "azurerm_virtual_machine" "{{.item}}" {
-  location                 = {{ .resource.location }}
-  name                     = {{ .resource.name }}
+  location                 = {{ .resource.location|Quote }}
+  name                     = {{ .resource.name|Quote }}
   network_interface_ids = []
 {{- if .resource.resourceGroupName }}
-  resource_group_name      = "{{ .resource.resourceGroupName }}"
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}

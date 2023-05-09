@@ -1,9 +1,26 @@
 resource "azurerm_network_security_group" "{{ .item }}" {
-  location                 = {{ .resource.location }}
-  name                     = {{ .resource.name }}
+  location                 = {{ .resource.location|Quote }}
+  name                     = {{ .resource.name|Quote }}
 {{- if .resource.resourceGroupName }}
-  resource_group_name      = "{{ .resource.resourceGroupName }}"
+  resource_group_name      = "{{ .resource.resourceGroupName|Quote }}"
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+
+{{- if .resource.properties.securityRules}}
+
+ {{- range $a, $i:= .resource.properties.securityRules}}
+  security_rule {
+     name  = {{$i.name|Quote}}
+     priority= {{$i.properties.priority}}
+     direction= {{$i.properties.direction|Quote}}
+     access= {{$i.properties.access|Quote}}
+     protocol= {{$i.properties.protocol|Quote}}
+     source_port_range= {{$i.properties.sourcePortRange|Quote}}
+     destination_port_range= {{$i.properties.destinationPortRange|Quote}}
+     source_address_prefix= {{$i.properties.sourceAddressPrefix|Quote}}
+     destination_address_prefix= {{$i.properties.destinationAddressPrefix|Quote}}
+  }
+ {{- end}}
 {{- end}}
 }
