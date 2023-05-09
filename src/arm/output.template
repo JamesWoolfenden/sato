@@ -1,0 +1,10 @@
+
+output "{{.item}}" {
+{{- if  eq .variable.Type "securestring"}}
+  sensitive   = true
+{{- end }}
+{{- if   .variable.Value}}
+  value     = {{ .variable.Value }}
+{{- end }}
+  description = "{{ .variable.Description }}"
+}

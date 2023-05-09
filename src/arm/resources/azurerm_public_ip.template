@@ -1,0 +1,10 @@
+resource "azurerm_public_ip" "{{ .item }}" {
+  allocation_method   = ""
+  location                 = {{ .resource.location }}
+  name                     = {{ .resource.name }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = "{{ .resource.resourceGroupName }}"
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+}

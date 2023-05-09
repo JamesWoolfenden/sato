@@ -1,0 +1,13 @@
+resource "azurerm_storage_account" "{{.item}}" {
+{{- range $a, $i:= .resource.sku}}
+  account_replication_type = "{{ SplitOn $i "_" 1 }}"
+  account_tier             = "{{ SplitOn $i "_" 0 }}"
+{{- end}}
+  location                 = {{ .resource.location }}
+  name                     = {{ .resource.name }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = "{{ .resource.resourceGroupName }}"
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+}

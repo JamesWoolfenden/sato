@@ -3,6 +3,7 @@ package arm
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -11,6 +12,7 @@ import (
 	"regexp"
 	sato "sato/src"
 	"sato/src/see"
+	"strconv"
 	"strings"
 	tftemplate "text/template"
 )
@@ -61,6 +63,7 @@ func Parse(file string, destination string) error {
 			return string(a)
 		},
 		"Split":        sato.Split,
+		"SplitOn":      sato.SplitOn,
 		"Replace":      sato.Replace,
 		"Tags":         sato.Tags,
 		"RandomString": sato.RandomString,
@@ -70,13 +73,14 @@ func Parse(file string, destination string) error {
 		"ZipFile":      sato.Zipfile,
 	}
 
-	_, err = ParseVariables(result, funcMap, destination)
+	variables, err := ParseVariables(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
 
-	Resources, err := ParseResources(result)
-	log.Print(Resources)
+	_, err = ParseResources(result, funcMap, destination, variables)
+	err = ParseOutputs(result, funcMap, destination)
+
 	if err != nil {
 		return err
 	}
@@ -106,7 +110,13 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			myVar.Type = "string"
 			myVar.Name = name
 			if value != nil {
-				myVar.Default = value.(string)
+				if strings.Contains(value.(string), "()") ||
+					strings.Contains(value.(string), "[") {
+
+					local := "\t" + name + " = " + *parseString(value.(string)) + "\n"
+					locals = locals + local
+					continue
+				}
 			} else {
 				myVar.Default = ""
 			}
@@ -155,13 +165,10 @@ func parseParameters(parameters map[string]interface{}, locals string, funcMap t
 		if myItem["defaultValue"] != nil {
 			var local string
 			//contains function
-			if strings.Contains(myItem["defaultValue"].(string), "()") {
-				switch myItem["defaultValue"].(string) {
-				case "[resourceGroup().location]":
-					local = "\t" + name + " = " + "data.azurerm_resource_group.sato.id" + "\n"
-				default:
-					local = "\t" + name + " = " + myItem["defaultValue"].(string) + "\n"
-				}
+			if strings.Contains(myItem["defaultValue"].(string), "()") ||
+				strings.Contains(myItem["defaultValue"].(string), "[") {
+
+				local = "\t" + name + " = " + *parseString(myItem["defaultValue"].(string)) + "\n"
 				locals = locals + local
 				continue
 			} else {
@@ -190,22 +197,57 @@ func parseParameters(parameters map[string]interface{}, locals string, funcMap t
 }
 
 // ParseResources handles resources in ARM conversion
-func ParseResources(result map[string]interface{}) (map[string]interface{}, error) {
+func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string, variables []sato.Variable) (map[string]interface{}, error) {
 	resources := result["resources"].([]interface{})
 	newResources, err := parseList(resources)
 	if err != nil {
 		return nil, err
 	}
 	result["resources"] = newResources
+
+	for x, resource := range newResources {
+		var output bytes.Buffer
+		var name *string
+		myType := resource.(map[string]interface{})
+		myContent := lookup(myType["type"].(string))
+		item := strings.Replace(myType["name"].(string), "var.", "", 1)
+		first, err := see.Lookup(myType["type"].(string))
+		if err != nil {
+			return nil, err
+		}
+
+		name, err = GetValue(item, variables)
+		if err != nil || name == nil || *name == "" {
+			temp := "sato" + strconv.Itoa(x)
+			name = &temp
+		}
+
+		//needs to pivot on policy template from resource
+		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
+
+		if err != nil {
+			return nil, err
+		}
+
+		_ = tmpl.Execute(&output, sato.M{
+			"resource": resource,
+			"item":     name,
+		})
+
+		err = sato.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return result, nil
 }
 
 func parseList(resources []interface{}) ([]interface{}, error) {
 	var newResources []interface{}
-	matches := []string{"parameters", "variables"}
 	for _, resource := range resources {
 		myResource := resource.(map[string]interface{})
-		myResource, err := parseMap(myResource, matches)
+		myResource, err := parseMap(myResource)
 		if err != nil {
 			return nil, err
 		}
@@ -214,15 +256,15 @@ func parseList(resources []interface{}) ([]interface{}, error) {
 	return newResources, nil
 }
 
-func parseMap(myResource map[string]interface{}, matches []string) (map[string]interface{}, error) {
+func parseMap(myResource map[string]interface{}) (map[string]interface{}, error) {
 	for name, attribute := range myResource {
 
 		switch attribute.(type) {
 		case string:
-			myResource[name] = *parseString(matches, attribute.(string))
+			myResource[name] = *parseString(attribute.(string))
 		case map[string]interface{}:
 			var err error
-			myResource[name], err = parseMap(attribute.(map[string]interface{}), matches)
+			myResource[name], err = parseMap(attribute.(map[string]interface{}))
 			if err != nil {
 				return nil, err
 			}
@@ -231,9 +273,9 @@ func parseMap(myResource map[string]interface{}, matches []string) (map[string]i
 			for index, resource := range myArray {
 				switch resource.(type) {
 				case string:
-					myArray[index] = parseString(matches, resource.(string))
+					myArray[index] = parseString(resource.(string))
 				case map[string]interface{}:
-					myArray[index], _ = parseMap(resource.(map[string]interface{}), matches)
+					myArray[index], _ = parseMap(resource.(map[string]interface{}))
 				case []interface{}:
 					log.Print(resource)
 				}
@@ -250,34 +292,70 @@ func parseMap(myResource map[string]interface{}, matches []string) (map[string]i
 	return myResource, nil
 }
 
-func parseString(matches []string, newAttribute string) *string {
+func parseString(newAttribute string) *string {
 	newAttribute, err := translate(newAttribute)
 	if err != nil {
 		return nil
 	}
-	if contains(matches, newAttribute) {
-		if strings.Contains(newAttribute, "parameters") {
-			newAttribute = strings.Replace(newAttribute, "parameters('", "var.", -1)
-			newAttribute = strings.Replace(newAttribute, "')", "", -1)
-		}
-		if strings.Contains(newAttribute, "variables") {
-			newAttribute = strings.Replace(newAttribute, "variables('", "var.", -1)
-			newAttribute = strings.Replace(newAttribute, "')", "", -1)
-		}
+
+	var matches = []string{"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
+		"substring"}
+
+	if what, found := contains(matches, newAttribute); found {
+		newAttribute = replace(matches, newAttribute, what)
 		newAttribute = strings.Replace(newAttribute, "[", "", 1)
 		newAttribute = strings.Replace(newAttribute, "]", "", 1)
 	}
 	return &newAttribute
 }
 
-func contains(s []string, str string) bool {
+func replace(matches []string, newAttribute string, what *string) string {
+	var Attribute string
+	switch *what {
+	case "parameters":
+		{
+			Attribute = strings.Replace(newAttribute, "parameters('", "var.", -1)
+			Attribute = strings.Replace(Attribute, "')", "", -1)
+		}
+	case "variables":
+		{
+			Attribute = strings.Replace(newAttribute, "variables('", "var.", -1)
+			Attribute = strings.Replace(Attribute, "')", "", -1)
+		}
+	case "toLower":
+		{
+			Attribute = strings.Replace(newAttribute, "toLower", "lower", -1)
+		}
+	case "resourceGroup().location":
+		{
+			Attribute = strings.Replace(newAttribute, "resourceGroup().location",
+				"data.azurerm_resource_group.sato.name", -1)
+		}
+	case "resourceGroup().id":
+		{
+			Attribute = strings.Replace(newAttribute, "resourceGroup().id",
+				"data.azurerm_resource_group.sato.id", -1)
+		}
+	case "substring":
+		{
+			Attribute = strings.Replace(newAttribute, "substring",
+				"substr", -1)
+		}
+	}
+	if again, still := contains(matches, Attribute); still {
+		Attribute = replace(matches, Attribute, again)
+	}
+	return Attribute
+}
+
+func contains(s []string, str string) (*string, bool) {
 	for _, v := range s {
 		if strings.Contains(str, v) {
-			return true
+			return &v, true
 		}
 	}
 
-	return false
+	return nil, false
 }
 
 func translate(target string) (string, error) {
@@ -295,10 +373,26 @@ func translate(target string) (string, error) {
 }
 
 func handleResource(target string) (string, error) {
+	var attribute string
+	if strings.Contains(target, "[") {
+		var re = regexp.MustCompile(`\[(.*)\]`)
+		Match := re.FindStringSubmatch(target)
+		target = Match[1]
+	}
+
+	if strings.Contains(target, "reference") {
+		var re = regexp.MustCompile(`reference\((.*)\)`)
+		Match := re.ReplaceAllString(target, "")
+		attribute = Match
+	}
+
 	if strings.Contains(target, "resourceId") {
-		var re = regexp.MustCompile(`\[resourceId\((.*)\)\]`)
-		matches := re.FindStringSubmatch(target)
-		splitten := strings.Split(matches[1], ",")
+		var re = regexp.MustCompile(`resourceId\((.*)\)`)
+		myMatches := re.FindStringSubmatch(target)
+		if myMatches == nil {
+			return target, errors.New("[resourceId] not found")
+		}
+		splitten := strings.Split(myMatches[1], ",")
 		resourceName := splitten[1]
 		var resourceMatch []string
 		if strings.Contains(splitten[1], "parameters") {
@@ -314,7 +408,48 @@ func handleResource(target string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return *resource + "." + resourceMatch[1], nil
+		return *resource + "." + resourceMatch[1] + attribute, nil
 	}
-	return "", nil
+	return target, nil
+}
+
+func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+	outputs := result["outputs"].(map[string]interface{})
+
+	var All string
+	for name, value := range outputs {
+		var myVar sato.Output
+		myVar.Type = "string"
+		myVar.Name = name
+		temp := value.(map[string]interface{})
+		myVar.Value, _ = handleResource(temp["value"].(string))
+
+		var output bytes.Buffer
+		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(OutputFile))
+		if err != nil {
+			return err
+		}
+		_ = tmpl.Execute(&output, m{
+			"variable": myVar,
+			"item":     name,
+		})
+		All = All + output.String()
+	}
+
+	err := sato.Write(All, destination, "outputs")
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func GetValue(item string, variables []sato.Variable) (*string, error) {
+	for _, x := range variables {
+		if x.Name == item {
+			return &x.Default, nil
+		}
+	}
+	something := fmt.Errorf("%s Not found", item)
+	return nil, something
 }

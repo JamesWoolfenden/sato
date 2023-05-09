@@ -1,0 +1,12 @@
+
+resource "azurerm_virtual_machine" "{{.item}}" {
+  location                 = {{ .resource.location }}
+  name                     = {{ .resource.name }}
+  network_interface_ids = []
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = "{{ .resource.resourceGroupName }}"
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  vm_size               = ""
+}

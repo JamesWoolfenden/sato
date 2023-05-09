@@ -27,6 +27,13 @@ type Variable struct {
 	Name        string
 }
 
+type Output struct {
+	Description string
+	Type        string
+	Value       string
+	Name        string
+}
+
 // Parse turn CFN into Terraform
 func Parse(file string, destination string) error {
 	// Open a template from file (can be JSON or YAML)
@@ -60,6 +67,7 @@ func Parse(file string, destination string) error {
 			return string(a)
 		},
 		"Split":        Split,
+		"SplitOn":      SplitOn,
 		"Replace":      Replace,
 		"Tags":         Tags,
 		"RandomString": RandomString,

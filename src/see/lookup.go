@@ -125,7 +125,7 @@ func Lookup(resource string) (*string, error) {
 		"Microsoft.Network/networkInterfaces":              "azurerm_network_interface",
 		"Microsoft.Network/networkSecurityGroups":          "azurerm_network_security_group",
 		"Microsoft.Network/publicIPAddresses":              "azurerm_public_ip",
-		"Microsoft.Network/virtualNetworks":                "azurerm_virtual_network ",
+		"Microsoft.Network/virtualNetworks":                "azurerm_virtual_network",
 		"Microsoft.Storage/storageAccounts":                "azurerm_storage_account",
 		"Microsoft.Network/virtualNetworks/subnets":        "azurerm_subnet",
 	}

@@ -6,3 +6,6 @@ import (
 
 //go:embed variable.template
 var VariableFile []byte
+
+//go:embed output.template
+var OutputFile []byte

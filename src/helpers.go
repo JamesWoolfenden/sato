@@ -34,6 +34,15 @@ func Split(source string, separator string) []string {
 	return strings.Split(source, separator)
 }
 
+// SplitOn is a template function
+func SplitOn(source string, separator string, index int) string {
+	splits := strings.Split(source, separator)
+	if len(splits) >= index+1 {
+		return splits[index]
+	}
+	return ""
+}
+
 // Dequote is a template function
 func Dequote(target string) string {
 	return strings.Replace(target, "\"", "", -1)
