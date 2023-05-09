@@ -226,7 +226,8 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
 
 		if err != nil {
-			return nil, err
+			log.Printf("failed at %s  for %s %s", err, *first, *name)
+			continue
 		}
 
 		_ = tmpl.Execute(&output, sato.M{
@@ -299,7 +300,7 @@ func parseString(newAttribute string) *string {
 	}
 
 	var matches = []string{"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
-		"substring"}
+		"substring", "format", "uniqueString"}
 
 	if what, found := contains(matches, newAttribute); found {
 		newAttribute = replace(matches, newAttribute, what)
@@ -312,6 +313,18 @@ func parseString(newAttribute string) *string {
 func replace(matches []string, newAttribute string, what *string) string {
 	var Attribute string
 	switch *what {
+	case "uniqueString":
+		{
+			var re = regexp.MustCompile(`uniqueString\((.*?)\)`) //format('{0}/{1}',
+			Match := re.ReplaceAllString(newAttribute, "substr(uuid(), 0, 8)")
+			Attribute = Match
+		}
+	case "format":
+		{
+			var re = regexp.MustCompile(`format\('(.*)',`) //format('{0}/{1}',
+			Match := re.ReplaceAllString(newAttribute, "concat(")
+			Attribute = Match
+		}
 	case "parameters":
 		{
 			Attribute = strings.Replace(newAttribute, "parameters('", "var.", -1)
@@ -329,7 +342,7 @@ func replace(matches []string, newAttribute string, what *string) string {
 	case "resourceGroup().location":
 		{
 			Attribute = strings.Replace(newAttribute, "resourceGroup().location",
-				"data.azurerm_resource_group.sato.name", -1)
+				"data.azurerm_resource_group.sato.location", -1)
 		}
 	case "resourceGroup().id":
 		{
@@ -413,6 +426,7 @@ func handleResource(target string) (string, error) {
 	return target, nil
 }
 
+// ParseOutputs writes out to outputs.tf
 func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
 	outputs := result["outputs"].(map[string]interface{})
 
@@ -444,6 +458,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 	return nil
 }
 
+// GetValue gets from variables
 func GetValue(item string, variables []sato.Variable) (*string, error) {
 	for _, x := range variables {
 		if x.Name == item {

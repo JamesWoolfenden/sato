@@ -1,5 +1,9 @@
 resource "azurerm_virtual_network" "{{.item}}" {
+{{- if .resource.location}}
   location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
   name                     = {{ .resource.name|Quote }}
 {{- if .resource.resourceGroupName }}
   resource_group_name      = {{ .resource.resourceGroupName|Quote }}

@@ -1,14 +1,21 @@
 resource "azurerm_network_interface" "{{ .item}}" {
+{{- if .resource.location}}
   location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
   name                     = {{ .resource.name|Quote }}
 {{- if .resource.resourceGroupName }}
   resource_group_name      = {{ .resource.resourceGroupName|Quote }}
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
+{{- range $x, $i:= .resource.properties.ipConfigurations}}
   ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.example.id
-    private_ip_address_allocation = "Dynamic"
+    name                          = {{ $i.name |Quote}}
+ subnet_id                     = {{ index $i.properties.subnet 2|Quote}}
+    private_ip_address_allocation = {{ index $i.properties.privateIPAllocationMethod 0|Quote}}
   }
+{{- end}}
+  depends_on=[  {{Deref .resource.dependsOn }}]
 }

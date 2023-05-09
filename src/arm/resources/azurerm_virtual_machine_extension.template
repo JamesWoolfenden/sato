@@ -1,7 +1,7 @@
 resource "azurerm_virtual_machine_extension" "{{.item}}" {
   name                     = {{ .resource.name |Quote}}
-  publisher            = ""
-  type                 = ""
-  type_handler_version = ""
-  virtual_machine_id   = ""
+  publisher            = {{.resource.properties.publisher|Quote}}
+  type                 = {{.resource.properties.type|Quote}}
+  type_handler_version = {{.resource.properties.typeHandlerVersion|Quote}}
+  virtual_machine_id   = {{index .resource.dependsOn 0|Quote}}
 }

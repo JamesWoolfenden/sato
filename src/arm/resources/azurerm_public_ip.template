@@ -1,5 +1,9 @@
 resource "azurerm_public_ip" "{{ .item }}" {
+{{- if .resource.location}}
   location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
   name                     = {{ .resource.name|Quote }}
 {{- range $a, $j:= .resource.sku}}
   sku                      = {{ $j|Quote }}
