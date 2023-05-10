@@ -5,11 +5,16 @@ resource "azurerm_virtual_machine" "{{.item}}" {
   location                 = data.azurerm_resource_group.sato.location
 {{- end }}
   name                     = {{ .resource.name|Quote }}
-  network_interface_ids = []
 {{- if .resource.resourceGroupName }}
   resource_group_name      = {{ .resource.resourceGroupName|Quote }}
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
-  vm_size               = ""
+  vm_size               = {{.resource.properties.hardwareProfile.vmSize}}
+  network_interface_ids = [{{- range $x, $z:= .resource.properties.networkProfile.networkInterfaces}} {{$z.id}}, {{- end}}]
+  boot_diagnostics {
+    enabled    = {{ .resource.properties.diagnosticsProfile.bootDiagnostics.enabled}}
+    storage_uri= {{ .resource.properties.diagnosticsProfile.bootDiagnostics.storageUri}}
+  }
+  depends_on=[  {{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 }

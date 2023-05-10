@@ -13,9 +13,9 @@ resource "azurerm_network_interface" "{{ .item}}" {
 {{- range $x, $i:= .resource.properties.ipConfigurations}}
   ip_configuration {
     name                          = {{ $i.name |Quote}}
- subnet_id                     = {{ index $i.properties.subnet 2|Quote}}
-    private_ip_address_allocation = {{ index $i.properties.privateIPAllocationMethod 0|Quote}}
+    subnet_id                     = {{ $i.properties.subnet.id}}
+    private_ip_address_allocation = {{ $i.properties.privateIPAllocationMethod|Quote }}
   }
 {{- end}}
-  depends_on=[  {{Deref .resource.dependsOn }}]
+  depends_on=[  {{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 }

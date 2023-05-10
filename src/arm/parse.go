@@ -482,5 +482,28 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 		newResults = append(newResults, inside)
 	}
 	results["resources"] = newResults
+
+	paraVariables := results["variables"].(map[string]interface{})
+	locals := make(map[string]interface{})
+	for item, result := range paraVariables {
+		switch result.(type) {
+		case string:
+			{
+				if strings.Contains(result.(string), "[") {
+					locals[item] = result
+				}
+			}
+		default:
+			jasoned, _ := json.Marshal(result)
+			if strings.Contains(string(jasoned), "[") {
+				locals[item] = string(jasoned)
+			}
+
+		}
+
+		//needs a data principal for data sources assumed
+		//need to find
+	}
+	results["locals"] = locals
 	return results
 }
