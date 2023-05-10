@@ -15,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	tftemplate "text/template"
+
+	"golang.org/x/exp/maps"
 )
 
 type m map[string]interface{}
@@ -73,6 +75,7 @@ func Parse(file string, destination string) error {
 		"ZipFile":      sato.Zipfile,
 	}
 
+	result = preprocess(result)
 	variables, err := ParseVariables(result, funcMap, destination)
 	if err != nil {
 		return err
@@ -205,7 +208,7 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	}
 	result["resources"] = newResources
 
-	for x, resource := range newResources {
+	for _, resource := range newResources {
 		var output bytes.Buffer
 		var name *string
 		myType := resource.(map[string]interface{})
@@ -218,7 +221,7 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 		name, err = GetValue(item, variables)
 		if err != nil || name == nil || *name == "" {
-			temp := "sato" + strconv.Itoa(x)
+			temp := myType["resource"].(string)
 			name = &temp
 		}
 
@@ -467,4 +470,17 @@ func GetValue(item string, variables []sato.Variable) (*string, error) {
 	}
 	something := fmt.Errorf("%s Not found", item)
 	return nil, something
+}
+
+func preprocess(results map[string]interface{}) map[string]interface{} {
+	resources := results["resources"].([]interface{})
+	var newResults []interface{}
+	for item, result := range resources {
+		inside := result.(map[string]interface{})
+		counter := map[string]interface{}{"resource": fmt.Sprintf("sato" + strconv.Itoa(item))}
+		maps.Copy(inside, counter)
+		newResults = append(newResults, inside)
+	}
+	results["resources"] = newResults
+	return results
 }
