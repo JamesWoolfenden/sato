@@ -16,5 +16,61 @@ resource "azurerm_virtual_machine" "{{.item}}" {
     enabled    = {{ .resource.properties.diagnosticsProfile.bootDiagnostics.enabled}}
     storage_uri= {{ .resource.properties.diagnosticsProfile.bootDiagnostics.storageUri}}
   }
+{{- if .resource.properties.osProfile}}
+  os_profile {
+      computer_name = {{.resource.properties.osProfile.computerName|Quote}}
+      admin_username= {{.resource.properties.osProfile.adminUsername|Quote}}
+      admin_password= {{.resource.properties.osProfile.adminPassword|Quote}}
+  }
+{{- end}}
+{{- if .resource.properties.storageProfile.dataDisks}}
+{{- range $a, $i:= .resource.properties.storageProfile.dataDisks}}
+  storage_data_disk {
+    name= "data{{- $a}}"
+{{- if $i.caching}}
+    caching      = {{$i.caching|Quote}}
+{{- end}}
+    create_option= {{ $i.createOption|Quote}}
+    disk_size_gb = {{ $i.diskSizeGB}}
+    lun          = {{ $i.lun }}
+{{- if $i.writeAcceleratorEnabled}}
+    write_acclerator_enabled={{$i.writeAcceleratorEnabled|Quote}}
+{{- end}}
+{{- if $i.managedDiskType}}
+    managed_disk_type={{ $i.managedDiskType|Quote}}
+{{- end}}
+{{- if $i.vhdUri}}
+    vhd_uri      = {{$i.vhdUri|Quote}}
+{{- end}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.properties.storageProfile.imageReference }}
+  storage_image_reference {
+    publisher = {{ .resource.properties.storageProfile.imageReference.publisher|Quote }}
+    offer     = {{ .resource.properties.storageProfile.imageReference.offer|Quote }}
+    sku       = {{ .resource.properties.storageProfile.imageReference.sku|Quote }}
+    version   = {{ .resource.properties.storageProfile.imageReference.version|Quote }}
+  }
+{{- end }}
+{{- if .resource.properties.storageProfile.osDisk }}
+{{ $os :=.resource.properties.storageProfile.osDisk}}
+  storage_os_disk {
+{{- if $os.name}}
+    name              = {{ $os.name |Quote}}
+{{- else }}
+    name = "os0"
+{{- end}}
+{{- if $os.caching }}
+    caching           = {{ $os.caching |Quote}}
+{{- end}}
+{{- if $os.createOption}}
+    create_option     = {{ $os.createOption |Quote}}
+{{- end}}
+{{- if $os.managedDisk.storageAccountType}}
+    managed_disk_type = {{ $os.managedDisk.storageAccountType |Quote}}
+{{- end}}
+  }
+{{- end }}
   depends_on=[  {{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 }

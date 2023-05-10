@@ -5,6 +5,7 @@ resource "azurerm_storage_account" "{{.item}}" {
 {{- end}}
   location                 = {{ .resource.location|Quote }}
   name                     = {{ .resource.name|Quote }}
+  account_kind             = {{ .resource.kind|Quote}}
 {{- if .resource.resourceGroupName }}
   resource_group_name      = {{ .resource.resourceGroupName|Quote }}
 {{- else }}

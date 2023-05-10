@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -15,6 +14,8 @@ import (
 	"strconv"
 	"strings"
 	tftemplate "text/template"
+
+	"github.com/rs/zerolog/log"
 
 	"golang.org/x/exp/maps"
 )
@@ -81,7 +82,10 @@ func Parse(file string, destination string) error {
 		return err
 	}
 
-	_, err = ParseResources(result, funcMap, destination, variables)
+	result, err = ParseResources(result, funcMap, destination, variables)
+	if err != nil {
+		return err
+	}
 	err = ParseOutputs(result, funcMap, destination)
 
 	if err != nil {
@@ -93,13 +97,13 @@ func Parse(file string, destination string) error {
 
 // ParseVariables convert ARM Parameters into terraform variables
 func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) ([]sato.Variable, error) {
-	parameters := result["parameters"].(map[string]interface{})
+
 	variables := result["variables"].(map[string]interface{})
 
 	var All string
 	var locals string
 
-	locals, All, myVariables, err := parseParameters(parameters, locals, funcMap, All)
+	locals, All, myVariables, err := parseParameters(result, locals, funcMap, All)
 
 	if err != nil {
 		return myVariables, err
@@ -116,7 +120,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 				if strings.Contains(value.(string), "()") ||
 					strings.Contains(value.(string), "[") {
 
-					local := "\t" + name + " = " + *parseString(value.(string)) + "\n"
+					local := "\t" + name + " = " + *parseString(value.(string), result) + "\n"
 					locals = locals + local
 					continue
 				}
@@ -158,7 +162,8 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	return myVariables, nil
 }
 
-func parseParameters(parameters map[string]interface{}, locals string, funcMap tftemplate.FuncMap, All string) (string, string, []sato.Variable, error) {
+func parseParameters(result map[string]interface{}, locals string, funcMap tftemplate.FuncMap, All string) (string, string, []sato.Variable, error) {
+	parameters := result["parameters"].(map[string]interface{})
 	var myVariables []sato.Variable
 	for name, item := range parameters {
 		var myVariable sato.Variable
@@ -171,7 +176,7 @@ func parseParameters(parameters map[string]interface{}, locals string, funcMap t
 			if strings.Contains(myItem["defaultValue"].(string), "()") ||
 				strings.Contains(myItem["defaultValue"].(string), "[") {
 
-				local = "\t" + name + " = " + *parseString(myItem["defaultValue"].(string)) + "\n"
+				local = "\t" + name + " = " + *parseString(myItem["defaultValue"].(string), result) + "\n"
 				locals = locals + local
 				continue
 			} else {
@@ -202,7 +207,7 @@ func parseParameters(parameters map[string]interface{}, locals string, funcMap t
 // ParseResources handles resources in ARM conversion
 func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string, variables []sato.Variable) (map[string]interface{}, error) {
 	resources := result["resources"].([]interface{})
-	newResources, err := parseList(resources)
+	newResources, err := parseList(resources, result)
 	if err != nil {
 		return nil, err
 	}
@@ -247,11 +252,11 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	return result, nil
 }
 
-func parseList(resources []interface{}) ([]interface{}, error) {
+func parseList(resources []interface{}, result map[string]interface{}) ([]interface{}, error) {
 	var newResources []interface{}
 	for _, resource := range resources {
 		myResource := resource.(map[string]interface{})
-		myResource, err := parseMap(myResource)
+		myResource, err := parseMap(myResource, result)
 		if err != nil {
 			return nil, err
 		}
@@ -260,15 +265,15 @@ func parseList(resources []interface{}) ([]interface{}, error) {
 	return newResources, nil
 }
 
-func parseMap(myResource map[string]interface{}) (map[string]interface{}, error) {
+func parseMap(myResource map[string]interface{}, result map[string]interface{}) (map[string]interface{}, error) {
 	for name, attribute := range myResource {
 
 		switch attribute.(type) {
 		case string:
-			myResource[name] = *parseString(attribute.(string))
+			myResource[name] = *parseString(attribute.(string), result)
 		case map[string]interface{}:
 			var err error
-			myResource[name], err = parseMap(attribute.(map[string]interface{}))
+			myResource[name], err = parseMap(attribute.(map[string]interface{}), result)
 			if err != nil {
 				return nil, err
 			}
@@ -277,9 +282,9 @@ func parseMap(myResource map[string]interface{}) (map[string]interface{}, error)
 			for index, resource := range myArray {
 				switch resource.(type) {
 				case string:
-					myArray[index] = parseString(resource.(string))
+					myArray[index] = parseString(resource.(string), result)
 				case map[string]interface{}:
-					myArray[index], _ = parseMap(resource.(map[string]interface{}))
+					myArray[index], _ = parseMap(resource.(map[string]interface{}), result)
 				case []interface{}:
 					log.Print(resource)
 				}
@@ -296,7 +301,7 @@ func parseMap(myResource map[string]interface{}) (map[string]interface{}, error)
 	return myResource, nil
 }
 
-func parseString(newAttribute string) *string {
+func parseString(newAttribute string, result map[string]interface{}) *string {
 	newAttribute, err := translate(newAttribute)
 	if err != nil {
 		return nil
@@ -306,14 +311,14 @@ func parseString(newAttribute string) *string {
 		"substring", "format", "uniqueString"}
 
 	if what, found := contains(matches, newAttribute); found {
-		newAttribute = replace(matches, newAttribute, what)
+		newAttribute = replace(matches, newAttribute, what, result)
 		newAttribute = strings.Replace(newAttribute, "[", "", 1)
 		newAttribute = strings.Replace(newAttribute, "]", "", 1)
 	}
 	return &newAttribute
 }
 
-func replace(matches []string, newAttribute string, what *string) string {
+func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) string {
 	var Attribute string
 	switch *what {
 	case "uniqueString":
@@ -330,13 +335,35 @@ func replace(matches []string, newAttribute string, what *string) string {
 		}
 	case "parameters":
 		{
-			Attribute = strings.Replace(newAttribute, "parameters('", "var.", -1)
-			Attribute = strings.Replace(Attribute, "')", "", -1)
+			var re = regexp.MustCompile(`parameters\('(.*?)\'\)`)
+			Match := re.FindStringSubmatch(newAttribute)
+			if (Match) != nil {
+				var temp string
+				if IsLocal(Match[1], result) {
+					temp = "local." + Match[1]
+				} else {
+					temp = "var." + Match[1]
+				}
+				Attribute = strings.Replace(newAttribute, Match[0], temp, -1)
+			} else {
+				log.Printf("not found %s", newAttribute)
+			}
 		}
 	case "variables":
 		{
-			Attribute = strings.Replace(newAttribute, "variables('", "var.", -1)
-			Attribute = strings.Replace(Attribute, "')", "", -1)
+			var re = regexp.MustCompile(`variables\('(.*?)\'\)`)
+			Match := re.FindStringSubmatch(newAttribute)
+			if (Match) != nil {
+				var temp string
+				if IsLocal(Match[1], result) {
+					temp = "local." + Match[1]
+				} else {
+					temp = "var." + Match[1]
+				}
+				Attribute = strings.Replace(newAttribute, Match[0], temp, -1)
+			} else {
+				log.Printf("not found %s", newAttribute)
+			}
 		}
 	case "toLower":
 		{
@@ -359,33 +386,9 @@ func replace(matches []string, newAttribute string, what *string) string {
 		}
 	}
 	if again, still := contains(matches, Attribute); still {
-		Attribute = replace(matches, Attribute, again)
+		Attribute = replace(matches, Attribute, again, result)
 	}
 	return Attribute
-}
-
-func contains(s []string, str string) (*string, bool) {
-	for _, v := range s {
-		if strings.Contains(str, v) {
-			return &v, true
-		}
-	}
-
-	return nil, false
-}
-
-func translate(target string) (string, error) {
-	if strings.Contains(target, "reference") {
-		log.Printf("skipped %s", target)
-	} else {
-		s, err := handleResource(target)
-		if err != nil {
-			return s, err
-		}
-		return s, nil
-	}
-
-	return target, nil
 }
 
 func handleResource(target string) (string, error) {
@@ -504,6 +507,23 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 		//needs a data principal for data sources assumed
 		//need to find
 	}
+
+	paraParameters := results["parameters"].(map[string]interface{})
+	newLocals := make(map[string]interface{})
+	for item, result := range paraParameters {
+		myResult := result.(map[string]interface{})
+		_, ok := myResult["defaultValue"]
+		if ok {
+			defaultValue := myResult["defaultValue"].(string)
+			if strings.Contains(defaultValue, "[") {
+				newLocals[item] = defaultValue
+			}
+		} else {
+			continue
+		}
+
+	}
+	maps.Copy(locals, newLocals)
 	results["locals"] = locals
 	return results
 }
