@@ -308,7 +308,7 @@ func parseString(newAttribute string, result map[string]interface{}) *string {
 	}
 
 	var matches = []string{"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
-		"substring", "format", "uniqueString"}
+		"substring", "format('", "uniqueString"}
 
 	if what, found := contains(matches, newAttribute); found {
 		newAttribute = replace(matches, newAttribute, what, result)
@@ -327,10 +327,11 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 			Match := re.ReplaceAllString(newAttribute, "substr(uuid(), 0, 8)")
 			Attribute = Match
 		}
-	case "format":
+	case "format('":
 		{
-			var re = regexp.MustCompile(`format\('(.*)',`) //format('{0}/{1}',
-			Match := re.ReplaceAllString(newAttribute, "concat(")
+			var re = regexp.MustCompile(`{.}`) //format('{0}/{1}',
+			Match := re.ReplaceAllString(newAttribute, "%%s")
+			Match = strings.Replace(Match, "'", "\"", -1)
 			Attribute = Match
 		}
 	case "parameters":
@@ -383,6 +384,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			Attribute = strings.Replace(newAttribute, "substring",
 				"substr", -1)
+			Attribute = strings.Replace(Attribute, "'", "\"", -1)
 		}
 	}
 	if again, still := contains(matches, Attribute); still {
