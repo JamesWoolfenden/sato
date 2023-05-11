@@ -218,17 +218,17 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		var name *string
 		myType := resource.(map[string]interface{})
 		myContent := lookup(myType["type"].(string))
-		item := strings.Replace(myType["name"].(string), "var.", "", 1)
+		//item := strings.Replace(myType["name"].(string), "var.", "", 1)
 		first, err := see.Lookup(myType["type"].(string))
 		if err != nil {
 			return nil, err
 		}
 
-		name, err = GetValue(item, variables)
-		if err != nil || name == nil || *name == "" {
-			temp := myType["resource"].(string)
-			name = &temp
-		}
+		//name, err = GetValue(item, variables)
+		//if err != nil || name == nil || *name == "" {
+		//
+		temp := myType["resource"].(string)
+		name = &temp
 
 		//needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
@@ -302,25 +302,49 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 }
 
 func parseString(newAttribute string, result map[string]interface{}) *string {
-	newAttribute, err := translate(newAttribute)
-	if err != nil {
-		return nil
-	}
-
 	var matches = []string{"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
-		"substring", "format('", "uniqueString"}
+		"substring", "format('", "uniqueString", "reference", "resourceId"}
 
 	if what, found := contains(matches, newAttribute); found {
 		newAttribute = replace(matches, newAttribute, what, result)
-		newAttribute = strings.Replace(newAttribute, "[", "", 1)
-		newAttribute = strings.Replace(newAttribute, "]", "", 1)
+		newAttribute = loseSQBrackets(newAttribute)
 	}
 	return &newAttribute
+}
+
+func loseSQBrackets(newAttribute string) string {
+	newAttribute = strings.Replace(newAttribute, "[", "", 1)
+	newAttribute = strings.Replace(newAttribute, "]", "", 1)
+	return newAttribute
 }
 
 func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) string {
 	var Attribute string
 	switch *what {
+	case "reference", "resourceId":
+		{
+			if *what == "reference" {
+				var re = regexp.MustCompile(`reference\((.*?)\)`) //format('{0}/{1}',
+				Match := re.FindStringSubmatch(newAttribute)
+				if (Match) != nil {
+					splitten := strings.Split(newAttribute, "')")
+					if len(splitten) > 1 {
+						remainder := strings.Replace(splitten[len(splitten)-1], "]", "", 1)
+						name, resourceName := replaceResourceID(Match[1], result)
+						Attribute = *resourceName + "." + name + remainder
+					} else {
+						log.Printf("no match found %s", splitten[0])
+					}
+				} else {
+					log.Printf("no match found %s", newAttribute)
+				}
+			} else {
+
+				name, resourceName := replaceResourceID(loseSQBrackets(newAttribute), result)
+				Attribute = *resourceName + "." + name
+			}
+
+		}
 	case "uniqueString":
 		{
 			var re = regexp.MustCompile(`uniqueString\((.*?)\)`) //format('{0}/{1}',
@@ -347,7 +371,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 				}
 				Attribute = strings.Replace(newAttribute, Match[0], temp, -1)
 			} else {
-				log.Printf("not found %s", newAttribute)
+				log.Printf("no match found %s", newAttribute)
 			}
 		}
 	case "variables":
@@ -391,6 +415,33 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		Attribute = replace(matches, Attribute, again, result)
 	}
 	return Attribute
+}
+
+func replaceResourceID(Match string, result map[string]interface{}) (string, *string) {
+	resource := strings.Replace(Match, "resourceId(", "", 1)
+	splitter := strings.Split(resource, ",")
+	arm := strings.Replace(splitter[0], "'", "", 2)
+	name := strings.Replace(strings.Replace(splitter[1], ")", "", 1), " ", "", -1)
+	name, err := findResourceName(result, name)
+	if err != nil {
+		log.Print(err)
+	}
+	resourceName, err := see.Lookup(arm)
+	if err != nil {
+		log.Printf("no match found %s", arm)
+	}
+	return name, resourceName
+}
+
+func findResourceName(result map[string]interface{}, name string) (string, error) {
+	resources := result["resources"].([]interface{})
+	for _, myResource := range resources {
+		test := myResource.(map[string]interface{})
+		if name == test["name"].(string) {
+			return test["resource"].(string), nil
+		}
+	}
+	return "", errors.New("failed to find {name}")
 }
 
 func handleResource(target string) (string, error) {

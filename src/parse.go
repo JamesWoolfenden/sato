@@ -27,6 +27,7 @@ type Variable struct {
 	Name        string
 }
 
+// Output describes Tf output type
 type Output struct {
 	Description string
 	Type        string

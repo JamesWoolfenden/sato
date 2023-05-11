@@ -17,7 +17,7 @@ var azurermNetworkInterface []byte
 var azurermNetworkSecurityGroup []byte
 
 //go:embed resources/azurerm_public_ip.template
-var azurermPublicIp []byte
+var azurermPublicIP []byte
 
 //go:embed resources/azurerm_virtual_network.template
 var azurermVirtualNetwork []byte

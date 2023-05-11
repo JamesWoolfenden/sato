@@ -8,7 +8,7 @@ func lookup(myType string) []byte {
 		"Microsoft.Compute/virtualMachines/extensions": azurermVirtualMachineExtension,
 		"Microsoft.Network/networkInterfaces":          azurermNetworkInterface,
 		"Microsoft.Network/networkSecurityGroups":      azurermNetworkSecurityGroup,
-		"Microsoft.Network/publicIPAddresses":          azurermPublicIp,
+		"Microsoft.Network/publicIPAddresses":          azurermPublicIP,
 		"Microsoft.Network/virtualNetworks":            azurermVirtualNetwork,
 		"Microsoft.Storage/storageAccounts":            azurermStorageAccount,
 		"Microsoft.Network/virtualNetworks/subnets":    azurermSubnet,

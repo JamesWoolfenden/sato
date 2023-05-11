@@ -10,7 +10,7 @@ James
 This is my set-up there are others but this one is mine.
 
 Set-up IDE/Goland to debug target cfn, this config might help:
- 
+
 ```xml
   <component name="RunManager">
     <configuration name="go build sato" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
@@ -48,6 +48,7 @@ Set a break point to see schema of new resources in parse resources in lookup.go
 ``` golang
 err = Write(ReplaceDependant(ReplaceVariables(output.String())), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 ```
+
 Find the resource and copy the schema to the template file and work out the templating:
 
 ```gotemplate
