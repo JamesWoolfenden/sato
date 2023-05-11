@@ -18,4 +18,7 @@ resource "azurerm_virtual_network" "{{.item}}" {
     security_group={{$i.properties.networkSecurityGroup.id |Quote}}
   }
   {{- end}}
+{{- if .resource.dependsOn }}
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
 }

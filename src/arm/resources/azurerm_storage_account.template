@@ -11,4 +11,7 @@ resource "azurerm_storage_account" "{{.item}}" {
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
+{{- if .resource.dependsOn }}
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
 }

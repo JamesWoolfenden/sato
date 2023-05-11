@@ -27,4 +27,7 @@ resource "azurerm_network_security_group" "{{ .item }}" {
   }
  {{- end}}
 {{- end}}
+{{- if .resource.dependsOn }}
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
 }

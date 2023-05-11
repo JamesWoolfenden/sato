@@ -20,4 +20,7 @@ resource "azurerm_public_ip" "{{ .item }}" {
 {{- if .resource.properties.publicIPAllocationMethod}}
   allocation_method        = {{.resource.properties.publicIPAllocationMethod|Quote}}
 {{- end}}
+{{- if .resource.dependsOn }}
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
 }
