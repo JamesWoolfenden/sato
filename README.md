@@ -134,18 +134,13 @@ $ sato bisect -f /Users/jwoolfenden/code/azure-quickstart-templates/quickstarts/
 1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/data.tf
 ```
 
-I make an opinionated translation, there are no parameters, resources and dependencies are very different,
-there's no 1 for 1 ARM for Terraform, so the aim is to get you 95% there.
+I make an opinionated translation, in Terraform there are no parameters, resources and dependencies are very different,
+there's no 1 for 1 - ARM to Terraform, so the aim is to get you close to 100%.
 
 There needs to be a lot of work supporting resources and built-in functions/template as yet.
 If you want to use this, let me know so, then I'll know to do so, or even better send me a PR.
 
-What's missing?
-
-- Lots of CloudFormation support - this is very new project
-- variables and resource relationships need work (Current limitation of a library)
-
-Extra credit?
+## Extra credit - <small>Pike</small>
 
 If you use my other tool, Pike you can now apply that and get the policy requirements:
 
