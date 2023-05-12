@@ -41,7 +41,7 @@ func Parse(file string, destination string) error {
 	byteValue, _ := io.ReadAll(jsonFile)
 
 	var result map[string]interface{}
-	err = json.Unmarshal([]byte(byteValue), &result)
+	err = json.Unmarshal(byteValue, &result)
 	if err != nil {
 		return err
 	}
@@ -86,12 +86,16 @@ func Parse(file string, destination string) error {
 	if err != nil {
 		return err
 	}
-	err = ParseOutputs(result, funcMap, destination)
 
+	err = ParseOutputs(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
 
+	err = ParseData(result, funcMap, destination)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -398,6 +402,15 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			Attribute = strings.Replace(newAttribute, "resourceGroup().location",
 				"data.azurerm_resource_group.sato.location", -1)
+			var data = make(map[string]bool)
+			if result["data"] != nil {
+				data := result["data"].(map[string]bool)
+				data["resource_group"] = true
+
+			} else {
+				data["resource_group"] = true
+			}
+			result["data"] = data
 		}
 	case "resourceGroup().id":
 		{
@@ -426,10 +439,32 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, *st
 	if err != nil {
 		log.Print(err)
 	}
-	resourceName, err := see.Lookup(arm)
-	if err != nil {
-		log.Printf("no match found %s", arm)
+	var resourceName *string
+	if findResourceType(result, arm) {
+		resourceName, err = see.Lookup(arm)
+		if err != nil {
+			log.Printf("no match found %s", arm)
+		}
+	} else {
+		switch arm {
+		case "Microsoft.Network/virtualNetworks/subnets":
+			{
+				temp := "azurerm_virtual_network"
+				resourceName = &temp
+				name = name + ".subnet"
+			}
+		default:
+			{
+				log.Printf("Unhandled conversion for %s %s", arm, name)
+
+				resourceName, err = see.Lookup(arm)
+				if err != nil {
+					log.Printf("no match found %s", arm)
+				}
+			}
+		}
 	}
+
 	return name, resourceName
 }
 
@@ -442,6 +477,17 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 		}
 	}
 	return "", errors.New("failed to find {name}")
+}
+
+func findResourceType(result map[string]interface{}, name string) bool {
+	resources := result["resources"].([]interface{})
+	for _, myResource := range resources {
+		test := myResource.(map[string]interface{})
+		if name == test["type"].(string) {
+			return true
+		}
+	}
+	return false
 }
 
 func handleResource(target string) (string, error) {
@@ -495,8 +541,8 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		myVar.Type = "string"
 		myVar.Name = name
 		temp := value.(map[string]interface{})
-		myVar.Value, _ = handleResource(temp["value"].(string))
-
+		//myVar.Value, _ = handleResource(temp["value"].(string))
+		myVar.Value = *parseString(temp["value"].(string), result)
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(OutputFile))
 		if err != nil {
@@ -511,6 +557,33 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 	err := sato.Write(All, destination, "outputs")
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ParseData writes out to data.tf
+func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+	data := result["data"]
+
+	var output bytes.Buffer
+	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(DataFile))
+	if err != nil {
+		return err
+	}
+	err = tmpl.Execute(&output, m{
+		"data": data,
+	})
+
+	if err != nil {
+		log.Print(err)
+		return err
+	}
+
+	err = sato.Write(output.String(), destination, "data")
+	if err != nil {
+		log.Print(err)
 		return err
 	}
 

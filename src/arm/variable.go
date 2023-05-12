@@ -9,3 +9,6 @@ var VariableFile []byte
 
 //go:embed output.template
 var OutputFile []byte
+
+//go:embed data.template
+var DataFile []byte

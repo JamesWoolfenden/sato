@@ -99,18 +99,40 @@ $ sato see -r Microsoft.Storage/storageAccounts
 azurerm_storage_account
 ```
 
-### *ARM and Azure - bisect coming soon*
+### Bisect #### *ARM to terraform*
 
 What? You've got these legacy ARM templates, and you'd dearly love to drop them, but you really don't fancy Bicep
 and the rework.
-I got you covered:
+I got you covered. Sato now bisects ARM into Terraform - Take one of the Azure quickstart examples from here <https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.compute/vm-simple-windows>:
+
+Clone it:
 
 ```bash
-$ sato bisect -f E:\code\sato\examples\arm\microsoft.compute\vm-simple-windows\azuredeploy.json
-12:08PM INF Created E:\Code\sato\.sato\variables.tf
-12:08PM INF Created E:\Code\sato\.sato\locals.tf
-
+git clone https://github.com/Azure/azure-quickstart-templates.git
 ```
+
+Then bisect it!
+
+```bash
+$ sato bisect -f /Users/jwoolfenden/code/azure-quickstart-templates/quickstarts/microsoft.compute/vm-simple-windows/azuredeploy.json
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/variables.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/locals.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_storage_account.sato0.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_public_ip.sato1.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_network_security_group.sato2.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_virtual_network.sato3.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_network_interface.sato4.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_virtual_machine.sato5.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/azurerm_virtual_machine_extension.sato6.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/outputs.tf
+1:56PM INF Created /Users/jwoolfenden/code/sato/.sato/data.tf
+```
+
+I make an opinionated translation, there are no parameters, resources and dependencies are very different,
+there's no 1 for 1 ARM for Terraform, so the aim is to get you 95% there.
+
+There needs to be a lot of work supporting resources and built-in functions/template as yet.
+If you want to use this, let me know so, then I'll know to do so, or even better send me a PR.
 
 What's missing?
 

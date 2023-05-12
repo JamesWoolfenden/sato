@@ -10,15 +10,22 @@ resource "azurerm_virtual_network" "{{.item}}" {
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
-  address_space={{index .resource.properties.addressSpace.addressPrefixes 0}}
-  {{- range $a, $i:= .resource.properties.subnets }}
+  address_space=[{{index .resource.properties.addressSpace.addressPrefixes 0}}]
+{{- if .resource.properties.subnets }}
+{{- range $a, $i:= .resource.properties.subnets }}
   subnet {
     name={{ $i.name|Quote}}
     address_prefix={{$i.properties.addressPrefix |Quote}}
     security_group={{$i.properties.networkSecurityGroup.id |Quote}}
   }
-  {{- end}}
+{{- end}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}
 }
+
+
+{{- if .resource.properties.subnets }}
+
+{{- end}}
