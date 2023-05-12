@@ -90,7 +90,7 @@ Plan: 12 to add, 0 to change, 0 to destroy.
 ...
 ```
 
-### See
+### See - <small>finds the terraform resource</small>
 
 This tells you the equivalent resource required given a CF ..... or an ARM resource;
 
@@ -99,7 +99,13 @@ $ sato see -r Microsoft.Storage/storageAccounts
 azurerm_storage_account
 ```
 
-### Bisect #### *ARM to terraform*
+or
+```
+$sato see -r AWS::EC2::Instance
+aws_instance%
+```
+
+### Bisect - <small>ARM to terraform</small>
 
 What? You've got these legacy ARM templates, and you'd dearly love to drop them, but you really don't fancy Bicep
 and the rework.
