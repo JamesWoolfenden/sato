@@ -27,3 +27,6 @@ var azurermStorageAccount []byte
 
 //go:embed resources/azurerm_subnet.template
 var azurermSubnet []byte
+
+//go:embed resources/azurerm_analysis_services_server.template
+var azurermAnalysisServicesServer []byte

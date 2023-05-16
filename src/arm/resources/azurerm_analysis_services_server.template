@@ -1,0 +1,32 @@
+resource "azurerm_analysis_services_server" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  sku                      = {{ .resource.sku.name|Quote }}
+{{- if .resource.properties.adminUsers}}
+  admin_users             = {{Array .resource.properties.adminUsers}}
+{{- end}}1
+{{- if .resource.properties.querypoolConnectionMode}}
+  querypool_connection_mode = {{ .resource.properties.querypoolConnectionMode}}
+{{- end}}
+{{- if .resource.properties.backupBlobContainerUri}}
+  backup_blob_container_uri =  {{ .resource.properties.backupBlobContainerUri}}
+{{- end}}
+{{- if .resource.properties.enablePowerBiService}}
+  enable_power_bi_service = {{ .resource.properties.enablePowerBiService}}
+{{- end}}
+{{- if .resource.properties.ipV4FirewallSettings}}
+  ipv4_firewall_rule = {{ .resource.properties.ipV4FirewallSettings}}
+{{- end}}
+{{- if .resource.properties.tags}}
+  tags = {{.resource.properties.tags}}
+{{- end}}
+}
