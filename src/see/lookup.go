@@ -128,6 +128,7 @@ func Lookup(resource string) (*string, error) {
 		"Microsoft.Network/virtualNetworks":                "azurerm_virtual_network",
 		"Microsoft.Storage/storageAccounts":                "azurerm_storage_account",
 		"Microsoft.Network/virtualNetworks/subnets":        "azurerm_subnet",
+		"Microsoft.AnalysisServices/servers":               "azurerm_analysis_services_server",
 	}
 	result := Lookup[resource]
 	var err error

@@ -51,7 +51,7 @@ func Dequote(target string) string {
 // Quote is a template function
 func Quote(target string) string {
 	//is it a resource or variable
-	if strings.Contains(target, ".") {
+	if strings.Contains(target, "var.") || strings.Contains(target, "_") {
 		return target
 	}
 	return "\"" + target + "\""

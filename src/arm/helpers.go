@@ -40,3 +40,36 @@ func translate(target string) (string, error) {
 
 	return target, nil
 }
+
+func fixType(myItem map[string]interface{}) map[string]interface{} {
+	if myItem["type"] == nil {
+		return nil
+	}
+
+	myType := myItem["type"].(string)
+	switch myType {
+	case "object":
+		{
+			myItem["type"] = "object()"
+		}
+	case "int", "float":
+		{
+			myItem["type"] = "number"
+		}
+	case "string", "map[string]interface{}":
+		{
+			myItem["type"] = "string"
+		}
+	case "securestring":
+		{
+			{
+				myItem["type"] = "securestring"
+			}
+		}
+	default:
+		{
+			log.Warn().Msgf("missed type %s", myType)
+		}
+	}
+	return myItem
+}

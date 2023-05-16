@@ -8,6 +8,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"reflect"
 	"regexp"
 	sato "sato/src"
 	"sato/src/see"
@@ -16,7 +17,6 @@ import (
 	tftemplate "text/template"
 
 	"github.com/rs/zerolog/log"
-
 	"golang.org/x/exp/maps"
 )
 
@@ -77,12 +77,12 @@ func Parse(file string, destination string) error {
 	}
 
 	result = preprocess(result)
-	variables, err := ParseVariables(result, funcMap, destination)
+	_, err = ParseVariables(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
 
-	result, err = ParseResources(result, funcMap, destination, variables)
+	result, err = ParseResources(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
@@ -100,9 +100,12 @@ func Parse(file string, destination string) error {
 }
 
 // ParseVariables convert ARM Parameters into terraform variables
-func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) ([]sato.Variable, error) {
+func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) ([]interface{}, error) {
 
-	variables := result["variables"].(map[string]interface{})
+	variables := make(map[string]interface{})
+	if result["variables"] != nil {
+		variables = result["variables"].(map[string]interface{})
+	}
 
 	var All string
 	var locals string
@@ -114,30 +117,33 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	}
 
 	for name, value := range variables {
-		var myVar sato.Variable
+		myItem := make(map[string]interface{})
 
-		switch value.(type) {
-		case string:
-			myVar.Type = "string"
-			myVar.Name = name
-			if value != nil {
+		if value != nil {
+			var local string
+
+			if reflect.TypeOf(value).String() == "string" {
 				if strings.Contains(value.(string), "()") ||
 					strings.Contains(value.(string), "[") {
 
-					local := "\t" + name + " = " + *parseString(value.(string), result) + "\n"
+					local = "\t" + name + " = " + *parseString(value.(string), result) + "\n"
 					locals = locals + local
 					continue
 				}
-			} else {
-				myVar.Default = ""
+				myItem["default"] = value
 			}
-		case map[string]interface{}:
-			myVar.Type = "string"
-			myVar.Name = name
-			myVar.Default = ""
-		default:
-			log.Print(value)
+
+			if reflect.TypeOf(value).String() == "map[string]interface {}" {
+				blob, _ := json.Marshal(value)
+				myItem["default"] = string(blob)
+			}
+
+			myItem["name"] = name
+			myItem["type"] = "string"
+			//myItem["type"] = reflect.TypeOf(value).String()
 		}
+
+		myItem = fixType(myItem)
 
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
@@ -145,11 +151,11 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			return nil, err
 		}
 		_ = tmpl.Execute(&output, m{
-			"variable": myVar,
+			"variable": myItem,
 			"item":     name,
 		})
 		All = All + output.String()
-		myVariables = append(myVariables, myVar)
+		myVariables = append(myVariables, myItem)
 	}
 
 	err = sato.Write(All, destination, "variables")
@@ -166,32 +172,27 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	return myVariables, nil
 }
 
-func parseParameters(result map[string]interface{}, locals string, funcMap tftemplate.FuncMap, All string) (string, string, []sato.Variable, error) {
+func parseParameters(result map[string]interface{}, locals string, funcMap tftemplate.FuncMap, All string) (string, string, []interface{}, error) {
 	parameters := result["parameters"].(map[string]interface{})
-	var myVariables []sato.Variable
+	myVariables := make([]interface{}, 0)
 	for name, item := range parameters {
-		var myVariable sato.Variable
-		myVariable.Name = name
+
 		myItem := item.(map[string]interface{})
 
 		if myItem["defaultValue"] != nil {
 			var local string
-			//contains function
-			if strings.Contains(myItem["defaultValue"].(string), "()") ||
-				strings.Contains(myItem["defaultValue"].(string), "[") {
+			if myItem["type"].(string) == "string" {
+				if strings.Contains(myItem["defaultValue"].(string), "()") ||
+					strings.Contains(myItem["defaultValue"].(string), "[") {
 
-				local = "\t" + name + " = " + *parseString(myItem["defaultValue"].(string), result) + "\n"
-				locals = locals + local
-				continue
-			} else {
-				myVariable.Default = myItem["defaultValue"].(string)
+					local = "\t" + name + " = " + *parseString(myItem["defaultValue"].(string), result) + "\n"
+					locals = locals + local
+					continue
+				}
 			}
 		}
-		myVariable.Type = myItem["type"].(string)
-		myDescription := myItem["metadata"].(map[string]interface{})
-		if myDescription != nil {
-			myVariable.Description = myDescription["description"].(string)
-		}
+
+		myItem = fixType(myItem)
 
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
@@ -199,17 +200,17 @@ func parseParameters(result map[string]interface{}, locals string, funcMap tftem
 			return "", "", nil, err
 		}
 		_ = tmpl.Execute(&output, m{
-			"variable": myVariable,
+			"variable": myItem,
 			"item":     name,
 		})
 		All = All + output.String()
-		myVariables = append(myVariables, myVariable)
+		myVariables = append(myVariables, myItem)
 	}
 	return locals, All, myVariables, nil
 }
 
 // ParseResources handles resources in ARM conversion
-func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string, variables []sato.Variable) (map[string]interface{}, error) {
+func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 	resources := result["resources"].([]interface{})
 	newResources, err := parseList(resources, result)
 	if err != nil {
@@ -225,12 +226,10 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		//item := strings.Replace(myType["name"].(string), "var.", "", 1)
 		first, err := see.Lookup(myType["type"].(string))
 		if err != nil {
-			return nil, err
+			log.Warn().Err(err)
+			continue
 		}
 
-		//name, err = GetValue(item, variables)
-		//if err != nil || name == nil || *name == "" {
-		//
 		temp := myType["resource"].(string)
 		name = &temp
 
@@ -533,6 +532,10 @@ func handleResource(target string) (string, error) {
 
 // ParseOutputs writes out to outputs.tf
 func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+	if result["outputs"] == nil {
+		return nil
+	}
+
 	outputs := result["outputs"].(map[string]interface{})
 
 	var All string
@@ -565,6 +568,10 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 // ParseData writes out to data.tf
 func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+	if result["data"] == nil {
+		return nil
+	}
+
 	data := result["data"]
 
 	var output bytes.Buffer
@@ -611,27 +618,27 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 		newResults = append(newResults, inside)
 	}
 	results["resources"] = newResults
-
-	paraVariables := results["variables"].(map[string]interface{})
 	locals := make(map[string]interface{})
-	for item, result := range paraVariables {
-		switch result.(type) {
-		case string:
-			{
-				if strings.Contains(result.(string), "[") {
-					locals[item] = result
+
+	if results["variables"] != nil {
+		paraVariables := results["variables"].(map[string]interface{})
+
+		for item, result := range paraVariables {
+			switch result.(type) {
+			case string:
+				{
+					if strings.Contains(result.(string), "[") {
+						locals[item] = result
+					}
 				}
-			}
-		default:
-			jasoned, _ := json.Marshal(result)
-			if strings.Contains(string(jasoned), "[") {
-				locals[item] = string(jasoned)
-			}
+			default:
+				jasoned, _ := json.Marshal(result)
+				if strings.Contains(string(jasoned), "[") {
+					locals[item] = string(jasoned)
+				}
 
+			}
 		}
-
-		//needs a data principal for data sources assumed
-		//need to find
 	}
 
 	paraParameters := results["parameters"].(map[string]interface{})
@@ -640,10 +647,25 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 		myResult := result.(map[string]interface{})
 		_, ok := myResult["defaultValue"]
 		if ok {
-			defaultValue := myResult["defaultValue"].(string)
-			if strings.Contains(defaultValue, "[") {
-				newLocals[item] = defaultValue
+			myType := myResult["type"].(string)
+			switch myType {
+			case "string":
+				{
+					defaultValue := myResult["defaultValue"].(string)
+					if strings.Contains(defaultValue, "[") {
+						newLocals[item] = defaultValue
+					}
+				}
+			case "int", "object":
+				{
+
+				}
+			default:
+				{
+					log.Printf("unhandled %s", myType)
+				}
 			}
+
 		} else {
 			continue
 		}

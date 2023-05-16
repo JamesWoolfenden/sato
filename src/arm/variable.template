@@ -1,13 +1,15 @@
 
 variable "{{.item}}" {
-{{- if  eq .variable.Type "securestring"}}
+{{- if  eq .variable.type "securestring"}}
   type        = string
   sensitive   = true
 {{- else }}
-  type        = {{.variable.Type}}
+  type        = {{.variable.type}}
 {{- end }}
-{{- if   .variable.Default}}
-  default     = {{ Replace .variable.Default "${" "$${"|Quote }}
+{{- if   .variable.default}}
+  default     = {{ Replace .variable.default "${" "$${"|Quote }}
 {{- end }}
-  description = "{{ .variable.Description }}"
+{{- if .variable.metadata.description }}
+  description = "{{ .variable.metadata.description }}"
+{{- end }}
 }
