@@ -13,7 +13,7 @@ resource "azurerm_analysis_services_server" "{{.item}}" {
   sku                      = {{ .resource.sku.name|Quote }}
 {{- if .resource.properties.adminUsers}}
   admin_users             = {{Array .resource.properties.adminUsers}}
-{{- end}}1
+{{- end}}
 {{- if .resource.properties.querypoolConnectionMode}}
   querypool_connection_mode = {{ .resource.properties.querypoolConnectionMode}}
 {{- end}}

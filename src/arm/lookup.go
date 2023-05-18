@@ -13,6 +13,7 @@ func lookup(myType string) []byte {
 		"Microsoft.Storage/storageAccounts":            azurermStorageAccount,
 		"Microsoft.Network/virtualNetworks/subnets":    azurermSubnet,
 		"Microsoft.AnalysisServices/servers":           azurermAnalysisServicesServer,
+		"Microsoft.ApiManagement/service":              azurermApiManagement,
 	}
 
 	var myContent []byte

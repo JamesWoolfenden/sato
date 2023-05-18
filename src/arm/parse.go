@@ -140,7 +140,6 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 			myItem["name"] = name
 			myItem["type"] = "string"
-			//myItem["type"] = reflect.TypeOf(value).String()
 		}
 
 		myItem = fixType(myItem)
@@ -655,17 +654,32 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 					if strings.Contains(defaultValue, "[") {
 						newLocals[item] = defaultValue
 					}
+					myResult["default"] = myResult["defaultValue"].(string)
 				}
-			case "int", "object":
+			case "int":
 				{
-
+					myResult["type"] = "number"
+					paraParameters[item] = myResult
+					myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"].(float64))
+				}
+			case "object", "list(string)":
+				{
+					//todo
+					//myResult["default"] = myResult["defaultValue"]
+					myResult["default"] = ""
+				}
+			case "array":
+				{
+					myResult["type"] = "list(string)"
+					myResult["default"] = arrayToString(myResult["defaultValue"].([]interface{}))
+					paraParameters[item] = myResult
 				}
 			default:
 				{
 					log.Printf("unhandled %s", myType)
 				}
 			}
-
+			results["parameters"] = paraParameters
 		} else {
 			continue
 		}

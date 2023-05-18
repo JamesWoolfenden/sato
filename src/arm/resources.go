@@ -30,3 +30,6 @@ var azurermSubnet []byte
 
 //go:embed resources/azurerm_analysis_services_server.template
 var azurermAnalysisServicesServer []byte
+
+//go:embed resources/azurerm_api_management.template
+var azurermApiManagement []byte

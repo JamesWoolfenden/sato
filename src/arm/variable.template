@@ -7,7 +7,11 @@ variable "{{.item}}" {
   type        = {{.variable.type}}
 {{- end }}
 {{- if   .variable.default}}
-  default     = {{ Replace .variable.default "${" "$${"|Quote }}
+{{- if or (eq .variable.type "string") (eq .variable.type "securestring")}}
+  default     = {{ Replace .variable.default "${" "$${" | Quote }}
+{{- else}}
+  default     = {{ Replace .variable.default "${" "$${"}}
+{{- end }}
 {{- end }}
 {{- if .variable.metadata.description }}
   description = "{{ .variable.metadata.description }}"

@@ -1,0 +1,79 @@
+resource "azurerm_api_management" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  publisher_name      = {{ .resource.properties.publisherName}}
+  publisher_email     = {{ .resource.properties.publisherEmail}}
+  sku_name = {{ .resource.sku.name}}
+{{- if  .resource.additionalLocation}}
+  additional_location={{ .resource.additionalLocation}}
+{{- end}}
+{{- if .resource.certificate}}
+  certificate={{ .resource.certificate}}
+{{- end}}
+{{- if .resource.clientCertificateEnabled }}
+  client_certificate_enabled={{ .resource.clientCertificateEnabled}}
+{{- end}}
+{{- if .resource.delegation}}
+  delegation={{ .resource.delegation}}
+{{- end}}
+{{- if .resource.delegation}}
+  gateway_disabled={{ .resource.delegation}}
+{{- end}}
+{{- if .resource.delegation}}
+  min_api_version={{ .resource.delegation}}
+{{- end}}
+{{- if .resource.delegation}}
+  zones={{ .resource.delegation}}
+{{- end}}
+{{- if .resource.delegation}}
+  identity={{ .resource.delegation}}
+{{- end}}
+{{- if .resource.hostnameConfiguration}}
+  hostname_configuration={{ .resource.hostnameConfiguration}}
+{{- end}}
+{{- if .resource.notificationSenderEmails}}
+  notification_sender_email={{ .resource.notificationSenderEmails}}
+{{- end}}
+{{- if .resource.policy}}
+  policy ={{ .resource.policy}}
+{{- end}}
+{{- if .resource.policy}}
+  protocols={{ .resource.protocols}}
+{{- end}}
+{{- if .resource.security}}
+  security={{ .resource.security}}
+{{- end}}
+{{- if .resource.signIn}}
+  sign_in={{ .resource.signIn}}
+{{- end}}
+{{- if .resource.signUp}}
+  sign_up={{ .resource.signUp}}
+{{- end}}
+{{- if .resource.tenantAccess}}
+  tenant_access={{ .resource.tenantAccess}}
+{{- end}}
+{{- if .resource.publicIpAddressId}}
+  public_ip_address_id={{ .resource.publicIpAddressId}}
+{{- end}}
+{{- if .resource.publicNetworkAccessEnabled}}
+  public_network_access_enabled={{ .resource.publicNetworkAccessEnabled}}
+{{- end}}
+{{- if .resource.virtualNetworkType}}
+  virtual_network_type={{ .resource.virtualNetworkType}}
+{{- end}}
+{{- if  .resource.virtualNetworkConfiguration}}
+  virtual_network_configuration={{ .resource.virtualNetworkConfiguration}}
+{{- end}}
+{{- if .resource.tags}}
+  tags={{ .resource.tags}}
+{{- end}}
+}
