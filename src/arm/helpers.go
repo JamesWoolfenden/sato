@@ -20,7 +20,7 @@ func IsLocal(target string, result map[string]interface{}) bool {
 
 func contains(s []string, str string) (*string, bool) {
 	for _, v := range s {
-		if strings.Contains(str, v) {
+		if strings.Contains(strings.ToLower(str), strings.ToLower(v)) {
 			return &v, true
 		}
 	}
@@ -84,7 +84,14 @@ func fixType(myItem map[string]interface{}) map[string]interface{} {
 					}
 				case string:
 					{
-						log.Print(item)
+						if result == "" {
+							result = name + " = " + escapeQuote(item)
+							types = name + " = " + "string"
+						} else {
+							temp := result
+							result = temp + ",\n\t" + name + " = " + escapeQuote(item)
+							types = types + ",\n\t" + name + " = " + "string"
+						}
 					}
 				case bool:
 					{
@@ -115,9 +122,13 @@ func fixType(myItem map[string]interface{}) map[string]interface{} {
 		{
 			myItem["type"] = "string"
 		}
-	case "list(string)", "string", "number", "securestring":
+	case "string", "securestring":
 		{
-			//do nothing- should move this all to preprocess
+			myItem["default"] = escapeQuote(myItem["default"])
+		}
+	case "list(string)", "number":
+		{
+			//do nothing
 		}
 	default:
 		{
@@ -125,6 +136,13 @@ func fixType(myItem map[string]interface{}) map[string]interface{} {
 		}
 	}
 	return myItem
+}
+
+func escapeQuote(item interface{}) string {
+	if item != nil {
+		return strings.Replace(item.(string), "\"", "\\\"", -1)
+	}
+	return ""
 }
 
 func arrayToString(defaultValue []interface{}) string {

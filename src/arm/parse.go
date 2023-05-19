@@ -108,9 +108,14 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	}
 
 	var All string
-	var locals string
 
-	locals, All, myVariables, err := parseParameters(result, locals, funcMap, All)
+	All, myVariables, err := parseParameters(result, funcMap, All)
+
+	if err != nil {
+		return myVariables, err
+	}
+
+	locals, err := parseLocals(result)
 
 	if err != nil {
 		return myVariables, err
@@ -171,32 +176,20 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	return myVariables, nil
 }
 
-func parseParameters(result map[string]interface{}, locals string, funcMap tftemplate.FuncMap, All string) (string, string, []interface{}, error) {
+func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, All string) (string, []interface{}, error) {
 	parameters := result["parameters"].(map[string]interface{})
 	myVariables := make([]interface{}, 0)
+
 	for name, item := range parameters {
 
 		myItem := item.(map[string]interface{})
-
-		if myItem["defaultValue"] != nil {
-			var local string
-			if myItem["type"].(string) == "string" {
-				if strings.Contains(myItem["defaultValue"].(string), "()") ||
-					strings.Contains(myItem["defaultValue"].(string), "[") {
-
-					local = "\t" + name + " = " + *parseString(myItem["defaultValue"].(string), result) + "\n"
-					locals = locals + local
-					continue
-				}
-			}
-		}
 
 		myItem = fixType(myItem)
 
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
 		if err != nil {
-			return "", "", nil, err
+			return "", nil, err
 		}
 		_ = tmpl.Execute(&output, m{
 			"variable": myItem,
@@ -205,7 +198,19 @@ func parseParameters(result map[string]interface{}, locals string, funcMap tftem
 		All = All + output.String()
 		myVariables = append(myVariables, myItem)
 	}
-	return locals, All, myVariables, nil
+	return All, myVariables, nil
+}
+
+func parseLocals(result map[string]interface{}) (string, error) {
+	var locals string
+	myLocals := result["locals"].(map[string]interface{})
+
+	for x, y := range myLocals {
+		local := "\t" + x + " = " + *parseString(y.(string), result) + "\n"
+		locals = locals + local
+	}
+
+	return locals, nil
 }
 
 // ParseResources handles resources in ARM conversion
@@ -347,9 +352,10 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 			}
 
 		}
-	case "uniqueString":
+	case "uniqueString", "uniquestring":
 		{
-			var re = regexp.MustCompile(`uniqueString\((.*?)\)`) //format('{0}/{1}',
+			target := *what + "\\((.*?)\\)"
+			var re = regexp.MustCompile(target) //format('{0}/{1}',
 			Match := re.ReplaceAllString(newAttribute, "substr(uuid(), 0, 8)")
 			Attribute = Match
 		}
@@ -387,6 +393,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 				} else {
 					temp = "var." + Match[1]
 				}
+
 				Attribute = strings.Replace(newAttribute, Match[0], temp, -1)
 			} else {
 				log.Printf("not found %s", newAttribute)
@@ -426,6 +433,14 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		Attribute = replace(matches, Attribute, again, result)
 	}
 	return Attribute
+}
+
+func isCompound(newAttribute string) bool {
+	var compound bool
+	if strings.Contains(newAttribute, "\"") {
+		compound = true
+	}
+	return compound
 }
 
 func replaceResourceID(Match string, result map[string]interface{}) (string, *string) {
@@ -622,22 +637,27 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 	if results["variables"] != nil {
 		paraVariables := results["variables"].(map[string]interface{})
 
+		newVariables := make(map[string]interface{})
 		for item, result := range paraVariables {
 			switch result.(type) {
 			case string:
 				{
 					if strings.Contains(result.(string), "[") {
 						locals[item] = result
+					} else {
+						newVariables[item] = result
 					}
 				}
 			default:
 				jasoned, _ := json.Marshal(result)
 				if strings.Contains(string(jasoned), "[") {
 					locals[item] = string(jasoned)
+				} else {
+					newVariables[item] = result
 				}
-
 			}
 		}
+		results["variables"] = newVariables
 	}
 
 	paraParameters := results["parameters"].(map[string]interface{})
