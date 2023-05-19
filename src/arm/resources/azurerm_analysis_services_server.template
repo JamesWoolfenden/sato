@@ -24,7 +24,14 @@ resource "azurerm_analysis_services_server" "{{.item}}" {
   enable_power_bi_service = {{ .resource.properties.enablePowerBiService}}
 {{- end}}
 {{- if .resource.properties.ipV4FirewallSettings}}
-  ipv4_firewall_rule = {{ .resource.properties.ipV4FirewallSettings}}
+  dynamic "ipv4_firewall_rule" {
+    for_each = {{.resource.properties.ipV4FirewallSettings}}.firewallRules
+      content {
+        name = ipv4_firewall_rule.value.firewallRuleName
+        range_start = ipv4_firewall_rule.value.rangeStart
+        range_end = ipv4_firewall_rule.value.rangeEnd
+      }
+  }
 {{- end}}
 {{- if .resource.properties.tags}}
   tags = {{.resource.properties.tags}}

@@ -662,6 +662,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 
 	paraParameters := results["parameters"].(map[string]interface{})
 	newLocals := make(map[string]interface{})
+	newParams := make(map[string]interface{})
 	for item, result := range paraParameters {
 		myResult := result.(map[string]interface{})
 		_, ok := myResult["defaultValue"]
@@ -673,38 +674,41 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 					defaultValue := myResult["defaultValue"].(string)
 					if strings.Contains(defaultValue, "[") {
 						newLocals[item] = defaultValue
+						break
 					}
 					myResult["default"] = myResult["defaultValue"].(string)
+					newParams[item] = myResult
 				}
 			case "int":
 				{
 					myResult["type"] = "number"
-					paraParameters[item] = myResult
 					myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"].(float64))
+					newParams[item] = myResult
 				}
 			case "object", "list(string)":
 				{
 					//todo
 					//myResult["default"] = myResult["defaultValue"]
 					myResult["default"] = ""
+					newParams[item] = myResult
 				}
 			case "array":
 				{
 					myResult["type"] = "list(string)"
 					myResult["default"] = arrayToString(myResult["defaultValue"].([]interface{}))
-					paraParameters[item] = myResult
+					newParams[item] = myResult
 				}
 			default:
 				{
 					log.Printf("unhandled %s", myType)
 				}
 			}
-			results["parameters"] = paraParameters
 		} else {
-			continue
+			myResult["default"] = ""
+			newParams[item] = myResult
 		}
-
 	}
+	results["parameters"] = newParams
 	maps.Copy(locals, newLocals)
 	results["locals"] = locals
 	return results
