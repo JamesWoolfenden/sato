@@ -323,32 +323,6 @@ func Test_parseList(t *testing.T) {
 	}
 }
 
-func Test_parseLocals(t *testing.T) {
-	type args struct {
-		result map[string]interface{}
-	}
-	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseLocals(tt.args.result)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseLocals() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("parseLocals() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_parseMap(t *testing.T) {
 	type args struct {
 		myResource map[string]interface{}
@@ -408,27 +382,6 @@ func Test_parseParameters(t *testing.T) {
 	}
 }
 
-func Test_parseString(t *testing.T) {
-	type args struct {
-		newAttribute string
-		result       map[string]interface{}
-	}
-	tests := []struct {
-		name string
-		args args
-		want *string
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseString(tt.args.newAttribute, tt.args.result); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseString() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_preprocess(t *testing.T) {
 	type args struct {
 		results map[string]interface{}
@@ -444,29 +397,6 @@ func Test_preprocess(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			if got := preprocess(tt.args.results); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("preprocess() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_replace(t *testing.T) {
-	type args struct {
-		matches      []string
-		newAttribute string
-		what         *string
-		result       map[string]interface{}
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := replace(tt.args.matches, tt.args.newAttribute, tt.args.what, tt.args.result); got != tt.want {
-				t.Errorf("replace() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -544,6 +474,90 @@ func Test_splitResourceName(t *testing.T) {
 			}
 			if got1 != tt.want1 {
 				t.Errorf("splitResourceName() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_parseLocals(t *testing.T) {
+	type args struct {
+		result map[string]interface{}
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		want1   map[string]interface{}
+		wantErr bool
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1, err := parseLocals(tt.args.result)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("parseLocals() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if got != tt.want {
+				t.Errorf("parseLocals() got = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("parseLocals() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_replace(t *testing.T) {
+	type args struct {
+		matches      []string
+		newAttribute string
+		what         *string
+		result       map[string]interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  string
+		want1 map[string]interface{}
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := replace(tt.args.matches, tt.args.newAttribute, tt.args.what, tt.args.result)
+			if got != tt.want {
+				t.Errorf("replace() got = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("replace() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}
+
+func Test_parseString(t *testing.T) {
+	type args struct {
+		newAttribute string
+		result       map[string]interface{}
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  *string
+		want1 map[string]interface{}
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := parseString(tt.args.newAttribute, tt.args.result)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("parseString() got = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(got1, tt.want1) {
+				t.Errorf("parseString() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
