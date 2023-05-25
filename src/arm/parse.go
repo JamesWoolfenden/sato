@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	tftemplate "text/template"
+	"unicode"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/maps"
@@ -541,6 +542,9 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 			{
 				temp := "azurerm_role_definition"
 				resourceName = &temp
+				if unicode.IsDigit(rune(name[0])) {
+					name = "_" + name
+				}
 			}
 		default:
 			{

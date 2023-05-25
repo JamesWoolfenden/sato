@@ -18,6 +18,6 @@ resource "azurerm_template_deployment" "{{.item}}" {
 {{- end}}
   }
 {{- if .resource.dependsOn }}
-  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+  depends_on = {{ .resource.dependsOn }}
 {{- end}}
 }
