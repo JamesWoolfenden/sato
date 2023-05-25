@@ -32,4 +32,25 @@ var azurermSubnet []byte
 var azurermAnalysisServicesServer []byte
 
 //go:embed resources/azurerm_api_management.template
-var azurermApiManagement []byte
+var azurermAPIManagement []byte
+
+//go:embed resources/azurerm_container_app.template
+var azurermContainerApp []byte
+
+//go:embed resources/azurerm_container_app_environment.template
+var azurermContainerAppEnvironment []byte
+
+//go:embed resources/azurerm_template_deployment.template
+var azurermTemplateDeployment []byte
+
+//go:embed resources/azurerm_role_assignment.template
+var azurermRoleAssignment []byte
+
+//go:embed resources/azurerm_user_assigned_identity.template
+var azurermUserAssignedIdentity []byte
+
+//go:embed resources/azurerm_log_analytics_workspace.template
+var azurermLogAnalyticsWorkspace []byte
+
+//go:embed resources/azurerm_role_definition.template
+var azurermRoleDefinition []byte

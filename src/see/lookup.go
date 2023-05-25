@@ -123,8 +123,9 @@ func Lookup(resource string) (*string, error) {
 		"Microsoft.AnalysisServices/servers":               "azurerm_analysis_services_server",
 		"Microsoft.ApiManagement/service":                  "azurerm_api_management",
 		"Microsoft.App/containerApps":                      "azurerm_container_app",
-		"Microsoft.App/managedEnvironments":                "azurerm_app_service_environment",
+		"Microsoft.App/managedEnvironments":                "azurerm_container_app_environment",
 		"Microsoft.Authorization/roleAssignments":          "azurerm_role_assignment",
+		"Microsoft.Authorization/roleDefinitions":          "azurerm_role_definition",
 		"Microsoft.Compute/virtualMachines":                "azurerm_virtual_machine",
 		"Microsoft.Compute/virtualMachines/extensions":     "azurerm_virtual_machine_extension",
 		"Microsoft.ManagedIdentity/userAssignedIdentities": "azurerm_user_assigned_identity",
@@ -136,11 +137,13 @@ func Lookup(resource string) (*string, error) {
 		"Microsoft.OperationalInsights/workspaces":         "azurerm_log_analytics_workspace",
 		"Microsoft.Resources/deployments":                  "azurerm_template_deployment",
 		"Microsoft.Storage/storageAccounts":                "azurerm_storage_account",
+		"Microsoft.ContainerRegistry/registries":           "azurerm_container_registry",
 	}
 	result := Lookup[resource]
 	var err error
 	if result == "" {
 		err = fmt.Errorf("resource %s not found", resource)
+		return nil, err
 	}
 	return &result, err
 }

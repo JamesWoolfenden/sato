@@ -1,0 +1,60 @@
+resource "azurerm_container_app" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+{{- if .resource.identity}}
+  identity {
+    type= {{.resource.identity.type|Quote}}
+    identity_ids={{range $i, $j := .resource.identity.userAssignedIdentities}}{{$i}}
+    {{- end}}
+  }
+{{- end}}
+{{- if .resource.properties.template}}
+  template {
+{{- range $i, $j :=  .resource.properties.template.containers}}
+    container {
+       cpu    = {{ $j.resources.cpu}}
+       image  = {{$j.image}}
+       memory = {{$j.resources.memory|Quote}}
+       name   = {{$j.name}}
+    }
+ {{- end}}
+    max_replicas    = {{.resource.properties.template.scale.maxReplicas}}
+    min_replicas    = {{.resource.properties.template.scale.minReplicas}}
+    revision_suffix = {{.resource.properties.template.revisionSuffix|Quote}}
+  }
+{{- end}}
+  container_app_environment_id = {{.resource.properties.managedEnvironmentId}}.id
+{{- if .resource.properties.configuration.ingress}}
+  ingress {
+    allow_insecure_connections = {{.resource.properties.configuration.ingress.allowInsecure}}
+    external_enabled           = {{.resource.properties.configuration.ingress.external}}
+    target_port                = {{.resource.properties.configuration.ingress.targetPort}}
+{{- range $i, $j:= .resource.properties.configuration.ingress.traffic}}
+    traffic_weight {
+      lastest_revision = {{$j.latestRevision}}
+      percentage       = {{$j.weight}}
+    }
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.properties.configuration.registries}}
+{{- range $i, $j:= .resource.properties.configuration.registries}}
+  registry {
+    identity= {{$j.identity}}
+    server  = {{$j.server}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
+}

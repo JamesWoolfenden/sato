@@ -16,7 +16,7 @@ resource "azurerm_virtual_network" "{{.item}}" {
   subnet {
     name={{ $i.name|Quote}}
     address_prefix={{$i.properties.addressPrefix |Quote}}
-    security_group={{$i.properties.networkSecurityGroup.id |Quote}}
+    security_group={{$i.properties.networkSecurityGroup.id |Quote}}.id
   }
 {{- end}}
 {{- end}}

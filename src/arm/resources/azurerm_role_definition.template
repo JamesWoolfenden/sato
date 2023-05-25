@@ -1,0 +1,21 @@
+resource "azurerm_role_definition" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+scope
+description
+permissions
+assignable_scopes
+
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
+}

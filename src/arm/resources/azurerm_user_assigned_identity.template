@@ -1,0 +1,16 @@
+resource "azurerm_user_assigned_identity" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
+}

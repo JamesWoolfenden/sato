@@ -1,0 +1,46 @@
+ resource "azurerm_log_analytics_workspace" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+{{- if .resource.properties.sku.name}}
+  sku                      = {{.resource.properties.sku.name |Quote}}
+{{- end}}
+{{- if .resource.properties.allowResourceOnlyPermissions}}
+  allow_resource_only_permissions = {{ .resource.properties.allowResourceOnlyPermissions}}
+{{- end}}
+{{- if .resource.properties.localAuthenticationDisabled}}
+  local_authentication_disabled = {{.resource.properties.localAuthenticationDisabled}}
+{{- end}}
+{{- if .resource.properties.retentionInDays}}
+  retention_in_days = {{.resource.properties.retentionInDays}}
+{{- end}}
+{{- if .resource.properties.dailyQuotaGB}}
+  daily_quota_gb= {{ .resource.properties.dailyQuotaGB}}
+{{- end}}
+{{- if .resource.properties.cmkForQueryForced}}
+  cmk_for_query_forced ={{ .resource.properties.cmkForQueryForced}}
+{{- end}}
+{{- if .resource.properties.internetIngestionEnabled}}
+  internet_ingestion_enabled = {{.resource.properties.internetIngestionEnabled}}
+{{- end}}
+{{- if .resource.properties.internetQueryEnabled}}
+  internet_query_enabled = {{.resource.properties.internetQueryEnabled}}
+{{- end}}
+{{- if .resource.properties.reservationCapacityInGBPerDay}}
+  reservation_capacity_in_gb_per_day = {{.resource.properties.reservationCapacityInGBPerDay}}
+{{- end}}
+{{- if .resource.properties.tags}}
+  tags = {{.resource.properties.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
+ }

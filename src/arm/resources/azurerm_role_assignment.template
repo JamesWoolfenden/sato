@@ -1,0 +1,10 @@
+resource "azurerm_role_assignment" "{{.item}}" {
+  name               = {{.resource.name}}
+  principal_id       = {{.resource.properties.principalId}}
+  scope              = ""
+  role_definition_id = {{.resource.properties.roleDefinitionId}}
+  description        = {{.resource.metadata.description|Quote}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
+}

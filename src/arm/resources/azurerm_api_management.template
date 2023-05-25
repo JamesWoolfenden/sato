@@ -12,7 +12,7 @@ resource "azurerm_api_management" "{{.item}}" {
 {{- end}}
   publisher_name      = {{ .resource.properties.publisherName}}
   publisher_email     = {{ .resource.properties.publisherEmail}}
-  sku_name = {{ .resource.sku.name}}
+  sku_name = "${ {{ .resource.sku.name}} }_${ {{ .resource.sku.capacity}} }"
 {{- if  .resource.additionalLocation}}
   additional_location={{ .resource.additionalLocation}}
 {{- end}}

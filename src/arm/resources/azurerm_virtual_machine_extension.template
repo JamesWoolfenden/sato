@@ -8,7 +8,7 @@ resource "azurerm_virtual_machine_extension" "{{.item}}" {
   automatic_upgrade_enabled  = {{$p.enableAutomaticUpgrade}}
   settings                   = jsonencode({{Marshal $p.settings}})
 {{- if .resource.dependsOn }}
-  virtual_machine_id         = {{index .resource.dependsOn 0|Quote}}
+  virtual_machine_id         = {{index .resource.dependsOn 0|Quote}}.id
   depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}
 }

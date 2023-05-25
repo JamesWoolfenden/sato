@@ -1,0 +1,23 @@
+resource "azurerm_template_deployment" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  template_body  = {{Marshal .resource.properties.template}}
+  deployment_mode= {{ .resource.properties.mode|Quote}}
+  parameters {
+{{- range $i,$j:=.resource.properties.parameters}}
+    {{ $i }}    = {{$j.value}}
+{{- end}}
+  }
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+{{- end}}
+}

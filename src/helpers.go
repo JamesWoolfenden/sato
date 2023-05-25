@@ -45,7 +45,7 @@ func SplitOn(source string, separator string, index int) string {
 
 // Dequote is a template function
 func Dequote(target string) string {
-	return strings.Replace(target, "\"", "", -1)
+	return strings.Replace(strings.Replace(target, "\"", "", -1), "'", "", -1)
 }
 
 // Quote is a template function
