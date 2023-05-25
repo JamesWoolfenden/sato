@@ -78,7 +78,7 @@ func Parse(file string, destination string) error {
 	}
 
 	result = preprocess(result)
-	_, err = ParseVariables(result, funcMap, destination)
+	result, err = ParseVariables(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
@@ -101,7 +101,7 @@ func Parse(file string, destination string) error {
 }
 
 // ParseVariables convert ARM Parameters into terraform variables
-func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) ([]interface{}, error) {
+func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 
 	variables := make(map[string]interface{})
 	if result["variables"] != nil {
@@ -113,13 +113,13 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	All, myVariables, err := parseParameters(result, funcMap, All)
 
 	if err != nil {
-		return myVariables, err
+		return result, err
 	}
 
-	locals, err := parseLocals(result)
+	locals, result, err := parseLocals(result)
 
 	if err != nil {
-		return myVariables, err
+		return result, err
 	}
 
 	for name, value := range variables {
@@ -131,8 +131,8 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			if reflect.TypeOf(value).String() == "string" {
 				if strings.Contains(value.(string), "()") ||
 					strings.Contains(value.(string), "[") {
-
-					local = "\t" + name + " = " + *parseString(value.(string), result) + "\n"
+					value, result = parseString(value.(string), result)
+					local = "\t" + name + " = " + value.(string) + "\n"
 					locals = locals + local
 					continue
 				}
@@ -153,7 +153,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
 		if err != nil {
-			return nil, err
+			return result, err
 		}
 		_ = tmpl.Execute(&output, m{
 			"variable": myItem,
@@ -165,16 +165,16 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 	err = sato.Write(All, destination, "variables")
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 
 	locals = "locals {\n" + locals + "}\n"
 	err = sato.Write(locals, destination, "locals")
 	if err != nil {
-		return nil, err
+		return result, err
 	}
 
-	return myVariables, nil
+	return result, nil
 }
 
 func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, All string) (string, []interface{}, error) {
@@ -202,16 +202,18 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 	return All, myVariables, nil
 }
 
-func parseLocals(result map[string]interface{}) (string, error) {
+func parseLocals(result map[string]interface{}) (string, map[string]interface{}, error) {
 	var locals string
 	myLocals := result["locals"].(map[string]interface{})
 
 	for x, y := range myLocals {
-		local := "\t" + x + " = " + *parseString(y.(string), result) + "\n"
+		var temp *string
+		temp, result = parseString(y.(string), result)
+		local := "\t" + x + " = " + *temp + "\n"
 		locals = locals + local
 	}
 
-	return locals, nil
+	return locals, result, nil
 }
 
 // ParseResources handles resources in ARM conversion
@@ -276,7 +278,9 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 	for name, attribute := range myResource {
 		switch attribute.(type) {
 		case string:
-			myResource[name] = *parseString(attribute.(string), result)
+			var temp *string
+			temp, result = parseString(attribute.(string), result)
+			myResource[name] = *temp
 		case map[string]interface{}:
 			var err error
 			myResource[name], err = parseMap(attribute.(map[string]interface{}), result)
@@ -288,7 +292,9 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 			for index, resource := range myArray {
 				switch resource.(type) {
 				case string:
-					myArray[index] = parseString(resource.(string), result)
+					var temp *string
+					temp, result = parseString(resource.(string), result)
+					myArray[index] = *temp
 				case map[string]interface{}:
 					myArray[index], _ = parseMap(resource.(map[string]interface{}), result)
 				case []interface{}:
@@ -307,15 +313,15 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 	return myResource, nil
 }
 
-func parseString(newAttribute string, result map[string]interface{}) *string {
+func parseString(newAttribute string, result map[string]interface{}) (*string, map[string]interface{}) {
 	var matches = []string{"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
 		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('"}
 
 	if what, found := contains(matches, newAttribute); found {
-		newAttribute = replace(matches, newAttribute, what, result)
+		newAttribute, result = replace(matches, newAttribute, what, result)
 		newAttribute = loseSQBrackets(newAttribute)
 	}
-	return &newAttribute
+	return &newAttribute, result
 }
 
 func loseSQBrackets(newAttribute string) string {
@@ -327,7 +333,7 @@ func loseSQBrackets(newAttribute string) string {
 	return newAttribute
 }
 
-func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) string {
+func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) (string, map[string]interface{}) {
 	var Attribute string
 	switch *what {
 	case "reference", "resourceId":
@@ -423,12 +429,11 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			Attribute = strings.Replace(newAttribute, "resourceGroup().location",
 				"data.azurerm_resource_group.sato.location", -1)
-			var data = make(map[string]bool)
-			if result["data"] != nil {
-				data := result["data"].(map[string]bool)
+			data := make(map[string]bool)
+			if result["data"] == nil {
 				data["resource_group"] = true
-
 			} else {
+				data = result["data"].(map[string]bool)
 				data["resource_group"] = true
 			}
 			result["data"] = data
@@ -449,12 +454,12 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	if again, still := contains(matches, Attribute); still {
 		//allow failure
 		if Attribute != newAttribute {
-			Attribute = replace(matches, Attribute, again, result)
+			Attribute, result = replace(matches, Attribute, again, result)
 		} else {
 			log.Printf("having a problem parsing %s", newAttribute)
 		}
 	}
-	return Attribute
+	return Attribute, result
 }
 
 func isCompound(newAttribute string) bool {
@@ -713,11 +718,12 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 	var All string
 	for name, value := range outputs {
 		var myVar sato.Output
+		var someString *string
 		myVar.Type = "string"
 		myVar.Name = name
 		temp := value.(map[string]interface{})
-		//myVar.Value, _ = handleResource(temp["value"].(string))
-		myVar.Value = *parseString(temp["value"].(string), result)
+		someString, result = parseString(temp["value"].(string), result)
+		myVar.Value = *someString
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(OutputFile))
 		if err != nil {
