@@ -99,6 +99,7 @@ func Test_escapeQuote(t *testing.T) {
 		{"pass", args{"\""}, "\\\""},
 		{"multiple", args{"\"this\""}, "\\\"this\\\""},
 		{"do nothing", args{"/"}, "/"},
+		{"nil", args{nil}, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -113,43 +114,110 @@ func Test_fixType(t *testing.T) {
 	type args struct {
 		myItem map[string]interface{}
 	}
-	tests := []struct {
-		name string
-		args args
-		want map[string]interface{}
-	}{
-		// TODO: Add test cases.
+	myItem := map[string]interface{}{
+		"type":         "number",
+		"defaultValue": 1,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := fixType(tt.args.myItem); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("fixType() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
-func Test_translate(t *testing.T) {
-	type args struct {
-		target string
+	myNullItem := map[string]interface{}{
+		"type":         nil,
+		"defaultValue": 1,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
 	}
+
+	myNullItemReturns := map[string]interface{}{
+		"type":         nil,
+		"defaultValue": 1,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	myObject := map[string]interface{}{
+		"type":         "object",
+		"defaultValue": 1,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	myObject2 := map[string]interface{}{
+		"type": "object",
+		"defaultValue": map[string]interface{}{
+			"firewallRules": []interface{}{
+				map[string]interface{}{
+					"firewallRuleName": "AllowFromAll",
+					"rangeStart":       "0.0.0.0",
+					"rangeEnd":         "255.255.255.255",
+				},
+			},
+		},
+		"maxValue": 25,
+		"minValue": 0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	myObjectReturned := map[string]interface{}{
+		"type": "object({\n\tfirewallRules= list(object({\n\t   firewallRuleName = string\n\t   rangeStart = string\n\t   rangeEnd = string}))})",
+		"defaultValue": map[string]interface{}{
+			"firewallRules": []interface{}{
+				map[string]interface{}{
+					"firewallRuleName": "AllowFromAll",
+					"rangeStart":       "0.0.0.0",
+					"rangeEnd":         "255.255.255.255",
+				},
+			},
+		},
+		"maxValue": 25,
+		"minValue": 0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "{\n\tfirewallRules= [{\n\t   firewallRuleName = \"AllowFromAll\"\n\t   rangeStart = \"0.0.0.0\"\n\t   rangeEnd = \"255.255.255.255\"}]}",
+	}
+
+	newObject := myObject
+	newObject["type"] = "string"
 	tests := []struct {
 		name    string
 		args    args
-		want    string
+		want    map[string]interface{}
 		wantErr bool
 	}{
-		// TODO: Add test cases.
+		{"Nil by mouth", args{myNullItem}, myNullItemReturns, true},
+		{"Do Nothing", args{myItem}, myItem, false},
+		{"Object", args{myObject}, newObject, false},
+		{"Convert Object", args{myObject2}, myObjectReturned, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := translate(tt.args.target)
+			got, err := fixType(tt.args.myItem)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("translate() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("fixType() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("translate() got = %v, want %v", got, tt.want)
+			if !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("fixType() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

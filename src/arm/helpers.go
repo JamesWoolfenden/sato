@@ -1,6 +1,7 @@
 package arm
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 
@@ -28,23 +29,9 @@ func contains(s []string, str string) (*string, bool) {
 	return nil, false
 }
 
-func translate(target string) (string, error) {
-	if strings.Contains(target, "reference") {
-		log.Printf("skipped %s", target)
-	} else {
-		s, err := handleResource(target)
-		if err != nil {
-			return s, err
-		}
-		return s, nil
-	}
-
-	return target, nil
-}
-
-func fixType(myItem map[string]interface{}) map[string]interface{} {
+func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	if myItem["type"] == nil {
-		return nil
+		return myItem, fmt.Errorf("object type is nil %s", myItem)
 	}
 
 	myType := myItem["type"].(string)
@@ -135,7 +122,7 @@ func fixType(myItem map[string]interface{}) map[string]interface{} {
 			log.Warn().Msgf("missed type %s", myType)
 		}
 	}
-	return myItem
+	return myItem, nil
 }
 
 func escapeQuote(item interface{}) string {

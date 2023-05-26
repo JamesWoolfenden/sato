@@ -3,7 +3,6 @@ package arm
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -149,7 +148,10 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			myItem["type"] = "string"
 		}
 
-		myItem = fixType(myItem)
+		myItem, err = fixType(myItem)
+		if err != nil {
+			log.Print(err)
+		}
 
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
@@ -181,12 +183,15 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, All string) (string, []interface{}, error) {
 	parameters := result["parameters"].(map[string]interface{})
 	myVariables := make([]interface{}, 0)
-
+	var err error
 	for name, item := range parameters {
 
 		myItem := item.(map[string]interface{})
 
-		myItem = fixType(myItem)
+		myItem, err = fixType(myItem)
+		if err != nil {
+			log.Print(err)
+		}
 
 		var output bytes.Buffer
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
@@ -668,47 +673,6 @@ func findResourceType(result map[string]interface{}, name string) bool {
 		}
 	}
 	return false
-}
-
-func handleResource(target string) (string, error) {
-	var attribute string
-	if strings.Contains(target, "[") {
-		var re = regexp.MustCompile(`\[(.*)\]`)
-		Match := re.FindStringSubmatch(target)
-		target = Match[1]
-	}
-
-	if strings.Contains(target, "reference") {
-		var re = regexp.MustCompile(`reference\((.*)\)`)
-		Match := re.ReplaceAllString(target, "")
-		attribute = Match
-	}
-
-	if strings.Contains(target, "resourceId") {
-		var re = regexp.MustCompile(`resourceId\((.*)\)`)
-		myMatches := re.FindStringSubmatch(target)
-		if myMatches == nil {
-			return target, errors.New("[resourceId] not found")
-		}
-		splitten := strings.Split(myMatches[1], ",")
-		resourceName := splitten[1]
-		var resourceMatch []string
-		if strings.Contains(splitten[1], "parameters") {
-			var myRe = regexp.MustCompile(`parameters\('(.*)'\)`)
-			resourceMatch = myRe.FindStringSubmatch(resourceName)
-		}
-
-		if strings.Contains(splitten[1], "variables") {
-			var myRe = regexp.MustCompile(`variables\('(.*)'\)`)
-			resourceMatch = myRe.FindStringSubmatch(resourceName)
-		}
-		resource, err := see.Lookup(strings.Replace(splitten[0], "'", "", 2))
-		if err != nil {
-			return "", err
-		}
-		return *resource + "." + resourceMatch[1] + attribute, nil
-	}
-	return target, nil
 }
 
 // ParseOutputs writes out to outputs.tf
