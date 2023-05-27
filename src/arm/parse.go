@@ -378,8 +378,9 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	case "format('":
 		{
 			var re = regexp.MustCompile(`{.}`) //format('{0}/{1}',
-			Match := re.ReplaceAllString(newAttribute, "%%s")
+			Match := re.ReplaceAllString(newAttribute, "%s")
 			Match = strings.Replace(Match, "'", "\"", -1)
+			Match = strings.Replace(Match, "/", "-", -1)
 			Attribute = loseSQBrackets(Match)
 		}
 	case "listKeys":
@@ -535,13 +536,13 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 			}
 		case "Microsoft.Network/virtualNetworks/subnets":
 			{
-				temp := "azurerm_virtual_network"
+				temp := "tolist(azurerm_virtual_network"
 				resourceName = &temp
 				splutters := strings.Split(name, ", ")
 				for item, splutter := range splutters {
 					splutters[item], _ = findResourceName(result, splutter)
 				}
-				name = strings.Join(splutters, ".") + ".subnet"
+				name = strings.Split(splutters[0], ".")[0] + ".subnet)[0].id"
 			}
 		case "Microsoft.Authorization/roleDefinitions":
 			{

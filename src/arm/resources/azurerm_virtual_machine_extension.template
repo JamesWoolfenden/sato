@@ -9,6 +9,6 @@ resource "azurerm_virtual_machine_extension" "{{.item}}" {
   settings                   = jsonencode({{Marshal $p.settings}})
 {{- if .resource.dependsOn }}
   virtual_machine_id         = {{index .resource.dependsOn 0|Quote}}.id
-  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
 {{- end}}
 }

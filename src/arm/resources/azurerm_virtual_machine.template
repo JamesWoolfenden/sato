@@ -11,10 +11,13 @@ resource "azurerm_virtual_machine" "{{.item}}" {
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
   vm_size               = {{.resource.properties.hardwareProfile.vmSize}}
-  network_interface_ids = [{{- range $x, $z:= .resource.properties.networkProfile.networkInterfaces}} {{$z.id}}, {{- end}}]
+  network_interface_ids = [{{- range $x, $z:= .resource.properties.networkProfile.networkInterfaces}}
+{{- if (Contains $z.id "azurerm")}}
+{{- $z.id}}.id,
+{{- else}} {{- $z.id}} {{- end}}  {{- end}}]
   boot_diagnostics {
     enabled    = {{ .resource.properties.diagnosticsProfile.bootDiagnostics.enabled}}
-    storage_uri= {{ .resource.properties.diagnosticsProfile.bootDiagnostics.storageUri}}
+    storage_uri= {{ Replace .resource.properties.diagnosticsProfile.bootDiagnostics.storageUri "primaryEndpoints.blob" "primary_blob_endpoint"}}
   }
 {{- if .resource.properties.osProfile}}
   os_profile {
@@ -73,6 +76,6 @@ resource "azurerm_virtual_machine" "{{.item}}" {
   }
 {{- end }}
 {{- if .resource.dependsOn }}
-  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
 {{- end}}
 }
