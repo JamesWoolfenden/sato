@@ -1,4 +1,7 @@
 resource "azurerm_subnet" "{{.item}}" {
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}

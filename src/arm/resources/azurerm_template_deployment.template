@@ -17,6 +17,9 @@ resource "azurerm_template_deployment" "{{.item}}" {
     {{ $i }}    = {{$j.value}}
 {{- end}}
   }
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on = {{ .resource.dependsOn }}
 {{- end}}

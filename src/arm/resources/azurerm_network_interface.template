@@ -17,6 +17,9 @@ resource "azurerm_network_interface" "{{ .item}}" {
     private_ip_address_allocation = {{ $i.properties.privateIPAllocationMethod|Quote }}
   }
 {{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
 {{- end}}

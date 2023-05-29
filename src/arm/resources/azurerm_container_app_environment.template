@@ -11,6 +11,9 @@ resource "azurerm_container_app_environment" "{{.item}}" {
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
   log_analytics_workspace_id={{- Replace .resource.properties.appLogsConfiguration.logAnalyticsConfiguration.customerId ".customerId" ".id"}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}

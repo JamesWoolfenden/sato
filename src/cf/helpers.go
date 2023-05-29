@@ -1,4 +1,4 @@
-package sato
+package cf
 
 import (
 	"archive/zip"
@@ -14,22 +14,27 @@ import (
 	"github.com/gobeam/stringy"
 )
 
-// Replace is a template function
+// Replace is a template function.
 func Replace(input, from, to string) string {
-	return strings.Replace(input, from, to, -1)
+	return strings.ReplaceAll(input, from, to)
 }
 
-// Add is a template function
-func Add(s string, a []string, m map[string]bool) ([]string, map[string]bool) {
-	if m[s] {
-		return a, m
+// Add is a template function.
+func Add(
+	myString string,
+	myList []string,
+	myMap map[string]bool,
+) ([]string, map[string]bool) {
+	if myMap[myString] {
+		return myList, myMap
 	}
-	a = append(a, s)
-	m[s] = true
-	return a, m
+	myList = append(myList, myString) //nolint:wsl
+	myMap[myString] = true
+
+	return myList, myMap
 }
 
-// Split is a template function
+// Split is a template function.
 func Split(source string, separator string) []string {
 	return strings.Split(source, separator)
 }
@@ -40,21 +45,23 @@ func SplitOn(source string, separator string, index int) string {
 	if len(splits) >= index+1 {
 		return splits[index]
 	}
+
 	return ""
 }
 
 // Dequote is a template function
 func Dequote(target string) string {
-	return strings.Replace(strings.Replace(target, "\"", "", -1), "'", "", -1)
+	return strings.ReplaceAll(strings.ReplaceAll(target, "\"", ""), "'", "")
 }
 
 // Quote is a template function
 func Quote(target string) string {
-	//is it a resource or variable
+	// is it a resource or variable
 	if strings.Contains(target, "var.") || strings.Contains(target, "local.") ||
 		(strings.Contains(target, "_") && strings.Contains(target, ".")) {
 		return target
 	}
+
 	return "\"" + target + "\""
 }
 
@@ -63,12 +70,14 @@ func Boolean(test *bool) bool {
 	if test == nil {
 		return false
 	}
+
 	return *test
 }
 
 // Decode64 is a template function
 func Decode64(str string) string {
 	temp, _ := base64.StdEncoding.DecodeString(str)
+
 	return string(temp)
 }
 
@@ -78,20 +87,23 @@ func Sprint(unknown interface{}) string {
 	if temp == "<nil>" {
 		return "\"\""
 	}
+
 	return temp
 }
 
 // Snake is a template function
-func Snake(Camel string) string {
-	str := stringy.New(Camel)
+func Snake(camel string) string {
+	str := stringy.New(camel)
 	snakeStr := str.SnakeCase()
+
 	return snakeStr.ToLower()
 }
 
 // Kebab is a template function
-func Kebab(Camel string) string {
-	str := stringy.New(Camel)
+func Kebab(camel string) string {
+	str := stringy.New(camel)
 	KebabStr := str.KebabCase()
+
 	return KebabStr.ToLower()
 }
 
@@ -105,6 +117,7 @@ func Nill(str *string) string {
 	if str == nil {
 		return ""
 	}
+
 	return *str
 }
 
@@ -113,6 +126,7 @@ func Nild(str *string, myDefault string) string {
 	if str == nil || *str == "" {
 		return myDefault
 	}
+
 	return *str
 }
 
@@ -121,11 +135,15 @@ func Array(mySlice []string) string {
 	if mySlice == nil || mySlice[0] == "" {
 		return "[]"
 	}
-	var newSlice []string
+
+	var newSlice []string //nolint:prealloc
+
 	for _, item := range mySlice {
 		newSlice = append(newSlice, "\t\""+item+"\"")
 	}
-	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
+
+	newString := "[\n" + strings.Join(newSlice, ",") + "\n\t]\n"
+
 	return newString
 }
 
@@ -134,13 +152,15 @@ func ArrayReplace(mySlice []string, target string, replacement string) string {
 	if mySlice == nil || mySlice[0] == "" {
 		return "[]"
 	}
-	var newSlice []string
+
+	var newSlice []string //nolint:prealloc
 
 	for _, item := range mySlice {
 		item = strings.Replace(item, target, replacement, 1)
 		newSlice = append(newSlice, "\t\""+item+"\"")
 	}
 	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
+
 	return newString
 }
 
@@ -152,6 +172,7 @@ func Contains(target string, substring string) bool {
 // Zipfile is a template function
 func Zipfile(code string, filename string, runtime string) string {
 	var extension string
+
 	switch runtime {
 	case "nodejs16.x", "nodejs14.x", "nodejs12.x", "nodejs":
 		extension = ".js"
@@ -165,23 +186,25 @@ func Zipfile(code string, filename string, runtime string) string {
 
 	codeFile := filename + extension
 	d1 := []byte(code)
-	_ = os.WriteFile(codeFile, d1, 0644)
+	_ = os.WriteFile(codeFile, d1, 0o644)
 
 	output := filename + ".zip"
 	archive, _ := os.Create(output)
+
 	defer func(archive *os.File) {
 		_ = archive.Close()
 	}(archive)
+
 	zipWriter := zip.NewWriter(archive)
 
-	f1, _ := os.Open(filename)
+	file, _ := os.Open(filename)
 
 	defer func(f1 *os.File) {
 		_ = f1.Close()
-	}(f1)
+	}(file)
 
 	w1, _ := zipWriter.Create(filename)
-	_, _ = io.Copy(w1, f1)
+	_, _ = io.Copy(w1, file)
 	_ = zipWriter.Close()
 
 	return output
@@ -189,34 +212,41 @@ func Zipfile(code string, filename string, runtime string) string {
 
 // Demap is a template function
 func Demap(str string) []string {
-	str = strings.Replace(str, "{", "", -1)
-	str = strings.Replace(str, "}", "", -1)
-	str = strings.Replace(str, "\"", "", -1)
-	str = strings.Replace(str, ":", "", -1)
-	str = strings.Replace(str, " ", "", -1)
+	str = strings.ReplaceAll(str, "{", "")
+	str = strings.ReplaceAll(str, "}", "")
+	str = strings.ReplaceAll(str, "\"", "")
+	str = strings.ReplaceAll(str, ":", "")
+	str = strings.ReplaceAll(str, " ", "")
+
 	return strings.Split(str, ",")
 }
 
 // Tags is a template function
 func Tags(v []tags.Tag) string {
 	var temp string
+
 	for _, item := range v {
 		if item.Key != "" {
 			temp = temp + "\t\"" + item.Key + "\"" + "=" + "\"" + item.Value + "\"" + "\n"
 		}
 	}
+
 	return temp
 }
 
 // RandomString is a template function
 func RandomString(n int) string {
-	rand.Seed(time.Now().UnixNano())
-	var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+	rand.New(rand.NewSource(time.Now().UnixNano())) //nolint:gosec
+
+	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	myString := make([]rune, n)
+
+	for i := range myString {
+		//goland:noinspection GoLinter
+		myString[i] = letters[rand.Intn(len(letters))] //nolint:gosec
 	}
-	return string(b)
+
+	return string(myString)
 }
 
 // Map is a template function
@@ -225,7 +255,8 @@ func Map(myMap map[string]string) string {
 	for item, stuff := range myMap {
 		result = result + "\t\"" + item + "\"" + "=" + "\"" + stuff + "\"\n"
 	}
-	result = result + " }"
+
+	result += " }"
 
 	return result
 }

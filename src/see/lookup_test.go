@@ -6,6 +6,8 @@ import (
 )
 
 func TestLookup(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		resource string
 	}
@@ -23,9 +25,11 @@ func TestLookup(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, err := Lookup(tt.args.resource)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Lookup() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {

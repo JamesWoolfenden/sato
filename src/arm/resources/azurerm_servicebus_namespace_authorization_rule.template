@@ -1,0 +1,15 @@
+resource "azurerm_servicebus_namespace_authorization_rule" "{{.item}}" {
+  name         = {{ .resource.name|Quote }}
+{{- if .resource.properties.rights}}
+{{- range $a, $i:= .resource.properties.rights}}
+  {{ToLower $i}}         = true
+{{- end}}
+{{- end}}
+  namespace_id = ""
+{{- if .resource.dependsOn }}
+  depends_on   = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+}

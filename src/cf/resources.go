@@ -1,7 +1,7 @@
-package sato
+package cf
 
 import (
-	_ "embed" //required for embed
+	_ "embed" // required for embed
 )
 
 //go:embed resources/aws_sns_topic.template
@@ -176,7 +176,7 @@ var awsCloudwatchMetricAlarm []byte
 var awsRoute53Record []byte
 
 //go:embed resources/aws_db_subnet_group.template
-var awsDbSubnetGroup []byte
+var awsDBSubnetGroup []byte
 
 //go:embed resources/aws_rds_cluster.template
 var awsRdsCluster []byte
@@ -215,7 +215,7 @@ var awsConfigConfigRule []byte
 var awsDmsReplicationTask []byte
 
 //go:embed resources/aws_db_parameter_group.template
-var awsDbParameterGroup []byte
+var awsDBParameterGroup []byte
 
 //go:embed resources/aws_dms_endpoint.template
 var awsDmsEndpoint []byte
@@ -227,7 +227,7 @@ var awsDmsReplicationinstance []byte
 var awsDmsReplicationSubnetGroup []byte
 
 //go:embed resources/aws_db_instance.template
-var awsDbInstance []byte
+var awsDBInstance []byte
 
 //go:embed resources/aws_eip_association.template
 var awsEipAssociation []byte
@@ -272,7 +272,7 @@ var awsSqsQueue []byte
 var awsNeptuneCluster []byte
 
 //go:embed resources/aws_neptune_cluster_instance.template
-var awsNeptuneDbInstance []byte
+var awsNeptuneDBInstance []byte
 
 //go:embed resources/aws_neptune_parameter_group.template
 var awsNeptuneDBParameterGroup []byte

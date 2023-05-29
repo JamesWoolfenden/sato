@@ -1,11 +1,11 @@
 package main
 
 import (
-	_ "embed" //required for embed
+	_ "embed" // required for embed
 	"fmt"
 	"os"
-	sato "sato/src"
 	"sato/src/arm"
+	"sato/src/cf"
 	"sato/src/see"
 	"sort"
 	"time"
@@ -15,10 +15,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
+//goland:noinspection GoLinter
 func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
 	var file string
+
 	var destination string
+
 	var resource string
 
 	app := &cli.App{
@@ -29,7 +33,8 @@ func main() {
 				Name:  "parse",
 				Usage: "translate CFN to Terraform",
 				Action: func(*cli.Context) error {
-					err := sato.Parse(file, destination)
+					err := cf.Parse(file, destination)
+
 					return err
 				},
 				Flags: []cli.Flag{
@@ -55,7 +60,8 @@ func main() {
 				Usage:     "Outputs the application version",
 				UsageText: "sato version",
 				Action: func(*cli.Context) error {
-					fmt.Println(sato.Version)
+					fmt.Println(cf.Version)
+
 					return nil
 				},
 			},
@@ -64,6 +70,7 @@ func main() {
 				Usage: "translate ARM to Terraform",
 				Action: func(*cli.Context) error {
 					err := arm.Parse(file, destination)
+
 					return err
 				},
 				Flags: []cli.Flag{
@@ -91,6 +98,7 @@ func main() {
 					if result != nil {
 						fmt.Print(*result)
 					}
+
 					return err
 				},
 				Flags: []cli.Flag{
@@ -108,7 +116,7 @@ func main() {
 		Usage:    "Translate Cloudformation to Terraform",
 		Compiled: time.Time{},
 		Authors:  []*cli.Author{{Name: "James Woolfenden", Email: "jim.wolf@duck.com"}},
-		Version:  sato.Version,
+		Version:  cf.Version,
 	}
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
@@ -116,5 +124,4 @@ func main() {
 	if err := app.Run(os.Args); err != nil {
 		log.Fatal().Err(err).Msg("Sato failure")
 	}
-
 }

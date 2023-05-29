@@ -10,6 +10,9 @@ resource "azurerm_user_assigned_identity" "{{.item}}" {
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}

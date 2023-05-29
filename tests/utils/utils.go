@@ -24,6 +24,10 @@ func CloneRepo(repoPath string, commitHash string) string {
 		URL: repoPath,
 	})
 
+	if err != nil {
+		log.Fatal().Err(err)
+	}
+
 	if commitHash != "" {
 		wt, _ := repo.Worktree()
 
@@ -43,8 +47,8 @@ func TfInit(workingDir string) error {
 	installer := &releases.LatestVersion{
 		Product: product.Terraform,
 	}
-
 	execPath, err := installer.Install(context.Background())
+
 	if err != nil {
 		return err
 	}
@@ -58,5 +62,6 @@ func TfInit(workingDir string) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }

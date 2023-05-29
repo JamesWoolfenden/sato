@@ -1,3 +1,4 @@
+#file: noinspection SpellCheckingInspection,SpellCheckingInspection
 ---
 # yamllint disable rule:line-length
 default_language_version:
@@ -31,7 +32,8 @@ repos:
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.34.0
     hooks:
-      - id: markdownlint
+      - # noinspection SpellCheckingInspection
+        id: markdownlint
         exclude: src/testdata|testdata
   - repo: https://github.com/jameswoolfenden/pre-commit
     rev: v0.1.50
@@ -39,15 +41,11 @@ repos:
       - id: terraform-fmt
         language_version: python3.9
   - repo: https://github.com/gruntwork-io/pre-commit
-    rev: v0.1.21
+    rev: v0.1.22
     hooks:
       - id: gofmt
       - id: goimports
       - id: golint
-#  - repo: https://github.com/golangci/golangci-lint
-#    rev: v1.51.1
-#    hooks:
-#      - id: golangci-lint
   - repo: https://github.com/syntaqx/git-hooks
     rev:  v0.0.17
     hooks:

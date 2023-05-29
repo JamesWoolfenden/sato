@@ -1,4 +1,4 @@
-package sato
+package cf
 
 import (
 	"bytes"
@@ -10,8 +10,8 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// ParseResources converts resource to Terraform
-func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncMap, destination string) error {
+// parseResources converts resource to Terraform
+func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncMap, destination string) error {
 	for item, resource := range resources {
 		var output bytes.Buffer
 
@@ -19,9 +19,8 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 
 		myContent := lookup(myType)
 
-		//needs to pivot on policy template from resource
+		// needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
-
 		if err != nil {
 			return err
 		}
@@ -31,14 +30,19 @@ func ParseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			"item":     item,
 		})
 
-		err = Write(ReplaceDependant(ReplaceVariables(output.String())), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+		err = Write(
+			ReplaceDependant(
+				ReplaceVariables(output.String())), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 		if err != nil {
 			return err
 		}
 	}
+
 	return nil
 }
 
+//goland:noinspection GoLinter
+//nolint:funlen
 func lookup(myType string) []byte {
 	TFLookup := map[string]interface{}{
 		"AWS::ApplicationAutoScaling::ScalableTarget":      awsAppAutoscalingTarget,
@@ -127,14 +131,14 @@ func lookup(myType string) []byte {
 		"AWS::Logs::MetricFilter":                          awsCloudwatchLogMetricFilter,
 		"AWS::Neptune::DBCluster":                          awsNeptuneCluster,
 		"AWS::Neptune::DBClusterParameterGroup":            awsNeptuneClusterDBParameterGroup,
-		"AWS::Neptune::DBInstance":                         awsNeptuneDbInstance,
+		"AWS::Neptune::DBInstance":                         awsNeptuneDBInstance,
 		"AWS::Neptune::DBParameterGroup":                   awsNeptuneDBParameterGroup,
 		"AWS::Neptune::DBSubnetGroup":                      awsNeptuneDnSubnetGroup,
 		"AWS::RDS::DBCluster":                              awsRdsCluster,
-		"AWS::RDS::DBClusterParameterGroup":                awsDbParameterGroup,
-		"AWS::RDS::DBInstance":                             awsDbInstance,
-		"AWS::RDS::DBParameterGroup":                       awsDbParameterGroup,
-		"AWS::RDS::DBSubnetGroup":                          awsDbSubnetGroup,
+		"AWS::RDS::DBClusterParameterGroup":                awsDBParameterGroup,
+		"AWS::RDS::DBInstance":                             awsDBInstance,
+		"AWS::RDS::DBParameterGroup":                       awsDBParameterGroup,
+		"AWS::RDS::DBSubnetGroup":                          awsDBSubnetGroup,
 		"AWS::Route53::RecordSet":                          awsRoute53Record,
 		"AWS::S3::Bucket":                                  awsS3Bucket,
 		"AWS::S3::BucketPolicy":                            awsS3BucketPolicy,
@@ -159,11 +163,18 @@ func lookup(myType string) []byte {
 	}
 
 	var myContent []byte
+
+	var ok bool
+
 	if TFLookup[myType] != nil {
-		myContent = TFLookup[myType].([]byte)
+		myContent, ok = TFLookup[myType].([]byte)
+		if !ok {
+			log.Warn().Msg("failed to cast to []byte")
+		}
 	} else {
-		//we don't want to half the parsing so just log it.
+		// we don't want to half the parsing so just log it.
 		log.Warn().Msgf("%s not found", myType)
 	}
+
 	return myContent
 }

@@ -1,14 +1,14 @@
 package arm
 
 import (
-	_ "embed" //required for embed
+	_ "embed" // required for embed
 )
 
 //go:embed variable.template
-var VariableFile []byte
+var variableFile []byte
 
 //go:embed output.template
-var OutputFile []byte
+var outputFile []byte
 
 //go:embed data.template
-var DataFile []byte
+var dataFile []byte

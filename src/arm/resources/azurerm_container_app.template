@@ -54,6 +54,9 @@ resource "azurerm_container_app" "{{.item}}" {
   }
 {{- end}}
 {{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}

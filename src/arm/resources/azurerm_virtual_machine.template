@@ -75,6 +75,9 @@ resource "azurerm_virtual_machine" "{{.item}}" {
 {{- end}}
   }
 {{- end }}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
 {{- end}}

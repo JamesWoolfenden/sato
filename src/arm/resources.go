@@ -1,7 +1,7 @@
 package arm
 
 import (
-	_ "embed" //required for embed
+	_ "embed" // required for embed
 )
 
 //go:embed resources/azurerm_virtual_machine.template
@@ -54,3 +54,12 @@ var azurermLogAnalyticsWorkspace []byte
 
 //go:embed resources/azurerm_role_definition.template
 var azurermRoleDefinition []byte
+
+//go:embed resources/azurerm_servicebus_namespace.template
+var azurermServicebusNamespace []byte
+
+//go:embed resources/azurerm_servicebus_namespace_authorization_rule.template
+var azurermServicebusNamespaceAuthorizationRule []byte
+
+//go:embed resources/azurerm_servicebus_queue.template
+var azurermServicebusQueue []byte

@@ -1,0 +1,41 @@
+resource "azurerm_servicebus_namespace" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{  .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  sku                      = {{ .resource.sku.name|Quote}}
+{{- if  .resource.properties.identity}}
+  identity {}
+{{- end}}
+{{- if .resource.properties.capacity}}
+  capacity = {{.resource.properties.capacity|Quote}}
+{{- end}}
+{{- if .resource.properties.customerManagedKey}}
+  customer_managed_key ={{.resource.properties.customerManagedKey|Quote}}
+{{- end}}
+{{- if NotNil .resource.properties.localAuthEnabled}}
+  local_auth_enabled= {{ .resource.properties.localAuthEnabled}}
+{{- end}}
+{{- if NotNil .resource.properties.publicNetworkAccessEnabled}}
+  public_network_access_enabled ={{ .resource.properties.publicNetworkAccessEnabled}}
+{{- end}}
+{{- if .resource.properties.minimumTlsVersion}}
+  minimum_tls_version={{ .resource.properties.minimumTlsVersion|Quote}}
+{{- end}}
+{{- if .resource.properties.zoneRedundant}}
+  zone_redundant={{.resource.properties.zoneRedundant|Quote}}
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}

@@ -13,7 +13,9 @@ resource "azurerm_public_ip" "{{ .item }}" {
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
-  tags = {}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.properties.dnsSettings.domainNameLabel}}
   domain_name_label        = {{ .resource.properties.dnsSettings.domainNameLabel|Quote }}
 {{- end}}

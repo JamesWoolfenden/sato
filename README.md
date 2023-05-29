@@ -100,7 +100,8 @@ azurerm_storage_account
 ```
 
 or
-```
+
+```bash
 $sato see -r AWS::EC2::Instance
 aws_instance%
 ```

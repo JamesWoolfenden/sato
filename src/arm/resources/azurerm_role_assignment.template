@@ -4,6 +4,9 @@ resource "azurerm_role_assignment" "{{.item}}" {
   scope              = ""
   role_definition_id = {{.resource.properties.roleDefinitionId}}
   description        = {{.resource.metadata.description|Quote}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
 {{- if .resource.dependsOn }}
   depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
 {{- end}}

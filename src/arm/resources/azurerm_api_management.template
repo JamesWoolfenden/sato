@@ -64,7 +64,7 @@ resource "azurerm_api_management" "{{.item}}" {
 {{- if .resource.publicIpAddressId}}
   public_ip_address_id={{ .resource.publicIpAddressId}}
 {{- end}}
-{{- if .resource.publicNetworkAccessEnabled}}
+{{- if NotNil .resource.publicNetworkAccessEnabled}}
   public_network_access_enabled={{ .resource.publicNetworkAccessEnabled}}
 {{- end}}
 {{- if .resource.virtualNetworkType}}
@@ -74,6 +74,6 @@ resource "azurerm_api_management" "{{.item}}" {
   virtual_network_configuration={{ .resource.virtualNetworkConfiguration}}
 {{- end}}
 {{- if .resource.tags}}
-  tags={{ .resource.tags}}
+  tags = {{Tags .resource.tags}}
 {{- end}}
 }

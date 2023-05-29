@@ -20,7 +20,7 @@ resource "azurerm_analysis_services_server" "{{.item}}" {
 {{- if .resource.properties.backupBlobContainerUri}}
   backup_blob_container_uri =  {{ .resource.properties.backupBlobContainerUri}}
 {{- end}}
-{{- if .resource.properties.enablePowerBiService}}
+{{- if NotNil .resource.properties.enablePowerBiService}}
   enable_power_bi_service = {{ .resource.properties.enablePowerBiService}}
 {{- end}}
 {{- if .resource.properties.ipV4FirewallSettings}}
@@ -33,7 +33,7 @@ resource "azurerm_analysis_services_server" "{{.item}}" {
       }
   }
 {{- end}}
-{{- if .resource.properties.tags}}
-  tags = {{.resource.properties.tags}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
 {{- end}}
 }

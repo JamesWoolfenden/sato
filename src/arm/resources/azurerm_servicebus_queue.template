@@ -1,0 +1,43 @@
+resource "azurerm_servicebus_queue" "{{.item}}" {
+  name         = {{ .resource.name|Quote }}
+  namespace_id = ""
+{{- if .resource.properties.lockDuration}}
+  lock_duration = {{.resource.properties.lockDuration|Quote}}
+{{- end}}
+{{- if NotNil .resource.properties.requiresSession}}
+  requires_session = {{ .resource.properties.requiresSession}}
+{{- end}}
+{{- if .resource.properties.defaultMessageTimeToLive}}
+  default_message_ttl = {{ .resource.properties.defaultMessageTimeToLive|Quote}}
+{{- end}}
+{{- if NotNil .resource.properties.duplicateDetectionHistoryTimeWindow}}
+  duplicate_detection_history_time_window = {{.resource.properties.duplicateDetectionHistoryTimeWindow|Quote}}
+{{- end}}
+{{- if .resource.properties.maxDeliveryCount}}
+  max_delivery_count = {{.resource.properties.maxDeliveryCount}}
+{{- end}}
+{{- if NotNil .resource.properties.enablePartitioning}}
+  enable_partitioning = {{.resource.properties.enablePartitioning}}
+{{- end}}
+{{- if NotNil .resource.properties.enableExpress}}
+  enable_express = {{.resource.properties.enableExpress}}
+{{- end}}
+{{- if .resource.properties.maxSizeInMegabytes}}
+  max_size_in_megabytes= {{ .resource.properties.maxSizeInMegabytes}}
+{{- end}}
+{{- if NotNil .resource.properties.requiresDuplicateDetection}}
+  requires_duplicate_detection = {{.resource.properties.requiresDuplicateDetection}}
+{{- end}}
+{{- if .resource.properties.deadLetteringOnMessageExpiration}}
+  dead_lettering_on_message_expiration = {{.resource.properties.deadLetteringOnMessageExpiration}}
+{{- end}}
+{{- if .resource.properties.autoDeleteOnIdle}}
+  auto_delete_on_idle = {{.resource.properties.autoDeleteOnIdle|Quote}}
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}

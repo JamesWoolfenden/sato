@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"reflect"
 	"regexp"
-	sato "sato/src"
+	"sato/src/cf"
 	"sato/src/see"
 	"strconv"
 	"strings"
@@ -22,7 +22,7 @@ import (
 
 type m map[string]interface{}
 
-// Parse turn CFN into Terraform
+// Parse turn CFN into Terraform.
 func Parse(file string, destination string) error {
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
@@ -30,7 +30,6 @@ func Parse(file string, destination string) error {
 	}
 
 	jsonFile, err := os.Open(fileAbs)
-
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -43,66 +42,69 @@ func Parse(file string, destination string) error {
 
 	var result map[string]interface{}
 	err = json.Unmarshal(byteValue, &result)
+
 	if err != nil {
 		return err
 	}
 
 	funcMap := tftemplate.FuncMap{
-		"Array":        sato.Array,
-		"ArrayReplace": sato.ArrayReplace,
-		"Contains":     sato.Contains,
-		"Sprint":       sato.Sprint,
-		"Decode64":     sato.Decode64,
-		"Boolean":      sato.Boolean,
-		"Dequote":      sato.Dequote,
-		"Quote":        sato.Quote,
-		"Demap":        sato.Demap,
+		"Array":        cf.Array,
+		"ArrayReplace": cf.ArrayReplace,
+		"Contains":     cf.Contains,
+		"Sprint":       cf.Sprint,
+		"Decode64":     cf.Decode64,
+		"Boolean":      cf.Boolean,
+		"Dequote":      cf.Dequote,
+		"Quote":        cf.Quote,
+		"Demap":        cf.Demap,
+		"Tags":         tags,
 		"ToUpper":      strings.ToUpper,
-		"ToLower":      sato.Lower,
+		"ToLower":      cf.Lower,
 		"Deref":        func(str *string) string { return *str },
-		"Nil":          sato.Nill,
-		"Nild":         sato.Nild,
+		"Nil":          cf.Nill,
+		"Nild":         cf.Nild,
 		"Marshal": func(v interface{}) string {
 			a, _ := json.Marshal(v)
+
 			return string(a)
 		},
-		"Split":        sato.Split,
-		"SplitOn":      sato.SplitOn,
-		"Replace":      sato.Replace,
-		"Tags":         sato.Tags,
-		"RandomString": sato.RandomString,
-		"Map":          sato.Map,
-		"Snake":        sato.Snake,
-		"Kebab":        sato.Kebab,
-		"ZipFile":      sato.Zipfile,
+		"Split":        cf.Split,
+		"SplitOn":      cf.SplitOn,
+		"Replace":      cf.Replace,
+		"RandomString": cf.RandomString,
+		"Map":          cf.Map,
+		"NotNil":       notNil,
+		"Snake":        cf.Snake,
+		"Kebab":        cf.Kebab,
+		"ZipFile":      cf.Zipfile,
 	}
 
 	result = preprocess(result)
-	result, err = ParseVariables(result, funcMap, destination)
+	result, err = parseVariables(result, funcMap, destination)
+
 	if err != nil {
 		return err
 	}
 
-	result, err = ParseResources(result, funcMap, destination)
+	result, err = parseResources(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
 
-	err = ParseOutputs(result, funcMap, destination)
+	err = parseOutputs(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
 
-	err = ParseData(result, funcMap, destination)
+	err = parseData(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-// ParseVariables convert ARM Parameters into terraform variables
-func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
-
+// parseVariables convert ARM Parameters into terraform variables.
+func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 	variables := make(map[string]interface{})
 	if result["variables"] != nil {
 		variables = result["variables"].(map[string]interface{})
@@ -111,13 +113,11 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	var All string
 
 	All, myVariables, err := parseParameters(result, funcMap, All)
-
 	if err != nil {
 		return result, err
 	}
 
 	locals, result, err := parseLocals(result)
-
 	if err != nil {
 		return result, err
 	}
@@ -128,24 +128,29 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		if value != nil {
 			var local string
 
-			if reflect.TypeOf(value).String() == "string" {
+			if reflect.TypeOf(value).String() == typeString {
 				if strings.Contains(value.(string), "()") ||
 					strings.Contains(value.(string), "[") {
 					value, result = parseString(value.(string), result)
 					local = "\t" + name + " = " + value.(string) + "\n"
-					locals = locals + local
+					locals += local
 					continue
 				}
+
 				myItem["default"] = value
 			}
 
 			if reflect.TypeOf(value).String() == "map[string]interface {}" {
-				blob, _ := json.Marshal(value)
+				blob, err := json.Marshal(value)
+				if err != nil {
+					log.Warn().Msgf("fail to marshal %s", value)
+				}
+
 				myItem["default"] = string(blob)
 			}
 
 			myItem["name"] = name
-			myItem["type"] = "string"
+			myItem["type"] = typeString
 		}
 
 		myItem, err = fixType(myItem)
@@ -154,7 +159,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		}
 
 		var output bytes.Buffer
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
+		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
 			return result, err
 		}
@@ -162,17 +167,17 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			"variable": myItem,
 			"item":     name,
 		})
-		All = All + output.String()
+		All += output.String()
 		myVariables = append(myVariables, myItem)
 	}
 
-	err = sato.Write(All, destination, "variables")
+	err = cf.Write(All, destination, "variables")
 	if err != nil {
 		return result, err
 	}
 
 	locals = "locals {\n" + locals + "}\n"
-	err = sato.Write(locals, destination, "locals")
+	err = cf.Write(locals, destination, "locals")
 	if err != nil {
 		return result, err
 	}
@@ -181,7 +186,10 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 }
 
 func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, All string) (string, []interface{}, error) {
-	parameters := result["parameters"].(map[string]interface{})
+	parameters, ok := result["parameters"].(map[string]interface{})
+	if !ok {
+		return "", nil, fmt.Errorf("failed to cast to map")
+	}
 	myVariables := make([]interface{}, 0)
 	var err error
 	for name, item := range parameters {
@@ -194,7 +202,7 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 		}
 
 		var output bytes.Buffer
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(VariableFile))
+		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
 			return "", nil, err
 		}
@@ -222,13 +230,16 @@ func parseLocals(result map[string]interface{}) (string, map[string]interface{},
 	return locals, result, nil
 }
 
-// ParseResources handles resources in ARM conversion
-func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
+// parseResources handles resources in ARM conversion
+func parseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 	resources := result["resources"].([]interface{})
+
 	newResources, err := parseList(resources, result)
+
 	if err != nil {
 		return nil, err
 	}
+
 	result["resources"] = newResources
 
 	for _, resource := range newResources {
@@ -237,6 +248,7 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		myType := resource.(map[string]interface{})
 		myContent := lookup(myType["type"].(string))
 		first, err := see.Lookup(myType["type"].(string))
+
 		if err != nil {
 			log.Warn().Err(err)
 			continue
@@ -245,20 +257,19 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		temp := myType["resource"].(string)
 		name = &temp
 
-		//needs to pivot on policy template from resource
+		// needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
-
 		if err != nil {
 			log.Printf("failed at %s  for %s %s", err, *first, *name)
 			continue
 		}
 
-		_ = tmpl.Execute(&output, sato.M{
+		_ = tmpl.Execute(&output, cf.M{
 			"resource": resource,
 			"item":     name,
 		})
 
-		err = sato.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
+		err = cf.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
 		if err != nil {
 			return nil, err
 		}
@@ -306,11 +317,10 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 				case []interface{}:
 					log.Print(resource)
 				}
-
 			}
 			myResource[name] = myArray
 		case float64, bool:
-			//it's fine
+			// it's fine
 			myResource[name] = attribute
 		default:
 			log.Print(attribute)
@@ -320,8 +330,10 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 }
 
 func parseString(newAttribute string, result map[string]interface{}) (*string, map[string]interface{}) {
-	var matches = []string{"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
-		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('"}
+	matches := []string{
+		"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
+		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('",
+	}
 
 	if what, found := contains(matches, newAttribute); found {
 		newAttribute, result = replace(matches, newAttribute, what, result)
@@ -331,7 +343,7 @@ func parseString(newAttribute string, result map[string]interface{}) (*string, m
 }
 
 func loseSQBrackets(newAttribute string) string {
-	var re = regexp.MustCompile(`^\[(.*)\]`) //format('{0}/{1}',
+	re := regexp.MustCompile(`^\[(.*)\]`) // format('{0}/{1}',
 	Matched := re.FindStringSubmatch(newAttribute)
 	if len(Matched) > 1 {
 		return Matched[1]
@@ -346,15 +358,15 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			if *what == "reference" {
 				Attribute = loseSQBrackets(newAttribute)
-				var re = regexp.MustCompile(`reference\((.*?)\)\.`) //format('{0}/{1}',
+				re := regexp.MustCompile(`reference\((.*?)\)\.`) // format('{0}/{1}',
 				Match := re.FindStringSubmatch(Attribute)
 				if (Match) != nil {
-					var rem = regexp.MustCompile(`\)\.(.*)`) //format('{0}/{1}',
+					rem := regexp.MustCompile(`\)\.(.*)`) // format('{0}/{1}',
 					remains := rem.FindStringSubmatch(Attribute)
 					if len(remains) <= 1 {
 						log.Print("no attribute")
 					}
-					var re2 = regexp.MustCompile(`resourceId\((.*?)\)`) //format('{0}/{1}',
+					re2 := regexp.MustCompile(`resourceId\((.*?)\)`) // format('{0}/{1}',
 					Match2 := re2.FindStringSubmatch(Attribute)
 					Attribute = Match2[0] + "." + remains[1]
 				} else {
@@ -371,13 +383,13 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	case "uniqueString", "uniquestring":
 		{
 			target := *what + "\\((.*?)\\)"
-			var re = regexp.MustCompile(target) //format('{0}/{1}',
+			re := regexp.MustCompile(target) // format('{0}/{1}',
 			Match := re.ReplaceAllString(newAttribute, "substr(uuid(), 0, 8)")
 			Attribute = Match
 		}
 	case "format('":
 		{
-			var re = regexp.MustCompile(`{.}`) //format('{0}/{1}',
+			re := regexp.MustCompile(`{.}`) // format('{0}/{1}',
 			Match := re.ReplaceAllString(newAttribute, "%s")
 			Match = strings.Replace(Match, "'", "\"", -1)
 			Match = strings.Replace(Match, "/", "-", -1)
@@ -386,7 +398,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	case "listKeys":
 		{
 			Attribute = loseSQBrackets(newAttribute)
-			var re = regexp.MustCompile(`listKeys\((.*)\)`) //format('{0}/{1}',
+			re := regexp.MustCompile(`listKeys\((.*)\)`) // format('{0}/{1}',
 			Match := re.FindStringSubmatch(Attribute)
 			if len(Match) > 1 {
 				resource := strings.Split(Match[1], ",")[0]
@@ -397,7 +409,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "parameters":
 		{
-			var re = regexp.MustCompile(`parameters\('(.*?)\'\)`)
+			re := regexp.MustCompile(`parameters\('(.*?)\'\)`)
 			Match := re.FindStringSubmatch(newAttribute)
 			if (Match) != nil {
 				var temp string
@@ -413,7 +425,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "variables":
 		{
-			var re = regexp.MustCompile(`variables\('(.*?)\'\)`)
+			re := regexp.MustCompile(`variables\('(.*?)\'\)`)
 			Match := re.FindStringSubmatch(newAttribute)
 			if (Match) != nil {
 				var temp string
@@ -459,7 +471,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	}
 
 	if again, still := contains(matches, Attribute); still {
-		//allow failure
+		// allow failure
 		if Attribute != newAttribute {
 			Attribute, result = replace(matches, Attribute, again, result)
 		} else {
@@ -478,16 +490,15 @@ func isCompound(newAttribute string) bool {
 }
 
 func replaceResourceID(Match string, result map[string]interface{}) (string, error) {
-
 	if strings.Contains(Match, "extensionResourceId") {
-		var re = regexp.MustCompile(`extensionResourceId\((.*?)\)`)
+		re := regexp.MustCompile(`extensionResourceId\((.*?)\)`)
 		Match = re.ReplaceAllString(Match, "NIL")
 	}
 
-	var re = regexp.MustCompile(`resourceId\((.*?)\)`)
+	re := regexp.MustCompile(`resourceId\((.*?)\)`)
 	Attribute := re.FindStringSubmatch(Match)
 
-	var re2 = regexp.MustCompile(`resourceId\((.*?\))\),`)
+	re2 := regexp.MustCompile(`resourceId\((.*?\))\),`)
 	Attribute2 := re2.FindStringSubmatch(Match)
 
 	if len(Attribute2) > 1 {
@@ -495,11 +506,10 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 	}
 
 	if len(Attribute) <= 1 {
-		var re3 = regexp.MustCompile(`,(![^[]*\])`)
+		re3 := regexp.MustCompile(`,(![^[]*\])`)
 		Attribute = re3.FindStringSubmatch(Match)
 	}
 	arm, name, err := splitResourceName(Attribute[1])
-
 	if err != nil {
 		log.Warn().Msgf("failed to parse %s", Attribute[1])
 	}
@@ -560,15 +570,26 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 						log.Warn().Msgf("no match found %s", arm)
 					}
 				}
-				resourceName, err = see.Lookup(sato.Dequote(arm))
+				resourceName, err = see.Lookup(cf.Dequote(arm))
 				if err != nil {
+					resourceName = toPointer()
 					log.Warn().Msgf("no match found %s", arm)
 				}
 			}
 		}
 	}
-	temp := *resourceName + "." + name
-	return strings.Replace(Match, Attribute[0], temp, -1), nil
+
+	if resourceName != nil {
+		temp := *resourceName + "." + name
+		return strings.Replace(Match, Attribute[0], temp, -1), nil
+	}
+
+	return "", err
+}
+
+func toPointer() *string {
+	temp := "UNKNOWN"
+	return &temp
 }
 
 func splitResourceName(Attribute string) (string, string, error) {
@@ -583,10 +604,10 @@ func splitResourceName(Attribute string) (string, string, error) {
 		}
 	case 2:
 		{
-			var re = regexp.MustCompile(`'(.*?)'`)
+			re := regexp.MustCompile(`'(.*?)'`)
 			newAttribute := re.FindStringSubmatch(splitsy[1])
 			if len(newAttribute) <= 1 {
-				arm = sato.Dequote(splitsy[0])
+				arm = cf.Dequote(splitsy[0])
 				name = strings.TrimSpace(splitsy[1])
 			} else {
 				name = newAttribute[1]
@@ -600,7 +621,7 @@ func splitResourceName(Attribute string) (string, string, error) {
 		}
 	default:
 		{
-			//more than 2
+			// more than 2
 		}
 	}
 	return arm, name, nil
@@ -611,7 +632,7 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 		return name, fmt.Errorf("uses inline format function %s", name)
 	}
 
-	name = sato.Dequote(name)
+	name = cf.Dequote(name)
 	var err error
 	resources := result["resources"].([]interface{})
 	for _, myResource := range resources {
@@ -621,7 +642,7 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 		}
 	}
 
-	//not simple name lookup
+	// not simple name lookup
 	if strings.Contains(name, ",") {
 		Lots := strings.Split(name, ",")
 		var newName []string
@@ -655,13 +676,16 @@ func getNameValue(result map[string]interface{}, name string) (string, error) {
 			return name, fmt.Errorf("failed to match value %s", name)
 		}
 		rawName := rawNames[1]
-		variables := result["variables"].(map[string]interface{})
-		for myVariable, value := range variables {
-			if rawName == myVariable {
-				return value.(string), nil
+		if result["variables"] != nil {
+			variables := result["variables"].(map[string]interface{})
+			for myVariable, value := range variables {
+				if rawName == myVariable {
+					return value.(string), nil
+				}
 			}
 		}
 	}
+
 	return name, nil
 }
 
@@ -676,8 +700,8 @@ func findResourceType(result map[string]interface{}, name string) bool {
 	return false
 }
 
-// ParseOutputs writes out to outputs.tf
-func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+// parseOutputs writes out to outputs.tf
+func parseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
 	if result["outputs"] == nil {
 		return nil
 	}
@@ -686,7 +710,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 	var All string
 	for name, value := range outputs {
-		var myVar sato.Output
+		var myVar cf.Output
 		var someString *string
 		myVar.Type = "string"
 		myVar.Name = name
@@ -694,7 +718,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		someString, result = parseString(temp["value"].(string), result)
 		myVar.Value = *someString
 		var output bytes.Buffer
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(OutputFile))
+		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(outputFile))
 		if err != nil {
 			return err
 		}
@@ -705,7 +729,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		All = All + output.String()
 	}
 
-	err := sato.Write(All, destination, "outputs")
+	err := cf.Write(All, destination, "outputs")
 	if err != nil {
 		return err
 	}
@@ -713,8 +737,8 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 	return nil
 }
 
-// ParseData writes out to data.tf
-func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+// parseData writes out to data.tf
+func parseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
 	if result["data"] == nil {
 		return nil
 	}
@@ -722,7 +746,7 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 	data := result["data"]
 
 	var output bytes.Buffer
-	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(DataFile))
+	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(dataFile))
 	if err != nil {
 		return err
 	}
@@ -735,7 +759,7 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 		return err
 	}
 
-	err = sato.Write(output.String(), destination, "data")
+	err = cf.Write(output.String(), destination, "data")
 	if err != nil {
 		log.Print(err)
 		return err
@@ -744,8 +768,8 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 	return nil
 }
 
-// GetValue gets from variables
-func GetValue(item string, variables []sato.Variable) (*string, error) {
+// getValue gets from variables
+func getValue(item string, variables []cf.Variable) (*string, error) {
 	for _, x := range variables {
 		if x.Name == item {
 			return &x.Default, nil
@@ -812,8 +836,8 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 				}
 			case "object", "list(string)":
 				{
-					//todo
-					//myResult["default"] = myResult["defaultValue"]
+					// todo
+					// myResult["default"] = myResult["defaultValue"]
 					myResult["default"] = ""
 					newParams[item] = myResult
 				}
