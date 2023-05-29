@@ -10,7 +10,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// parseResources converts resource to Terraform
+// parseResources converts resource to Terraform.
 func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncMap, destination string) error {
 	for item, resource := range resources {
 		var output bytes.Buffer
@@ -22,7 +22,7 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		// needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to template %v", err)
 		}
 
 		_ = tmpl.Execute(&output, M{

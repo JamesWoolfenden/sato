@@ -166,7 +166,7 @@ func arrayToString(defaultValue []interface{}) string {
 func tags(tags map[string]interface{}) string {
 	tagged := "{\n"
 	for item, name := range tags {
-		tagged = tagged + "\t\"" + item + "\"" + " = " + "\"" + name.(string) + "\"\n"
+		tagged += "\t\"" + item + "\"" + " = " + "\"" + name.(string) + "\"\n"
 	}
 
 	tagged += "\t}"
@@ -176,6 +176,7 @@ func tags(tags map[string]interface{}) string {
 
 func notNil(unknown interface{}) bool {
 	if unknown == nil {
+
 		return false
 	}
 

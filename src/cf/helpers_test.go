@@ -137,6 +137,7 @@ func Test_boolean(t *testing.T) {
 	}
 
 	test := true
+
 	var undefined bool
 
 	tests := []struct {
@@ -176,6 +177,7 @@ func Test_decode64(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Decode64(tt.args.str); got != tt.want {
@@ -193,7 +195,9 @@ func Test_sprint(t *testing.T) {
 	}
 
 	var empty interface{}
+
 	var sliceEmpty []interface{}
+
 	var sliceNotEmpty []interface{}
 
 	sliceNotEmpty = append(sliceNotEmpty, "SliceNotEmpty")
@@ -209,7 +213,9 @@ func Test_sprint(t *testing.T) {
 		{"sliceEmpty", args{sliceEmpty}, ""},
 		{"sliceNotEmpty", args{sliceNotEmpty}, "SliceNotEmpty"},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Sprint(tt.args.unknown); got != tt.want {
@@ -220,9 +226,12 @@ func Test_sprint(t *testing.T) {
 }
 
 func Test_quote(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		target string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -230,8 +239,11 @@ func Test_quote(t *testing.T) {
 	}{
 		{"test", args{"something"}, "\"something\""},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Quote(tt.args.target); got != tt.want {
 				t.Errorf("Quote() = %v, want %v", got, tt.want)
 			}
@@ -240,9 +252,12 @@ func Test_quote(t *testing.T) {
 }
 
 func Test_snake(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		Camel string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -251,8 +266,10 @@ func Test_snake(t *testing.T) {
 		{"Camel", args{"ThisIsSnakeCasing"}, "this_is_snake_casing"},
 		{"Snake", args{"This-Is-Snake-Casing"}, "this_is_snake_casing"},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Snake(tt.args.Camel); got != tt.want {
 				t.Errorf("Snake() = %v, want %v", got, tt.want)
 			}
@@ -261,6 +278,8 @@ func Test_snake(t *testing.T) {
 }
 
 func Test_kebab(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		Camel string
 	}
@@ -272,8 +291,10 @@ func Test_kebab(t *testing.T) {
 		{"Camel", args{"ThisIsCamelCasing"}, "this-is-camel-casing"},
 		{"Snake", args{"This_Is_Camel_Casing"}, "this-is-camel-casing"},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Kebab(tt.args.Camel); got != tt.want {
 				t.Errorf("Kebab() = %v, want %v", got, tt.want)
 			}
@@ -303,6 +324,8 @@ func Test_lower(t *testing.T) {
 }
 
 func Test_nill(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		str *string
 	}
@@ -315,8 +338,10 @@ func Test_nill(t *testing.T) {
 		{"Nil", args{nil}, ""},
 		{"Not Nil", args{&exists}, exists},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Nill(tt.args.str); got != tt.want {
 				t.Errorf("Nill() = %v, want %v", got, tt.want)
 			}

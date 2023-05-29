@@ -255,7 +255,7 @@ func StringToMap(param cloudformation.Parameter, myVariable Variable) Variable {
 	return myVariable
 }
 
-// Write out Terraform
+// Write out Terraform.
 func Write(output string, location string, name string) error {
 	if output != "" {
 		newPath, _ := filepath.Abs(location)
@@ -279,12 +279,12 @@ func Write(output string, location string, name string) error {
 	return nil
 }
 
-// ToTFName creates a Terraform resource name from a CFN type (approximates)
+// ToTFName creates a Terraform resource name from a CFN type (approximates).
 func ToTFName(CFN string) string {
 	return strings.ToLower(strings.ReplaceAll(CFN, "::", "_"))
 }
 
-// ReplaceVariables looks to see if u can translate CFN vars into terraform
+// ReplaceVariables looks to see if u can translate CFN vars into terraform.
 func ReplaceVariables(str1 string) string {
 	re := regexp.MustCompile(`\${.*?}`)
 	submatch := re.FindAllString(str1, -1)

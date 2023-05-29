@@ -1,6 +1,7 @@
 package arm
 
 import (
+	"path/filepath"
 	"reflect"
 	sato "sato/src/cf"
 	"testing"
@@ -55,8 +56,8 @@ func TestParse(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{"Pass", args{"..\\..\\examples\\arm\\microsoft.compute\\vm-simple-windows\\azuredeploy.json", ".sato"}, false},
-		{"Fail", args{"..\\..\\examples\\arm\\microsoft.compute\\vm-simple-windows\\nofile.json", ".sato"}, true},
+		{"Pass", args{filepath.FromSlash("..\\..\\examples\\arm\\microsoft.compute\\vm-simple-windows\\azuredeploy.json"), ".sato"}, false},
+		{"Fail", args{filepath.FromSlash("..\\..\\examples\\arm\\microsoft.compute\\vm-simple-windows\\nofile.json"), ".sato"}, true},
 	}
 
 	for _, tt := range tests {
@@ -629,7 +630,9 @@ func Test_parseString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			got, got1 := parseString(tt.args.newAttribute, tt.args.result)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("parseString() got = %v, want %v", got, tt.want)

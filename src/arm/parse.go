@@ -132,6 +132,7 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 				if strings.Contains(value.(string), "()") ||
 					strings.Contains(value.(string), "[") {
 					value, result = parseString(value.(string), result)
+
 					local = "\t" + name + " = " + value.(string) + "\n"
 					locals += local
 					continue
@@ -159,7 +160,9 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		}
 
 		var output bytes.Buffer
+
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
+
 		if err != nil {
 			return result, err
 		}
@@ -168,6 +171,7 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			"item":     name,
 		})
 		All += output.String()
+
 		myVariables = append(myVariables, myItem)
 	}
 
@@ -178,6 +182,7 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 	locals = "locals {\n" + locals + "}\n"
 	err = cf.Write(locals, destination, "locals")
+
 	if err != nil {
 		return result, err
 	}

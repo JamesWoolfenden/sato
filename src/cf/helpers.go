@@ -39,7 +39,7 @@ func Split(source string, separator string) []string {
 	return strings.Split(source, separator)
 }
 
-// SplitOn is a template function
+// SplitOn is a template function.
 func SplitOn(source string, separator string, index int) string {
 	splits := strings.Split(source, separator)
 	if len(splits) >= index+1 {
@@ -49,12 +49,12 @@ func SplitOn(source string, separator string, index int) string {
 	return ""
 }
 
-// Dequote is a template function
+// Dequote is a template function.
 func Dequote(target string) string {
 	return strings.ReplaceAll(strings.ReplaceAll(target, "\"", ""), "'", "")
 }
 
-// Quote is a template function
+// Quote is a template function.
 func Quote(target string) string {
 	// is it a resource or variable
 	if strings.Contains(target, "var.") || strings.Contains(target, "local.") ||
@@ -65,7 +65,7 @@ func Quote(target string) string {
 	return "\"" + target + "\""
 }
 
-// Boolean is a template function
+// Boolean is a template function.
 func Boolean(test *bool) bool {
 	if test == nil {
 		return false
@@ -74,14 +74,14 @@ func Boolean(test *bool) bool {
 	return *test
 }
 
-// Decode64 is a template function
+// Decode64 is a template function.
 func Decode64(str string) string {
 	temp, _ := base64.StdEncoding.DecodeString(str)
 
 	return string(temp)
 }
 
-// Sprint is a template function
+// Sprint is a template function.
 func Sprint(unknown interface{}) string {
 	temp := strings.Replace(strings.Replace(fmt.Sprint(unknown), "[", "", 1), "]", "", 1)
 	if temp == "<nil>" {
@@ -91,7 +91,7 @@ func Sprint(unknown interface{}) string {
 	return temp
 }
 
-// Snake is a template function
+// Snake is a template function.
 func Snake(camel string) string {
 	str := stringy.New(camel)
 	snakeStr := str.SnakeCase()
@@ -99,7 +99,7 @@ func Snake(camel string) string {
 	return snakeStr.ToLower()
 }
 
-// Kebab is a template function
+// Kebab is a template function.
 func Kebab(camel string) string {
 	str := stringy.New(camel)
 	KebabStr := str.KebabCase()
@@ -107,12 +107,12 @@ func Kebab(camel string) string {
 	return KebabStr.ToLower()
 }
 
-// Lower is a template function
+// Lower is a template function.
 func Lower(target string) string {
 	return strings.ToLower(target)
 }
 
-// Nill is a template function
+// Nill is a template function.
 func Nill(str *string) string {
 	if str == nil {
 		return ""
@@ -121,7 +121,7 @@ func Nill(str *string) string {
 	return *str
 }
 
-// Nild is a template function
+// Nild is a template function.
 func Nild(str *string, myDefault string) string {
 	if str == nil || *str == "" {
 		return myDefault
@@ -130,7 +130,7 @@ func Nild(str *string, myDefault string) string {
 	return *str
 }
 
-// Array is a template function
+// Array is a template function.
 func Array(mySlice []string) string {
 	if mySlice == nil || mySlice[0] == "" {
 		return "[]"
@@ -147,7 +147,7 @@ func Array(mySlice []string) string {
 	return newString
 }
 
-// ArrayReplace is a template function
+// ArrayReplace is a template function.
 func ArrayReplace(mySlice []string, target string, replacement string) string {
 	if mySlice == nil || mySlice[0] == "" {
 		return "[]"
@@ -159,17 +159,17 @@ func ArrayReplace(mySlice []string, target string, replacement string) string {
 		item = strings.Replace(item, target, replacement, 1)
 		newSlice = append(newSlice, "\t\""+item+"\"")
 	}
-	newString := "[\n" + strings.Join(newSlice[:], ",") + "\n\t]\n"
+	newString := "[\n" + strings.Join(newSlice, ",") + "\n\t]\n"
 
 	return newString
 }
 
-// Contains is a template function
+// Contains is a template function.
 func Contains(target string, substring string) bool {
 	return strings.Contains(target, substring)
 }
 
-// Zipfile is a template function
+// Zipfile is a template function.
 func Zipfile(code string, filename string, runtime string) string {
 	var extension string
 
@@ -210,7 +210,7 @@ func Zipfile(code string, filename string, runtime string) string {
 	return output
 }
 
-// Demap is a template function
+// Demap is a template function.
 func Demap(str string) []string {
 	str = strings.ReplaceAll(str, "{", "")
 	str = strings.ReplaceAll(str, "}", "")
@@ -221,7 +221,7 @@ func Demap(str string) []string {
 	return strings.Split(str, ",")
 }
 
-// Tags is a template function
+// Tags is a template function.
 func Tags(v []tags.Tag) string {
 	var temp string
 
@@ -234,7 +234,7 @@ func Tags(v []tags.Tag) string {
 	return temp
 }
 
-// RandomString is a template function
+// RandomString is a template function.
 func RandomString(n int) string {
 	rand.New(rand.NewSource(time.Now().UnixNano())) //nolint:gosec
 
@@ -249,7 +249,7 @@ func RandomString(n int) string {
 	return string(myString)
 }
 
-// Map is a template function
+// Map is a template function.
 func Map(myMap map[string]string) string {
 	result := "{ \n"
 	for item, stuff := range myMap {

@@ -119,9 +119,12 @@ func TestToTFName(t *testing.T) {
 
 //goland:noinspection GoLinter,GoLinter,GoLinter,GoLinter,GoLinter
 func TestReplaceVariables(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		str1 string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -130,8 +133,11 @@ func TestReplaceVariables(t *testing.T) {
 		{"pass", args{"Im ${good}"}, "Im ${var.good}"},
 		{"do nothing", args{"Im ${good::aws}"}, "Im ${good::aws}"},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.ReplaceVariables(tt.args.str1); got != tt.want {
 				t.Errorf("ReplaceVariables() = %v, want %v", got, tt.want)
 			}
@@ -159,12 +165,14 @@ func TestParseVariables(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
 			got, err := sato.ParseVariables(tt.args.template, tt.args.funcMap, tt.args.destination)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseVariables() error = %v, wantErr %v", err, tt.wantErr)
+
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
@@ -230,6 +238,7 @@ func TestGetVariableDefault(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.GetVariableDefault(tt.args.param, tt.args.myVariable); !reflect.DeepEqual(got, tt.want) {
@@ -241,9 +250,12 @@ func TestGetVariableDefault(t *testing.T) {
 
 //goland:noinspection GoLinter,GoLinter,GoLinter,GoLinter,GoLinter,GoLinter
 func TestReplaceDependant(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		str1 string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -251,8 +263,11 @@ func TestReplaceDependant(t *testing.T) {
 	}{
 		{},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.ReplaceDependant(tt.args.str1); got != tt.want {
 				t.Errorf("ReplaceDependant() = %v, want %v", got, tt.want)
 			}

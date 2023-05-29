@@ -31,6 +31,7 @@ func lookup(myType string) []byte {
 	}
 
 	var myContent []byte
+
 	var ok bool
 
 	if TFLookup[myType] != nil {
