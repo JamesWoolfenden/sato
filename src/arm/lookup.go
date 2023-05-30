@@ -28,6 +28,7 @@ func lookup(myType string) []byte {
 		"Microsoft.ServiceBus/namespaces":                    azurermServicebusNamespace,
 		"Microsoft.ServiceBus/namespaces/authorizationRules": azurermServicebusNamespaceAuthorizationRule,
 		"Microsoft.ServiceBus/namespaces/queues":             azurermServicebusQueue,
+		"Microsoft.AAD/domainServices":                       azurermActiveDirectoryDomainService,
 	}
 
 	var myContent []byte

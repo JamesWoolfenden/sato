@@ -211,7 +211,7 @@ func Test_fixType(t *testing.T) {
 		"default": "1",
 	}
 
-	returNotObject := map[string]interface{}{
+	returnNotObject := map[string]interface{}{
 		"type":         43,
 		"defaultValue": 1,
 		"maxValue":     25,
@@ -221,43 +221,6 @@ func Test_fixType(t *testing.T) {
 		},
 		"default": "1",
 	}
-	//myObject2 := map[string]interface{}{
-	//	"type": "object",
-	//	"defaultValue": map[string]interface{}{
-	//		"firewallRules": []interface{}{
-	//			map[string]interface{}{
-	//				"firewallRuleName": "AllowFromAll",
-	//				"rangeStart":       "0.0.0.0",
-	//				"rangeEnd":         "255.255.255.255",
-	//			},
-	//		},
-	//	},
-	//	"maxValue": 25,
-	//	"minValue": 0,
-	//	"metadata": map[string]interface{}{
-	//		"description": "Minimum number of replicas that will be deployed",
-	//	},
-	//	"default": "1",
-	//}
-	//
-	//myObjectReturned := map[string]interface{}{
-	//	"type": "object({\n\tfirewallRules= list(object({\n\t   firewallRuleName = string\n\t   rangeStart = string\n\t   rangeEnd = string}))})",
-	//	"defaultValue": map[string]interface{}{
-	//		"firewallRules": []interface{}{
-	//			map[string]interface{}{
-	//				"firewallRuleName": "AllowFromAll",
-	//				"rangeStart":       "0.0.0.0",
-	//				"rangeEnd":         "255.255.255.255",
-	//			},
-	//		},
-	//	},
-	//	"maxValue": 25,
-	//	"minValue": 0,
-	//	"metadata": map[string]interface{}{
-	//		"description": "Minimum number of replicas that will be deployed",
-	//	},
-	//	"default": "{\n\tfirewallRules= [{\n\t   firewallRuleName = \"AllowFromAll\"\n\t   rangeStart = \"0.0.0.0\"\n\t   rangeEnd = \"255.255.255.255\"}]}",
-	//}
 
 	tests := []struct {
 		name    string
@@ -268,7 +231,7 @@ func Test_fixType(t *testing.T) {
 		{"Nil by mouth", args{myNullItem}, myNullItemReturns, true},
 		{"Do Nothing", args{myItem}, myItem, false},
 		{"Object", args{myObject}, newObject, false},
-		{"Not string", args{notObject}, returNotObject, true},
+		{"Not string", args{notObject}, returnNotObject, true},
 		//{"Convert Object", args{myObject2}, myObjectReturned, false},
 	}
 

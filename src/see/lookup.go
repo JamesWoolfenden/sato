@@ -144,6 +144,7 @@ func Lookup(resource string) (*string, error) {
 		"Microsoft.ServiceBus/namespaces":                    "azurerm_servicebus_namespace",
 		"Microsoft.ServiceBus/namespaces/authorizationRules": "azurerm_servicebus_namespace_authorization_rule",
 		"Microsoft.ServiceBus/namespaces/queues":             "azurerm_servicebus_queue",
+		"Microsoft.AAD/domainServices":                       "azurerm_active_directory_domain_service",
 	}
 	result := Lookup[strings.TrimSuffix(resource, "/")]
 

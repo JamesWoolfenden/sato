@@ -15,15 +15,25 @@ resource "azurerm_network_security_group" "{{ .item }}" {
 
  {{- range $a, $i:= .resource.properties.securityRules}}
   security_rule {
-     name  = {{$i.name|Quote}}
-     priority= {{$i.properties.priority}}
-     direction= {{$i.properties.direction|Quote}}
-     access= {{$i.properties.access|Quote}}
-     protocol= {{$i.properties.protocol|Quote}}
-     source_port_range= {{$i.properties.sourcePortRange|Quote}}
-     destination_port_range= {{$i.properties.destinationPortRange|Quote}}
-     source_address_prefix= {{$i.properties.sourceAddressPrefix|Quote}}
+     name                    = {{$i.name|Quote}}
+     priority                = {{$i.properties.priority}}
+     direction               = {{$i.properties.direction|Quote}}
+     access                  = {{$i.properties.access|Quote}}
+     protocol                = {{$i.properties.protocol|Quote}}
+     source_port_range       = {{$i.properties.sourcePortRange|Quote}}
+     destination_port_range  = {{$i.properties.destinationPortRange|Quote}}
+{{- if  $i.properties.sourceAddressPrefixes}}
+     source_address_prefixes   = {{$i.properties.sourceAddressPrefixes|Quote}}
+{{- end}}
+{{- if  $i.properties.sourceAddressPrefix}}
+     source_address_prefix = {{$i.properties.sourceAddressPrefix|Quote}}
+{{- end}}
+{{- if $i.properties.destinationAddressPrefix}}
      destination_address_prefix= {{$i.properties.destinationAddressPrefix|Quote}}
+{{- end}}
+{{- if $i.properties.destinationAddressPrefixes}}
+     destination_address_prefixes= {{$i.properties.destinationAddressPrefixes|Quote}}
+{{- end}}
   }
  {{- end}}
 {{- end}}

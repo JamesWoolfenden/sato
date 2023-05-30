@@ -1,0 +1,51 @@
+resource "azurerm_active_directory_domain_service" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  domain_name               = {{ .resource.properties.domainName|Quote}}
+  domain_configuration_type = {{ .resource.properties.domainConfigurationType|Quote}}
+  sku                       = {{ .resource.properties.sku|Quote}}
+{{- if .resource.properties.filteredSync}}
+{{- if eq .resource.properties.filteredSync "Disabled"}}
+  filtered_sync_enabled     = false
+{{- else}}
+  filtered_sync_enabled     = true
+{{- end }}
+{{- end }}
+  initial_replica_set {
+  {{- range $i, $j :=  .resource.properties.replicaSets}}
+    subnet_id = {{ $j.subnetId}}
+  {{- end}}
+  }
+
+{{- if .resource.properties.notifications}}
+  notifications {
+    additional_recipients =
+    notify_dc_admins      =
+    notify_global_admins  =
+  }
+{{- end }}
+
+{{- if .resource.properties.security}}
+  security {
+    sync_kerberos_passwords =
+    sync_ntlm_passwords     =
+    sync_on_prem_passwords  =
+  }
+{{- end}}
+
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on  = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}

@@ -63,3 +63,6 @@ var azurermServicebusNamespaceAuthorizationRule []byte
 
 //go:embed resources/azurerm_servicebus_queue.template
 var azurermServicebusQueue []byte
+
+//go:embed resources/azurerm_active_directory_domain_service.template
+var azurermActiveDirectoryDomainService []byte
