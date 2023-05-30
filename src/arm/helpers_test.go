@@ -8,14 +8,16 @@ import (
 func TestIsLocal(t *testing.T) {
 	t.Parallel()
 
+	empty := make(map[string]interface{})
 	result := make(map[string]interface{})
 	locals := map[string]interface{}{
 		"securityProfileJson": "example",
 		"storageAccountName":  "dont care",
 		"location":            "anywhere",
 	}
-	result["locals"] = locals
 
+	result["locals"] = locals
+	empty["locals"] = "test"
 	type args struct {
 		target string
 		result map[string]interface{}
@@ -27,6 +29,7 @@ func TestIsLocal(t *testing.T) {
 		want bool
 	}{
 		{name: "Pass", args: args{target: "var.sato", result: result}, want: false},
+		{name: "Empty", args: args{target: "var.sato", result: empty}, want: false},
 		{name: "Found", args: args{target: "location", result: result}, want: true},
 	}
 
@@ -175,6 +178,30 @@ func Test_fixType(t *testing.T) {
 
 	myObject := map[string]interface{}{
 		"type":         "object",
+		"defaultValue": map[string]interface{}{"name": 1},
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	newObject := map[string]interface{}{
+		"type": `object({
+	name = number})`,
+		"defaultValue": map[string]interface{}{"name": 1},
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": `{
+	name = 1}`,
+	}
+
+	notObject := map[string]interface{}{
+		"type":         43,
 		"defaultValue": 1,
 		"maxValue":     25,
 		"minValue":     0,
@@ -184,6 +211,16 @@ func Test_fixType(t *testing.T) {
 		"default": "1",
 	}
 
+	returNotObject := map[string]interface{}{
+		"type":         43,
+		"defaultValue": 1,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
 	//myObject2 := map[string]interface{}{
 	//	"type": "object",
 	//	"defaultValue": map[string]interface{}{
@@ -222,8 +259,6 @@ func Test_fixType(t *testing.T) {
 	//	"default": "{\n\tfirewallRules= [{\n\t   firewallRuleName = \"AllowFromAll\"\n\t   rangeStart = \"0.0.0.0\"\n\t   rangeEnd = \"255.255.255.255\"}]}",
 	//}
 
-	newObject := myObject
-	newObject["type"] = "string"
 	tests := []struct {
 		name    string
 		args    args
@@ -233,6 +268,7 @@ func Test_fixType(t *testing.T) {
 		{"Nil by mouth", args{myNullItem}, myNullItemReturns, true},
 		{"Do Nothing", args{myItem}, myItem, false},
 		{"Object", args{myObject}, newObject, false},
+		{"Not string", args{notObject}, returNotObject, true},
 		//{"Convert Object", args{myObject2}, myObjectReturned, false},
 	}
 
@@ -248,7 +284,7 @@ func Test_fixType(t *testing.T) {
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("fixType() got = %v, want %v", got, tt.want)
+				t.Errorf("fixType() got =\n %v, want \n%v", got, tt.want)
 			}
 		})
 	}

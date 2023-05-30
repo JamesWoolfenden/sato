@@ -12,12 +12,17 @@ func Test_lookup(t *testing.T) {
 		myType string
 	}
 
+	test := azurermTemplateDeployment
+	var empty []byte
+
 	tests := []struct {
 		name string
 		args args
 		want []byte
 	}{
-		{},
+		{"Find", args{"Microsoft.Resources/deployments"}, test},
+		{"Dont Find", args{"garbage"}, empty},
+		{"Nil", args{""}, empty},
 	}
 
 	for _, tt := range tests {

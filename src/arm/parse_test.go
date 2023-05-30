@@ -56,8 +56,8 @@ func TestParse(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{"Pass", args{filepath.FromSlash("..\\..\\examples\\arm\\microsoft.compute\\vm-simple-windows\\azuredeploy.json"), ".sato"}, false},
-		{"Fail", args{filepath.FromSlash("..\\..\\examples\\arm\\microsoft.compute\\vm-simple-windows\\nofile.json"), ".sato"}, true},
+		{"Pass", args{filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json"), ".sato"}, false},
+		{"Fail", args{filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/nofile.json"), ".sato"}, true},
 	}
 
 	for _, tt := range tests {
@@ -85,7 +85,7 @@ func TestParseData(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{},
+		//		{},
 	}
 
 	for _, tt := range tests {
@@ -113,7 +113,7 @@ func TestParseOutputs(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{},
+		//		{},
 	}
 
 	for _, tt := range tests {
@@ -257,15 +257,25 @@ func Test_getNameValue(t *testing.T) {
 		name   string
 	}
 
+	myEmpty := map[string]interface{}{}
+	myResult := map[string]interface{}{
+		"variables": map[string]interface{}{
+			"finder": "found",
+		},
+	}
+
 	tests := []struct {
 		name    string
 		args    args
 		want    string
 		wantErr bool
 	}{
-		{},
+		{"Found", args{myResult, "var.finder"}, "found", false},
+		{"Double dots", args{myResult, "var.test.arse"}, "var.test.arse", true},
+		{"Not Found", args{myResult, "var.missing"}, "var.missing", false},
+		{"Empty Result Map", args{myEmpty, "var.missing"}, "var.missing", false},
+		{"Nil", args{myResult, "guff"}, "guff", false},
 	}
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := getNameValue(tt.args.result, tt.args.name)
@@ -281,27 +291,6 @@ func Test_getNameValue(t *testing.T) {
 	}
 }
 
-func Test_isCompound(t *testing.T) {
-	type args struct {
-		newAttribute string
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := isCompound(tt.args.newAttribute); got != tt.want {
-				t.Errorf("isCompound() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_loseSQBrackets(t *testing.T) {
 	type args struct {
 		newAttribute string
@@ -312,7 +301,12 @@ func Test_loseSQBrackets(t *testing.T) {
 		args args
 		want string
 	}{
-		{},
+		{"pass", args{"[pass]"}, "pass"},
+		{"no pass", args{"[pass"}, "[pass"},
+		{"leave", args{"stuff[pass]"}, "stuff[pass]"},
+		{"leave with outside", args{"[stuff[pass]]"}, "stuff[pass]"},
+		{"just", args{"[]"}, ""},
+		{"nil", args{""}, ""},
 	}
 
 	for _, tt := range tests {

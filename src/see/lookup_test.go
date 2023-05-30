@@ -21,6 +21,7 @@ func TestLookup(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "Pass", args: args{"AWS::ApplicationAutoScaling::ScalableTarget"}, want: &result, wantErr: false},
+		{name: "Pass", args: args{"Microsoft.ServiceBus/namespaces/"}, want: &result, wantErr: false},
 		{name: "Fail", args: args{"AWS::Guff::Guffing"}, want: nil, wantErr: true},
 	}
 	for _, tt := range tests {

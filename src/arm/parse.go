@@ -486,14 +486,6 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	return Attribute, result
 }
 
-func isCompound(newAttribute string) bool {
-	var compound bool
-	if strings.Contains(newAttribute, "\"") {
-		compound = true
-	}
-	return compound
-}
-
 func replaceResourceID(Match string, result map[string]interface{}) (string, error) {
 	if strings.Contains(Match, "extensionResourceId") {
 		re := regexp.MustCompile(`extensionResourceId\((.*?)\)`)
@@ -677,12 +669,13 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 func getNameValue(result map[string]interface{}, name string) (string, error) {
 	if strings.Contains(name, ".") {
 		rawNames := strings.Split(name, ".")
-		if len(rawNames) <= 1 {
+		if len(rawNames) != 2 {
 			return name, fmt.Errorf("failed to match value %s", name)
 		}
 		rawName := rawNames[1]
 		if result["variables"] != nil {
 			variables := result["variables"].(map[string]interface{})
+
 			for myVariable, value := range variables {
 				if rawName == myVariable {
 					return value.(string), nil

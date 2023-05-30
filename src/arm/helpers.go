@@ -57,64 +57,80 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 			var types string
 			var result string
 
-			for name, item := range myItem["defaultValue"].(map[string]interface{}) {
-				//goland:noinspection GoLinter
-				switch item.(type) {
-				case []interface{}:
-					{
-						var temp string
-						var temptTypes string
-						var myType string
-						for _, y := range item.([]interface{}) {
-							for name, value := range y.(map[string]interface{}) {
-								temp = temp + "\t   " + name + " = \"" + value.(string) + "\"\n"
-								myType = myType + "\t   " + name + " = string\n"
+			_, ok := myItem["defaultValue"].(map[string]interface{})
+			if ok {
+				for name, item := range myItem["defaultValue"].(map[string]interface{}) {
+					//goland:noinspection GoLinter
+					switch item.(type) {
+					case []interface{}:
+						{
+							var temp string
+							var temptTypes string
+							var myType string
+							for _, y := range item.([]interface{}) {
+								for name, value := range y.(map[string]interface{}) {
+									temp = temp + "\t   " + name + " = \"" + value.(string) + "\"\n"
+									myType = myType + "\t   " + name + " = string\n"
+								}
+								temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
+								temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
 							}
-							temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
-							temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
+							if result != "" {
+								result = result + "," + name + "= [" + temp + "]"
+								types = types + "," + name + "= list(object(" + temptTypes + "))"
+							} else {
+								result = result + name + "= [" + temp + "]"
+								types = types + name + "= list(object(" + temptTypes + "))"
+							}
 						}
-						if result != "" {
-							result = result + "," + name + "= [" + temp + "]"
-							types = types + "," + name + "= list(object(" + temptTypes + "))"
-						} else {
-							result = result + name + "= [" + temp + "]"
-							types = types + name + "= list(object(" + temptTypes + "))"
+					case map[string]interface{}:
+						{
+							log.Print(item)
 						}
-					}
-				case map[string]interface{}:
-					{
-						log.Print(item)
-					}
-				case string:
-					{
-						if result == "" {
-							result = name + " = " + escapeQuote(item)
-							types = name + " = " + "string"
-						} else {
-							temp := result
-							result = temp + ",\n\t" + name + " = " + escapeQuote(item)
-							types = types + ",\n\t" + name + " = " + "string"
+					case string:
+						{
+							if result == "" {
+								result = name + " = " + escapeQuote(item)
+								types = name + " = " + "string"
+							} else {
+								temp := result
+								result = temp + ",\n\t" + name + " = " + escapeQuote(item)
+								types = types + ",\n\t" + name + " = " + "string"
+							}
 						}
-					}
-				case bool:
-					{
-						if result == "" {
-							result = name + " = " + strconv.FormatBool(item.(bool))
-							types = name + " = " + "bool"
-						} else {
-							temp := result
-							result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item.(bool))
-							types = types + ",\n\t" + name + " = " + "bool"
+					case bool:
+						{
+							if result == "" {
+								result = name + " = " + strconv.FormatBool(item.(bool))
+								types = name + " = " + "bool"
+							} else {
+								temp := result
+								result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item.(bool))
+								types = types + ",\n\t" + name + " = " + "bool"
+							}
 						}
-					}
-				default:
-					{
-						log.Print(item)
+					case int:
+						{
+							if result == "" {
+								result = name + " = " + strconv.Itoa(item.(int))
+								types = name + " = " + "number"
+							} else {
+								temp := result
+								result = temp + ",\n\t" + name + " = " + strconv.Itoa(item.(int))
+								types = types + ",\n\t" + name + " = " + "number"
+							}
+						}
+					default:
+						{
+							log.Print(item)
+						}
 					}
 				}
+				myItem["default"] = "{\n\t" + result + "}"
+				myItem["type"] = "object({\n\t" + types + "})"
+			} else {
+				return nil, fmt.Errorf("default value is not an object %v", myItem["defaultValue"])
 			}
-			myItem["default"] = "{\n\t" + result + "}"
-			myItem["type"] = "object({\n\t" + types + "})"
 		}
 	case "int", "float":
 		{
