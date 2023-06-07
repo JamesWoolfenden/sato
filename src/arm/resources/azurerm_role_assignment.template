@@ -1,13 +1,23 @@
 resource "azurerm_role_assignment" "{{.item}}" {
   name               = {{.resource.name}}
   principal_id       = {{.resource.properties.principalId}}
+{{- if  .resource.properties.scope}}
+  scope              = {{.resource.properties.scope}}
+{{- else}}
   scope              = ""
+{{- end}}
   role_definition_id = {{.resource.properties.roleDefinitionId}}
+{{- if .resource.metadata.description}}
   description        = {{.resource.metadata.description|Quote}}
+{{- else}}
+{{- if .resource.properties.description }}
+  description        = {{.resource.properties.description|Quote}}
+{{- end}}
+{{- end}}
 {{- if .resource.tags}}
   tags = {{Tags .resource.tags}}
 {{- end}}
 {{- if .resource.dependsOn }}
-  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{Deref $j}}, {{- end}}]
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
 {{- end}}
 }

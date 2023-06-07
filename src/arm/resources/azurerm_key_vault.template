@@ -1,0 +1,113 @@
+resource "azurerm_key_vault" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  tenant_id                   = {{.resource.properties.tenantId|Quote}}
+  soft_delete_retention_days  = 7
+  purge_protection_enabled    = false
+  sku_name = {{.resource.properties.sku.name|Quote}}
+{{- if .resource.properties.accessPolicies}}
+{{- range $i, $j:= .resource.properties.accessPolicies}}
+
+  access_policy {
+    tenant_id = {{$j.tenantId}}
+    object_id = {{$j.objectId}}
+
+{{- if $j.permissions.keys}}
+    key_permissions = {{Set $j.permissions.keys}}
+{{- end}}
+{{- if $j.permissions.secrets}}
+    secret_permissions = {{Set $j.permissions.secrets}}
+{{- end}}
+{{- if $j.permissions.storage}}
+    storage_permissions = {{Set $j.permissions.storage}}
+{{- end}}
+{{- if $j.permissions.certificates}}
+    certificate_permissions = {{Set $j.permissions.certificates}}
+{{- end}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.properties.networkAcls}}
+  networks_acls {
+    bypass        = {{.resource.properties.networkAcls.bypass|Quote}}
+    defaultAction = {{.resource.properties.networkAcls.defaultAction|Quote}}
+{{- if .resource.properties.networkAcls.ipRules}}
+    ip_rules = {{.resource.properties.networkAcls.ipRules}}
+{{- end}}
+{{- if .resource.properties.networkAcls.virtualNetworkSubnetIds}}
+    virtual_network_subnet_ids= {{.resource.properties.networkAcls.virtualNetworkSubnetIds}}
+{{- end}}
+  }
+{{- end}}
+{{- if NotNil .resource.properties.enabledForDeployment}}
+  enabled_for_deployment = {{.resource.properties.enabledForDeployment}}
+{{-  end}}
+{{- if NotNil .resource.properties.enabledForDiskEncryption}}
+  enabled_for_disk_encryption = {{.resource.properties.enabledForDiskEncryption}}
+{{-  end}}
+{{- if NotNil .resource.properties.enabledForTemplateDeployment}}
+  enabled_for_template_deployment = {{.resource.properties.enabledForTemplateDeployment}}
+{{  end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{$j}}, {{- end}}]
+{{- end}}
+}
+
+
+{{- if .resource.resources}}
+{{- $j := (index .resource.resources 0)}}
+resource "azurerm_role_assignment" "{{.item}}" {
+  principal_id                     = {{Nil $j.properties.PrincipalId|Quote}}
+  role_definition_name             = {{$j.name}}
+  scope                            = azurerm_container_registry.{{.item}}.id
+{{- if $j.dependsOn }}
+  depends_on  = [{{- range $x, $y:= $j.dependsOn }} {{ $y}}, {{- end}}]
+{{- end}}
+}
+
+
+{{- $y := (index .resource.resources 1)}}
+resource "azurerm_monitor_diagnostic_setting" "{{.item}}" {
+  name={{$y.name|Quote}}
+{{- if $y.properties.workspaceId}}
+  log_analytics_workspace_id={{$y.properties.workspaceId}}
+{{- end}}
+{{- if $y.properties.metrics}}
+{{- range $a, $b:= $y.properties.metrics}}
+  metric {
+    category = {{$b.category|Quote}}
+    retention_policy {
+      enabled = true
+    }
+    enabled = {{$b.enabled}}
+  }
+{{- end}}
+{{- end}}
+{{- if $y.properties.logs}}
+{{- range $a, $b:= $y.properties.logs}}
+  enabled_log{
+    category = {{$b.category|Quote}}
+    retention_policy {
+      enabled = true
+    }
+  }
+{{- end}}
+{{- end}}
+  target_resource_id = azurerm_key_vault.{{.item}}.id
+  {{- if $y.dependsOn }}
+    depends_on  = [{{- range $x, $z:= $y.dependsOn }} {{ $z}}, {{- end}}]
+  {{- end}}
+}
+{{- end}}

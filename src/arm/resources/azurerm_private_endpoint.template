@@ -1,0 +1,33 @@
+resource "azurerm_private_endpoint" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  subnet_id           = {{ .resource.properties.subnet.id|Quote}}
+{{- if .resource.properties.privateLinkServiceConnections}}
+{{- range $x, $y:= .resource.properties.privateLinkServiceConnections}}
+  private_service_connection {
+{{- if $y.name}}
+    name                           = {{$y.name|Quote}}
+{{- end}}
+{{- if $y.properties.privateLinkServiceId}}
+    private_connection_resource_id = {{$y.properties.privateLinkServiceId}}
+{{- end}}
+    is_manual_connection           = false
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on  = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}

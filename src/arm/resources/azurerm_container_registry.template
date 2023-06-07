@@ -1,0 +1,114 @@
+resource "azurerm_container_registry" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  sku                      = {{.resource.sku.name}}
+{{- if NotNil .resource.properties.adminUserEnabled}}
+  admin_enabled            = {{.resource.properties.adminUserEnabled}}
+{{- end}}
+{{- if .resource.properties.networkRuleSet}}
+  network_rule_set {
+{{- if .resource.properties.networkRuleSet.defaultAction}}
+    default_action  = {{.resource.properties.networkRuleSet.defaultAction}}
+{{- end}}
+{{- if .resource.properties.networkRuleSet.ipRule}}
+    ip_rule         {
+
+    }
+{{- end}}
+{{- if .resource.properties.networkRuleSet.virtualNetwork}}
+    virtual_network {
+    }
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.properties.policies.quarantinePolicy.status}}
+  quarantine_policy_enabled={{.resource.properties.policies.quarantinePolicy.status|Quote}}
+{{- end}}
+{{- if .resource.properties.policies.trustPolicy.status}}
+  trust_policy {
+    enabled ={{Enabled .resource.properties.policies.trustPolicy.status}}
+  }
+{{- end}}
+{{- if .resource.properties.policies.retentionPolicy.status}}
+  retention_policy {
+    days    = {{.resource.properties.policies.retentionPolicy.days}}
+    enabled = {{Enabled .resource.properties.policies.retentionPolicy.status}}
+  }
+{{- end}}
+{{- if .resource.properties.publicNetworkAccess}}
+  public_network_access_enabled= {{.resource.properties.publicNetworkAccess}}
+{{- end}}
+{{- if .resource.properties.encryption}}
+  encryption {
+    enabled = {{Enabled .resource.properties.encryption.status}}
+  }
+{{- end}}
+{{- if NotNil .resource.properties.dataEndpointEnabled}}
+  data_endpoint_enabled= {{.resource.properties.dataEndpointEnabled}}
+{{- end}}
+{{- if .resource.properties.networkRuleBypassOptions}}
+  network_rule_bypass_option = {{ .resource.properties.networkRuleBypassOptions|Quote}}
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on  = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}
+
+
+{{- if .resource.resources}}
+{{- $j := (index .resource.resources 0)}}
+resource "azurerm_role_assignment" "{{.item}}" {
+  principal_id                     = {{Nil $j.properties.PrincipalId|Quote}}
+  role_definition_name             = {{$j.name}}
+  scope                            = azurerm_container_registry.{{.item}}.id
+{{- if $j.dependsOn }}
+  depends_on  = [{{- range $x, $y:= $j.dependsOn }} {{ $y}}, {{- end}}]
+{{- end}}
+}
+
+
+{{- $y := (index .resource.resources 1)}}
+resource "azurerm_monitor_diagnostic_setting" "{{.item}}" {
+  name={{$y.name|Quote}}
+{{- if $y.properties.workspaceId}}
+  log_analytics_workspace_id={{$y.properties.workspaceId}}
+{{- end}}
+{{- if $y.properties.metrics}}
+{{- range $a, $b:= $y.properties.metrics}}
+  metric {
+    category = {{$b.category|Quote}}
+    retention_policy {
+      enabled = true
+    }
+    enabled = {{$b.enabled}}
+  }
+{{- end}}
+{{- end}}
+{{- if $y.properties.logs}}
+{{- range $a, $b:= $y.properties.logs}}
+  enabled_log{
+    category = {{$b.category|Quote}}
+    retention_policy {
+      enabled = true
+    }
+  }
+{{- end}}
+{{- end}}
+  target_resource_id = azurerm_container_registry.{{.item}}.id
+  {{- if $y.dependsOn }}
+    depends_on  = [{{- range $x, $z:= $y.dependsOn }} {{ $z}}, {{- end}}]
+  {{- end}}
+}
+{{- end}}

@@ -4,9 +4,18 @@ resource "azurerm_virtual_machine_extension" "{{.item}}" {
   publisher                  = {{$p.publisher|Quote}}
   type                       = {{$p.type|Quote}}
   type_handler_version       = {{$p.typeHandlerVersion|Quote}}
+{{- if NotNil $p.autoUpgradeMinorVersion}}
   auto_upgrade_minor_version = {{$p.autoUpgradeMinorVersion}}
+{{- end}}
+{{- if NotNil $p.enableAutomaticUpgrade}}
   automatic_upgrade_enabled  = {{$p.enableAutomaticUpgrade}}
+{{- end}}
+{{- if $p.settings}}
   settings                   = jsonencode({{Marshal $p.settings}})
+{{- end}}
+{{- if   $p.protectedSettings}}
+  protected_settings         = jsonencode({{Marshal $p.protectedSettings}})
+{{- end}}
 {{- if .resource.tags}}
   tags = {{Tags .resource.tags}}
 {{- end}}

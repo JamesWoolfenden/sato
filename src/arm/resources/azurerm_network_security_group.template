@@ -21,7 +21,9 @@ resource "azurerm_network_security_group" "{{ .item }}" {
      access                  = {{$i.properties.access|Quote}}
      protocol                = {{$i.properties.protocol|Quote}}
      source_port_range       = {{$i.properties.sourcePortRange|Quote}}
+{{- if  $i.properties.destinationPortRange}}
      destination_port_range  = {{$i.properties.destinationPortRange|Quote}}
+{{- end}}
 {{- if  $i.properties.sourceAddressPrefixes}}
      source_address_prefixes   = {{$i.properties.sourceAddressPrefixes|Quote}}
 {{- end}}

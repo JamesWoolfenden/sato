@@ -1,0 +1,45 @@
+resource "azurerm_web_application_firewall_policy" "example" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+{{range $x, $i:= .resource.properties.customRules}}
+  custom_rules {
+    name      = {{$i.name|Quote}}
+    priority  = {{$i.priority}}
+    rule_type = {{$i.ruleType|Quote}}
+
+{{- if $i.matchConditions}}
+{{- range $a, $b:= $i.matchConditions}}
+    match_conditions {
+      match_variables {
+{{- range $c, $d:= (index $b.matchVariables 0)}}
+        {{Snake $c}} = {{$d|Quote}}
+{{- end}}
+      }
+
+      operator           = {{$b.operator|Quote}}
+{{- if NotNil $b.negationCondition}}
+      negation_condition = {{$b.negationCondition}}
+{{- end}}
+      match_values       = {{Set $b.matchValues}}
+    }
+{{- end}}
+{{- end}}
+    action = {{$i.action|Quote}}
+  }
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{$j}}, {{- end}}]
+{{- end}}
+}

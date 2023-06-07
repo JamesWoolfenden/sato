@@ -3,7 +3,13 @@ data "azurerm_resource_group" "sato" {
   name = "sato"
 }
 {{- end }}
-
+{{- if eq true .data.client_config }}
+data "azurerm_client_config" "sato" {
+}
+{{- end }}
+{{- if .data.uuid }}
+{{Uuid .data.uuid }}
+{{- end }}
 provider "azurerm" {
   features{}
 }

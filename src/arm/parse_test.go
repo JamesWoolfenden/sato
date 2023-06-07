@@ -3,45 +3,8 @@ package arm
 import (
 	"path/filepath"
 	"reflect"
-	sato "sato/src/cf"
 	"testing"
-	"text/template"
 )
-
-func TestGetValue(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		item      string
-		variables []sato.Variable
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		want    *string
-		wantErr bool
-	}{
-		//{},
-	}
-
-	for _, tt := range tests {
-		tt := tt
-
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			got, err := getValue(tt.args.item, tt.args.variables)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("getValue() error = %v, wantErr %v", err, tt.wantErr)
-
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getValue() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
 
 func TestParse(t *testing.T) {
 	t.Parallel()
@@ -71,127 +34,6 @@ func TestParse(t *testing.T) {
 	}
 }
 
-func TestParseData(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		result      map[string]interface{}
-		funcMap     template.FuncMap
-		destination string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		//		{},
-	}
-
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			if err := parseData(tt.args.result, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
-				t.Errorf("parseData() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestParseOutputs(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		result      map[string]interface{}
-		funcMap     template.FuncMap
-		destination string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		//		{},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			if err := parseOutputs(tt.args.result, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
-				t.Errorf("parseOutputs() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-func TestParseResources(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		result      map[string]interface{}
-		funcMap     template.FuncMap
-		destination string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		want    map[string]interface{}
-		wantErr bool
-	}{
-		//{},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseResources(tt.args.result, tt.args.funcMap, tt.args.destination)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseResources() error = %v, wantErr %v", err, tt.wantErr)
-
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseResources() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func TestParseVariables(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		result      map[string]interface{}
-		funcMap     template.FuncMap
-		destination string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		want    []interface{}
-		wantErr bool
-	}{
-		//{},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			got, err := parseVariables(tt.args.result, tt.args.funcMap, tt.args.destination)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseVariables() error = %v, wantErr %v", err, tt.wantErr)
-
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseVariables() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_findResourceName(t *testing.T) {
 	t.Parallel()
 
@@ -200,13 +42,36 @@ func Test_findResourceName(t *testing.T) {
 		name   string
 	}
 
+	target := map[string]interface{}{
+		"resources": []interface{}{
+			map[string]interface{}{
+				"name":     "[variables('PrivateDNSZone')]",
+				"resource": "sato0",
+			},
+		},
+	}
+
+	empty := map[string]interface{}{
+		"resources": []interface{}{
+			nil,
+		},
+	}
+
+	veryEmpty := map[string]interface{}{
+		"resources": nil,
+	}
+
 	tests := []struct {
 		name    string
 		args    args
 		want    string
 		wantErr bool
 	}{
-		//{},
+		{"Pass", args{target, "PrivateDNSZone"}, "sato0", false},
+		{"Fail", args{target, "MyDNSZone"}, "", true},
+		{"format", args{target, "format('PrivateDNSZone')"}, "format('PrivateDNSZone')", true},
+		{"Empty", args{empty, "PrivateDNSZone"}, "PrivateDNSZone", false},
+		{"Very Empty", args{veryEmpty, "PrivateDNSZone"}, "", true},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -231,12 +96,34 @@ func Test_findResourceType(t *testing.T) {
 		name   string
 	}
 
+	target := map[string]interface{}{
+		"resources": []interface{}{
+			map[string]interface{}{
+				"name":     "[variables('PrivateDNSZone')]",
+				"resource": "sato0",
+				"type":     "fred",
+			},
+		},
+	}
+
+	empty := map[string]interface{}{
+		"resources": []interface{}{
+			nil,
+		},
+	}
+
+	veryEmpty := map[string]interface{}{
+		"resources": nil,
+	}
+
 	tests := []struct {
 		name string
 		args args
 		want bool
 	}{
-		//{},
+		{"Pass", args{target, "fred"}, true},
+		{"Empty", args{empty, ""}, false},
+		{"Very Empty", args{veryEmpty, ""}, false},
 	}
 
 	for _, tt := range tests {
@@ -291,33 +178,6 @@ func Test_getNameValue(t *testing.T) {
 	}
 }
 
-func Test_loseSQBrackets(t *testing.T) {
-	type args struct {
-		newAttribute string
-	}
-
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{"pass", args{"[pass]"}, "pass"},
-		{"no pass", args{"[pass"}, "[pass"},
-		{"leave", args{"stuff[pass]"}, "stuff[pass]"},
-		{"leave with outside", args{"[stuff[pass]]"}, "stuff[pass]"},
-		{"just", args{"[]"}, ""},
-		{"nil", args{""}, ""},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := loseSQBrackets(tt.args.newAttribute); got != tt.want {
-				t.Errorf("loseSQBrackets() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func Test_parseList(t *testing.T) {
 	type args struct {
 		resources []interface{}
@@ -330,7 +190,7 @@ func Test_parseList(t *testing.T) {
 		want    []interface{}
 		wantErr bool
 	}{
-		{},
+		//{"pass", args{}},
 	}
 
 	for _, tt := range tests {
@@ -376,43 +236,6 @@ func Test_parseMap(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("parseMap() got = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
-func Test_parseParameters(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		result  map[string]interface{}
-		funcMap template.FuncMap
-		All     string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		want    string
-		want1   []interface{}
-		wantErr bool
-	}{
-		//{"Pass", args{}, "false"},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			got, got1, err := parseParameters(tt.args.result, tt.args.funcMap, tt.args.All)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseParameters() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("parseParameters() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("parseParameters() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -544,6 +367,33 @@ func Test_parseLocals(t *testing.T) {
 		result map[string]interface{}
 	}
 
+	parsed := "\tvmSubnetNsgId = azurerm_network_security_group.sato8 #[resourceId(\"Microsoft.Network/networkSecurityGroups\",variables(\"vmSubnetNsgName\"))]\n"
+	bodge := make(map[string]interface{})
+
+	startLocals := map[string]interface{}{
+		"vmSubnetNsgId": "[resourceId('Microsoft.Network/networkSecurityGroups',variables('vmSubnetNsgName'))]",
+	}
+
+	locals := map[string]interface{}{
+		"vmSubnetNsgId": "azurerm_network_security_group.sato8",
+	}
+	var resources []interface{}
+	resource := map[string]interface{}{
+		"type":     "Microsoft.Network/networkSecurityGroups",
+		"name":     "[variables('vmSubnetNsgName')]",
+		"location": "[parameters('location')]",
+		"resource": "sato8",
+	}
+	resources = append(resources, resource)
+
+	result := make(map[string]interface{})
+
+	result["locals"] = locals
+	result["resources"] = resources
+
+	bodge["locals"] = startLocals
+	bodge["resources"] = resources
+
 	tests := []struct {
 		name    string
 		args    args
@@ -551,7 +401,7 @@ func Test_parseLocals(t *testing.T) {
 		want1   map[string]interface{}
 		wantErr bool
 	}{
-		//{},
+		{"test", args{bodge}, parsed, result, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -563,7 +413,7 @@ func Test_parseLocals(t *testing.T) {
 				return
 			}
 			if got != tt.want {
-				t.Errorf("parseLocals() got = %v, want %v", got, tt.want)
+				t.Errorf("parseLocals()\n got:\n %v\n want:\n %v", got, tt.want)
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("parseLocals() got1 = %v, want %v", got1, tt.want1)

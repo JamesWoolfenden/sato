@@ -1,13 +1,11 @@
 package arm
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
-	"reflect"
 	"regexp"
 	"sato/src/cf"
 	"sato/src/see"
@@ -51,6 +49,7 @@ func Parse(file string, destination string) error {
 		"Array":        cf.Array,
 		"ArrayReplace": cf.ArrayReplace,
 		"Contains":     cf.Contains,
+		"Enabled":      enabled,
 		"Sprint":       cf.Sprint,
 		"Decode64":     cf.Decode64,
 		"Boolean":      cf.Boolean,
@@ -68,6 +67,7 @@ func Parse(file string, destination string) error {
 
 			return string(a)
 		},
+		"Set":          arrayToString,
 		"Split":        cf.Split,
 		"SplitOn":      cf.SplitOn,
 		"Replace":      cf.Replace,
@@ -77,6 +77,7 @@ func Parse(file string, destination string) error {
 		"Snake":        cf.Snake,
 		"Kebab":        cf.Kebab,
 		"ZipFile":      cf.Zipfile,
+		"Uuid":         uuid,
 	}
 
 	result = preprocess(result)
@@ -103,186 +104,6 @@ func Parse(file string, destination string) error {
 	return nil
 }
 
-// parseVariables convert ARM Parameters into terraform variables.
-func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
-	variables := make(map[string]interface{})
-	if result["variables"] != nil {
-		variables = result["variables"].(map[string]interface{})
-	}
-
-	var All string
-
-	All, myVariables, err := parseParameters(result, funcMap, All)
-	if err != nil {
-		return result, err
-	}
-
-	locals, result, err := parseLocals(result)
-	if err != nil {
-		return result, err
-	}
-
-	for name, value := range variables {
-		myItem := make(map[string]interface{})
-
-		if value != nil {
-			var local string
-
-			if reflect.TypeOf(value).String() == typeString {
-				if strings.Contains(value.(string), "()") ||
-					strings.Contains(value.(string), "[") {
-					value, result = parseString(value.(string), result)
-
-					local = "\t" + name + " = " + value.(string) + "\n"
-					locals += local
-					continue
-				}
-
-				myItem["default"] = value
-			}
-
-			if reflect.TypeOf(value).String() == "map[string]interface {}" {
-				blob, err := json.Marshal(value)
-				if err != nil {
-					log.Warn().Msgf("fail to marshal %s", value)
-				}
-
-				myItem["default"] = string(blob)
-			}
-
-			myItem["name"] = name
-			myItem["type"] = typeString
-		}
-
-		myItem, err = fixType(myItem)
-		if err != nil {
-			log.Print(err)
-		}
-
-		var output bytes.Buffer
-
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
-
-		if err != nil {
-			return result, err
-		}
-		_ = tmpl.Execute(&output, m{
-			"variable": myItem,
-			"item":     name,
-		})
-		All += output.String()
-
-		myVariables = append(myVariables, myItem)
-	}
-
-	err = cf.Write(All, destination, "variables")
-	if err != nil {
-		return result, err
-	}
-
-	locals = "locals {\n" + locals + "}\n"
-	err = cf.Write(locals, destination, "locals")
-
-	if err != nil {
-		return result, err
-	}
-
-	return result, nil
-}
-
-func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, All string) (string, []interface{}, error) {
-	parameters, ok := result["parameters"].(map[string]interface{})
-	if !ok {
-		return "", nil, fmt.Errorf("failed to cast to map")
-	}
-	myVariables := make([]interface{}, 0)
-	var err error
-	for name, item := range parameters {
-
-		myItem := item.(map[string]interface{})
-
-		myItem, err = fixType(myItem)
-		if err != nil {
-			log.Print(err)
-		}
-
-		var output bytes.Buffer
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
-		if err != nil {
-			return "", nil, err
-		}
-		_ = tmpl.Execute(&output, m{
-			"variable": myItem,
-			"item":     name,
-		})
-		All = All + output.String()
-		myVariables = append(myVariables, myItem)
-	}
-	return All, myVariables, nil
-}
-
-func parseLocals(result map[string]interface{}) (string, map[string]interface{}, error) {
-	var locals string
-	myLocals := result["locals"].(map[string]interface{})
-
-	for x, y := range myLocals {
-		var temp *string
-		temp, result = parseString(y.(string), result)
-		local := "\t" + x + " = " + *temp + "\n"
-		locals = locals + local
-	}
-
-	return locals, result, nil
-}
-
-// parseResources handles resources in ARM conversion
-func parseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
-	resources := result["resources"].([]interface{})
-
-	newResources, err := parseList(resources, result)
-
-	if err != nil {
-		return nil, err
-	}
-
-	result["resources"] = newResources
-
-	for _, resource := range newResources {
-		var output bytes.Buffer
-		var name *string
-		myType := resource.(map[string]interface{})
-		myContent := lookup(myType["type"].(string))
-		first, err := see.Lookup(myType["type"].(string))
-
-		if err != nil {
-			log.Warn().Err(err)
-			continue
-		}
-
-		temp := myType["resource"].(string)
-		name = &temp
-
-		// needs to pivot on policy template from resource
-		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
-		if err != nil {
-			log.Printf("failed at %s  for %s %s", err, *first, *name)
-			continue
-		}
-
-		_ = tmpl.Execute(&output, cf.M{
-			"resource": resource,
-			"item":     name,
-		})
-
-		err = cf.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return result, nil
-}
-
 func parseList(resources []interface{}, result map[string]interface{}) ([]interface{}, error) {
 	var newResources []interface{}
 	for _, resource := range resources {
@@ -300,9 +121,9 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 	for name, attribute := range myResource {
 		switch attribute.(type) {
 		case string:
-			var temp *string
+			var temp string
 			temp, result = parseString(attribute.(string), result)
-			myResource[name] = *temp
+			myResource[name] = temp
 		case map[string]interface{}:
 			var err error
 			myResource[name], err = parseMap(attribute.(map[string]interface{}), result)
@@ -314,9 +135,9 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 			for index, resource := range myArray {
 				switch resource.(type) {
 				case string:
-					var temp *string
+					var temp string
 					temp, result = parseString(resource.(string), result)
-					myArray[index] = *temp
+					myArray[index] = temp
 				case map[string]interface{}:
 					myArray[index], _ = parseMap(resource.(map[string]interface{}), result)
 				case []interface{}:
@@ -334,63 +155,89 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 	return myResource, nil
 }
 
-func parseString(newAttribute string, result map[string]interface{}) (*string, map[string]interface{}) {
+func parseString(attribute string, result map[string]interface{}) (string, map[string]interface{}) {
 	matches := []string{
 		"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
-		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('",
+		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
+		"concat", "subscription().tenantId", "uuid",
 	}
 
-	if what, found := contains(matches, newAttribute); found {
-		newAttribute, result = replace(matches, newAttribute, what, result)
-		newAttribute = loseSQBrackets(newAttribute)
+	if what, found := contains(matches, attribute); found {
+		attribute, result = replace(matches, attribute, what, result)
+		attribute = loseSQBrackets(attribute)
 	}
-	return &newAttribute, result
-}
-
-func loseSQBrackets(newAttribute string) string {
-	re := regexp.MustCompile(`^\[(.*)\]`) // format('{0}/{1}',
-	Matched := re.FindStringSubmatch(newAttribute)
-	if len(Matched) > 1 {
-		return Matched[1]
-	}
-	return newAttribute
+	return attribute, result
 }
 
 func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) (string, map[string]interface{}) {
 	var Attribute string
 	switch *what {
-	case "reference", "resourceId":
+	case "concat":
 		{
-			if *what == "reference" {
-				Attribute = loseSQBrackets(newAttribute)
-				re := regexp.MustCompile(`reference\((.*?)\)\.`) // format('{0}/{1}',
-				Match := re.FindStringSubmatch(Attribute)
-				if (Match) != nil {
-					rem := regexp.MustCompile(`\)\.(.*)`) // format('{0}/{1}',
-					remains := rem.FindStringSubmatch(Attribute)
-					if len(remains) <= 1 {
-						log.Print("no attribute")
+			Attribute = loseSQBrackets(newAttribute)
+			ditched := ditch(Attribute, "concat")
+
+			raw := strings.Split(ditched, ",")
+			var after string
+
+			for item, value := range raw {
+				if value == "/" {
+					value = "_"
+				}
+
+				if strings.Contains(value, "Microsoft") {
+					var err error
+					value, err = resourceToName(value, result)
+					if err != nil {
+						log.Debug().Msgf("Concat failed: %v", err)
 					}
-					re2 := regexp.MustCompile(`resourceId\((.*?)\)`) // format('{0}/{1}',
-					Match2 := re2.FindStringSubmatch(Attribute)
-					Attribute = Match2[0] + "." + remains[1]
-				} else {
-					log.Info().Msgf("ignoring %s", newAttribute)
 				}
+
+				s := []string{"var.", "azurerm_", "local.", "substr"}
+				for _, v := range s {
+					if strings.Contains(strings.ToLower(value), strings.ToLower(v)) {
+						if v == "substr" {
+							after = "${" + strings.TrimSpace(strings.Join(raw[1:], ",")) + "}"
+							continue
+						} else {
+							raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
+						}
+					}
+
+				}
+				raw[item] = strings.ReplaceAll(strings.TrimSpace(raw[item]), "'", "")
+			}
+
+			if after == "" {
+				Attribute = strings.Join(raw, "")
 			} else {
-				var err error
-				Attribute, err = replaceResourceID(loseSQBrackets(newAttribute), result)
-				if err != nil {
-					log.Warn().Msgf("failed to parse %s", newAttribute)
-				}
+				Attribute = raw[0] + after
+			}
+		}
+	case "reference":
+		{
+			Attribute = ditch(loseSQBrackets(newAttribute), "reference")
+		}
+	case "resourceId":
+		{
+			Attribute = loseSQBrackets(newAttribute)
+
+			var err error
+			Attribute, err = replaceResourceID(Attribute, result)
+			if err != nil {
+				log.Warn().Msgf("failed to parse %s", newAttribute)
 			}
 		}
 	case "uniqueString", "uniquestring":
 		{
-			target := *what + "\\((.*?)\\)"
+			target := "uniquestring\\((.*?)\\)"
 			re := regexp.MustCompile(target) // format('{0}/{1}',
-			Match := re.ReplaceAllString(newAttribute, "substr(uuid(), 0, 8)")
+			Match := re.ReplaceAllString(strings.ToLower(newAttribute), "substr(uuid(), 0, 8)")
 			Attribute = Match
+		}
+	case "subscriptionResourceId":
+		{
+			Attribute = ditch(newAttribute, "subscriptionResourceId")
 		}
 	case "format('":
 		{
@@ -433,32 +280,65 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 			re := regexp.MustCompile(`variables\('(.*?)\'\)`)
 			Match := re.FindStringSubmatch(newAttribute)
 			if (Match) != nil {
-				var temp string
+				var myTemp string
 				if IsLocal(Match[1], result) {
-					temp = "local." + Match[1]
+					myTemp = "local." + Match[1]
 				} else {
-					temp = "var." + Match[1]
+					myTemp = "var." + Match[1]
 				}
 
-				Attribute = strings.Replace(newAttribute, Match[0], temp, -1)
+				Attribute = strings.Replace(newAttribute, Match[0], myTemp, -1)
 			} else {
 				log.Printf("not found %s", newAttribute)
 			}
 		}
-	case "toLower":
+	case "toLower", "tolower":
 		{
-			Attribute = strings.Replace(newAttribute, "toLower", "lower", -1)
+			re := regexp.MustCompile(`(?i)tolower`)
+			Attribute = re.ReplaceAllString(newAttribute, "lower")
 		}
 	case "resourceGroup().location":
 		{
 			Attribute = strings.Replace(newAttribute, "resourceGroup().location",
 				"data.azurerm_resource_group.sato.location", -1)
-			data := make(map[string]bool)
+			data := make(map[string]interface{})
 			if result["data"] == nil {
 				data["resource_group"] = true
 			} else {
-				data = result["data"].(map[string]bool)
+				data = result["data"].(map[string]interface{})
 				data["resource_group"] = true
+			}
+			result["data"] = data
+		}
+	case "uuid":
+		{
+			data := make(map[string]interface{})
+			if result["data"] == nil {
+				data["uuid"] = 0
+			} else {
+				data = result["data"].(map[string]interface{})
+				//temp := data["uuid"].(int) + 1
+				if data["uuid"] != nil {
+					data["uuid"] = data["uuid"].(int) + 1
+				} else {
+					data["uuid"] = 0
+				}
+			}
+
+			result["data"] = data
+			replacement := "random_uuid.sato" + strconv.Itoa(data["uuid"].(int)) + ".result"
+			Attribute = strings.Replace(newAttribute, "uuid()", replacement, 1)
+		}
+	case "subscription().tenantId":
+		{
+			Attribute = strings.Replace(newAttribute, "subscription().tenantId",
+				"data.azurerm_client_config.sato.tenant_id", -1)
+			data := make(map[string]interface{})
+			if result["data"] == nil {
+				data["client_config"] = true
+			} else {
+				data = result["data"].(map[string]interface{})
+				data["client_config"] = true
 			}
 			result["data"] = data
 		}
@@ -488,8 +368,11 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 
 func replaceResourceID(Match string, result map[string]interface{}) (string, error) {
 	if strings.Contains(Match, "extensionResourceId") {
-		re := regexp.MustCompile(`extensionResourceId\((.*?)\)`)
-		Match = re.ReplaceAllString(Match, "NIL")
+		Match = strings.Replace(Match, "extensionResourceId", "resourceId", 1)
+	}
+
+	if strings.Contains(Match, "subscriptionResourceId") {
+		Match = strings.Replace(Match, "subscriptionResourceId", "resourceId", 1)
 	}
 
 	re := regexp.MustCompile(`resourceId\((.*?)\)`)
@@ -506,6 +389,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 		re3 := regexp.MustCompile(`,(![^[]*\])`)
 		Attribute = re3.FindStringSubmatch(Match)
 	}
+
 	arm, name, err := splitResourceName(Attribute[1])
 	if err != nil {
 		log.Warn().Msgf("failed to parse %s", Attribute[1])
@@ -515,6 +399,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 	if err != nil {
 		log.Print(err)
 	}
+
 	var resourceName *string
 	if findResourceType(result, arm) {
 		resourceName, err = see.Lookup(arm)
@@ -531,8 +416,14 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 			}
 		}
 
-		switch arm {
-		case "Microsoft.ContainerRegistry/registries":
+		resourceName, err = see.Lookup(arm)
+
+		if err != nil {
+			return "", err
+		}
+
+		switch strings.ToLower(arm) {
+		case "microsoft.containerregistry/registries":
 			{
 				temp := "azurerm_container_registry"
 				resourceName = &temp
@@ -541,7 +432,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 					log.Warn().Msgf("no match found %s", arm)
 				}
 			}
-		case "Microsoft.Network/virtualNetworks/subnets":
+		case "microsoft.network/virtualnetworks/subnets":
 			{
 				temp := "tolist(azurerm_virtual_network"
 				resourceName = &temp
@@ -551,13 +442,67 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				}
 				name = strings.Split(splutters[0], ".")[0] + ".subnet)[0].id"
 			}
-		case "Microsoft.Authorization/roleDefinitions":
+		case "microsoft.authorization/roledefinitions":
 			{
-				temp := "azurerm_role_definition"
-				resourceName = &temp
 				if unicode.IsDigit(rune(name[0])) {
 					name = "_" + name
 				}
+			}
+		case "microsoft.network/privateendpoints/privatednszonegroups":
+			{
+				// this isn't a separate terraform resource just part of
+				// private_dns_zone_group in a azurerm_private_endpoint
+				name, err = resourceToName(Match, result)
+				if err != nil {
+					return "", err
+				}
+
+				return *resourceName + "." + name + ".private_dns_zone_group.id", nil
+			}
+		case "microsoft.network/applicationgateways/httplisteners":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".http_listener.id", nil
+			}
+		case "microsoft.network/applicationgateways/frontendipconfigurations":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".frontend_ip_configuration.id", nil
+			}
+		case "microsoft.network/applicationgateways/frontendports":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".frontend_port", nil
+			}
+		case "microsoft.network/applicationgateways/backendaddresspools":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".frontend_ip_configuration.id", nil
+			}
+		case "microsoft.network/applicationgateways/backendhttpsettingscollection":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".backend_http_settings", nil
 			}
 		default:
 			{
@@ -569,7 +514,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				}
 				resourceName, err = see.Lookup(cf.Dequote(arm))
 				if err != nil {
-					resourceName = toPointer()
+					resourceName = toUnknownPointer()
 					log.Warn().Msgf("no match found %s", arm)
 				}
 			}
@@ -584,7 +529,36 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 	return "", err
 }
 
-func toPointer() *string {
+func resourceToName(Match string, result map[string]interface{}) (string, error) {
+	re := regexp.MustCompile(`^resourceId\((.*)\)`)
+	splitter := re.FindStringSubmatch(Match)
+	if len(splitter) > 1 {
+		//ditch type
+		_, found, _ := strings.Cut(splitter[1], ",")
+		myResourceName, _, _ := strings.Cut(found, ",")
+		name, err := findResourceName(result, strings.TrimSpace(myResourceName))
+
+		if err != nil {
+			log.Warn().Msgf("no match found %s", Match)
+		} else {
+			return name, err
+		}
+	}
+
+	if len(splitter) == 0 {
+		name, err := findResourceName(result, strings.TrimSpace(Match))
+
+		if err != nil {
+			log.Warn().Msgf("no match found %s", Match)
+		} else {
+			return name, err
+		}
+	}
+
+	return "", fmt.Errorf("failed to split resource %s", Match)
+}
+
+func toUnknownPointer() *string {
 	temp := "UNKNOWN"
 	return &temp
 }
@@ -605,7 +579,11 @@ func splitResourceName(Attribute string) (string, string, error) {
 			newAttribute := re.FindStringSubmatch(splitsy[1])
 			if len(newAttribute) <= 1 {
 				arm = cf.Dequote(splitsy[0])
+				// check it's not an array
 				name = strings.TrimSpace(splitsy[1])
+				if strings.Contains(name, ",") {
+					name = strings.Split(name, ",")[0]
+				}
 			} else {
 				name = newAttribute[1]
 				newArm := re.FindStringSubmatch(splitsy[0])
@@ -631,11 +609,52 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 
 	name = cf.Dequote(name)
 	var err error
-	resources := result["resources"].([]interface{})
+
+	if result["resources"] == nil {
+		return "", fmt.Errorf("resources are empty")
+	}
+
+	resources, ok := result["resources"].([]interface{})
+
+	if !ok {
+		return name, fmt.Errorf("no resources found")
+	}
+
 	for _, myResource := range resources {
-		test := myResource.(map[string]interface{})
-		if name == test["name"].(string) {
+		test, ok := myResource.(map[string]interface{})
+		if !ok {
+			log.Print("resource is not a map")
+			continue
+		}
+		temp := loseSQBrackets(test["name"].(string))
+
+		if name == temp {
 			return test["resource"].(string), nil
+		}
+
+		trimName := strings.Replace(name, "var.", "", 1)
+		trimTemp := strings.Replace(ditch(temp, "variables"), "'", "", 2)
+
+		if trimTemp == trimName {
+			return test["resource"].(string), nil
+		}
+
+		if strings.Contains(name, "local") {
+			resourceName := strings.Split(name, ".")[1]
+			if strings.Contains(temp, resourceName) {
+				retrieved := test["resource"].(string)
+				return retrieved, nil
+			}
+		}
+
+		re := regexp.MustCompile(`\((.*?)\)`)
+		splits := re.FindStringSubmatch(temp)
+		if len(splits) > 1 {
+			name = strings.Trim(name, "var.")
+
+			if name == strings.ReplaceAll(splits[1], "'", "") {
+				return test["resource"].(string), nil
+			}
 		}
 	}
 
@@ -688,6 +707,10 @@ func getNameValue(result map[string]interface{}, name string) (string, error) {
 }
 
 func findResourceType(result map[string]interface{}, name string) bool {
+	if result["resources"] == nil {
+		return false
+	}
+
 	resources := result["resources"].([]interface{})
 	for _, myResource := range resources {
 		test := myResource.(map[string]interface{})
@@ -696,85 +719,6 @@ func findResourceType(result map[string]interface{}, name string) bool {
 		}
 	}
 	return false
-}
-
-// parseOutputs writes out to outputs.tf
-func parseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
-	if result["outputs"] == nil {
-		return nil
-	}
-
-	outputs := result["outputs"].(map[string]interface{})
-
-	var All string
-	for name, value := range outputs {
-		var myVar cf.Output
-		var someString *string
-		myVar.Type = "string"
-		myVar.Name = name
-		temp := value.(map[string]interface{})
-		someString, result = parseString(temp["value"].(string), result)
-		myVar.Value = *someString
-		var output bytes.Buffer
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(outputFile))
-		if err != nil {
-			return err
-		}
-		_ = tmpl.Execute(&output, m{
-			"variable": myVar,
-			"item":     name,
-		})
-		All = All + output.String()
-	}
-
-	err := cf.Write(All, destination, "outputs")
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// parseData writes out to data.tf
-func parseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
-	if result["data"] == nil {
-		return nil
-	}
-
-	data := result["data"]
-
-	var output bytes.Buffer
-	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(dataFile))
-	if err != nil {
-		return err
-	}
-	err = tmpl.Execute(&output, m{
-		"data": data,
-	})
-
-	if err != nil {
-		log.Print(err)
-		return err
-	}
-
-	err = cf.Write(output.String(), destination, "data")
-	if err != nil {
-		log.Print(err)
-		return err
-	}
-
-	return nil
-}
-
-// getValue gets from variables
-func getValue(item string, variables []cf.Variable) (*string, error) {
-	for _, x := range variables {
-		if x.Name == item {
-			return &x.Default, nil
-		}
-	}
-	something := fmt.Errorf("%s Not found", item)
-	return nil, something
 }
 
 func preprocess(results map[string]interface{}) map[string]interface{} {
@@ -815,7 +759,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 		_, ok := myResult["defaultValue"]
 		if ok {
 			myType := myResult["type"].(string)
-			switch myType {
+			switch strings.ToLower(myType) {
 			case "string":
 				{
 					defaultValue := myResult["defaultValue"].(string)
@@ -848,6 +792,11 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 			case "map[string]interface{}":
 				{
 					log.Printf("handled %s", myType)
+				}
+			case "bool":
+				{
+					myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"])
+					newParams[item] = myResult
 				}
 			default:
 				{

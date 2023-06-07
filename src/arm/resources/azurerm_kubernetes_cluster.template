@@ -1,0 +1,111 @@
+resource "azurerm_kubernetes_cluster" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+{{- if .resource.identity}}
+  identity {
+    type        = {{.resource.identity.type}}
+ {{- if    .resource.identity.userAssignedIdentities.aksClusterUserDefinedManagedIdentityId}}
+    identity_ids= {{.resource.identity.userAssignedIdentities.aksClusterUserDefinedManagedIdentityId}}
+ {{- end}}
+  }
+{{- end}}
+
+{{- if .resource.properties.defaultNodePool}}
+default_node_pool {}
+dns_prefix
+dns_prefix_private_cluster
+aci_connector_linux{}
+automatic_channel_upgrade
+api_server_access_profile {}
+auto_scaler_profile {}
+azure_active_directory_role_based_access_control {
+}
+azure_policy_enabled
+confidential_computing {
+}
+disk_encryption_set_id
+edge_zone
+http_application_routing_enabled
+http_proxy_config
+image_cleaner_enabled
+image_cleaner_interval_hours
+ingress_application_gateway
+key_management_service{}
+key_vault_secrets_provider{}
+kubelet_identity
+kubernetes_version
+linux_profile{}
+local_account_disabled
+maintenance_windows
+microsoft_defender
+monitor_metrics{}
+networks_profile
+node_resource_group
+oidc_issuer_enabled
+oms_agent
+private_cluster_enabled
+private_dns_zone_id
+private_cluster_public_fqdn_enabled
+service_mesh_profile
+workload_autoscaler_profile
+workload_identity_enabled
+public_network_access_enabled
+role_based_access_control_enabled
+run_command_enabled
+service_principal
+sku_tier
+storage_profile
+web_app_routing
+windows_profile
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{.resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}
+
+{{- if .resource.resources}}
+{{- $y := (index .resource.resources 0)}}
+resource "azurerm_monitor_diagnostic_setting" "{{.item}}" {
+  name={{$y.name|Quote}}
+{{- if $y.properties.workspaceId}}
+  log_analytics_workspace_id={{$y.properties.workspaceId}}
+{{- end}}
+{{- if $y.properties.metrics}}
+{{- range $a, $b:= $y.properties.metrics}}
+  metric {
+    category = {{$b.category|Quote}}
+    retention_policy {
+      enabled = true
+    }
+    enabled = {{$b.enabled}}
+  }
+{{- end}}
+{{- end}}
+{{- if $y.properties.logs}}
+{{- range $a, $b:= $y.properties.logs}}
+  enabled_log{
+    category = {{$b.category|Quote}}
+    retention_policy {
+      enabled = true
+    }
+  }
+{{- end}}
+{{- end}}
+  target_resource_id = azurerm_kubernetes_cluster.{{.item}}.id
+  {{- if $y.dependsOn }}
+    depends_on  = [{{- range $x, $z:= $y.dependsOn }} {{ $z}}, {{- end}}]
+  {{- end}}
+}
+{{- end}}

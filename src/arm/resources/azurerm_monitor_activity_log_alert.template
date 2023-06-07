@@ -1,0 +1,17 @@
+resource "azurerm_monitor_activity_log_alert" "{{.item}}" {
+  name                = {{.resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  scopes              = {{index .resource.properties.scopes 0}}
+  description         = {{ .resource.properties.description|Quote}}
+  enabled             = {{ .resource.properties.enabled}}
+{{- if .resource.tags}}
+ tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+ depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{$j}}, {{- end}}]
+{{- end}}
+}

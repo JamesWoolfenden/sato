@@ -1,68 +1,59 @@
 package arm
 
 import (
-	_ "embed" // required for embed
+	"bytes"
+	"sato/src/cf"
+	"sato/src/see"
+	"strings"
+	tftemplate "text/template"
+
+	"github.com/rs/zerolog/log"
 )
 
-//go:embed resources/azurerm_virtual_machine.template
-var azurermVirtualMachine []byte
+// parseResources handles resources in ARM conversion
+func parseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
+	resources := result["resources"].([]interface{})
 
-//go:embed resources/azurerm_virtual_machine_extension.template
-var azurermVirtualMachineExtension []byte
+	newResources, err := parseList(resources, result)
 
-//go:embed resources/azurerm_network_interface.template
-var azurermNetworkInterface []byte
+	if err != nil {
+		return nil, err
+	}
 
-//go:embed resources/azurerm_network_security_group.template
-var azurermNetworkSecurityGroup []byte
+	result["resources"] = newResources
 
-//go:embed resources/azurerm_public_ip.template
-var azurermPublicIP []byte
+	for _, resource := range newResources {
+		var output bytes.Buffer
+		var name *string
+		myType := resource.(map[string]interface{})
+		myContent := lookup(myType["type"].(string))
+		first, err := see.Lookup(myType["type"].(string))
 
-//go:embed resources/azurerm_virtual_network.template
-var azurermVirtualNetwork []byte
+		if err != nil {
+			log.Warn().Err(err)
+			continue
+		}
 
-//go:embed resources/azurerm_storage_account.template
-var azurermStorageAccount []byte
+		temp := myType["resource"].(string)
+		name = &temp
 
-//go:embed resources/azurerm_subnet.template
-var azurermSubnet []byte
+		// needs to pivot on policy template from resource
+		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
+		if err != nil {
+			log.Printf("failed at %s  for %s %s", err, *first, *name)
+			continue
+		}
 
-//go:embed resources/azurerm_analysis_services_server.template
-var azurermAnalysisServicesServer []byte
+		_ = tmpl.Execute(&output, cf.M{
+			"resource": resource,
+			"item":     name,
+		})
 
-//go:embed resources/azurerm_api_management.template
-var azurermAPIManagement []byte
+		err = cf.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
+		if err != nil {
+			return nil, err
+		}
+	}
 
-//go:embed resources/azurerm_container_app.template
-var azurermContainerApp []byte
-
-//go:embed resources/azurerm_container_app_environment.template
-var azurermContainerAppEnvironment []byte
-
-//go:embed resources/azurerm_template_deployment.template
-var azurermTemplateDeployment []byte
-
-//go:embed resources/azurerm_role_assignment.template
-var azurermRoleAssignment []byte
-
-//go:embed resources/azurerm_user_assigned_identity.template
-var azurermUserAssignedIdentity []byte
-
-//go:embed resources/azurerm_log_analytics_workspace.template
-var azurermLogAnalyticsWorkspace []byte
-
-//go:embed resources/azurerm_role_definition.template
-var azurermRoleDefinition []byte
-
-//go:embed resources/azurerm_servicebus_namespace.template
-var azurermServicebusNamespace []byte
-
-//go:embed resources/azurerm_servicebus_namespace_authorization_rule.template
-var azurermServicebusNamespaceAuthorizationRule []byte
-
-//go:embed resources/azurerm_servicebus_queue.template
-var azurermServicebusQueue []byte
-
-//go:embed resources/azurerm_active_directory_domain_service.template
-var azurermActiveDirectoryDomainService []byte
+	return result, nil
+}

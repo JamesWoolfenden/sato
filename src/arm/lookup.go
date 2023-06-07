@@ -8,35 +8,49 @@ import (
 
 func lookup(myType string) []byte {
 	TFLookup := map[string]interface{}{
-		"Microsoft.AnalysisServices/servers":                 azurermAnalysisServicesServer,
-		"Microsoft.ApiManagement/service":                    azurermAPIManagement,
-		"Microsoft.App/containerApps":                        azurermContainerApp,
-		"Microsoft.App/managedEnvironments":                  azurermContainerAppEnvironment,
-		"Microsoft.Authorization/roleAssignments":            azurermRoleAssignment,
-		"Microsoft.Authorization/roleDefinitions":            azurermRoleDefinition,
-		"Microsoft.Compute/virtualMachines":                  azurermVirtualMachine,
-		"Microsoft.Compute/virtualMachines/extensions":       azurermVirtualMachineExtension,
-		"Microsoft.ManagedIdentity/userAssignedIdentities":   azurermUserAssignedIdentity,
-		"Microsoft.Network/networkInterfaces":                azurermNetworkInterface,
-		"Microsoft.Network/networkSecurityGroups":            azurermNetworkSecurityGroup,
-		"Microsoft.Network/publicIPAddresses":                azurermPublicIP,
-		"Microsoft.Network/virtualNetworks":                  azurermVirtualNetwork,
-		"Microsoft.Network/virtualNetworks/subnets":          azurermSubnet,
-		"Microsoft.OperationalInsights/workspaces":           azurermLogAnalyticsWorkspace,
-		"Microsoft.Storage/storageAccounts":                  azurermStorageAccount,
-		"Microsoft.Resources/deployments":                    azurermTemplateDeployment,
-		"Microsoft.ServiceBus/namespaces":                    azurermServicebusNamespace,
-		"Microsoft.ServiceBus/namespaces/authorizationRules": azurermServicebusNamespaceAuthorizationRule,
-		"Microsoft.ServiceBus/namespaces/queues":             azurermServicebusQueue,
-		"Microsoft.AAD/domainServices":                       azurermActiveDirectoryDomainService,
+		"microsoft.aad/domainservices":                                       azurermActiveDirectoryDomainService,
+		"microsoft.analysisservices/servers":                                 azurermAnalysisServicesServer,
+		"microsoft.apiManagement/service":                                    azurermAPIManagement,
+		"microsoft.app/containerapps":                                        azurermContainerApp,
+		"microsoft.app/managedenvironments":                                  azurermContainerAppEnvironment,
+		"microsoft.authorization/roleassignments":                            azurermRoleAssignment,
+		"microsoft.authorization/roledefinitions":                            azurermRoleDefinition,
+		"microsoft.containerregistry/registries":                             azurermContainerRegistry,
+		"microsoft.containerservice/managedclusters":                         azurermKubernetesCluster,
+		"microsoft.compute/virtualmachines":                                  azurermVirtualMachine,
+		"microsoft.compute/virtualmachines/extensions":                       azurermVirtualMachineExtension,
+		"microsoft.keyvault/vaults":                                          azurermKeyVault,
+		"microsoft.managedidentity/userassignedidentities":                   azurermUserAssignedIdentity,
+		"microsoft.network/applicationgateways":                              azurermApplicationGateway,
+		"Microsoft.Network/applicationGateways/backendAddressPools":          azurermNetworkInterfaceApplicationGatewayBackendAddressPoolAssociation,
+		"microsoft.network/bastionhosts":                                     azurermBastionHost,
+		"microsoft.network/networkinterfaces":                                azurermNetworkInterface,
+		"microsoft.network/networksecuritygroups":                            azurermNetworkSecurityGroup,
+		"microsoft.network/publicipaddresses":                                azurermPublicIP,
+		"microsoft.network/virtualnetworks":                                  azurermVirtualNetwork,
+		"microsoft.network/virtualnetworks/subnets":                          azurermSubnet,
+		"microsoft.network/privatednszones":                                  azurermPrivateDNSZone,
+		"microsoft.network/privatednszones/virtualnetworklinks":              azurermPrivateDNSZoneVirtualNetworkLink,
+		"microsoft.network/privateendpoints":                                 azurermPrivateEndpoint,
+		"microsoft.network/applicationgatewaywebapplicationfirewallpolicies": azurermWebApplicationFirewallPolicy,
+		"microsoft.operationalinsights/workspaces":                           azurermLogAnalyticsWorkspace,
+		"microsoft.insights/activitylogalerts":                               azurermMonitorActivityLogAlert,
+		"microsoft.operationsmanagement/solutions":                           azurermLogAnalyticsSolution,
+		"microsoft.resources/deployments":                                    azurermTemplateDeployment,
+		"microsoft.servicebus/namespaces":                                    azurermServicebusNamespace,
+		"microsoft.servicebus/namespaces/authorizationRules":                 azurermServicebusNamespaceAuthorizationRule,
+		"microsoft.servicebus/namespaces/queues":                             azurermServicebusQueue,
+		"microsoft.storage/storageaccounts":                                  azurermStorageAccount,
 	}
 
 	var myContent []byte
 
 	var ok bool
 
+	myType = strings.ToLower(strings.TrimSuffix(myType, "/"))
+
 	if TFLookup[myType] != nil {
-		myContent, ok = TFLookup[strings.TrimSuffix(myType, "/")].([]byte)
+		myContent, ok = TFLookup[myType].([]byte)
 		if !ok {
 			log.Warn().Msg("Failed to cast lookup")
 		}

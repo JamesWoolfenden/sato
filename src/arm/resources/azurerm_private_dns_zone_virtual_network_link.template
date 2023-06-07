@@ -1,0 +1,19 @@
+resource "azurerm_private_dns_zone_virtual_network_link" "{{.item}}" {
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  private_dns_zone_name = {{.resource.name|Quote}}
+  virtual_network_id    = {{.resource.properties.virtualNetwork.id|Quote}}
+{{- if NotNil .resource.properties.registrationEnabled}}
+  registration_enabled  = {{.resource.properties.registrationEnabled|Quote}}
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{$j}}, {{- end}}]
+{{- end}}
+}

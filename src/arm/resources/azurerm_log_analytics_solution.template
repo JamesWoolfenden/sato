@@ -1,0 +1,30 @@
+resource "azurerm_log_analytics_solution" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  solution_name            = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  workspace_resource_id    = {{Nil .resource.properties.workspaceresourceId|Quote}}
+  workspace_name           = ""
+{{- if .resource.plan}}
+  plan {
+    publisher      = {{ .resource.plan.publisher|Quote}}
+    product        = {{ .resource.plan.product|Quote}}
+{{- if .resource.plan.promotionCode}}
+    promotion_code = {{ .resource.plan.promotionCode|Quote}}
+{{- end}}
+  }
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on  = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}

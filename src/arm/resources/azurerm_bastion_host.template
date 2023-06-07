@@ -1,0 +1,29 @@
+resource "azurerm_bastion_host" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+
+{{- if .resource.properties.ipConfigurations}}
+{{ range $i, $j:= .resource.properties.ipConfigurations}}
+  ip_configuration {
+    name                 = {{$j.name|Quote}}
+    subnet_id            = {{$j.properties.subnet.id}}
+    public_ip_address_id = {{$j.properties.publicIPAddress.id}}
+  }
+{{- end}}
+{{- end}}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+{{- if .resource.dependsOn }}
+  depends_on = [{{- range $x, $j:= .resource.dependsOn }} {{$j}}, {{- end}}]
+{{- end}}
+}

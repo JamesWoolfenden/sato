@@ -143,6 +143,72 @@ func Test_fixType(t *testing.T) {
 		myItem map[string]interface{}
 	}
 
+	myString := map[string]interface{}{
+		"type":         "string",
+		"defaultValue": "2",
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	myStringResult := map[string]interface{}{
+		"type":         "string",
+		"defaultValue": "2",
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	myInt := map[string]interface{}{
+		"type":         "int",
+		"defaultValue": 2,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	myIntResult := map[string]interface{}{
+		"type":         "number",
+		"defaultValue": 2,
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	mySlice := map[string]interface{}{
+		"type":         "[]interface{}",
+		"defaultValue": []interface{}{1, 2},
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
+	mySliceResult := map[string]interface{}{
+		"type":         "[]interface{}",
+		"defaultValue": []interface{}{1, 2},
+		"maxValue":     25,
+		"minValue":     0,
+		"metadata": map[string]interface{}{
+			"description": "Minimum number of replicas that will be deployed",
+		},
+		"default": "1",
+	}
+
 	myItem := map[string]interface{}{
 		"type":         "number",
 		"defaultValue": 1,
@@ -232,7 +298,9 @@ func Test_fixType(t *testing.T) {
 		{"Do Nothing", args{myItem}, myItem, false},
 		{"Object", args{myObject}, newObject, false},
 		{"Not string", args{notObject}, returnNotObject, true},
-		//{"Convert Object", args{myObject2}, myObjectReturned, false},
+		{"Slice", args{mySlice}, mySliceResult, false},
+		{"Int", args{myInt}, myIntResult, false},
+		{"String", args{myString}, myStringResult, false},
 	}
 
 	for _, tt := range tests {
@@ -248,6 +316,191 @@ func Test_fixType(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("fixType() got =\n %v, want \n%v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_ditch(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		Attribute string
+		name      string
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"none", args{"bastionPublicIpAddressName", "variables"}, "bastionPublicIpAddressName"},
+		{"variables", args{"variables('bastionPublicIpAddressName')", "variables"}, "'bastionPublicIpAddressName'"},
+		{"variables not", args{"parameters('vmName')", "variables"}, "parameters('vmName')"},
+		{"mixed",
+			args{"concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))", "variables"},
+			"concat(parameters('vmName'),'/', 'omsAgentForLinuxName'))"},
+		{"mixed 2",
+			args{"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))", "variables"},
+			"concat('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := ditch(tt.args.Attribute, tt.args.name); got != tt.want {
+				t.Errorf("ditch() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_enabled(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		status string
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{"Enabled", args{"Enabled"}, true},
+		{"Disabled", args{"Disabled"}, false},
+		{"Guff", args{"guff"}, false},
+		{"Nil", args{""}, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := enabled(tt.args.status); got != tt.want {
+				t.Errorf("enabled() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_notNil(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		unknown interface{}
+	}
+
+	var test interface{}
+	var test2 interface{}
+	var test3 interface{}
+
+	test = true
+	test3 = false
+	test4 := ""
+
+	tests := []struct {
+		name string
+		args args
+		want bool
+	}{
+		{"True", args{test}, true},
+		{"Nil", args{test2}, false},
+		{"False", args{test3}, true},
+		{"String", args{""}, true},
+		{"Pointer", args{&test4}, true},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := notNil(tt.args.unknown); got != tt.want {
+				t.Errorf("notNil() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_tags(t *testing.T) {
+	t.Parallel()
+
+	myTags := map[string]interface{}{
+		"test":    "something",
+		"another": "stuff",
+	}
+
+	myBodge := map[string]interface{}{
+		"test":    "something",
+		"another": false,
+	}
+
+	type args struct {
+		tags map[string]interface{}
+	}
+
+	result := "{\n\t\"test\" = \"something\"\n\t\"another\" = \"stuff\"\n\t}"
+	bodge := "{\n\t\"test\" = \"something\"\n\t\"another\" = \"OBJECT\"\n\t}"
+
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"pass", args{myTags}, result},
+		{"bodge", args{myBodge}, bodge},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := tags(tt.args.tags); got != tt.want {
+				t.Errorf("tags() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_uuid(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		count int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"Pass", args{1}, "resource \"random_uuid\" \"sato0\" {}\n"},
+		{"Two", args{2}, "resource \"random_uuid\" \"sato0\" {}\nresource \"random_uuid\" \"sato1\" {}\n"},
+		{"Zero", args{0}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := uuid(tt.args.count); got != tt.want {
+				t.Errorf("uuid() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_loseSQBrackets(t *testing.T) {
+	type args struct {
+		newAttribute string
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"pass", args{"[pass]"}, "pass"},
+		{"no pass", args{"[pass"}, "[pass"},
+		{"leave", args{"stuff[pass]"}, "stuff[pass]"},
+		{"leave with outside", args{"[stuff[pass]]"}, "stuff[pass]"},
+		{"just", args{"[]"}, ""},
+		{"nil", args{""}, ""},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := loseSQBrackets(tt.args.newAttribute); got != tt.want {
+				t.Errorf("loseSQBrackets() = %v, want %v", got, tt.want)
 			}
 		})
 	}

@@ -13,12 +13,24 @@ resource "azurerm_virtual_network" "{{.item}}" {
   address_space=[{{index .resource.properties.addressSpace.addressPrefixes 0}}]
 {{- if .resource.properties.subnets }}
 {{- range $a, $i:= .resource.properties.subnets }}
+  {{- if $i.name}}
   subnet {
     name={{ $i.name|Quote}}
     address_prefix={{$i.properties.addressPrefix |Quote}}
+{{- if  $i.properties.networkSecurityGroup.id}}
     security_group={{$i.properties.networkSecurityGroup.id |Quote}}.id
-  }
 {{- end}}
+  }
+  {{- end}}
+{{- end}}
+{{- end}}
+{{- if NotNil .resource.properties.enableDdosProtection}}
+  ddos_protection_plan {
+    id = azurerm_network_ddos_protection_plan.{{.item}}.id
+{{- if NotNil .resource.properties.enableDdosProtection}}
+    enable = {{.resource.properties.enableDdosProtection}}
+{{- end}}
+  }
 {{- end}}
 {{- if .resource.tags}}
   tags = {{Tags .resource.tags}}
@@ -29,4 +41,20 @@ resource "azurerm_virtual_network" "{{.item}}" {
 }
 {{- if .resource.properties.subnets }}
 
+{{- end}}
+
+{{- if NotNil .resource.properties.enableDdosProtection}}
+resource "azurerm_network_ddos_protection_plan" "{{.item}}" {
+{{- if .resource.location}}
+  location                 = {{ .resource.location|Quote }}
+{{- else}}
+  location                 = data.azurerm_resource_group.sato.location
+{{- end }}
+  name                     = {{ .resource.name|Quote }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+}
 {{- end}}

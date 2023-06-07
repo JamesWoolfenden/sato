@@ -3,6 +3,7 @@ package arm
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -76,11 +77,11 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 								temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
 							}
 							if result != "" {
-								result = result + "," + name + "= [" + temp + "]"
-								types = types + "," + name + "= list(object(" + temptTypes + "))"
+								result += "," + name + "= [" + temp + "]"
+								types += "," + name + "= list(object(" + temptTypes + "))"
 							} else {
-								result = result + name + "= [" + temp + "]"
-								types = types + name + "= list(object(" + temptTypes + "))"
+								result += name + "= [" + temp + "]"
+								types += name + "= list(object(" + temptTypes + "))"
 							}
 						}
 					case map[string]interface{}:
@@ -90,12 +91,11 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 					case string:
 						{
 							if result == "" {
-								result = name + " = " + escapeQuote(item)
+								result = name + " = " + "\"" + escapeQuote(item) + "\""
 								types = name + " = " + "string"
 							} else {
-								temp := result
-								result = temp + ",\n\t" + name + " = " + escapeQuote(item)
-								types = types + ",\n\t" + name + " = " + "string"
+								result += ",\n\t" + name + " = " + "\"" + escapeQuote(item) + "\""
+								types += ",\n\t" + name + " = " + "string"
 							}
 						}
 					case bool:
@@ -144,7 +144,7 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 		{
 			myItem["default"] = escapeQuote(myItem["default"])
 		}
-	case typeListString, typeNumber:
+	case typeListString, typeNumber, "bool":
 		{
 			// do nothing
 		}
@@ -182,7 +182,11 @@ func arrayToString(defaultValue []interface{}) string {
 func tags(tags map[string]interface{}) string {
 	tagged := "{\n"
 	for item, name := range tags {
-		tagged += "\t\"" + item + "\"" + " = " + "\"" + name.(string) + "\"\n"
+		if _, ok := name.(string); ok {
+			tagged += "\t\"" + item + "\"" + " = " + "\"" + name.(string) + "\"\n"
+		} else {
+			tagged += "\t\"" + item + "\"" + " = " + "\"OBJECT\"\n"
+		}
 	}
 
 	tagged += "\t}"
@@ -197,4 +201,63 @@ func notNil(unknown interface{}) bool {
 	}
 
 	return true
+}
+
+func enabled(status string) bool {
+	if strings.ToLower(status) == "enabled" {
+		return true
+	}
+	return false
+}
+
+func loseSQBrackets(newAttribute string) string {
+	re := regexp.MustCompile(`^\[(.*)\]`) // format('{0}/{1}',
+	Matched := re.FindStringSubmatch(newAttribute)
+	if len(Matched) > 1 {
+		return Matched[1]
+	}
+	return newAttribute
+}
+
+func ditch(Attribute string, name string) string {
+
+	leftBrackets := strings.SplitAfter(Attribute, "(")
+
+	if len(leftBrackets) == 0 {
+		return Attribute
+	}
+
+	var brackets []string
+
+	for _, item := range leftBrackets {
+		rbrackets := strings.SplitAfter(item, ")")
+		brackets = append(brackets, rbrackets...)
+	}
+
+	y := 100
+	var raw []string
+	for x, item := range brackets {
+		if strings.Contains(item, name) {
+			y = len(brackets) - 2 + x
+			raw = append(raw, strings.Replace(item, name+"(", "", 1))
+		}
+
+		if y != x && !strings.Contains(item, name) {
+			raw = append(raw, item)
+		}
+
+		if y == x {
+			raw = append(raw, strings.Replace(item, ")", "", 1))
+		}
+	}
+	return strings.Join(raw, "")
+}
+
+func uuid(count int) string {
+	var i int
+	var uuids string
+	for i = 0; i < (count); i++ {
+		uuids += "resource \"random_uuid\" \"sato" + strconv.Itoa(i) + "\" {}\n"
+	}
+	return uuids
 }
