@@ -144,6 +144,8 @@ func Lookup(resource string) (*string, error) {
 		"microsoft.network/applicationgateways/httplisteners":                 "azurerm_application_gateway",
 		"microsoft.network/applicationgateways/frontendports":                 "azurerm_application_gateway",
 		"microsoft.network/applicationgateways/backendhttpsettingscollection": "azurerm_application_gateway",
+		"microsoft.network/applicationgateways/authenticationcertificates":    "azurerm_application_gateway",
+		"microsoft.network/applicationgateways/sslcertificates":               "azurerm_application_gateway",
 		"microsoft.network/applicationgatewaywebapplicationfirewallpolicies":  "azurerm_web_application_firewall_policy",
 		"microsoft.network/bastionhosts":                                      "azurerm_bastion_host",
 		"microsoft.network/networkinterfaces":                                 "azurerm_network_interface",
@@ -161,6 +163,7 @@ func Lookup(resource string) (*string, error) {
 		"microsoft.servicebus/namespaces/authorizationRules":                  "azurerm_servicebus_namespace_authorization_rule",
 		"microsoft.servicebus/namespaces/queues":                              "azurerm_servicebus_queue",
 		"microsoft.storage/storageaccounts":                                   "azurerm_storage_account",
+		"microsoft.compute/availabilitysets":                                  "azurerm_availability_set",
 	}
 	result := Lookup[strings.TrimSuffix(strings.ToLower(resource), "/")]
 

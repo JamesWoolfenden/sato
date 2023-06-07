@@ -15,10 +15,12 @@ resource "azurerm_virtual_machine" "{{.item}}" {
 {{- if (Contains $z.id "azurerm")}}
 {{- $z.id}}.id,
 {{- else}} {{- $z.id}} {{- end}}  {{- end}}]
+{{- if .resource.properties.diagnosticsProfile.bootDiagnostics}}
   boot_diagnostics {
     enabled    = {{ .resource.properties.diagnosticsProfile.bootDiagnostics.enabled}}
     storage_uri= {{ Replace .resource.properties.diagnosticsProfile.bootDiagnostics.storageUri "primaryEndpoints.blob" "primary_blob_endpoint"}}
   }
+{{- end}}
 {{- if .resource.properties.osProfile}}
   os_profile {
       computer_name = {{.resource.properties.osProfile.computerName|Quote}}

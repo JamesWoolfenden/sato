@@ -102,3 +102,6 @@ var azurermApplicationGateway []byte
 
 //go:embed resources/azurerm_network_interface_application_gateway_backend_address_pool_association.template
 var azurermNetworkInterfaceApplicationGatewayBackendAddressPoolAssociation []byte
+
+//go:embed resources/azurerm_availability_set.template
+var azurermAvailabilitySet []byte

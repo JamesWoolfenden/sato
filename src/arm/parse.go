@@ -760,7 +760,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 		if ok {
 			myType := myResult["type"].(string)
 			switch strings.ToLower(myType) {
-			case "string":
+			case "string", "securestring":
 				{
 					defaultValue := myResult["defaultValue"].(string)
 					if strings.Contains(defaultValue, "[") {
