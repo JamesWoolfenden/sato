@@ -504,6 +504,24 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				}
 				return *resourceName + "." + name + ".backend_http_settings", nil
 			}
+		case "microsoft.network/applicationgateways/authenticationcertificates":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".authentication_certificates", nil
+			}
+		case "microsoft.network/applicationgateways/sslcertificates":
+			{
+				name, err = resourceToName(Match, result)
+
+				if err != nil {
+					return "", err
+				}
+				return *resourceName + "." + name + ".ssl_certificates", nil
+			}
 		default:
 			{
 				if strings.Contains(name, "local") {
@@ -650,9 +668,7 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 		re := regexp.MustCompile(`\((.*?)\)`)
 		splits := re.FindStringSubmatch(temp)
 		if len(splits) > 1 {
-			name = strings.Trim(name, "var.")
-
-			if name == strings.ReplaceAll(splits[1], "'", "") {
+			if trimName == strings.ReplaceAll(splits[1], "'", "") {
 				return test["resource"].(string), nil
 			}
 		}
@@ -711,13 +727,16 @@ func findResourceType(result map[string]interface{}, name string) bool {
 		return false
 	}
 
-	resources := result["resources"].([]interface{})
-	for _, myResource := range resources {
-		test := myResource.(map[string]interface{})
-		if name == test["type"].(string) {
-			return true
+	resources, ok := result["resources"].([]interface{})
+	if ok {
+		for _, myResource := range resources {
+			test := myResource.(map[string]interface{})
+			if name == test["type"].(string) {
+				return true
+			}
 		}
 	}
+
 	return false
 }
 
@@ -808,6 +827,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 			newParams[item] = myResult
 		}
 	}
+
 	results["parameters"] = newParams
 	maps.Copy(locals, newLocals)
 	results["locals"] = locals

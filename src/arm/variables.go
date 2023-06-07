@@ -25,7 +25,9 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		return result, err
 	}
 
-	locals, result, err := parseLocals(result)
+	var locals string
+	locals, result, err = parseLocals(result)
+
 	if err != nil {
 		return result, err
 	}

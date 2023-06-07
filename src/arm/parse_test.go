@@ -425,6 +425,25 @@ func Test_parseLocals(t *testing.T) {
 
 func Test_replace(t *testing.T) {
 	t.Parallel()
+	//matches := []string{
+	//	"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
+	//	"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
+	//	"concat", "subscription().tenantId", "uuid",
+	//}
+	//
+	//target := map[string]interface{}{
+	//	"locals": map[string]interface{}{
+	//		"location": "[resourceGroup().location]",
+	//	},
+	//	"resources": []interface{}{
+	//		map[string]interface{}{
+	//			"name":     "[variables('appGwPublicIpName')]",
+	//			"resource": "sato0",
+	//			"type":     "Microsoft.Network/publicIPAddresses",
+	//		},
+	//	},
+	//}
+	//result := target
 
 	type args struct {
 		matches      []string
@@ -433,13 +452,30 @@ func Test_replace(t *testing.T) {
 		result       map[string]interface{}
 	}
 
+	//vars := "variables"
+	//resourceId := "resourceId"
+	//params := "parameters"
+
 	tests := []struct {
 		name  string
 		args  args
 		want  string
 		want1 map[string]interface{}
 	}{
-		//{},
+		//{"Pass",
+		//	args{matches, "[resourceId('Microsoft.Network/publicIPAddresses',variables('appGwPublicIpName'))]", &vars, target},
+		//	"azurerm_public_ip.sato0", result},
+		//{"resourceId",
+		//	args{matches, "[resourceId('Microsoft.Network/publicIPAddresses',local.appGwPublicIpName)]", &resourceId, target},
+		//	"azurerm_public_ip.sato0", result},
+		//{"parameters", args{matches, "[parameters('wafMode')]", &params, target}, "local.wafMode", result},
+		//{"bodge",
+		//	args{
+		//		matches, "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('appGatewaySubnetName'))]",
+		//		&vars,
+		//		target},
+		//	"tolist(azurerm_virtual_network.sato6.subnet)[0].id",
+		//	result},
 	}
 
 	for _, tt := range tests {
@@ -465,13 +501,18 @@ func Test_parseString(t *testing.T) {
 		result       map[string]interface{}
 	}
 
+	//want := "${var._artifactsLocation}artifacts/vm2.default.htm"
+	//target := map[string]interface{}{}
+	//
+	//result := map[string]interface{}{}
+
 	tests := []struct {
 		name  string
 		args  args
 		want  *string
 		want1 map[string]interface{}
 	}{
-		//{},
+		//{"Pass", args{"vm2DefaultHtmFullPath", target}, &want, result},
 	}
 
 	for _, tt := range tests {
