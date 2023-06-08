@@ -343,6 +343,11 @@ func Test_ditch(t *testing.T) {
 		{"mixed 2",
 			args{"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))", "variables"},
 			"concat('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))"},
+		{"concat", args{"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))", "concat"},
+			"uri(local._artifactsLocation, 'artifacts/vm1.default.htm', var._artifactsLocationSasToken)"},
+		{"works",
+			args{`[uri(parameters("_artifactsLocation"), concat("artifacts/vm2.default.htm", parameters("_artifactsLocationSasToken")))]`, "uri"},
+			"[parameters(\"_artifactsLocation\"), concat(\"artifacts/vm2.default.htm\", parameters(\"_artifactsLocationSasToken\"))]"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

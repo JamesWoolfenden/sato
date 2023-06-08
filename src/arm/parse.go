@@ -159,7 +159,7 @@ func parseString(attribute string, result map[string]interface{}) (string, map[s
 	matches := []string{
 		"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
 		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
-		"concat", "subscription().tenantId", "uuid",
+		"concat", "subscription().tenantId", "uuid", "uri(",
 	}
 
 	if what, found := contains(matches, attribute); found {
@@ -172,6 +172,10 @@ func parseString(attribute string, result map[string]interface{}) (string, map[s
 func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) (string, map[string]interface{}) {
 	var Attribute string
 	switch *what {
+	case "uri(":
+		{
+			Attribute = ditch(loseSQBrackets(newAttribute), "uri")
+		}
 	case "concat":
 		{
 			Attribute = loseSQBrackets(newAttribute)

@@ -10,56 +10,84 @@ resource "azurerm_application_gateway" "{{.item}}" {
 {{- else }}
   resource_group_name      = data.azurerm_resource_group.sato.name
 {{- end}}
-
+{{- if .resource.properties.sku}}
   sku {
-    name     = "Standard_Small"
-    tier     = "Standard"
-    capacity = 2
+    name     =  {{.resource.properties.sku.name|Quote}}
+    tier     =  {{.resource.properties.sku.tier|Quote}}
+    capacity =  {{.resource.properties.sku.capacity}}
   }
-
+{{- end}}
+{{- if .resource.properties.gatewayIPConfigurations}}
+{{range $a, $b:= .resource.properties.gatewayIPConfigurations}}
   gateway_ip_configuration {
-    name      = "my-gateway-ip-configuration"
-    subnet_id = azurerm_subnet.frontend.id
+    name      = {{$b.name|Quote}}
+    subnet_id = {{$b.properties.subnet.id|Quote}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.properties.frontendPorts}}
+{{range $c, $d:= .resource.properties.frontendPorts}}
   frontend_port {
-    name = local.frontend_port_name
-    port = 80
+    name = {{$d.name|Quote}}
+    port = {{$d.properties.Port}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.properties.frontendIPConfigurations}}
+{{range $e, $f:= .resource.properties.frontendIPConfigurations}}
   frontend_ip_configuration {
-    name                 = local.frontend_ip_configuration_name
-    public_ip_address_id = azurerm_public_ip.example.id
+    name                 = {{$f.name|Quote}}
+    public_ip_address_id = {{$f.properties.PublicIPAddress.id|Quote}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.properties.backendAddressPools}}
+{{range $g, $h:= .resource.properties.backendAddressPools}}
   backend_address_pool {
-    name = local.backend_address_pool_name
+    name = {{$h.name|Quote}}
+{{- if $h.properties.BackendAddresses}}
+    ip_addresses=[{{ range $a,$b:= $h.properties.BackendAddresses}}{{$b.IpAddress}},{{- end}}]
+{{- end}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.properties.backendHttpSettingsCollection}}
+{{range $x,$y:= .resource.properties.backendHttpSettingsCollection}}
   backend_http_settings {
-    name                  = local.http_setting_name
-    cookie_based_affinity = "Disabled"
-    path                  = "/path1/"
-    port                  = 80
-    protocol              = "Http"
-    request_timeout       = 60
+    name                  = {{$y.name|Quote}}
+    cookie_based_affinity  = {{$y.properties.CookieBasedAffinity|Quote}}
+{{- if $y.properties.Path}}
+    path                  = {{$y.properties.Path|Quote}}
+{{- end}}
+    port                  = {{$y.properties.Port}}
+    protocol              = {{$y.properties.Protocol}}
+{{- if  $y.properties.RequestTimeout}}
+    request_timeout       = {{$y.properties.RequestTimeout}}
+{{- end}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.properties.httpListeners}}
+{{range $x,$y:= .resource.properties.httpListeners}}
   http_listener {
-    name                           = local.listener_name
-    frontend_ip_configuration_name = local.frontend_ip_configuration_name
-    frontend_port_name             = local.frontend_port_name
-    protocol                       = "Http"
+    name                           = {{$y.name|Quote}}
+    frontend_ip_configuration_name  = {{$y.properties.FrontendIPConfiguration.Id|Quote}}
+    frontend_port_name             = {{$y.properties.FrontendPort.Id|Quote}}
+    protocol                       = {{$y.properties.Protocol|Quote}}
   }
-
+{{- end}}
+{{- end}}
+{{- if .resource.properties.requestRoutingRules}}
+{{range $x,$y:= .resource.properties.requestRoutingRules}}
   request_routing_rule {
-    name                       = local.request_routing_rule_name
-    rule_type                  = "Basic"
-    http_listener_name         = local.listener_name
-    backend_address_pool_name  = local.backend_address_pool_name
-    backend_http_settings_name = local.http_setting_name
+    name                       = {{$y.Name|Quote}}
+    rule_type                  = {{$y.properties.RuleType|Quote}}
+    http_listener_name         = {{$y.properties.httpListener.id|Quote}}
+    backend_address_pool_name  = {{$y.properties.backendAddressPool.id|Quote}}
+    backend_http_settings_name = {{$y.properties.backendHttpSettings.id|Quote}}
   }
-
+{{- end}}
+{{- end}}
 {{- if .resource.tags}}
   tags = {{Tags .resource.tags}}
 {{- end}}

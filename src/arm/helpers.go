@@ -234,6 +234,8 @@ func ditch(Attribute string, name string) string {
 		brackets = append(brackets, rbrackets...)
 	}
 
+	brackets = deleteEmpty(brackets)
+
 	y := 100
 	var raw []string
 	for x, item := range brackets {
@@ -260,4 +262,14 @@ func uuid(count int) string {
 		uuids += "resource \"random_uuid\" \"sato" + strconv.Itoa(i) + "\" {}\n"
 	}
 	return uuids
+}
+
+func deleteEmpty(s []string) []string {
+	var r []string
+	for _, str := range s {
+		if str != "" {
+			r = append(r, str)
+		}
+	}
+	return r
 }
