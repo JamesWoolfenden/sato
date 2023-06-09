@@ -348,7 +348,7 @@ func Test_ditch(t *testing.T) {
 			args{
 				"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))",
 				"variables"},
-			"concat('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))"},
+			"concat('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName'))"},
 		{"concat", args{
 			"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))",
 			"concat"},
@@ -404,9 +404,11 @@ func Test_notNil(t *testing.T) {
 		unknown interface{}
 	}
 
-	var test interface{}
-	var test2 interface{}
-	var test3 interface{}
+	var (
+		test  interface{}
+		test2 interface{}
+		test3 interface{}
+	)
 
 	test = true
 	test3 = false

@@ -22,7 +22,7 @@ func TestParseResources(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		//{},
+		// {},
 	}
 
 	for _, tt := range tests {
@@ -37,6 +37,8 @@ func TestParseResources(t *testing.T) {
 }
 
 func TestLookup(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		myType string
 	}

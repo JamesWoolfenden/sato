@@ -22,7 +22,7 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		// needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
 		if err != nil {
-			return fmt.Errorf("failed to template %v", err)
+			return fmt.Errorf("failed to template %w", err)
 		}
 
 		_ = tmpl.Execute(&output, M{

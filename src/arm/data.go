@@ -2,10 +2,9 @@ package arm
 
 import (
 	"bytes"
+	"fmt"
 	"sato/src/cf"
 	tftemplate "text/template"
-
-	"github.com/rs/zerolog/log"
 )
 
 // parseData writes out to data.tf
@@ -21,7 +20,7 @@ func parseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(dataFile))
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to build parser %w", err)
 	}
 
 	err = tmpl.Execute(&output, m{
@@ -29,16 +28,12 @@ func parseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 	})
 
 	if err != nil {
-		log.Print(err)
-
-		return err
+		return fmt.Errorf("failed to execute parser %w", err)
 	}
 
 	err = cf.Write(output.String(), destination, "data")
 	if err != nil {
-		log.Print(err)
-
-		return err
+		return fmt.Errorf("failed to write data.tf %w", err)
 	}
 
 	return nil

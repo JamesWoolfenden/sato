@@ -71,7 +71,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := arm.Parse(file, destination)
 
-					return err
+					return fmt.Errorf("bisect failure: %w", err)
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -99,7 +99,7 @@ func main() {
 						fmt.Print(*result)
 					}
 
-					return err
+					return fmt.Errorf("see failed with error %w", err)
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{

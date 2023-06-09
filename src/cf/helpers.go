@@ -159,9 +159,8 @@ func ArrayReplace(mySlice []string, target string, replacement string) string {
 		item = strings.Replace(item, target, replacement, 1)
 		newSlice = append(newSlice, "\t\""+item+"\"")
 	}
-	newString := "[\n" + strings.Join(newSlice, ",") + "\n\t]\n"
 
-	return newString
+	return "[\n" + strings.Join(newSlice, ",") + "\n\t]\n"
 }
 
 // Contains is a template function.

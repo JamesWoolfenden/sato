@@ -9,16 +9,18 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	tftemplate "text/template"
+	"text/template"
 
 	"github.com/awslabs/goformation/v7"
 	"github.com/awslabs/goformation/v7/cloudformation"
 	"github.com/rs/zerolog/log"
 )
 
-const typeNumber = "number"
-const typeListString = "list(string)"
-const typeString = "string"
+const (
+	typeNumber     = "number"
+	typeListString = "list(string)"
+	typeString     = "string"
+)
 
 // M is a wrapper object to help pass in multiple object to template.
 type M map[string]interface{}
@@ -41,18 +43,18 @@ type Output struct {
 
 // Parse turn CFN into Terraform.
 func Parse(file string, destination string) error {
-	// Open a template from file (can be JSON or YAML)
+	// Open a cloudFormation from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
 		return err
 	}
 
-	template, err := goformation.Open(fileAbs)
+	cloudFormation, err := goformation.Open(fileAbs)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Parse failure")
 	}
 
-	funcMap := tftemplate.FuncMap{
+	funcMap := template.FuncMap{
 		"Array":        Array,
 		"ArrayReplace": ArrayReplace,
 		"Contains":     Contains,
@@ -82,13 +84,13 @@ func Parse(file string, destination string) error {
 		"Kebab":        Kebab,
 		"ZipFile":      Zipfile,
 	}
-	_, err = ParseVariables(template, funcMap, destination)
+	_, err = ParseVariables(cloudFormation, funcMap, destination)
 
 	if err != nil {
 		return err
 	}
 
-	err = parseResources(template.Resources, funcMap, destination)
+	err = parseResources(cloudFormation.Resources, funcMap, destination)
 	if err != nil {
 		return err
 	}
@@ -98,8 +100,8 @@ func Parse(file string, destination string) error {
 
 // ParseVariables convert CFN Parameters into terraform variables
 func ParseVariables(
-	template *cloudformation.Template,
-	funcMap tftemplate.FuncMap,
+	cloudFormation *cloudformation.Template,
+	funcMap template.FuncMap,
 	destination string,
 ) ([]Variable, error) {
 	var All string
@@ -107,11 +109,10 @@ func ParseVariables(
 	var (
 		myMap         = make(map[string]bool)
 		DataResources []string
+		myVariables   []Variable
 	)
 
-	var myVariables []Variable
-
-	for Name, param := range template.Parameters {
+	for Name, param := range cloudFormation.Parameters {
 		var myVariable Variable
 
 		DataResources, myVariable, myMap = GetVariableType(param, myVariable, DataResources, myMap)
@@ -121,7 +122,7 @@ func ParseVariables(
 
 		var output bytes.Buffer
 
-		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
+		tmpl, err := template.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
 			return nil, err
 		}
@@ -154,7 +155,11 @@ func GetVariableType(
 	param cloudformation.Parameter,
 	myVariable Variable,
 	dataResources []string,
-	myMap map[string]bool) ([]string, Variable, map[string]bool) {
+	myMap map[string]bool) (
+	[]string,
+	Variable,
+	map[string]bool,
+) {
 	switch param.Type {
 	case "String":
 		if param.Default == "false" || param.Default == "true" || param.Default == true || param.Default == false {

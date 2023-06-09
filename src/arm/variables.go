@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"reflect"
 	"sato/src/cf"
 	"strings"
@@ -54,6 +55,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 					local = "\t" + name + " = " + value + "\n"
 					locals += local
+
 					continue
 				}
 
@@ -105,7 +107,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	err = cf.Write(locals, destination, "locals")
 
 	if err != nil {
-		return result, err
+		return result, fmt.Errorf("failed to write locals %w", err)
 	}
 
 	return result, nil

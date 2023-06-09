@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rs/zerolog/log"
+	"github.com/rs/zerolog/log" //nolint:depguard
 )
 
 const typeNumber = "number"
@@ -31,7 +31,7 @@ func IsLocal(target string, result map[string]interface{}) bool {
 	return false
 }
 
-// Contains looks into slice for string
+// Contains looks into slice for string.
 func Contains(s []string, str string) (*string, bool) {
 	for _, v := range s {
 		if strings.Contains(strings.ToLower(str), strings.ToLower(v)) {
@@ -42,7 +42,7 @@ func Contains(s []string, str string) (*string, bool) {
 	return nil, false
 }
 
-// FixType converts from go to terraform type names
+// FixType converts from go to terraform type names.
 func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	if myItem["type"] == nil {
 		return myItem, fmt.Errorf("object type is nil %s", myItem)
@@ -60,9 +60,9 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 			var types string
 			var result string
 
-			_, ok := myItem["defaultValue"].(map[string]interface{})
+			defaultValue, ok := myItem["defaultValue"].(map[string]interface{})
 			if ok {
-				for name, item := range myItem["defaultValue"].(map[string]interface{}) {
+				for name, item := range defaultValue {
 					switch item := item.(type) {
 					case []interface{}:
 						{
@@ -70,10 +70,16 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 							var temptTypes string
 							var myType string
 							for _, y := range item {
-								for name, value := range y.(map[string]interface{}) {
-									temp = temp + "\t   " + name + " = \"" + value.(string) + "\"\n"
-									myType = myType + "\t   " + name + " = string\n"
+								y, ok := y.(map[string]interface{})
+								if !ok {
+									return myItem, errors.New("failed to assert  (map[string]interface{}")
 								}
+
+								for name, value := range y {
+									temp += "\t   " + name + " = \"" + value.(string) + "\"\n"
+									myType += "\t   " + name + " = string\n"
+								}
+
 								temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
 								temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
 							}
@@ -158,7 +164,7 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	return myItem, nil
 }
 
-// EscapeQuote them quotes
+// EscapeQuote them quotes.
 func EscapeQuote(item interface{}) string {
 	if item != nil {
 		return strings.ReplaceAll(item.(string), "\"", "\\\"")
@@ -167,7 +173,7 @@ func EscapeQuote(item interface{}) string {
 	return ""
 }
 
-// ArrayToString squashes slice into string
+// ArrayToString squashes slice into string.
 func ArrayToString(defaultValue []interface{}) string {
 	newValue := "["
 
@@ -185,6 +191,7 @@ func ArrayToString(defaultValue []interface{}) string {
 // Tags take map into a string for tags
 func Tags(tags map[string]interface{}) string {
 	tagged := "{\n"
+
 	for item, name := range tags {
 		if _, ok := name.(string); ok {
 			tagged += "\t\"" + item + "\"" + " = " + "\"" + name.(string) + "\"\n"
@@ -221,12 +228,12 @@ func LoseSQBrackets(newAttribute string) string {
 }
 
 // Ditch helps to drop functions for arm
-func Ditch(Attribute string, name string) string {
+func Ditch(attribute string, ditch string) string {
 
-	leftBrackets := strings.SplitAfter(Attribute, "(")
+	leftBrackets := strings.SplitAfter(attribute, "(")
 
 	if len(leftBrackets) == 0 {
-		return Attribute
+		return attribute
 	}
 
 	var brackets []string
@@ -238,26 +245,29 @@ func Ditch(Attribute string, name string) string {
 
 	brackets = deleteEmpty(brackets)
 
-	y := 100
+	var opposite = 100
+
 	var raw []string
+
 	for x, item := range brackets {
-		if strings.Contains(item, name) {
-			y = len(brackets) - 2 + x
-			raw = append(raw, strings.Replace(item, name+"(", "", 1))
+		if strings.Contains(item, ditch) {
+			opposite = len(brackets) - 2 + x
+			item = strings.Replace(item, ditch+"(", "", 1)
 		}
 
-		if y != x && !strings.Contains(item, name) {
-			raw = append(raw, item)
-		}
-
-		if y == x {
-			raw = append(raw, strings.Replace(item, ")", "", 1))
+		if opposite != x {
+			if !strings.Contains(item, ditch) {
+				raw = append(raw, item)
+			} else {
+				raw = append(raw, strings.Replace(item, ")", "", 1))
+			}
 		}
 	}
+
 	return strings.Join(raw, "")
 }
 
-// UUID replaces
+// UUID replaces.
 func UUID(count int) string {
 	var i int
 	var uuids string
