@@ -343,12 +343,12 @@ func Test_ditch(t *testing.T) {
 			args{
 				"concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
 				"variables"},
-			"concat(parameters('vmName'),'/', 'omsAgentForLinuxName'))"},
+			"concat(parameters('vmName'),'/', 'omsAgentForLinuxName')"},
 		{"mixed 2",
 			args{
 				"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))",
 				"variables"},
-			"concat('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName'))"},
+			"concat('blobPrivateDnsZoneName', '/link_to_', toLower(parameters('virtualNetworkName')))"},
 		{"concat", args{
 			"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))",
 			"concat"},

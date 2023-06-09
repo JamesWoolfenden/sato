@@ -230,41 +230,60 @@ func LoseSQBrackets(newAttribute string) string {
 // Ditch helps to drop functions for arm
 func Ditch(attribute string, ditch string) string {
 
-	leftBrackets := strings.SplitAfter(attribute, "(")
+	splitter := strings.SplitN(attribute, ditch+"(", 2)
 
-	if len(leftBrackets) == 0 {
+	if len(splitter) != 2 {
 		return attribute
 	}
 
-	var brackets []string
+	remains := strings.Replace(splitter[0], ditch+"(", "", 1)
+	next := splitter[1]
 
-	for _, item := range leftBrackets {
-		rbrackets := strings.SplitAfter(item, ")")
-		brackets = append(brackets, rbrackets...)
-	}
+	cards := 1
 
-	brackets = deleteEmpty(brackets)
+	var newString string
 
-	var opposite = 100
+	lb := "("
+	rb := ")"
 
-	var raw []string
+	found := false
 
-	for x, item := range brackets {
-		if strings.Contains(item, ditch) {
-			opposite = len(brackets) - 2 + x
-			item = strings.Replace(item, ditch+"(", "", 1)
-		}
+	for _, y := range next {
+		char := string(y)
+		switch char {
+		case lb:
+			{
+				if !found {
+					cards++
+				}
 
-		if opposite != x {
-			if !strings.Contains(item, ditch) {
-				raw = append(raw, item)
-			} else {
-				raw = append(raw, strings.Replace(item, ")", "", 1))
+				newString += char
+			}
+		case rb:
+			{
+				if !found {
+					if cards != 1 {
+						newString += string(y)
+					} else {
+						found = true
+					}
+
+					cards--
+				} else {
+					newString += string(y)
+				}
+
+			}
+		default:
+			{
+				newString += char
 			}
 		}
 	}
 
-	return strings.Join(raw, "")
+	newString = remains + newString
+
+	return newString
 }
 
 // UUID replaces.
