@@ -49,14 +49,14 @@ func Parse(file string, destination string) error {
 		"Array":        cf.Array,
 		"ArrayReplace": cf.ArrayReplace,
 		"Contains":     cf.Contains,
-		"Enabled":      enabled,
+		"Enabled":      Enabled,
 		"Sprint":       cf.Sprint,
 		"Decode64":     cf.Decode64,
 		"Boolean":      cf.Boolean,
 		"Dequote":      cf.Dequote,
 		"Quote":        cf.Quote,
 		"Demap":        cf.Demap,
-		"Tags":         tags,
+		"Tags":         Tags,
 		"ToUpper":      strings.ToUpper,
 		"ToLower":      cf.Lower,
 		"Deref":        func(str *string) string { return *str },
@@ -67,21 +67,21 @@ func Parse(file string, destination string) error {
 
 			return string(a)
 		},
-		"Set":          arrayToString,
+		"Set":          ArrayToString,
 		"Split":        cf.Split,
 		"SplitOn":      cf.SplitOn,
 		"Replace":      cf.Replace,
 		"RandomString": cf.RandomString,
 		"Map":          cf.Map,
-		"NotNil":       notNil,
+		"NotNil":       NotNil,
 		"Snake":        cf.Snake,
 		"Kebab":        cf.Kebab,
 		"ZipFile":      cf.Zipfile,
-		"Uuid":         uuid,
+		"Uuid":         UUID,
 	}
 
 	result = preprocess(result)
-	result, err = parseVariables(result, funcMap, destination)
+	result, err = ParseVariables(result, funcMap, destination)
 
 	if err != nil {
 		return err
@@ -92,7 +92,7 @@ func Parse(file string, destination string) error {
 		return err
 	}
 
-	err = parseOutputs(result, funcMap, destination)
+	err = ParseOutputs(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
@@ -119,31 +119,33 @@ func parseList(resources []interface{}, result map[string]interface{}) ([]interf
 
 func parseMap(myResource map[string]interface{}, result map[string]interface{}) (map[string]interface{}, error) {
 	for name, attribute := range myResource {
-		switch attribute.(type) {
+		switch v := attribute.(type) {
 		case string:
 			var temp string
-			temp, result = parseString(attribute.(string), result)
+			temp, result = parseString(v, result)
 			myResource[name] = temp
 		case map[string]interface{}:
 			var err error
-			myResource[name], err = parseMap(attribute.(map[string]interface{}), result)
+			myResource[name], err = parseMap(v, result)
+
 			if err != nil {
 				return nil, err
 			}
 		case []interface{}:
-			myArray := attribute.([]interface{})
+			myArray := v
 			for index, resource := range myArray {
-				switch resource.(type) {
+				switch resource := resource.(type) {
 				case string:
 					var temp string
-					temp, result = parseString(resource.(string), result)
+					temp, result = parseString(resource, result)
 					myArray[index] = temp
 				case map[string]interface{}:
-					myArray[index], _ = parseMap(resource.(map[string]interface{}), result)
+					myArray[index], _ = parseMap(resource, result)
 				case []interface{}:
 					log.Print(resource)
 				}
 			}
+
 			myResource[name] = myArray
 		case float64, bool:
 			// it's fine
@@ -159,12 +161,12 @@ func parseString(attribute string, result map[string]interface{}) (string, map[s
 	matches := []string{
 		"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
 		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
-		"concat", "subscription().tenantId", "uuid", "uri(",
+		"concat", "subscription().tenantId", "UUID", "uri(",
 	}
 
-	if what, found := contains(matches, attribute); found {
+	if what, found := Contains(matches, attribute); found {
 		attribute, result = replace(matches, attribute, what, result)
-		attribute = loseSQBrackets(attribute)
+		attribute = LoseSQBrackets(attribute)
 	}
 	return attribute, result
 }
@@ -174,12 +176,12 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	switch *what {
 	case "uri(":
 		{
-			Attribute = ditch(loseSQBrackets(newAttribute), "uri")
+			Attribute = Ditch(LoseSQBrackets(newAttribute), "uri")
 		}
 	case "concat":
 		{
-			Attribute = loseSQBrackets(newAttribute)
-			ditched := ditch(Attribute, "concat")
+			Attribute = LoseSQBrackets(newAttribute)
+			ditched := Ditch(Attribute, "concat")
 
 			raw := strings.Split(ditched, ",")
 			var after string
@@ -220,11 +222,11 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "reference":
 		{
-			Attribute = ditch(loseSQBrackets(newAttribute), "reference")
+			Attribute = Ditch(LoseSQBrackets(newAttribute), "reference")
 		}
 	case "resourceId":
 		{
-			Attribute = loseSQBrackets(newAttribute)
+			Attribute = LoseSQBrackets(newAttribute)
 
 			var err error
 			Attribute, err = replaceResourceID(Attribute, result)
@@ -241,7 +243,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "subscriptionResourceId":
 		{
-			Attribute = ditch(newAttribute, "subscriptionResourceId")
+			Attribute = Ditch(newAttribute, "subscriptionResourceId")
 		}
 	case "format('":
 		{
@@ -249,11 +251,11 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 			Match := re.ReplaceAllString(newAttribute, "%s")
 			Match = strings.Replace(Match, "'", "\"", -1)
 			Match = strings.Replace(Match, "/", "-", -1)
-			Attribute = loseSQBrackets(Match)
+			Attribute = LoseSQBrackets(Match)
 		}
 	case "listKeys":
 		{
-			Attribute = loseSQBrackets(newAttribute)
+			Attribute = LoseSQBrackets(newAttribute)
 			re := regexp.MustCompile(`listKeys\((.*)\)`) // format('{0}/{1}',
 			Match := re.FindStringSubmatch(Attribute)
 			if len(Match) > 1 {
@@ -274,7 +276,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 				} else {
 					temp = "var." + Match[1]
 				}
-				Attribute = loseSQBrackets(strings.Replace(newAttribute, Match[0], temp, -1))
+				Attribute = LoseSQBrackets(strings.Replace(newAttribute, Match[0], temp, -1))
 			} else {
 				log.Printf("no match found %s", newAttribute)
 			}
@@ -321,7 +323,6 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 				data["uuid"] = 0
 			} else {
 				data = result["data"].(map[string]interface{})
-				//temp := data["uuid"].(int) + 1
 				if data["uuid"] != nil {
 					data["uuid"] = data["uuid"].(int) + 1
 				} else {
@@ -348,7 +349,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "resourceGroup().id":
 		{
-			Attribute = loseSQBrackets(strings.Replace(newAttribute, "resourceGroup().id",
+			Attribute = LoseSQBrackets(strings.Replace(newAttribute, "resourceGroup().id",
 				"data.azurerm_resource_group.sato.id", -1))
 		}
 	case "substring":
@@ -359,7 +360,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	}
 
-	if again, still := contains(matches, Attribute); still {
+	if again, still := Contains(matches, Attribute); still {
 		// allow failure
 		if Attribute != newAttribute {
 			Attribute, result = replace(matches, Attribute, again, result)
@@ -371,13 +372,8 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 }
 
 func replaceResourceID(Match string, result map[string]interface{}) (string, error) {
-	if strings.Contains(Match, "extensionResourceId") {
-		Match = strings.Replace(Match, "extensionResourceId", "resourceId", 1)
-	}
-
-	if strings.Contains(Match, "subscriptionResourceId") {
-		Match = strings.Replace(Match, "subscriptionResourceId", "resourceId", 1)
-	}
+	Match = strings.Replace(Match, "extensionResourceId", "resourceId", 1)
+	Match = strings.Replace(Match, "subscriptionResourceId", "resourceId", 1)
 
 	re := regexp.MustCompile(`resourceId\((.*?)\)`)
 	Attribute := re.FindStringSubmatch(Match)
@@ -555,7 +551,7 @@ func resourceToName(Match string, result map[string]interface{}) (string, error)
 	re := regexp.MustCompile(`^resourceId\((.*)\)`)
 	splitter := re.FindStringSubmatch(Match)
 	if len(splitter) > 1 {
-		//ditch type
+		//Ditch type
 		_, found, _ := strings.Cut(splitter[1], ",")
 		myResourceName, _, _ := strings.Cut(found, ",")
 		name, err := findResourceName(result, strings.TrimSpace(myResourceName))
@@ -648,14 +644,14 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 			log.Print("resource is not a map")
 			continue
 		}
-		temp := loseSQBrackets(test["name"].(string))
+		temp := LoseSQBrackets(test["name"].(string))
 
 		if name == temp {
 			return test["resource"].(string), nil
 		}
 
 		trimName := strings.Replace(name, "var.", "", 1)
-		trimTemp := strings.Replace(ditch(temp, "variables"), "'", "", 2)
+		trimTemp := strings.Replace(Ditch(temp, "variables"), "'", "", 2)
 
 		if trimTemp == trimName {
 			return test["resource"].(string), nil
@@ -749,14 +745,16 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 	locals := make(map[string]interface{})
 
 	if results["variables"] != nil {
+
 		paraVariables := results["variables"].(map[string]interface{})
 
 		newVariables := make(map[string]interface{})
+
 		for item, result := range paraVariables {
-			switch result.(type) {
+			switch result := result.(type) {
 			case string:
 				{
-					if strings.Contains(result.(string), "[") {
+					if strings.Contains(result, "[") {
 						locals[item] = result
 					} else {
 						newVariables[item] = result
@@ -775,8 +773,10 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 	}
 
 	paraParameters := results["parameters"].(map[string]interface{})
+
 	newLocals := make(map[string]interface{})
 	newParams := make(map[string]interface{})
+
 	for item, result := range paraParameters {
 		myResult := result.(map[string]interface{})
 		_, ok := myResult["defaultValue"]
@@ -809,7 +809,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 			case "array":
 				{
 					myResult["type"] = "list(string)"
-					myResult["default"] = arrayToString(myResult["defaultValue"].([]interface{}))
+					myResult["default"] = ArrayToString(myResult["defaultValue"].([]interface{}))
 					newParams[item] = myResult
 				}
 			case "map[string]interface{}":

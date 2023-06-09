@@ -19,7 +19,7 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 
 		myItem := item.(map[string]interface{})
 
-		myItem, err = fixType(myItem)
+		myItem, err = FixType(myItem)
 		if err != nil {
 			log.Print(err)
 		}

@@ -1,7 +1,8 @@
-package arm
+package arm_test
 
 import (
 	"reflect"
+	"sato/src/arm"
 	"testing"
 	"text/template"
 )
@@ -26,14 +27,14 @@ func Test_parseVariables(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := parseVariables(tt.args.result, tt.args.funcMap, tt.args.destination)
+			got, err := arm.ParseVariables(tt.args.result, tt.args.funcMap, tt.args.destination)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseVariables() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ParseVariables() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseVariables() got = %v, want %v", got, tt.want)
+				t.Errorf("ParseVariables() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

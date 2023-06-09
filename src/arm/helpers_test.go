@@ -1,7 +1,8 @@
-package arm
+package arm_test
 
 import (
 	"reflect"
+	"sato/src/arm"
 	"testing"
 )
 
@@ -18,6 +19,7 @@ func TestIsLocal(t *testing.T) {
 
 	result["locals"] = locals
 	empty["locals"] = "test"
+
 	type args struct {
 		target string
 		result map[string]interface{}
@@ -37,7 +39,7 @@ func TestIsLocal(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := IsLocal(tt.args.target, tt.args.result); got != tt.want {
+			if got := arm.IsLocal(tt.args.target, tt.args.result); got != tt.want {
 				t.Errorf("IsLocal() = %v, want %v", got, tt.want)
 			}
 		})
@@ -65,8 +67,8 @@ func Test_arrayToString(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := arrayToString(tt.args.defaultValue); got != tt.want {
-				t.Errorf("arrayToString() = %v, want %v", got, tt.want)
+			if got := arm.ArrayToString(tt.args.defaultValue); got != tt.want {
+				t.Errorf("ArrayToString() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -96,12 +98,12 @@ func Test_contains(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, got1 := contains(tt.args.s, tt.args.str)
+			got, got1 := arm.Contains(tt.args.s, tt.args.str)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("contains() got = %v, want %v", got, tt.want)
+				t.Errorf("Contains() got = %v, want %v", got, tt.want)
 			}
 			if got1 != tt.want1 {
-				t.Errorf("contains() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("Contains() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -129,8 +131,8 @@ func Test_escapeQuote(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := escapeQuote(tt.args.item); got != tt.want {
-				t.Errorf("escapeQuote() = %v, want %v", got, tt.want)
+			if got := arm.EscapeQuote(tt.args.item); got != tt.want {
+				t.Errorf("EscapeQuote() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -308,14 +310,14 @@ func Test_fixType(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := fixType(tt.args.myItem)
+			got, err := arm.FixType(tt.args.myItem)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("fixType() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("FixType() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("fixType() got =\n %v, want \n%v", got, tt.want)
+				t.Errorf("FixType() got =\n %v, want \n%v", got, tt.want)
 			}
 		})
 	}
@@ -338,22 +340,32 @@ func Test_ditch(t *testing.T) {
 		{"variables", args{"variables('bastionPublicIpAddressName')", "variables"}, "'bastionPublicIpAddressName'"},
 		{"variables not", args{"parameters('vmName')", "variables"}, "parameters('vmName')"},
 		{"mixed",
-			args{"concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))", "variables"},
+			args{
+				"concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
+				"variables"},
 			"concat(parameters('vmName'),'/', 'omsAgentForLinuxName'))"},
 		{"mixed 2",
-			args{"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))", "variables"},
+			args{
+				"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))",
+				"variables"},
 			"concat('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))"},
-		{"concat", args{"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))", "concat"},
+		{"concat", args{
+			"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))",
+			"concat"},
 			"uri(local._artifactsLocation, 'artifacts/vm1.default.htm', var._artifactsLocationSasToken)"},
 		{"works",
-			args{`[uri(parameters("_artifactsLocation"), concat("artifacts/vm2.default.htm", parameters("_artifactsLocationSasToken")))]`, "uri"},
+			args{
+				`[uri(parameters("_artifactsLocation"), concat("artifacts/vm2.default.htm", parameters("_artifactsLocationSasToken")))]`,
+				"uri"},
 			"[parameters(\"_artifactsLocation\"), concat(\"artifacts/vm2.default.htm\", parameters(\"_artifactsLocationSasToken\"))]"},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := ditch(tt.args.Attribute, tt.args.name); got != tt.want {
-				t.Errorf("ditch() = %v, want %v", got, tt.want)
+			if got := arm.Ditch(tt.args.Attribute, tt.args.name); got != tt.want {
+				t.Errorf("Ditch() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -378,8 +390,8 @@ func Test_enabled(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := enabled(tt.args.status); got != tt.want {
-				t.Errorf("enabled() = %v, want %v", got, tt.want)
+			if got := arm.Enabled(tt.args.status); got != tt.want {
+				t.Errorf("Enabled() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -412,10 +424,11 @@ func Test_notNil(t *testing.T) {
 		{"Pointer", args{&test4}, true},
 	}
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := notNil(tt.args.unknown); got != tt.want {
-				t.Errorf("notNil() = %v, want %v", got, tt.want)
+			if got := arm.NotNil(tt.args.unknown); got != tt.want {
+				t.Errorf("NotNil() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -449,11 +462,13 @@ func Test_tags(t *testing.T) {
 		{"pass", args{myTags}, result},
 		{"bodge", args{myBodge}, bodge},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := tags(tt.args.tags); got != tt.want {
-				t.Errorf("tags() = %v, want %v", got, tt.want)
+			if got := arm.Tags(tt.args.tags); got != tt.want {
+				t.Errorf("Tags() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -465,6 +480,7 @@ func Test_uuid(t *testing.T) {
 	type args struct {
 		count int
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -474,10 +490,12 @@ func Test_uuid(t *testing.T) {
 		{"Two", args{2}, "resource \"random_uuid\" \"sato0\" {}\nresource \"random_uuid\" \"sato1\" {}\n"},
 		{"Zero", args{0}, ""},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := uuid(tt.args.count); got != tt.want {
+			if got := arm.UUID(tt.args.count); got != tt.want {
 				t.Errorf("uuid() = %v, want %v", got, tt.want)
 			}
 		})
@@ -485,6 +503,8 @@ func Test_uuid(t *testing.T) {
 }
 
 func Test_loseSQBrackets(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		newAttribute string
 	}
@@ -503,9 +523,11 @@ func Test_loseSQBrackets(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got := loseSQBrackets(tt.args.newAttribute); got != tt.want {
-				t.Errorf("loseSQBrackets() = %v, want %v", got, tt.want)
+			t.Parallel()
+			if got := arm.LoseSQBrackets(tt.args.newAttribute); got != tt.want {
+				t.Errorf("LoseSQBrackets() = %v, want %v", got, tt.want)
 			}
 		})
 	}

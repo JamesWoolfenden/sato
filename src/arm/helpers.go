@@ -31,7 +31,8 @@ func IsLocal(target string, result map[string]interface{}) bool {
 	return false
 }
 
-func contains(s []string, str string) (*string, bool) {
+// Contains looks into slice for string
+func Contains(s []string, str string) (*string, bool) {
 	for _, v := range s {
 		if strings.Contains(strings.ToLower(str), strings.ToLower(v)) {
 			return &v, true
@@ -41,7 +42,8 @@ func contains(s []string, str string) (*string, bool) {
 	return nil, false
 }
 
-func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
+// FixType converts from go to terraform type names
+func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	if myItem["type"] == nil {
 		return myItem, fmt.Errorf("object type is nil %s", myItem)
 	}
@@ -61,14 +63,13 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 			_, ok := myItem["defaultValue"].(map[string]interface{})
 			if ok {
 				for name, item := range myItem["defaultValue"].(map[string]interface{}) {
-					//goland:noinspection GoLinter
-					switch item.(type) {
+					switch item := item.(type) {
 					case []interface{}:
 						{
 							var temp string
 							var temptTypes string
 							var myType string
-							for _, y := range item.([]interface{}) {
+							for _, y := range item {
 								for name, value := range y.(map[string]interface{}) {
 									temp = temp + "\t   " + name + " = \"" + value.(string) + "\"\n"
 									myType = myType + "\t   " + name + " = string\n"
@@ -91,32 +92,32 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 					case string:
 						{
 							if result == "" {
-								result = name + " = " + "\"" + escapeQuote(item) + "\""
+								result = name + " = " + "\"" + EscapeQuote(item) + "\""
 								types = name + " = " + "string"
 							} else {
-								result += ",\n\t" + name + " = " + "\"" + escapeQuote(item) + "\""
+								result += ",\n\t" + name + " = " + "\"" + EscapeQuote(item) + "\""
 								types += ",\n\t" + name + " = " + "string"
 							}
 						}
 					case bool:
 						{
 							if result == "" {
-								result = name + " = " + strconv.FormatBool(item.(bool))
+								result = name + " = " + strconv.FormatBool(item)
 								types = name + " = " + "bool"
 							} else {
 								temp := result
-								result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item.(bool))
+								result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item)
 								types = types + ",\n\t" + name + " = " + "bool"
 							}
 						}
 					case int:
 						{
 							if result == "" {
-								result = name + " = " + strconv.Itoa(item.(int))
+								result = name + " = " + strconv.Itoa(item)
 								types = name + " = " + "number"
 							} else {
 								temp := result
-								result = temp + ",\n\t" + name + " = " + strconv.Itoa(item.(int))
+								result = temp + ",\n\t" + name + " = " + strconv.Itoa(item)
 								types = types + ",\n\t" + name + " = " + "number"
 							}
 						}
@@ -142,7 +143,7 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 		}
 	case typeString, "securestring":
 		{
-			myItem["default"] = escapeQuote(myItem["default"])
+			myItem["default"] = EscapeQuote(myItem["default"])
 		}
 	case typeListString, typeNumber, "bool":
 		{
@@ -157,7 +158,8 @@ func fixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	return myItem, nil
 }
 
-func escapeQuote(item interface{}) string {
+// EscapeQuote them quotes
+func EscapeQuote(item interface{}) string {
 	if item != nil {
 		return strings.ReplaceAll(item.(string), "\"", "\\\"")
 	}
@@ -165,21 +167,23 @@ func escapeQuote(item interface{}) string {
 	return ""
 }
 
-func arrayToString(defaultValue []interface{}) string {
+// ArrayToString squashes slice into string
+func ArrayToString(defaultValue []interface{}) string {
 	newValue := "["
 
 	for count, value := range defaultValue {
 		if count == len(defaultValue)-1 {
-			newValue = newValue + "\"" + value.(string) + "\""
+			newValue += "\"" + value.(string) + "\""
 		} else {
-			newValue = newValue + "\"" + value.(string) + "\"" + ","
+			newValue += "\"" + value.(string) + "\"" + ","
 		}
 	}
 
 	return newValue + "]"
 }
 
-func tags(tags map[string]interface{}) string {
+// Tags take map into a string for tags
+func Tags(tags map[string]interface{}) string {
 	tagged := "{\n"
 	for item, name := range tags {
 		if _, ok := name.(string); ok {
@@ -194,32 +198,30 @@ func tags(tags map[string]interface{}) string {
 	return tagged
 }
 
-func notNil(unknown interface{}) bool {
-	if unknown == nil {
-
-		return false
-	}
-
-	return true
+// NotNil handles interfaces that are bools and their value being set
+func NotNil(unknown interface{}) bool {
+	return unknown != nil
 }
 
-func enabled(status string) bool {
-	if strings.ToLower(status) == "enabled" {
-		return true
-	}
-	return false
+// Enabled cast from string to bool
+func Enabled(status string) bool {
+	return strings.ToLower(status) == "Enabled"
 }
 
-func loseSQBrackets(newAttribute string) string {
+// LoseSQBrackets ditches square brackets
+func LoseSQBrackets(newAttribute string) string {
 	re := regexp.MustCompile(`^\[(.*)\]`) // format('{0}/{1}',
 	Matched := re.FindStringSubmatch(newAttribute)
+
 	if len(Matched) > 1 {
 		return Matched[1]
 	}
+
 	return newAttribute
 }
 
-func ditch(Attribute string, name string) string {
+// Ditch helps to drop functions for arm
+func Ditch(Attribute string, name string) string {
 
 	leftBrackets := strings.SplitAfter(Attribute, "(")
 
@@ -255,12 +257,15 @@ func ditch(Attribute string, name string) string {
 	return strings.Join(raw, "")
 }
 
-func uuid(count int) string {
+// UUID replaces
+func UUID(count int) string {
 	var i int
 	var uuids string
+
 	for i = 0; i < (count); i++ {
 		uuids += "resource \"random_uuid\" \"sato" + strconv.Itoa(i) + "\" {}\n"
 	}
+
 	return uuids
 }
 

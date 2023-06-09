@@ -3,6 +3,7 @@ package arm
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"reflect"
 	"sato/src/cf"
 	"strings"
@@ -11,11 +12,18 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// parseVariables convert ARM Parameters into terraform variables.
-func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
+// ParseVariables convert ARM Parameters into terraform variables.
+func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 	variables := make(map[string]interface{})
+
+	var ok bool
+
 	if result["variables"] != nil {
-		variables = result["variables"].(map[string]interface{})
+		variables, ok = result["variables"].(map[string]interface{})
+
+		if !ok {
+			return result, errors.New("failed to assert variable is a map[string]interface{}")
+		}
 	}
 
 	var All string
@@ -39,11 +47,12 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			var local string
 
 			if reflect.TypeOf(value).String() == typeString {
-				if strings.Contains(value.(string), "()") ||
-					strings.Contains(value.(string), "[") {
-					value, result = parseString(value.(string), result)
+				value := value.(string)
+				if strings.Contains(value, "()") ||
+					strings.Contains(value, "[") {
+					value, result = parseString(value, result)
 
-					local = "\t" + name + " = " + value.(string) + "\n"
+					local = "\t" + name + " = " + value + "\n"
 					locals += local
 					continue
 				}
@@ -64,7 +73,7 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			myItem["type"] = typeString
 		}
 
-		myItem, err = fixType(myItem)
+		myItem, err = FixType(myItem)
 		if err != nil {
 			log.Print(err)
 		}
@@ -76,10 +85,12 @@ func parseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		if err != nil {
 			return result, err
 		}
+
 		_ = tmpl.Execute(&output, m{
 			"variable": myItem,
 			"item":     name,
 		})
+
 		All += output.String()
 
 		myVariables = append(myVariables, myItem)

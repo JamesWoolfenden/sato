@@ -280,8 +280,8 @@ func Write(output string, location string, name string) error {
 }
 
 // ToTFName creates a Terraform resource name from a CFN type (approximates).
-func ToTFName(CFN string) string {
-	return strings.ToLower(strings.ReplaceAll(CFN, "::", "_"))
+func ToTFName(Cloudformation string) string {
+	return strings.ToLower(strings.ReplaceAll(Cloudformation, "::", "_"))
 }
 
 // ReplaceVariables looks to see if u can translate CFN vars into terraform.
