@@ -68,12 +68,14 @@ func Test_findResourceName(t *testing.T) {
 		wantErr bool
 	}{
 		{"Pass", args{target, "PrivateDNSZone"}, "sato0", false},
-		{"Fail", args{target, "MyDNSZone"}, "", true},
+		{"Not found", args{target, "MyDNSZone"}, "MyDNSZone", false},
 		{"format", args{target, "format('PrivateDNSZone')"}, "format('PrivateDNSZone')", true},
 		{"Empty", args{empty, "PrivateDNSZone"}, "PrivateDNSZone", false},
 		{"Very Empty", args{veryEmpty, "PrivateDNSZone"}, "", true},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, err := findResourceName(tt.args.result, tt.args.name)
@@ -128,6 +130,8 @@ func Test_findResourceType(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
+
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := findResourceType(tt.args.result, tt.args.name); got != tt.want {
@@ -227,6 +231,7 @@ func Test_parseMap(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, err := parseMap(tt.args.myResource, tt.args.result)
@@ -258,6 +263,7 @@ func Test_preprocess(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := preprocess(tt.args.results); !reflect.DeepEqual(got, tt.want) {
@@ -285,6 +291,7 @@ func Test_replaceResourceID(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, err := replaceResourceID(tt.args.Match, tt.args.result)
@@ -316,6 +323,7 @@ func Test_setResourceNames(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := setResourceNames(tt.args.results); !reflect.DeepEqual(got, tt.want) {
@@ -343,6 +351,7 @@ func Test_splitResourceName(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, got1, err := splitResourceName(tt.args.Attribute)
@@ -404,7 +413,9 @@ func Test_parseLocals(t *testing.T) {
 	}{
 		{"test", args{bodge}, parsed, result, false},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, got1, err := parseLocals(tt.args.result)
@@ -479,6 +490,7 @@ func Test_replace(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 

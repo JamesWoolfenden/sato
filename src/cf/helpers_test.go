@@ -268,6 +268,7 @@ func Test_snake(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Snake(tt.args.Camel); got != tt.want {
@@ -293,6 +294,8 @@ func Test_kebab(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
+
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Kebab(tt.args.Camel); got != tt.want {
@@ -329,6 +332,7 @@ func Test_nill(t *testing.T) {
 	type args struct {
 		str *string
 	}
+
 	exists := "here"
 	tests := []struct {
 		name string
@@ -340,6 +344,7 @@ func Test_nill(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Nill(tt.args.str); got != tt.want {
@@ -350,11 +355,15 @@ func Test_nill(t *testing.T) {
 }
 
 func Test_nild(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		str       *string
 		myDefault string
 	}
+
 	exists := "here"
+
 	tests := []struct {
 		name string
 		args args
@@ -363,8 +372,11 @@ func Test_nild(t *testing.T) {
 		{"Nil", args{nil, "hello"}, "hello"},
 		{name: "NotNil", args: args{str: &exists, myDefault: "hello"}, want: "here"},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Nild(tt.args.str, tt.args.myDefault); got != tt.want {
 				t.Errorf("Nild() = %v, want %v", got, tt.want)
 			}
@@ -373,9 +385,11 @@ func Test_nild(t *testing.T) {
 }
 
 func Test_array(t *testing.T) {
+	t.Parallel()
 	type args struct {
 		mySlice []string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -392,8 +406,10 @@ func Test_array(t *testing.T) {
 			want: "[]",
 		},
 	}
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Array(tt.args.mySlice); got != tt.want {
 				t.Errorf("Array() = %v, want %v", got, tt.want)
 			}
@@ -402,11 +418,14 @@ func Test_array(t *testing.T) {
 }
 
 func Test_arrayReplace(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		mySlice     []string
 		target      string
 		replacement string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -423,8 +442,11 @@ func Test_arrayReplace(t *testing.T) {
 			want: "[]",
 		},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.ArrayReplace(tt.args.mySlice, tt.args.target, tt.args.replacement); got != tt.want {
 				t.Errorf("ArrayReplace() = %v, want %v", got, tt.want)
 			}
@@ -433,10 +455,13 @@ func Test_arrayReplace(t *testing.T) {
 }
 
 func Test_contains(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		target    string
 		substring string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -445,8 +470,11 @@ func Test_contains(t *testing.T) {
 		{"found", args{"scunthorpe", "thor"}, true},
 		{"not found", args{"typhoo", "thor"}, false},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Contains(tt.args.target, tt.args.substring); got != tt.want {
 				t.Errorf("Contains() = %v, want %v", got, tt.want)
 			}
@@ -472,6 +500,7 @@ func Test_zipfile(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Zipfile(tt.args.code, tt.args.filename, tt.args.runtime); got != tt.want {

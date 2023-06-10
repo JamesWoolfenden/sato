@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"fmt"
 	"os"
 
 	"github.com/go-git/go-git/v5"
@@ -50,17 +51,17 @@ func TfInit(workingDir string) error {
 	execPath, err := installer.Install(context.Background())
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to install terraform %w", err)
 	}
 
 	tf, err := tfexec.NewTerraform(workingDir, execPath)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create terraform object %w", err)
 	}
 
 	err = tf.Init(context.Background(), tfexec.Upgrade(true))
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to init terraform %w", err)
 	}
 
 	return nil

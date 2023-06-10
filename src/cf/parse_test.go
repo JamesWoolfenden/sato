@@ -27,6 +27,7 @@ func TestParse(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if err := sato.Parse(tt.args.file, tt.args.destination); (err != nil) != tt.wantErr {
@@ -54,6 +55,7 @@ func TestStringToMap(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.StringToMap(tt.args.param, tt.args.myVariable); !reflect.DeepEqual(got, tt.want) {
@@ -82,6 +84,7 @@ func TestWrite(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if err := sato.Write(tt.args.output, tt.args.location, tt.args.name); (err != nil) != tt.wantErr {
@@ -108,6 +111,7 @@ func TestToTFName(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.ToTFName(tt.args.CFN); got != tt.want {
@@ -204,6 +208,7 @@ func TestGetVariableType(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, got1, got2 := sato.GetVariableType(tt.args.param, tt.args.myVariable, tt.args.DataResources, tt.args.m)

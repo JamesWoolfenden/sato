@@ -1,6 +1,7 @@
-package arm
+package arm_test
 
 import (
+	"sato/src/arm"
 	"testing"
 	"text/template"
 )
@@ -26,8 +27,8 @@ func Test_parseData(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if err := parseData(tt.args.result, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
-				t.Errorf("parseData() error = %v, wantErr %v", err, tt.wantErr)
+			if err := arm.ParseData(tt.args.result, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
+				t.Errorf("ParseData() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

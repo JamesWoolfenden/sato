@@ -203,7 +203,6 @@ func Tags(tags map[string]interface{}) string {
 	for _, k := range keys {
 		if value, ok := tags[k].(string); ok {
 			tagged += "\t\"" + k + "\"" + " = " + "\"" + value + "\"\n"
-
 		} else {
 			tagged += "\t\"" + k + "\"" + " = " + "\"OBJECT\"\n"
 		}
@@ -221,7 +220,7 @@ func NotNil(unknown interface{}) bool {
 
 // Enabled cast from string to bool
 func Enabled(status string) bool {
-	return strings.ToLower(status) == "Enabled"
+	return strings.ToLower(status) == "enabled"
 }
 
 // LoseSQBrackets ditches square brackets
@@ -252,15 +251,15 @@ func Ditch(attribute string, ditch string) string {
 
 	var newString string
 
-	lb := "("
-	rb := ")"
+	leftBrackets := "("
+	rightBrackets := ")"
 
 	found := false
 
 	for _, y := range next {
 		char := string(y)
 		switch char {
-		case lb:
+		case leftBrackets:
 			{
 				if !found {
 					cards++
@@ -268,7 +267,7 @@ func Ditch(attribute string, ditch string) string {
 
 				newString += char
 			}
-		case rb:
+		case rightBrackets:
 			{
 				if !found {
 					if cards != 1 {
@@ -297,22 +296,15 @@ func Ditch(attribute string, ditch string) string {
 
 // UUID replaces.
 func UUID(count int) string {
-	var i int
-	var uuids string
+
+	var (
+		i     int
+		uuids string
+	)
 
 	for i = 0; i < (count); i++ {
 		uuids += "resource \"random_uuid\" \"sato" + strconv.Itoa(i) + "\" {}\n"
 	}
 
 	return uuids
-}
-
-func deleteEmpty(s []string) []string {
-	var r []string
-	for _, str := range s {
-		if str != "" {
-			r = append(r, str)
-		}
-	}
-	return r
 }

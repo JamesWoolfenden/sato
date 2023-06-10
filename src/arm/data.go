@@ -7,8 +7,8 @@ import (
 	tftemplate "text/template"
 )
 
-// parseData writes out to data.tf
-func parseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+// ParseData writes out to data.tf
+func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
 	if result["data"] == nil {
 		return nil
 	}

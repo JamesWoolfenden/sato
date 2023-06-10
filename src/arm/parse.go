@@ -87,7 +87,7 @@ func Parse(file string, destination string) error {
 		return err
 	}
 
-	result, err = parseResources(result, funcMap, destination)
+	result, err = ParseResources(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
@@ -97,7 +97,7 @@ func Parse(file string, destination string) error {
 		return err
 	}
 
-	err = parseData(result, funcMap, destination)
+	err = ParseData(result, funcMap, destination)
 	if err != nil {
 		return err
 	}
@@ -644,6 +644,7 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 			log.Print("resource is not a map")
 			continue
 		}
+
 		temp := LoseSQBrackets(test["name"].(string))
 
 		if name == temp {
@@ -677,7 +678,10 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 	// not simple name lookup
 	if strings.Contains(name, ",") {
 		Lots := strings.Split(name, ",")
-		var newName []string
+		var (
+			newName []string
+		)
+
 		for _, lot := range Lots {
 			var part string
 			if part, err = findResourceName(result, strings.TrimSpace(lot)); err != nil {
@@ -690,12 +694,13 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 
 			newName = append(newName, part)
 		}
+
 		return strings.Join(newName, "."), nil
 	}
 
 	name, err = getNameValue(result, name)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("get Name value failed: %w", err)
 	}
 
 	return name, nil
@@ -707,7 +712,9 @@ func getNameValue(result map[string]interface{}, name string) (string, error) {
 		if len(rawNames) != 2 {
 			return name, fmt.Errorf("failed to match value %s", name)
 		}
+
 		rawName := rawNames[1]
+
 		if result["variables"] != nil {
 			variables := result["variables"].(map[string]interface{})
 
@@ -730,10 +737,13 @@ func findResourceType(result map[string]interface{}, name string) bool {
 	resources, ok := result["resources"].([]interface{})
 	if ok {
 		for _, myResource := range resources {
-			test := myResource.(map[string]interface{})
-			if name == test["type"].(string) {
-				return true
+			test, ok := myResource.(map[string]interface{})
+			if ok {
+				if name == test["type"].(string) {
+					return true
+				}
 			}
+
 		}
 	}
 

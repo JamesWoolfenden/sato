@@ -13,6 +13,7 @@ func TestLookup(t *testing.T) {
 	}
 
 	result := "aws_appautoscaling_target"
+	myServiceBus := "azurerm_servicebus_namespace"
 
 	tests := []struct {
 		name    string
@@ -21,10 +22,12 @@ func TestLookup(t *testing.T) {
 		wantErr bool
 	}{
 		{name: "Pass", args: args{"AWS::ApplicationAutoScaling::ScalableTarget"}, want: &result, wantErr: false},
-		{name: "Pass", args: args{"Microsoft.ServiceBus/namespaces/"}, want: &result, wantErr: false},
+		{name: "Pass", args: args{"Microsoft.ServiceBus/namespaces/"}, want: &myServiceBus, wantErr: false},
 		{name: "Fail", args: args{"AWS::Guff::Guffing"}, want: nil, wantErr: true},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, err := Lookup(tt.args.resource)

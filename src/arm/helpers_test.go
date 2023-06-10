@@ -377,6 +377,7 @@ func Test_enabled(t *testing.T) {
 	type args struct {
 		status string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -387,7 +388,9 @@ func Test_enabled(t *testing.T) {
 		{"Guff", args{"guff"}, false},
 		{"Nil", args{""}, false},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := arm.Enabled(tt.args.status); got != tt.want {
