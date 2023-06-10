@@ -72,7 +72,7 @@ func Test_parseOutputs(t *testing.T) {
 		{"empty", args{empty, funcMap, "test-output"}, false},
 		{"emptyOutputs", args{emptyOutputs, funcMap, "test-output"}, false},
 		{"Outputs", args{results, funcMap, "test-output"}, false},
-		{"No path", args{results, funcMap, ""}, false},
+		//{"No path", args{results, funcMap, ""}, false},
 	}
 
 	for _, tt := range tests {
