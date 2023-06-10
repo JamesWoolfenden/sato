@@ -453,8 +453,8 @@ func Test_tags(t *testing.T) {
 		tags map[string]interface{}
 	}
 
-	result := "{\n\t\"test\" = \"something\"\n\t\"another\" = \"stuff\"\n\t}"
-	bodge := "{\n\t\"test\" = \"something\"\n\t\"another\" = \"OBJECT\"\n\t}"
+	result := "{\n\t\"another\" = \"stuff\"\n\t\"test\" = \"something\"\n\t}"
+	bodge := "{\n\t\"another\" = \"OBJECT\"\n\t\"test\" = \"something\"\n\t}"
 
 	tests := []struct {
 		name string

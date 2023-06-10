@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -190,13 +191,21 @@ func ArrayToString(defaultValue []interface{}) string {
 
 // Tags take map into a string for tags
 func Tags(tags map[string]interface{}) string {
+	keys := make([]string, 0, len(tags))
+	for k := range tags {
+		keys = append(keys, k)
+	}
+
+	sort.Strings(keys)
+
 	tagged := "{\n"
 
-	for item, name := range tags {
-		if _, ok := name.(string); ok {
-			tagged += "\t\"" + item + "\"" + " = " + "\"" + name.(string) + "\"\n"
+	for _, k := range keys {
+		if value, ok := tags[k].(string); ok {
+			tagged += "\t\"" + k + "\"" + " = " + "\"" + value + "\"\n"
+
 		} else {
-			tagged += "\t\"" + item + "\"" + " = " + "\"OBJECT\"\n"
+			tagged += "\t\"" + k + "\"" + " = " + "\"OBJECT\"\n"
 		}
 	}
 
