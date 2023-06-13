@@ -5,7 +5,8 @@ import (
 	"strings"
 )
 
-func parseLocals(result map[string]interface{}) (string, map[string]interface{}, error) {
+// ParseLocals parses fields into locals.tf
+func ParseLocals(result map[string]interface{}) (string, map[string]interface{}, error) {
 	var locals string
 
 	myLocals, ok := result["locals"].(map[string]interface{})
@@ -14,20 +15,20 @@ func parseLocals(result map[string]interface{}) (string, map[string]interface{},
 		return "", result, fmt.Errorf("locals is empty")
 	}
 
-	for x, value := range myLocals {
-		var theValue string
-		var local string
+	for item, value := range myLocals {
+		var (
+			theValue string
+			local    string
+		)
 
-		theValue, result = parseString(value.(string), result)
+		theValue, result = ParseString(value.(string), result)
 
-		myLocals[x] = theValue
+		myLocals[item] = theValue
 		if strings.Contains(theValue, "${") {
-
-			local = "\t" + x + " = \"" + theValue + "\" #" + value.(string) + "\n"
+			local = "\t" + item + " = \"" + theValue + "\" #" + value.(string) + "\n"
 
 		} else {
-
-			local = "\t" + x + " = " + theValue + " #" + value.(string) + "\n"
+			local = "\t" + item + " = " + theValue + " #" + value.(string) + "\n"
 		}
 
 		locals += strings.ReplaceAll(local, "'", "\"")

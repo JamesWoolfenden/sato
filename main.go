@@ -35,7 +35,11 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := cf.Parse(file, destination)
 
-					return err
+					if err != nil {
+						fmt.Println("parse failure", err)
+					}
+
+					return nil
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -60,6 +64,7 @@ func main() {
 				Usage:     "Outputs the application version",
 				UsageText: "sato version",
 				Action: func(*cli.Context) error {
+					//goland:noinspection GoLinter
 					fmt.Println(cf.Version)
 
 					return nil
@@ -70,8 +75,11 @@ func main() {
 				Usage: "translate ARM to Terraform",
 				Action: func(*cli.Context) error {
 					err := arm.Parse(file, destination)
+					if err != nil {
+						return fmt.Errorf("bisect failure: %w", err)
+					}
 
-					return fmt.Errorf("bisect failure: %w", err)
+					return nil
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -96,6 +104,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					result, err := see.Lookup(resource)
 					if result != nil {
+						//goland:noinspection GoLinter
 						fmt.Print(*result)
 					}
 

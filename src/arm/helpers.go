@@ -62,83 +62,84 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 			var result string
 
 			defaultValue, ok := myItem["defaultValue"].(map[string]interface{})
-			if ok {
-				for name, item := range defaultValue {
-					switch item := item.(type) {
-					case []interface{}:
-						{
-							var temp string
-							var temptTypes string
-							var myType string
-							for _, y := range item {
-								y, ok := y.(map[string]interface{})
-								if !ok {
-									return myItem, errors.New("failed to assert  (map[string]interface{}")
-								}
-
-								for name, value := range y {
-									temp += "\t   " + name + " = \"" + value.(string) + "\"\n"
-									myType += "\t   " + name + " = string\n"
-								}
-
-								temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
-								temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
-							}
-							if result != "" {
-								result += "," + name + "= [" + temp + "]"
-								types += "," + name + "= list(object(" + temptTypes + "))"
-							} else {
-								result += name + "= [" + temp + "]"
-								types += name + "= list(object(" + temptTypes + "))"
-							}
-						}
-					case map[string]interface{}:
-						{
-							log.Print(item)
-						}
-					case string:
-						{
-							if result == "" {
-								result = name + " = " + "\"" + EscapeQuote(item) + "\""
-								types = name + " = " + "string"
-							} else {
-								result += ",\n\t" + name + " = " + "\"" + EscapeQuote(item) + "\""
-								types += ",\n\t" + name + " = " + "string"
-							}
-						}
-					case bool:
-						{
-							if result == "" {
-								result = name + " = " + strconv.FormatBool(item)
-								types = name + " = " + "bool"
-							} else {
-								temp := result
-								result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item)
-								types = types + ",\n\t" + name + " = " + "bool"
-							}
-						}
-					case int:
-						{
-							if result == "" {
-								result = name + " = " + strconv.Itoa(item)
-								types = name + " = " + "number"
-							} else {
-								temp := result
-								result = temp + ",\n\t" + name + " = " + strconv.Itoa(item)
-								types = types + ",\n\t" + name + " = " + "number"
-							}
-						}
-					default:
-						{
-							log.Print(item)
-						}
-					}
-				}
-				myItem["default"] = "{\n\t" + result + "}"
-				myItem["type"] = "object({\n\t" + types + "})"
-			} else {
+			if !ok {
 				return nil, fmt.Errorf("default value is not an object %v", myItem["defaultValue"])
 			}
+
+			for name, item := range defaultValue {
+				switch item := item.(type) {
+				case []interface{}:
+					{
+						var temp string
+						var temptTypes string
+						var myType string
+						for _, y := range item {
+							y, ok := y.(map[string]interface{})
+							if !ok {
+								return myItem, errors.New("failed to assert  (map[string]interface{}")
+							}
+
+							for name, value := range y {
+								temp += "\t   " + name + " = \"" + value.(string) + "\"\n"
+								myType += "\t   " + name + " = string\n"
+							}
+
+							temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
+							temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
+						}
+						if result != "" {
+							result += "," + name + "= [" + temp + "]"
+							types += "," + name + "= list(object(" + temptTypes + "))"
+						} else {
+							result += name + "= [" + temp + "]"
+							types += name + "= list(object(" + temptTypes + "))"
+						}
+					}
+				case map[string]interface{}:
+					{
+						log.Print(item)
+					}
+				case string:
+					{
+						if result == "" {
+							result = name + " = " + "\"" + EscapeQuote(item) + "\""
+							types = name + " = " + "string"
+						} else {
+							result += ",\n\t" + name + " = " + "\"" + EscapeQuote(item) + "\""
+							types += ",\n\t" + name + " = " + "string"
+						}
+					}
+				case bool:
+					{
+						if result == "" {
+							result = name + " = " + strconv.FormatBool(item)
+							types = name + " = " + "bool"
+						} else {
+							temp := result
+							result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item)
+							types = types + ",\n\t" + name + " = " + "bool"
+						}
+					}
+				case int:
+					{
+						if result == "" {
+							result = name + " = " + strconv.Itoa(item)
+							types = name + " = " + "number"
+						} else {
+							temp := result
+							result = temp + ",\n\t" + name + " = " + strconv.Itoa(item)
+							types = types + ",\n\t" + name + " = " + "number"
+						}
+					}
+				default:
+					{
+						log.Print(item)
+					}
+				}
+			}
+			myItem["default"] = "{\n\t" + result + "}"
+			myItem["type"] = "object({\n\t" + types + "})"
+
 		}
 	case "int", "float":
 		{

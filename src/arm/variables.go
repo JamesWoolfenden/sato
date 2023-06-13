@@ -35,7 +35,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	}
 
 	var locals string
-	locals, result, err = parseLocals(result)
+	locals, result, err = ParseLocals(result)
 
 	if err != nil {
 		return result, err
@@ -48,10 +48,16 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 			var local string
 
 			if reflect.TypeOf(value).String() == typeString {
-				value := value.(string)
+				value, ok := value.(string)
+				if !ok {
+					log.Printf("type assertion failed")
+
+					continue
+				}
+
 				if strings.Contains(value, "()") ||
 					strings.Contains(value, "[") {
-					value, result = parseString(value, result)
+					value, result = ParseString(value, result)
 
 					local = "\t" + name + " = " + value + "\n"
 					locals += local

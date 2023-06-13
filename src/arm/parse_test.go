@@ -1,8 +1,9 @@
-package arm
+package arm_test
 
 import (
 	"path/filepath"
 	"reflect"
+	"sato/src/arm"
 	"testing"
 )
 
@@ -19,15 +20,22 @@ func TestParse(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{"Pass", args{filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json"), ".sato"}, false},
-		{"Fail", args{filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/nofile.json"), ".sato"}, true},
+		{name: "Pass",
+			args: args{
+				file:        filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json"),
+				destination: ".sato"}},
+		{name: "Fail",
+			args: args{
+				file:        filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/nofile.json"),
+				destination: ".sato"},
+			wantErr: true},
 	}
 
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if err := Parse(tt.args.file, tt.args.destination); (err != nil) != tt.wantErr {
+			if err := arm.Parse(tt.args.file, tt.args.destination); (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -78,14 +86,14 @@ func Test_findResourceName(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := findResourceName(tt.args.result, tt.args.name)
+			got, err := arm.FindResourceName(tt.args.result, tt.args.name)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("findResourceName() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("FindResourceName() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if got != tt.want {
-				t.Errorf("findResourceName() got = %v, want %v", got, tt.want)
+				t.Errorf("FindResourceName() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -134,8 +142,8 @@ func Test_findResourceType(t *testing.T) {
 
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := findResourceType(tt.args.result, tt.args.name); got != tt.want {
-				t.Errorf("findResourceType() = %v, want %v", got, tt.want)
+			if got := arm.FindResourceType(tt.args.result, tt.args.name); got != tt.want {
+				t.Errorf("FindResourceType() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -168,22 +176,27 @@ func Test_getNameValue(t *testing.T) {
 		{"Empty Result Map", args{myEmpty, "var.missing"}, "var.missing", false},
 		{"Nil", args{myResult, "guff"}, "guff", false},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := getNameValue(tt.args.result, tt.args.name)
+			t.Parallel()
+			got, err := arm.GetNameValue(tt.args.result, tt.args.name)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("getNameValue() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetNameValue() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if got != tt.want {
-				t.Errorf("getNameValue() got = %v, want %v", got, tt.want)
+				t.Errorf("GetNameValue() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
 }
 
 func Test_parseList(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		resources []interface{}
 		result    map[string]interface{}
@@ -199,15 +212,17 @@ func Test_parseList(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseList(tt.args.resources, tt.args.result)
+			t.Parallel()
+			got, err := arm.ParseList(tt.args.resources, tt.args.result)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseList() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ParseList() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseList() got = %v, want %v", got, tt.want)
+				t.Errorf("ParseList() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -234,14 +249,14 @@ func Test_parseMap(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := parseMap(tt.args.myResource, tt.args.result)
+			got, err := arm.ParseMap(tt.args.myResource, tt.args.result)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseMap() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ParseMap() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseMap() got = %v, want %v", got, tt.want)
+				t.Errorf("ParseMap() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -266,8 +281,8 @@ func Test_preprocess(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := preprocess(tt.args.results); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("preprocess() = %v, want %v", got, tt.want)
+			if got := arm.Preprocess(tt.args.results); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Preprocess() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -294,14 +309,14 @@ func Test_replaceResourceID(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, err := replaceResourceID(tt.args.Match, tt.args.result)
+			got, err := arm.ReplaceResourceID(tt.args.Match, tt.args.result)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("replaceResourceID() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ReplaceResourceID() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if got != tt.want {
-				t.Errorf("replaceResourceID() got = %v, want %v", got, tt.want)
+				t.Errorf("ReplaceResourceID() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -326,8 +341,8 @@ func Test_setResourceNames(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := setResourceNames(tt.args.results); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("setResourceNames() = %v, want %v", got, tt.want)
+			if got := arm.SetResourceNames(tt.args.results); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("SetResourceNames() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -354,17 +369,17 @@ func Test_splitResourceName(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, got1, err := splitResourceName(tt.args.Attribute)
+			got, got1, err := arm.SplitResourceName(tt.args.Attribute)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("splitResourceName() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("SplitResourceName() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if got != tt.want {
-				t.Errorf("splitResourceName() got = %v, want %v", got, tt.want)
+				t.Errorf("SplitResourceName() got = %v, want %v", got, tt.want)
 			}
 			if got1 != tt.want1 {
-				t.Errorf("splitResourceName() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("SplitResourceName() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -387,6 +402,7 @@ func Test_parseLocals(t *testing.T) {
 	locals := map[string]interface{}{
 		"vmSubnetNsgId": "azurerm_network_security_group.sato8",
 	}
+
 	var resources []interface{}
 	resource := map[string]interface{}{
 		"type":     "Microsoft.Network/networkSecurityGroups",
@@ -418,17 +434,17 @@ func Test_parseLocals(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, got1, err := parseLocals(tt.args.result)
+			got, got1, err := arm.ParseLocals(tt.args.result)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("parseLocals() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ParseLocals() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
 			if got != tt.want {
-				t.Errorf("parseLocals()\n got:\n %v\n want:\n %v", got, tt.want)
+				t.Errorf("ParseLocals()\n got:\n %v\n want:\n %v", got, tt.want)
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("parseLocals() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("ParseLocals() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -494,12 +510,12 @@ func Test_replace(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, got1 := replace(tt.args.matches, tt.args.newAttribute, tt.args.what, tt.args.result)
+			got, got1 := arm.Replace(tt.args.matches, tt.args.newAttribute, tt.args.what, tt.args.result)
 			if got != tt.want {
-				t.Errorf("replace() got = %v, want %v", got, tt.want)
+				t.Errorf("Replace() got = %v, want %v", got, tt.want)
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("replace() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("Replace() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}
@@ -531,12 +547,12 @@ func Test_parseString(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, got1 := parseString(tt.args.newAttribute, tt.args.result)
+			got, got1 := arm.ParseString(tt.args.newAttribute, tt.args.result)
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseString() got = %v, want %v", got, tt.want)
+				t.Errorf("ParseString() got = %v, want %v", got, tt.want)
 			}
 			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("parseString() got1 = %v, want %v", got1, tt.want1)
+				t.Errorf("ParseString() got1 = %v, want %v", got1, tt.want1)
 			}
 		})
 	}

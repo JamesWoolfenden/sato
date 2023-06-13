@@ -46,7 +46,7 @@ func Parse(file string, destination string) error {
 	// Open a cloudFormation from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return err
+		return fmt.Errorf("filpath failure %w", err)
 	}
 
 	cloudFormation, err := goformation.Open(fileAbs)
@@ -70,7 +70,10 @@ func Parse(file string, destination string) error {
 		"Nil":          Nill,
 		"Nild":         Nild,
 		"Marshal": func(v interface{}) string {
-			a, _ := json.Marshal(v)
+			a, err := json.Marshal(v)
+			if err != nil {
+				log.Error().Msgf("marshalling failed %s", err)
+			}
 
 			return string(a)
 		},
@@ -98,7 +101,7 @@ func Parse(file string, destination string) error {
 	return nil
 }
 
-// ParseVariables convert CFN Parameters into terraform variables
+// ParseVariables convert CFN Parameters into terraform variables.
 func ParseVariables(
 	cloudFormation *cloudformation.Template,
 	funcMap template.FuncMap,
@@ -124,7 +127,7 @@ func ParseVariables(
 
 		tmpl, err := template.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("template fail %w", err)
 		}
 
 		_ = tmpl.Execute(&output, M{
@@ -267,7 +270,7 @@ func Write(output string, location string, name string) error {
 		err := os.MkdirAll(newPath, os.ModePerm)
 
 		if err != nil {
-			return err
+			return fmt.Errorf("mkdir failed %w", err)
 		}
 
 		d1 := []byte(output)
@@ -285,8 +288,8 @@ func Write(output string, location string, name string) error {
 }
 
 // ToTFName creates a Terraform resource name from a CFN type (approximates).
-func ToTFName(Cloudformation string) string {
-	return strings.ToLower(strings.ReplaceAll(Cloudformation, "::", "_"))
+func ToTFName(cloudformation string) string {
+	return strings.ToLower(strings.ReplaceAll(cloudformation, "::", "_"))
 }
 
 // ReplaceVariables looks to see if u can translate CFN vars into terraform.

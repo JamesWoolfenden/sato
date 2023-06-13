@@ -35,7 +35,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 			log.Printf("fail to assert value to map[string]interface{}")
 		}
 
-		someString, result = parseString(temp["value"].(string), result)
+		someString, result = ParseString(temp["value"].(string), result)
 		myVar.Value = someString
 
 		var output bytes.Buffer
@@ -46,10 +46,14 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 			return fmt.Errorf("failed to parse template %w", err)
 		}
 
-		_ = tmpl.Execute(&output, m{
+		err = tmpl.Execute(&output, m{
 			"variable": myVar,
 			"item":     name,
 		})
+
+		if err != nil {
+			return fmt.Errorf("failed to execute parser %w", err)
+		}
 
 		All += output.String()
 	}

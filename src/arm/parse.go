@@ -24,12 +24,12 @@ type m map[string]interface{}
 func Parse(file string, destination string) error {
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return err
+		return fmt.Errorf("path failure %w", err)
 	}
 
 	jsonFile, err := os.Open(fileAbs)
 	if err != nil {
-		fmt.Println(err)
+		return fmt.Errorf("file open failure %w", err)
 	}
 
 	// defer the closing of our jsonFile so that we can parse it later on
@@ -42,7 +42,7 @@ func Parse(file string, destination string) error {
 	err = json.Unmarshal(byteValue, &result)
 
 	if err != nil {
-		return err
+		return fmt.Errorf("unmarshall failure %w", err)
 	}
 
 	funcMap := tftemplate.FuncMap{
@@ -63,7 +63,10 @@ func Parse(file string, destination string) error {
 		"Nil":          cf.Nill,
 		"Nild":         cf.Nild,
 		"Marshal": func(v interface{}) string {
-			a, _ := json.Marshal(v)
+			a, err := json.Marshal(v)
+			if err != nil {
+				log.Printf("marshal failure")
+			}
 
 			return string(a)
 		},
@@ -80,7 +83,7 @@ func Parse(file string, destination string) error {
 		"Uuid":         UUID,
 	}
 
-	result = preprocess(result)
+	result = Preprocess(result)
 	result, err = ParseVariables(result, funcMap, destination)
 
 	if err != nil {
@@ -99,48 +102,58 @@ func Parse(file string, destination string) error {
 
 	err = ParseData(result, funcMap, destination)
 	if err != nil {
-		return err
+		return fmt.Errorf("parse data %w", err)
 	}
+
 	return nil
 }
 
-func parseList(resources []interface{}, result map[string]interface{}) ([]interface{}, error) {
+// ParseList parses List objects
+func ParseList(resources []interface{}, result map[string]interface{}) ([]interface{}, error) {
 	var newResources []interface{}
+
 	for _, resource := range resources {
-		myResource := resource.(map[string]interface{})
-		myResource, err := parseMap(myResource, result)
-		if err != nil {
-			return nil, err
+		myResource, ok := resource.(map[string]interface{})
+		if ok {
+			myResource, err := ParseMap(myResource, result)
+			if err != nil {
+				return nil, fmt.Errorf("parse list map %w", err)
+			}
+
+			newResources = append(newResources, myResource)
+		} else {
+			return nil, fmt.Errorf("parse list assertion")
 		}
-		newResources = append(newResources, myResource)
 	}
+
 	return newResources, nil
 }
 
-func parseMap(myResource map[string]interface{}, result map[string]interface{}) (map[string]interface{}, error) {
+// ParseMap parses a map type
+func ParseMap(myResource map[string]interface{}, result map[string]interface{}) (map[string]interface{}, error) {
 	for name, attribute := range myResource {
-		switch v := attribute.(type) {
+		switch mapType := attribute.(type) {
 		case string:
 			var temp string
-			temp, result = parseString(v, result)
+			temp, result = ParseString(mapType, result)
 			myResource[name] = temp
 		case map[string]interface{}:
 			var err error
-			myResource[name], err = parseMap(v, result)
+			myResource[name], err = ParseMap(mapType, result)
 
 			if err != nil {
 				return nil, err
 			}
 		case []interface{}:
-			myArray := v
+			myArray := mapType
 			for index, resource := range myArray {
 				switch resource := resource.(type) {
 				case string:
 					var temp string
-					temp, result = parseString(resource, result)
+					temp, result = ParseString(resource, result)
 					myArray[index] = temp
 				case map[string]interface{}:
-					myArray[index], _ = parseMap(resource, result)
+					myArray[index], _ = ParseMap(resource, result)
 				case []interface{}:
 					log.Print(resource)
 				}
@@ -154,10 +167,12 @@ func parseMap(myResource map[string]interface{}, result map[string]interface{}) 
 			log.Print(attribute)
 		}
 	}
+
 	return myResource, nil
 }
 
-func parseString(attribute string, result map[string]interface{}) (string, map[string]interface{}) {
+// ParseString does just that.
+func ParseString(attribute string, result map[string]interface{}) (string, map[string]interface{}) {
 	matches := []string{
 		"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
 		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
@@ -165,14 +180,17 @@ func parseString(attribute string, result map[string]interface{}) (string, map[s
 	}
 
 	if what, found := Contains(matches, attribute); found {
-		attribute, result = replace(matches, attribute, what, result)
+		attribute, result = Replace(matches, attribute, what, result)
 		attribute = LoseSQBrackets(attribute)
 	}
+
 	return attribute, result
 }
 
-func replace(matches []string, newAttribute string, what *string, result map[string]interface{}) (string, map[string]interface{}) {
+// Replace convert ARM functions to tf
+func Replace(matches []string, newAttribute string, what *string, result map[string]interface{}) (string, map[string]interface{}) {
 	var Attribute string
+
 	switch *what {
 	case "uri(":
 		{
@@ -204,10 +222,11 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 					if strings.Contains(strings.ToLower(value), strings.ToLower(v)) {
 						if v == "substr" {
 							after = "${" + strings.TrimSpace(strings.Join(raw[1:], ",")) + "}"
+
 							continue
-						} else {
-							raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
 						}
+
+						raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
 					}
 
 				}
@@ -229,7 +248,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 			Attribute = LoseSQBrackets(newAttribute)
 
 			var err error
-			Attribute, err = replaceResourceID(Attribute, result)
+			Attribute, err = ReplaceResourceID(Attribute, result)
 			if err != nil {
 				log.Warn().Msgf("failed to parse %s", newAttribute)
 			}
@@ -249,8 +268,8 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			re := regexp.MustCompile(`{.}`) // format('{0}/{1}',
 			Match := re.ReplaceAllString(newAttribute, "%s")
-			Match = strings.Replace(Match, "'", "\"", -1)
-			Match = strings.Replace(Match, "/", "-", -1)
+			Match = strings.ReplaceAll(Match, "'", "\"")
+			Match = strings.ReplaceAll(Match, "/", "-")
 			Attribute = LoseSQBrackets(Match)
 		}
 	case "listKeys":
@@ -260,7 +279,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 			Match := re.FindStringSubmatch(Attribute)
 			if len(Match) > 1 {
 				resource := strings.Split(Match[1], ",")[0]
-				Attribute = strings.Replace(Attribute, Match[0], resource, -1)
+				Attribute = strings.ReplaceAll(Attribute, Match[0], resource)
 			} else {
 				log.Warn().Msgf("failed to parse list keys")
 			}
@@ -276,7 +295,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 				} else {
 					temp = "var." + Match[1]
 				}
-				Attribute = LoseSQBrackets(strings.Replace(newAttribute, Match[0], temp, -1))
+				Attribute = LoseSQBrackets(strings.ReplaceAll(newAttribute, Match[0], temp))
 			} else {
 				log.Printf("no match found %s", newAttribute)
 			}
@@ -293,7 +312,7 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 					myTemp = "var." + Match[1]
 				}
 
-				Attribute = strings.Replace(newAttribute, Match[0], myTemp, -1)
+				Attribute = strings.ReplaceAll(newAttribute, Match[0], myTemp)
 			} else {
 				log.Printf("not found %s", newAttribute)
 			}
@@ -305,13 +324,21 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "resourceGroup().location":
 		{
-			Attribute = strings.Replace(newAttribute, "resourceGroup().location",
-				"data.azurerm_resource_group.sato.location", -1)
+			Attribute = strings.ReplaceAll(newAttribute, "resourceGroup().location",
+				"data.azurerm_resource_group.sato.location")
 			data := make(map[string]interface{})
 			if result["data"] == nil {
 				data["resource_group"] = true
 			} else {
-				data = result["data"].(map[string]interface{})
+				var ok bool
+
+				data, ok = result["data"].(map[string]interface{})
+				if !ok {
+					log.Printf("assertion failure %s", result["data"])
+
+					break
+				}
+
 				data["resource_group"] = true
 			}
 			result["data"] = data
@@ -363,15 +390,17 @@ func replace(matches []string, newAttribute string, what *string, result map[str
 	if again, still := Contains(matches, Attribute); still {
 		// allow failure
 		if Attribute != newAttribute {
-			Attribute, result = replace(matches, Attribute, again, result)
+			Attribute, result = Replace(matches, Attribute, again, result)
 		} else {
 			log.Printf("having a problem parsing %s", newAttribute)
 		}
 	}
+
 	return Attribute, result
 }
 
-func replaceResourceID(Match string, result map[string]interface{}) (string, error) {
+// ReplaceResourceID ditches rssourceID
+func ReplaceResourceID(Match string, result map[string]interface{}) (string, error) {
 	Match = strings.Replace(Match, "extensionResourceId", "resourceId", 1)
 	Match = strings.Replace(Match, "subscriptionResourceId", "resourceId", 1)
 
@@ -390,18 +419,18 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 		Attribute = re3.FindStringSubmatch(Match)
 	}
 
-	arm, name, err := splitResourceName(Attribute[1])
+	arm, name, err := SplitResourceName(Attribute[1])
 	if err != nil {
 		log.Warn().Msgf("failed to parse %s", Attribute[1])
 	}
 
-	name, err = findResourceName(result, name)
+	name, err = FindResourceName(result, name)
 	if err != nil {
 		log.Print(err)
 	}
 
 	var resourceName *string
-	if findResourceType(result, arm) {
+	if FindResourceType(result, arm) {
 		resourceName, err = see.Lookup(arm)
 		if err != nil {
 			log.Printf("no match found %s", arm)
@@ -427,7 +456,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 			{
 				temp := "azurerm_container_registry"
 				resourceName = &temp
-				name, err = findResourceName(result, name)
+				name, err = FindResourceName(result, name)
 				if err != nil {
 					log.Warn().Msgf("no match found %s", arm)
 				}
@@ -438,7 +467,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				resourceName = &temp
 				splutters := strings.Split(name, ", ")
 				for item, splutter := range splutters {
-					splutters[item], _ = findResourceName(result, splutter)
+					splutters[item], _ = FindResourceName(result, splutter)
 				}
 				name = strings.Split(splutters[0], ".")[0] + ".subnet)[0].id"
 			}
@@ -466,6 +495,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".http_listener.id", nil
 			}
 		case "microsoft.network/applicationgateways/frontendipconfigurations":
@@ -475,6 +505,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".frontend_ip_configuration.id", nil
 			}
 		case "microsoft.network/applicationgateways/frontendports":
@@ -484,6 +515,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".frontend_port", nil
 			}
 		case "microsoft.network/applicationgateways/backendaddresspools":
@@ -511,6 +543,7 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".authentication_certificates", nil
 			}
 		case "microsoft.network/applicationgateways/sslcertificates":
@@ -520,12 +553,13 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".ssl_certificates", nil
 			}
 		default:
 			{
 				if strings.Contains(name, "local") {
-					name, err = findResourceName(result, name)
+					name, err = FindResourceName(result, name)
 					if err != nil {
 						log.Warn().Msgf("no match found %s", arm)
 					}
@@ -547,49 +581,57 @@ func replaceResourceID(Match string, result map[string]interface{}) (string, err
 	return "", err
 }
 
-func resourceToName(Match string, result map[string]interface{}) (string, error) {
+func resourceToName(match string, result map[string]interface{}) (string, error) {
 	re := regexp.MustCompile(`^resourceId\((.*)\)`)
-	splitter := re.FindStringSubmatch(Match)
+	splitter := re.FindStringSubmatch(match)
+
 	if len(splitter) > 1 {
-		//Ditch type
+		// Ditch type
 		_, found, _ := strings.Cut(splitter[1], ",")
 		myResourceName, _, _ := strings.Cut(found, ",")
-		name, err := findResourceName(result, strings.TrimSpace(myResourceName))
+		name, err := FindResourceName(result, strings.TrimSpace(myResourceName))
 
 		if err != nil {
-			log.Warn().Msgf("no match found %s", Match)
+			log.Warn().Msgf("no match found %s", match)
 		} else {
 			return name, err
 		}
 	}
 
 	if len(splitter) == 0 {
-		name, err := findResourceName(result, strings.TrimSpace(Match))
+		name, err := FindResourceName(result, strings.TrimSpace(match))
 
 		if err != nil {
-			log.Warn().Msgf("no match found %s", Match)
+			log.Warn().Msgf("no match found %s", match)
 		} else {
 			return name, err
 		}
 	}
 
-	return "", fmt.Errorf("failed to split resource %s", Match)
+	return "", fmt.Errorf("failed to split resource %s", match)
 }
 
 func toUnknownPointer() *string {
 	temp := "UNKNOWN"
+
 	return &temp
 }
 
-func splitResourceName(Attribute string) (string, string, error) {
-	splitsy := strings.SplitN(Attribute, ",", 2)
-	var name string
-	var arm string
+// SplitResourceName splits and converts arm names into terraform
+func SplitResourceName(attribute string) (string, string, error) {
+	const even = 2
+
+	splitsy := strings.SplitN(attribute, ",", even)
+
+	var (
+		name string
+		arm  string
+	)
 
 	switch len(splitsy) {
 	case 1:
 		{
-			return "", "", fmt.Errorf("failed to parse resource name %s", Attribute)
+			return "", "", fmt.Errorf("failed to parse resource name %s", attribute)
 		}
 	case 2:
 		{
@@ -620,7 +662,8 @@ func splitResourceName(Attribute string) (string, string, error) {
 	return arm, name, nil
 }
 
-func findResourceName(result map[string]interface{}, name string) (string, error) {
+// FindResourceName looks for resource names
+func FindResourceName(result map[string]interface{}, name string) (string, error) {
 	if strings.HasPrefix(name, "format") {
 		return name, fmt.Errorf("uses inline format function %s", name)
 	}
@@ -684,8 +727,8 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 
 		for _, lot := range Lots {
 			var part string
-			if part, err = findResourceName(result, strings.TrimSpace(lot)); err != nil {
-				part, err = getNameValue(result, strings.TrimSpace(lot))
+			if part, err = FindResourceName(result, strings.TrimSpace(lot)); err != nil {
+				part, err = GetNameValue(result, strings.TrimSpace(lot))
 
 				if err != nil {
 					return "", err
@@ -698,7 +741,7 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 		return strings.Join(newName, "."), nil
 	}
 
-	name, err = getNameValue(result, name)
+	name, err = GetNameValue(result, name)
 	if err != nil {
 		return "", fmt.Errorf("get Name value failed: %w", err)
 	}
@@ -706,7 +749,8 @@ func findResourceName(result map[string]interface{}, name string) (string, error
 	return name, nil
 }
 
-func getNameValue(result map[string]interface{}, name string) (string, error) {
+// GetNameValue does just that.
+func GetNameValue(result map[string]interface{}, name string) (string, error) {
 	if strings.Contains(name, ".") {
 		rawNames := strings.Split(name, ".")
 		if len(rawNames) != 2 {
@@ -729,7 +773,8 @@ func getNameValue(result map[string]interface{}, name string) (string, error) {
 	return name, nil
 }
 
-func findResourceType(result map[string]interface{}, name string) bool {
+// FindResourceType get resource types
+func FindResourceType(result map[string]interface{}, name string) bool {
 	if result["resources"] == nil {
 		return false
 	}
@@ -750,12 +795,12 @@ func findResourceType(result map[string]interface{}, name string) bool {
 	return false
 }
 
-func preprocess(results map[string]interface{}) map[string]interface{} {
-	results["resources"] = setResourceNames(results)
+// Preprocess examines raw ARM loads.
+func Preprocess(results map[string]interface{}) map[string]interface{} {
+	results["resources"] = SetResourceNames(results)
 	locals := make(map[string]interface{})
 
 	if results["variables"] != nil {
-
 		paraVariables := results["variables"].(map[string]interface{})
 
 		newVariables := make(map[string]interface{})
@@ -779,6 +824,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 				}
 			}
 		}
+
 		results["variables"] = newVariables
 	}
 
@@ -790,6 +836,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 	for item, result := range paraParameters {
 		myResult := result.(map[string]interface{})
 		_, ok := myResult["defaultValue"]
+
 		if ok {
 			myType := myResult["type"].(string)
 			switch strings.ToLower(myType) {
@@ -800,6 +847,7 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 						newLocals[item] = defaultValue
 						break
 					}
+
 					myResult["default"] = myResult["defaultValue"].(string)
 					newParams[item] = myResult
 				}
@@ -843,19 +891,26 @@ func preprocess(results map[string]interface{}) map[string]interface{} {
 	}
 
 	results["parameters"] = newParams
+
 	maps.Copy(locals, newLocals)
 	results["locals"] = locals
+
 	return results
 }
 
-func setResourceNames(results map[string]interface{}) []interface{} {
+// SetResourceNames gets resource names for results
+func SetResourceNames(results map[string]interface{}) []interface{} {
 	resources := results["resources"].([]interface{})
+
 	var newResults []interface{}
+
 	for item, result := range resources {
+
 		inside := result.(map[string]interface{})
 		counter := map[string]interface{}{"resource": fmt.Sprintf("sato" + strconv.Itoa(item))}
 		maps.Copy(inside, counter)
 		newResults = append(newResults, inside)
 	}
+
 	return newResults
 }

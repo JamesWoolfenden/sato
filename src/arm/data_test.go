@@ -15,12 +15,26 @@ func Test_parseData(t *testing.T) {
 		destination string
 	}
 
+	var badFunk template.FuncMap
+	empty := make(map[string]interface{})
+	emptyData := make(map[string]interface{})
+	emptyData["data"] = make(map[string]interface{})
+
+	results := make(map[string]interface{})
+	data := make(map[string]interface{})
+
+	data["resource_group"] = true
+	results["data"] = data
+
 	tests := []struct {
 		name    string
 		args    args
 		wantErr bool
 	}{
-		//		{},
+		{"empty", args{empty, funcMap, "test-output"}, false},
+		{"emptyData", args{emptyData, funcMap, "test-output"}, false},
+		{"data", args{results, funcMap, "test-output"}, false},
+		{"bad funk", args{results, badFunk, "test-output"}, true},
 	}
 
 	for _, tt := range tests {

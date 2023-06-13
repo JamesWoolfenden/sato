@@ -8,13 +8,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, All string) (string, []interface{}, error) {
+func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, all string) (string, []interface{}, error) {
 	parameters, ok := result["parameters"].(map[string]interface{})
 	if !ok {
 		return "", nil, fmt.Errorf("failed to cast to map")
 	}
 
 	myVariables := make([]interface{}, 0)
+
 	var err error
 
 	for name, item := range parameters {
@@ -26,6 +27,7 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 		}
 
 		var output bytes.Buffer
+
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
 
 		if err != nil {
@@ -36,10 +38,10 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 			"variable": myItem,
 			"item":     name,
 		})
-		All += output.String()
+		all += output.String()
 
 		myVariables = append(myVariables, myItem)
 	}
 
-	return All, myVariables, nil
+	return all, myVariables, nil
 }

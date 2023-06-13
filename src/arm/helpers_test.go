@@ -336,28 +336,28 @@ func Test_ditch(t *testing.T) {
 		args args
 		want string
 	}{
-		{"none", args{"bastionPublicIpAddressName", "variables"}, "bastionPublicIpAddressName"},
-		{"variables", args{"variables('bastionPublicIpAddressName')", "variables"}, "'bastionPublicIpAddressName'"},
-		{"variables not", args{"parameters('vmName')", "variables"}, "parameters('vmName')"},
-		{"mixed",
-			args{
+		{name: "none", args: args{"bastionPublicIpAddressName", "variables"}, want: "bastionPublicIpAddressName"},
+		{name: "variables", args: args{"variables('bastionPublicIpAddressName')", "variables"}, want: "'bastionPublicIpAddressName'"},
+		{name: "variables not", args: args{"parameters('vmName')", "variables"}, want: "parameters('vmName')"},
+		{name: "mixed",
+			args: args{
 				"concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
 				"variables"},
-			"concat(parameters('vmName'),'/', 'omsAgentForLinuxName')"},
-		{"mixed 2",
-			args{
+			want: "concat(parameters('vmName'),'/', 'omsAgentForLinuxName')"},
+		{name: "mixed 2",
+			args: args{
 				"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))",
 				"variables"},
-			"concat('blobPrivateDnsZoneName', '/link_to_', toLower(parameters('virtualNetworkName')))"},
-		{"concat", args{
+			want: "concat('blobPrivateDnsZoneName', '/link_to_', toLower(parameters('virtualNetworkName')))"},
+		{name: "concat", args: args{
 			"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))",
 			"concat"},
-			"uri(local._artifactsLocation, 'artifacts/vm1.default.htm', var._artifactsLocationSasToken)"},
-		{"works",
-			args{
-				`[uri(parameters("_artifactsLocation"), concat("artifacts/vm2.default.htm", parameters("_artifactsLocationSasToken")))]`,
-				"uri"},
-			"[parameters(\"_artifactsLocation\"), concat(\"artifacts/vm2.default.htm\", parameters(\"_artifactsLocationSasToken\"))]"},
+			want: "uri(local._artifactsLocation, 'artifacts/vm1.default.htm', var._artifactsLocationSasToken)"},
+		{name: "works",
+			args: args{
+				Attribute: `[uri(parameters("_artifactsLocation"), concat("artifacts/vm2.default.htm", parameters("_artifactsLocationSasToken")))]`,
+				name:      "uri"},
+			want: "[parameters(\"_artifactsLocation\"), concat(\"artifacts/vm2.default.htm\", parameters(\"_artifactsLocationSasToken\"))]"},
 	}
 
 	for _, tt := range tests {

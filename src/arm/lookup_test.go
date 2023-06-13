@@ -13,6 +13,7 @@ func Test_lookup(t *testing.T) {
 	}
 
 	test := azurermTemplateDeployment
+
 	var empty []byte
 
 	tests := []struct {

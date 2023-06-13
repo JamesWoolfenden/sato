@@ -9,6 +9,8 @@ import (
 	"text/template"
 )
 
+var badFunk template.FuncMap
+
 var funcMap = template.FuncMap{ //nolint:gochecknoglobals
 	"Array":        cf.Array,
 	"ArrayReplace": cf.ArrayReplace,
@@ -38,6 +40,7 @@ var funcMap = template.FuncMap{ //nolint:gochecknoglobals
 	"Snake":        cf.Snake,
 	"Kebab":        cf.Kebab,
 	"ZipFile":      cf.Zipfile,
+	"Uuid":         arm.UUID,
 }
 
 func Test_parseOutputs(t *testing.T) {
@@ -72,7 +75,7 @@ func Test_parseOutputs(t *testing.T) {
 		{"empty", args{empty, funcMap, "test-output"}, false},
 		{"emptyOutputs", args{emptyOutputs, funcMap, "test-output"}, false},
 		{"Outputs", args{results, funcMap, "test-output"}, false},
-		//{"No path", args{results, funcMap, ""}, false},
+		{"Bad funk", args{results, badFunk, "test-output"}, false},
 	}
 
 	for _, tt := range tests {
