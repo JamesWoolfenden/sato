@@ -3,10 +3,11 @@ package integration_test
 import (
 	"os"
 	"path"
-	sato "sato/src/cf"
-	"sato/tests/utils"
 	"strconv"
 	"testing"
+
+	sato "sato/src/cf"
+	"sato/tests/utils"
 
 	"github.com/stretchr/testify/assert"
 )

@@ -2,9 +2,10 @@ package arm_test
 
 import (
 	"reflect"
-	"sato/src/arm"
 	"testing"
 	"text/template"
+
+	"sato/src/arm"
 )
 
 func Test_parseResources(t *testing.T) {

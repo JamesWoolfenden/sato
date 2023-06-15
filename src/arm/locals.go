@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// ParseLocals parses fields into locals.tf
+// ParseLocals parses fields into locals.tf.
 func ParseLocals(result map[string]interface{}) (string, map[string]interface{}, error) {
 	var locals string
 
@@ -24,9 +24,9 @@ func ParseLocals(result map[string]interface{}) (string, map[string]interface{},
 		theValue, result = ParseString(value.(string), result)
 
 		myLocals[item] = theValue
+
 		if strings.Contains(theValue, "${") {
 			local = "\t" + item + " = \"" + theValue + "\" #" + value.(string) + "\n"
-
 		} else {
 			local = "\t" + item + " = " + theValue + " #" + value.(string) + "\n"
 		}

@@ -11,9 +11,11 @@ import (
 	"github.com/rs/zerolog/log" //nolint:depguard
 )
 
-const typeNumber = "number"
-const typeString = "string"
-const typeListString = "list(string)"
+const (
+	typeNumber     = "number"
+	typeString     = "string"
+	typeListString = "list(string)"
+)
 
 // IsLocal looks up whether a variable is a local or not.
 func IsLocal(target string, result map[string]interface{}) bool {
@@ -139,7 +141,6 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 			}
 			myItem["default"] = "{\n\t" + result + "}"
 			myItem["type"] = "object({\n\t" + types + "})"
-
 		}
 	case "int", "float":
 		{
@@ -190,7 +191,7 @@ func ArrayToString(defaultValue []interface{}) string {
 	return newValue + "]"
 }
 
-// Tags take map into a string for tags
+// Tags take map into a string for tags.
 func Tags(tags map[string]interface{}) string {
 	keys := make([]string, 0, len(tags))
 	for k := range tags {
@@ -236,9 +237,8 @@ func LoseSQBrackets(newAttribute string) string {
 	return newAttribute
 }
 
-// Ditch helps to drop functions for arm
+// Ditch helps to drop functions for arm.
 func Ditch(attribute string, ditch string) string {
-
 	splitter := strings.SplitN(attribute, ditch+"(", 2)
 
 	if len(splitter) != 2 {
@@ -281,7 +281,6 @@ func Ditch(attribute string, ditch string) string {
 				} else {
 					newString += string(y)
 				}
-
 			}
 		default:
 			{
@@ -297,7 +296,6 @@ func Ditch(attribute string, ditch string) string {
 
 // UUID replaces.
 func UUID(count int) string {
-
 	var (
 		i     int
 		uuids string

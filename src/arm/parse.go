@@ -7,12 +7,13 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sato/src/cf"
-	"sato/src/see"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
 	"unicode"
+
+	"sato/src/cf"
+	"sato/src/see"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/maps"
@@ -108,7 +109,7 @@ func Parse(file string, destination string) error {
 	return nil
 }
 
-// ParseList parses List objects
+// ParseList parses List objects.
 func ParseList(resources []interface{}, result map[string]interface{}) ([]interface{}, error) {
 	var newResources []interface{}
 
@@ -129,7 +130,7 @@ func ParseList(resources []interface{}, result map[string]interface{}) ([]interf
 	return newResources, nil
 }
 
-// ParseMap parses a map type
+// ParseMap parses a map type.
 func ParseMap(myResource map[string]interface{}, result map[string]interface{}) (map[string]interface{}, error) {
 	for name, attribute := range myResource {
 		switch mapType := attribute.(type) {
@@ -228,7 +229,6 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 
 						raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
 					}
-
 				}
 				raw[item] = strings.ReplaceAll(strings.TrimSpace(raw[item]), "'", "")
 			}
@@ -376,14 +376,16 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 		}
 	case "resourceGroup().id":
 		{
-			Attribute = LoseSQBrackets(strings.Replace(newAttribute, "resourceGroup().id",
-				"data.azurerm_resource_group.sato.id", -1))
+			Attribute = LoseSQBrackets(strings.ReplaceAll(
+				newAttribute,
+				"resourceGroup().id",
+				"data.azurerm_resource_group.sato.id",
+			))
 		}
 	case "substring":
 		{
-			Attribute = strings.Replace(newAttribute, "substring",
-				"substr", -1)
-			Attribute = strings.Replace(Attribute, "'", "\"", -1)
+			Attribute = strings.ReplaceAll(newAttribute, "substring", "substr")
+			Attribute = strings.ReplaceAll(Attribute, "'", "\"")
 		}
 	}
 
@@ -721,9 +723,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 	// not simple name lookup
 	if strings.Contains(name, ",") {
 		Lots := strings.Split(name, ",")
-		var (
-			newName []string
-		)
+		var newName []string
 
 		for _, lot := range Lots {
 			var part string

@@ -24,7 +24,6 @@ func CloneRepo(repoPath string, commitHash string) string {
 	repo, err := git.PlainClone(dir, false, &git.CloneOptions{
 		URL: repoPath,
 	})
-
 	if err != nil {
 		log.Fatal().Err(err)
 	}
@@ -49,7 +48,6 @@ func TfInit(workingDir string) error {
 		Product: product.Terraform,
 	}
 	execPath, err := installer.Install(context.Background())
-
 	if err != nil {
 		return fmt.Errorf("failed to install terraform %w", err)
 	}

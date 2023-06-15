@@ -3,8 +3,9 @@ package arm_test
 import (
 	"path/filepath"
 	"reflect"
-	"sato/src/arm"
 	"testing"
+
+	"sato/src/arm"
 )
 
 func TestParse(t *testing.T) {
@@ -20,15 +21,21 @@ func TestParse(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		{name: "Pass",
+		{
+			name: "Pass",
 			args: args{
 				file:        filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json"),
-				destination: ".sato"}},
-		{name: "Fail",
+				destination: ".sato",
+			},
+		},
+		{
+			name: "Fail",
 			args: args{
 				file:        filepath.FromSlash("../../examples/arm/microsoft.compute/vm-simple-windows/nofile.json"),
-				destination: ".sato"},
-			wantErr: true},
+				destination: ".sato",
+			},
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -479,9 +486,9 @@ func Test_replace(t *testing.T) {
 		result       map[string]interface{}
 	}
 
-	//vars := "variables"
-	//resourceId := "resourceId"
-	//params := "parameters"
+	// vars := "variables"
+	// resourceId := "resourceId"
+	// params := "parameters"
 
 	tests := []struct {
 		name  string

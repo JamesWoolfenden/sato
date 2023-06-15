@@ -3,10 +3,11 @@ package arm
 import (
 	"bytes"
 	"fmt"
-	"sato/src/cf"
-	"sato/src/see"
 	"strings"
 	tftemplate "text/template"
+
+	"sato/src/cf"
+	"sato/src/see"
 
 	"github.com/rs/zerolog/log"
 )
@@ -16,7 +17,6 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	resources := result["resources"].([]interface{})
 
 	newResources, err := ParseList(resources, result)
-
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,6 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		myContent := lookup(myType["type"].(string))
 
 		first, err := see.Lookup(myType["type"].(string))
-
 		if err != nil {
 			log.Warn().Err(err)
 

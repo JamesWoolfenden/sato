@@ -1,9 +1,10 @@
 package arm_test
 
 import (
-	"sato/src/arm"
 	"testing"
 	"text/template"
+
+	"sato/src/arm"
 )
 
 func Test_parseData(t *testing.T) {

@@ -2,8 +2,9 @@ package arm_test
 
 import (
 	"reflect"
-	"sato/src/arm"
 	"testing"
+
+	"sato/src/arm"
 )
 
 func TestIsLocal(t *testing.T) {
@@ -336,28 +337,47 @@ func Test_ditch(t *testing.T) {
 		args args
 		want string
 	}{
-		{name: "none", args: args{"bastionPublicIpAddressName", "variables"}, want: "bastionPublicIpAddressName"},
-		{name: "variables", args: args{"variables('bastionPublicIpAddressName')", "variables"}, want: "'bastionPublicIpAddressName'"},
-		{name: "variables not", args: args{"parameters('vmName')", "variables"}, want: "parameters('vmName')"},
-		{name: "mixed",
-			args: args{
-				"concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
-				"variables"},
-			want: "concat(parameters('vmName'),'/', 'omsAgentForLinuxName')"},
-		{name: "mixed 2",
+		{
+			name: "none",
+			args: args{"bastionPublicIpAddressName", "variables"},
+			want: "bastionPublicIpAddressName",
+		},
+		{
+			name: "variables",
+			args: args{Attribute: "variables('bastionPublicIpAddressName')", name: "variables"},
+			want: "'bastionPublicIpAddressName'",
+		},
+		{
+			name: "variables not", args: args{"parameters('vmName')", "variables"}, want: "parameters('vmName')",
+		},
+		{
+			name: "mixed",
+			args: args{Attribute: "concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))", name: "variables"},
+			want: "concat(parameters('vmName'),'/', 'omsAgentForLinuxName')",
+		},
+		{
+			name: "mixed 2",
 			args: args{
 				"concat(variables('blobPrivateDnsZoneName'), '/link_to_', toLower(parameters('virtualNetworkName')))",
-				"variables"},
-			want: "concat('blobPrivateDnsZoneName', '/link_to_', toLower(parameters('virtualNetworkName')))"},
-		{name: "concat", args: args{
-			"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))",
-			"concat"},
-			want: "uri(local._artifactsLocation, 'artifacts/vm1.default.htm', var._artifactsLocationSasToken)"},
-		{name: "works",
+				"variables",
+			},
+			want: "concat('blobPrivateDnsZoneName', '/link_to_', toLower(parameters('virtualNetworkName')))",
+		},
+		{
+			name: "concat", args: args{
+				"uri(local._artifactsLocation, concat('artifacts/vm1.default.htm', var._artifactsLocationSasToken))",
+				"concat",
+			},
+			want: "uri(local._artifactsLocation, 'artifacts/vm1.default.htm', var._artifactsLocationSasToken)",
+		},
+		{
+			name: "works",
 			args: args{
 				Attribute: `[uri(parameters("_artifactsLocation"), concat("artifacts/vm2.default.htm", parameters("_artifactsLocationSasToken")))]`,
-				name:      "uri"},
-			want: "[parameters(\"_artifactsLocation\"), concat(\"artifacts/vm2.default.htm\", parameters(\"_artifactsLocationSasToken\"))]"},
+				name:      "uri",
+			},
+			want: "[parameters(\"_artifactsLocation\"), concat(\"artifacts/vm2.default.htm\", parameters(\"_artifactsLocationSasToken\"))]",
+		},
 	}
 
 	for _, tt := range tests {

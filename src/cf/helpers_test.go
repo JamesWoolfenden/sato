@@ -2,8 +2,9 @@ package cf_test
 
 import (
 	"reflect"
-	sato "sato/src/cf"
 	"testing"
+
+	sato "sato/src/cf"
 )
 
 func Test_replace(t *testing.T) {

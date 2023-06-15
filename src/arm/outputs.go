@@ -5,11 +5,12 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"sato/src/cf"
 	tftemplate "text/template"
+
+	"sato/src/cf"
 )
 
-// ParseOutputs writes out to outputs.tf
+// ParseOutputs writes out to outputs.tf.
 func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
 	if result["outputs"] == nil {
 		return nil
@@ -41,7 +42,6 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		var output bytes.Buffer
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(outputFile))
-
 		if err != nil {
 			return fmt.Errorf("failed to parse template %w", err)
 		}

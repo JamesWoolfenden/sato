@@ -19,7 +19,7 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 	var err error
 
 	for name, item := range parameters {
-		var myItem = item.(map[string]interface{})
+		myItem := item.(map[string]interface{})
 
 		myItem, err = FixType(myItem)
 		if err != nil {
@@ -29,7 +29,6 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 		var output bytes.Buffer
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
-
 		if err != nil {
 			return "", nil, fmt.Errorf("failed to build parser %w", err)
 		}

@@ -268,7 +268,6 @@ func Write(output string, location string, name string) error {
 	if output != "" {
 		newPath, _ := filepath.Abs(location)
 		err := os.MkdirAll(newPath, os.ModePerm)
-
 		if err != nil {
 			return fmt.Errorf("mkdir failed %w", err)
 		}

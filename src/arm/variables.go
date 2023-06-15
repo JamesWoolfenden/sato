@@ -6,9 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"sato/src/cf"
 	"strings"
 	tftemplate "text/template"
+
+	"sato/src/cf"
 
 	"github.com/rs/zerolog/log"
 )
@@ -31,14 +32,23 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 	All, myVariables, err := parseParameters(result, funcMap, All)
 	if err != nil {
-		return result, err
+		log.Warn().Msgf("parseParameters failed %s", err)
 	}
 
 	var locals string
 	locals, result, err = ParseLocals(result)
 
 	if err != nil {
-		return result, err
+		log.Warn().Msgf("locals failed %s", err)
+	}
+
+	if locals != "" {
+		locals = "locals {\n" + locals + "}\n"
+		err = cf.Write(locals, destination, "locals")
+
+		if err != nil {
+			return result, fmt.Errorf("failed to write locals %w", err)
+		}
 	}
 
 	for name, value := range variables {
@@ -89,7 +99,6 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		var output bytes.Buffer
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
-
 		if err != nil {
 			return result, err
 		}
@@ -105,15 +114,9 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 	}
 
 	err = cf.Write(All, destination, "variables")
-	if err != nil {
-		return result, err
-	}
-
-	locals = "locals {\n" + locals + "}\n"
-	err = cf.Write(locals, destination, "locals")
 
 	if err != nil {
-		return result, fmt.Errorf("failed to write locals %w", err)
+		return result, fmt.Errorf("variable write fail %w", err)
 	}
 
 	return result, nil

@@ -4,11 +4,12 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
+	"sort"
+	"time"
+
 	"sato/src/arm"
 	"sato/src/cf"
 	"sato/src/see"
-	"sort"
-	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -34,7 +35,6 @@ func main() {
 				Usage: "translate CFN to Terraform",
 				Action: func(*cli.Context) error {
 					err := cf.Parse(file, destination)
-
 					if err != nil {
 						fmt.Println("parse failure", err)
 					}

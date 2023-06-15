@@ -53,7 +53,7 @@ docs:
 
 fmt:
 	go fmt ./...
-
+	gofumpt -w .
 vet:
 	go vet ./...
 
