@@ -51,9 +51,6 @@ generate-docs:
 docs:
 
 
-fmt:
-	go fmt ./...
-	gofumpt -w .
 vet:
 	go vet ./...
 
@@ -74,3 +71,9 @@ update:
 
 lint:
 	golangci-lint run --fix
+
+gci:
+	gci -w .
+
+fmt:
+	gofumpt -l -w .
