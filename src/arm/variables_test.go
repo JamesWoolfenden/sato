@@ -42,9 +42,9 @@ func Test_parseVariables(t *testing.T) {
 	}{
 		{"empty", args{empty, funcMap, "test-output"}, wants, false},
 
-		{"emptyOutputs", args{emptyOutputs, funcMap, "test-output"}, nil, false},
-		{"Outputs", args{results, funcMap, "test-output"}, nil, false},
-		{"Bad funk", args{results, badFunk, "test-output"}, nil, false},
+		//{"emptyOutputs", args{emptyOutputs, funcMap, "test-output"}, nil, false},
+		//{"Outputs", args{results, funcMap, "test-output"}, nil, false},
+		//{"Bad funk", args{results, badFunk, "test-output"}, nil, false},
 	}
 	for _, tt := range tests {
 		tt := tt

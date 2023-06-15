@@ -387,6 +387,7 @@ func Test_nild(t *testing.T) {
 
 func Test_array(t *testing.T) {
 	t.Parallel()
+
 	type args struct {
 		mySlice []string
 	}
@@ -409,6 +410,7 @@ func Test_array(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			if got := sato.Array(tt.args.mySlice); got != tt.want {
