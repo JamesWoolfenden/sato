@@ -4,6 +4,7 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
+	"sato/src/version"
 	"sort"
 	"time"
 
@@ -65,7 +66,7 @@ func main() {
 				UsageText: "sato version",
 				Action: func(*cli.Context) error {
 					//goland:noinspection GoLinter
-					fmt.Println(cf.Version)
+					fmt.Println(version.Version)
 
 					return nil
 				},
@@ -125,7 +126,7 @@ func main() {
 		Usage:    "Translate Cloudformation to Terraform",
 		Compiled: time.Time{},
 		Authors:  []*cli.Author{{Name: "James Woolfenden", Email: "jim.wolf@duck.com"}},
-		Version:  cf.Version,
+		Version:  version.Version,
 	}
 	sort.Sort(cli.FlagsByName(app.Flags))
 	sort.Sort(cli.CommandsByName(app.Commands))
