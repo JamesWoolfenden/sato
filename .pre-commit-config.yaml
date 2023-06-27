@@ -2,7 +2,7 @@
 ---
 # yamllint disable rule:line-length
 default_language_version:
-  python: python3.9
+  python: python3.10
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
@@ -23,14 +23,14 @@ repos:
     rev: v1.5.1
     hooks:
       - id: forbid-tabs
-        exclude_types: [python, javascript, dtd, markdown, makefile, xml]
+        exclude_types: [ python, javascript, dtd, markdown, makefile, xml ]
         exclude: binary|\.bin$|rego|\.rego$|go|\.go$
   - repo: https://github.com/jameswoolfenden/pre-commit-shell
     rev: 0.0.2
     hooks:
       - id: shell-lint
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.34.0
+    rev: v0.35.0
     hooks:
       - # noinspection SpellCheckingInspection
         id: markdownlint
@@ -39,7 +39,7 @@ repos:
     rev: v0.1.50
     hooks:
       - id: terraform-fmt
-        language_version: python3.9
+        language_version: python3.10
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.22
     hooks:
@@ -50,10 +50,26 @@ repos:
     rev:  v0.0.18
     hooks:
       - id: go-test
-        args: ["./..."]
+        args: [ "./..." ]
       - id: go-mod-tidy
       - id: go-generate
   - repo: https://github.com/golangci/golangci-lint
-    rev: v1.52.2
+    rev: v1.53.3
     hooks:
       - id: golangci-lint
+  - repo: https://github.com/bridgecrewio/checkov
+    rev: 2.3.301
+    hooks:
+      - id: checkov
+        language_version: python3.10
+  - repo: https://github.com/jameswoolfenden/ghat
+    rev: v0.0.11
+    hooks:
+      - id: ghat-go
+        name: ghat
+        description: upgrade action dependencies
+        language: golang
+        entry: ghat swot -d . --stable 14
+        always_run: true
+        pass_filenames: false
+        types: [ yaml ]
