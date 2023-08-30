@@ -6,7 +6,9 @@ import (
 )
 
 // Lookup converts from cf/arm to terraform resource name.
-func Lookup(resource string) (*string, error) {
+func Lookup(resource string, reverse bool) (*string, error) {
+	var result string
+
 	Lookup := map[string]string{
 		"aws::EFS::filesystem":                                                "aws_efs_file_system",
 		"aws::EFS::mounttarget":                                               "aws_efs_mount_target",
@@ -165,7 +167,13 @@ func Lookup(resource string) (*string, error) {
 		"microsoft.storage/storageaccounts":                                   "azurerm_storage_account",
 		"microsoft.compute/availabilitysets":                                  "azurerm_availability_set",
 	}
-	result := Lookup[strings.TrimSuffix(strings.ToLower(resource), "/")]
+
+	if reverse {
+		Reversed := reverseMap(Lookup)
+		result = Reversed[resource]
+	} else {
+		result = Lookup[strings.TrimSuffix(strings.ToLower(resource), "/")]
+	}
 
 	var err error
 
@@ -176,4 +184,12 @@ func Lookup(resource string) (*string, error) {
 	}
 
 	return &result, err
+}
+
+func reverseMap(m map[string]string) map[string]string {
+	n := make(map[string]string, len(m))
+	for k, v := range m {
+		n[v] = k
+	}
+	return n
 }

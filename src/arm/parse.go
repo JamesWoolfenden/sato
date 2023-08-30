@@ -433,7 +433,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 
 	var resourceName *string
 	if FindResourceType(result, arm) {
-		resourceName, err = see.Lookup(arm)
+		resourceName, err = see.Lookup(arm, false)
 		if err != nil {
 			log.Printf("no match found %s", arm)
 		}
@@ -447,7 +447,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 			}
 		}
 
-		resourceName, err = see.Lookup(arm)
+		resourceName, err = see.Lookup(arm, false)
 
 		if err != nil {
 			return "", err
@@ -566,7 +566,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 						log.Warn().Msgf("no match found %s", arm)
 					}
 				}
-				resourceName, err = see.Lookup(cf.Dequote(arm))
+				resourceName, err = see.Lookup(cf.Dequote(arm), false)
 				if err != nil {
 					resourceName = toUnknownPointer()
 					log.Warn().Msgf("no match found %s", arm)

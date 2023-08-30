@@ -30,7 +30,7 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		myType := resource.(map[string]interface{})
 		myContent := lookup(myType["type"].(string))
 
-		first, err := see.Lookup(myType["type"].(string))
+		first, err := see.Lookup(myType["type"].(string), false)
 		if err != nil {
 			log.Warn().Err(err)
 

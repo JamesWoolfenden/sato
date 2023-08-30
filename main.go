@@ -27,6 +27,8 @@ func main() {
 
 	var resource string
 
+	var flip bool
+
 	app := &cli.App{
 		EnableBashCompletion: true,
 		Flags:                []cli.Flag{},
@@ -101,15 +103,18 @@ func main() {
 			},
 			{
 				Name:  "see",
-				Usage: "shows equivalent Terraform resource",
+				Usage: "shows equivalent Terraform resource or the reverse",
 				Action: func(*cli.Context) error {
-					result, err := see.Lookup(resource)
-					if result != nil {
+					result, err := see.Lookup(resource, flip)
+					if result == nil {
 						//goland:noinspection GoLinter
-						fmt.Print(*result)
+						return fmt.Errorf("see failed with error %w", err)
 					}
 
-					return fmt.Errorf("see failed with error %w", err)
+					fmt.Print(*result)
+					fmt.Print("\n")
+
+					return err
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
@@ -119,11 +124,18 @@ func main() {
 						Required:    true,
 						Destination: &resource,
 					},
+					&cli.BoolFlag{
+						Name:        "flip",
+						Aliases:     []string{"f"},
+						Usage:       "reverse the lookup",
+						Required:    false,
+						Destination: &flip,
+					},
 				},
 			},
 		},
 		Name:     "sato",
-		Usage:    "Translate Cloudformation to Terraform",
+		Usage:    "Translate Cloudformation or ARM to Terraform",
 		Compiled: time.Time{},
 		Authors:  []*cli.Author{{Name: "James Woolfenden", Email: "jim.wolf@duck.com"}},
 		Version:  version.Version,
