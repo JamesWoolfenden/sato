@@ -8,6 +8,7 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![checkov](https://img.shields.io/badge/checkov-verified-brightgreen)](https://www.checkov.io/)
 [![Github All Releases](https://img.shields.io/github/downloads/jameswoolfenden/sato/total.svg)](https://github.com/JamesWoolfenden/sato/releases)
+[![codecov](https://codecov.io/gh/JamesWoolfenden/sato/graph/badge.svg?token=AT1DREJQPR)](https://codecov.io/gh/JamesWoolfenden/sato)
 
 Converts CloudFormation (and now also ARM) into Terraform. In Go, quickerly.
 
