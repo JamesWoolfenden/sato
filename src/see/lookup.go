@@ -166,6 +166,10 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"microsoft.servicebus/namespaces/queues":                              "azurerm_servicebus_queue",
 		"microsoft.storage/storageaccounts":                                   "azurerm_storage_account",
 		"microsoft.compute/availabilitysets":                                  "azurerm_availability_set",
+		"microsoft.compute/virtualmachinescalesets":                           "azurerm_linux_virtual_machine_scale_set",
+		"microsoft.documentdb/databaseaccounts":                               "azurerm_cosmosdb_account",
+		"microsoft.cognitiveservices/accounts":                                "azurerm_cognitive_account",
+		"":                                                                    "azurerm_mssql_server",
 	}
 
 	if reverse {

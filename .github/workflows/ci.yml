@@ -5,7 +5,8 @@ on:
 
 name: CI
 permissions: read-all
-
+env:
+  GITHUB_TOKEN: ${{ github.token }}
 jobs:
   test:
     ## We want to define a strategy for our job
@@ -13,8 +14,8 @@ jobs:
       ## this will contain a matrix of all the combinations
       ## we wish to test again:
       matrix:
-        go-version: [1.20.x]
-        platform: [ubuntu-latest, macos-latest, windows-latest]
+        go-version: [ 1.21.x ]
+        platform: [ ubuntu-latest, macos-latest, windows-latest ]
 
     ## Defines the platform for each test run
     runs-on: ${{ matrix.platform }}
@@ -22,20 +23,25 @@ jobs:
     ## the steps that will be run through for each version and platform
     ## combination
     steps:
-    ## sets up go based on the version
-    - name: Install Go
-      uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
-      with:
-        go-version: ${{ matrix.go-version }}
+      ## sets up go based on the version
+      - name: Install Go
+        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+        with:
+          go-version: ${{ matrix.go-version }}
 
-    ## checks out our code locally, so we can work with the files
-    - name: Checkout code
-      uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      ## checks out our code locally, so we can work with the files
+      - name: Checkout code
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v4.0.0
 
-    ## runs go test ./...
-    - name: Build
-      run: go build ./...
+      ## runs go test ./...
+      - name: Build
+        run: go build ./...
 
-    ## runs go test ./...
-    - name: Test
-      run: go test ./...
+      ## runs go test ./...
+      - name: Test
+        run: go test ./... -coverprofile=./cover.out
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@3444e47d45411c1e34e39245eb914e9d557d2305 # v3.1.4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
