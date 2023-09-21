@@ -39,13 +39,12 @@ repos:
     rev: v0.1.50
     hooks:
       - id: terraform-fmt
-        language_version: python3.10
+        language_version: python3.11
   - repo: https://github.com/gruntwork-io/pre-commit
     rev: v0.1.22
     hooks:
       - id: gofmt
       - id: goimports
-      - id: golint
   - repo: https://github.com/syntaqx/git-hooks
     rev:  v0.0.18
     hooks:
@@ -62,7 +61,6 @@ repos:
     hooks:
       - id: checkov
         language_version: python3.11
-        args: ["-d", "."]
   - repo: https://github.com/jameswoolfenden/ghat
     rev: v0.1.0
     hooks:
@@ -70,7 +68,13 @@ repos:
         name: ghat
         description: upgrade action dependencies
         language: golang
-        entry: ghat swot -d . --stable 14
+        entry: ghat swot -d . --continue-on-error true --stable 14
         always_run: true
         pass_filenames: false
         types: [ yaml ]
+  - repo: https://github.com/dnephin/pre-commit-golang
+    rev: v0.5.1
+    hooks:
+      - id: validate-toml
+      - id: no-go-testing
+      - id: go-mod-tidy
