@@ -2,9 +2,8 @@ package cf_test
 
 import (
 	"reflect"
-	"testing"
-
 	sato "sato/src/cf"
+	"testing"
 )
 
 func Test_replace(t *testing.T) {
@@ -285,6 +284,7 @@ func Test_kebab(t *testing.T) {
 	type args struct {
 		Camel string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -307,9 +307,12 @@ func Test_kebab(t *testing.T) {
 }
 
 func Test_lower(t *testing.T) {
+	t.Parallel()
+
 	type args struct {
 		target string
 	}
+
 	tests := []struct {
 		name string
 		args args
@@ -318,8 +321,11 @@ func Test_lower(t *testing.T) {
 		{"basic", args{"SHOUTING"}, "shouting"},
 		{"with special chars", args{"SHOUTING!"}, "shouting!"},
 	}
+
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			if got := sato.Lower(tt.args.target); got != tt.want {
 				t.Errorf("Lower() = %v, want %v", got, tt.want)
 			}
@@ -508,6 +514,92 @@ func Test_zipfile(t *testing.T) {
 			t.Parallel()
 			if got := sato.Zipfile(tt.args.code, tt.args.filename, tt.args.runtime); got != tt.want {
 				t.Errorf("Zipfile() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestSplitOn(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		source    string
+		separator string
+		index     int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"Pass", args{"the calm, before the storm", ",", 0}, "the calm"},
+		{"Pass index", args{"the calm, before the storm", ",", 1}, " before the storm"},
+		{"Fail", args{"the calm, before the storm", ",", 3}, ""},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := sato.SplitOn(tt.args.source, tt.args.separator, tt.args.index); got != tt.want {
+				t.Errorf("SplitOn() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestRandomString(t *testing.T) {
+	type args struct {
+		n int
+	}
+
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{"Pass", args{10}, 10},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := sato.RandomString(tt.args.n); len(got) != tt.want {
+				t.Errorf("RandomString() = %v, want %v", len(got), tt.want)
+			}
+		})
+	}
+}
+
+func TestMap(t *testing.T) {
+	t.Parallel()
+
+	type args struct {
+		myMap map[string]string
+	}
+
+	sample := map[string]string{
+		"index":  "key",
+		"rabbit": "fox",
+	}
+
+	wants := "{ \n\t\"rabbit\"=\"fox\"\n\t\"index\"=\"key\"\n }"
+	reverse := "{ \n\t\"index\"=\"key\"\n\t\"rabbit\"=\"fox\"\n }"
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		reverse string
+	}{
+		{"Pass", args{sample}, wants, reverse},
+	}
+
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			if got := sato.Map(tt.args.myMap); got != tt.want && got != reverse {
+				t.Errorf("Map() = %v, want %v", got, tt.want)
 			}
 		})
 	}

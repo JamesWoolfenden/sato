@@ -4,9 +4,10 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
-	"sato/src/version"
 	"sort"
 	"time"
+
+	"sato/src/version"
 
 	"sato/src/arm"
 	"sato/src/cf"

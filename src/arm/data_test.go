@@ -17,6 +17,7 @@ func Test_parseData(t *testing.T) {
 	}
 
 	var badFunk template.FuncMap
+
 	empty := make(map[string]interface{})
 	emptyData := make(map[string]interface{})
 	emptyData["data"] = make(map[string]interface{})
