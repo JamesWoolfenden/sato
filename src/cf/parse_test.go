@@ -81,7 +81,8 @@ func TestWrite(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-		//{},
+		{"Pass", args{"gibberine", ".", "test"}, false},
+		{"Fail", args{"gibberine", "/usr/bin/local", "test"}, true},
 	}
 
 	for _, tt := range tests {

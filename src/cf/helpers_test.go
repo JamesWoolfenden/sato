@@ -604,3 +604,26 @@ func TestMap(t *testing.T) {
 		})
 	}
 }
+
+func TestSplitOn1(t *testing.T) {
+	type args struct {
+		source    string
+		separator string
+		index     int
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{"Pass", args{"Fab Five Freddy told me everybody's fly", "me", 0}, "Fab Five Freddy told "},
+		{"Nought", args{"Fab Five Freddy told me everybody's fly", "aardvark", 1}, ""},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := sato.SplitOn(tt.args.source, tt.args.separator, tt.args.index); got != tt.want {
+				t.Errorf("SplitOn() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
