@@ -42,6 +42,8 @@ func lookup(myType string) []byte {
 		"microsoft.servicebus/namespaces/queues":                             azurermServicebusQueue,
 		"microsoft.storage/storageaccounts":                                  azurermStorageAccount,
 		"microsoft.compute/availabilitysets":                                 azurermAvailabilitySet,
+		"microsoft.compute/disks":                                            azurermComputeDisks,
+		"microsoft.network/networksecuritygroups/securityrules":              azurermNetworkNSGSecurityRules,
 	}
 
 	var myContent []byte

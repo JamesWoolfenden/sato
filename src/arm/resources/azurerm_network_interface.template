@@ -13,8 +13,12 @@ resource "azurerm_network_interface" "{{ .item}}" {
 {{- range $x, $i:= .resource.properties.ipConfigurations}}
   ip_configuration {
     name                          = {{ $i.name |Quote}}
-    subnet_id                     = {{ $i.properties.subnet.id}}
+{{- if $i.properties.subnet}}
+    subnet_id                     = {{ $i.properties.subnet.id }}
+{{- end}}
+{{- if  $i.properties.privateIPAllocationMethod }}
     private_ip_address_allocation = {{ $i.properties.privateIPAllocationMethod|Quote }}
+{{- end}}
   }
 {{- end}}
 {{- if .resource.tags}}

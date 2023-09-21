@@ -1,0 +1,39 @@
+resource "azurerm_network_security_rule" "{{ .item }}" {
+  name                        = {{.resource.name|Quote}}
+{{- if .resource.properties.description}}
+  description                 = {{.resource.properties.description|Quote}}
+{{- end  }}
+{{- if .resource.properties.priority}}
+  priority                    = {{.resource.properties.priority}}
+{{- end}}
+{{- if .resource.properties.direction}}
+  direction                   = {{.resource.properties.direction|Quote}}
+{{- end}}
+{{- if .resource.properties.access}}
+  access                      = {{.resource.properties.access|Quote}}
+{{- end}}
+{{- if .resource.properties.protocol }}
+  protocol                    = {{.resource.properties.protocol|Quote }}
+{{- end}}
+{{- if .resource.properties.sourcePortRange}}
+  source_port_range           = {{.resource.properties.sourcePortRange|Quote }}
+{{- end}}
+{{- if .resource.properties.destinationPortRange}}
+  destination_port_range      = {{.resource.properties.destinationPortRange|Quote}}
+{{- end}}
+{{- if .resource.properties.sourceAddressPrefix }}
+  source_address_prefix       = {{.resource.properties.sourceAddressPrefix|Quote }}
+{{- end}}
+{{- if .resource.properties.destinationAddressPrefix}}
+  destination_address_prefix  = {{.resource.properties.destinationAddressPrefix|Quote }}
+{{- end}}
+{{- if .resource.resourceGroupName }}
+  resource_group_name      = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name      = data.azurerm_resource_group.sato.name
+{{- end}}
+  network_security_group_name = ""
+{{- if .resource.dependsOn }}
+  depends_on                 = [{{- range $x, $j:= .resource.dependsOn }} {{ $j}}, {{- end}}]
+{{- end}}
+}

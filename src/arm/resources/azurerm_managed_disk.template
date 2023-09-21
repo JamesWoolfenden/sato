@@ -1,0 +1,35 @@
+resource "azurerm_managed_disk" "{{.item}}" {
+  name                 = {{ .resource.name }}
+{{- if .resource.location}}
+  location             = {{ .resource.location|Quote }}
+{{- else}}
+  location             = data.azurerm_resource_group.sato.location
+{{- end }}
+{{- if .resource.resourceGroupName }}
+  resource_group_name  = {{ .resource.resourceGroupName|Quote }}
+{{- else }}
+  resource_group_name  = data.azurerm_resource_group.sato.name
+{{- end}}
+{{- if .resource.properties.creationData.createOption}}
+  create_option        = {{ .resource.properties.creationData.createOption|Quote }}
+{{- else }}
+  create_option="Empty"
+{{- end }}
+  disk_size_gb         = {{ .resource.properties.diskSizeGB}}
+{{- if .resource.properties.CreationData.sourceResourceId}}
+   Copy = {{ .resource.properties.CreationData.sourceResourceId| Quote }}
+{{- end }}
+  storage_account_type = "Standard_LRS" #not in arm spec
+{{- if  .resource.properties.creationData.galleryImageReference.id}}
+   gallery_image_reference_id={{.resource.properties.creationData.galleryImageReference.id}}
+{{- end}}
+{{- if .resource.properties.creationData.logicalSectorSize }}
+   logical_sector_size={{.resource.properties.creationData.logicalSectorSize }}
+{{- end }}
+{{- if .resource.properties.creationData.performancePlus }}
+   performance_plus_enabled={{ Boolean .resource.properties.creationData.performancePlus }}
+{{- end }}
+{{- if .resource.tags}}
+  tags = {{Tags .resource.tags}}
+{{- end}}
+}

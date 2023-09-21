@@ -192,7 +192,12 @@ func ArrayToString(defaultValue []interface{}) string {
 }
 
 // Tags take map into a string for tags.
-func Tags(tags map[string]interface{}) string {
+func Tags(raw interface{}) string {
+	tags, ok := raw.(map[string]interface{})
+	if !ok {
+		return raw.(string)
+	}
+
 	keys := make([]string, 0, len(tags))
 	for k := range tags {
 		keys = append(keys, k)

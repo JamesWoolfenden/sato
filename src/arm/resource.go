@@ -105,3 +105,9 @@ var azurermNetworkInterfaceApplicationGatewayBackendAddressPoolAssociation []byt
 
 //go:embed resources/azurerm_availability_set.template
 var azurermAvailabilitySet []byte
+
+//go:embed resources/azurerm_managed_disk.template
+var azurermComputeDisks []byte
+
+//go:embed resources/azurerm_network_security_rule.template
+var azurermNetworkNSGSecurityRules []byte

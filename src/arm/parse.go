@@ -406,6 +406,8 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 	Match = strings.Replace(Match, "extensionResourceId", "resourceId", 1)
 	Match = strings.Replace(Match, "subscriptionResourceId", "resourceId", 1)
 
+	Match = strings.ReplaceAll(Match, "resourceID", "resourceId")
+
 	re := regexp.MustCompile(`resourceId\((.*?)\)`)
 	Attribute := re.FindStringSubmatch(Match)
 

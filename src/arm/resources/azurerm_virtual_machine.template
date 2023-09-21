@@ -25,7 +25,9 @@ resource "azurerm_virtual_machine" "{{.item}}" {
   os_profile {
       computer_name = {{.resource.properties.osProfile.computerName|Quote}}
       admin_username= {{.resource.properties.osProfile.adminUsername|Quote}}
+  {{- if .resource.properties.osProfile.adminPassword}}
       admin_password= {{.resource.properties.osProfile.adminPassword|Quote}}
+  {{- end}}
   }
 {{- end}}
 {{- if .resource.properties.storageProfile.dataDisks}}
@@ -36,7 +38,7 @@ resource "azurerm_virtual_machine" "{{.item}}" {
     caching      = {{$i.caching|Quote}}
 {{- end}}
     create_option= {{ $i.createOption|Quote}}
-    disk_size_gb = {{ $i.diskSizeGB}}
+    disk_size_gb = {{Nil $i.diskSizeGB|Quote}}
     lun          = {{ $i.lun }}
 {{- if $i.writeAcceleratorEnabled}}
     write_acclerator_enabled={{$i.writeAcceleratorEnabled|Quote}}
