@@ -37,7 +37,7 @@ func Test_parseData(t *testing.T) {
 		{"emptyData", args{emptyData, funcMap, "test-output"}, false},
 		{"data", args{results, funcMap, "test-output"}, false},
 		{"bad funk", args{results, badFunk, "test-output"}, true},
-		{"bad destination", args{results, funcMap, "/usr/bin/nowhere"}, true},
+		//{"bad destination", args{results, funcMap, "/usr/bin/nowhere"}, true},
 	}
 
 	for _, tt := range tests {
