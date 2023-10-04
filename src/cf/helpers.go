@@ -3,6 +3,7 @@ package cf
 import (
 	"archive/zip"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"io"
 	"math/rand"
@@ -12,6 +13,7 @@ import (
 
 	"github.com/awslabs/goformation/v7/cloudformation/tags"
 	"github.com/gobeam/stringy"
+	"github.com/rs/zerolog/log"
 )
 
 // Replace is a template function.
@@ -258,4 +260,13 @@ func Map(myMap map[string]string) string {
 	result += " }"
 
 	return result
+}
+
+func Marshal(v interface{}) string {
+	a, err := json.Marshal(v)
+	if err != nil {
+		log.Error().Msgf("marshalling failed %s", err)
+	}
+
+	return string(a)
 }

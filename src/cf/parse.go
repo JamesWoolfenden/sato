@@ -2,7 +2,6 @@ package cf
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -51,7 +50,7 @@ func Parse(file string, destination string) error {
 
 	cloudFormation, err := goformation.Open(fileAbs)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Parse failure")
+		return fmt.Errorf("parse failure %s", err)
 	}
 
 	funcMap := template.FuncMap{
@@ -69,14 +68,7 @@ func Parse(file string, destination string) error {
 		"Deref":        func(str *string) string { return *str },
 		"Nil":          Nill,
 		"Nild":         Nild,
-		"Marshal": func(v interface{}) string {
-			a, err := json.Marshal(v)
-			if err != nil {
-				log.Error().Msgf("marshalling failed %s", err)
-			}
-
-			return string(a)
-		},
+		"Marshal":      Marshal,
 		"Split":        Split,
 		"SplitOn":      SplitOn,
 		"Replace":      Replace,
@@ -211,6 +203,7 @@ func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Var
 	switch param.Default.(type) {
 	case string:
 		_, err := strconv.Atoi(param.Default.(string))
+
 		if err == nil {
 			myVariable.Type = typeNumber
 			myVariable.Default = param.Default.(string)
@@ -219,7 +212,7 @@ func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Var
 				myVariable.Default = param.Default.(string)
 			} else {
 				if strings.Contains(param.Default.(string), "=") {
-					myVariable = StringToMap(param, myVariable)
+					myVariable = StringToMap(param)
 				} else {
 					myVariable.Default = "\"" + param.Default.(string) + "\""
 				}
@@ -240,8 +233,10 @@ func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Var
 }
 
 // StringToMap converts maps in strings(for tags).
-func StringToMap(param cloudformation.Parameter, myVariable Variable) Variable {
+func StringToMap(param cloudformation.Parameter) Variable {
 	temp := strings.Split(param.Default.(string), "=")
+
+	var myVariable Variable
 
 	var myMap string
 
