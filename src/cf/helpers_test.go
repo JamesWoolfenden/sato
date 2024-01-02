@@ -427,8 +427,6 @@ func Test_array(t *testing.T) {
 }
 
 func Test_arrayReplace(t *testing.T) {
-	t.Parallel()
-
 	type args struct {
 		mySlice     []string
 		target      string
@@ -453,9 +451,7 @@ func Test_arrayReplace(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
 			if got := sato.ArrayReplace(tt.args.mySlice, tt.args.target, tt.args.replacement); got != tt.want {
 				t.Errorf("ArrayReplace() = %v, want %v", got, tt.want)
 			}
