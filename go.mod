@@ -1,6 +1,6 @@
 module sato
 
-go 1.21
+go 1.22.2
 
 require (
 	github.com/awslabs/goformation/v7 v7.14.9
@@ -11,7 +11,7 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.27.2
-	golang.org/x/exp v0.0.0-20240707233637-46b078467d37
+	golang.org/x/exp v0.0.0-20240716160929-1d5bc16f04a8
 )
 
 require (
