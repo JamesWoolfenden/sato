@@ -1,0 +1,13 @@
+resource "aws_athena_named_query" "{{.item}}" {
+  name      = {{.resource.Name|Quote}}
+{{- if .resource.Description}}
+  description = {{Nil .resource.Description|Quote}}
+{{- end}}
+{{- if .resource.WorkGroup}}
+  workgroup = {{Nil .resource.WorkGroup|Quote}}
+{{- end }}
+  database  = {{Nil .resource.Database|Quote}}
+  query     = <<QUERY
+{{.resource.QueryString}}
+QUERY
+}

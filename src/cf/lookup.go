@@ -160,6 +160,8 @@ func lookup(myType string) []byte {
 		"AWS::ServiceDiscovery::Service":                   awsServiceDiscoveryService,
 		"AWS::StepFunctions::StateMachine":                 awsStepfunctionStateMachine,
 		"AWS::WAFv2::WebACLAssociation":                    awsWAFv2WebACLAssociation,
+		"AWS::Athena::WorkGroup":                           awsAthenaWorkGroup,
+		"AWS::Athena::NamedQuery":                          awsAthenaNamedQuery,
 	}
 
 	var myContent []byte

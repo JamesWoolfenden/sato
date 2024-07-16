@@ -25,13 +25,13 @@ jobs:
     steps:
       ## sets up go based on the version
       - name: Install Go
-        uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+        uses: actions/setup-go@0a12ed9d6a96ab950c8f026ed9f722fe0da7ef32 # v5.0.2
         with:
           go-version: ${{ matrix.go-version }}
 
       ## checks out our code locally, so we can work with the files
       - name: Checkout code
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
 
       ## runs go test ./...
       - name: Build
@@ -42,6 +42,6 @@ jobs:
         run: go test ./... -coverprofile=./cover.out
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@fa9a6909dc02281d24b410b6ee3dd8c5675a2e76 # v4.3.0
+        uses: codecov/codecov-action@79066c46f8dcdf8d7355f820dbac958c5b4cb9d3 # v4.5.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

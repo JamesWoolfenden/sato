@@ -3,15 +3,15 @@ module sato
 go 1.21
 
 require (
-	github.com/awslabs/goformation/v7 v7.14.6
+	github.com/awslabs/goformation/v7 v7.14.9
 	github.com/go-git/go-git/v5 v5.4.2
-	github.com/gobeam/stringy v0.0.6
+	github.com/gobeam/stringy v0.0.7
 	github.com/hashicorp/hc-install v0.4.0
 	github.com/hashicorp/terraform-exec v0.17.3
-	github.com/rs/zerolog v1.32.0
+	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.7.0
-	github.com/urfave/cli/v2 v2.27.1
-	golang.org/x/exp v0.0.0-20240409090435-93d18d7e34b8
+	github.com/urfave/cli/v2 v2.27.2
+	golang.org/x/exp v0.0.0-20240707233637-46b078467d37
 )
 
 require (
@@ -36,11 +36,11 @@ require (
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sergi/go-diff v1.2.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
-	github.com/xrash/smetrics v0.0.0-20240312152122-5f08fbb34913 // indirect
+	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	github.com/zclconf/go-cty v1.11.0 // indirect
-	golang.org/x/crypto v0.18.0 // indirect
-	golang.org/x/net v0.20.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/crypto v0.21.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

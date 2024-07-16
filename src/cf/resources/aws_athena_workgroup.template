@@ -1,0 +1,65 @@
+resource "aws_athena_workgroup" "{{.item}}" {
+    name="{{.resource.Name}}"
+
+{{- if .resource.WorkGroupConfiguration}}
+    configuration {
+{{- if .resource.WorkGroupConfiguration }}
+      bytes_scanned_cutoff_per_query = {{ .resource.WorkGroupConfiguration.BytesScannedCutoffPerQuery }}
+{{- end}}
+{{- if .resource.WorkGroupConfiguration.EnforceWorkGroupConfiguration }}
+        enforce_workgroup_configuration    = {{Boolean .resource.WorkGroupConfiguration.EnforceWorkGroupConfiguration }}
+{{- end }}
+{{- if .resource.WorkGroupConfiguration.EngineVersion }}
+        engine_version  {
+            selected_engine_version = {{.resource.WorkGroupConfiguration.EngineVersion }}
+        }
+{{- end}}
+{{- if .resource.WorkGroupConfiguration.ExecutionRole }}
+        execution_role={{.resource.WorkGroupConfiguration.ExecutionRole|Quote }}
+{{- end}}
+{{- if .resource.WorkGroupConfiguration.PublishCloudWatchMetricsEnabled}}
+        publish_cloudwatch_metrics_enabled = {{ Boolean .resource.WorkGroupConfiguration.PublishCloudWatchMetricsEnabled}}
+{{- end}}
+
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration }}
+        result_configuration {
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration.OutputLocation }}
+              output_location = {{ .resource.WorkGroupConfiguration.ResultConfiguration.OutputLocation|Quote }}
+{{- end}}
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration}}
+            encryption_configuration {
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration.EncryptionOption }}
+                encryption_option = {{ .resource.WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration.EncryptionOption| Quote }}
+{{- end }}
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration.KmsKey }}
+                kms_key_arn       = {{ .resource.WorkGroupConfiguration.ResultConfiguration.EncryptionConfiguration.KmsKey | Quote}}
+{{- end}}
+            }
+{{- end}}
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration.AclConfiguration}}
+            acl_configuration {
+            s3_acl_options={{ .resource.WorkGroupConfiguration.ResultConfiguration.AclConfiguration.S3AclOptions|Quote }}
+            }
+{{- end }}
+{{- if .resource.WorkGroupConfiguration.ResultConfiguration.ExpectedBucketOwner}}
+            expected_bucket_owner= {{ .resource.WorkGroupConfiguration.ResultConfiguration.ExpectedBucketOwner |Quote}}
+{{- end}}
+        }
+{{- end}}
+{{- if  .resource.WorkGroupConfiguration.RequesterPaysEnabled}}
+        requester_pays_enabled = {{Boolean .resource.WorkGroupConfiguration.RequesterPaysEnabled}}
+{{- end}}
+    }
+{{- end }}
+{{- if .resource.Description}}
+    description={{Nil .resource.Description|Quote}}
+{{- end}}
+{{- if  .resource.State}}
+    state="{{.resource.State}}"
+{{- end}}
+{{- if .resource.Tags}}
+  tags = {
+  {{Tags .resource.Tags}}
+  }
+{{- end }}
+}

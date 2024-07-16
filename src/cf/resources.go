@@ -345,3 +345,9 @@ var awsCloudwatchDashboard []byte
 
 //go:embed resources/aws_cloudwatch_log_metric_filter.template
 var awsCloudwatchLogMetricFilter []byte
+
+//go:embed resources/aws_athena_workgroup.template
+var awsAthenaWorkGroup []byte
+
+//go:embed resources/aws_athena_named_query.template
+var awsAthenaNamedQuery []byte
