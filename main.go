@@ -40,7 +40,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := cf.Parse(file, destination)
 					if err != nil {
-						fmt.Println("parse failure", err)
+						log.Error().Err(err)
 					}
 
 					return nil

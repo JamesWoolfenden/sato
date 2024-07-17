@@ -121,6 +121,7 @@ func lookup(myType string) []byte {
 		"AWS::IAM::Role":                                   awsIamRole,
 		"AWS::IAM::User":                                   awsIamUser,
 		"AWS::IAM::UserToGroupAddition":                    awsIamGroupMembership,
+		"AWS::KinesisFirehose::DeliveryStream":             awsKinesisFirehoseDeliveryStream,
 		"AWS::KMS::Alias":                                  awskmsAlias,
 		"AWS::KMS::Key":                                    awsKmsKey,
 		"AWS::Lambda::EventSourceMapping":                  awsLambdaEventSourceMapping,

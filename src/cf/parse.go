@@ -45,7 +45,7 @@ func Parse(file string, destination string) error {
 	// Open a cloudFormation from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return fmt.Errorf("filpath failure %w", err)
+		return fmt.Errorf("filepath failure %w", err)
 	}
 
 	cloudFormation, err := goformation.Open(fileAbs)

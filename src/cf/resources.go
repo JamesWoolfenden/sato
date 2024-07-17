@@ -351,3 +351,6 @@ var awsAthenaWorkGroup []byte
 
 //go:embed resources/aws_athena_named_query.template
 var awsAthenaNamedQuery []byte
+
+//go:embed resources/aws_kinesis_firehose_delivery_stream.template
+var awsKinesisFirehoseDeliveryStream []byte

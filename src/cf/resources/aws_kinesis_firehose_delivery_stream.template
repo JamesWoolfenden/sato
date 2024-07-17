@@ -1,0 +1,96 @@
+resource "aws_kinesis_firehose_delivery_stream" "{{.item}}" {
+    name        = "{{.resource.DeliveryStreamName}}"
+    destination = "extended_s3"
+
+{{- if .resource.DeliveryStreamEncryptionConfigurationInput}}
+    server_side_encryption {
+        enabled = true
+        {{- if .resource.DeliveryStreamEncryptionConfigurationInput.KeyARN}}
+        key_arn =  {{.resource.DeliveryStreamEncryptionConfigurationInput.KeyARN|Quote}}
+        {{- end}}
+        {{- if .resource.DeliveryStreamEncryptionConfigurationInput.KeyType}}
+        key_type = {{.resource.DeliveryStreamEncryptionConfigurationInput.KeyType|Quote}}
+        {{- end}}
+    }
+{{- end }}
+
+{{- if .resource.ExtendedS3DestinationConfiguration  }}
+    extended_s3_configuration {
+        role_arn   = aws_iam_role.firehose_role.arn
+        bucket_arn = {{ .resource.ExtendedS3DestinationConfiguration.BucketARN|Quote }}
+{{- if .resource.ExtendedS3DestinationConfiguration.BufferingHints.SizeInMBs}}
+        buffering_size= {{ .resource.ExtendedS3DestinationConfiguration.BufferingHints.SizeInMBs}}
+{{- end }}
+{{- if .resource.ExtendedS3DestinationConfiguration.BufferingHints.IntervalInSeconds}}
+        buffering_interval= {{.resource.ExtendedS3DestinationConfiguration.BufferingHints.IntervalInSeconds}}
+{{- end}}
+
+{{- if .resource.ExtendedS3DestinationConfiguration.CloudWatchLoggingOptions}}
+        cloudwatch_logging_options{
+            enabled = {{Boolean .resource.ExtendedS3DestinationConfiguration.CloudWatchLoggingOptions.Enabled}}
+{{- if .resource.ExtendedS3DestinationConfiguration.CloudWatchLoggingOptions.LogGroupName}}
+            log_group_name = {{.resource.ExtendedS3DestinationConfiguration.CloudWatchLoggingOptions.LogGroupName|Quote}}
+{{- end}}
+{{- if .resource.ExtendedS3DestinationConfiguration.CloudWatchLoggingOptions.LogStreamName}}
+            log_stream_name = {{.resource.ExtendedS3DestinationConfiguration.CloudWatchLoggingOptions.LogStreamName|Quote}}
+{{- end}}
+        }
+{{- end}}
+{{- if .resource.ExtendedS3DestinationConfiguration.CompressionFormat}}
+        compression_format = {{.resource.ExtendedS3DestinationConfiguration.CompressionFormat}}
+{{- end}}
+{{- if .resource.ExtendedS3DestinationConfiguration.CustomTimeZone}}
+        custom_timezone = {{.resource.ExtendedS3DestinationConfiguration.CustomTimeZone}}
+{{- end }}
+{{- if .resource.ExtendedS3DestinationConfiguration.DataFormatConversionConfiguration}}
+        data_format_conversion_configuration {
+        }
+{{- end}}
+{{- if .resource.ExtendedS3DestinationConfiguration.DynamicPartitioningConfiguration}}
+        dynamic_partitioning_configuration {
+        }
+{{- end}}
+    {{- if .resource.ExtendedS3DestinationConfiguration.ErrorOutputPrefix}}
+        error_output_prefix = {{.resource.ExtendedS3DestinationConfiguration.ErrorOutputPrefix|Quote}}
+    {{- end }}
+{{- if .resource.ExtendedS3DestinationConfiguration.RoleARN}}
+    role_arn = {{.resource.ExtendedS3DestinationConfiguration.RoleARN|Quote}}
+{{- end}}
+{{- if  .resource.ExtendedS3DestinationConfiguration.ProcessingConfiguration }}
+        processing_configuration {
+            enabled = {{ Boolean .resource.ExtendedS3DestinationConfiguration.ProcessingConfiguration.Enabled}}
+
+{{- range $a, $i := .resource.ExtendedS3DestinationConfiguration.ProcessingConfiguration.Processors}}
+            processors {
+                type = {{$i.Type}}
+
+{{- range $b, $j := $i.Parameters}}
+                parameters {
+                    parameter_name  = {{ $j.ParameterName|Quote}}
+                    parameter_value = {{ $j.ParameterValue|Quote}}
+                    }
+{{- end}}
+                }
+{{- end}}
+            }
+{{- if .resource.ExtendedS3DestinationConfiguration.S3BackupMode}}
+            s3_backup_mode = {{.resource.ExtendedS3DestinationConfiguration.S3BackupMode}}
+{{- end}}
+{{- if .resource.ExtendedS3DestinationConfiguration.S3BackupConfiguration}}
+            s3_backup_configuration {
+                bucket_arn = {{.resource.ExtendedS3DestinationConfiguration.S3BackupConfiguration.BucketARN|Quote}}
+                role_arn   = {{.resource.ExtendedS3DestinationConfiguration.S3BackupConfiguration.RoleARN|Quote}}
+                prefix     = {{.resource.ExtendedS3DestinationConfiguration.S3BackupConfiguration.Prefix|Quote}}
+            }
+{{- end}}
+
+{{- end}}
+    }
+{{- end}}
+
+  {{- if .resource.Tags}}
+    tags = {
+       {{Tags .resource.Tags}}
+    }
+  {{- end}}
+}

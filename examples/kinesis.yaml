@@ -1,0 +1,32 @@
+Resources:
+  SecHubEventsFirehoseDeliveryStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamName: aws-sechub-logs-kinesis-delivery-stream
+      DeliveryStreamType: DirectPut
+      DeliveryStreamEncryptionConfigurationInput:
+        KeyType: AWS_OWNED_CMK
+      ExtendedS3DestinationConfiguration:
+        BucketARN: !GetAtt S3Bucketsechubyashdatafirehose.Arn
+        Prefix: !Sub "sechub_events/managementid=${AWS::AccountId}/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
+        ErrorOutputPrefix: "aws-sechub-logs-firehose-error/"
+        RoleARN: !GetAtt kinesisFirehoseRole.Arn
+        CloudWatchLoggingOptions:
+          Enabled: true
+          LogGroupName: !Ref FirehoseLogGroup
+          LogStreamName: !Ref FirehoseLogStream
+        BufferingHints:
+          IntervalInSeconds: 900
+          SizeInMBs: 30
+        CompressionFormat: "GZIP"
+        ProcessingConfiguration:
+          Enabled: true
+          Processors:
+            - Type: Lambda
+              Parameters:
+                - ParameterName: LambdaArn
+                  ParameterValue: !GetAtt LambdaFunctiontransformationsechub.Arn
+                - ParameterName: BufferIntervalInSeconds
+                  ParameterValue: "600"
+                - ParameterName: BufferSizeInMBs
+                  ParameterValue: "3"
