@@ -500,12 +500,14 @@ func Test_zipfile(t *testing.T) {
 		runtime  string
 	}
 
+	var mycode = `package main`
+
 	tests := []struct {
 		name string
 		args args
 		want string
 	}{
-		//{},
+		{"pass", args{mycode, "test.go", "go"}, "test.go.zip"},
 	}
 
 	for _, tt := range tests {

@@ -93,7 +93,7 @@ Plan: 12 to add, 0 to change, 0 to destroy.
 
 ### See - <small>finds the terraform resource</small>
 
-This tells you the equivalent resource required given a CF ..... or an ARM resource;
+This tells you the equivalent resource required, given a CF ..... or an ARM resource;
 
 ```bash
 $ sato see -r Microsoft.Storage/storageAccounts

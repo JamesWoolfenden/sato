@@ -11,7 +11,7 @@ require (
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli/v2 v2.27.2
-	golang.org/x/exp v0.0.0-20240716160929-1d5bc16f04a8
+	golang.org/x/exp v0.0.0-20240716175740-e3f259677ff7
 )
 
 require (
