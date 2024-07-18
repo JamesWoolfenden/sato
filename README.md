@@ -14,7 +14,7 @@ Converts CloudFormation (and now also ARM) into Terraform. In Go, quickerly.
 
 ## Install
 
-Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.1.1> or:
+Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.1.19> or:
 
 Compile locally:
 
