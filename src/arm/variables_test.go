@@ -2,10 +2,9 @@ package arm_test
 
 import (
 	"reflect"
+	"sato/src/arm"
 	"testing"
 	"text/template"
-
-	"sato/src/arm"
 )
 
 func Test_parseVariables(t *testing.T) {
@@ -50,12 +49,15 @@ func Test_parseVariables(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			got, err := arm.ParseVariables(tt.args.result, tt.args.funcMap, tt.args.destination)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseVariables() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("ParseVariables() got = %v, want %v", got, tt.want)
 			}

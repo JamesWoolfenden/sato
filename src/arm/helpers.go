@@ -1,7 +1,6 @@
 package arm
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"sort"
@@ -54,13 +53,14 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	myType, ok := myItem["type"].(string)
 
 	if !ok {
-		return myItem, errors.New("type is not string")
+		return myItem, &castError{Type: "string"}
 	}
 
 	switch myType {
 	case "object":
 		{
 			var types string
+
 			var result string
 
 			defaultValue, ok := myItem["defaultValue"].(map[string]interface{})
@@ -73,12 +73,15 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 				case []interface{}:
 					{
 						var temp string
+
 						var temptTypes string
+
 						var myType string
+
 						for _, y := range item {
 							y, ok := y.(map[string]interface{})
 							if !ok {
-								return myItem, errors.New("failed to assert  (map[string]interface{}")
+								return myItem, &castError{Type: "map[string]interface{}"}
 							}
 
 							for name, value := range y {
@@ -89,6 +92,7 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 							temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
 							temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
 						}
+
 						if result != "" {
 							result += "," + name + "= [" + temp + "]"
 							types += "," + name + "= list(object(" + temptTypes + "))"
@@ -242,7 +246,7 @@ func LoseSQBrackets(newAttribute string) string {
 	return newAttribute
 }
 
-// Ditch helps to drop functions for arm.
+// Ditch helps to drop functions for ARM.
 func Ditch(attribute string, ditch string) string {
 	splitter := strings.SplitN(attribute, ditch+"(", 2)
 

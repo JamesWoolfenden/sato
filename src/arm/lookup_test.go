@@ -30,6 +30,7 @@ func Test_lookup(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := lookup(tt.args.myType); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("lookup() = %v, want %v", got, tt.want)
 			}

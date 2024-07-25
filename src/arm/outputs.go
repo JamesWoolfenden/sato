@@ -2,12 +2,10 @@ package arm
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"log"
-	tftemplate "text/template"
-
 	"sato/src/cf"
+	tftemplate "text/template"
 )
 
 // ParseOutputs writes out to outputs.tf.
@@ -17,8 +15,9 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 	}
 
 	outputs, ok := result["outputs"].(map[string]interface{})
+
 	if !ok {
-		return errors.New("failed to assert to map[string]interface{}")
+		return &castError{"map[string]interface{}"}
 	}
 
 	var All string

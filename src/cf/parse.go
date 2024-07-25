@@ -40,17 +40,33 @@ type Output struct {
 	Name        string
 }
 
+type filepathError struct {
+	Path string
+}
+
+func (m *filepathError) Error() string {
+	return fmt.Sprintf("not implemented %s", m.Path)
+}
+
+type goformationError struct {
+	err error
+}
+
+func (m *goformationError) Error() string {
+	return fmt.Sprintf("goformation parse failure %v", m.err)
+}
+
 // Parse turn CFN into Terraform.
 func Parse(file string, destination string) error {
 	// Open a cloudFormation from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return fmt.Errorf("filepath failure %w", err)
+		return &filepathError{Path: file}
 	}
 
 	cloudFormation, err := goformation.Open(fileAbs)
 	if err != nil {
-		return fmt.Errorf("parse failure %s", err)
+		return &goformationError{err: err}
 	}
 
 	funcMap := template.FuncMap{
@@ -206,14 +222,18 @@ func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Var
 
 		if err == nil {
 			myVariable.Type = typeNumber
+
 			myVariable.Default = param.Default.(string)
 		} else {
 			if myVariable.Type == "bool" {
+
 				myVariable.Default = param.Default.(string)
 			} else {
+
 				if strings.Contains(param.Default.(string), "=") {
 					myVariable = StringToMap(param)
 				} else {
+
 					myVariable.Default = "\"" + param.Default.(string) + "\""
 				}
 			}
@@ -263,6 +283,7 @@ func Write(output string, location string, name string) error {
 	if output != "" {
 		newPath, _ := filepath.Abs(location)
 		err := os.MkdirAll(newPath, os.ModePerm)
+
 		if err != nil {
 			return fmt.Errorf("mkdir failed %w", err)
 		}

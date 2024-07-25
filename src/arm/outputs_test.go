@@ -2,12 +2,11 @@ package arm_test
 
 import (
 	"encoding/json"
+	"sato/src/arm"
+	"sato/src/cf"
 	"strings"
 	"testing"
 	"text/template"
-
-	"sato/src/arm"
-	"sato/src/cf"
 )
 
 var badFunk template.FuncMap
@@ -83,6 +82,7 @@ func Test_parseOutputs(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if err := arm.ParseOutputs(tt.args.result, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
 				t.Errorf("ParseOutputs() error = %v, wantErr %v", err, tt.wantErr)
 			}

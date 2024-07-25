@@ -10,8 +10,8 @@ require (
 	github.com/hashicorp/terraform-exec v0.17.3
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.7.0
-	github.com/urfave/cli/v2 v2.27.2
-	golang.org/x/exp v0.0.0-20240716175740-e3f259677ff7
+	github.com/urfave/cli/v2 v2.27.3
+	golang.org/x/exp v0.0.0-20240719175910-8a7402abbf56
 )
 
 require (

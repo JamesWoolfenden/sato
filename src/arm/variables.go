@@ -3,13 +3,11 @@ package arm
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"reflect"
+	"sato/src/cf"
 	"strings"
 	tftemplate "text/template"
-
-	"sato/src/cf"
 
 	"github.com/rs/zerolog/log"
 )
@@ -24,7 +22,7 @@ func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		variables, ok = result["variables"].(map[string]interface{})
 
 		if !ok {
-			return result, errors.New("failed to assert variable is a map[string]interface{}")
+			return result, &castError{"map[string]interface{}"}
 		}
 	}
 

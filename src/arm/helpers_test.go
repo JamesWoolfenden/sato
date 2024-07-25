@@ -2,9 +2,8 @@ package arm_test
 
 import (
 	"reflect"
-	"testing"
-
 	"sato/src/arm"
+	"testing"
 )
 
 func TestIsLocal(t *testing.T) {
@@ -40,6 +39,7 @@ func TestIsLocal(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := arm.IsLocal(tt.args.target, tt.args.result); got != tt.want {
 				t.Errorf("IsLocal() = %v, want %v", got, tt.want)
 			}
@@ -103,6 +103,7 @@ func Test_contains(t *testing.T) {
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Contains() got = %v, want %v", got, tt.want)
 			}
+
 			if got1 != tt.want1 {
 				t.Errorf("Contains() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -384,6 +385,7 @@ func Test_ditch(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := arm.Ditch(tt.args.Attribute, tt.args.name); got != tt.want {
 				t.Errorf("Ditch() = %v, want %v", got, tt.want)
 			}

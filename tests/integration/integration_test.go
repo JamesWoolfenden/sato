@@ -3,11 +3,10 @@ package integration_test
 import (
 	"os"
 	"path"
-	"strconv"
-	"testing"
-
 	sato "sato/src/cf"
 	"sato/tests/utils"
+	"strconv"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -16,8 +15,10 @@ func TestLocalModules(t *testing.T) {
 	t.Parallel()
 	t.Run("Test sato conversion", func(t *testing.T) {
 		t.Parallel()
+
 		localTagExampleRepo := "https://github.com/JamesWoolfenden/aws-cloudformation-templates"
 		repoPath := utils.CloneRepo(localTagExampleRepo, "6758465103b4431e9de4a93d30faff7912204847")
+
 		defer func() {
 			_ = os.RemoveAll(repoPath)
 		}()
@@ -36,6 +37,7 @@ func TestLocalModules(t *testing.T) {
 		assert.Equal(
 			t, expect, len(files),
 			"The number of files found "+strconv.Itoa(len(files))+" should match expectation "+strconv.Itoa(expect))
+
 		err = utils.TfInit(destination)
 		assert.Nil(t, err, "Failed to tf init output")
 	})

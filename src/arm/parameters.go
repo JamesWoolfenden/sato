@@ -8,10 +8,18 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type castError struct {
+	Type string
+}
+
+func (m *castError) Error() string {
+	return fmt.Sprintf("failed to cast to %s", m.Type)
+}
+
 func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, all string) (string, []interface{}, error) {
 	parameters, ok := result["parameters"].(map[string]interface{})
 	if !ok {
-		return "", nil, fmt.Errorf("failed to cast to map")
+		return "", nil, &castError{Type: "map[string]interface{}"}
 	}
 
 	myVariables := make([]interface{}, 0)
@@ -19,7 +27,11 @@ func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, 
 	var err error
 
 	for name, item := range parameters {
-		myItem := item.(map[string]interface{})
+		myItem, ok := item.(map[string]interface{})
+
+		if !ok {
+			return "", nil, &castError{Type: "map[string]interface{}"}
+		}
 
 		myItem, err = FixType(myItem)
 		if err != nil {

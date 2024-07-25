@@ -29,6 +29,7 @@ func TestParseResources(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if err := parseResources(tt.args.resources, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
 				t.Errorf("parseResources() error = %v, wantErr %v", err, tt.wantErr)
 			}
@@ -56,7 +57,9 @@ func TestLookup(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			got := lookup(tt.args.myType)
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Lookup() = %v, want %v", got, tt.want)
 			}

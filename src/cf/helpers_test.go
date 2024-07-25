@@ -27,6 +27,7 @@ func Test_replace(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Replace(tt.args.input, tt.args.from, tt.args.to); got != tt.want {
 				t.Errorf("Replace() = %v, want %v", got, tt.want)
 			}
@@ -65,9 +66,11 @@ func Test_add(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			got, got1 := sato.Add(tt.args.s, tt.args.a, tt.args.m)
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Add() got = %v, want %v", got, tt.want)
 			}
+
 			if !reflect.DeepEqual(got1, tt.want1) {
 				t.Errorf("Add() got1 = %v, want %v", got1, tt.want1)
 			}
@@ -154,6 +157,7 @@ func Test_boolean(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Boolean(tt.args.test); got != tt.want {
 				t.Errorf("Boolean() = %v, want %v", got, tt.want)
 			}
@@ -180,6 +184,7 @@ func Test_decode64(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Decode64(tt.args.str); got != tt.want {
 				t.Errorf("Decode64() = %v, want %v", got, tt.want)
 			}
@@ -218,6 +223,7 @@ func Test_sprint(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Sprint(tt.args.unknown); got != tt.want {
 				t.Errorf("Sprint() = %v, want %v", got, tt.want)
 			}
@@ -271,6 +277,7 @@ func Test_snake(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Snake(tt.args.Camel); got != tt.want {
 				t.Errorf("Snake() = %v, want %v", got, tt.want)
 			}
@@ -544,6 +551,7 @@ func TestSplitOn(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.SplitOn(tt.args.source, tt.args.separator, tt.args.index); got != tt.want {
 				t.Errorf("SplitOn() = %v, want %v", got, tt.want)
 			}

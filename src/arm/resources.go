@@ -3,11 +3,10 @@ package arm
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	tftemplate "text/template"
-
 	"sato/src/cf"
 	"sato/src/see"
+	"strings"
+	tftemplate "text/template"
 
 	"github.com/rs/zerolog/log"
 )
@@ -27,7 +26,9 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 		var output bytes.Buffer
 
 		var name *string
+
 		myType := resource.(map[string]interface{})
+
 		myContent := lookup(myType["type"].(string))
 
 		first, err := see.Lookup(myType["type"].(string), false)

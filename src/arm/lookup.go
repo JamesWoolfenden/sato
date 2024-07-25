@@ -48,6 +48,7 @@ func lookup(myType string) []byte {
 
 	var myContent []byte
 
+	//goland:noinspection GoLinter
 	var ok bool
 
 	myType = strings.ToLower(strings.TrimSuffix(myType, "/"))

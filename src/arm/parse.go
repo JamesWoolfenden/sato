@@ -7,17 +7,24 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sato/src/cf"
+	"sato/src/see"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
 	"unicode"
 
-	"sato/src/cf"
-	"sato/src/see"
-
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/maps"
 )
+
+type filepathError struct {
+	Path string
+}
+
+func (m *filepathError) Error() string {
+	return fmt.Sprintf("not implemented %s", m.Path)
+}
 
 type m map[string]interface{}
 
@@ -25,7 +32,7 @@ type m map[string]interface{}
 func Parse(file string, destination string) error {
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return fmt.Errorf("path failure %w", err)
+		return &filepathError{Path: file}
 	}
 
 	jsonFile, err := os.Open(fileAbs)
@@ -213,6 +220,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 				if strings.Contains(value, "Microsoft") {
 					var err error
 					value, err = resourceToName(value, result)
+
 					if err != nil {
 						log.Debug().Msgf("Concat failed: %v", err)
 					}
@@ -249,6 +257,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 
 			var err error
 			Attribute, err = ReplaceResourceID(Attribute, result)
+
 			if err != nil {
 				log.Warn().Msgf("failed to parse %s", newAttribute)
 			}
@@ -277,6 +286,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 			Attribute = LoseSQBrackets(newAttribute)
 			re := regexp.MustCompile(`listKeys\((.*)\)`) // format('{0}/{1}',
 			Match := re.FindStringSubmatch(Attribute)
+
 			if len(Match) > 1 {
 				resource := strings.Split(Match[1], ",")[0]
 				Attribute = strings.ReplaceAll(Attribute, Match[0], resource)
@@ -288,6 +298,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			re := regexp.MustCompile(`parameters\('(.*?)\'\)`)
 			Match := re.FindStringSubmatch(newAttribute)
+
 			if (Match) != nil {
 				var temp string
 				if IsLocal(Match[1], result) {
@@ -295,6 +306,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 				} else {
 					temp = "var." + Match[1]
 				}
+
 				Attribute = LoseSQBrackets(strings.ReplaceAll(newAttribute, Match[0], temp))
 			} else {
 				log.Printf("no match found %s", newAttribute)
@@ -304,6 +316,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 		{
 			re := regexp.MustCompile(`variables\('(.*?)\'\)`)
 			Match := re.FindStringSubmatch(newAttribute)
+
 			if (Match) != nil {
 				var myTemp string
 				if IsLocal(Match[1], result) {
@@ -327,6 +340,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 			Attribute = strings.ReplaceAll(newAttribute, "resourceGroup().location",
 				"data.azurerm_resource_group.sato.location")
 			data := make(map[string]interface{})
+
 			if result["data"] == nil {
 				data["resource_group"] = true
 			} else {
@@ -341,6 +355,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 
 				data["resource_group"] = true
 			}
+
 			result["data"] = data
 		}
 	case "uuid":
@@ -366,6 +381,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 			Attribute = strings.Replace(newAttribute, "subscription().tenantId",
 				"data.azurerm_client_config.sato.tenant_id", -1)
 			data := make(map[string]interface{})
+
 			if result["data"] == nil {
 				data["client_config"] = true
 			} else {
@@ -461,6 +477,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 				temp := "azurerm_container_registry"
 				resourceName = &temp
 				name, err = FindResourceName(result, name)
+
 				if err != nil {
 					log.Warn().Msgf("no match found %s", arm)
 				}
@@ -470,9 +487,11 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 				temp := "tolist(azurerm_virtual_network"
 				resourceName = &temp
 				splutters := strings.Split(name, ", ")
+
 				for item, splutter := range splutters {
 					splutters[item], _ = FindResourceName(result, splutter)
 				}
+
 				name = strings.Split(splutters[0], ".")[0] + ".subnet)[0].id"
 			}
 		case "microsoft.authorization/roledefinitions":
@@ -569,6 +588,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 					}
 				}
 				resourceName, err = see.Lookup(cf.Dequote(arm), false)
+
 				if err != nil {
 					resourceName = toUnknownPointer()
 					log.Warn().Msgf("no match found %s", arm)
@@ -641,6 +661,7 @@ func SplitResourceName(attribute string) (string, string, error) {
 		{
 			re := regexp.MustCompile(`'(.*?)'`)
 			newAttribute := re.FindStringSubmatch(splitsy[1])
+
 			if len(newAttribute) <= 1 {
 				arm = cf.Dequote(splitsy[0])
 				// check it's not an array
@@ -663,6 +684,7 @@ func SplitResourceName(attribute string) (string, string, error) {
 			// more than 2
 		}
 	}
+
 	return arm, name, nil
 }
 
@@ -689,6 +711,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 		test, ok := myResource.(map[string]interface{})
 		if !ok {
 			log.Print("resource is not a map")
+
 			continue
 		}
 
@@ -709,6 +732,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 			resourceName := strings.Split(name, ".")[1]
 			if strings.Contains(temp, resourceName) {
 				retrieved := test["resource"].(string)
+
 				return retrieved, nil
 			}
 		}

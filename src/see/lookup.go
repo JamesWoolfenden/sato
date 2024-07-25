@@ -5,10 +5,11 @@ import (
 	"strings"
 )
 
-// Lookup converts from cf/arm to terraform resource name.
+// Lookup converts from cloudformation/ARM to terraform resource name.
 func Lookup(resource string, reverse bool) (*string, error) {
 	var result string
 
+	//goland:noinspection GoLinter
 	Lookup := map[string]string{
 		"aws::EFS::filesystem":                                                "aws_efs_file_system",
 		"aws::EFS::mounttarget":                                               "aws_efs_mount_target",

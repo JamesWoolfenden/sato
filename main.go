@@ -4,14 +4,12 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
-	"sort"
-	"time"
-
-	"sato/src/version"
-
 	"sato/src/arm"
 	"sato/src/cf"
 	"sato/src/see"
+	"sato/src/version"
+	"sort"
+	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -40,7 +38,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := cf.Parse(file, destination)
 					if err != nil {
-						log.Error().Err(err)
+						log.Info().Msgf(err.Error())
 					}
 
 					return nil
@@ -80,7 +78,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := arm.Parse(file, destination)
 					if err != nil {
-						return fmt.Errorf("bisect failure: %w", err)
+						log.Info().Msgf(err.Error())
 					}
 
 					return nil
@@ -113,6 +111,7 @@ func main() {
 					}
 
 					fmt.Print(*result)
+
 					fmt.Print("\n")
 
 					return err
