@@ -58,7 +58,7 @@ func Dequote(target string) string {
 
 // Quote is a template function.
 func Quote(target string) string {
-	// is it a resource or variable
+	// Check if it's a resource or variable
 	if (strings.Contains(target, "var.") || strings.Contains(target, "local.") ||
 		(strings.Contains(target, "_") && strings.Contains(target, "."))) && (!strings.Contains(target, "${")) {
 		return target
@@ -262,6 +262,7 @@ func Map(myMap map[string]string) string {
 	return result
 }
 
+//goland:noinspection GoUnnecessarilyExportedIdentifiers
 func Marshal(v interface{}) string {
 	a, err := json.Marshal(v)
 	if err != nil {

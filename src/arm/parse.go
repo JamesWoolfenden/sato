@@ -26,6 +26,21 @@ func (m *filepathError) Error() string {
 	return fmt.Sprintf("not implemented %s", m.Path)
 }
 
+type parseListError struct {
+}
+
+func (m *parseListError) Error() string {
+	return "parseListError"
+}
+
+type parseMapError struct {
+	Err error
+}
+
+func (m *parseMapError) Error() string {
+	return fmt.Sprintf("parseMapError %s", m.Err)
+}
+
 type m map[string]interface{}
 
 // Parse turn CFN into Terraform.
@@ -125,12 +140,12 @@ func ParseList(resources []interface{}, result map[string]interface{}) ([]interf
 		if ok {
 			myResource, err := ParseMap(myResource, result)
 			if err != nil {
-				return nil, fmt.Errorf("parse list map %w", err)
+				return nil, &parseMapError{err}
 			}
 
 			newResources = append(newResources, myResource)
 		} else {
-			return nil, fmt.Errorf("parse list assertion")
+			return nil, &parseListError{}
 		}
 	}
 
@@ -210,6 +225,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 			ditched := Ditch(Attribute, "concat")
 
 			raw := strings.Split(ditched, ",")
+
 			var after string
 
 			for item, value := range raw {
@@ -388,6 +404,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 				data = result["data"].(map[string]interface{})
 				data["client_config"] = true
 			}
+
 			result["data"] = data
 		}
 	case "resourceGroup().id":
@@ -548,6 +565,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".frontend_ip_configuration.id", nil
 			}
 		case "microsoft.network/applicationgateways/backendhttpsettingscollection":
@@ -587,6 +605,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 						log.Warn().Msgf("no match found %s", arm)
 					}
 				}
+
 				resourceName, err = see.Lookup(cf.Dequote(arm), false)
 
 				if err != nil {
@@ -672,6 +691,7 @@ func SplitResourceName(attribute string) (string, string, error) {
 			} else {
 				name = newAttribute[1]
 				newArm := re.FindStringSubmatch(splitsy[0])
+
 				if len(newArm) > 1 {
 					arm = newArm[1]
 				} else {
@@ -695,6 +715,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 	}
 
 	name = cf.Dequote(name)
+
 	var err error
 
 	if result["resources"] == nil {
@@ -746,9 +767,10 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 		}
 	}
 
-	// not simple name lookup
+	// not a simple name lookup
 	if strings.Contains(name, ",") {
 		Lots := strings.Split(name, ",")
+
 		var newName []string
 
 		for _, lot := range Lots {

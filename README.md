@@ -10,7 +10,7 @@
 [![Github All Releases](https://img.shields.io/github/downloads/jameswoolfenden/sato/total.svg)](https://github.com/JamesWoolfenden/sato/releases)
 [![codecov](https://codecov.io/gh/JamesWoolfenden/sato/graph/badge.svg?token=AT1DREJQPR)](https://codecov.io/gh/JamesWoolfenden/sato)
 
-Converts CloudFormation (and now also ARM) into Terraform. In Go, quickerly.
+Converts CloudFormation (and now also ARM) into Terraform. In Go, but quickerly.
 
 ## Install
 
@@ -111,7 +111,8 @@ aws_instance%
 
 What? You've got these legacy ARM templates, and you'd dearly love to drop them, but you really don't fancy Bicep
 and the rework.
-I got you covered. Sato now bisects ARM into Terraform - Take one of the Azure quickstart examples from here <https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.compute/vm-simple-windows>:
+I got you covered. Sato now bisects ARM into Terraform - Take one of the Azure quickstart examples from here
+<https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.compute/vm-simple-windows>:
 
 Clone it:
 
@@ -137,7 +138,7 @@ $ sato bisect -f /Users/jwoolfenden/code/azure-quickstart-templates/quickstarts/
 ```
 
 I make an opinionated translation, in Terraform there are no parameters, resources and dependencies are very different,
-there's no 1 for 1 - ARM to Terraform, so the aim is to get you close to 100%.
+there's no one for one - ARM to Terraform, so the aim is to get you close to 100%.
 
 There needs to be a lot of work supporting resources and built-in functions/template as yet.
 If you want to use this, let me know so, then I'll know to do so, or even better send me a PR.
@@ -231,7 +232,7 @@ If you use my other tool, Pike you can now apply that and get the policy require
 
 ## Valid CloudFormation
 
-Ditch it all, Ok, ok but some older samples can play fast and lose with the CloudFormation schema and data types.
+Ditch it all, OK, OK but some older samples can play fast and lose with the CloudFormation schema and data types.
 The Go-formation parser is less accommodating, you may need to be stricter on your typing.
 
 - Booleans are true or false and not "false"

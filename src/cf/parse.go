@@ -21,7 +21,7 @@ const (
 	typeString     = "string"
 )
 
-// M is a wrapper object to help pass in multiple object to template.
+// M is a wrapper object to help pass in multiple objects to template.
 type M map[string]interface{}
 
 // Variable describes a terraform variable.

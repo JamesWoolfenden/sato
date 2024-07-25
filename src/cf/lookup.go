@@ -175,7 +175,7 @@ func lookup(myType string) []byte {
 			log.Warn().Msg("failed to cast to []byte")
 		}
 	} else {
-		// we don't want to half the parsing so just log it.
+		// we don't want to half the parsing so log it.
 		log.Warn().Msgf("%s not found", myType)
 	}
 
