@@ -16,7 +16,9 @@ func (m *castError) Error() string {
 	return fmt.Sprintf("failed to cast to %s", m.Type)
 }
 
-func parseParameters(result map[string]interface{}, funcMap tftemplate.FuncMap, all string) (string, []interface{}, error) {
+func parseParameters(
+	result map[string]interface{},
+	funcMap tftemplate.FuncMap, all string) (string, []interface{}, error) {
 	parameters, ok := result["parameters"].(map[string]interface{})
 	if !ok {
 		return "", nil, &castError{Type: "map[string]interface{}"}

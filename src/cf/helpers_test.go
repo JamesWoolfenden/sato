@@ -65,6 +65,7 @@ func Test_add(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			got, got1 := sato.Add(tt.args.s, tt.args.a, tt.args.m)
 
 			if !reflect.DeepEqual(got, tt.want) {
@@ -99,6 +100,7 @@ func Test_split(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Split(tt.args.source, tt.args.separator); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Split() = %v, want %v", got, tt.want)
 			}
@@ -125,6 +127,7 @@ func Test_dequote(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Dequote(tt.args.target); got != tt.want {
 				t.Errorf("Dequote() = %v, want %v", got, tt.want)
 			}
@@ -306,6 +309,7 @@ func Test_kebab(t *testing.T) {
 
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Kebab(tt.args.Camel); got != tt.want {
 				t.Errorf("Kebab() = %v, want %v", got, tt.want)
 			}
@@ -333,6 +337,7 @@ func Test_lower(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Lower(tt.args.target); got != tt.want {
 				t.Errorf("Lower() = %v, want %v", got, tt.want)
 			}
@@ -361,6 +366,7 @@ func Test_nill(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Nill(tt.args.str); got != tt.want {
 				t.Errorf("Nill() = %v, want %v", got, tt.want)
 			}
@@ -426,6 +432,7 @@ func Test_array(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Array(tt.args.mySlice); got != tt.want {
 				t.Errorf("Array() = %v, want %v", got, tt.want)
 			}
@@ -463,6 +470,7 @@ func Test_arrayReplace(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.ArrayReplace(tt.args.mySlice, tt.args.target, tt.args.replacement); got != tt.want {
 				t.Errorf("ArrayReplace() = %v, want %v", got, tt.want)
 			}
@@ -491,6 +499,7 @@ func Test_contains(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Contains(tt.args.target, tt.args.substring); got != tt.want {
 				t.Errorf("Contains() = %v, want %v", got, tt.want)
 			}
@@ -521,6 +530,7 @@ func Test_zipfile(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Zipfile(tt.args.code, tt.args.filename, tt.args.runtime); got != tt.want {
 				t.Errorf("Zipfile() = %v, want %v", got, tt.want)
 			}
@@ -608,6 +618,7 @@ func TestMap(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			if got := sato.Map(tt.args.myMap); got != tt.want && got != reverse {
 				t.Errorf("Map() = %v, want %v", got, tt.want)
 			}

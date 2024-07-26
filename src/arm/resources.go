@@ -13,7 +13,11 @@ import (
 
 // ParseResources handles resources in ARM conversion
 func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
-	resources := result["resources"].([]interface{})
+	resources, ok := result["resources"].([]interface{})
+
+	if !ok {
+		return result, &castError{"[]interface{}"}
+	}
 
 	newResources, err := ParseList(resources, result)
 	if err != nil {
@@ -27,7 +31,11 @@ func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, d
 
 		var name *string
 
-		myType := resource.(map[string]interface{})
+		myType, ok := resource.(map[string]interface{})
+
+		if !ok {
+			log.Warn().Msg("resource is not map[string]interface{}")
+		}
 
 		myContent := lookup(myType["type"].(string))
 

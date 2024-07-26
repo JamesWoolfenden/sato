@@ -147,7 +147,7 @@ If you want to use this, let me know so, then I'll know to do so, or even better
 
 If you use my other tool, Pike you can now apply that and get the policy requirements:
 
->pike scan -d .sato -o json
+> pike scan -d .sato -o json
 
 ```json
 {

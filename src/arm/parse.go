@@ -18,6 +18,14 @@ import (
 	"golang.org/x/exp/maps"
 )
 
+type splitResourceError struct {
+	match string
+}
+
+func (e splitResourceError) Error() string {
+	return fmt.Sprintf("failed to split resource %s", e.match)
+}
+
 type filepathError struct {
 	Path string
 }
@@ -380,7 +388,12 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 			if result["data"] == nil {
 				data["uuid"] = 0
 			} else {
-				data = result["data"].(map[string]interface{})
+				data, ok := result["data"].(map[string]interface{})
+
+				if !ok {
+					log.Printf("assertion failure %s", result["data"])
+				}
+
 				if data["uuid"] != nil {
 					data["uuid"] = data["uuid"].(int) + 1
 				} else {
@@ -401,7 +414,10 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 			if result["data"] == nil {
 				data["client_config"] = true
 			} else {
-				data = result["data"].(map[string]interface{})
+				data, ok := result["data"].(map[string]interface{})
+				if !ok {
+					log.Printf("assertion failure %s", result["data"])
+				}
 				data["client_config"] = true
 			}
 
@@ -575,6 +591,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 				if err != nil {
 					return "", err
 				}
+
 				return *resourceName + "." + name + ".backend_http_settings", nil
 			}
 		case "microsoft.network/applicationgateways/authenticationcertificates":
@@ -610,6 +627,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 
 				if err != nil {
 					resourceName = toUnknownPointer()
+
 					log.Warn().Msgf("no match found %s", arm)
 				}
 			}
@@ -651,7 +669,7 @@ func resourceToName(match string, result map[string]interface{}) (string, error)
 		}
 	}
 
-	return "", fmt.Errorf("failed to split resource %s", match)
+	return "", &splitResourceError{match}
 }
 
 func toUnknownPointer() *string {
@@ -760,6 +778,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 
 		re := regexp.MustCompile(`\((.*?)\)`)
 		splits := re.FindStringSubmatch(temp)
+
 		if len(splits) > 1 {
 			if trimName == strings.ReplaceAll(splits[1], "'", "") {
 				return test["resource"].(string), nil

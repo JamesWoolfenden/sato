@@ -349,11 +349,14 @@ func Test_ditch(t *testing.T) {
 			want: "'bastionPublicIpAddressName'",
 		},
 		{
-			name: "variables not", args: args{"parameters('vmName')", "variables"}, want: "parameters('vmName')",
+			name: "variables not",
+			args: args{"parameters('vmName')", "variables"},
+			want: "parameters('vmName')",
 		},
 		{
 			name: "mixed",
-			args: args{Attribute: "concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))", name: "variables"},
+			args: args{Attribute: "concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
+				name: "variables"},
 			want: "concat(parameters('vmName'),'/', 'omsAgentForLinuxName')",
 		},
 		{

@@ -5,6 +5,14 @@ import (
 	"strings"
 )
 
+type missingResourceError struct {
+	Resource string
+}
+
+func (e *missingResourceError) Error() string {
+	return fmt.Sprintf("resource %s not found", e.Resource)
+}
+
 // Lookup converts from cloudformation/ARM to terraform resource name.
 func Lookup(resource string, reverse bool) (*string, error) {
 	var result string
@@ -183,9 +191,9 @@ func Lookup(resource string, reverse bool) (*string, error) {
 	var err error
 
 	if result == "" {
-		err = fmt.Errorf("resource %s not found", resource)
-
-		return nil, err
+		return nil, &missingResourceError{
+			Resource: resource,
+		}
 	}
 
 	return &result, err
