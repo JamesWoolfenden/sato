@@ -15,7 +15,7 @@ func TestLookup(t *testing.T) {
 
 	result := "aws_appautoscaling_target"
 	myServiceBus := "azurerm_servicebus_namespace"
-	reverse := "aws::EFS::filesystem"
+	reverse := "aws::efs::filesystem"
 
 	tests := []struct {
 		name    string
