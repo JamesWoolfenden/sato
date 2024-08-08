@@ -2,8 +2,9 @@ package cf_test
 
 import (
 	"reflect"
-	sato "sato/src/cf"
 	"testing"
+
+	sato "sato/src/cf"
 )
 
 func Test_replace(t *testing.T) {
@@ -516,7 +517,7 @@ func Test_zipfile(t *testing.T) {
 		runtime  string
 	}
 
-	var mycode = `package main`
+	mycode := `package main`
 
 	tests := []struct {
 		name string

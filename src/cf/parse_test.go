@@ -2,9 +2,10 @@ package cf_test
 
 import (
 	"reflect"
-	sato "sato/src/cf"
 	"testing"
 	tftemplate "text/template"
+
+	sato "sato/src/cf"
 
 	"github.com/awslabs/goformation/v7/cloudformation"
 )

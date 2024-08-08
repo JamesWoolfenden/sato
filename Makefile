@@ -78,3 +78,7 @@ gci:
 
 fmt:
 	gofumpt -l -w .
+
+.PHONY: schema
+schema:
+	wget -qO- https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip  |tar xvz -C ./schema
