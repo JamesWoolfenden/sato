@@ -33,12 +33,15 @@ func TestLookup(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
 			got, err := Lookup(tt.args.resource, tt.args.reverse)
+
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Lookup() error = %v, wantErr %v", err, tt.wantErr)
 
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("Lookup() got = %v, want %v", got, tt.want)
 			}
