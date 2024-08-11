@@ -12,7 +12,28 @@
 
 Converts CloudFormation (and now also ARM) into Terraform. In Go, but quickerly.
 
+## Table of Contents
+
+<!--toc:start-->
+- [Sato](#sato)
+  - [Table of Contents](#table-of-contents)
+  - [Install](#install)
+    - [Compile](#compile)
+    - [MacOS](#macos)
+    - [Windows](#windows)
+    - [Docker](#docker)
+  - [Usage](#usage)
+    - [Bisect](#bisect)
+    - [Parse](#parse)
+    - [See](#see)
+    - [Version](#version)
+  - [Help](#help)
+
+<!--toc:end-->
+
 ## Install
+
+### Compile
 
 Download the latest releases <https://github.com/JamesWoolfenden/sato/releases/tag/v0.1.19> or:
 
@@ -24,7 +45,14 @@ cd sato
 go install
 ```
 
-## Windows
+### MacOS
+
+```shell
+brew tap jameswoolfenden/homebrew-tap
+brew install jameswoolfenden/tap/pike
+```
+
+### Windows
 
 I'm now using Scoop to distribute releases, it's much quicker to update and easier to manage than previous methods,
 you can install scoop from <https://scoop.sh/>.
@@ -41,7 +69,18 @@ Then you can install a tool:
 scoop install sato
 ```
 
+### Docker
+
+```shell
+docker pull jameswoolfenden/sato
+docker run --tty --volume /local/path/to/tf:/tf jameswoolfenden/sato scan -d /tf
+```
+
+<https://hub.docker.com/repository/docker/jameswoolfenden/sato>
+
 ## Usage
+
+### Parse
 
 Get yourself some valid CloudFormation*
 
@@ -91,7 +130,9 @@ Plan: 12 to add, 0 to change, 0 to destroy.
 ...
 ```
 
-### See - <small>finds the terraform resource</small>
+### See
+
+Shows the Terraform resource equivalent to a CloudFormation resource. Or vice-versa.
 
 This tells you the equivalent resource required, given a CF ..... or an ARM resource;
 
@@ -107,7 +148,9 @@ $sato see -r AWS::EC2::Instance
 aws_instance%
 ```
 
-### Bisect - <small>ARM to terraform</small>
+### Bisect
+
+ARM to Terraform conversion.
 
 What? You've got these legacy ARM templates, and you'd dearly love to drop them, but you really don't fancy Bicep
 and the rework.
@@ -142,6 +185,41 @@ there's no one for one - ARM to Terraform, so the aim is to get you close to 100
 
 There needs to be a lot of work supporting resources and built-in functions/template as yet.
 If you want to use this, let me know so, then I'll know to do so, or even better send me a PR.
+
+### Version
+
+```bash
+$sato version
+9.9.9
+```
+
+### Help
+
+```bash
+$ sato
+NAME:
+sato - Translate Cloudformation to Terraform
+
+USAGE:
+sato [global options] command [command options] [arguments...]
+
+VERSION:
+9.9.9
+
+AUTHOR:
+James Woolfenden <jim.wolf@duck.com>
+
+COMMANDS:
+bisect      translate ARM to Terraform
+parse       translate CFN to Terraform
+see         shows equivalent Terraform resource
+version, v  Outputs the application version
+help, h     Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+--help, -h     show help
+--version, -v  print the version
+```
 
 ## Extra credit - <small>Pike</small>
 

@@ -1,4 +1,4 @@
-#lookup
+# lookup
 
 from <https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/resource-type-schemas.html>
 
