@@ -143,6 +143,7 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 					}
 				}
 			}
+
 			myItem["default"] = "{\n\t" + result + "}"
 
 			myItem["type"] = "object({\n\t" + types + "})"

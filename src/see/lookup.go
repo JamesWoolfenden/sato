@@ -320,10 +320,10 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::datasync::agent":                                             "aws_datasync_agent",
 		"aws::datasync::locationazureblob":                                 "aws_datasync_location_azure_blob",
 		"aws::datasync::locationefs":                                       "aws_datasync_location_efs",
-		"aws::datasync::locationfsxlustre":                                 "aws_datasync_location_fsx_lustre_file_system",
-		"aws::datasync::locationfsxontap":                                  "aws_datasync_location_fsx_ontap_file_system",
-		"aws::datasync::locationfsxopenzfs":                                "aws_datasync_location_fsx_openzfs_file_system",
-		"aws::datasync::locationfsxwindows":                                "aws_datasync_location_fsx_windows_file_system",
+		"aws::datasync::locationfsxlustre":                                 "aws_datasync_location_fsx_lustre_file_system",  //nolint:lll
+		"aws::datasync::locationfsxontap":                                  "aws_datasync_location_fsx_ontap_file_system",   //nolint:lll
+		"aws::datasync::locationfsxopenzfs":                                "aws_datasync_location_fsx_openzfs_file_system", //nolint:lll
+		"aws::datasync::locationfsxwindows":                                "aws_datasync_location_fsx_windows_file_system", //nolint:lll
 		"aws::datasync::locationhdfs":                                      "aws_datasync_location_hdfs",
 		"aws::datasync::locationnfs":                                       "aws_datasync_location_nfs",
 		"aws::datasync::locationobjectstorage":                             "aws_datasync_location_object_storage",
@@ -334,7 +334,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::datazone::datasource":                                        "",
 		"aws::datazone::domain":                                            "aws_datazone_domain",
 		"aws::datazone::environment":                                       "",
-		"aws::datazone::environmentblueprintconfiguration":                 "aws_datazone_environment_blueprint_configuration",
+		"aws::datazone::environmentblueprintconfiguration":                 "aws_datazone_environment_blueprint_configuration", //nolint:lll
 		"aws::datazone::environmentprofile":                                "",
 		"aws::datazone::groupprofile":                                      "",
 		"aws::datazone::project":                                           "aws_datazone_project",
@@ -445,7 +445,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::ec2::transitgatewayattachment":                               "aws_ec2_transit_gateway",
 		"aws::ec2::transitgatewayconnect":                                  "aws_ec2_transit_gateway_connect",
 		"aws::ec2::transitgatewaymulticastdomain":                          "aws_ec2_transit_gateway_multicast_domain",
-		"aws::ec2::transitgatewaymulticastdomainassociation":               "aws_ec2_transit_gateway_multicast_domain_association",
+		"aws::ec2::transitgatewaymulticastdomainassociation":               "aws_ec2_transit_gateway_multicast_domain_association", //nolint:lll
 		"aws::ec2::transitgatewaymulticastgroupmember":                     "aws_ec2_transit_gateway_multicast_group_member",
 		"aws::ec2::transitgatewaymulticastgroupsource":                     "aws_ec2_transit_gateway_multicast_group_source",
 		"aws::ec2::transitgatewaypeeringattachment":                        "aws_ec2_transit_gateway_peering_attachment",
@@ -895,7 +895,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::networkfirewall::firewallpolicy":                             "aws_networkfirewall_firewall_policy",
 		"aws::networkfirewall::loggingconfiguration":                       "aws_networkfirewall_logging_configuration",
 		"aws::networkfirewall::rulegroup":                                  "aws_networkfirewall_rule_group",
-		"aws::networkfirewall::tlsinspectionconfiguration":                 "aws_networkfirewall_tls_inspection_configuration",
+		"aws::networkfirewall::tlsinspectionconfiguration":                 "aws_networkfirewall_tls_inspection_configuration", //nolint:lll
 		"aws::networkmanager::connectattachment":                           "aws_networkmanager_connect_attachment",
 		"aws::networkmanager::connectpeer":                                 "aws_networkmanager_connect_peer",
 		"aws::networkmanager::corenetwork":                                 "aws_networkmanager_core_network",
@@ -908,7 +908,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::networkmanager::sitetositevpnattachment":                     "aws_networkmanager_site_to_site_vpn_attachment",
 		"aws::networkmanager::transitgatewaypeering":                       "aws_networkmanager_transit_gateway_peering",
 		"aws::networkmanager::transitgatewayregistration":                  "aws_networkmanager_transit_gateway_registration",
-		"aws::networkmanager::transitgatewayroutetableattachment":          "aws_networkmanager_transit_gateway_route_table_attachment",
+		"aws::networkmanager::transitgatewayroutetableattachment":          "aws_networkmanager_transit_gateway_route_table_attachment", //nolint:lll
 		"aws::networkmanager::vpcattachment":                               "aws_networkmanager_vpc_attachment",
 		"aws::nimblestudio::launchprofile":                                 "",
 		"aws::nimblestudio::streamingimage":                                "",
@@ -1063,7 +1063,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::route53profiles::profileresourceassociation":                 "",
 		"aws::route53recoverycontrol::cluster":                             "aws_route53recoverycontrolconfig_cluster",
 		"aws::route53recoverycontrol::controlpanel":                        "aws_route53recoverycontrolconfig_control_panel",
-		"aws::route53recoverycontrol::routingcontrol":                      "aws_route53recoverycontrolconfig_routing_control",
+		"aws::route53recoverycontrol::routingcontrol":                      "aws_route53recoverycontrolconfig_routing_control", //nolint:lll
 		"aws::route53recoverycontrol::safetyrule":                          "aws_route53recoverycontrolconfig_safety_rule",
 		"aws::route53recoveryreadiness::cell":                              "aws_route53recoveryreadiness_cell",
 		"aws::route53recoveryreadiness::readinesscheck":                    "aws_route53recoveryreadiness_readiness_check",
@@ -1260,7 +1260,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"aws::vpclattice::rule":                                            "aws_vpclattice_listener_rule",
 		"aws::vpclattice::service":                                         "aws_vpclattice_service",
 		"aws::vpclattice::servicenetwork":                                  "aws_vpclattice_service_network",
-		"aws::vpclattice::servicenetworkserviceassociation":                "aws_vpclattice_service_network_service_association",
+		"aws::vpclattice::servicenetworkserviceassociation":                "aws_vpclattice_service_network_service_association", //nolint:lll
 		"aws::vpclattice::servicenetworkvpcassociation":                    "aws_vpclattice_service_network_vpc_association",
 		"aws::vpclattice::targetgroup":                                     "aws_vpclattice_target_group",
 		"aws::waf::bytematchset":                                           "aws_waf_byte_match_set",
@@ -1327,7 +1327,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"microsoft.managedidentity/userassignedidentities":                    "azurerm_user_assigned_identity",
 		"microsoft.network/applicationgateways":                               "azurerm_application_gateway",
 		"microsoft.network/applicationgateways/authenticationcertificates":    "azurerm_application_gateway",
-		"microsoft.network/applicationgateways/backendaddresspools":           "azurerm_network_interface_application_gateway_backend_address_pool_association",
+		"microsoft.network/applicationgateways/backendaddresspools":           "azurerm_network_interface_application_gateway_backend_address_pool_association", //nolint:lll
 		"microsoft.network/applicationgateways/backendhttpsettingscollection": "azurerm_application_gateway",
 		"microsoft.network/applicationgateways/frontendipconfigurations":      "azurerm_application_gateway",
 		"microsoft.network/applicationgateways/frontendports":                 "azurerm_application_gateway",
@@ -1348,7 +1348,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 		"microsoft.operationsmanagement/solutions":                            "azurerm_log_analytics_solution",
 		"microsoft.resources/deployments":                                     "azurerm_template_deployment",
 		"microsoft.servicebus/namespaces":                                     "azurerm_servicebus_namespace",
-		"microsoft.servicebus/namespaces/authorizationRules":                  "azurerm_servicebus_namespace_authorization_rule",
+		"microsoft.servicebus/namespaces/authorizationRules":                  "azurerm_servicebus_namespace_authorization_rule", //nolint:lll
 		"microsoft.servicebus/namespaces/queues":                              "azurerm_servicebus_queue",
 		"microsoft.storage/storageaccounts":                                   "azurerm_storage_account",
 	}
