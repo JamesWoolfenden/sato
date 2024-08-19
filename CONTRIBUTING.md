@@ -7,7 +7,7 @@ James
 
 ## adding resource support
 
-This is my set-up there are others but this one is mine.
+This is my set-up there are others, but this one is mine.
 
 Set-up IDE/Goland to debug target cfn, this config might help:
 

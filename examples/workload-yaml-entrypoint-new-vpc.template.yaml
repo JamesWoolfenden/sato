@@ -15,39 +15,39 @@ Metadata:
         - W9901 # Not passing all the default parameters to reduce verbosity
   AWS::CloudFormation::Interface:
     ParameterGroups:
-    - Label:
-        default: Network configuration
-      Parameters:
-      - AvailabilityZones
-      - VPCCIDR
-      - PrivateSubnet1CIDR
-      - PrivateSubnet2CIDR
-      - PublicSubnet1CIDR
-      - PublicSubnet2CIDR
-      - RemoteAccessCIDR
-    - Label:
-        default: Amazon EC2 configuration
-      Parameters:
-      - KeyPairName
-      - BastionAMIOS
-      - BastionInstanceType
-      - WorkloadInstanceType
-    - Label:
-        default: Workload nodes configuration
-      Parameters:
-      - WorkloadNodesMinSize
-      - WorkloadNodesMaxSize
-      - OperatorEmail
-    - Label:
-        default: Workload storage configuration
-      Parameters:
-      - S3BucketName
-    - Label:
-        default: AWS Quick Start configuration
-      Parameters:
-      - QSS3BucketName
-      - QSS3BucketRegion
-      - QSS3KeyPrefix
+      - Label:
+          default: Network configuration
+        Parameters:
+          - AvailabilityZones
+          - VPCCIDR
+          - PrivateSubnet1CIDR
+          - PrivateSubnet2CIDR
+          - PublicSubnet1CIDR
+          - PublicSubnet2CIDR
+          - RemoteAccessCIDR
+      - Label:
+          default: Amazon EC2 configuration
+        Parameters:
+          - KeyPairName
+          - BastionAMIOS
+          - BastionInstanceType
+          - WorkloadInstanceType
+      - Label:
+          default: Workload nodes configuration
+        Parameters:
+          - WorkloadNodesMinSize
+          - WorkloadNodesMaxSize
+          - OperatorEmail
+      - Label:
+          default: Workload storage configuration
+        Parameters:
+          - S3BucketName
+      - Label:
+          default: AWS Quick Start configuration
+        Parameters:
+          - QSS3BucketName
+          - QSS3BucketRegion
+          - QSS3KeyPrefix
     ParameterLabels:
       AvailabilityZones:
         default: Availability Zones
@@ -102,18 +102,18 @@ Parameters:
     Type: String
   BastionInstanceType:
     AllowedValues:
-    - t2.nano
-    - t2.micro
-    - t2.small
-    - t2.medium
-    - t2.large
-    - m3.large
-    - m3.xlarge
-    - m3.2xlarge
-    - m4.large
-    - m4.xlarge
-    - m4.2xlarge
-    - m4.4xlarge
+      - t2.nano
+      - t2.micro
+      - t2.small
+      - t2.medium
+      - t2.large
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
     Default: t2.micro
     Description: Amazon EC2 instance type for the bastion instances.
     Type: String
@@ -196,28 +196,28 @@ Parameters:
     Type: String
   WorkloadInstanceType:
     AllowedValues:
-    - t2.large
-    - m4.large
-    - m4.xlarge
-    - m4.2xlarge
-    - m4.4xlarge
-    - m4.10xlarge
-    - m3.medium
-    - m3.large
-    - m3.xlarge
-    - m3.2xlarge
-    - c4.large
-    - c4.xlarge
-    - c4.2xlarge
-    - c4.4xlarge
-    - c4.8xlarge
-    - c3.large
-    - c3.xlarge
-    - c3.2xlarge
-    - c3.4xlarge
-    - c3.8xlarge
-    - r3.large
-    - r3.xlarge
+      - t2.large
+      - m4.large
+      - m4.xlarge
+      - m4.2xlarge
+      - m4.4xlarge
+      - m4.10xlarge
+      - m3.medium
+      - m3.large
+      - m3.xlarge
+      - m3.2xlarge
+      - c4.large
+      - c4.xlarge
+      - c4.2xlarge
+      - c4.4xlarge
+      - c4.8xlarge
+      - c3.large
+      - c3.xlarge
+      - c3.2xlarge
+      - c3.4xlarge
+      - c3.8xlarge
+      - r3.large
+      - r3.xlarge
     ConstraintDescription: Must contain valid instance type
     Default: m4.xlarge
     Description: EC2 instance type for the workload instances.
@@ -235,21 +235,21 @@ Parameters:
     Description: Minimum size of the Auto Scaling group.
     Type: String
 Conditions:
-  UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  UsingDefaultBucket: !Equals [ !Ref QSS3BucketName, 'aws-quickstart' ]
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml'
-          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-aws-vpc/templates/aws-vpc.template.yaml'
+        - S3Region: !If [ UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion ]
+          S3Bucket: !If [ UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName ]
       Parameters:
         AvailabilityZones:
           Fn::Join:
-          - ','
-          - Ref: AvailabilityZones
+            - ','
+            - Ref: AvailabilityZones
         NumberOfAZs: '2'
         PrivateSubnet1ACIDR:
           Ref: PrivateSubnet1CIDR
@@ -266,9 +266,9 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template'
-          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-linux-bastion/templates/linux-bastion.template'
+        - S3Region: !If [ UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion ]
+          S3Bucket: !If [ UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName ]
       Parameters:
         QSS3BucketName:
           Ref: QSS3BucketName
@@ -283,26 +283,26 @@ Resources:
           Ref: KeyPairName
         PublicSubnet1ID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.PublicSubnet1ID
+            - VPCStack
+            - Outputs.PublicSubnet1ID
         PublicSubnet2ID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.PublicSubnet2ID
+            - VPCStack
+            - Outputs.PublicSubnet2ID
         RemoteAccessCIDR:
           Ref: RemoteAccessCIDR
         VPCID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.VPCID
+            - VPCStack
+            - Outputs.VPCID
   WorkloadStack:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/workload-yaml.template.yaml'
-          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+        - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}templates/workload-yaml.template.yaml'
+        - S3Region: !If [ UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion ]
+          S3Bucket: !If [ UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName ]
       Parameters:
         WorkloadInstanceType:
           Ref: WorkloadInstanceType
@@ -314,28 +314,28 @@ Resources:
           Ref: WorkloadNodesMinSize
         BastionSecurityGroupID:
           Fn::GetAtt:
-          - BastionStack
-          - Outputs.BastionSecurityGroupID
+            - BastionStack
+            - Outputs.BastionSecurityGroupID
         KeyPairName:
           Ref: KeyPairName
         OperatorEmail:
           Ref: OperatorEmail
         PrivateSubnet1ID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.PrivateSubnet1AID
+            - VPCStack
+            - Outputs.PrivateSubnet1AID
         PrivateSubnet2ID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.PrivateSubnet2AID
+            - VPCStack
+            - Outputs.PrivateSubnet2AID
         PublicSubnet1ID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.PublicSubnet1ID
+            - VPCStack
+            - Outputs.PublicSubnet1ID
         PublicSubnet2ID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.PublicSubnet2ID
+            - VPCStack
+            - Outputs.PublicSubnet2ID
         QSS3BucketName:
           Ref: QSS3BucketName
         QSS3KeyPrefix:
@@ -344,5 +344,5 @@ Resources:
           Ref: S3BucketName
         VPCID:
           Fn::GetAtt:
-          - VPCStack
-          - Outputs.VPCID
+            - VPCStack
+            - Outputs.VPCID

@@ -3,10 +3,11 @@ package arm
 import (
 	"bytes"
 	"fmt"
-	"sato/src/cf"
-	"sato/src/see"
 	"strings"
 	tftemplate "text/template"
+
+	"sato/src/cf"
+	"sato/src/see"
 
 	"github.com/rs/zerolog/log"
 )

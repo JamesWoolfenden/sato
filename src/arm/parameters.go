@@ -18,7 +18,8 @@ func (m *castError) Error() string {
 
 func parseParameters(
 	result map[string]interface{},
-	funcMap tftemplate.FuncMap, all string) (string, []interface{}, error) {
+	funcMap tftemplate.FuncMap, all string,
+) (string, []interface{}, error) {
 	parameters, ok := result["parameters"].(map[string]interface{})
 	if !ok {
 		return "", nil, &castError{Type: "map[string]interface{}"}

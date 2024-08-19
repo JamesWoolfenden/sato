@@ -7,12 +7,13 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sato/src/cf"
-	"sato/src/see"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
 	"unicode"
+
+	"sato/src/cf"
+	"sato/src/see"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/maps"
@@ -34,8 +35,7 @@ func (m *filepathError) Error() string {
 	return fmt.Sprintf("not implemented %s", m.Path)
 }
 
-type parseListError struct {
-}
+type parseListError struct{}
 
 func (m *parseListError) Error() string {
 	return "parseListError"
@@ -262,6 +262,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 						raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
 					}
 				}
+
 				raw[item] = strings.ReplaceAll(strings.TrimSpace(raw[item]), "'", "")
 			}
 
@@ -418,6 +419,7 @@ func Replace(matches []string, newAttribute string, what *string, result map[str
 				if !ok {
 					log.Printf("assertion failure %s", result["data"])
 				}
+
 				data["client_config"] = true
 			}
 
@@ -692,7 +694,7 @@ func SplitResourceName(attribute string) (string, string, error) {
 	switch len(splitsy) {
 	case 1:
 		{
-			return "", "", fmt.Errorf("failed to parse resource name %s", attribute)
+			return "", "", &parseResourceError{attribute}
 		}
 	case 2:
 		{
@@ -729,7 +731,7 @@ func SplitResourceName(attribute string) (string, string, error) {
 // FindResourceName looks for resource names
 func FindResourceName(result map[string]interface{}, name string) (string, error) {
 	if strings.HasPrefix(name, "format") {
-		return name, fmt.Errorf("uses inline format function %s", name)
+		return name, &inlineFormatError{Name: name}
 	}
 
 	name = cf.Dequote(name)
@@ -737,13 +739,13 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 	var err error
 
 	if result["resources"] == nil {
-		return "", fmt.Errorf("resources are empty")
+		return "", &emptyResourceError{"resources"}
 	}
 
 	resources, ok := result["resources"].([]interface{})
 
 	if !ok {
-		return name, fmt.Errorf("no resources found")
+		return name, &emptyResourceError{"resources"}
 	}
 
 	for _, myResource := range resources {
@@ -821,7 +823,7 @@ func GetNameValue(result map[string]interface{}, name string) (string, error) {
 	if strings.Contains(name, ".") {
 		rawNames := strings.Split(name, ".")
 		if len(rawNames) != 2 {
-			return name, fmt.Errorf("failed to match value %s", name)
+			return name, &matchValueError{name}
 		}
 
 		rawName := rawNames[1]
@@ -972,9 +974,8 @@ func SetResourceNames(results map[string]interface{}) []interface{} {
 	var newResults []interface{}
 
 	for item, result := range resources {
-
 		inside := result.(map[string]interface{})
-		counter := map[string]interface{}{"resource": fmt.Sprintf("sato" + strconv.Itoa(item))}
+		counter := map[string]interface{}{"resource": fmt.Sprintf("sato%d", item)}
 		maps.Copy(inside, counter)
 		newResults = append(newResults, inside)
 	}

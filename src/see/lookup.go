@@ -19,7 +19,6 @@ func Lookup(resource string, reverse bool) (*string, error) {
 
 	//goland:noinspection GoLinter
 	Lookup := map[string]string{
-
 		"alexa::ask::skill":                                       "",
 		"aws::accessanalyzer::analyzer":                           "aws_accessanalyzer_analyzer",
 		"aws::acmpca::certificate":                                "aws_acmpca_certificate",

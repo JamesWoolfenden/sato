@@ -4,12 +4,13 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
+	"sort"
+	"time"
+
 	"sato/src/arm"
 	"sato/src/cf"
 	"sato/src/see"
 	"sato/src/version"
-	"sort"
-	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"

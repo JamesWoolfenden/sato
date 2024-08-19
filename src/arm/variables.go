@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sato/src/cf"
 	"strings"
 	tftemplate "text/template"
+
+	"sato/src/cf"
 
 	"github.com/rs/zerolog/log"
 )

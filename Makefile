@@ -67,7 +67,7 @@ psbump:
 update:
 	go get -u
 	go mod tidy
-	go vendor
+	go mod vendor
 	pre-commit autoupdate
 
 lint:

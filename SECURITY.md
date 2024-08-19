@@ -6,4 +6,4 @@ I'm only supporting the latest version, and required changes will be releases AS
 
 ## Reporting a Vulnerability
 
-Contact me James Woolfenden at gmail dot com.
+Contact James Woolfenden at gmail dot com.

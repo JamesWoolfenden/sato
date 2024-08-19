@@ -47,10 +47,10 @@ func TfInit(workingDir string) error {
 	installer := &releases.LatestVersion{
 		Product: product.Terraform,
 	}
+
 	execPath, err := installer.Install(context.Background())
 
 	if err != nil {
-
 		return fmt.Errorf("failed to install terraform %w", err)
 	}
 

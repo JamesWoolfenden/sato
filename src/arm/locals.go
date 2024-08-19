@@ -1,7 +1,6 @@
 package arm
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -12,7 +11,7 @@ func ParseLocals(result map[string]interface{}) (string, map[string]interface{},
 	myLocals, ok := result["locals"].(map[string]interface{})
 
 	if !ok || myLocals == nil {
-		return "", result, fmt.Errorf("locals is empty")
+		return "", result, &emptyResourceError{}
 	}
 
 	for item, value := range myLocals {

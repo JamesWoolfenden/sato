@@ -415,7 +415,7 @@ Parameters:
   VPCFlowLogsLogGroupRetention:
     Type: String
     Description: Number of days to retain the VPC flow logs in CloudWatch.
-    AllowedValues: [1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653]
+    AllowedValues: [ 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653 ]
     Default: 14
   VPCFlowLogsMaxAggregationInterval:
     Type: String
@@ -448,7 +448,7 @@ Resources:
   DHCPOptions:
     Type: AWS::EC2::DHCPOptions
     Properties:
-      DomainName: !If [NVirginiaRegionCondition, ec2.internal, !Sub '${AWS::Region}.compute.internal']
+      DomainName: !If [ NVirginiaRegionCondition, ec2.internal, !Sub '${AWS::Region}.compute.internal' ]
       DomainNameServers:
         - AmazonProvidedDNS
       Tags:
@@ -490,24 +490,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet1ACIDR
-      AvailabilityZone: !Select [0, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 1A
         - !If
           - PrivateSubnetATag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet1B:
     Condition: AdditionalPrivateSubnetsCondition
@@ -515,24 +515,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet1BCIDR
-      AvailabilityZone: !Select [0, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 1B
         - !If
           - PrivateSubnetBTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet2A:
     Condition: PrivateSubnetsCondition
@@ -540,24 +540,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet2ACIDR
-      AvailabilityZone: !Select [1, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 2A
         - !If
           - PrivateSubnetATag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet2B:
     Condition: AdditionalPrivateSubnetsCondition
@@ -565,24 +565,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet2BCIDR
-      AvailabilityZone: !Select [1, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 2B
         - !If
           - PrivateSubnetBTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet3A:
     Condition: PrivateSubnets&3AZCondition
@@ -590,24 +590,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet3ACIDR
-      AvailabilityZone: !Select [2, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 2, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 3A
         - !If
           - PrivateSubnetATag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet3B:
     Condition: AdditionalPrivateSubnets&3AZCondition
@@ -615,24 +615,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet3BCIDR
-      AvailabilityZone: !Select [2, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 2, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 3B
         - !If
           - PrivateSubnetBTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet4A:
     Condition: PrivateSubnets&4AZCondition
@@ -640,24 +640,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet4ACIDR
-      AvailabilityZone: !Select [3, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 3, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 4A
         - !If
           - PrivateSubnetATag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetATag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetATag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetATag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetATag3 ] ]
           - !Ref AWS::NoValue
   PrivateSubnet4B:
     Condition: AdditionalPrivateSubnets&4AZCondition
@@ -665,24 +665,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PrivateSubnet4BCIDR
-      AvailabilityZone: !Select [3, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 3, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Private subnet 4B
         - !If
           - PrivateSubnetBTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag1]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag2]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PrivateSubnetBTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PrivateSubnetBTag3]]
-            Value: !Select [1, !Split ['=', !Ref PrivateSubnetBTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PrivateSubnetBTag3 ] ]
           - !Ref AWS::NoValue
   PublicSubnet1:
     Condition: PublicSubnetsCondition
@@ -696,24 +696,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet1CIDR
-      AvailabilityZone: !Select [0, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 0, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Public subnet 1
         - !If
           - PublicSubnetTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag1]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag2]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag3]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag3 ] ]
           - !Ref AWS::NoValue
       MapPublicIpOnLaunch: true
   PublicSubnet2:
@@ -728,24 +728,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet2CIDR
-      AvailabilityZone: !Select [1, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 1, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Public subnet 2
         - !If
           - PublicSubnetTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag1]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag2]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag3]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag3 ] ]
           - !Ref AWS::NoValue
       MapPublicIpOnLaunch: true
   PublicSubnet3:
@@ -760,24 +760,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet3CIDR
-      AvailabilityZone: !Select [2, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 2, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Public subnet 3
         - !If
           - PublicSubnetTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag1]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag2]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag3]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag3 ] ]
           - !Ref AWS::NoValue
       MapPublicIpOnLaunch: true
   PublicSubnet4:
@@ -792,24 +792,24 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: !Ref PublicSubnet4CIDR
-      AvailabilityZone: !Select [3, !Ref AvailabilityZones]
+      AvailabilityZone: !Select [ 3, !Ref AvailabilityZones ]
       Tags:
         - Key: Name
           Value: Public subnet 4
         - !If
           - PublicSubnetTag1Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag1]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag1]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag1 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag1 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag2Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag2]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag2]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag2 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag2 ] ]
           - !Ref AWS::NoValue
         - !If
           - PublicSubnetTag3Condition
-          - Key: !Select [0, !Split ['=', !Ref PublicSubnetTag3]]
-            Value: !Select [1, !Split ['=', !Ref PublicSubnetTag3]]
+          - Key: !Select [ 0, !Split [ '=', !Ref PublicSubnetTag3 ] ]
+            Value: !Select [ 1, !Split [ '=', !Ref PublicSubnetTag3 ] ]
           - !Ref AWS::NoValue
       MapPublicIpOnLaunch: true
   PrivateSubnet1ARouteTable:

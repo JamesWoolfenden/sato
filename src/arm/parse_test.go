@@ -3,8 +3,9 @@ package arm_test
 import (
 	"path/filepath"
 	"reflect"
-	"sato/src/arm"
 	"testing"
+
+	"sato/src/arm"
 )
 
 func TestParse(t *testing.T) {

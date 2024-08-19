@@ -15,6 +15,7 @@ Converts CloudFormation (and now also ARM) into Terraform. In Go, but quickerly.
 ## Table of Contents
 
 <!--toc:start-->
+
 - [Sato](#sato)
   - [Table of Contents](#table-of-contents)
   - [Install](#install)
@@ -27,7 +28,7 @@ Converts CloudFormation (and now also ARM) into Terraform. In Go, but quickerly.
     - [Parse](#parse)
     - [See](#see)
     - [Version](#version)
-  - [Help](#help)
+    - [Help](#help)
 
 <!--toc:end-->
 
@@ -310,7 +311,7 @@ If you use my other tool, Pike you can now apply that and get the policy require
 
 ## Valid CloudFormation
 
-Ditch it all, OK, OK but some older samples can play fast and lose with the CloudFormation schema and data types.
+Ditch it all, OK, but some older samples can play fast and lose with the CloudFormation schema and data types.
 The Go-formation parser is less accommodating, you may need to be stricter on your typing.
 
 - Booleans are true or false and not "false"

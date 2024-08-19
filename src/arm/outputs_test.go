@@ -2,11 +2,12 @@ package arm_test
 
 import (
 	"encoding/json"
-	"sato/src/arm"
-	"sato/src/cf"
 	"strings"
 	"testing"
 	"text/template"
+
+	"sato/src/arm"
+	"sato/src/cf"
 )
 
 var badFunk template.FuncMap

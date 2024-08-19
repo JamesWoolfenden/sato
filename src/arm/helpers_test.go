@@ -2,8 +2,9 @@ package arm_test
 
 import (
 	"reflect"
-	"sato/src/arm"
 	"testing"
+
+	"sato/src/arm"
 )
 
 func TestIsLocal(t *testing.T) {
@@ -355,8 +356,10 @@ func Test_ditch(t *testing.T) {
 		},
 		{
 			name: "mixed",
-			args: args{Attribute: "concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
-				name: "variables"},
+			args: args{
+				Attribute: "concat(parameters('vmName'),'/', variables('omsAgentForLinuxName'))",
+				name:      "variables",
+			},
 			want: "concat(parameters('vmName'),'/', 'omsAgentForLinuxName')",
 		},
 		{
