@@ -58,7 +58,7 @@ func TestParseResources(t *testing.T) {
 		{"Parsed", args{
 			resources:   cloudFormation.Resources,
 			funcMap:     funcMap,
-			destination: "",
+			destination: ".",
 		}, false},
 		{"empty function map", args{
 			resources:   cloudFormation.Resources,
