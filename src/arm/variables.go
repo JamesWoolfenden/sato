@@ -18,6 +18,10 @@ func ParseVariables(
 	funcMap tftemplate.FuncMap,
 	destination string) (map[string]interface{}, error) {
 
+	if result["variables"] == nil {
+		result["variables"] = make(map[string]interface{})
+	}
+
 	variables, ok := result["variables"].(map[string]interface{})
 
 	if !ok {
