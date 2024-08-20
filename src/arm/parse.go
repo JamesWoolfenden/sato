@@ -7,13 +7,12 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sato/src/cf"
+	"sato/src/see"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
 	"unicode"
-
-	"sato/src/cf"
-	"sato/src/see"
 
 	"github.com/rs/zerolog/log"
 	"golang.org/x/exp/maps"
@@ -51,7 +50,7 @@ func (m *parseMapError) Error() string {
 
 type m map[string]interface{}
 
-// Parse turn CFN into Terraform.
+// Parse turn ARM into Terraform.
 func Parse(file string, destination string) error {
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
@@ -73,7 +72,7 @@ func Parse(file string, destination string) error {
 	err = json.Unmarshal(byteValue, &result)
 
 	if err != nil {
-		return fmt.Errorf("unmarshall failure %w", err)
+		return fmt.Errorf("unmarshal failure %w", err)
 	}
 
 	funcMap := tftemplate.FuncMap{
@@ -219,7 +218,12 @@ func ParseString(attribute string, result map[string]interface{}) (string, map[s
 }
 
 // Replace convert ARM functions to tf
-func Replace(matches []string, newAttribute string, what *string, result map[string]interface{}) (string, map[string]interface{}) {
+func Replace(
+	matches []string,
+	newAttribute string,
+	what *string,
+	result map[string]interface{}) (string, map[string]interface{}) {
+
 	var Attribute string
 
 	switch *what {
@@ -869,7 +873,10 @@ func Preprocess(results map[string]interface{}) map[string]interface{} {
 	results["resources"] = SetResourceNames(results)
 	locals := make(map[string]interface{})
 
-	if results["variables"] != nil {
+	//only satisfied if empty
+	_, ok := results["variables"].(map[string]interface{})
+
+	if !ok {
 		paraVariables := results["variables"].(map[string]interface{})
 
 		newVariables := make(map[string]interface{})

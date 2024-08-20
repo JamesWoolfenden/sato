@@ -3,9 +3,8 @@ package arm_test
 import (
 	"path/filepath"
 	"reflect"
-	"testing"
-
 	"sato/src/arm"
+	"testing"
 )
 
 func TestParse(t *testing.T) {
@@ -35,6 +34,14 @@ func TestParse(t *testing.T) {
 				destination: ".sato",
 			},
 			wantErr: true,
+		},
+		{
+			name: "Empty",
+			args: args{
+				file:        filepath.FromSlash("../../examples/arm/smallest.json"),
+				destination: ".sato",
+			},
+			wantErr: false,
 		},
 	}
 

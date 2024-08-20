@@ -133,9 +133,9 @@ Plan: 12 to add, 0 to change, 0 to destroy.
 
 ### See
 
-Shows the Terraform resource equivalent to a CloudFormation resource. Or vice-versa.
+Shows the Terraform resource equivalent to a CloudFormation resource, or vice versa.
 
-This tells you the equivalent resource required, given a CF ..... or an ARM resource;
+This tells you the equivalent resource required, given a CF or an ARM resource;
 
 ```bash
 $ sato see -r Microsoft.Storage/storageAccounts
@@ -155,7 +155,9 @@ ARM to Terraform conversion.
 
 What? You've got these legacy ARM templates, and you'd dearly love to drop them, but you really don't fancy Bicep
 and the rework.
-I got you covered. Sato now bisects ARM into Terraform - Take one of the Azure quickstart examples from here
+I got you covered. Sato now bisects ARM into Terraform.
+
+Take one of the Azure quickstart examples from here
 <https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.compute/vm-simple-windows>:
 
 Clone it:

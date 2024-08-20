@@ -4,9 +4,8 @@ import (
 	"bytes"
 	"fmt"
 	"log"
-	tftemplate "text/template"
-
 	"sato/src/cf"
+	tftemplate "text/template"
 )
 
 // ParseOutputs writes out to outputs.tf.

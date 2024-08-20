@@ -5,26 +5,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"sato/src/cf"
 	"strings"
 	tftemplate "text/template"
-
-	"sato/src/cf"
 
 	"github.com/rs/zerolog/log"
 )
 
 // ParseVariables convert ARM Parameters into terraform variables.
-func ParseVariables(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
-	variables := make(map[string]interface{})
+func ParseVariables(
+	result map[string]interface{},
+	funcMap tftemplate.FuncMap,
+	destination string) (map[string]interface{}, error) {
 
-	var ok bool
+	variables, ok := result["variables"].(map[string]interface{})
 
-	if result["variables"] != nil {
-		variables, ok = result["variables"].(map[string]interface{})
-
-		if !ok {
-			return result, &castError{"map[string]interface{}"}
-		}
+	if !ok {
+		return result, &castError{"map[string]interface{}"}
 	}
 
 	var All string

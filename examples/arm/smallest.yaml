@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: AMi Factory Set up template
+
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.small
+    Description: Instance Type
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet ID to run the EC2 instance for AMI building
+  NotificationEmail:
+    Type: String
+    Description: Email id to be notified once AMI is created
+
+Resources:
+  SNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref NotificationEmail
+          Protocol: "email"

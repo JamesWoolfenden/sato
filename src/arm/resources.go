@@ -3,17 +3,17 @@ package arm
 import (
 	"bytes"
 	"fmt"
-	"strings"
-	tftemplate "text/template"
-
 	"sato/src/cf"
 	"sato/src/see"
+	"strings"
+	tftemplate "text/template"
 
 	"github.com/rs/zerolog/log"
 )
 
 // ParseResources handles resources in ARM conversion
-func ParseResources(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
+func ParseResources(
+	result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 	resources, ok := result["resources"].([]interface{})
 
 	if !ok {

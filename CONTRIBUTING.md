@@ -42,7 +42,7 @@ Import resources into go - **src/resource.go**
 var awsCloudwatchLogMetricFilter []byte
 ```
 
-Iterate on creation of tf using a debugger
+Iterate on the creation of tf using a debugger
 Set a break point to see schema of new resources in parse resources in lookup.go line 34 :
 
 ``` golang

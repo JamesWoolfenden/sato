@@ -2,10 +2,9 @@ package arm_test
 
 import (
 	"reflect"
+	"sato/src/arm"
 	"testing"
 	"text/template"
-
-	"sato/src/arm"
 )
 
 func Test_parseResources(t *testing.T) {
@@ -23,7 +22,9 @@ func Test_parseResources(t *testing.T) {
 		want    map[string]interface{}
 		wantErr bool
 	}{
-		//{ "Pass", args{}, ResultPass, false},
+		{"Fail", args{}, nil, true},
+		{"Empty Cast", args{nil, nil, ""}, nil, true},
+		//{"minimal", args{result, nil, ""}, nil, false},
 	}
 
 	for _, tt := range tests {
