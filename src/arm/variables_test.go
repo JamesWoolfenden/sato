@@ -31,7 +31,11 @@ func Test_parseVariables(t *testing.T) {
 
 	outputs["hostname"] = entry
 	results["outputs"] = outputs
-	wants := make(map[string]interface{})
+
+	wants := map[string]interface{}{
+		"variables": make(map[string]interface{}),
+	}
+
 	// emptySlice = append(emptySlice, empty)
 
 	tests := []struct {
