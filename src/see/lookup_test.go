@@ -1,8 +1,11 @@
 package see
 
 import (
+	"archive/zip"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -58,9 +61,70 @@ func TestLookup(t *testing.T) {
 	}
 }
 
+func extract(filename string, destination string) {
+	archive, err := zip.OpenReader(filename)
+	if err != nil {
+		panic(err)
+	}
+	defer archive.Close()
+
+	for _, f := range archive.File {
+		filePath := filepath.Join(destination, f.Name)
+		//fmt.Println("unzipping file ", filePath)
+
+		if !strings.HasPrefix(filePath, filepath.Clean(destination)+string(os.PathSeparator)) {
+			fmt.Println("invalid file path")
+			return
+		}
+
+		if f.FileInfo().IsDir() {
+			fmt.Println("creating directory...")
+			_ = os.MkdirAll(filePath, os.ModePerm)
+			continue
+		}
+
+		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
+			panic(err)
+		}
+
+		dstFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		if err != nil {
+			panic(err)
+		}
+
+		fileInArchive, err := f.Open()
+		if err != nil {
+			panic(err)
+		}
+
+		if _, err := io.Copy(dstFile, fileInArchive); err != nil {
+			panic(err)
+		}
+
+		dstFile.Close()
+		fileInArchive.Close()
+	}
+}
+
+func UpdateSchema(directory string) {
+	zip := "schema.zip"
+	destination := filepath.Join(directory, zip)
+	err := DownloadFile(
+		"https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip", destination)
+
+	if err != nil {
+		log.Fatal().Msg("failed to update schema")
+	}
+
+	extract(destination, directory)
+}
+
 func TestLookupAll(t *testing.T) {
 	t.Parallel()
 	directory := "../../schema"
+
+	UpdateSchema(directory)
+
 	files, err := os.ReadDir(directory)
 
 	if err != nil {
@@ -86,7 +150,9 @@ func TestLookupAll(t *testing.T) {
 			}
 
 			typeName := strings.ToLower(result["typeName"].(string))
+
 			_, err = Lookup(typeName, false)
+
 			if err != nil {
 
 				var s strings.Builder
@@ -101,4 +167,28 @@ func TestLookupAll(t *testing.T) {
 
 	//	got, err := Lookup(tt.args.resource, tt.args.reverse)
 
+}
+
+func DownloadFile(url string, filepath string) error {
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
