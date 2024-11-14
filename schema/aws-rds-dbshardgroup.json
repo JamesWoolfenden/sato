@@ -1,0 +1,155 @@
+{
+  "additionalProperties": false,
+  "createOnlyProperties": [
+    "/properties/DBClusterIdentifier",
+    "/properties/DBShardGroupIdentifier",
+    "/properties/PubliclyAccessible"
+  ],
+  "definitions": {
+    "Tag": {
+      "additionalProperties": false,
+      "description": "A key-value pair to associate with a resource.",
+      "properties": {
+        "Key": {
+          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "Value": {
+          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "maxLength": 256,
+          "minLength": 0,
+          "type": "string"
+        }
+      },
+      "required": [
+        "Key"
+      ],
+      "type": "object"
+    }
+  },
+  "description": "The AWS::RDS::DBShardGroup resource creates an Amazon Aurora Limitless DB Shard Group.",
+  "handlers": {
+    "create": {
+      "permissions": [
+        "rds:AddTagsToResource",
+        "rds:CreateDBShardGroup",
+        "rds:DescribeDBClusters",
+        "rds:DescribeDBShardGroups",
+        "rds:ListTagsForResource"
+      ],
+      "timeoutInMinutes": 2160
+    },
+    "delete": {
+      "permissions": [
+        "rds:DeleteDBShardGroup",
+        "rds:DescribeDBClusters",
+        "rds:DescribeDbShardGroups"
+      ],
+      "timeoutInMinutes": 2160
+    },
+    "list": {
+      "permissions": [
+        "rds:DescribeDBShardGroups",
+        "rds:ListTagsForResource"
+      ]
+    },
+    "read": {
+      "permissions": [
+        "rds:DescribeDBShardGroups",
+        "rds:ListTagsForResource"
+      ]
+    },
+    "update": {
+      "permissions": [
+        "rds:AddTagsToResource",
+        "rds:DescribeDBShardGroups",
+        "rds:DescribeDBClusters",
+        "rds:RemoveTagsFromResource",
+        "rds:ModifyDBShardGroup",
+        "rds:ListTagsForResource"
+      ]
+    }
+  },
+  "primaryIdentifier": [
+    "/properties/DBShardGroupIdentifier"
+  ],
+  "properties": {
+    "ComputeRedundancy": {
+      "description": "Specifies whether to create standby instances for the DB shard group.",
+      "minimum": 0,
+      "type": "integer"
+    },
+    "DBClusterIdentifier": {
+      "description": "The name of the primary DB cluster for the DB shard group.",
+      "maxLength": 63,
+      "minLength": 1,
+      "type": "string"
+    },
+    "DBShardGroupIdentifier": {
+      "description": "The name of the DB shard group.",
+      "maxLength": 63,
+      "minLength": 1,
+      "type": "string"
+    },
+    "DBShardGroupResourceId": {
+      "description": "The Amazon Web Services Region-unique, immutable identifier for the DB shard group.",
+      "type": "string"
+    },
+    "Endpoint": {
+      "description": "The connection endpoint for the DB shard group.",
+      "type": "string"
+    },
+    "MaxACU": {
+      "description": "The maximum capacity of the DB shard group in Aurora capacity units (ACUs).",
+      "type": "number"
+    },
+    "MinACU": {
+      "description": "The minimum capacity of the DB shard group in Aurora capacity units (ACUs).",
+      "type": "number"
+    },
+    "PubliclyAccessible": {
+      "description": "Indicates whether the DB shard group is publicly accessible.",
+      "type": "boolean"
+    },
+    "Tags": {
+      "description": "An array of key-value pairs to apply to this resource.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "maxItems": 50,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "propertyTransform": {
+    "/properties/DBClusterIdentifier": "$lowercase(DBClusterIdentifier)",
+    "/properties/DBShardGroupIdentifier": "$lowercase(DBShardGroupIdentifier)"
+  },
+  "readOnlyProperties": [
+    "/properties/DBShardGroupResourceId",
+    "/properties/Endpoint"
+  ],
+  "required": [
+    "DBClusterIdentifier",
+    "MaxACU"
+  ],
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-rds",
+  "tagging": {
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "rds:AddTagsToResource",
+      "rds:RemoveTagsFromResource"
+    ],
+    "tagOnCreate": false,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
+  "typeName": "AWS::RDS::DBShardGroup",
+  "writeOnlyProperties": [
+    "/properties/MinACU"
+  ]
+}

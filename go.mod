@@ -10,8 +10,8 @@ require (
 	github.com/hashicorp/terraform-exec v0.17.3
 	github.com/rs/zerolog v1.33.0
 	github.com/stretchr/testify v1.9.0
-	github.com/urfave/cli/v2 v2.27.4
-	golang.org/x/exp v0.0.0-20240808152545-0cdaa3abc0fa
+	github.com/urfave/cli/v2 v2.27.5
+	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f
 )
 
 require (
@@ -19,7 +19,7 @@ require (
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
 	github.com/cloudflare/circl v1.3.7 // indirect
-	github.com/cpuguy83/go-md2man/v2 v2.0.4 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.5 // indirect
 	github.com/cyphar/filepath-securejoin v0.2.4 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
@@ -41,13 +41,13 @@ require (
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
 	github.com/xrash/smetrics v0.0.0-20240521201337-686a1a2994c1 // indirect
 	github.com/zclconf/go-cty v1.11.0 // indirect
-	golang.org/x/crypto v0.26.0 // indirect
-	golang.org/x/mod v0.20.0 // indirect
-	golang.org/x/net v0.28.0 // indirect
-	golang.org/x/sync v0.8.0 // indirect
-	golang.org/x/sys v0.24.0 // indirect
-	golang.org/x/text v0.17.0 // indirect
-	golang.org/x/tools v0.24.0 // indirect
+	golang.org/x/crypto v0.29.0 // indirect
+	golang.org/x/mod v0.22.0 // indirect
+	golang.org/x/net v0.31.0 // indirect
+	golang.org/x/sync v0.9.0 // indirect
+	golang.org/x/sys v0.27.0 // indirect
+	golang.org/x/text v0.20.0 // indirect
+	golang.org/x/tools v0.27.0 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
