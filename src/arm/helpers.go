@@ -197,7 +197,7 @@ func ArrayToString(defaultValue []interface{}) string {
 	return newValue + "]"
 }
 
-// Tags take map into a string for tags.
+// Tags take a map into a string for tags.
 func Tags(raw interface{}) string {
 	tags, ok := raw.(map[string]interface{})
 	if !ok {

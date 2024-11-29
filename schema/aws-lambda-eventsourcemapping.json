@@ -123,6 +123,26 @@
       "minimum": 2,
       "type": "integer"
     },
+    "MetricsConfig": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Metrics": {
+          "description": "Metric groups to enable.",
+          "items": {
+            "enum": [
+              "EventCount"
+            ],
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 0,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "type": "object"
+    },
     "OnFailure": {
       "additionalProperties": false,
       "description": "A destination for events that failed processing.",
@@ -133,6 +153,25 @@
           "minLength": 12,
           "pattern": "arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1})?:(\\d{12})?:(.*)",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ProvisionedPollerConfig": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "MaximumPollers": {
+          "description": "The maximum number of event pollers this event source can scale up to.",
+          "maximum": 2000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "MinimumPollers": {
+          "description": "The minimum number of event pollers this event source can scale down to.",
+          "maximum": 200,
+          "minimum": 1,
+          "type": "integer"
         }
       },
       "type": "object"
@@ -365,11 +404,19 @@
       "minimum": -1,
       "type": "integer"
     },
+    "MetricsConfig": {
+      "$ref": "#/definitions/MetricsConfig",
+      "description": ""
+    },
     "ParallelizationFactor": {
       "description": "(Kinesis and DynamoDB Streams only) The number of batches to process concurrently from each shard. The default value is 1.",
       "maximum": 10,
       "minimum": 1,
       "type": "integer"
+    },
+    "ProvisionedPollerConfig": {
+      "$ref": "#/definitions/ProvisionedPollerConfig",
+      "description": ""
     },
     "Queues": {
       "description": "(Amazon MQ) The name of the Amazon MQ broker destination queue to consume.",

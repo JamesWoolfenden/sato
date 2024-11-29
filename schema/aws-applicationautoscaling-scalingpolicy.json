@@ -86,6 +86,254 @@
       ],
       "type": "object"
     },
+    "PredictiveScalingCustomizedCapacityMetric": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "MetricDataQueries": {
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/PredictiveScalingMetricDataQuery"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "MetricDataQueries"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingCustomizedLoadMetric": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "MetricDataQueries": {
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/PredictiveScalingMetricDataQuery"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "MetricDataQueries"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingCustomizedScalingMetric": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "MetricDataQueries": {
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/PredictiveScalingMetricDataQuery"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "MetricDataQueries"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingMetric": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Dimensions": {
+          "description": "The dimensions for the metric.",
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/PredictiveScalingMetricDimension"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "MetricName": {
+          "description": "The name of the metric.",
+          "type": "string"
+        },
+        "Namespace": {
+          "description": "The namespace of the metric.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PredictiveScalingMetricDataQuery": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Expression": {
+          "description": "The math expression to perform on the returned data, if this object is performing a math expression.",
+          "type": "string"
+        },
+        "Id": {
+          "description": "A short name that identifies the object's results in the response.",
+          "type": "string"
+        },
+        "Label": {
+          "description": "A human-readable label for this metric or expression. This is especially useful if this is a math expression, so that you know what the value represents.",
+          "type": "string"
+        },
+        "MetricStat": {
+          "$ref": "#/definitions/PredictiveScalingMetricStat",
+          "description": "Information about the metric data to return."
+        },
+        "ReturnData": {
+          "description": "Indicates whether to return the timestamps and raw data values of this metric.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "PredictiveScalingMetricDimension": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Name": {
+          "description": "The name of the dimension.",
+          "type": "string"
+        },
+        "Value": {
+          "description": "The value of the dimension.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PredictiveScalingMetricSpecification": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "CustomizedCapacityMetricSpecification": {
+          "$ref": "#/definitions/PredictiveScalingCustomizedCapacityMetric"
+        },
+        "CustomizedLoadMetricSpecification": {
+          "$ref": "#/definitions/PredictiveScalingCustomizedLoadMetric"
+        },
+        "CustomizedScalingMetricSpecification": {
+          "$ref": "#/definitions/PredictiveScalingCustomizedScalingMetric"
+        },
+        "PredefinedLoadMetricSpecification": {
+          "$ref": "#/definitions/PredictiveScalingPredefinedLoadMetric"
+        },
+        "PredefinedMetricPairSpecification": {
+          "$ref": "#/definitions/PredictiveScalingPredefinedMetricPair"
+        },
+        "PredefinedScalingMetricSpecification": {
+          "$ref": "#/definitions/PredictiveScalingPredefinedScalingMetric"
+        },
+        "TargetValue": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "TargetValue"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingMetricStat": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Metric": {
+          "$ref": "#/definitions/PredictiveScalingMetric",
+          "description": "The CloudWatch metric to return, including the metric name, namespace, and dimensions. "
+        },
+        "Stat": {
+          "description": "The statistic to return. It can include any CloudWatch statistic or extended statistic.",
+          "type": "string"
+        },
+        "Unit": {
+          "description": "The unit to use for the returned data points.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PredictiveScalingPolicyConfiguration": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "MaxCapacityBreachBehavior": {
+          "type": "string"
+        },
+        "MaxCapacityBuffer": {
+          "type": "integer"
+        },
+        "MetricSpecifications": {
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/PredictiveScalingMetricSpecification"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "Mode": {
+          "type": "string"
+        },
+        "SchedulingBufferTime": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "MetricSpecifications"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingPredefinedLoadMetric": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "PredefinedMetricType": {
+          "type": "string"
+        },
+        "ResourceLabel": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "PredefinedMetricType"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingPredefinedMetricPair": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "PredefinedMetricType": {
+          "type": "string"
+        },
+        "ResourceLabel": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "PredefinedMetricType"
+      ],
+      "type": "object"
+    },
+    "PredictiveScalingPredefinedScalingMetric": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "PredefinedMetricType": {
+          "type": "string"
+        },
+        "ResourceLabel": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "PredefinedMetricType"
+      ],
+      "type": "object"
+    },
     "StepAdjustment": {
       "additionalProperties": false,
       "description": "``StepAdjustment`` specifies a step adjustment for the ``StepAdjustments`` property of the [AWS::ApplicationAutoScaling::ScalingPolicy StepScalingPolicyConfiguration](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-applicationautoscaling-scalingpolicy-stepscalingpolicyconfiguration.html) property type. \n For the following examples, suppose that you have an alarm with a breach threshold of 50: \n  +  To trigger a step adjustment when the metric is greater than or equal to 50 and less than 60, specify a lower bound of 0 and an upper bound of 10. \n  +  To trigger a step adjustment when the metric is greater than 40 and less than or equal to 50, specify a lower bound of -10 and an upper bound of 0. \n  \n For more information, see [Step adjustments](https://docs.aws.amazon.com/autoscaling/application/userguide/application-auto-scaling-step-scaling-policies.html#as-scaling-steps) in the *Application Auto Scaling User Guide*.\n You can find a sample template snippet in the [Examples](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-applicationautoscaling-scalingpolicy.html#aws-resource-applicationautoscaling-scalingpolicy--examples) section of the ``AWS::ApplicationAutoScaling::ScalingPolicy`` documentation.",
@@ -265,7 +513,8 @@
     "create": {
       "permissions": [
         "application-autoscaling:DescribeScalingPolicies",
-        "application-autoscaling:PutScalingPolicy"
+        "application-autoscaling:PutScalingPolicy",
+        "cloudwatch:GetMetricData"
       ]
     },
     "delete": {
@@ -298,7 +547,8 @@
     "update": {
       "permissions": [
         "application-autoscaling:DescribeScalingPolicies",
-        "application-autoscaling:PutScalingPolicy"
+        "application-autoscaling:PutScalingPolicy",
+        "cloudwatch:GetMetricData"
       ]
     }
   },
@@ -318,6 +568,10 @@
     "PolicyType": {
       "description": "The scaling policy type.\n The following policy types are supported: \n  ``TargetTrackingScaling``\u2014Not supported for Amazon EMR\n  ``StepScaling``\u2014Not supported for DynamoDB, Amazon Comprehend, Lambda, Amazon Keyspaces, Amazon MSK, Amazon ElastiCache, or Neptune.",
       "type": "string"
+    },
+    "PredictiveScalingPolicyConfiguration": {
+      "$ref": "#/definitions/PredictiveScalingPolicyConfiguration",
+      "description": ""
     },
     "ResourceId": {
       "description": "The identifier of the resource associated with the scaling policy. This string consists of the resource type and unique identifier.\n  +  ECS service - The resource type is ``service`` and the unique identifier is the cluster name and service name. Example: ``service/my-cluster/my-service``.\n  +  Spot Fleet - The resource type is ``spot-fleet-request`` and the unique identifier is the Spot Fleet request ID. Example: ``spot-fleet-request/sfr-73fbd2ce-aa30-494c-8788-1cee4EXAMPLE``.\n  +  EMR cluster - The resource type is ``instancegroup`` and the unique identifier is the cluster ID and instance group ID. Example: ``instancegroup/j-2EEZNYKUA1NTV/ig-1791Y4E1L8YI0``.\n  +  AppStream 2.0 fleet - The resource type is ``fleet`` and the unique identifier is the fleet name. Example: ``fleet/sample-fleet``.\n  +  DynamoDB table - The resource type is ``table`` and the unique identifier is the table name. Example: ``table/my-table``.\n  +  DynamoDB global secondary index - The resource type is ``index`` and the unique identifier is the index name. Example: ``table/my-table/index/my-table-index``.\n  +  Aurora DB cluster - The resource type is ``cluster`` and the unique identifier is the cluster name. Example: ``cluster:my-db-cluster``.\n  +  SageMaker endpoint variant - The resource type is ``variant`` and the unique identifier is the resource ID. Example: ``endpoint/my-end-point/variant/KMeansClustering``.\n  +  Custom resources are not supported with a resource type. This parameter must specify the ``OutputValue`` from the CloudFormation template stack used to access the resources. The unique identifier is defined by the service provider. More information is available in our [GitHub repository](https://docs.aws.amazon.com/https://github.com/aws/aws-auto-scaling-custom-resource).\n  +  Amazon Comprehend document classification endpoint - The resource type and unique identifier are specified using the endpoint ARN. Example: ``arn:aws:comprehend:us-west-2:123456789012:document-classifier-endpoint/EXAMPLE``.\n  +  Amazon Comprehend entity recognizer endpoint - The resource type and unique identifier are specified using the endpoint ARN. Example: ``arn:aws:comprehend:us-west-2:123456789012:entity-recognizer-endpoint/EXAMPLE``.\n  +  Lambda provisioned concurrency - The resource type is ``function`` and the unique identifier is the function name with a function version or alias name suffix that is not ``$LATEST``. Example: ``function:my-function:prod`` or ``function:my-function:1``.\n  +  Amazon Keyspaces table - The resource type is ``table`` and the unique identifier is the table name. Example: ``keyspace/mykeyspace/table/mytable``.\n  +  Amazon MSK cluster - The resource type and unique identifier are specified using the cluster ARN. Example: ``arn:aws:kafka:us-east-1:123456789012:cluster/demo-cluster-1/6357e0b2-0e6a-4b86-a0b4-70df934c2e31-5``.\n  +  Amazon ElastiCache replication group - The resource type is ``replication-group`` and the unique identifier is the replication group name. Example: ``replication-group/mycluster``.\n  +  Neptune cluster - The resource type is ``cluster`` and the unique identifier is the cluster name. Example: ``cluster:mycluster``.\n  +  SageMaker serverless endpoint - The resource type is ``variant`` and the unique identifier is the resource ID. Example: ``endpoint/my-end-point/variant/KMeansClustering``.\n  +  SageMaker inference component - The resource type is ``inference-component`` and the unique identifier is the resource ID. Example: ``inference-component/my-inference-component``.\n  +  Pool of WorkSpaces - The resource type is ``workspacespool`` and the unique identifier is the pool ID. Example: ``workspacespool/wspool-123456``.",

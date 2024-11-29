@@ -55,6 +55,27 @@
       },
       "type": "object"
     },
+    "AvailabilityZoneImpairmentPolicy": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "ImpairedZoneHealthCheckBehavior": {
+          "enum": [
+            "IgnoreUnhealthy",
+            "ReplaceUnhealthy"
+          ],
+          "type": "string"
+        },
+        "ZonalShiftEnabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "ImpairedZoneHealthCheckBehavior",
+        "ZonalShiftEnabled"
+      ],
+      "type": "object"
+    },
     "BaselineEbsBandwidthMbpsRequest": {
       "additionalProperties": false,
       "description": "``BaselineEbsBandwidthMbpsRequest`` is a property of the ``InstanceRequirements`` property of the [AWS::AutoScaling::AutoScalingGroup LaunchTemplateOverrides](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-autoscalinggroup-launchtemplateoverrides.html) property type that describes the minimum and maximum baseline bandwidth performance for an instance type, in Mbps.",
@@ -66,6 +87,71 @@
         "Min": {
           "description": "The minimum value in Mbps.",
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "BaselinePerformanceFactorsRequest": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Cpu": {
+          "$ref": "#/definitions/CpuPerformanceFactorRequest"
+        }
+      },
+      "type": "object"
+    },
+    "CapacityReservationIds": {
+      "insertionOrder": true,
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "CapacityReservationResourceGroupArns": {
+      "insertionOrder": true,
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "CapacityReservationSpecification": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "CapacityReservationPreference": {
+          "type": "string"
+        },
+        "CapacityReservationTarget": {
+          "$ref": "#/definitions/CapacityReservationTarget"
+        }
+      },
+      "required": [
+        "CapacityReservationPreference"
+      ],
+      "type": "object"
+    },
+    "CapacityReservationTarget": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "CapacityReservationIds": {
+          "$ref": "#/definitions/CapacityReservationIds"
+        },
+        "CapacityReservationResourceGroupArns": {
+          "$ref": "#/definitions/CapacityReservationResourceGroupArns"
+        }
+      },
+      "type": "object"
+    },
+    "CpuPerformanceFactorRequest": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "References": {
+          "$ref": "#/definitions/PerformanceFactorReferenceSetRequest"
         }
       },
       "type": "object"
@@ -148,6 +234,10 @@
         "BaselineEbsBandwidthMbps": {
           "$ref": "#/definitions/BaselineEbsBandwidthMbpsRequest",
           "description": "The minimum and maximum baseline bandwidth performance for an instance type, in Mbps. For more information, see [Amazon EBS\u2013optimized instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-optimized.html) in the *Amazon EC2 User Guide for Linux Instances*.\n Default: No minimum or maximum limits"
+        },
+        "BaselinePerformanceFactors": {
+          "$ref": "#/definitions/BaselinePerformanceFactorsRequest",
+          "description": ""
         },
         "BurstablePerformance": {
           "description": "Indicates whether burstable performance instance types are included, excluded, or required. For more information, see [Burstable performance instances](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/burstable-performance-instances.html) in the *Amazon EC2 User Guide for Linux Instances*.\n Default: ``excluded``",
@@ -508,6 +598,24 @@
       ],
       "type": "object"
     },
+    "PerformanceFactorReferenceRequest": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "InstanceFamily": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PerformanceFactorReferenceSetRequest": {
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/PerformanceFactorReferenceRequest"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
     "TagProperty": {
       "additionalProperties": false,
       "description": "A structure that specifies a tag for the ``Tags`` property of [AWS::AutoScaling::AutoScalingGroup](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-autoscalinggroup.html) resource.\n For more information, see [Tag Auto Scaling groups and instances](https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-tagging.html) in the *Amazon EC2 Auto Scaling User Guide*. You can find a sample template snippet in the [Examples](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-autoscaling-autoscalinggroup.html#aws-resource-autoscaling-autoscalinggroup--examples) section of the ``AWS::AutoScaling::AutoScalingGroup`` resource.\n CloudFormation adds the following tags to all Auto Scaling groups and associated instances: \n  +  aws:cloudformation:stack-name\n  +  aws:cloudformation:stack-id\n  +  aws:cloudformation:logical-id",
@@ -684,6 +792,10 @@
       "$ref": "#/definitions/AvailabilityZoneDistribution",
       "description": ""
     },
+    "AvailabilityZoneImpairmentPolicy": {
+      "$ref": "#/definitions/AvailabilityZoneImpairmentPolicy",
+      "description": ""
+    },
     "AvailabilityZones": {
       "description": "A list of Availability Zones where instances in the Auto Scaling group can be created. Used for launching into the default VPC subnet in each Availability Zone when not using the ``VPCZoneIdentifier`` property, or for attaching a network interface when an existing network interface ID is specified in a launch template.",
       "insertionOrder": false,
@@ -696,6 +808,10 @@
     "CapacityRebalance": {
       "description": "Indicates whether Capacity Rebalancing is enabled. Otherwise, Capacity Rebalancing is disabled. When you turn on Capacity Rebalancing, Amazon EC2 Auto Scaling attempts to launch a Spot Instance whenever Amazon EC2 notifies that a Spot Instance is at an elevated risk of interruption. After launching a new instance, it then terminates an old instance. For more information, see [Use Capacity Rebalancing to handle Amazon EC2 Spot Interruptions](https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-capacity-rebalancing.html) in the in the *Amazon EC2 Auto Scaling User Guide*.",
       "type": "boolean"
+    },
+    "CapacityReservationSpecification": {
+      "$ref": "#/definitions/CapacityReservationSpecification",
+      "description": ""
     },
     "Context": {
       "description": "Reserved.",
@@ -812,6 +928,10 @@
       "description": "The Amazon Resource Name (ARN) of the service-linked role that the Auto Scaling group uses to call other AWS service on your behalf. By default, Amazon EC2 Auto Scaling uses a service-linked role named ``AWSServiceRoleForAutoScaling``, which it creates if it does not exist. For more information, see [Service-linked roles](https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-service-linked-role.html) in the *Amazon EC2 Auto Scaling User Guide*.",
       "type": "string"
     },
+    "SkipZonalShiftValidation": {
+      "description": "",
+      "type": "boolean"
+    },
     "Tags": {
       "description": "One or more tags. You can tag your Auto Scaling group and propagate the tags to the Amazon EC2 instances it launches. Tags are not propagated to Amazon EBS volumes. To add tags to Amazon EBS volumes, specify the tags in a launch template but use caution. If the launch template specifies an instance tag with a key that is also specified for the Auto Scaling group, Amazon EC2 Auto Scaling overrides the value of that instance tag with the value specified by the Auto Scaling group. For more information, see [Tag Auto Scaling groups and instances](https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-tagging.html) in the *Amazon EC2 Auto Scaling User Guide*.",
       "insertionOrder": false,
@@ -873,6 +993,7 @@
   },
   "typeName": "AWS::AutoScaling::AutoScalingGroup",
   "writeOnlyProperties": [
+    "/properties/SkipZonalShiftValidation",
     "/properties/InstanceId"
   ]
 }

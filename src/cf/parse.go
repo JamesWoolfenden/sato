@@ -2,6 +2,7 @@ package cf
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -40,28 +41,43 @@ type Output struct {
 	Name        string
 }
 
-type filepathError struct {
-	Path string
-}
-
-func (m *filepathError) Error() string {
-	return fmt.Sprintf("not implemented %s", m.Path)
-}
-
-type goformationError struct {
-	err error
-}
-
-func (m *goformationError) Error() string {
-	return fmt.Sprintf("goformation parse failure %v", m.err)
+var funcMap = template.FuncMap{
+	"Array":        Array,
+	"ArrayReplace": ArrayReplace,
+	"Contains":     Contains,
+	"Sprint":       Sprint,
+	"Decode64":     Decode64,
+	"Boolean":      Boolean,
+	"Dequote":      Dequote,
+	"Quote":        Quote,
+	"Demap":        Demap,
+	"ToUpper":      strings.ToUpper,
+	"ToLower":      Lower,
+	"Deref":        func(str *string) string { return *str },
+	"Nil":          Nill,
+	"Nild":         Nild,
+	"Marshal":      Marshal,
+	"Split":        Split,
+	"SplitOn":      SplitOn,
+	"Replace":      Replace,
+	"Tags":         Tags,
+	"RandomString": RandomString,
+	"Map":          Map,
+	"Snake":        Snake,
+	"Kebab":        Kebab,
+	"ZipFile":      Zipfile,
 }
 
 // Parse turn CFN into Terraform.
 func Parse(file string, destination string) error {
+	if file == "" || destination == "" {
+		return errors.New("file and destination paths cannot be empty")
+	}
+
 	// Open a cloudFormation from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return &filepathError{Path: file}
+		return &filepathError{Path: file, err: err}
 	}
 
 	cloudFormation, err := goformation.Open(fileAbs)
@@ -69,41 +85,15 @@ func Parse(file string, destination string) error {
 		return &goformationError{err: err}
 	}
 
-	funcMap := template.FuncMap{
-		"Array":        Array,
-		"ArrayReplace": ArrayReplace,
-		"Contains":     Contains,
-		"Sprint":       Sprint,
-		"Decode64":     Decode64,
-		"Boolean":      Boolean,
-		"Dequote":      Dequote,
-		"Quote":        Quote,
-		"Demap":        Demap,
-		"ToUpper":      strings.ToUpper,
-		"ToLower":      Lower,
-		"Deref":        func(str *string) string { return *str },
-		"Nil":          Nill,
-		"Nild":         Nild,
-		"Marshal":      Marshal,
-		"Split":        Split,
-		"SplitOn":      SplitOn,
-		"Replace":      Replace,
-		"Tags":         Tags,
-		"RandomString": RandomString,
-		"Map":          Map,
-		"Snake":        Snake,
-		"Kebab":        Kebab,
-		"ZipFile":      Zipfile,
-	}
 	_, err = ParseVariables(cloudFormation, funcMap, destination)
 
 	if err != nil {
-		return err
+		return &parseVariablesError{err: err}
 	}
 
 	err = parseResources(cloudFormation.Resources, funcMap, destination)
 	if err != nil {
-		return err
+		return &parseResourcesError{err: err}
 	}
 
 	return nil

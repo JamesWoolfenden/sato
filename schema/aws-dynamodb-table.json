@@ -1,5 +1,8 @@
 {
   "additionalProperties": false,
+  "conditionalCreateOnlyProperties": [
+    "/properties/KeySchema"
+  ],
   "createOnlyProperties": [
     "/properties/TableName",
     "/properties/ImportSourceSpecification"
@@ -121,7 +124,7 @@
         },
         "WarmThroughput": {
           "$ref": "#/definitions/WarmThroughput",
-          "description": ""
+          "description": "Represents the warm throughput value (in read units per second and write units per second) for the specified secondary index. If you use this parameter, you must specify ``ReadUnitsPerSecond``, ``WriteUnitsPerSecond``, or both."
         }
       },
       "required": [
@@ -459,13 +462,15 @@
           ]
         }
       ],
-      "description": "",
+      "description": "Provides visibility into the number of read and write operations your table or secondary index can instantaneously support. The settings can be modified using the ``UpdateTable`` operation to meet the throughput requirements of an upcoming peak event.",
       "properties": {
         "ReadUnitsPerSecond": {
+          "description": "Represents the number of read operations your base table can instantaneously support.",
           "minimum": 1,
           "type": "integer"
         },
         "WriteUnitsPerSecond": {
+          "description": "Represents the number of write operations your base table can instantaneously support.",
           "minimum": 1,
           "type": "integer"
         }
@@ -686,7 +691,7 @@
     },
     "WarmThroughput": {
       "$ref": "#/definitions/WarmThroughput",
-      "description": ""
+      "description": "Represents the warm throughput (in read units per second and write units per second) for creating a table."
     }
   },
   "propertyTransform": {

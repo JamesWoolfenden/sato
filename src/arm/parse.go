@@ -18,37 +18,45 @@ import (
 	"golang.org/x/exp/maps"
 )
 
-type splitResourceError struct {
-	match string
-}
-
-func (e splitResourceError) Error() string {
-	return fmt.Sprintf("failed to split resource %s", e.match)
-}
-
-type filepathError struct {
-	Path string
-}
-
-func (m *filepathError) Error() string {
-	return fmt.Sprintf("not implemented %s", m.Path)
-}
-
-type parseListError struct{}
-
-func (m *parseListError) Error() string {
-	return "parseListError"
-}
-
-type parseMapError struct {
-	Err error
-}
-
-func (m *parseMapError) Error() string {
-	return fmt.Sprintf("parseMapError %s", m.Err)
-}
-
 type m map[string]interface{}
+
+var funcMap = tftemplate.FuncMap{
+	"Array":        cf.Array,
+	"ArrayReplace": cf.ArrayReplace,
+	"Contains":     cf.Contains,
+	"Enabled":      Enabled,
+	"Sprint":       cf.Sprint,
+	"Decode64":     cf.Decode64,
+	"Boolean":      cf.Boolean,
+	"Dequote":      cf.Dequote,
+	"Quote":        cf.Quote,
+	"Demap":        cf.Demap,
+	"Tags":         Tags,
+	"ToUpper":      strings.ToUpper,
+	"ToLower":      cf.Lower,
+	"Deref":        func(str *string) string { return *str },
+	"Nil":          cf.Nill,
+	"Nild":         cf.Nild,
+	"Marshal": func(v interface{}) string {
+		a, err := json.Marshal(v)
+		if err != nil {
+			log.Printf("marshal failure")
+		}
+
+		return string(a)
+	},
+	"Set":          ArrayToString,
+	"Split":        cf.Split,
+	"SplitOn":      cf.SplitOn,
+	"Replace":      cf.Replace,
+	"RandomString": cf.RandomString,
+	"Map":          cf.Map,
+	"NotNil":       NotNil,
+	"Snake":        cf.Snake,
+	"Kebab":        cf.Kebab,
+	"ZipFile":      cf.Zipfile,
+	"Uuid":         UUID,
+}
 
 // Parse turn ARM into Terraform.
 func Parse(file string, destination string) error {
@@ -66,51 +74,16 @@ func Parse(file string, destination string) error {
 	//goland:noinspection GoUnhandledErrorResult
 	defer jsonFile.Close()
 
-	byteValue, _ := io.ReadAll(jsonFile)
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		return fmt.Errorf("failed to read file: %w", err)
+	}
 
 	var result map[string]interface{}
 	err = json.Unmarshal(byteValue, &result)
 
 	if err != nil {
 		return fmt.Errorf("unmarshal failure %w", err)
-	}
-
-	funcMap := tftemplate.FuncMap{
-		"Array":        cf.Array,
-		"ArrayReplace": cf.ArrayReplace,
-		"Contains":     cf.Contains,
-		"Enabled":      Enabled,
-		"Sprint":       cf.Sprint,
-		"Decode64":     cf.Decode64,
-		"Boolean":      cf.Boolean,
-		"Dequote":      cf.Dequote,
-		"Quote":        cf.Quote,
-		"Demap":        cf.Demap,
-		"Tags":         Tags,
-		"ToUpper":      strings.ToUpper,
-		"ToLower":      cf.Lower,
-		"Deref":        func(str *string) string { return *str },
-		"Nil":          cf.Nill,
-		"Nild":         cf.Nild,
-		"Marshal": func(v interface{}) string {
-			a, err := json.Marshal(v)
-			if err != nil {
-				log.Printf("marshal failure")
-			}
-
-			return string(a)
-		},
-		"Set":          ArrayToString,
-		"Split":        cf.Split,
-		"SplitOn":      cf.SplitOn,
-		"Replace":      cf.Replace,
-		"RandomString": cf.RandomString,
-		"Map":          cf.Map,
-		"NotNil":       NotNil,
-		"Snake":        cf.Snake,
-		"Kebab":        cf.Kebab,
-		"ZipFile":      cf.Zipfile,
-		"Uuid":         UUID,
 	}
 
 	result = Preprocess(result)
@@ -542,7 +515,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 		case "microsoft.network/privateendpoints/privatednszonegroups":
 			{
 				// this isn't a separate terraform resource just part of
-				// private_dns_zone_group in a azurerm_private_endpoint
+				// private_dns_zone_group in an azurerm_private_endpoint
 				name, err = resourceToName(Match, result)
 				if err != nil {
 					return "", err

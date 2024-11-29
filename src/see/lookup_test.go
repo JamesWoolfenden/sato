@@ -61,7 +61,7 @@ func TestLookup(t *testing.T) {
 	}
 }
 
-func extract(filename string, destination string) {
+func extract(filename string, destination string) error {
 	archive, err := zip.OpenReader(filename)
 	if err != nil {
 		panic(err)
@@ -70,11 +70,9 @@ func extract(filename string, destination string) {
 
 	for _, f := range archive.File {
 		filePath := filepath.Join(destination, f.Name)
-		//fmt.Println("unzipping file ", filePath)
 
 		if !strings.HasPrefix(filePath, filepath.Clean(destination)+string(os.PathSeparator)) {
-			fmt.Println("invalid file path")
-			return
+			return fmt.Errorf("invalid file path")
 		}
 
 		if f.FileInfo().IsDir() {
@@ -89,26 +87,35 @@ func extract(filename string, destination string) {
 
 		dstFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		fileInArchive, err := f.Open()
 		if err != nil {
-			panic(err)
+			return err
 		}
 
 		if _, err := io.Copy(dstFile, fileInArchive); err != nil {
-			panic(err)
+			return err
 		}
 
-		dstFile.Close()
-		fileInArchive.Close()
+		err = dstFile.Close()
+		if err != nil {
+			return err
+		}
+
+		err = fileInArchive.Close()
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
 func UpdateSchema(directory string) {
-	zip := "schema.zip"
-	destination := filepath.Join(directory, zip)
+	zipArchive := "schema.zip"
+	destination := filepath.Join(directory, zipArchive)
 	err := DownloadFile(
 		"https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip", destination)
 
@@ -116,7 +123,10 @@ func UpdateSchema(directory string) {
 		log.Fatal().Msg("failed to update schema")
 	}
 
-	extract(destination, directory)
+	err = extract(destination, directory)
+	if err != nil {
+		return
+	}
 }
 
 func TestLookupAll(t *testing.T) {
@@ -132,7 +142,7 @@ func TestLookupAll(t *testing.T) {
 	}
 
 	for _, file := range files {
-		//has file extension json
+		//has file extension JSON
 		//has lookup
 		if strings.Contains(file.Name(), ".json") {
 			fileName := filepath.Join(directory, file.Name())
@@ -175,6 +185,7 @@ func DownloadFile(url string, filepath string) error {
 	if err != nil {
 		return err
 	}
+
 	defer out.Close()
 
 	// Get the data
@@ -182,6 +193,7 @@ func DownloadFile(url string, filepath string) error {
 	if err != nil {
 		return err
 	}
+
 	defer resp.Body.Close()
 
 	// Write the body to file
