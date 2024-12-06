@@ -9,10 +9,10 @@ $version = $null
 
 try
 {
-    $version = $( git describe --tags --abbrev=0 )
+    $version = $( git describe --tags --abbrev=0 ) -replace "v"
     if ($version -notmatch $versionPattern)
     {
-        Write-Error "Invalid version format. Expected: x.y.z"
+        Write-Error "Invalid version format $version. Expected: x.y.z"
         exit 1
     }
 
@@ -30,8 +30,8 @@ try
     Write-Host "New version: $newVersion"
     Write-Host "Creating new tag..."
 
-    git tag -a $newVersion -m "$message"
-    git push origin $newVersion
+    git tag -a v$newVersion -m "$message"
+    git push origin v$newVersion
 }
 catch
 {

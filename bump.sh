@@ -9,6 +9,7 @@ version=''
 
 # Get the current version
 version=$(git describe --tags --abbrev=0 2>/dev/null)
+version=${version//v}
 if [[ ! $version =~ $versionPattern ]]; then
     echo "Invalid version format. Expected: x.y.z"
     exit 1
@@ -30,5 +31,5 @@ echo "New version: $newVersion"
 echo "Creating new tag..."
 
 # Create a new tag and push it
-git tag -a "$newVersion" -m "$message"
-git push origin "$newVersion"
+git tag -a "v$newVersion" -m "$message"
+git push origin "v$newVersion"
