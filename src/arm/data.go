@@ -8,6 +8,7 @@ import (
 
 // ParseData writes out to data.tf.
 func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) error {
+
 	if result["data"] == nil {
 		return nil
 	}
