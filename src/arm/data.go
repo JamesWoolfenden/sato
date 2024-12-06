@@ -2,10 +2,8 @@ package arm
 
 import (
 	"bytes"
-	"fmt"
-	tftemplate "text/template"
-
 	"sato/src/cf"
+	tftemplate "text/template"
 )
 
 // ParseData writes out to data.tf.
@@ -20,7 +18,7 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 
 	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(dataFile))
 	if err != nil {
-		return fmt.Errorf("failed to build parser %w", err)
+		return &templateNewError{err: err}
 	}
 
 	err = tmpl.Execute(&output, m{
@@ -28,12 +26,12 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to execute parser %w", err)
+		return &templateExecuteError{err: err}
 	}
 
 	err = cf.Write(output.String(), destination, "data")
 	if err != nil {
-		return fmt.Errorf("failed to write data.tf %w", err)
+		return &writeFileError{destination: destination, err: err}
 	}
 
 	return nil

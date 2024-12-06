@@ -58,6 +58,56 @@ var funcMap = tftemplate.FuncMap{
 	"Uuid":         UUID,
 }
 
+type readFileError struct {
+	path string
+	err  error
+}
+
+func (r *readFileError) Error() string {
+	return fmt.Sprintf("failed to read file: %s %v", r.path, r.err)
+}
+
+type openFileError struct {
+	path string
+	err  error
+}
+
+func (o *openFileError) Error() string {
+	return fmt.Sprintf("failed to open file: %s %v", o.path, o.err)
+}
+
+type unmarshalError struct {
+	err error
+}
+
+func (u *unmarshalError) Error() string {
+	return fmt.Sprintf("unmarshal failure %v", u.err)
+}
+
+type parseVariablesError struct {
+	err error
+}
+
+func (p *parseVariablesError) Error() string {
+	return fmt.Sprintf("parse varriables failure %v", p.err)
+}
+
+type parseResourcesError struct {
+	err error
+}
+
+func (p *parseResourcesError) Error() string {
+	return fmt.Sprintf("parse resources failure %v", p.err)
+}
+
+type parseDataError struct {
+	err error
+}
+
+func (p *parseDataError) Error() string {
+	return fmt.Sprintf("parse data failure %v", p.err)
+}
+
 // Parse turn ARM into Terraform.
 func Parse(file string, destination string) error {
 	fileAbs, err := filepath.Abs(file)
@@ -67,7 +117,7 @@ func Parse(file string, destination string) error {
 
 	jsonFile, err := os.Open(fileAbs)
 	if err != nil {
-		return fmt.Errorf("file open failure %w", err)
+		return &openFileError{path: file, err: err}
 	}
 
 	// defer the closing of our jsonFile so that we can parse it later on
@@ -76,21 +126,21 @@ func Parse(file string, destination string) error {
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
-		return fmt.Errorf("failed to read file: %w", err)
+		return &readFileError{path: file, err: err}
 	}
 
 	var result map[string]interface{}
 	err = json.Unmarshal(byteValue, &result)
 
 	if err != nil {
-		return fmt.Errorf("unmarshal failure %w", err)
+		return &unmarshalError{err: err}
 	}
 
 	result = Preprocess(result)
 	result, err = ParseVariables(result, funcMap, destination)
 
 	if err != nil {
-		return err
+		return &parseVariablesError{err: err}
 	}
 
 	result, err = ParseResources(result, funcMap, destination)
@@ -100,12 +150,12 @@ func Parse(file string, destination string) error {
 
 	err = ParseOutputs(result, funcMap, destination)
 	if err != nil {
-		return err
+		return &parseResourcesError{err: err}
 	}
 
 	err = ParseData(result, funcMap, destination)
 	if err != nil {
-		return fmt.Errorf("parse data %w", err)
+		return &parseDataError{err: err}
 	}
 
 	return nil

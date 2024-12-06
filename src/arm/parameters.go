@@ -38,20 +38,24 @@ func parseParameters(
 
 		myItem, err = FixType(myItem)
 		if err != nil {
-			log.Print(err)
+			log.Info().Err(err)
 		}
 
 		var output bytes.Buffer
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
-			return "", nil, fmt.Errorf("failed to build parser %w", err)
+			return "", nil, templateNewError{err: err}
 		}
 
-		_ = tmpl.Execute(&output, m{
+		err = tmpl.Execute(&output, m{
 			"variable": myItem,
 			"item":     name,
 		})
+		if err != nil {
+			return "", nil, templateExecuteError{err: err}
+		}
+
 		all += output.String()
 
 		myVariables = append(myVariables, myItem)

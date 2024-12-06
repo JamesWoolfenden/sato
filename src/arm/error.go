@@ -63,3 +63,28 @@ type matchValueError struct {
 func (m *matchValueError) Error() string {
 	return fmt.Sprintf("failed to match value %s", m.Name)
 }
+
+type templateNewError struct {
+	err error
+}
+
+func (e templateNewError) Error() string {
+	return fmt.Sprintf("failed to build parser %v", e.err)
+}
+
+type templateExecuteError struct {
+	err error
+}
+
+func (e templateExecuteError) Error() string {
+	return fmt.Sprintf("failed to execute parser %v", e.err)
+}
+
+type writeFileError struct {
+	destination string
+	err         error
+}
+
+func (e writeFileError) Error() string {
+	return fmt.Sprintf("failed to write %s %v", e.destination, e.err)
+}

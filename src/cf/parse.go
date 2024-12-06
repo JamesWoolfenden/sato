@@ -2,7 +2,6 @@ package cf
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -71,7 +70,7 @@ var funcMap = template.FuncMap{
 // Parse turn CFN into Terraform.
 func Parse(file string, destination string) error {
 	if file == "" || destination == "" {
-		return errors.New("file and destination paths cannot be empty")
+		return &emptyPathsError{}
 	}
 
 	// Open a cloudFormation from file (can be JSON or YAML)
@@ -125,7 +124,7 @@ func ParseVariables(
 
 		tmpl, err := template.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
-			return nil, fmt.Errorf("template fail %w", err)
+			return nil, &templateNewError{Err: err}
 		}
 
 		_ = tmpl.Execute(&output, M{
@@ -140,12 +139,12 @@ func ParseVariables(
 
 	err := Write(All, destination, "variables")
 	if err != nil {
-		return nil, err
+		return nil, &writeError{destination: destination, err: err}
 	}
 
 	err = Write(strings.Join(DataResources, "\n"), destination, "data")
 	if err != nil {
-		return nil, err
+		return nil, &writeError{destination: destination, err: err}
 	}
 
 	return myVariables, nil
@@ -271,7 +270,7 @@ func Write(output string, location string, name string) error {
 		newPath, _ := filepath.Abs(location)
 		err := os.MkdirAll(newPath, os.ModePerm)
 		if err != nil {
-			return fmt.Errorf("mkdir failed %w", err)
+			return &makeDirError{err}
 		}
 
 		d1 := []byte(output)
@@ -281,7 +280,7 @@ func Write(output string, location string, name string) error {
 		log.Info().Msgf("Created %s", destination)
 
 		if err != nil {
-			return err
+			return &writeFileError{destination: destination, err: err}
 		}
 	}
 

@@ -10,6 +10,14 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
+type templateNewError struct {
+	Err error
+}
+
+func (e *templateNewError) Error() string {
+	return fmt.Sprintf("failed to create template %v", e.Err)
+}
+
 // parseResources converts resource to Terraform.
 func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncMap, destination string) error {
 	if resources == nil || funcMap == nil || destination == "" {
@@ -26,7 +34,7 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		// needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
 		if err != nil {
-			return fmt.Errorf("failed to template %w", err)
+			return &templateNewError{Err: err}
 		}
 
 		_ = tmpl.Execute(&output, M{
@@ -38,7 +46,7 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			ReplaceDependant(
 				ReplaceVariables(output.String())), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 		if err != nil {
-			return err
+			return &writeError{destination: destination, err: err}
 		}
 	}
 

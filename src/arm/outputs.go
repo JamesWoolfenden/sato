@@ -2,7 +2,6 @@ package arm
 
 import (
 	"bytes"
-	"fmt"
 	"log"
 	"sato/src/cf"
 	tftemplate "text/template"
@@ -42,7 +41,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(outputFile))
 		if err != nil {
-			return fmt.Errorf("failed to parse template %w", err)
+			return templateNewError{err}
 		}
 
 		err = tmpl.Execute(&output, m{
@@ -51,7 +50,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		})
 
 		if err != nil {
-			return fmt.Errorf("failed to execute parser %w", err)
+			return templateExecuteError{err: err}
 		}
 
 		All += output.String()
@@ -59,7 +58,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 	err := cf.Write(All, destination, "outputs")
 	if err != nil {
-		return fmt.Errorf("failed to write Outputs %w", err)
+		return writeFileError{destination: destination, err: err}
 	}
 
 	return nil

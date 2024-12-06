@@ -42,3 +42,35 @@ type parseResourcesError struct {
 func (m *parseResourcesError) Error() string {
 	return fmt.Sprintf("parse resources failure %v", m.err)
 }
+
+type makeDirError struct {
+	err error
+}
+
+func (e *makeDirError) Error() string {
+	return fmt.Sprintf("mkdir failed %v", e.err)
+}
+
+type writeError struct {
+	destination string
+	err         error
+}
+
+func (e *writeError) Error() string {
+	return fmt.Sprintf("write failed %s %v", e.destination, e.err)
+}
+
+type writeFileError struct {
+	destination string
+	err         error
+}
+
+type emptyPathsError struct{}
+
+func (e emptyPathsError) Error() string {
+	return "paths cannot be empty"
+}
+
+func (e *writeFileError) Error() string {
+	return fmt.Sprintf("write file failed %s %v", e.destination, e.err)
+}
