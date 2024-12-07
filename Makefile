@@ -3,8 +3,12 @@ TEST?=$$(go list ./... | grep -v 'vendor'| grep -v 'scripts'| grep -v 'version')
 HOSTNAME=jameswoolfenden
 FULL_PKG_NAME=github.com/jameswoolfenden/sato
 VERSION_PLACEHOLDER=version.ProviderVersion
-NAMESPACE=dev
+# Repository owner/organization
+HOSTNAME=jameswoolfenden
+# Output binary name
 BINARY=sato
+# Version placeholder
+VERSION=
 OS_ARCH=darwin_amd64
 TERRAFORM=./terraform/
 TF_TEST=./terraform_test/
