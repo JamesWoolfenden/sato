@@ -1,6 +1,6 @@
 module sato
 
-go 1.22.2
+go 1.23.4
 
 require (
 	github.com/awslabs/goformation/v7 v7.14.9

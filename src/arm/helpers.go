@@ -188,9 +188,9 @@ func ArrayToString(defaultValue []interface{}) string {
 
 	for count, value := range defaultValue {
 		if count == len(defaultValue)-1 {
-			newValue += "\"" + value.(string) + "\""
+			newValue += "\"" + EscapeQuote(value.(string)) + "\""
 		} else {
-			newValue += "\"" + value.(string) + "\"" + ","
+			newValue += "\"" + EscapeQuote(value.(string)) + "\"" + ","
 		}
 	}
 
