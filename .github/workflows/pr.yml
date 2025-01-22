@@ -22,11 +22,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-mod-
       - name: gofumpt
-        uses: iamnotaturtle/auto-gofmt@v2.1.0
+        uses: jameswoolfenden/auto-gofmt@99a3ed2b78b6c01d70db1740ba16d3dff60003df # v0.0.3
   test:
     strategy:
       matrix:
-        go-version: [ 1.22.x ]
+        go-version: [ 1.23.x ]
         platform: [ ubuntu-latest, macos-latest, windows-latest ]
     runs-on: ${{ matrix.platform }}
     steps:
@@ -53,4 +53,4 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # v5.3.0
         with:
-          go-version: 1.22.x
+          go-version: 1.23.x
