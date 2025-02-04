@@ -1379,6 +1379,7 @@ var lookupMapping = map[string]string{
 	"aws::xray::group":                                                    "aws_xray_group",
 	"aws::xray::resourcepolicy":                                           none,
 	"aws::xray::samplingrule":                                             "aws_xray_sampling_rule",
+	"aws::cloudfront::vpcorigin":                                          none,
 
 	// add more
 	"microsoft.aad/domainservices":                                        "azurerm_active_directory_domain_service",
