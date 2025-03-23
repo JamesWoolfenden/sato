@@ -9,9 +9,22 @@
     "/properties/OutPostArn",
     "/properties/EphemeralStorage",
     "/properties/EbsOptimized",
-    "/properties/PlacementGroupArn"
+    "/properties/PlacementGroupArn",
+    "/properties/AvailabilityZoneId"
   ],
   "definitions": {
+    "CapacityAllocation": {
+      "additionalProperties": false,
+      "properties": {
+        "AllocationType": {
+          "type": "string"
+        },
+        "Count": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "properties": {
@@ -93,8 +106,43 @@
     "AvailabilityZone": {
       "type": "string"
     },
+    "AvailabilityZoneId": {
+      "type": "string"
+    },
     "AvailableInstanceCount": {
       "type": "integer"
+    },
+    "CapacityAllocationSet": {
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/CapacityAllocation"
+      },
+      "type": "array",
+      "uniqueItems": false
+    },
+    "CapacityReservationArn": {
+      "type": "string"
+    },
+    "CapacityReservationFleetId": {
+      "type": "string"
+    },
+    "CommitmentInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "CommitmentEndDate": {
+          "type": "string"
+        },
+        "CommittedInstanceCount": {
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "CreateDate": {
+      "type": "string"
+    },
+    "DeliveryPreference": {
+      "type": "string"
     },
     "EbsOptimized": {
       "type": "boolean"
@@ -126,7 +174,19 @@
     "OutPostArn": {
       "type": "string"
     },
+    "OwnerId": {
+      "type": "string"
+    },
     "PlacementGroupArn": {
+      "type": "string"
+    },
+    "ReservationType": {
+      "type": "string"
+    },
+    "StartDate": {
+      "type": "string"
+    },
+    "State": {
       "type": "string"
     },
     "TagSpecifications": {
@@ -150,14 +210,34 @@
   "readOnlyProperties": [
     "/properties/Id",
     "/properties/AvailableInstanceCount",
-    "/properties/TotalInstanceCount"
+    "/properties/TotalInstanceCount",
+    "/properties/StartDate",
+    "/properties/CapacityReservationArn",
+    "/properties/CreateDate",
+    "/properties/State",
+    "/properties/OwnerId",
+    "/properties/ReservationType",
+    "/properties/CapacityAllocationSet",
+    "/properties/CommitmentInfo",
+    "/properties/DeliveryPreference",
+    "/properties/CapacityReservationFleetId"
   ],
   "required": [
     "InstanceCount",
-    "AvailabilityZone",
     "InstancePlatform",
     "InstanceType"
   ],
+  "tagging": {
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "ec2:CreateTags",
+      "ec2:DeleteTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/TagSpecifications",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::EC2::CapacityReservation",
   "writeOnlyProperties": [
     "/properties/UnusedReservationBillingOwnerId"

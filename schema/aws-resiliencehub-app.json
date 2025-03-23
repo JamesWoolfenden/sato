@@ -164,7 +164,17 @@
         "sns:GetTopicAttributes",
         "route53:List*",
         "iam:PassRole",
-        "resiliencehub:*"
+        "resiliencehub:CreateApp",
+        "resiliencehub:DescribeApp",
+        "resiliencehub:DescribeAppVersionTemplate",
+        "resiliencehub:PutDraftAppVersionTemplate",
+        "resiliencehub:AddDraftAppVersionResourceMappings",
+        "resiliencehub:ListAppVersionResourceMappings",
+        "resiliencehub:ListAppVersions",
+        "resiliencehub:PublishAppVersion",
+        "resiliencehub:ListTagsForResource",
+        "resiliencehub:TagResource",
+        "resiliencehub:UntagResource"
       ]
     },
     "delete": {
@@ -209,7 +219,18 @@
         "sns:GetTopicAttributes",
         "route53:List*",
         "iam:PassRole",
-        "resiliencehub:*"
+        "resiliencehub:UpdateApp",
+        "resiliencehub:DescribeApp",
+        "resiliencehub:DescribeAppVersionTemplate",
+        "resiliencehub:PutDraftAppVersionTemplate",
+        "resiliencehub:AddDraftAppVersionResourceMappings",
+        "resiliencehub:RemoveDraftAppVersionResourceMappings",
+        "resiliencehub:ListAppVersionResourceMappings",
+        "resiliencehub:ListAppVersions",
+        "resiliencehub:PublishAppVersion",
+        "resiliencehub:ListTagsForResource",
+        "resiliencehub:TagResource",
+        "resiliencehub:UntagResource"
       ]
     }
   },
@@ -299,6 +320,11 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-resiliencehub",
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "resiliencehub:TagResource",
+      "resiliencehub:ListTagsForResource",
+      "resiliencehub:UntagResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

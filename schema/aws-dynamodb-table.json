@@ -264,11 +264,22 @@
     },
     "PointInTimeRecoverySpecification": {
       "additionalProperties": false,
+      "dependencies": {
+        "RecoveryPeriodInDays": [
+          "PointInTimeRecoveryEnabled"
+        ]
+      },
       "description": "The settings used to enable point in time recovery.",
       "properties": {
         "PointInTimeRecoveryEnabled": {
           "description": "Indicates whether point in time recovery is enabled (true) or disabled (false) on the table.",
           "type": "boolean"
+        },
+        "RecoveryPeriodInDays": {
+          "description": "The number of preceding days for which continuous backups are taken and maintained. Your table data is only recoverable to any point-in-time from within the configured recovery period. This parameter is optional. If no value is provided, the value will default to 35.",
+          "maximum": 35,
+          "minimum": 1,
+          "type": "integer"
         }
       },
       "type": "object"
@@ -591,7 +602,7 @@
       "uniqueItems": true
     },
     "BillingMode": {
-      "description": "Specify how you are charged for read and write throughput and how you manage capacity.\n Valid values include:\n  +   ``PROVISIONED`` - We recommend using ``PROVISIONED`` for predictable workloads. ``PROVISIONED`` sets the billing mode to [Provisioned Mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.ProvisionedThroughput.Manual).\n  +   ``PAY_PER_REQUEST`` - We recommend using ``PAY_PER_REQUEST`` for unpredictable workloads. ``PAY_PER_REQUEST`` sets the billing mode to [On-Demand Mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadWriteCapacityMode.html#HowItWorks.OnDemand).\n  \n If not specified, the default is ``PROVISIONED``.",
+      "description": "Specify how you are charged for read and write throughput and how you manage capacity.\n Valid values include:\n  +   ``PAY_PER_REQUEST`` - We recommend using ``PAY_PER_REQUEST`` for most DynamoDB workloads. ``PAY_PER_REQUEST`` sets the billing mode to [On-demand capacity mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/on-demand-capacity-mode.html). \n  +   ``PROVISIONED`` - We recommend using ``PROVISIONED`` for steady workloads with predictable growth where capacity requirements can be reliably forecasted. ``PROVISIONED`` sets the billing mode to [Provisioned capacity mode](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/provisioned-capacity-mode.html).\n  \n If not specified, the default is ``PROVISIONED``.",
       "type": "string"
     },
     "ContributorInsightsSpecification": {
@@ -612,7 +623,7 @@
     },
     "ImportSourceSpecification": {
       "$ref": "#/definitions/ImportSourceSpecification",
-      "description": "Specifies the properties of data being imported from the S3 bucket source to the table.\n  If you specify the ``ImportSourceSpecification`` property, and also specify either the ``StreamSpecification``, the ``TableClass`` property, or the ``DeletionProtectionEnabled`` property, the IAM entity creating/updating stack must have ``UpdateTable`` permission."
+      "description": "Specifies the properties of data being imported from the S3 bucket source to the\" table.\n  If you specify the ``ImportSourceSpecification`` property, and also specify either the ``StreamSpecification``, the ``TableClass`` property, the ``DeletionProtectionEnabled`` property, or the ``WarmThroughput`` property, the IAM entity creating/updating stack must have ``UpdateTable`` permission."
     },
     "KeySchema": {
       "description": "Specifies the attributes that make up the primary key for the table. The attributes in the ``KeySchema`` property must also be defined in the ``AttributeDefinitions`` property.",

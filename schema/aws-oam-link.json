@@ -37,7 +37,9 @@
         "AWS::Logs::LogGroup",
         "AWS::XRay::Trace",
         "AWS::ApplicationInsights::Application",
-        "AWS::InternetMonitor::Monitor"
+        "AWS::InternetMonitor::Monitor",
+        "AWS::ApplicationSignals::Service",
+        "AWS::ApplicationSignals::ServiceLevelObjective"
       ],
       "type": "string"
     }
@@ -48,11 +50,14 @@
       "permissions": [
         "oam:CreateLink",
         "oam:GetLink",
+        "oam:TagResource",
+        "oam:ListTagsForResource",
         "cloudwatch:Link",
         "logs:Link",
         "xray:Link",
         "applicationinsights:Link",
-        "internetmonitor:Link"
+        "internetmonitor:Link",
+        "application-signals:Link"
       ]
     },
     "delete": {
@@ -68,7 +73,8 @@
     },
     "read": {
       "permissions": [
-        "oam:GetLink"
+        "oam:GetLink",
+        "oam:ListTagsForResource"
       ]
     },
     "update": {
@@ -80,8 +86,10 @@
         "xray:Link",
         "applicationinsights:Link",
         "internetmonitor:Link",
+        "application-signals:Link",
         "oam:TagResource",
-        "oam:UntagResource"
+        "oam:UntagResource",
+        "oam:ListTagsForResource"
       ]
     }
   },

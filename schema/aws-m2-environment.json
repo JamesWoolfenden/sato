@@ -5,6 +5,7 @@
     "/properties/EngineType",
     "/properties/KmsKeyId",
     "/properties/Name",
+    "/properties/NetworkType",
     "/properties/PubliclyAccessible",
     "/properties/SecurityGroupIds",
     "/properties/StorageConfigurations",
@@ -75,6 +76,13 @@
         "DesiredCapacity"
       ],
       "type": "object"
+    },
+    "NetworkType": {
+      "enum": [
+        "ipv4",
+        "dual"
+      ],
+      "type": "string"
     },
     "StorageConfiguration": {
       "description": "Defines the storage configuration for an environment.",
@@ -223,6 +231,9 @@
       "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
       "type": "string"
     },
+    "NetworkType": {
+      "$ref": "#/definitions/NetworkType"
+    },
     "PreferredMaintenanceWindow": {
       "description": "Configures a desired maintenance window for the environment. If you do not provide a value, a random system-generated value will be assigned.",
       "pattern": "^\\S{1,50}$",
@@ -274,7 +285,13 @@
   ],
   "tagging": {
     "cloudFormationSystemTags": false,
+    "permissions": [
+      "m2:TagResource",
+      "m2:UntagResource",
+      "m2:ListTagsForResource"
+    ],
     "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
     "tagUpdatable": true,
     "taggable": true
   },

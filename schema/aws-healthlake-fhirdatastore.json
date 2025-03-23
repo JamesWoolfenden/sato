@@ -68,13 +68,18 @@
     },
     "IdentityProviderConfiguration": {
       "additionalProperties": false,
+      "default": {
+        "AuthorizationStrategy": "AWS_AUTH",
+        "FineGrainedAuthorizationEnabled": false
+      },
       "description": "The identity provider configuration for the datastore",
       "properties": {
         "AuthorizationStrategy": {
           "description": "Type of Authorization Strategy. The two types of supported Authorization strategies are SMART_ON_FHIR_V1 and AWS_AUTH.",
           "enum": [
             "SMART_ON_FHIR_V1",
-            "AWS_AUTH"
+            "AWS_AUTH",
+            "SMART_ON_FHIR"
           ],
           "type": "string"
         },
@@ -143,6 +148,11 @@
     },
     "SseConfiguration": {
       "additionalProperties": false,
+      "default": {
+        "KmsEncryptionConfig": {
+          "CmkType": "AWS_OWNED_KMS_KEY"
+        }
+      },
       "description": "The server-side encryption key configuration for a customer provided encryption key.",
       "properties": {
         "KmsEncryptionConfig": {

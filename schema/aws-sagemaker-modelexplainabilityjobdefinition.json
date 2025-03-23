@@ -483,7 +483,8 @@
         "sagemaker:CreateModelExplainabilityJobDefinition",
         "sagemaker:DescribeModelExplainabilityJobDefinition",
         "iam:PassRole",
-        "sagemaker:AddTags"
+        "sagemaker:AddTags",
+        "sagemaker:ListTags"
       ]
     },
     "delete": {
@@ -499,7 +500,8 @@
     },
     "read": {
       "permissions": [
-        "sagemaker:DescribeModelExplainabilityJobDefinition"
+        "sagemaker:DescribeModelExplainabilityJobDefinition",
+        "sagemaker:ListTags"
       ]
     }
   },
@@ -571,11 +573,19 @@
     "JobResources",
     "RoleArn"
   ],
+  "tagging": {
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "sagemaker:AddTags",
+      "sagemaker:ListTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": false,
+    "taggable": true
+  },
   "typeName": "AWS::SageMaker::ModelExplainabilityJobDefinition",
   "writeOnlyProperties": [
-    "/properties/EndpointName",
-    "/properties/Tags",
-    "/properties/Tags/*/Key",
-    "/properties/Tags/*/Value"
+    "/properties/EndpointName"
   ]
 }

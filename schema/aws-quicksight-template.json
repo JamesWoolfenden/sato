@@ -209,9 +209,7 @@
     "AxisDisplayOptions": {
       "additionalProperties": false,
       "properties": {
-        "AxisLineVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "AxisLineVisibility": {},
         "AxisOffset": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
@@ -219,9 +217,7 @@
         "DataOptions": {
           "$ref": "#/definitions/AxisDataOptions"
         },
-        "GridLineVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "GridLineVisibility": {},
         "ScrollbarOptions": {
           "$ref": "#/definitions/ScrollBarOptions"
         },
@@ -391,6 +387,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/BarChartFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -578,6 +577,9 @@
         "PageBreakConfiguration": {
           "$ref": "#/definitions/SectionPageBreakConfiguration"
         },
+        "RepeatConfiguration": {
+          "$ref": "#/definitions/BodySectionRepeatConfiguration"
+        },
         "SectionId": {
           "maxLength": 512,
           "minLength": 1,
@@ -599,6 +601,105 @@
       "properties": {
         "Layout": {
           "$ref": "#/definitions/SectionLayoutConfiguration"
+        }
+      },
+      "type": "object"
+    },
+    "BodySectionDynamicCategoryDimensionConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "Column": {
+          "$ref": "#/definitions/ColumnIdentifier"
+        },
+        "Limit": {
+          "maximum": 1000,
+          "minimum": 1,
+          "type": "number"
+        },
+        "SortByMetrics": {
+          "items": {
+            "$ref": "#/definitions/ColumnSort"
+          },
+          "maxItems": 100,
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "Column"
+      ],
+      "type": "object"
+    },
+    "BodySectionDynamicNumericDimensionConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "Column": {
+          "$ref": "#/definitions/ColumnIdentifier"
+        },
+        "Limit": {
+          "maximum": 1000,
+          "minimum": 1,
+          "type": "number"
+        },
+        "SortByMetrics": {
+          "items": {
+            "$ref": "#/definitions/ColumnSort"
+          },
+          "maxItems": 100,
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "required": [
+        "Column"
+      ],
+      "type": "object"
+    },
+    "BodySectionRepeatConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "DimensionConfigurations": {
+          "items": {
+            "$ref": "#/definitions/BodySectionRepeatDimensionConfiguration"
+          },
+          "maxItems": 3,
+          "minItems": 0,
+          "type": "array"
+        },
+        "NonRepeatingVisuals": {
+          "items": {
+            "maxLength": 512,
+            "minLength": 1,
+            "pattern": "^[\\w\\-]+$",
+            "type": "string"
+          },
+          "maxItems": 20,
+          "minItems": 0,
+          "type": "array"
+        },
+        "PageBreakConfiguration": {
+          "$ref": "#/definitions/BodySectionRepeatPageBreakConfiguration"
+        }
+      },
+      "type": "object"
+    },
+    "BodySectionRepeatDimensionConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "DynamicCategoryDimensionConfiguration": {
+          "$ref": "#/definitions/BodySectionDynamicCategoryDimensionConfiguration"
+        },
+        "DynamicNumericDimensionConfiguration": {
+          "$ref": "#/definitions/BodySectionDynamicNumericDimensionConfiguration"
+        }
+      },
+      "type": "object"
+    },
+    "BodySectionRepeatPageBreakConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "After": {
+          "$ref": "#/definitions/SectionAfterPageBreak"
         }
       },
       "type": "object"
@@ -639,6 +740,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/BoxPlotFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -688,12 +792,8 @@
     "BoxPlotOptions": {
       "additionalProperties": false,
       "properties": {
-        "AllDataPointsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
-        "OutlierVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "AllDataPointsVisibility": {},
+        "OutlierVisibility": {},
         "StyleOptions": {
           "$ref": "#/definitions/BoxPlotStyleOptions"
         }
@@ -1011,12 +1111,8 @@
           "minItems": 0,
           "type": "array"
         },
-        "SortIconVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "SortIconVisibility": {},
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -1230,9 +1326,7 @@
         "TooltipTarget": {
           "$ref": "#/definitions/TooltipTarget"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "required": [
         "Column"
@@ -1297,6 +1391,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/ComboChartFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -1642,6 +1739,15 @@
       ],
       "type": "object"
     },
+    "ContextMenuOption": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityStatus": {
+          "$ref": "#/definitions/DashboardBehavior"
+        }
+      },
+      "type": "object"
+    },
     "ContributionAnalysisDefault": {
       "additionalProperties": false,
       "properties": {
@@ -1801,6 +1907,9 @@
         },
         "ImageScaling": {
           "$ref": "#/definitions/CustomContentImageScalingConfiguration"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         }
       },
       "type": "object"
@@ -1991,6 +2100,13 @@
       ],
       "type": "object"
     },
+    "DashboardBehavior": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
     "DataBarsOptions": {
       "additionalProperties": false,
       "properties": {
@@ -2062,9 +2178,7 @@
     "DataLabelOptions": {
       "additionalProperties": false,
       "properties": {
-        "CategoryLabelVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "CategoryLabelVisibility": {},
         "DataLabelTypes": {
           "items": {
             "$ref": "#/definitions/DataLabelType"
@@ -2083,21 +2197,15 @@
         "LabelFontConfiguration": {
           "$ref": "#/definitions/FontConfiguration"
         },
-        "MeasureLabelVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "MeasureLabelVisibility": {},
         "Overlap": {
           "$ref": "#/definitions/DataLabelOverlap"
         },
         "Position": {
           "$ref": "#/definitions/DataLabelPosition"
         },
-        "TotalsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "TotalsVisibility": {},
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -2173,9 +2281,7 @@
           "minLength": 0,
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -2299,9 +2405,7 @@
     "DateAxisOptions": {
       "additionalProperties": false,
       "properties": {
-        "MissingDateVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "MissingDateVisibility": {}
       },
       "type": "object"
     },
@@ -2453,11 +2557,13 @@
     "DateTimePickerControlDisplayOptions": {
       "additionalProperties": false,
       "properties": {
+        "DateIconVisibility": {},
         "DateTimeFormat": {
           "maxLength": 128,
           "minLength": 1,
           "type": "string"
         },
+        "HelperTextVisibility": {},
         "InfoIconLabelOptions": {
           "$ref": "#/definitions/SheetControlInfoIconLabelOptions"
         },
@@ -2821,6 +2927,13 @@
       },
       "type": "object"
     },
+    "DigitGroupingStyle": {
+      "enum": [
+        "DEFAULT",
+        "LAKHS"
+      ],
+      "type": "string"
+    },
     "DimensionField": {
       "additionalProperties": false,
       "properties": {
@@ -2839,9 +2952,7 @@
     "DonutCenterOptions": {
       "additionalProperties": false,
       "properties": {
-        "LabelVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "LabelVisibility": {}
       },
       "type": "object"
     },
@@ -2998,9 +3109,7 @@
     "FieldBasedTooltip": {
       "additionalProperties": false,
       "properties": {
-        "AggregationVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "AggregationVisibility": {},
         "TooltipFields": {
           "items": {
             "$ref": "#/definitions/TooltipItem"
@@ -3023,9 +3132,7 @@
           "minLength": 1,
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -3094,9 +3201,7 @@
         "TooltipTarget": {
           "$ref": "#/definitions/TooltipTarget"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "required": [
         "FieldId"
@@ -3159,6 +3264,9 @@
       "properties": {
         "FieldWells": {
           "$ref": "#/definitions/FilledMapFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -3772,6 +3880,9 @@
         "FontDecoration": {
           "$ref": "#/definitions/FontDecoration"
         },
+        "FontFamily": {
+          "type": "string"
+        },
         "FontSize": {
           "$ref": "#/definitions/FontSize"
         },
@@ -3794,6 +3905,10 @@
     "FontSize": {
       "additionalProperties": false,
       "properties": {
+        "Absolute": {
+          "description": "String based length that is composed of value and unit in px",
+          "type": "string"
+        },
         "Relative": {
           "$ref": "#/definitions/RelativeFontSize"
         }
@@ -3990,9 +4105,7 @@
         "SelectedBorderStyle": {
           "$ref": "#/definitions/FreeFormLayoutElementBorderStyle"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "Visibility": {},
         "Width": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
@@ -4023,9 +4136,7 @@
           "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -4036,9 +4147,7 @@
           "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -4106,6 +4215,9 @@
         "FieldWells": {
           "$ref": "#/definitions/FunnelChartFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "SortConfiguration": {
           "$ref": "#/definitions/FunnelChartSortConfiguration"
         },
@@ -4124,9 +4236,7 @@
     "FunnelChartDataLabelOptions": {
       "additionalProperties": false,
       "properties": {
-        "CategoryLabelVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "CategoryLabelVisibility": {},
         "LabelColor": {
           "pattern": "^#[A-F0-9]{6}$",
           "type": "string"
@@ -4137,15 +4247,11 @@
         "MeasureDataLabelStyle": {
           "$ref": "#/definitions/FunnelChartMeasureDataLabelStyle"
         },
-        "MeasureLabelVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "MeasureLabelVisibility": {},
         "Position": {
           "$ref": "#/definitions/DataLabelPosition"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -4239,6 +4345,20 @@
       },
       "type": "object"
     },
+    "GaugeChartColorConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "BackgroundColor": {
+          "pattern": "^#[A-F0-9]{6}$",
+          "type": "string"
+        },
+        "ForegroundColor": {
+          "pattern": "^#[A-F0-9]{6}$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "GaugeChartConditionalFormatting": {
       "additionalProperties": false,
       "properties": {
@@ -4268,6 +4388,9 @@
     "GaugeChartConfiguration": {
       "additionalProperties": false,
       "properties": {
+        "ColorConfiguration": {
+          "$ref": "#/definitions/GaugeChartColorConfiguration"
+        },
         "DataLabels": {
           "$ref": "#/definitions/DataLabelOptions"
         },
@@ -4276,6 +4399,9 @@
         },
         "GaugeChartOptions": {
           "$ref": "#/definitions/GaugeChartOptions"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "TooltipOptions": {
           "$ref": "#/definitions/TooltipOptions"
@@ -4614,9 +4740,7 @@
     "GeospatialPointStyle": {
       "additionalProperties": false,
       "properties": {
-        "CircleSymbolStyle": {
-          "$ref": "#/definitions/GeospatialCircleSymbolStyle"
-        }
+        "CircleSymbolStyle": {}
       },
       "type": "object"
     },
@@ -4659,15 +4783,9 @@
     "GeospatialPolygonSymbolStyle": {
       "additionalProperties": false,
       "properties": {
-        "FillColor": {
-          "$ref": "#/definitions/GeospatialColor"
-        },
-        "StrokeColor": {
-          "$ref": "#/definitions/GeospatialColor"
-        },
-        "StrokeWidth": {
-          "$ref": "#/definitions/GeospatialLineWidth"
-        }
+        "FillColor": {},
+        "StrokeColor": {},
+        "StrokeWidth": {}
       },
       "type": "object"
     },
@@ -4687,9 +4805,7 @@
           "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
           "type": "string"
         },
-        "State": {
-          "$ref": "#/definitions/GeospatialColorState"
-        }
+        "State": {}
       },
       "required": [
         "Color"
@@ -4953,6 +5069,9 @@
         "FieldWells": {
           "$ref": "#/definitions/HeatMapFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
         },
@@ -5101,6 +5220,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/HistogramFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Tooltip": {
           "$ref": "#/definitions/TooltipOptions"
@@ -5323,6 +5445,9 @@
         },
         "CustomNarrative": {
           "$ref": "#/definitions/CustomNarrativeOptions"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         }
       },
       "type": "object"
@@ -5508,6 +5633,9 @@
         "FieldWells": {
           "$ref": "#/definitions/KPIFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "KPIOptions": {
           "$ref": "#/definitions/KPIOptions"
         },
@@ -5622,15 +5750,11 @@
           "pattern": "^#[A-F0-9]{6}$",
           "type": "string"
         },
-        "TooltipVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "TooltipVisibility": {},
         "Type": {
           "$ref": "#/definitions/KPISparklineType"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "required": [
         "Type"
@@ -5729,9 +5853,7 @@
         "FontConfiguration": {
           "$ref": "#/definitions/FontConfiguration"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -5800,9 +5922,7 @@
     "LayerMapVisual": {
       "additionalProperties": false,
       "properties": {
-        "ChartConfiguration": {
-          "$ref": "#/definitions/GeospatialLayerMapConfiguration"
-        },
+        "ChartConfiguration": {},
         "DataSetIdentifier": {
           "maxLength": 2048,
           "minLength": 1,
@@ -5885,9 +6005,7 @@
         "ValueFontConfiguration": {
           "$ref": "#/definitions/FontConfiguration"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "Visibility": {},
         "Width": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
@@ -5969,6 +6087,9 @@
           "maxItems": 10,
           "minItems": 0,
           "type": "array"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -6069,9 +6190,7 @@
         "LineStyle": {
           "$ref": "#/definitions/LineChartLineStyle"
         },
-        "LineVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "LineVisibility": {},
         "LineWidth": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
@@ -6103,9 +6222,7 @@
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
         },
-        "MarkerVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "MarkerVisibility": {}
       },
       "type": "object"
     },
@@ -6251,27 +6368,21 @@
     "ListControlSearchOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
     "ListControlSelectAllOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
     "LoadingAnimation": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -6337,9 +6448,7 @@
     "MaximumLabelType": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -6426,9 +6535,7 @@
     "MinimumLabelType": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -6557,7 +6664,9 @@
         "THOUSANDS",
         "MILLIONS",
         "BILLIONS",
-        "TRILLIONS"
+        "TRILLIONS",
+        "LAKHS",
+        "CRORES"
       ],
       "type": "string"
     },
@@ -6848,9 +6957,7 @@
           "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
           "type": "string"
         },
-        "BackgroundVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "BackgroundVisibility": {},
         "BorderColor": {
           "pattern": "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
           "type": "string"
@@ -6862,16 +6969,12 @@
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
         },
-        "BorderVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "BorderVisibility": {},
         "GutterSpacing": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
         },
-        "GutterVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "GutterVisibility": {},
         "Title": {
           "$ref": "#/definitions/PanelTitleOptions"
         }
@@ -6887,9 +6990,7 @@
         "HorizontalTextAlignment": {
           "$ref": "#/definitions/HorizontalTextAlignment"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -7370,6 +7471,9 @@
         "FieldWells": {
           "$ref": "#/definitions/PieChartFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
         },
@@ -7598,6 +7702,9 @@
         "FieldWells": {
           "$ref": "#/definitions/PivotTableFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "PaginatedReportOptions": {
           "$ref": "#/definitions/PivotTablePaginatedReportOptions"
         },
@@ -7695,9 +7802,7 @@
           "minLength": 1,
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "required": [
         "FieldId"
@@ -7765,15 +7870,11 @@
         "CellStyle": {
           "$ref": "#/definitions/TableCellStyle"
         },
-        "CollapsedRowDimensionsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "CollapsedRowDimensionsVisibility": {},
         "ColumnHeaderStyle": {
           "$ref": "#/definitions/TableCellStyle"
         },
-        "ColumnNamesVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "ColumnNamesVisibility": {},
         "DefaultCellWidth": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
@@ -7796,24 +7897,16 @@
         "RowsLayout": {
           "$ref": "#/definitions/PivotTableRowsLayout"
         },
-        "SingleMetricVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
-        "ToggleButtonsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "SingleMetricVisibility": {},
+        "ToggleButtonsVisibility": {}
       },
       "type": "object"
     },
     "PivotTablePaginatedReportOptions": {
       "additionalProperties": false,
       "properties": {
-        "OverflowColumnHeaderVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
-        "VerticalOverflowVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "OverflowColumnHeaderVisibility": {},
+        "VerticalOverflowVisibility": {}
       },
       "type": "object"
     },
@@ -7825,9 +7918,7 @@
           "minLength": 1,
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -7959,9 +8050,7 @@
         "TotalCellStyle": {
           "$ref": "#/definitions/TableCellStyle"
         },
-        "TotalsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "TotalsVisibility": {},
         "ValueCellStyle": {
           "$ref": "#/definitions/TableCellStyle"
         }
@@ -8163,9 +8252,7 @@
     "ProgressBarOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -8218,9 +8305,7 @@
     "RadarChartAreaStyleSettings": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -8235,9 +8320,7 @@
     "RadarChartConfiguration": {
       "additionalProperties": false,
       "properties": {
-        "AlternateBandColorsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "AlternateBandColorsVisibility": {},
         "AlternateBandEvenColor": {
           "pattern": "^#[A-F0-9]{6}$",
           "type": "string"
@@ -8266,6 +8349,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/RadarChartFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -8388,9 +8474,7 @@
     "RangeEndsLabelType": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -8800,6 +8884,9 @@
         "FieldWells": {
           "$ref": "#/definitions/SankeyDiagramFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "SortConfiguration": {
           "$ref": "#/definitions/SankeyDiagramSortConfiguration"
         }
@@ -8927,8 +9014,14 @@
         "FieldWells": {
           "$ref": "#/definitions/ScatterPlotFieldWells"
         },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
+        },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
+        },
+        "SortConfiguration": {
+          "$ref": "#/definitions/ScatterPlotSortConfiguration"
         },
         "Tooltip": {
           "$ref": "#/definitions/TooltipOptions"
@@ -8959,6 +9052,15 @@
         },
         "ScatterPlotUnaggregatedFieldWells": {
           "$ref": "#/definitions/ScatterPlotUnaggregatedFieldWells"
+        }
+      },
+      "type": "object"
+    },
+    "ScatterPlotSortConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "ScatterPlotLimitConfiguration": {
+          "$ref": "#/definitions/ItemsLimitConfiguration"
         }
       },
       "type": "object"
@@ -9057,9 +9159,7 @@
     "ScrollBarOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "Visibility": {},
         "VisibleRange": {
           "$ref": "#/definitions/VisibleRangeOptions"
         }
@@ -9069,9 +9169,7 @@
     "SecondaryValueOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -9268,14 +9366,6 @@
       "additionalProperties": false,
       "description": "<p>A <i>sheet</i>, which is an object that contains a set of visuals that\n            are viewed together on one page in Amazon QuickSight. Every analysis and dashboard\n            contains at least one sheet. Each sheet contains at least one visualization widget, for\n            example a chart, pivot table, or narrative insight. Sheets can be associated with other\n            components, such as controls, filters, and so on.</p>",
       "properties": {
-        "Images": {
-          "items": {
-            "$ref": "#/definitions/SheetImage"
-          },
-          "maxItems": 10,
-          "minItems": 0,
-          "type": "array"
-        },
         "Name": {
           "description": "<p>The name of a sheet. This name is displayed on the sheet's tab in the Amazon QuickSight\n            console.</p>",
           "maxLength": 2048,
@@ -9314,9 +9404,7 @@
           "minLength": 1,
           "type": "string"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -9447,9 +9535,7 @@
     "SheetElementConfigurationOverrides": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -9560,9 +9646,7 @@
         "TooltipText": {
           "$ref": "#/definitions/SheetImageTooltipText"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -9988,9 +10072,7 @@
         "TotalCellStyle": {
           "$ref": "#/definitions/TableCellStyle"
         },
-        "TotalsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "TotalsVisibility": {},
         "ValueCellStyle": {
           "$ref": "#/definitions/TableCellStyle"
         }
@@ -10105,9 +10187,7 @@
         "VerticalTextAlignment": {
           "$ref": "#/definitions/VerticalTextAlignment"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -10145,6 +10225,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/TableFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "PaginatedReportOptions": {
           "$ref": "#/definitions/TablePaginatedReportOptions"
@@ -10252,9 +10335,7 @@
         "URLStyling": {
           "$ref": "#/definitions/TableFieldURLConfiguration"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        },
+        "Visibility": {},
         "Width": {
           "description": "String based length that is composed of value and unit in px",
           "type": "string"
@@ -10353,12 +10434,8 @@
     "TablePaginatedReportOptions": {
       "additionalProperties": false,
       "properties": {
-        "OverflowColumnHeaderVisibility": {
-          "$ref": "#/definitions/Visibility"
-        },
-        "VerticalOverflowVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "OverflowColumnHeaderVisibility": {},
+        "VerticalOverflowVisibility": {}
       },
       "type": "object"
     },
@@ -10783,9 +10860,7 @@
     "TextControlPlaceholderOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -10814,12 +10889,13 @@
     "ThousandSeparatorOptions": {
       "additionalProperties": false,
       "properties": {
+        "GroupingStyle": {
+          "$ref": "#/definitions/DigitGroupingStyle"
+        },
         "Symbol": {
           "$ref": "#/definitions/NumericSeparatorSymbol"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -11021,9 +11097,7 @@
         "SelectedTooltipType": {
           "$ref": "#/definitions/SelectedTooltipType"
         },
-        "TooltipVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "TooltipVisibility": {}
       },
       "type": "object"
     },
@@ -11245,9 +11319,7 @@
         "TotalCellStyle": {
           "$ref": "#/definitions/TableCellStyle"
         },
-        "TotalsVisibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "TotalsVisibility": {}
       },
       "type": "object"
     },
@@ -11298,6 +11370,9 @@
         },
         "GroupLabelOptions": {
           "$ref": "#/definitions/ChartAxisLabelOptions"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -11388,9 +11463,7 @@
     "TrendArrowOptions": {
       "additionalProperties": false,
       "properties": {
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -11636,6 +11709,27 @@
       ],
       "type": "string"
     },
+    "VisualInteractionOptions": {
+      "additionalProperties": false,
+      "properties": {
+        "ContextMenuOption": {
+          "$ref": "#/definitions/ContextMenuOption"
+        },
+        "VisualMenuOption": {
+          "$ref": "#/definitions/VisualMenuOption"
+        }
+      },
+      "type": "object"
+    },
+    "VisualMenuOption": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityStatus": {
+          "$ref": "#/definitions/DashboardBehavior"
+        }
+      },
+      "type": "object"
+    },
     "VisualPalette": {
       "additionalProperties": false,
       "properties": {
@@ -11660,9 +11754,7 @@
         "FormatText": {
           "$ref": "#/definitions/LongFormatText"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -11672,9 +11764,7 @@
         "FormatText": {
           "$ref": "#/definitions/ShortFormatText"
         },
-        "Visibility": {
-          "$ref": "#/definitions/Visibility"
-        }
+        "Visibility": {}
       },
       "type": "object"
     },
@@ -11734,6 +11824,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/WaterfallChartFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "Legend": {
           "$ref": "#/definitions/LegendOptions"
@@ -11932,6 +12025,9 @@
         },
         "FieldWells": {
           "$ref": "#/definitions/WordCloudFieldWells"
+        },
+        "Interactions": {
+          "$ref": "#/definitions/VisualInteractionOptions"
         },
         "SortConfiguration": {
           "$ref": "#/definitions/WordCloudSortConfiguration"
@@ -12224,6 +12320,18 @@
     "TemplateId"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-quicksight",
+  "tagging": {
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "quicksight:TagResource",
+      "quicksight:UntagResource",
+      "quicksight:ListTagsForResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::QuickSight::Template",
   "writeOnlyProperties": [
     "/properties/Definition",

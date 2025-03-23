@@ -155,7 +155,8 @@
         ]
       },
       "permissions": [
-        "imagebuilder:ListImages"
+        "imagebuilder:ListImages",
+        "imagebuilder:ListImageBuildVersions"
       ]
     },
     "read": {
@@ -175,6 +176,11 @@
       "required": [
         "ImageRecipeArn",
         "InfrastructureConfigurationArn"
+      ]
+    },
+    {
+      "required": [
+        "ImportDiskImageSettings"
       ]
     }
   ],
@@ -257,7 +263,15 @@
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
   "tagging": {
-    "taggable": false
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "imagebuilder:TagResource",
+      "imagebuilder:UnTagResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": false,
+    "taggable": true
   },
   "typeName": "AWS::ImageBuilder::Image"
 }

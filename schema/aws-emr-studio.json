@@ -14,7 +14,7 @@
   ],
   "definitions": {
     "Arn": {
-      "pattern": "^arn:aws(-(cn|us-gov))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
+      "pattern": "^arn:aws(-(cn|us-gov|iso-f|iso-e))?:[a-z-]+:(([a-z]+-)+[0-9])?:([0-9]{12})?:[^.]+$",
       "type": "string"
     },
     "SubnetId": {
@@ -232,5 +232,16 @@
     "WorkspaceSecurityGroupId",
     "DefaultS3Location"
   ],
+  "tagging": {
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "elasticmapreduce:AddTags",
+      "elasticmapreduce:RemoveTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::EMR::Studio"
 }

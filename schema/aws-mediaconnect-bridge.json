@@ -71,6 +71,10 @@
           "description": "The network source multicast IP.",
           "type": "string"
         },
+        "MulticastSourceSettings": {
+          "$ref": "#/definitions/MulticastSourceSettings",
+          "description": "The settings related to the multicast source."
+        },
         "Name": {
           "description": "The name of the network source.",
           "type": "string"
@@ -201,6 +205,17 @@
       ],
       "type": "object"
     },
+    "MulticastSourceSettings": {
+      "additionalProperties": false,
+      "description": "The settings related to the multicast source.",
+      "properties": {
+        "MulticastSourceIp": {
+          "description": "The IP address of the source for source-specific multicast (SSM).",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "ProtocolEnum": {
       "enum": [
         "rtp-fec",
@@ -237,13 +252,17 @@
     "create": {
       "permissions": [
         "mediaconnect:CreateBridge",
-        "mediaconnect:DescribeBridge"
+        "mediaconnect:DescribeBridge",
+        "mediaconnect:AddBridgeOutputs",
+        "mediaconnect:AddBridgeSources"
       ]
     },
     "delete": {
       "permissions": [
         "mediaconnect:DescribeBridge",
-        "mediaconnect:DeleteBridge"
+        "mediaconnect:DeleteBridge",
+        "mediaconnect:RemoveBridgeOutput",
+        "mediaconnect:RemoveBridgeSource"
       ]
     },
     "list": {

@@ -1,16 +1,42 @@
 {
   "additionalProperties": false,
+  "definitions": {
+    "IpAddressType": {
+      "enum": [
+        "ipv4",
+        "ipv6"
+      ],
+      "type": "string"
+    },
+    "Tag": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "Value",
+        "Key"
+      ],
+      "type": "object"
+    }
+  },
   "description": "Resource Type definition for AWS::EC2::VPCEndpointService",
   "handlers": {
     "create": {
       "permissions": [
         "ec2:CreateVpcEndpointServiceConfiguration",
-        "ec2:ModifyVpcEndpointServiceConfiguration",
         "ec2:ModifyVpcEndpointServicePayerResponsibility",
         "cloudwatch:ListManagedInsightRules",
         "cloudwatch:DeleteInsightRules",
         "cloudwatch:PutManagedInsightRules",
-        "ec2:DescribeVpcEndpointServiceConfigurations"
+        "ec2:DescribeVpcEndpointServiceConfigurations",
+        "vpce:AllowMultiRegion",
+        "ec2:CreateTags"
       ]
     },
     "delete": {
@@ -18,7 +44,9 @@
         "ec2:DeleteVpcEndpointServiceConfigurations",
         "ec2:DescribeVpcEndpointServiceConfigurations",
         "cloudwatch:ListManagedInsightRules",
-        "cloudwatch:DeleteInsightRules"
+        "cloudwatch:DeleteInsightRules",
+        "ec2:DeleteTags",
+        "vpce:AllowMultiRegion"
       ]
     },
     "list": {
@@ -36,12 +64,14 @@
     "update": {
       "permissions": [
         "ec2:ModifyVpcEndpointServiceConfiguration",
-        "ec2:DeleteVpcEndpointServiceConfigurations",
         "ec2:DescribeVpcEndpointServiceConfigurations",
         "ec2:ModifyVpcEndpointServicePayerResponsibility",
         "cloudwatch:ListManagedInsightRules",
         "cloudwatch:DeleteInsightRules",
-        "cloudwatch:PutManagedInsightRules"
+        "cloudwatch:PutManagedInsightRules",
+        "ec2:CreateTags",
+        "ec2:DeleteTags",
+        "vpce:AllowMultiRegion"
       ]
     }
   },
@@ -78,6 +108,33 @@
     },
     "ServiceId": {
       "type": "string"
+    },
+    "SupportedIpAddressTypes": {
+      "description": "Specify which Ip Address types are supported for VPC endpoint service.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/IpAddressType"
+      },
+      "type": "array",
+      "uniqueItems": false
+    },
+    "SupportedRegions": {
+      "description": "The Regions from which service consumers can access the service.",
+      "insertionOrder": false,
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "Tags": {
+      "description": "The tags to add to the VPC endpoint service.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "type": "array",
+      "uniqueItems": false
     }
   },
   "readOnlyProperties": [
@@ -85,9 +142,14 @@
   ],
   "tagging": {
     "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+    "permissions": [
+      "ec2:CreateTags",
+      "ec2:DeleteTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
   },
   "typeName": "AWS::EC2::VPCEndpointService",
   "writeOnlyProperties": [

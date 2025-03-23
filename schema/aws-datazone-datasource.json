@@ -1,6 +1,7 @@
 {
   "additionalProperties": false,
   "createOnlyProperties": [
+    "/properties/ConnectionIdentifier",
     "/properties/EnvironmentIdentifier",
     "/properties/DomainIdentifier",
     "/properties/ProjectIdentifier",
@@ -19,7 +20,7 @@
       "type": "string"
     },
     "DataSourceConfigurationInput": {
-      "description": "Specifies the configuration of the data source. It can be set to either glueRunConfiguration or redshiftRunConfiguration.",
+      "description": "Specifies the configuration of the data source. It can be set to either glueRunConfiguration or redshiftRunConfiguration or sageMakerRunConfiguration.",
       "oneOf": [
         {
           "additionalProperties": false,
@@ -39,6 +40,16 @@
             }
           },
           "title": "RedshiftRunConfiguration",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "SageMakerRunConfiguration": {
+              "$ref": "#/definitions/SageMakerRunConfigurationInput"
+            }
+          },
+          "title": "SageMakerRunConfiguration",
           "type": "object"
         }
       ]
@@ -136,6 +147,12 @@
           "description": "Specifies whether to automatically import data quality metrics as part of the data source run.",
           "type": "boolean"
         },
+        "CatalogName": {
+          "description": "The catalog name in the AWS Glue run configuration.",
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
         "DataAccessRole": {
           "$ref": "#/definitions/DataAccessRole",
           "description": "The data access role included in the configuration details of the AWS Glue data source."
@@ -219,8 +236,6 @@
         }
       },
       "required": [
-        "RedshiftCredentialConfiguration",
-        "RedshiftStorage",
         "RelationalFilterConfigurations"
       ],
       "type": "object"
@@ -319,6 +334,20 @@
       },
       "type": "array"
     },
+    "SageMakerRunConfigurationInput": {
+      "additionalProperties": false,
+      "description": "The configuration details of the Amazon SageMaker data source.",
+      "properties": {
+        "TrackingAssets": {
+          "$ref": "#/definitions/TrackingAssets",
+          "description": "The tracking assets of the Amazon SageMaker run."
+        }
+      },
+      "required": [
+        "TrackingAssets"
+      ],
+      "type": "object"
+    },
     "ScheduleConfiguration": {
       "additionalProperties": false,
       "description": "The schedule of the data source runs.",
@@ -339,6 +368,23 @@
     },
     "Timezone": {
       "type": "string"
+    },
+    "TrackingAssets": {
+      "additionalProperties": false,
+      "description": "The tracking assets of the Amazon SageMaker run.",
+      "maxProperties": 1,
+      "patternProperties": {
+        "^.{1,64}$": {
+          "items": {
+            "pattern": "^arn:aws[^:]*:sagemaker:[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]:\\d{12}:[\\w+=,.@-]{1,128}/[\\w+=,.@-]{1,256}$",
+            "type": "string"
+          },
+          "maxItems": 500,
+          "minItems": 0,
+          "type": "array"
+        }
+      },
+      "type": "object"
     },
     "TypeRevision": {
       "description": "The revision of the metadata form type.",
@@ -413,6 +459,14 @@
       "$ref": "#/definitions/DataSourceConfigurationInput",
       "description": "Configuration of the data source. It can be set to either glueRunConfiguration or redshiftRunConfiguration."
     },
+    "ConnectionId": {
+      "description": "The unique identifier of a connection used to fetch relevant parameters from connection during Datasource run",
+      "type": "string"
+    },
+    "ConnectionIdentifier": {
+      "description": "The unique identifier of a connection used to fetch relevant parameters from connection during Datasource run",
+      "type": "string"
+    },
     "CreatedAt": {
       "description": "The timestamp of when the data source was created.",
       "format": "date-time",
@@ -439,7 +493,6 @@
     },
     "EnvironmentId": {
       "description": "The unique identifier of the Amazon DataZone environment to which the data source publishes assets.",
-      "pattern": "^[a-zA-Z0-9_-]{1,36}$",
       "type": "string"
     },
     "EnvironmentIdentifier": {
@@ -507,6 +560,7 @@
     }
   },
   "readOnlyProperties": [
+    "/properties/ConnectionId",
     "/properties/CreatedAt",
     "/properties/DomainId",
     "/properties/EnvironmentId",
@@ -522,7 +576,6 @@
     "Name",
     "DomainIdentifier",
     "ProjectIdentifier",
-    "EnvironmentIdentifier",
     "Type"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
@@ -535,6 +588,7 @@
   "typeName": "AWS::DataZone::DataSource",
   "writeOnlyProperties": [
     "/properties/AssetFormsInput",
+    "/properties/ConnectionIdentifier",
     "/properties/EnvironmentIdentifier",
     "/properties/DomainIdentifier",
     "/properties/Configuration",

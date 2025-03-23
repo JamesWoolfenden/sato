@@ -555,6 +555,7 @@
         "sagemaker:CreateModelQualityJobDefinition",
         "sagemaker:DescribeModelQualityJobDefinition",
         "sagemaker:AddTags",
+        "sagemaker:ListTags",
         "iam:PassRole"
       ]
     },
@@ -571,7 +572,8 @@
     },
     "read": {
       "permissions": [
-        "sagemaker:DescribeModelQualityJobDefinition"
+        "sagemaker:DescribeModelQualityJobDefinition",
+        "sagemaker:ListTags"
       ]
     }
   },
@@ -643,11 +645,19 @@
     "JobResources",
     "RoleArn"
   ],
+  "tagging": {
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "sagemaker:AddTags",
+      "sagemaker:ListTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": false,
+    "taggable": true
+  },
   "typeName": "AWS::SageMaker::ModelQualityJobDefinition",
   "writeOnlyProperties": [
-    "/properties/EndpointName",
-    "/properties/Tags",
-    "/properties/Tags/*/Key",
-    "/properties/Tags/*/Value"
+    "/properties/EndpointName"
   ]
 }

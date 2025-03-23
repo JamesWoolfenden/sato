@@ -15,6 +15,21 @@
       ],
       "type": "object"
     },
+    "IpamOrganizationalUnitExclusion": {
+      "additionalProperties": false,
+      "description": "If your IPAM is integrated with AWS Organizations and you add an organizational unit (OU) exclusion, IPAM will not manage the IP addresses in accounts in that OU exclusion.",
+      "properties": {
+        "OrganizationsEntityPath": {
+          "description": "An AWS Organizations entity path. Build the path for the OU(s) using AWS Organizations IDs separated by a '/'. Include all child OUs by ending the path with '/*'.",
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "OrganizationsEntityPath"
+      ],
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "description": "A key-value pair to associate with a resource.",
@@ -46,7 +61,9 @@
         "ec2:CreateIpam",
         "iam:CreateServiceLinkedRole",
         "ec2:CreateTags",
-        "ec2:DescribeIpams"
+        "ec2:DescribeIpams",
+        "ec2:DescribeIpamResourceDiscoveries",
+        "ec2:ModifyIpamResourceDiscovery"
       ]
     },
     "delete": {
@@ -63,7 +80,8 @@
     },
     "read": {
       "permissions": [
-        "ec2:DescribeIpams"
+        "ec2:DescribeIpams",
+        "ec2:DescribeIpamResourceDiscoveries"
       ]
     },
     "update": {
@@ -71,7 +89,9 @@
         "ec2:ModifyIpam",
         "ec2:CreateTags",
         "ec2:DeleteTags",
-        "ec2:DescribeIpams"
+        "ec2:DescribeIpams",
+        "ec2:DescribeIpamResourceDiscoveries",
+        "ec2:ModifyIpamResourceDiscovery"
       ]
     }
   },
@@ -90,6 +110,15 @@
     "DefaultResourceDiscoveryId": {
       "description": "The Id of the default resource discovery, created with this IPAM.",
       "type": "string"
+    },
+    "DefaultResourceDiscoveryOrganizationalUnitExclusions": {
+      "description": "A set of organizational unit (OU) exclusions for the default resource discovery, created with this IPAM.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/IpamOrganizationalUnitExclusion"
+      },
+      "type": "array",
+      "uniqueItems": true
     },
     "Description": {
       "type": "string"

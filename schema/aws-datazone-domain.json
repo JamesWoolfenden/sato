@@ -6,7 +6,8 @@
   ],
   "additionalProperties": false,
   "createOnlyProperties": [
-    "/properties/KmsKeyIdentifier"
+    "/properties/KmsKeyIdentifier",
+    "/properties/DomainVersion"
   ],
   "definitions": {
     "AuthType": {
@@ -84,7 +85,10 @@
         "datazone:TagResource",
         "sso:CreateManagedApplicationInstance",
         "sso:DeleteManagedApplicationInstance",
-        "sso:PutApplicationAssignmentConfiguration"
+        "sso:PutApplicationAssignmentConfiguration",
+        "sso:ListInstances",
+        "sso:PutApplicationAccessScope",
+        "iam:PassRole"
       ]
     },
     "delete": {
@@ -92,7 +96,8 @@
         "datazone:DeleteDomain",
         "datazone:GetDomain",
         "sso:DeleteManagedApplicationInstance",
-        "sso:PutApplicationAssignmentConfiguration"
+        "sso:PutApplicationAssignmentConfiguration",
+        "sso:ListInstances"
       ]
     },
     "list": {
@@ -113,7 +118,10 @@
         "datazone:UntagResource",
         "sso:CreateManagedApplicationInstance",
         "sso:DeleteManagedApplicationInstance",
-        "sso:PutApplicationAssignmentConfiguration"
+        "sso:PutApplicationAssignmentConfiguration",
+        "sso:ListInstances",
+        "sso:PutApplicationAccessScope",
+        "iam:PassRole"
       ]
     }
   },
@@ -138,6 +146,14 @@
     "DomainExecutionRole": {
       "description": "The domain execution role that is created when an Amazon DataZone domain is created. The domain execution role is created in the AWS account that houses the Amazon DataZone domain.",
       "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+      "type": "string"
+    },
+    "DomainVersion": {
+      "description": "The version of the domain.",
+      "enum": [
+        "V1",
+        "V2"
+      ],
       "type": "string"
     },
     "Id": {
@@ -169,6 +185,18 @@
       "description": "The URL of the data portal for this Amazon DataZone domain.",
       "type": "string"
     },
+    "RootDomainUnitId": {
+      "description": "The ID of the root domain in Amazon Datazone.",
+      "maxLength": 256,
+      "minLength": 1,
+      "pattern": "^[a-z0-9_\\-]+$",
+      "type": "string"
+    },
+    "ServiceRole": {
+      "description": "The service role of the domain that is created.",
+      "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+      "type": "string"
+    },
     "SingleSignOn": {
       "$ref": "#/definitions/SingleSignOn",
       "description": "The single-sign on configuration of the Amazon DataZone domain."
@@ -188,6 +216,7 @@
     }
   },
   "readOnlyProperties": [
+    "/properties/RootDomainUnitId",
     "/properties/Arn",
     "/properties/CreatedAt",
     "/properties/Id",
