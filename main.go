@@ -4,13 +4,12 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
-	"sort"
-	"time"
-
 	"sato/src/arm"
 	"sato/src/cf"
 	"sato/src/see"
 	"sato/src/version"
+	"sort"
+	"time"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
@@ -39,7 +38,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := cf.Parse(file, destination)
 					if err != nil {
-						log.Info().Msgf(err.Error())
+						log.Info().Msgf("%v", err.Error())
 					}
 
 					return nil
@@ -79,7 +78,7 @@ func main() {
 				Action: func(*cli.Context) error {
 					err := arm.Parse(file, destination)
 					if err != nil {
-						log.Info().Msgf(err.Error())
+						log.Info().Msgf("%v", err.Error())
 					}
 
 					return nil
