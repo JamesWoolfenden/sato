@@ -69,8 +69,8 @@ var lookupMapping = map[string]string{
 	"aws::applicationautoscaling::scalabletarget":                         "aws_appautoscaling_target",
 	"aws::applicationautoscaling::scalingpolicy":                          "aws_appAutoscaling_policy",
 	"aws::applicationinsights::application":                               "aws_applicationinsights_application",
-	"aws::applicationsignals::servicelevelobjective":                      none,
 	"aws::applicationsignals::discovery":                                  none,
+	"aws::applicationsignals::servicelevelobjective":                      none,
 	"aws::appmesh::gatewayroute":                                          "aws_appmesh_gateway_route",
 	"aws::appmesh::mesh":                                                  "aws_appmesh_mesh",
 	"aws::appmesh::route":                                                 "aws_appmesh_route",
@@ -1331,7 +1331,7 @@ var lookupMapping = map[string]string{
 	"aws::vpclattice::authpolicy":                                         "aws_vpclattice_auth_policy",
 	"aws::vpclattice::listener":                                           "aws_vpclattice_listener",
 	"aws::vpclattice::resourceconfiguration":                              none,
-	"aws::vpclattice::resourcegateway":                                    none,
+	"aws::vpclattice::resourcegateway":                                    "aws_vpclattice_resource_gateway",
 	"aws::vpclattice::resourcepolicy":                                     "aws_vpclattice_resource_policy",
 	"aws::vpclattice::rule":                                               "aws_vpclattice_listener_rule",
 	"aws::vpclattice::service":                                            "aws_vpclattice_service",
@@ -1392,7 +1392,6 @@ var lookupMapping = map[string]string{
 	"aws::xray::resourcepolicy":                                           none,
 	"aws::xray::samplingrule":                                             "aws_xray_sampling_rule",
 	"aws::xray::transactionsearchconfig":                                  none,
-
 	// add more
 	"microsoft.aad/domainservices":                                        "azurerm_active_directory_domain_service",
 	"microsoft.analysisservices/servers":                                  "azurerm_analysis_services_server",

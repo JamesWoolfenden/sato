@@ -170,7 +170,7 @@ func TestLookupAll(t *testing.T) {
 				s.WriteString(typeName)
 				s.WriteString("\": \"\",")
 				fmt.Println(s.String())
-				t.Errorf("Lookup incomplete")
+				t.Errorf("Lookup incomplete %s", typeName)
 			}
 		}
 	}
