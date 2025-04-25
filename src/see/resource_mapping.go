@@ -1392,6 +1392,17 @@ var lookupMapping = map[string]string{
 	"aws::xray::resourcepolicy":                                           none,
 	"aws::xray::samplingrule":                                             "aws_xray_sampling_rule",
 	"aws::xray::transactionsearchconfig":                                  none,
+	"aws::cloudfront::connectiongroup":                                    none,
+	"aws::cloudfront::distributiontenant":                                 none,
+	"aws::dsql::cluster":                                                  none,
+	"aws::ec2::routeserver":                                               none,
+	"aws::ec2::routeserverassociation":                                    none,
+	"aws::ec2::routeserverendpoint":                                       none,
+	"aws::ec2::routeserverpeer":                                           none,
+	"aws::ec2::routeserverpropagation":                                    none,
+	"aws::ecr::registryscanningconfiguration":                             "aws_ecr_registry_scanning_configuration",
+	"aws::iotsitewise::dataset":                                           none,
+
 	// add more
 	"microsoft.aad/domainservices":                                        "azurerm_active_directory_domain_service",
 	"microsoft.analysisservices/servers":                                  "azurerm_analysis_services_server",
