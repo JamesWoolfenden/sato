@@ -34,7 +34,9 @@
     "create": {
       "permissions": [
         "cur:PutReportDefinition",
-        "cur:DescribeReportDefinitions"
+        "cur:DescribeReportDefinitions",
+        "cur:ListTagsForResource",
+        "cur:TagResource"
       ]
     },
     "delete": {
@@ -49,13 +51,17 @@
     },
     "read": {
       "permissions": [
-        "cur:DescribeReportDefinitions"
+        "cur:DescribeReportDefinitions",
+        "cur:ListTagsForResource"
       ]
     },
     "update": {
       "permissions": [
         "cur:DescribeReportDefinitions",
-        "cur:ModifyReportDefinition"
+        "cur:ModifyReportDefinition",
+        "cur:ListTagsForResource",
+        "cur:TagResource",
+        "cur:UntagResource"
       ]
     }
   },
@@ -153,6 +159,14 @@
       "description": "The region of the S3 bucket that AWS delivers the report into.",
       "type": "string"
     },
+    "Tags": {
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "maxItems": 100,
+      "minItems": 0,
+      "type": "array"
+    },
     "TimeUnit": {
       "description": "The granularity of the line items in the report.",
       "enum": [
@@ -176,7 +190,16 @@
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cur.git",
   "tagging": {
-    "taggable": false
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "cur:ListTagsForResource",
+      "cur:TagResource",
+      "cur:UntagResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
   },
   "typeName": "AWS::CUR::ReportDefinition"
 }

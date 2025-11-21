@@ -7,8 +7,7 @@
     "/properties/ParentImage",
     "/properties/Description",
     "/properties/BlockDeviceMappings",
-    "/properties/WorkingDirectory",
-    "/properties/Tags"
+    "/properties/WorkingDirectory"
   ],
   "definitions": {
     "AdditionalInstanceConfiguration": {
@@ -139,6 +138,29 @@
       },
       "type": "object"
     },
+    "LatestVersion": {
+      "additionalProperties": false,
+      "description": "The latest version references of the image recipe.",
+      "properties": {
+        "Arn": {
+          "description": "The latest version ARN of the created image recipe.",
+          "type": "string"
+        },
+        "Major": {
+          "description": "The latest version ARN of the created image recipe, with the same major version.",
+          "type": "string"
+        },
+        "Minor": {
+          "description": "The latest version ARN of the created image recipe, with the same minor version.",
+          "type": "string"
+        },
+        "Patch": {
+          "description": "The latest version ARN of the created image recipe, with the same patch version.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SystemsManagerAgent": {
       "additionalProperties": false,
       "description": "Contains settings for the SSM agent on your build instance.",
@@ -167,7 +189,7 @@
     },
     "delete": {
       "permissions": [
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:GetImageRecipe",
         "imagebuilder:DeleteImageRecipe"
       ]
@@ -181,6 +203,12 @@
       "permissions": [
         "imagebuilder:GetImageRecipe"
       ]
+    },
+    "update": {
+      "permissions": [
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
+      ]
     }
   },
   "primaryIdentifier": [
@@ -190,6 +218,16 @@
     "AdditionalInstanceConfiguration": {
       "$ref": "#/definitions/AdditionalInstanceConfiguration",
       "description": "Specify additional settings and launch scripts for your build instances."
+    },
+    "AmiTags": {
+      "additionalProperties": false,
+      "description": "The tags to apply to the AMI created by this image recipe.",
+      "patternProperties": {
+        ".{1,}": {
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "Arn": {
       "description": "The Amazon Resource Name (ARN) of the image recipe.",
@@ -214,6 +252,10 @@
     "Description": {
       "description": "The description of the image recipe.",
       "type": "string"
+    },
+    "LatestVersion": {
+      "$ref": "#/definitions/LatestVersion",
+      "description": "The latest version references of the image recipe."
     },
     "Name": {
       "description": "The name of the image recipe.",
@@ -242,16 +284,17 @@
       "type": "string"
     }
   },
-  "propertyTransform": {
-    "/properties/BlockDeviceMappings/*/Ebs/VolumeType": "$uppercase(VolumeType)"
-  },
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/LatestVersion",
+    "/properties/LatestVersion/Arn",
+    "/properties/LatestVersion/Major",
+    "/properties/LatestVersion/Minor",
+    "/properties/LatestVersion/Patch"
   ],
   "required": [
     "Name",
     "Version",
-    "Components",
     "ParentImage"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
@@ -259,11 +302,11 @@
     "cloudFormationSystemTags": true,
     "permissions": [
       "imagebuilder:TagResource",
-      "imagebuilder:UnTagResource"
+      "imagebuilder:UntagResource"
     ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "taggable": true
   },
   "typeName": "AWS::ImageBuilder::ImageRecipe"

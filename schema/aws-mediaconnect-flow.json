@@ -16,6 +16,11 @@
       },
       "type": "object"
     },
+    "AutomaticEncryptionKeyConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.",
+      "type": "object"
+    },
     "BlackFrames": {
       "additionalProperties": false,
       "description": "Configures settings for the BlackFrames metric.",
@@ -131,6 +136,60 @@
         }
       },
       "type": "object"
+    },
+    "FlowTransitEncryption": {
+      "additionalProperties": false,
+      "description": "The configuration that defines how content is encrypted during transit between the MediaConnect router and a MediaConnect flow.",
+      "properties": {
+        "EncryptionKeyConfiguration": {
+          "$ref": "#/definitions/FlowTransitEncryptionKeyConfiguration"
+        },
+        "EncryptionKeyType": {
+          "$ref": "#/definitions/FlowTransitEncryptionKeyType"
+        }
+      },
+      "required": [
+        "EncryptionKeyConfiguration"
+      ],
+      "type": "object"
+    },
+    "FlowTransitEncryptionKeyConfiguration": {
+      "description": "Configuration settings for flow transit encryption keys.",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "SecretsManager": {
+              "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+            }
+          },
+          "required": [
+            "SecretsManager"
+          ],
+          "title": "SecretsManager",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "Automatic": {
+              "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
+            }
+          },
+          "required": [
+            "Automatic"
+          ],
+          "title": "Automatic",
+          "type": "object"
+        }
+      ]
+    },
+    "FlowTransitEncryptionKeyType": {
+      "enum": [
+        "SECRETS_MANAGER",
+        "AUTOMATIC"
+      ],
+      "type": "string"
     },
     "Fmtp": {
       "additionalProperties": false,
@@ -448,6 +507,27 @@
       ],
       "type": "object"
     },
+    "SecretsManagerEncryptionKeyConfiguration": {
+      "additionalProperties": false,
+      "description": "The configuration settings for transit encryption of a flow source using AWS Secrets Manager, including the secret ARN and role ARN.",
+      "properties": {
+        "RoleArn": {
+          "description": "The ARN of the IAM role used for transit encryption from the router output using AWS Secrets Manager.",
+          "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+          "type": "string"
+        },
+        "SecretArn": {
+          "description": "The ARN of the AWS Secrets Manager secret used for transit encryption from the router output.",
+          "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "RoleArn",
+        "SecretArn"
+      ],
+      "type": "object"
+    },
     "SilentAudio": {
       "additionalProperties": false,
       "description": "Configures settings for the SilentAudio metric.",
@@ -536,6 +616,16 @@
             "cdi"
           ],
           "type": "string"
+        },
+        "RouterIntegrationState": {
+          "enum": [
+            "ENABLED",
+            "DISABLED"
+          ],
+          "type": "string"
+        },
+        "RouterIntegrationTransitDecryption": {
+          "$ref": "#/definitions/FlowTransitEncryption"
         },
         "SenderControlPort": {
           "description": "The port that the flow uses to send outbound requests to initiate connection with the sender for fujitsu-qos protocol.",

@@ -14,8 +14,7 @@
     "/properties/KmsKeyId",
     "/properties/PlatformOverride",
     "/properties/WorkingDirectory",
-    "/properties/Components",
-    "/properties/Tags"
+    "/properties/Components"
   ],
   "definitions": {
     "ComponentConfiguration": {
@@ -150,6 +149,29 @@
       },
       "type": "object"
     },
+    "LatestVersion": {
+      "additionalProperties": false,
+      "description": "The latest version references of the container recipe.",
+      "properties": {
+        "Arn": {
+          "description": "The latest version ARN of the created container recipe.",
+          "type": "string"
+        },
+        "Major": {
+          "description": "The latest version ARN of the created container recipe, with the same major version.",
+          "type": "string"
+        },
+        "Minor": {
+          "description": "The latest version ARN of the created container recipe, with the same minor version.",
+          "type": "string"
+        },
+        "Patch": {
+          "description": "The latest version ARN of the created container recipe, with the same patch version.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "TargetContainerRepository": {
       "additionalProperties": false,
       "description": "The container repository where the output container image is stored.",
@@ -196,7 +218,7 @@
     },
     "delete": {
       "permissions": [
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:GetContainerRecipe",
         "imagebuilder:DeleteContainerRecipe"
       ]
@@ -211,26 +233,19 @@
         "imagebuilder:GetContainerRecipe",
         "kms:Decrypt"
       ]
+    },
+    "update": {
+      "permissions": [
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
+      ]
     }
   },
   "oneOf": [
     {
       "required": [
-        "DockerfileTemplateData",
         "Name",
         "Version",
-        "Components",
-        "ParentImage",
-        "TargetRepository",
-        "ContainerType"
-      ]
-    },
-    {
-      "required": [
-        "DockerfileTemplateUri",
-        "Name",
-        "Version",
-        "Components",
         "ParentImage",
         "TargetRepository",
         "ContainerType"
@@ -285,6 +300,10 @@
       "description": "Identifies which KMS key is used to encrypt the container image.",
       "type": "string"
     },
+    "LatestVersion": {
+      "$ref": "#/definitions/LatestVersion",
+      "description": "The latest version references of the container recipe."
+    },
     "Name": {
       "description": "The name of the container recipe.",
       "type": "string"
@@ -324,22 +343,24 @@
       "type": "string"
     }
   },
-  "propertyTransform": {
-    "/properties/InstanceConfiguration/BlockDeviceMappings/*/Ebs/VolumeType": "$uppercase(VolumeType)"
-  },
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/LatestVersion",
+    "/properties/LatestVersion/Arn",
+    "/properties/LatestVersion/Major",
+    "/properties/LatestVersion/Minor",
+    "/properties/LatestVersion/Patch"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
   "tagging": {
     "cloudFormationSystemTags": true,
     "permissions": [
       "imagebuilder:TagResource",
-      "imagebuilder:UnTagResource"
+      "imagebuilder:UntagResource"
     ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "taggable": true
   },
   "typeName": "AWS::ImageBuilder::ContainerRecipe",

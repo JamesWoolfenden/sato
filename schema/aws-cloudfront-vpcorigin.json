@@ -52,7 +52,7 @@
             "TLSv1",
             "SSLv3"
           ],
-          "description": "",
+          "description": "Specifies the minimum SSL/TLS protocol that CloudFront uses when connecting to your origin over HTTPS. Valid values include ``SSLv3``, ``TLSv1``, ``TLSv1.1``, and ``TLSv1.2``.\n For more information, see [Minimum Origin SSL Protocol](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/DownloadDistValuesOrigin.html#DownloadDistValuesOriginSSLProtocols) in the *Amazon CloudFront Developer Guide*.",
           "items": {
             "type": "string"
           },
@@ -79,7 +79,8 @@
         "ec2:DescribeInternetGateways",
         "iam:CreateServiceLinkedRole",
         "sts:AssumeRole"
-      ]
+      ],
+      "timeoutInMinutes": 40
     },
     "delete": {
       "permissions": [
@@ -115,13 +116,18 @@
         "ec2:DescribeInternetGateways",
         "iam:CreateServiceLinkedRole",
         "sts:AssumeRole"
-      ]
+      ],
+      "timeoutInMinutes": 40
     }
   },
   "primaryIdentifier": [
     "/properties/Id"
   ],
   "properties": {
+    "AccountId": {
+      "description": "",
+      "type": "string"
+    },
     "Arn": {
       "description": "",
       "type": "string"
@@ -158,6 +164,7 @@
   "readOnlyProperties": [
     "/properties/Id",
     "/properties/Arn",
+    "/properties/AccountId",
     "/properties/Status",
     "/properties/CreatedTime",
     "/properties/LastModifiedTime"

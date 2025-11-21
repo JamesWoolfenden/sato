@@ -2,7 +2,8 @@
   "additionalProperties": false,
   "createOnlyProperties": [
     "/properties/Tags",
-    "/properties/JobQueueName"
+    "/properties/JobQueueName",
+    "/properties/JobQueueType"
   ],
   "definitions": {
     "ComputeEnvironmentOrder": {
@@ -26,7 +27,8 @@
       "properties": {
         "Action": {
           "enum": [
-            "CANCEL"
+            "CANCEL",
+            "TERMINATE"
           ],
           "type": "string"
         },
@@ -56,6 +58,22 @@
     "ResourceArn": {
       "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
       "type": "string"
+    },
+    "ServiceEnvironmentOrder": {
+      "additionalProperties": false,
+      "properties": {
+        "Order": {
+          "type": "integer"
+        },
+        "ServiceEnvironment": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "ServiceEnvironment",
+        "Order"
+      ],
+      "type": "object"
     }
   },
   "description": "Resource Type definition for AWS::Batch::JobQueue",
@@ -93,6 +111,18 @@
       ]
     }
   },
+  "oneOf": [
+    {
+      "required": [
+        "ComputeEnvironmentOrder"
+      ]
+    },
+    {
+      "required": [
+        "ServiceEnvironmentOrder"
+      ]
+    }
+  ],
   "primaryIdentifier": [
     "/properties/JobQueueArn"
   ],
@@ -113,6 +143,9 @@
       "minLength": 1,
       "type": "string"
     },
+    "JobQueueType": {
+      "type": "string"
+    },
     "JobStateTimeLimitActions": {
       "insertionOrder": true,
       "items": {
@@ -128,6 +161,14 @@
     },
     "SchedulingPolicyArn": {
       "$ref": "#/definitions/ResourceArn"
+    },
+    "ServiceEnvironmentOrder": {
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/ServiceEnvironmentOrder"
+      },
+      "type": "array",
+      "uniqueItems": false
     },
     "State": {
       "enum": [
@@ -151,7 +192,6 @@
     "/properties/JobQueueArn"
   ],
   "required": [
-    "ComputeEnvironmentOrder",
     "Priority"
   ],
   "tagging": {

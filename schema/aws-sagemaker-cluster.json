@@ -13,13 +13,99 @@
     "/properties/InstanceGroups/*/ExecutionRole",
     "/properties/InstanceGroups/*/InstanceGroupName",
     "/properties/InstanceGroups/*/InstanceType",
-    "/properties/InstanceGroups/*/ThreadsPerCore"
+    "/properties/InstanceGroups/*/ThreadsPerCore",
+    "/properties/RestrictedInstanceGroups/*/OverrideVpcConfig",
+    "/properties/RestrictedInstanceGroups/*/ExecutionRole",
+    "/properties/RestrictedInstanceGroups/*/InstanceGroupName",
+    "/properties/RestrictedInstanceGroups/*/InstanceType",
+    "/properties/RestrictedInstanceGroups/*/ThreadsPerCore"
   ],
   "definitions": {
+    "AlarmDetails": {
+      "additionalProperties": false,
+      "description": "The details of the alarm to monitor during the AMI update.",
+      "properties": {
+        "AlarmName": {
+          "description": "The name of the alarm.",
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "(?!\\s*$).+",
+          "type": "string"
+        }
+      },
+      "required": [
+        "AlarmName"
+      ],
+      "type": "object"
+    },
+    "AutoRollbackConfiguration": {
+      "description": "An array that contains the alarms that SageMaker monitors to know whether to roll back the AMI update.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AlarmDetails"
+      },
+      "type": "array"
+    },
+    "CapacitySizeConfig": {
+      "additionalProperties": false,
+      "description": "The configuration of the size measurements of the AMI update. Using this configuration, you can specify whether SageMaker should update your instance group by an amount or percentage of instances.",
+      "properties": {
+        "Type": {
+          "description": "Specifies whether SageMaker should process the update by amount or percentage of instances.",
+          "pattern": "INSTANCE_COUNT|CAPACITY_PERCENTAGE",
+          "type": "string"
+        },
+        "Value": {
+          "description": "Specifies the amount or percentage of instances SageMaker updates at a time.",
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "Type",
+        "Value"
+      ],
+      "type": "object"
+    },
+    "ClusterAutoScalingConfig": {
+      "additionalProperties": false,
+      "description": "Configuration for cluster auto-scaling",
+      "properties": {
+        "AutoScalerType": {
+          "default": "Karpenter",
+          "description": "The type of auto-scaler to use",
+          "enum": [
+            "Karpenter"
+          ],
+          "type": "string"
+        },
+        "Mode": {
+          "description": "The auto-scaling mode for the cluster",
+          "enum": [
+            "Enable",
+            "Disable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Mode"
+      ],
+      "type": "object"
+    },
     "ClusterEbsVolumeConfig": {
       "additionalProperties": false,
       "description": "Defines the configuration for attaching additional Amazon Elastic Block Store (EBS) volumes to the instances in the SageMaker HyperPod cluster instance group. The additional EBS volume is attached to each instance within the SageMaker HyperPod cluster instance group and mounted to /opt/sagemaker.",
       "properties": {
+        "RootVolume": {
+          "type": "boolean"
+        },
+        "VolumeKmsKeyId": {
+          "maxLength": 2048,
+          "minLength": 0,
+          "pattern": "^[a-zA-Z0-9:/_-]*$",
+          "type": "string"
+        },
         "VolumeSizeInGB": {
           "description": "The size in gigabytes (GB) of the additional EBS volume to be attached to the instances in the SageMaker HyperPod cluster instance group. The additional EBS volume is attached to each instance within the SageMaker HyperPod cluster instance group and mounted to /opt/sagemaker.",
           "maximum": 16384,
@@ -40,6 +126,9 @@
         },
         "ExecutionRole": {
           "$ref": "#/definitions/ExecutionRole"
+        },
+        "ImageId": {
+          "$ref": "#/definitions/ImageId"
         },
         "InstanceCount": {
           "description": "The number of instances you specified to add to the instance group of a SageMaker HyperPod cluster.",
@@ -64,11 +153,21 @@
         "OverrideVpcConfig": {
           "$ref": "#/definitions/VpcConfig"
         },
+        "ScheduledUpdateConfig": {
+          "$ref": "#/definitions/ScheduledUpdateConfig"
+        },
         "ThreadsPerCore": {
           "description": "The number you specified to TreadsPerCore in CreateCluster for enabling or disabling multithreading. For instance types that support multithreading, you can specify 1 for disabling multithreading and 2 for enabling multithreading.",
           "maximum": 2,
           "minimum": 1,
           "type": "integer"
+        },
+        "TrainingPlanArn": {
+          "description": "The Amazon Resource Name (ARN) of the training plan to use for this cluster instance group. For more information about how to reserve GPU capacity for your SageMaker HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan.",
+          "maxLength": 2048,
+          "minLength": 50,
+          "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:training-plan/.*$",
+          "type": "string"
         }
       },
       "required": [
@@ -151,6 +250,73 @@
       ],
       "type": "object"
     },
+    "ClusterRestrictedInstanceGroup": {
+      "additionalProperties": false,
+      "description": "Details of a restricted instance group in a SageMaker HyperPod cluster.",
+      "properties": {
+        "CurrentCount": {
+          "description": "The number of instances that are currently in the restricted instance group of a SageMaker HyperPod cluster.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "EnvironmentConfig": {
+          "$ref": "#/definitions/EnvironmentConfig"
+        },
+        "ExecutionRole": {
+          "$ref": "#/definitions/ExecutionRole"
+        },
+        "InstanceCount": {
+          "description": "The number of instances you specified to add to the restricted instance group of a SageMaker HyperPod cluster.",
+          "minimum": 0,
+          "type": "integer"
+        },
+        "InstanceGroupName": {
+          "$ref": "#/definitions/InstanceGroupName"
+        },
+        "InstanceStorageConfigs": {
+          "$ref": "#/definitions/ClusterInstanceStorageConfigs"
+        },
+        "InstanceType": {
+          "$ref": "#/definitions/InstanceType"
+        },
+        "OnStartDeepHealthChecks": {
+          "$ref": "#/definitions/OnStartDeepHealthChecks"
+        },
+        "OverrideVpcConfig": {
+          "$ref": "#/definitions/VpcConfig"
+        },
+        "ThreadsPerCore": {
+          "description": "The number you specified to TreadsPerCore in CreateCluster for enabling or disabling multithreading. For instance types that support multithreading, you can specify 1 for disabling multithreading and 2 for enabling multithreading.",
+          "maximum": 2,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "TrainingPlanArn": {
+          "description": "The Amazon Resource Name (ARN) of the training plan to use for this cluster restricted instance group. For more information about how to reserve GPU capacity for your SageMaker HyperPod clusters using Amazon SageMaker Training Plan, see CreateTrainingPlan.",
+          "maxLength": 2048,
+          "minLength": 50,
+          "pattern": "^arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:training-plan/.*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ExecutionRole",
+        "InstanceCount",
+        "InstanceGroupName",
+        "InstanceType",
+        "EnvironmentConfig"
+      ],
+      "type": "object"
+    },
+    "ClusterRestrictedInstanceGroupsList": {
+      "description": "The restricted instance groups of the SageMaker HyperPod cluster.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/ClusterRestrictedInstanceGroup"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
     "DeepHealthCheckType": {
       "description": "The type of deep health check(s) to be performed on the instances in the SageMaker HyperPod cluster instance group.",
       "enum": [
@@ -159,11 +325,70 @@
       ],
       "type": "string"
     },
+    "DeploymentConfig": {
+      "additionalProperties": false,
+      "description": "The configuration to use when updating the AMI versions.",
+      "properties": {
+        "AutoRollbackConfiguration": {
+          "$ref": "#/definitions/AutoRollbackConfiguration"
+        },
+        "RollingUpdatePolicy": {
+          "$ref": "#/definitions/RollingUpdatePolicy"
+        },
+        "WaitIntervalInSeconds": {
+          "description": "The duration in seconds that SageMaker waits before updating more instances in the cluster.",
+          "maximum": 3600,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "EnvironmentConfig": {
+      "additionalProperties": false,
+      "description": "The configuration for the restricted instance groups (RIG) environment.",
+      "properties": {
+        "FSxLustreConfig": {
+          "$ref": "#/definitions/FSxLustreConfig"
+        }
+      },
+      "type": "object"
+    },
     "ExecutionRole": {
       "description": "The execution role for the instance group to assume.",
       "maxLength": 2048,
       "minLength": 20,
       "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
+      "type": "string"
+    },
+    "FSxLustreConfig": {
+      "additionalProperties": false,
+      "description": "Configuration settings for an Amazon FSx for Lustre file system to be used with the cluster.",
+      "properties": {
+        "PerUnitStorageThroughput": {
+          "description": "The throughput capacity of the FSx for Lustre file system, measured in MB/s per TiB of storage.",
+          "maximum": 1000,
+          "minimum": 125,
+          "type": "integer"
+        },
+        "SizeInGiB": {
+          "description": "The storage capacity of the FSx for Lustre file system, specified in gibibytes (GiB).",
+          "maximum": 100800,
+          "minimum": 1200,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "SizeInGiB",
+        "PerUnitStorageThroughput"
+      ],
+      "type": "object"
+    },
+    "ImageId": {
+      "description": "AMI Id to be used for launching EC2 instances - HyperPodPublicAmiId or CustomAmiId",
+      "maxLength": 21,
+      "minLength": 7,
+      "pattern": "^ami-[0-9a-fA-F]{8,17}|default$",
       "type": "string"
     },
     "InstanceGroupName": {
@@ -198,6 +423,42 @@
       ],
       "type": "object"
     },
+    "RollingUpdatePolicy": {
+      "additionalProperties": false,
+      "description": "The policy that SageMaker uses when updating the AMI versions of the cluster.",
+      "properties": {
+        "MaximumBatchSize": {
+          "$ref": "#/definitions/CapacitySizeConfig"
+        },
+        "RollbackMaximumBatchSize": {
+          "$ref": "#/definitions/CapacitySizeConfig"
+        }
+      },
+      "required": [
+        "MaximumBatchSize"
+      ],
+      "type": "object"
+    },
+    "ScheduledUpdateConfig": {
+      "additionalProperties": false,
+      "description": "The configuration object of the schedule that SageMaker follows when updating the AMI.",
+      "properties": {
+        "DeploymentConfig": {
+          "$ref": "#/definitions/DeploymentConfig"
+        },
+        "ScheduleExpression": {
+          "description": "A cron expression that specifies the schedule that SageMaker follows when updating the AMI.",
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "cron\\((?:[0-5][0-9]|[0-9]|) (?:[01][0-9]|2[0-3]|[0-9]) (?:[1-9]|0[1-9]|[12][0-9]|3[01]|\\?) (?:[1-9]|0[1-9]|1[0-2]|\\*|\\*/(?:[1-9]|1[0-2])|) (?:MON|TUE|WED|THU|FRI|SAT|SUN|[1-7]|\\?|L|(?:[1-7]#[1-5])|(?:[1-7]L)) (?:20[2-9][0-9]|\\*|)\\)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ScheduleExpression"
+      ],
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "description": "A key-value pair to associate with a resource.",
@@ -220,6 +481,28 @@
       "required": [
         "Key",
         "Value"
+      ],
+      "type": "object"
+    },
+    "TieredStorageConfig": {
+      "additionalProperties": false,
+      "description": "Configuration for tiered storage in the SageMaker HyperPod cluster.",
+      "properties": {
+        "InstanceMemoryAllocationPercentage": {
+          "description": "The percentage of instance memory to allocate for tiered storage.",
+          "type": "integer"
+        },
+        "Mode": {
+          "description": "The mode of tiered storage.",
+          "enum": [
+            "Enable",
+            "Disable"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Mode"
       ],
       "type": "object"
     },
@@ -265,15 +548,24 @@
       "permissions": [
         "sagemaker:CreateCluster",
         "sagemaker:DescribeCluster",
+        "sagemaker:UpdateClusterSoftware",
         "sagemaker:AddTags",
         "sagemaker:ListTags",
+        "sagemaker:BatchAddClusterNodes",
+        "sagemaker:BatchDeleteClusterNodes",
         "eks:DescribeAccessEntry",
         "eks:DescribeCluster",
         "eks:CreateAccessEntry",
         "eks:DeleteAccessEntry",
         "eks:AssociateAccessPolicy",
         "iam:CreateServiceLinkedRole",
-        "iam:PassRole"
+        "iam:PassRole",
+        "kms:DescribeKey",
+        "kms:CreateGrant",
+        "ec2:DescribeImages",
+        "ec2:DescribeSnapshots",
+        "ec2:ModifyImageAttribute",
+        "ec2:ModifySnapshotAttribute"
       ],
       "timeoutInMinutes": 720
     },
@@ -300,15 +592,27 @@
     "update": {
       "permissions": [
         "sagemaker:UpdateCluster",
+        "sagemaker:UpdateClusterSoftware",
         "sagemaker:DescribeCluster",
         "sagemaker:ListTags",
         "sagemaker:AddTags",
         "sagemaker:DeleteTags",
+        "sagemaker:BatchAddClusterNodes",
+        "sagemaker:BatchDeleteClusterNodes",
         "eks:DescribeAccessEntry",
         "eks:DescribeCluster",
         "eks:CreateAccessEntry",
         "eks:DeleteAccessEntry",
-        "iam:PassRole"
+        "eks:AssociateAccessPolicy",
+        "iam:PassRole",
+        "kms:DescribeKey",
+        "kms:CreateGrant",
+        "sagemaker:BatchAddClusterNodes",
+        "sagemaker:BatchDeleteClusterNodes",
+        "ec2:DescribeImages",
+        "ec2:DescribeSnapshots",
+        "ec2:ModifyImageAttribute",
+        "ec2:ModifySnapshotAttribute"
       ],
       "timeoutInMinutes": 720
     }
@@ -317,6 +621,9 @@
     "/properties/ClusterArn"
   ],
   "properties": {
+    "AutoScaling": {
+      "$ref": "#/definitions/ClusterAutoScalingConfig"
+    },
     "ClusterArn": {
       "description": "The Amazon Resource Name (ARN) of the HyperPod Cluster.",
       "maxLength": 256,
@@ -328,6 +635,13 @@
       "maxLength": 63,
       "minLength": 1,
       "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9]){0,62}$",
+      "type": "string"
+    },
+    "ClusterRole": {
+      "description": "The cluster role for the autoscaler to assume.",
+      "maxLength": 2048,
+      "minLength": 20,
+      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
       "type": "string"
     },
     "ClusterStatus": {
@@ -354,6 +668,13 @@
     "InstanceGroups": {
       "$ref": "#/definitions/ClusterInstanceGroupsList"
     },
+    "NodeProvisioningMode": {
+      "description": "Determines the scaling strategy for the SageMaker HyperPod cluster. When set to 'Continuous', enables continuous scaling which dynamically manages node provisioning. If the parameter is omitted, uses the standard scaling approach in previous release.",
+      "enum": [
+        "Continuous"
+      ],
+      "type": "string"
+    },
     "NodeRecovery": {
       "description": "If node auto-recovery is set to true, faulty nodes will be replaced or rebooted when a failure is detected. If set to false, nodes will be labelled when a fault is detected.",
       "enum": [
@@ -365,6 +686,9 @@
     "Orchestrator": {
       "$ref": "#/definitions/Orchestrator"
     },
+    "RestrictedInstanceGroups": {
+      "$ref": "#/definitions/ClusterRestrictedInstanceGroupsList"
+    },
     "Tags": {
       "description": "Custom tags for managing the SageMaker HyperPod cluster as an AWS resource. You can add tags to your cluster in the same way you add them in other AWS services that support tagging.",
       "insertionOrder": false,
@@ -375,6 +699,9 @@
       "type": "array",
       "uniqueItems": true
     },
+    "TieredStorageConfig": {
+      "$ref": "#/definitions/TieredStorageConfig"
+    },
     "VpcConfig": {
       "$ref": "#/definitions/VpcConfig"
     }
@@ -384,11 +711,10 @@
     "/properties/CreationTime",
     "/properties/ClusterStatus",
     "/properties/FailureMessage",
-    "/properties/InstanceGroups/*/CurrentCount"
+    "/properties/InstanceGroups/*/CurrentCount",
+    "/properties/RestrictedInstanceGroups/*/CurrentCount"
   ],
-  "required": [
-    "InstanceGroups"
-  ],
+  "required": [],
   "tagging": {
     "cloudFormationSystemTags": false,
     "permissions": [

@@ -67,7 +67,9 @@
     "GeneratedRulesType": {
       "enum": [
         "ALLOWLIST",
-        "DENYLIST"
+        "DENYLIST",
+        "ALERTLIST",
+        "REJECTLIST"
       ],
       "type": "string"
     },
@@ -539,6 +541,14 @@
       ],
       "type": "object"
     },
+    "SummaryRuleOption": {
+      "enum": [
+        "SID",
+        "MSG",
+        "METADATA"
+      ],
+      "type": "string"
+    },
     "TCPFlag": {
       "enum": [
         "FIN",
@@ -621,7 +631,8 @@
         "network-firewall:TagResource",
         "network-firewall:ListRuleGroups",
         "iam:CreateServiceLinkedRole",
-        "ec2:GetManagedPrefixListEntries"
+        "ec2:GetManagedPrefixListEntries",
+        "ec2:DescribeManagedPrefixLists"
       ]
     },
     "delete": {
@@ -649,7 +660,8 @@
         "network-firewall:TagResource",
         "network-firewall:UntagResource",
         "iam:CreateServiceLinkedRole",
-        "ec2:GetManagedPrefixListEntries"
+        "ec2:GetManagedPrefixListEntries",
+        "ec2:DescribeManagedPrefixLists"
       ]
     }
   },
@@ -683,6 +695,20 @@
       "minLength": 1,
       "pattern": "^[a-zA-Z0-9-]+$",
       "type": "string"
+    },
+    "SummaryConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "RuleOptions": {
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/SummaryRuleOption"
+          },
+          "type": "array",
+          "uniqueItems": false
+        }
+      },
+      "type": "object"
     },
     "Tags": {
       "insertionOrder": false,

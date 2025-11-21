@@ -3,7 +3,8 @@
   "createOnlyProperties": [
     "/properties/Name",
     "/properties/OutputFormat",
-    "/properties/DestinationResourceArn"
+    "/properties/DestinationResourceArn",
+    "/properties/DeliveryDestinationType"
   ],
   "definitions": {
     "Arn": {
@@ -24,15 +25,9 @@
         },
         "DeliveryDestinationPolicy": {
           "description": "The contents of the policy attached to the delivery destination",
-          "maxLength": 51200,
-          "minLength": 1,
-          "type": "string"
+          "type": "object"
         }
       },
-      "required": [
-        "DeliveryDestinationName",
-        "DeliveryDestinationPolicy"
-      ],
       "type": "object"
     },
     "Tag": {
@@ -113,14 +108,12 @@
       "description": "The Amazon Resource Name (ARN) that uniquely identifies this delivery destination."
     },
     "DeliveryDestinationPolicy": {
+      "$ref": "#/definitions/DestinationPolicy",
       "description": "IAM policy that grants permissions to CloudWatch Logs to deliver logs cross-account to a specified destination in this account.\n\nThe policy must be in JSON string format.\n\nLength Constraints: Maximum length of 51200",
-      "items": {
-        "$ref": "#/definitions/DestinationPolicy"
-      },
       "type": "object"
     },
     "DeliveryDestinationType": {
-      "description": "Displays whether this delivery destination is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.",
+      "description": "Displays whether this delivery destination is CloudWatch Logs, Amazon S3, Kinesis Data Firehose, or XRay.",
       "maxLength": 12,
       "minLength": 1,
       "pattern": "^[0-9A-Za-z]+$",
@@ -155,8 +148,7 @@
     }
   },
   "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/DeliveryDestinationType"
+    "/properties/Arn"
   ],
   "required": [
     "Name"

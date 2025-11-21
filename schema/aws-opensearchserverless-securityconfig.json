@@ -11,6 +11,21 @@
     "/properties/IamIdentityCenterOptions/InstanceArn"
   ],
   "definitions": {
+    "IamFederationConfigOptions": {
+      "additionalProperties": false,
+      "description": "Describe IAM federation options in form of key value map",
+      "properties": {
+        "GroupAttribute": {
+          "description": "Group attribute for this IAM federation integration",
+          "type": "string"
+        },
+        "UserAttribute": {
+          "description": "User attribute for this IAM federation integration",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "IamIdentityCenterApplicationArn": {
       "description": "The ARN of the IAM Identity Center application used to integrate with OpenSearch Serverless",
       "type": "string"
@@ -103,7 +118,8 @@
       "description": "Config type for security config",
       "enum": [
         "saml",
-        "iamidentitycenter"
+        "iamidentitycenter",
+        "iamfederation"
       ],
       "type": "string"
     }
@@ -165,6 +181,9 @@
       "maxLength": 1000,
       "minLength": 1,
       "type": "string"
+    },
+    "IamFederationOptions": {
+      "$ref": "#/definitions/IamFederationConfigOptions"
     },
     "IamIdentityCenterOptions": {
       "$ref": "#/definitions/IamIdentityCenterConfigOptions"

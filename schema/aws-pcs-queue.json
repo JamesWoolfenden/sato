@@ -30,6 +30,25 @@
         }
       },
       "type": "object"
+    },
+    "SlurmCustomSetting": {
+      "additionalProperties": false,
+      "description": "Additional settings that directly map to Slurm settings.",
+      "properties": {
+        "ParameterName": {
+          "description": "AWS PCS supports configuration of the Slurm parameters for queues:.",
+          "type": "string"
+        },
+        "ParameterValue": {
+          "description": "The value for the configured Slurm setting.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ParameterName",
+        "ParameterValue"
+      ],
+      "type": "object"
     }
   },
   "description": "AWS::PCS::Queue resource creates an AWS PCS queue.",
@@ -127,6 +146,21 @@
     "Name": {
       "description": "The name that identifies the queue.",
       "type": "string"
+    },
+    "SlurmConfiguration": {
+      "additionalProperties": false,
+      "description": "The Slurm configuration for the queue.",
+      "properties": {
+        "SlurmCustomSettings": {
+          "description": "Custom Slurm parameters that directly map to Slurm configuration settings.",
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/SlurmCustomSetting"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
     },
     "Status": {
       "description": "The provisioning status of the queue. The provisioning status doesn't indicate the overall health of the queue.",

@@ -9,15 +9,38 @@
     "/properties/QueryLogStatus",
     "/properties/Members",
     "/properties/CreatorPaymentConfiguration",
-    "/properties/AnalyticsEngine"
+    "/properties/AutoApprovedChangeTypes",
+    "/properties/AllowedResultRegions"
   ],
   "definitions": {
+    "AllowedResultRegions": {
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/SupportedS3Region"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
     "AnalyticsEngine": {
       "enum": [
         "CLEAN_ROOMS_SQL",
         "SPARK"
       ],
       "type": "string"
+    },
+    "AutoApprovedChangeType": {
+      "enum": [
+        "ADD_MEMBER"
+      ],
+      "type": "string"
+    },
+    "AutoApprovedChangeTypeList": {
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AutoApprovedChangeType"
+      },
+      "type": "array",
+      "uniqueItems": true
     },
     "CollaborationJobLogStatus": {
       "enum": [
@@ -148,8 +171,7 @@
       },
       "required": [
         "AccountId",
-        "DisplayName",
-        "MemberAbilities"
+        "DisplayName"
       ],
       "type": "object"
     },
@@ -221,6 +243,44 @@
         "IsResponsible"
       ],
       "type": "object"
+    },
+    "SupportedS3Region": {
+      "enum": [
+        "us-west-1",
+        "us-west-2",
+        "us-east-1",
+        "us-east-2",
+        "af-south-1",
+        "ap-east-1",
+        "ap-east-2",
+        "ap-south-2",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-southeast-3",
+        "ap-southeast-5",
+        "ap-southeast-4",
+        "ap-southeast-7",
+        "ap-south-1",
+        "ap-northeast-3",
+        "ap-northeast-1",
+        "ap-northeast-2",
+        "ca-central-1",
+        "ca-west-1",
+        "eu-south-1",
+        "eu-west-3",
+        "eu-south-2",
+        "eu-central-2",
+        "eu-central-1",
+        "eu-north-1",
+        "eu-west-1",
+        "eu-west-2",
+        "me-south-1",
+        "me-central-1",
+        "il-central-1",
+        "sa-east-1",
+        "mx-central-1"
+      ],
+      "type": "string"
     },
     "Tag": {
       "additionalProperties": false,
@@ -294,12 +354,18 @@
     "/properties/CollaborationIdentifier"
   ],
   "properties": {
+    "AllowedResultRegions": {
+      "$ref": "#/definitions/AllowedResultRegions"
+    },
     "AnalyticsEngine": {
       "$ref": "#/definitions/AnalyticsEngine"
     },
     "Arn": {
       "maxLength": 100,
       "type": "string"
+    },
+    "AutoApprovedChangeTypes": {
+      "$ref": "#/definitions/AutoApprovedChangeTypeList"
     },
     "CollaborationIdentifier": {
       "maxLength": 36,
@@ -365,8 +431,6 @@
   ],
   "required": [
     "CreatorDisplayName",
-    "CreatorMemberAbilities",
-    "Members",
     "Name",
     "Description",
     "QueryLogStatus"

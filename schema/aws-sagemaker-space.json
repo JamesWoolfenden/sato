@@ -42,6 +42,9 @@
         },
         "FSxLustreFileSystem": {
           "$ref": "#/definitions/FSxLustreFileSystem"
+        },
+        "S3FileSystem": {
+          "$ref": "#/definitions/S3FileSystem"
         }
       },
       "type": "object"
@@ -192,6 +195,14 @@
       ],
       "type": "object"
     },
+    "RemoteAccess": {
+      "description": "The flag to enable/disable remote access for a space.",
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
     "ResourceSpec": {
       "additionalProperties": false,
       "properties": {
@@ -285,6 +296,18 @@
       },
       "type": "object"
     },
+    "S3FileSystem": {
+      "additionalProperties": false,
+      "properties": {
+        "S3Uri": {
+          "maxLength": 1024,
+          "minLength": 0,
+          "pattern": "(s3)://([^/]+)/?(.*)",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SpaceAppLifecycleManagement": {
       "additionalProperties": false,
       "properties": {
@@ -347,6 +370,14 @@
       },
       "type": "object"
     },
+    "SpaceManagedResources": {
+      "description": "The flag to enable/disable creation of space managed resources.",
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
     "SpaceSettings": {
       "additionalProperties": false,
       "description": "A collection of settings that apply to spaces of Amazon SageMaker Studio. These settings are specified when the CreateSpace API is called.",
@@ -372,6 +403,14 @@
         "KernelGatewayAppSettings": {
           "$ref": "#/definitions/KernelGatewayAppSettings",
           "description": "The kernel gateway app settings."
+        },
+        "RemoteAccess": {
+          "$ref": "#/definitions/RemoteAccess",
+          "description": "This is a flag used to indicate if remote access is enabled."
+        },
+        "SpaceManagedResources": {
+          "$ref": "#/definitions/SpaceManagedResources",
+          "description": "This is a flag used to indicate if space managed resources needs to be created."
         },
         "SpaceStorageSettings": {
           "$ref": "#/definitions/SpaceStorageSettings",

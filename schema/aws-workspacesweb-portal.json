@@ -88,6 +88,7 @@
         "workspaces-web:AssociateUserAccessLoggingSettings",
         "workspaces-web:AssociateUserSettings",
         "workspaces-web:AssociateDataProtectionSettings",
+        "workspaces-web:AssociateSessionLogger",
         "workspaces-web:List*",
         "workspaces-web:TagResource",
         "kms:DescribeKey",
@@ -105,7 +106,8 @@
         "kinesis:PutRecords",
         "kinesis:Describe*",
         "sso:CreateManagedApplicationInstance",
-        "sso:Describe*"
+        "sso:Describe*",
+        "s3:PutObject"
       ]
     },
     "delete": {
@@ -119,6 +121,7 @@
         "workspaces-web:DisassociateUserAccessLoggingSettings",
         "workspaces-web:DisassociateUserSettings",
         "workspaces-web:DisassociateDataProtectionSettings",
+        "workspaces-web:DisassociateSessionLogger",
         "kms:Decrypt",
         "kms:DescribeKey",
         "sso:DeleteManagedApplicationInstance"
@@ -150,6 +153,7 @@
         "workspaces-web:AssociateUserAccessLoggingSettings",
         "workspaces-web:AssociateUserSettings",
         "workspaces-web:AssociateDataProtectionSettings",
+        "workspaces-web:AssociateSessionLogger",
         "workspaces-web:DisassociateBrowserSettings",
         "workspaces-web:DisassociateIpAccessSettings",
         "workspaces-web:DisassociateNetworkSettings",
@@ -157,6 +161,7 @@
         "workspaces-web:DisassociateUserAccessLoggingSettings",
         "workspaces-web:DisassociateUserSettings",
         "workspaces-web:DisassociateDataProtectionSettings",
+        "workspaces-web:DisassociateSessionLogger",
         "workspaces-web:List*",
         "workspaces-web:TagResource",
         "workspaces-web:UntagResource",
@@ -177,7 +182,8 @@
         "sso:DeleteManagedApplicationInstance",
         "sso:Describe*",
         "sso:GetApplicationInstance",
-        "sso:List*"
+        "sso:List*",
+        "s3:PutObject"
       ]
     }
   },
@@ -264,6 +270,12 @@
       "maxLength": 204800,
       "minLength": 0,
       "pattern": "^.*$",
+      "type": "string"
+    },
+    "SessionLoggerArn": {
+      "maxLength": 2048,
+      "minLength": 20,
+      "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
       "type": "string"
     },
     "StatusReason": {

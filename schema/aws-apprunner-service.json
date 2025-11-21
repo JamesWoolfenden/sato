@@ -71,7 +71,8 @@
             "PHP_81",
             "RUBY_31",
             "PYTHON_311",
-            "NODEJS_18"
+            "NODEJS_18",
+            "NODEJS_22"
           ],
           "type": "string"
         },
@@ -536,6 +537,11 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
   "tagging": {
     "cloudFormationSystemTags": false,
+    "permissions": [
+      "apprunner:TagResource",
+      "apprunner:UntagResource",
+      "apprunner:ListTagsForResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": false,
@@ -543,7 +549,7 @@
   },
   "typeName": "AWS::AppRunner::Service",
   "writeOnlyProperties": [
-    "/properties/Tags",
-    "/properties/AutoScalingConfigurationArn"
+    "/properties/AutoScalingConfigurationArn",
+    "/properties/Tags"
   ]
 }

@@ -159,6 +159,22 @@
         "ses:DeleteConfigurationSetEventDestination"
       ]
     },
+    "list": {
+      "handlerSchema": {
+        "properties": {
+          "ConfigurationSetName": {
+            "$ref": "resource-schema.json#/properties/ConfigurationSetName"
+          }
+        },
+        "required": [
+          "ConfigurationSetName"
+        ]
+      },
+      "permissions": [
+        "ses:GetConfigurationSetEventDestinations",
+        "ses:DescribeConfigurationSet"
+      ]
+    },
     "read": {
       "permissions": [
         "ses:GetConfigurationSetEventDestinations",
@@ -196,6 +212,8 @@
     "EventDestination"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
-  "taggable": false,
+  "tagging": {
+    "taggable": false
+  },
   "typeName": "AWS::SES::ConfigurationSetEventDestination"
 }

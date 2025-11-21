@@ -86,6 +86,25 @@
       ],
       "type": "object"
     },
+    "DockerServer": {
+      "additionalProperties": false,
+      "properties": {
+        "ComputeType": {
+          "type": "string"
+        },
+        "SecurityGroupIds": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        }
+      },
+      "required": [
+        "ComputeType"
+      ],
+      "type": "object"
+    },
     "Environment": {
       "additionalProperties": false,
       "properties": {
@@ -94,6 +113,9 @@
         },
         "ComputeType": {
           "type": "string"
+        },
+        "DockerServer": {
+          "$ref": "#/definitions/DockerServer"
         },
         "EnvironmentVariables": {
           "items": {
@@ -285,6 +307,9 @@
           "type": "array",
           "uniqueItems": false
         },
+        "PullRequestBuildPolicy": {
+          "$ref": "#/definitions/PullRequestBuildPolicy"
+        },
         "ScopeConfiguration": {
           "$ref": "#/definitions/ScopeConfiguration"
         },
@@ -292,6 +317,25 @@
           "type": "boolean"
         }
       },
+      "type": "object"
+    },
+    "PullRequestBuildPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "ApproverRoles": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "RequiresCommentApproval": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "RequiresCommentApproval"
+      ],
       "type": "object"
     },
     "RegistryCredential": {

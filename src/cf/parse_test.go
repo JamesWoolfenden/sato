@@ -1,11 +1,9 @@
-package cf_test
+package cf
 
 import (
 	"reflect"
 	"testing"
 	tftemplate "text/template"
-
-	sato "sato/src/cf"
 
 	"github.com/awslabs/goformation/v7/cloudformation"
 )
@@ -33,7 +31,7 @@ func TestParse(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if err := sato.Parse(tt.args.file, tt.args.destination); (err != nil) != tt.wantErr {
+			if err := Parse(tt.args.file, tt.args.destination); (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -49,7 +47,7 @@ func TestStringToMap(t *testing.T) {
 	}
 
 	//Description := "Enter t2.micro, m1.small, or m1.large. Default is t2.micro."
-	//result := sato.Variable{
+	//result := Variable{
 	//	Description: "",
 	//	Type:        "map(string)",
 	//	Default:     "{ \"t2.micro\" = }",
@@ -59,7 +57,7 @@ func TestStringToMap(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want sato.Variable
+		want Variable
 	}{
 		//{name: "pass",
 		//	args: args{
@@ -76,7 +74,7 @@ func TestStringToMap(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sato.StringToMap(tt.args.param); !reflect.DeepEqual(got, tt.want) {
+			if got := StringToMap(tt.args.param); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("StringToMap() = %v, want %v", got, tt.want)
 			}
 		})
@@ -106,7 +104,7 @@ func TestWrite(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if err := sato.Write(tt.args.output, tt.args.location, tt.args.name); (err != nil) != tt.wantErr {
+			if err := Write(tt.args.output, tt.args.location, tt.args.name); (err != nil) != tt.wantErr {
 				t.Errorf("Write() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -133,7 +131,7 @@ func TestToTFName(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sato.ToTFName(tt.args.CFN); got != tt.want {
+			if got := ToTFName(tt.args.CFN); got != tt.want {
 				t.Errorf("ToTFName() = %v, want %v", got, tt.want)
 			}
 		})
@@ -161,7 +159,7 @@ func TestReplaceVariables(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sato.ReplaceVariables(tt.args.str1); got != tt.want {
+			if got := ReplaceVariables(tt.args.str1); got != tt.want {
 				t.Errorf("ReplaceVariables() = %v, want %v", got, tt.want)
 			}
 		})
@@ -181,7 +179,7 @@ func TestParseVariables(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []sato.Variable
+		want    []Variable
 		wantErr bool
 	}{
 		//{},
@@ -192,7 +190,7 @@ func TestParseVariables(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			got, err := sato.ParseVariables(tt.args.template, tt.args.funcMap, tt.args.destination)
+			got, err := ParseVariables(tt.args.template, tt.args.funcMap, tt.args.destination)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseVariables() error = %v, wantErr %v", err, tt.wantErr)
 
@@ -211,7 +209,7 @@ func TestGetVariableType(t *testing.T) {
 
 	type args struct {
 		param         cloudformation.Parameter
-		myVariable    sato.Variable
+		myVariable    Variable
 		DataResources []string
 		m             map[string]bool
 	}
@@ -220,7 +218,7 @@ func TestGetVariableType(t *testing.T) {
 		name  string
 		args  args
 		want  []string
-		want1 sato.Variable
+		want1 Variable
 		want2 map[string]bool
 	}{
 		//{},
@@ -230,7 +228,7 @@ func TestGetVariableType(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got, got1, got2 := sato.GetVariableType(tt.args.param, tt.args.myVariable, tt.args.DataResources, tt.args.m)
+			got, got1, got2 := GetVariableType(tt.args.param, tt.args.myVariable, tt.args.DataResources, tt.args.m)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetVariableType() got = %v, want %v", got, tt.want)
 			}
@@ -250,13 +248,13 @@ func TestGetVariableDefault(t *testing.T) {
 
 	type args struct {
 		param      cloudformation.Parameter
-		myVariable sato.Variable
+		myVariable Variable
 	}
 
 	tests := []struct {
 		name string
 		args args
-		want sato.Variable
+		want Variable
 	}{
 		//{},
 	}
@@ -265,7 +263,7 @@ func TestGetVariableDefault(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sato.GetVariableDefault(tt.args.param, tt.args.myVariable); !reflect.DeepEqual(got, tt.want) {
+			if got := GetVariableDefault(tt.args.param, tt.args.myVariable); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetVariableDefault() = %v, want %v", got, tt.want)
 			}
 		})
@@ -292,7 +290,7 @@ func TestReplaceDependant(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			if got := sato.ReplaceDependant(tt.args.str1); got != tt.want {
+			if got := ReplaceDependant(tt.args.str1); got != tt.want {
 				t.Errorf("ReplaceDependant() = %v, want %v", got, tt.want)
 			}
 		})

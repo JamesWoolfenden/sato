@@ -97,6 +97,26 @@
       },
       "type": "object"
     },
+    "Tag": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "Value": {
+          "maxLength": 256,
+          "minLength": 0,
+          "type": "string"
+        }
+      },
+      "required": [
+        "Key",
+        "Value"
+      ],
+      "type": "object"
+    },
     "TrackingOptions": {
       "additionalProperties": false,
       "description": "An object that defines the open and click tracking options for emails that you send using the configuration set.",
@@ -131,7 +151,11 @@
   "handlers": {
     "create": {
       "permissions": [
-        "ses:CreateConfigurationSet"
+        "ses:CreateConfigurationSet",
+        "ses:UntagResource",
+        "ses:TagResource",
+        "ses:DescribeConfigurationSet",
+        "ses:GetConfigurationSet"
       ]
     },
     "delete": {
@@ -157,7 +181,10 @@
         "ses:PutConfigurationSetReputationOptions",
         "ses:PutConfigurationSetSendingOptions",
         "ses:PutConfigurationSetSuppressionOptions",
-        "ses:PutConfigurationSetVdmOptions"
+        "ses:PutConfigurationSetVdmOptions",
+        "ses:DescribeConfigurationSet",
+        "ses:UntagResource",
+        "ses:TagResource"
       ]
     }
   },
@@ -182,6 +209,16 @@
     "SuppressionOptions": {
       "$ref": "#/definitions/SuppressionOptions"
     },
+    "Tags": {
+      "description": "The tags (keys and values) associated with the contact list.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "maxItems": 50,
+      "minItems": 0,
+      "type": "array"
+    },
     "TrackingOptions": {
       "$ref": "#/definitions/TrackingOptions"
     },
@@ -190,6 +227,17 @@
     }
   },
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
-  "taggable": false,
+  "tagging": {
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "ses:TagResource",
+      "ses:UntagResource",
+      "ses:ListTagsForResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::SES::ConfigurationSet"
 }

@@ -7,6 +7,9 @@
         "disk": {
           "type": "integer"
         },
+        "instanceType": {
+          "type": "string"
+        },
         "machineType": {
           "enum": [
             "GENERAL",
@@ -197,7 +200,7 @@
       "type": "string"
     },
     "BaseCapacity": {
-      "minimum": 1,
+      "minimum": 0,
       "type": "integer"
     },
     "ComputeConfiguration": {
@@ -210,7 +213,8 @@
         "BUILD_GENERAL1_LARGE",
         "BUILD_GENERAL1_XLARGE",
         "BUILD_GENERAL1_2XLARGE",
-        "ATTRIBUTE_BASED_COMPUTE"
+        "ATTRIBUTE_BASED_COMPUTE",
+        "CUSTOM_INSTANCE_TYPE"
       ],
       "type": "string"
     },
@@ -239,7 +243,7 @@
       "$ref": "#/definitions/VpcConfig"
     },
     "ImageId": {
-      "pattern": "^((aws/codebuild/[A-Za-z-]+:[0-9]+(-[0-9._]+)?)|ami-[a-z0-9]{1,1020})$",
+      "pattern": "^((aws/codebuild/([A-Za-z0-9._-]+|ami/[A-Za-z0-9._-]+):[A-Za-z0-9._-]+)|ami-[a-z0-9]{1,1020})$",
       "type": "string"
     },
     "Name": {
@@ -270,6 +274,10 @@
   ],
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "codebuild:CreateFleet",
+      "codebuild:UpdateFleet"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

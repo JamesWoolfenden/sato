@@ -26,10 +26,6 @@
       "additionalProperties": false,
       "properties": {
         "BucketName": {
-          "relationshipRef": {
-            "propertyPath": "/properties/BucketName",
-            "typeName": "AWS::S3::Bucket"
-          },
           "type": "string"
         },
         "LogDestinationType": {
@@ -89,26 +85,22 @@
         "redshift:GetResourcePolicy",
         "redshift:PutResourcePolicy",
         "redshift:ModifyClusterMaintenance",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:DescribeAddresses",
+        "ec2:Describe*",
         "ec2:AssociateAddress",
         "ec2:CreateNetworkInterface",
         "ec2:ModifyNetworkInterfaceAttribute",
         "ec2:CreateVpcEndpoint",
-        "ec2:DescribeVpcEndpoints",
         "ec2:ModifyVpcEndpoint",
         "ec2:AllocateAddress",
         "ec2:CreateSecurityGroup",
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeSecurityGroupRules",
-        "ec2:DescribeAvailabilityZones",
-        "ec2:DescribeNetworkAcls",
-        "ec2:DescribeRouteTables",
-        "cloudwatch:PutMetricData"
+        "cloudwatch:PutMetricData",
+        "kms:GenerateDataKey",
+        "kms:CreateGrant",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "secretsmanager:CreateSecret",
+        "secretsmanager:TagResource"
       ],
       "timeoutInMinutes": 2160
     },
@@ -164,7 +156,14 @@
         "redshift:PutResourcePolicy",
         "redshift:GetResourcePolicy",
         "redshift:DeleteResourcePolicy",
-        "cloudwatch:PutMetricData"
+        "cloudwatch:PutMetricData",
+        "kms:GenerateDataKey",
+        "kms:CreateGrant",
+        "kms:DescribeKey",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "secretsmanager:CreateSecret",
+        "secretsmanager:TagResource"
       ],
       "timeoutInMinutes": 2160
     }

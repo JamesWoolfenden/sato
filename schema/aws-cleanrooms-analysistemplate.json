@@ -6,7 +6,8 @@
     "/properties/Source",
     "/properties/Format",
     "/properties/AnalysisParameters",
-    "/properties/Schema"
+    "/properties/Schema",
+    "/properties/ErrorMessageConfiguration"
   ],
   "definitions": {
     "AnalysisParameter": {
@@ -182,6 +183,21 @@
       ],
       "type": "object"
     },
+    "ErrorMessageConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "Type": {
+          "enum": [
+            "DETAILED"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "type": "object"
+    },
     "Hash": {
       "additionalProperties": false,
       "properties": {
@@ -334,6 +350,9 @@
       "maxLength": 255,
       "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
       "type": "string"
+    },
+    "ErrorMessageConfiguration": {
+      "$ref": "#/definitions/ErrorMessageConfiguration"
     },
     "Format": {
       "enum": [

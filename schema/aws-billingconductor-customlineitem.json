@@ -3,6 +3,8 @@
   "createOnlyProperties": [
     "/properties/BillingGroupArn",
     "/properties/AccountId",
+    "/properties/ComputationRule",
+    "/properties/PresentationDetails",
     "/properties/BillingPeriodRange/InclusiveStartBillingPeriod",
     "/properties/BillingPeriodRange/ExclusiveEndBillingPeriod",
     "/properties/CustomLineItemChargeDetails/Type"
@@ -226,11 +228,18 @@
     },
     "BillingGroupArn": {
       "description": "Billing Group ARN",
-      "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[0-9]{12}",
+      "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[a-zA-Z0-9]{10,12}",
       "type": "string"
     },
     "BillingPeriodRange": {
       "$ref": "#/definitions/BillingPeriodRange"
+    },
+    "ComputationRule": {
+      "description": "The display settings of the Custom Line Item.",
+      "enum": [
+        "CONSOLIDATED"
+      ],
+      "type": "string"
     },
     "CreationTime": {
       "description": "Creation timestamp in UNIX epoch time format",
@@ -259,6 +268,19 @@
       "minLength": 1,
       "pattern": "[a-zA-Z0-9_\\+=\\.\\-@]+",
       "type": "string"
+    },
+    "PresentationDetails": {
+      "additionalProperties": false,
+      "properties": {
+        "Service": {
+          "pattern": "^[a-zA-Z0-9]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "Service"
+      ],
+      "type": "object"
     },
     "ProductCode": {
       "maxLength": 29,

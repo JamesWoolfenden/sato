@@ -4,6 +4,22 @@
     "/properties/KmsKeyArn"
   ],
   "definitions": {
+    "CloudWatchLogDestination": {
+      "additionalProperties": false,
+      "description": "Represents a cloudwatch logs destination for query logging",
+      "properties": {
+        "LogGroupArn": {
+          "description": "The ARN of the CloudWatch Logs log group",
+          "maxLength": 512,
+          "minLength": 0,
+          "type": "string"
+        }
+      },
+      "required": [
+        "LogGroupArn"
+      ],
+      "type": "object"
+    },
     "Label": {
       "additionalProperties": false,
       "description": "Series label",
@@ -75,6 +91,57 @@
       },
       "type": "object"
     },
+    "LoggingDestination": {
+      "additionalProperties": false,
+      "description": "Destinations for query logging",
+      "properties": {
+        "CloudWatchLogs": {
+          "$ref": "#/definitions/CloudWatchLogDestination"
+        },
+        "Filters": {
+          "$ref": "#/definitions/LoggingFilter"
+        }
+      },
+      "required": [
+        "CloudWatchLogs",
+        "Filters"
+      ],
+      "type": "object"
+    },
+    "LoggingFilter": {
+      "additionalProperties": false,
+      "description": "Filters for logging",
+      "properties": {
+        "QspThreshold": {
+          "description": "Query logs with QSP above this limit are vended",
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "QspThreshold"
+      ],
+      "type": "object"
+    },
+    "QueryLoggingConfiguration": {
+      "additionalProperties": false,
+      "description": "Query logging configuration",
+      "properties": {
+        "Destinations": {
+          "description": "The destinations configuration for query logging",
+          "items": {
+            "$ref": "#/definitions/LoggingDestination"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "Destinations"
+      ],
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "description": "A key-value pair to associate with a resource.",
@@ -131,6 +198,7 @@
         "aps:CreateAlertManagerDefinition",
         "aps:DescribeAlertManagerDefinition",
         "aps:CreateLoggingConfiguration",
+        "aps:CreateQueryLoggingConfiguration",
         "aps:DescribeWorkspaceConfiguration",
         "aps:UpdateWorkspaceConfiguration",
         "logs:CreateLogDelivery",
@@ -148,6 +216,7 @@
         "aps:DescribeWorkspace",
         "aps:DeleteAlertManagerDefinition",
         "aps:DeleteLoggingConfiguration",
+        "aps:DeleteQueryLoggingConfiguration",
         "logs:DeleteLogDelivery"
       ]
     },
@@ -163,6 +232,7 @@
         "aps:ListTagsForResource",
         "aps:DescribeAlertManagerDefinition",
         "aps:DescribeLoggingConfiguration",
+        "aps:DescribeQueryLoggingConfiguration",
         "aps:DescribeWorkspaceConfiguration"
       ]
     },
@@ -182,6 +252,10 @@
         "aps:DeleteLoggingConfiguration",
         "aps:DescribeWorkspaceConfiguration",
         "aps:UpdateWorkspaceConfiguration",
+        "aps:CreateQueryLoggingConfiguration",
+        "aps:UpdateQueryLoggingConfiguration",
+        "aps:DeleteQueryLoggingConfiguration",
+        "aps:DescribeQueryLoggingConfiguration",
         "logs:CreateLogDelivery",
         "logs:GetLogDelivery",
         "logs:UpdateLogDelivery",
@@ -225,6 +299,9 @@
     "PrometheusEndpoint": {
       "description": "AMP Workspace prometheus endpoint",
       "type": "string"
+    },
+    "QueryLoggingConfiguration": {
+      "$ref": "#/definitions/QueryLoggingConfiguration"
     },
     "Tags": {
       "description": "An array of key-value pairs to apply to this resource.",

@@ -9,9 +9,33 @@
     "/properties/Data",
     "/properties/Uri",
     "/properties/KmsKeyId",
-    "/properties/SupportedOsVersions",
-    "/properties/Tags"
+    "/properties/SupportedOsVersions"
   ],
+  "definitions": {
+    "LatestVersion": {
+      "additionalProperties": false,
+      "description": "The latest version references of the component.",
+      "properties": {
+        "Arn": {
+          "description": "The latest version ARN of the created component.",
+          "type": "string"
+        },
+        "Major": {
+          "description": "The latest version ARN of the created component, with the same major version.",
+          "type": "string"
+        },
+        "Minor": {
+          "description": "The latest version ARN of the created component, with the same minor version.",
+          "type": "string"
+        },
+        "Patch": {
+          "description": "The latest version ARN of the created component, with the same patch version.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
   "description": "Resource schema for AWS::ImageBuilder::Component",
   "handlers": {
     "create": {
@@ -35,7 +59,7 @@
     "delete": {
       "permissions": [
         "imagebuilder:GetComponent",
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:DeleteComponent"
       ]
     },
@@ -45,10 +69,7 @@
           "Arn": {
             "$ref": "resource-schema.json#/properties/Arn"
           }
-        },
-        "required": [
-          "Arn"
-        ]
+        }
       },
       "permissions": [
         "imagebuilder:ListComponents",
@@ -60,20 +81,14 @@
         "imagebuilder:GetComponent",
         "kms:Decrypt"
       ]
+    },
+    "update": {
+      "permissions": [
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
+      ]
     }
   },
-  "oneOf": [
-    {
-      "required": [
-        "Data"
-      ]
-    },
-    {
-      "required": [
-        "Uri"
-      ]
-    }
-  ],
   "primaryIdentifier": [
     "/properties/Arn"
   ],
@@ -103,6 +118,10 @@
     "KmsKeyId": {
       "description": "The KMS key identifier used to encrypt the component.",
       "type": "string"
+    },
+    "LatestVersion": {
+      "$ref": "#/definitions/LatestVersion",
+      "description": "The latest version references of the component."
     },
     "Name": {
       "description": "The name of the component.",
@@ -155,7 +174,12 @@
   "readOnlyProperties": [
     "/properties/Arn",
     "/properties/Type",
-    "/properties/Encrypted"
+    "/properties/Encrypted",
+    "/properties/LatestVersion",
+    "/properties/LatestVersion/Arn",
+    "/properties/LatestVersion/Major",
+    "/properties/LatestVersion/Minor",
+    "/properties/LatestVersion/Patch"
   ],
   "required": [
     "Name",
@@ -167,11 +191,11 @@
     "cloudFormationSystemTags": true,
     "permissions": [
       "imagebuilder:TagResource",
-      "imagebuilder:UnTagResource"
+      "imagebuilder:UntagResource"
     ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "taggable": true
   },
   "typeName": "AWS::ImageBuilder::Component",

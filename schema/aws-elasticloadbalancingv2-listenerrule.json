@@ -22,7 +22,11 @@
         },
         "ForwardConfig": {
           "$ref": "#/definitions/ForwardConfig",
-          "description": "Information for creating an action that distributes requests among one or more target groups. For Network Load Balancers, you can specify a single target group. Specify only when ``Type`` is ``forward``. If you specify both ``ForwardConfig`` and ``TargetGroupArn``, you can specify only one target group using ``ForwardConfig`` and it must be the same target group specified in ``TargetGroupArn``."
+          "description": "Information for creating an action that distributes requests among multiple target groups. Specify only when ``Type`` is ``forward``.\n If you specify both ``ForwardConfig`` and ``TargetGroupArn``, you can specify only one target group using ``ForwardConfig`` and it must be the same target group specified in ``TargetGroupArn``."
+        },
+        "JwtValidationConfig": {
+          "$ref": "#/definitions/JwtValidationConfig",
+          "description": ""
         },
         "Order": {
           "description": "The order for the action. This value is required for rules with multiple actions. The action with the lowest value for order is performed first.",
@@ -33,7 +37,7 @@
           "description": "[Application Load Balancer] Information for creating a redirect action. Specify only when ``Type`` is ``redirect``."
         },
         "TargetGroupArn": {
-          "description": "The Amazon Resource Name (ARN) of the target group. Specify only when ``Type`` is ``forward`` and you want to route to a single target group. To route to one or more target groups, use ``ForwardConfig`` instead.",
+          "description": "The Amazon Resource Name (ARN) of the target group. Specify only when ``Type`` is ``forward`` and you want to route to a single target group. To route to multiple target groups, you must use ``ForwardConfig`` instead.",
           "type": "string"
         },
         "Type": {
@@ -200,7 +204,7 @@
     },
     "ForwardConfig": {
       "additionalProperties": false,
-      "description": "Information for creating an action that distributes requests among one or more target groups. For Network Load Balancers, you can specify a single target group. Specify only when ``Type`` is ``forward``. If you specify both ``ForwardConfig`` and ``TargetGroupArn``, you can specify only one target group using ``ForwardConfig`` and it must be the same target group specified in ``TargetGroupArn``.",
+      "description": "Information for creating an action that distributes requests among multiple target groups. Specify only when ``Type`` is ``forward``.\n If you specify both ``ForwardConfig`` and ``TargetGroupArn``, you can specify only one target group using ``ForwardConfig`` and it must be the same target group specified in ``TargetGroupArn``.",
       "properties": {
         "TargetGroupStickinessConfig": {
           "$ref": "#/definitions/TargetGroupStickinessConfig",
@@ -222,14 +226,13 @@
       "additionalProperties": false,
       "description": "Information about a host header condition.",
       "properties": {
+        "RegexValues": {
+          "$ref": "#/definitions/ListOfStrings",
+          "description": ""
+        },
         "Values": {
-          "description": "The host names. The maximum size of each name is 128 characters. The comparison is case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).\n If you specify multiple strings, the condition is satisfied if one of the strings matches the host name.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+          "$ref": "#/definitions/ListOfStrings",
+          "description": "The host names. The maximum length of each string is 128 characters. The comparison is case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character). You must include at least one \".\" character. You can include only alphabetical characters after the final \".\" character.\n If you specify multiple strings, the condition is satisfied if one of the strings matches the host name."
         }
       },
       "type": "object"
@@ -242,14 +245,13 @@
           "description": "The name of the HTTP header field. The maximum size is 40 characters. The header name is case insensitive. The allowed characters are specified by RFC 7230. Wildcards are not supported.",
           "type": "string"
         },
+        "RegexValues": {
+          "$ref": "#/definitions/ListOfStrings",
+          "description": ""
+        },
         "Values": {
-          "description": "The strings to compare against the value of the HTTP header. The maximum size of each string is 128 characters. The comparison strings are case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).\n If the same header appears multiple times in the request, we search them in order until a match is found.\n If you specify multiple strings, the condition is satisfied if one of the strings matches the value of the HTTP header. To require that all of the strings are a match, create one condition per string.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+          "$ref": "#/definitions/ListOfStrings",
+          "description": "The strings to compare against the value of the HTTP header. The maximum length of each string is 128 characters. The comparison strings are case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).\n If the same header appears multiple times in the request, we search them in order until a match is found.\n If you specify multiple strings, the condition is satisfied if one of the strings matches the value of the HTTP header. To require that all of the strings are a match, create one condition per string."
         }
       },
       "type": "object"
@@ -259,8 +261,26 @@
       "description": "Information about an HTTP method condition.\n HTTP defines a set of request methods, also referred to as HTTP verbs. For more information, see the [HTTP Method Registry](https://docs.aws.amazon.com/https://www.iana.org/assignments/http-methods/http-methods.xhtml). You can also define custom HTTP methods.",
       "properties": {
         "Values": {
-          "description": "The name of the request method. The maximum size is 40 characters. The allowed characters are A-Z, hyphen (-), and underscore (_). The comparison is case sensitive. Wildcards are not supported; therefore, the method name must be an exact match.\n If you specify multiple strings, the condition is satisfied if one of the strings matches the HTTP request method. We recommend that you route GET and HEAD requests in the same way, because the response to a HEAD request may be cached.",
-          "insertionOrder": false,
+          "$ref": "#/definitions/ListOfStrings",
+          "description": "The name of the request method. The maximum length is 40 characters. The allowed characters are A-Z, hyphen (-), and underscore (_). The comparison is case sensitive. Wildcards are not supported; therefore, the method name must be an exact match.\n If you specify multiple strings, the condition is satisfied if one of the strings matches the HTTP request method. We recommend that you route GET and HEAD requests in the same way, because the response to a HEAD request may be cached."
+        }
+      },
+      "type": "object"
+    },
+    "JwtValidationActionAdditionalClaim": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Format": {
+          "description": "",
+          "type": "string"
+        },
+        "Name": {
+          "description": "",
+          "type": "string"
+        },
+        "Values": {
+          "description": "",
           "items": {
             "type": "string"
           },
@@ -268,20 +288,59 @@
           "uniqueItems": true
         }
       },
+      "required": [
+        "Format",
+        "Name",
+        "Values"
+      ],
       "type": "object"
+    },
+    "JwtValidationConfig": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "AdditionalClaims": {
+          "description": "",
+          "items": {
+            "$ref": "#/definitions/JwtValidationActionAdditionalClaim"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "Issuer": {
+          "description": "",
+          "type": "string"
+        },
+        "JwksEndpoint": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "required": [
+        "JwksEndpoint",
+        "Issuer"
+      ],
+      "type": "object"
+    },
+    "ListOfStrings": {
+      "insertionOrder": false,
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "uniqueItems": true
     },
     "PathPatternConfig": {
       "additionalProperties": false,
       "description": "Information about a path pattern condition.",
       "properties": {
+        "RegexValues": {
+          "$ref": "#/definitions/ListOfStrings",
+          "description": ""
+        },
         "Values": {
-          "description": "The path patterns to compare against the request URL. The maximum size of each string is 128 characters. The comparison is case sensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).\n If you specify multiple strings, the condition is satisfied if one of them matches the request URL. The path pattern is compared only to the path of the URL, not to its query string.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+          "$ref": "#/definitions/ListOfStrings",
+          "description": "The path patterns to compare against the request URL. The maximum size of each string is 128 characters. The comparison is case sensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character).\n If you specify multiple strings, the condition is satisfied if one of them matches the request URL. The path pattern is compared only to the path of the URL, not to its query string."
         }
       },
       "type": "object"
@@ -291,7 +350,7 @@
       "description": "Information about a query string condition.\n The query string component of a URI starts after the first '?' character and is terminated by either a '#' character or the end of the URI. A typical query string contains key/value pairs separated by '&' characters. The allowed characters are specified by RFC 3986. Any character can be percentage encoded.",
       "properties": {
         "Values": {
-          "description": "The key/value pairs or values to find in the query string. The maximum size of each string is 128 characters. The comparison is case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character). To search for a literal '*' or '?' character in a query string, you must escape these characters in ``Values`` using a '\\' character.\n If you specify multiple key/value pairs or values, the condition is satisfied if one of them is found in the query string.",
+          "description": "The key/value pairs or values to find in the query string. The maximum length of each string is 128 characters. The comparison is case insensitive. The following wildcard characters are supported: * (matches 0 or more characters) and ? (matches exactly 1 character). To search for a literal '*' or '?' character in a query string, you must escape these characters in ``Values`` using a '\\' character.\n If you specify multiple key/value pairs or values, the condition is satisfied if one of them is found in the query string.",
           "insertionOrder": false,
           "items": {
             "$ref": "#/definitions/QueryStringKeyValue"
@@ -351,6 +410,47 @@
       ],
       "type": "object"
     },
+    "RewriteConfig": {
+      "additionalProperties": false,
+      "description": "Information about a rewrite transform. This transform matches a pattern and replaces it with the specified string.",
+      "properties": {
+        "Regex": {
+          "description": "The regular expression to match in the input string. The maximum length of the string is 1,024 characters.",
+          "type": "string"
+        },
+        "Replace": {
+          "description": "The replacement string to use when rewriting the matched input. The maximum length of the string is 1,024 characters. You can specify capture groups in the regular expression (for example, $1 and $2).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "Regex",
+        "Replace"
+      ],
+      "type": "object"
+    },
+    "RewriteConfigList": {
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/RewriteConfig"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
+    "RewriteConfigObject": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Rewrites": {
+          "$ref": "#/definitions/RewriteConfigList",
+          "description": ""
+        }
+      },
+      "required": [
+        "Rewrites"
+      ],
+      "type": "object"
+    },
     "RuleCondition": {
       "additionalProperties": false,
       "description": "Specifies a condition for a listener rule.",
@@ -379,18 +479,17 @@
           "$ref": "#/definitions/QueryStringConfig",
           "description": "Information for a query string condition. Specify only when ``Field`` is ``query-string``."
         },
+        "RegexValues": {
+          "$ref": "#/definitions/ListOfStrings",
+          "description": "The regular expressions to match against the condition field. The maximum length of each string is 128 characters. Specify only when ``Field`` is ``http-header``, ``host-header``, or ``path-pattern``."
+        },
         "SourceIpConfig": {
           "$ref": "#/definitions/SourceIpConfig",
           "description": "Information for a source IP condition. Specify only when ``Field`` is ``source-ip``."
         },
         "Values": {
-          "description": "The condition value. Specify only when ``Field`` is ``host-header`` or ``path-pattern``. Alternatively, to specify multiple host names or multiple path patterns, use ``HostHeaderConfig`` or ``PathPatternConfig``.\n If ``Field`` is ``host-header`` and you're not using ``HostHeaderConfig``, you can specify a single host name (for example, my.example.com). A host name is case insensitive, can be up to 128 characters in length, and can contain any of the following characters.\n  +  A-Z, a-z, 0-9\n  +  - .\n  +  * (matches 0 or more characters)\n  +  ? (matches exactly 1 character)\n  \n If ``Field`` is ``path-pattern`` and you're not using ``PathPatternConfig``, you can specify a single path pattern (for example, /img/*). A path pattern is case-sensitive, can be up to 128 characters in length, and can contain any of the following characters.\n  +  A-Z, a-z, 0-9\n  +  _ - . $ / ~ \" ' @ : +\n  +  & (using &amp;)\n  +  * (matches 0 or more characters)\n  +  ? (matches exactly 1 character)",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+          "$ref": "#/definitions/ListOfStrings",
+          "description": "The condition value. Specify only when ``Field`` is ``host-header`` or ``path-pattern``. Alternatively, to specify multiple host names or multiple path patterns, use ``HostHeaderConfig`` or ``PathPatternConfig``.\n If ``Field`` is ``host-header`` and you're not using ``HostHeaderConfig``, you can specify a single host name (for example, my.example.com). A host name is case insensitive, can be up to 128 characters in length, and can contain any of the following characters.\n  +  A-Z, a-z, 0-9\n  +  - .\n  +  * (matches 0 or more characters)\n  +  ? (matches exactly 1 character)\n  \n If ``Field`` is ``path-pattern`` and you're not using ``PathPatternConfig``, you can specify a single path pattern (for example, /img/*). A path pattern is case-sensitive, can be up to 128 characters in length, and can contain any of the following characters.\n  +  A-Z, a-z, 0-9\n  +  _ - . $ / ~ \" ' @ : +\n  +  & (using &amp;)\n  +  * (matches 0 or more characters)\n  +  ? (matches exactly 1 character)"
         }
       },
       "type": "object"
@@ -416,7 +515,7 @@
       "description": "Information about the target group stickiness for a rule.",
       "properties": {
         "DurationSeconds": {
-          "description": "The time period, in seconds, during which requests from a client should be routed to the same target group. The range is 1-604800 seconds (7 days).",
+          "description": "[Application Load Balancers] The time period, in seconds, during which requests from a client should be routed to the same target group. The range is 1-604800 seconds (7 days). You must specify this value when enabling target group stickiness.",
           "type": "integer"
         },
         "Enabled": {
@@ -439,6 +538,40 @@
           "type": "integer"
         }
       },
+      "type": "object"
+    },
+    "Transform": {
+      "additionalProperties": false,
+      "description": "",
+      "oneOf": [
+        {
+          "required": [
+            "HostHeaderRewriteConfig"
+          ]
+        },
+        {
+          "required": [
+            "UrlRewriteConfig"
+          ]
+        }
+      ],
+      "properties": {
+        "HostHeaderRewriteConfig": {
+          "$ref": "#/definitions/RewriteConfigObject",
+          "description": ""
+        },
+        "Type": {
+          "description": "",
+          "type": "string"
+        },
+        "UrlRewriteConfig": {
+          "$ref": "#/definitions/RewriteConfigObject",
+          "description": ""
+        }
+      },
+      "required": [
+        "Type"
+      ],
       "type": "object"
     }
   },
@@ -539,6 +672,15 @@
     "RuleArn": {
       "description": "",
       "type": "string"
+    },
+    "Transforms": {
+      "description": "",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Transform"
+      },
+      "type": "array",
+      "uniqueItems": true
     }
   },
   "readOnlyProperties": [

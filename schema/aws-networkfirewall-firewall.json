@@ -5,6 +5,19 @@
     "/properties/FirewallName"
   ],
   "definitions": {
+    "AvailabilityZoneMapping": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityZone": {
+          "description": "A AvailabilityZone",
+          "type": "string"
+        }
+      },
+      "required": [
+        "AvailabilityZone"
+      ],
+      "type": "object"
+    },
     "EnabledAnalysisType": {
       "description": "An analysis type.",
       "enum": [
@@ -76,6 +89,7 @@
         "network-firewall:DescribeRuleGroup",
         "network-firewall:TagResource",
         "network-firewall:AssociateSubnets",
+        "network-firewall:AssociateAvailabilityZones",
         "network-firewall:AssociateFirewallPolicy",
         "network-firewall:DescribeFirewall"
       ]
@@ -116,7 +130,10 @@
         "network-firewall:TagResource",
         "network-firewall:UntagResource",
         "network-firewall:DescribeFirewall",
-        "network-firewall:UpdateFirewallAnalysisSettings"
+        "network-firewall:UpdateFirewallAnalysisSettings",
+        "network-firewall:DisassociateAvailabilityZones",
+        "network-firewall:AssociateAvailabilityZones",
+        "network-firewall:UpdateAvailabilityZoneChangeProtection"
       ]
     }
   },
@@ -124,6 +141,17 @@
     "/properties/FirewallArn"
   ],
   "properties": {
+    "AvailabilityZoneChangeProtection": {
+      "type": "boolean"
+    },
+    "AvailabilityZoneMappings": {
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AvailabilityZoneMapping"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
     "DeleteProtection": {
       "type": "boolean"
     },
@@ -176,7 +204,6 @@
       "items": {
         "$ref": "#/definitions/SubnetMapping"
       },
-      "minItems": 1,
       "type": "array",
       "uniqueItems": true
     },
@@ -188,6 +215,17 @@
       "type": "array",
       "uniqueItems": true
     },
+    "TransitGatewayAttachmentId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "pattern": "^tgw-attach-[0-9a-z]+$",
+      "type": "string"
+    },
+    "TransitGatewayId": {
+      "maxLength": 128,
+      "pattern": "^tgw-[0-9a-z]+$",
+      "type": "string"
+    },
     "VpcId": {
       "maxLength": 128,
       "minLength": 1,
@@ -198,13 +236,12 @@
   "readOnlyProperties": [
     "/properties/FirewallArn",
     "/properties/FirewallId",
+    "/properties/TransitGatewayAttachmentId",
     "/properties/EndpointIds"
   ],
   "required": [
     "FirewallName",
-    "FirewallPolicyArn",
-    "VpcId",
-    "SubnetMappings"
+    "FirewallPolicyArn"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
   "tagging": {

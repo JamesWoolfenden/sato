@@ -1,6 +1,55 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "ConnectorEgressConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "VpcLattice": {
+          "$ref": "#/definitions/ConnectorVpcLatticeEgressConfig"
+        }
+      },
+      "required": [
+        "VpcLattice"
+      ],
+      "type": "object"
+    },
+    "ConnectorEgressType": {
+      "enum": [
+        "SERVICE_MANAGED",
+        "VPC_LATTICE"
+      ],
+      "type": "string"
+    },
+    "ConnectorStatus": {
+      "enum": [
+        "ACTIVE",
+        "PENDING",
+        "ERRORED"
+      ],
+      "type": "string"
+    },
+    "ConnectorVpcLatticeEgressConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "PortNumber": {
+          "description": "Port to connect to on the target VPC Lattice resource",
+          "maximum": 65535,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "ResourceConfigurationArn": {
+          "description": "ARN of the VPC Lattice resource configuration",
+          "maxLength": 2048,
+          "minLength": 1,
+          "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ResourceConfigurationArn"
+      ],
+      "type": "object"
+    },
     "SftpConnectorTrustedHostKey": {
       "description": "The public host key for the external server to which you are connecting.",
       "maxLength": 2048,
@@ -36,8 +85,12 @@
     "create": {
       "permissions": [
         "transfer:CreateConnector",
+        "transfer:DescribeConnector",
         "transfer:TagResource",
-        "iam:PassRole"
+        "iam:PassRole",
+        "vpc-lattice:CreateServiceNetworkResourceAssociation",
+        "vpc-lattice:GetResourceConfiguration",
+        "vpc-lattice:AssociateViaAWSService"
       ]
     },
     "delete": {
@@ -58,9 +111,13 @@
     "update": {
       "permissions": [
         "transfer:UpdateConnector",
+        "transfer:DescribeConnector",
         "transfer:UnTagResource",
         "transfer:TagResource",
-        "iam:PassRole"
+        "iam:PassRole",
+        "vpc-lattice:CreateServiceNetworkResourceAssociation",
+        "vpc-lattice:GetResourceConfiguration",
+        "vpc-lattice:AssociateViaAWSService"
       ]
     }
   },
@@ -181,6 +238,14 @@
       "pattern": "^c-([0-9a-f]{17})$",
       "type": "string"
     },
+    "EgressConfig": {
+      "$ref": "#/definitions/ConnectorEgressConfig",
+      "description": "Egress configuration for the connector."
+    },
+    "EgressType": {
+      "$ref": "#/definitions/ConnectorEgressType",
+      "description": "Specifies the egress type for the connector."
+    },
     "LoggingRole": {
       "description": "Specifies the logging role for the connector.",
       "maxLength": 2048,
@@ -207,6 +272,13 @@
       "additionalProperties": false,
       "description": "Configuration for an SFTP connector.",
       "properties": {
+        "MaxConcurrentConnections": {
+          "default": 1,
+          "description": "Specifies the number of active connections that your connector can establish with the remote server at the same time.",
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        },
         "TrustedHostKeys": {
           "description": "List of public host keys, for the external server to which you are connecting.",
           "insertionOrder": false,
@@ -225,6 +297,9 @@
         }
       },
       "type": "object"
+    },
+    "Status": {
+      "$ref": "#/definitions/ConnectorStatus"
     },
     "Tags": {
       "description": "Key-value pairs that can be used to group and search for connectors. Tags are metadata attached to connectors for any purpose.",
@@ -245,11 +320,11 @@
   "readOnlyProperties": [
     "/properties/Arn",
     "/properties/ConnectorId",
-    "/properties/ServiceManagedEgressIpAddresses"
+    "/properties/ServiceManagedEgressIpAddresses",
+    "/properties/Status"
   ],
   "required": [
-    "AccessRole",
-    "Url"
+    "AccessRole"
   ],
   "tagging": {
     "cloudFormationSystemTags": true,

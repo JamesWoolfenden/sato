@@ -4,6 +4,21 @@
     "/properties/Name"
   ],
   "definitions": {
+    "AutoDisablePolicy": {
+      "additionalProperties": false,
+      "description": "The auto-disable policy configuration for the image pipeline.",
+      "properties": {
+        "FailureCount": {
+          "description": "The number of consecutive failures after which the pipeline should be automatically disabled.",
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "FailureCount"
+      ],
+      "type": "object"
+    },
     "EcrConfiguration": {
       "additionalProperties": false,
       "description": "Settings for Image Builder to configure the ECR repository and output container images that are scanned.",
@@ -55,10 +70,29 @@
       },
       "type": "object"
     },
+    "PipelineLoggingConfiguration": {
+      "additionalProperties": false,
+      "description": "The logging configuration settings for the image pipeline.",
+      "properties": {
+        "ImageLogGroupName": {
+          "description": "The name of the log group for image build logs.",
+          "type": "string"
+        },
+        "PipelineLogGroupName": {
+          "description": "The name of the log group for pipeline execution logs.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "Schedule": {
       "additionalProperties": false,
       "description": "The schedule of the image pipeline.",
       "properties": {
+        "AutoDisablePolicy": {
+          "$ref": "#/definitions/AutoDisablePolicy",
+          "description": "The auto-disable policy for the image pipeline."
+        },
         "PipelineExecutionStartCondition": {
           "description": "The condition configures when the pipeline should trigger a new image build.",
           "enum": [
@@ -147,7 +181,7 @@
     },
     "delete": {
       "permissions": [
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:GetImagePipeline",
         "imagebuilder:DeleteImagePipeline"
       ]
@@ -167,7 +201,9 @@
         "iam:PassRole",
         "imagebuilder:GetImagePipeline",
         "imagebuilder:UpdateImagePipeline",
-        "imagebuilder:GetWorkflow"
+        "imagebuilder:GetWorkflow",
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
       ]
     }
   },
@@ -197,6 +233,10 @@
     },
     "ContainerRecipeArn": {
       "description": "The Amazon Resource Name (ARN) of the container recipe that defines how images are configured and tested.",
+      "type": "string"
+    },
+    "DeploymentId": {
+      "description": "The deployment ID of the pipeline, used for resource create/update triggers.",
       "type": "string"
     },
     "Description": {
@@ -230,6 +270,10 @@
     "InfrastructureConfigurationArn": {
       "description": "The Amazon Resource Name (ARN) of the infrastructure configuration associated with this image pipeline.",
       "type": "string"
+    },
+    "LoggingConfiguration": {
+      "$ref": "#/definitions/PipelineLoggingConfiguration",
+      "description": "The logging configuration settings for the image pipeline."
     },
     "Name": {
       "description": "The name of the image pipeline.",
@@ -267,11 +311,16 @@
     }
   },
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/DeploymentId"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "imagebuilder:TagResource",
+      "imagebuilder:UntagResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

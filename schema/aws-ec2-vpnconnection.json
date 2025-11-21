@@ -5,6 +5,7 @@
     "/properties/Type",
     "/properties/CustomerGatewayId",
     "/properties/VpnGatewayId",
+    "/properties/VpnConcentratorId",
     "/properties/TransitGatewayId",
     "/properties/EnableAcceleration",
     "/properties/LocalIpv4NetworkCidr",
@@ -15,6 +16,8 @@
     "/properties/StaticRoutesOnly",
     "/properties/TransportTransitGatewayAttachmentId",
     "/properties/TunnelInsideIpVersion",
+    "/properties/PreSharedKeyStorage",
+    "/properties/TunnelBandwidth",
     "/properties/VpnTunnelOptionsSpecifications"
   ],
   "definitions": {
@@ -22,6 +25,22 @@
       "additionalProperties": false,
       "description": "Options for sending VPN tunnel logs to CloudWatch.",
       "properties": {
+        "BgpLogEnabled": {
+          "description": "",
+          "type": "boolean"
+        },
+        "BgpLogGroupArn": {
+          "description": "",
+          "type": "string"
+        },
+        "BgpLogOutputFormat": {
+          "description": "",
+          "enum": [
+            "json",
+            "text"
+          ],
+          "type": "string"
+        },
         "LogEnabled": {
           "description": "Enable or disable VPN tunnel logging feature. Default value is ``False``.\n Valid values: ``True`` | ``False``",
           "type": "boolean"
@@ -210,7 +229,7 @@
       "description": "The tunnel options for a single VPN tunnel.",
       "properties": {
         "DPDTimeoutAction": {
-          "description": "The action to take after DPD timeout occurs. Specify ``restart`` to restart the IKE initiation. Specify ``clear`` to end the IKE session.\n Valid Values: ``clear`` | ``none`` | ``restart`` \n Default: ``clear``",
+          "description": "The action to take after DPD timeout occurs. Specify ``restart`` to restart the IKE initiation. Specify ``clear`` to end the IKE session.\n Valid Values: ``clear`` | ``none`` | ``restart``\n Default: ``clear``",
           "enum": [
             "clear",
             "none",
@@ -328,7 +347,7 @@
           "type": "integer"
         },
         "StartupAction": {
-          "description": "The action to take when the establishing the tunnel for the VPN connection. By default, your customer gateway device must initiate the IKE negotiation and bring up the tunnel. Specify ``start`` for AWS to initiate the IKE negotiation.\n Valid Values: ``add`` | ``start`` \n Default: ``add``",
+          "description": "The action to take when the establishing the tunnel for the VPN connection. By default, your customer gateway device must initiate the IKE negotiation and bring up the tunnel. Specify ``start`` for AWS to initiate the IKE negotiation.\n Valid Values: ``add`` | ``start``\n Default: ``add``",
           "enum": [
             "add",
             "start"
@@ -401,7 +420,15 @@
       "type": "string"
     },
     "OutsideIpAddressType": {
-      "description": "The type of IPv4 address assigned to the outside interface of the customer gateway device.\n Valid values: ``PrivateIpv4`` | ``PublicIpv4`` \n Default: ``PublicIpv4``",
+      "description": "The type of IP address assigned to the outside interface of the customer gateway device.\n Valid values: ``PrivateIpv4`` | ``PublicIpv4`` | ``Ipv6``\n Default: ``PublicIpv4``",
+      "type": "string"
+    },
+    "PreSharedKeyStorage": {
+      "description": "Describes the storage location for an instance store-backed AMI.",
+      "enum": [
+        "Standard",
+        "SecretsManager"
+      ],
       "type": "string"
     },
     "RemoteIpv4NetworkCidr": {
@@ -433,12 +460,25 @@
       "description": "The transit gateway attachment ID to use for the VPN tunnel.\n Required if ``OutsideIpAddressType`` is set to ``PrivateIpv4``.",
       "type": "string"
     },
+    "TunnelBandwidth": {
+      "default": "standard",
+      "description": "",
+      "enum": [
+        "standard",
+        "large"
+      ],
+      "type": "string"
+    },
     "TunnelInsideIpVersion": {
       "description": "Indicate whether the VPN tunnels process IPv4 or IPv6 traffic.\n Default: ``ipv4``",
       "type": "string"
     },
     "Type": {
       "description": "The type of VPN connection.",
+      "type": "string"
+    },
+    "VpnConcentratorId": {
+      "description": "",
       "type": "string"
     },
     "VpnConnectionId": {
@@ -478,5 +518,9 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::EC2::VPNConnection"
+  "typeName": "AWS::EC2::VPNConnection",
+  "writeOnlyProperties": [
+    "/properties/PreSharedKeyStorage",
+    "/properties/VpnTunnelOptionsSpecifications/*/PreSharedKey"
+  ]
 }

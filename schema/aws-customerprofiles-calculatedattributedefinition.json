@@ -2,7 +2,10 @@
   "additionalProperties": false,
   "createOnlyProperties": [
     "/properties/DomainName",
-    "/properties/CalculatedAttributeName"
+    "/properties/CalculatedAttributeName",
+    "/properties/UseHistoricalData",
+    "/properties/Conditions/Range/TimestampSource",
+    "/properties/Conditions/Range/TimestampFormat"
   ],
   "definitions": {
     "AttributeDetails": {
@@ -104,7 +107,7 @@
     },
     "ObjectCount": {
       "description": "The number of profile objects used for the calculated attribute.",
-      "maximum": 100,
+      "maximum": 300,
       "minimum": 1,
       "type": "integer"
     },
@@ -112,15 +115,29 @@
       "additionalProperties": false,
       "description": "The relative time period over which data is included in the aggregation.",
       "properties": {
+        "TimestampFormat": {
+          "description": "The format the timestamp field in your JSON object is specified. This value should be one of EPOCHMILLI or ISO_8601. E.g. if your object type is MyType and source JSON is {\"generatedAt\": {\"timestamp\": \"2001-07-04T12:08:56.235Z\"}}, then TimestampFormat should be \"ISO_8601\".",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": "string"
+        },
+        "TimestampSource": {
+          "description": "An expression specifying the field in your JSON object from which the date should be parsed. The expression should follow the structure of \\\"{ObjectTypeName.<Location of timestamp field in JSON pointer format>}\\\". E.g. if your object type is MyType and source JSON is {\"generatedAt\": {\"timestamp\": \"1737587945945\"}}, then TimestampSource should be \"{MyType.generatedAt.timestamp}\".",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": "string"
+        },
         "Unit": {
           "$ref": "#/definitions/RangeUnit"
         },
         "Value": {
           "$ref": "#/definitions/RangeValue"
+        },
+        "ValueRange": {
+          "$ref": "#/definitions/ValueRange"
         }
       },
       "required": [
-        "Value",
         "Unit"
       ],
       "type": "object"
@@ -134,9 +151,26 @@
     },
     "RangeValue": {
       "description": "The amount of time of the specified unit.",
-      "maximum": 366,
+      "maximum": 2147483647,
       "minimum": 1,
       "type": "integer"
+    },
+    "Readiness": {
+      "additionalProperties": false,
+      "description": "The readiness status of the calculated attribute.",
+      "properties": {
+        "Message": {
+          "description": "Any information pertaining to the status of the calculated attribute if required.",
+          "type": "string"
+        },
+        "ProgressPercentage": {
+          "description": "The progress percentage for including historical data in your calculated attribute.",
+          "maximum": 100,
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "type": "object"
     },
     "Statistic": {
       "description": "The aggregation operation to perform for the calculated attribute.",
@@ -218,6 +252,29 @@
       "maxLength": 255,
       "minLength": 1,
       "type": "string"
+    },
+    "ValueRange": {
+      "additionalProperties": false,
+      "description": "A structure specifying the endpoints of the relative time period over which data is included in the aggregation.",
+      "properties": {
+        "End": {
+          "description": "The ending point for this range. Positive numbers indicate how many days in the past data should be included, and negative numbers indicate how many days in the future.",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        },
+        "Start": {
+          "description": "The starting point for this range. Positive numbers indicate how many days in the past data should be included, and negative numbers indicate how many days in the future.",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "Start",
+        "End"
+      ],
+      "type": "object"
     }
   },
   "description": "A calculated attribute definition for Customer Profiles",
@@ -293,16 +350,35 @@
       "description": "The timestamp of when the calculated attribute definition was most recently edited.",
       "type": "string"
     },
+    "Readiness": {
+      "$ref": "#/definitions/Readiness"
+    },
     "Statistic": {
       "$ref": "#/definitions/Statistic"
     },
+    "Status": {
+      "description": "The status of the calculated attribute definition.",
+      "enum": [
+        "IN_PROGRESS",
+        "PREPARING",
+        "COMPLETED",
+        "FAILED"
+      ],
+      "type": "string"
+    },
     "Tags": {
       "$ref": "#/definitions/Tags"
+    },
+    "UseHistoricalData": {
+      "description": "Whether to use historical data for the calculated attribute.",
+      "type": "boolean"
     }
   },
   "readOnlyProperties": [
     "/properties/CreatedAt",
-    "/properties/LastUpdatedAt"
+    "/properties/LastUpdatedAt",
+    "/properties/Status",
+    "/properties/Readiness"
   ],
   "required": [
     "DomainName",

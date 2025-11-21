@@ -5,26 +5,71 @@
     "/properties/ProductId"
   ],
   "description": "Resource Type definition for AWS::ServiceCatalog::LaunchTemplateConstraint",
+  "handlers": {
+    "create": {
+      "permissions": [
+        "servicecatalog:CreateConstraint",
+        "servicecatalog:DescribeConstraint"
+      ]
+    },
+    "delete": {
+      "permissions": [
+        "servicecatalog:DeleteConstraint"
+      ]
+    },
+    "list": {
+      "handlerSchema": {
+        "properties": {
+          "PortfolioId": {
+            "$ref": "resource-schema.json#/properties/PortfolioId"
+          }
+        },
+        "required": [
+          "PortfolioId"
+        ]
+      },
+      "permissions": [
+        "servicecatalog:ListConstraintsForPortfolio"
+      ]
+    },
+    "read": {
+      "permissions": [
+        "servicecatalog:DescribeConstraint"
+      ]
+    },
+    "update": {
+      "permissions": [
+        "servicecatalog:UpdateConstraint",
+        "servicecatalog:DescribeConstraint"
+      ]
+    }
+  },
   "primaryIdentifier": [
     "/properties/Id"
   ],
   "properties": {
     "AcceptLanguage": {
+      "description": "The language code.",
       "type": "string"
     },
     "Description": {
+      "description": "The description of the constraint.",
       "type": "string"
     },
     "Id": {
+      "description": "Unique identifier for the constraint",
       "type": "string"
     },
     "PortfolioId": {
+      "description": "The portfolio identifier.",
       "type": "string"
     },
     "ProductId": {
+      "description": "The product identifier.",
       "type": "string"
     },
     "Rules": {
+      "description": "A json encoded string of the template constraint rules",
       "type": "string"
     }
   },
@@ -32,9 +77,16 @@
     "/properties/Id"
   ],
   "required": [
+    "Rules",
     "PortfolioId",
-    "ProductId",
-    "Rules"
+    "ProductId"
   ],
-  "typeName": "AWS::ServiceCatalog::LaunchTemplateConstraint"
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog/tree/master/aws-servicecatalog-launchtemplateconstraint.git",
+  "tagging": {
+    "taggable": false
+  },
+  "typeName": "AWS::ServiceCatalog::LaunchTemplateConstraint",
+  "writeOnlyProperties": [
+    "/properties/AcceptLanguage"
+  ]
 }

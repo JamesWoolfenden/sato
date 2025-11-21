@@ -1,5 +1,8 @@
 {
   "additionalProperties": false,
+  "conditionalCreateOnlyProperties": [
+    "/properties/ImagePipelineExecutionSettings"
+  ],
   "createOnlyProperties": [
     "/properties/ImageRecipeArn",
     "/properties/ContainerRecipeArn",
@@ -8,10 +11,23 @@
     "/properties/DistributionConfigurationArn",
     "/properties/ImageTestsConfiguration",
     "/properties/ImageScanningConfiguration",
-    "/properties/EnhancedImageMetadataEnabled",
-    "/properties/Tags"
+    "/properties/EnhancedImageMetadataEnabled"
   ],
   "definitions": {
+    "DeletionSettings": {
+      "additionalProperties": false,
+      "description": "The deletion settings of the image, indicating whether to delete the underlying resources in addition to the image.",
+      "properties": {
+        "ExecutionRole": {
+          "description": "The execution role to use for deleting the image, as well as underlying resources.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ExecutionRole"
+      ],
+      "type": "object"
+    },
     "EcrConfiguration": {
       "additionalProperties": false,
       "description": "Settings for Image Builder to configure the ECR repository and output container images that are scanned.",
@@ -27,6 +43,32 @@
         "RepositoryName": {
           "description": "The name of the container repository that Amazon Inspector scans to identify findings for your container images. The name includes the path for the repository location. If you don\u2019t provide this information, Image Builder creates a repository in your account named image-builder-image-scanning-repository to use for vulnerability scans for your output container images.",
           "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ImageLoggingConfiguration": {
+      "additionalProperties": false,
+      "description": "The logging configuration settings for the image.",
+      "properties": {
+        "LogGroupName": {
+          "description": "The name of the log group for image build logs.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ImagePipelineExecutionSettings": {
+      "additionalProperties": false,
+      "description": "The settings for starting an image pipeline execution.",
+      "properties": {
+        "DeploymentId": {
+          "description": "The deployment ID of the pipeline, used to trigger new image pipeline executions.",
+          "type": "string"
+        },
+        "OnUpdate": {
+          "description": "Whether to trigger the image pipeline when the pipeline is updated. False by default.",
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -59,6 +101,29 @@
           "maximum": 1440,
           "minimum": 60,
           "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "LatestVersion": {
+      "additionalProperties": false,
+      "description": "The latest version references of the image.",
+      "properties": {
+        "Arn": {
+          "description": "The latest version ARN of the created image.",
+          "type": "string"
+        },
+        "Major": {
+          "description": "The latest version ARN of the created image, with the same major version.",
+          "type": "string"
+        },
+        "Minor": {
+          "description": "The latest version ARN of the created image, with the same minor version.",
+          "type": "string"
+        },
+        "Patch": {
+          "description": "The latest version ARN of the created image, with the same patch version.",
+          "type": "string"
         }
       },
       "type": "object"
@@ -139,7 +204,7 @@
       "permissions": [
         "imagebuilder:GetImage",
         "imagebuilder:DeleteImage",
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:CancelImageCreation"
       ]
     },
@@ -149,10 +214,7 @@
           "Arn": {
             "$ref": "resource-schema.json#/properties/Arn"
           }
-        },
-        "required": [
-          "Arn"
-        ]
+        }
       },
       "permissions": [
         "imagebuilder:ListImages",
@@ -162,6 +224,12 @@
     "read": {
       "permissions": [
         "imagebuilder:GetImage"
+      ]
+    },
+    "update": {
+      "permissions": [
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
       ]
     }
   },
@@ -180,7 +248,7 @@
     },
     {
       "required": [
-        "ImportDiskImageSettings"
+        "ImagePipelineExecutionSettings"
       ]
     }
   ],
@@ -195,6 +263,10 @@
     "ContainerRecipeArn": {
       "description": "The Amazon Resource Name (ARN) of the container recipe that defines how images are configured and tested.",
       "type": "string"
+    },
+    "DeletionSettings": {
+      "$ref": "#/definitions/DeletionSettings",
+      "description": "The deletion settings of the image, indicating whether to delete the underlying resources in addition to the image."
     },
     "DistributionConfigurationArn": {
       "description": "The Amazon Resource Name (ARN) of the distribution configuration.",
@@ -211,6 +283,61 @@
     "ImageId": {
       "description": "The AMI ID of the EC2 AMI in current region.",
       "type": "string"
+    },
+    "ImagePipelineExecutionSettings": {
+      "$ref": "#/definitions/ImagePipelineExecutionSettings",
+      "dependencies": {
+        "ImagePipelineExecutionSettings": {
+          "oneOf": [
+            {
+              "required": [
+                "ImageRecipeArn"
+              ]
+            },
+            {
+              "required": [
+                "ContainerRecipeArn"
+              ]
+            },
+            {
+              "required": [
+                "InfrastructureConfigurationArn"
+              ]
+            },
+            {
+              "required": [
+                "Workflows"
+              ]
+            },
+            {
+              "required": [
+                "DistributionConfigurationArn"
+              ]
+            },
+            {
+              "required": [
+                "ImageTestsConfiguration"
+              ]
+            },
+            {
+              "required": [
+                "ImageScanningConfiguration"
+              ]
+            },
+            {
+              "required": [
+                "EnhancedImageMetadataEnabled"
+              ]
+            },
+            {
+              "required": [
+                "ImportDiskImageSettings"
+              ]
+            }
+          ]
+        }
+      },
+      "description": "The image pipeline execution settings of the image."
     },
     "ImageRecipeArn": {
       "description": "The Amazon Resource Name (ARN) of the image recipe that defines how images are configured, tested, and assessed.",
@@ -231,6 +358,14 @@
     "InfrastructureConfigurationArn": {
       "description": "The Amazon Resource Name (ARN) of the infrastructure configuration.",
       "type": "string"
+    },
+    "LatestVersion": {
+      "$ref": "#/definitions/LatestVersion",
+      "description": "The latest version references of the image."
+    },
+    "LoggingConfiguration": {
+      "$ref": "#/definitions/ImageLoggingConfiguration",
+      "description": "The logging configuration settings for the image."
     },
     "Name": {
       "description": "The name of the image.",
@@ -259,19 +394,28 @@
     "/properties/Arn",
     "/properties/Name",
     "/properties/ImageId",
-    "/properties/ImageUri"
+    "/properties/ImageUri",
+    "/properties/LatestVersion",
+    "/properties/LatestVersion/Arn",
+    "/properties/LatestVersion/Major",
+    "/properties/LatestVersion/Minor",
+    "/properties/LatestVersion/Patch"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder",
   "tagging": {
     "cloudFormationSystemTags": true,
     "permissions": [
       "imagebuilder:TagResource",
-      "imagebuilder:UnTagResource"
+      "imagebuilder:UntagResource"
     ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::ImageBuilder::Image"
+  "typeName": "AWS::ImageBuilder::Image",
+  "writeOnlyProperties": [
+    "/properties/DeletionSettings",
+    "/properties/ImagePipelineExecutionSettings"
+  ]
 }

@@ -129,6 +129,17 @@
       "pattern": "[\\w+=,.@-]{1,64}",
       "type": "string"
     },
+    "State": {
+      "description": "The state of the account in the organization.",
+      "enum": [
+        "PENDING_ACTIVATION",
+        "ACTIVE",
+        "SUSPENDED",
+        "PENDING_CLOSURE",
+        "CLOSED"
+      ],
+      "type": "string"
+    },
     "Status": {
       "description": "The status of the account in the organization.",
       "enum": [
@@ -151,6 +162,7 @@
   "readOnlyProperties": [
     "/properties/AccountId",
     "/properties/Status",
+    "/properties/State",
     "/properties/JoinedTimestamp",
     "/properties/JoinedMethod",
     "/properties/Arn"

@@ -4,6 +4,21 @@
     "/properties/EmailAddress"
   ],
   "definitions": {
+    "AliasConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration for an email address alias",
+      "properties": {
+        "EmailAddressArn": {
+          "description": "The identifier of the email address alias",
+          "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}/email-address/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "EmailAddressArn"
+      ],
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "description": "A key-value pair to associate with a resource.",
@@ -32,6 +47,7 @@
     "create": {
       "permissions": [
         "connect:CreateEmailAddress",
+        "connect:AssociateEmailAddressAlias",
         "connect:TagResource",
         "connect:ListIntegrationAssociations",
         "ses:GetEmailIdentity",
@@ -43,6 +59,7 @@
     "delete": {
       "permissions": [
         "connect:DeleteEmailAddress",
+        "connect:DisassociateEmailAddressAlias",
         "connect:UntagResource",
         "iam:PassRole",
         "ses:DescribeReceiptRule",
@@ -73,6 +90,8 @@
     "update": {
       "permissions": [
         "connect:UpdateEmailAddressMetadata",
+        "connect:AssociateEmailAddressAlias",
+        "connect:DisassociateEmailAddressAlias",
         "connect:TagResource",
         "connect:UntagResource"
       ]
@@ -82,6 +101,15 @@
     "/properties/EmailAddressArn"
   ],
   "properties": {
+    "AliasConfigurations": {
+      "description": "List of alias configurations for the email address",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AliasConfiguration"
+      },
+      "maxItems": 1,
+      "type": "array"
+    },
     "Description": {
       "description": "A description for the email address.",
       "maxLength": 250,

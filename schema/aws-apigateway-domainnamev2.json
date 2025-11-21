@@ -9,6 +9,9 @@
     "EndpointConfiguration": {
       "additionalProperties": false,
       "properties": {
+        "IpAddressType": {
+          "type": "string"
+        },
         "Types": {
           "items": {
             "type": "string"
@@ -83,6 +86,9 @@
     "DomainNameId": {
       "type": "string"
     },
+    "EndpointAccessMode": {
+      "type": "string"
+    },
     "EndpointConfiguration": {
       "$ref": "#/definitions/EndpointConfiguration"
     },
@@ -91,6 +97,16 @@
         "object",
         "string"
       ]
+    },
+    "RoutingMode": {
+      "default": "BASE_PATH_MAPPING_ONLY",
+      "description": "The valid routing modes are [BASE_PATH_MAPPING_ONLY], [ROUTING_RULE_THEN_BASE_PATH_MAPPING] and [ROUTING_RULE_ONLY]. All other inputs are invalid.",
+      "enum": [
+        "BASE_PATH_MAPPING_ONLY",
+        "ROUTING_RULE_THEN_BASE_PATH_MAPPING",
+        "ROUTING_RULE_ONLY"
+      ],
+      "type": "string"
     },
     "SecurityPolicy": {
       "type": "string"

@@ -21,7 +21,8 @@
       "required": [
         "Key",
         "Value"
-      ]
+      ],
+      "type": "object"
     }
   },
   "description": "Resource Type definition for AWS::DSQL::Cluster",
@@ -29,10 +30,21 @@
     "create": {
       "permissions": [
         "dsql:CreateCluster",
+        "dsql:UpdateCluster",
         "dsql:GetCluster",
+        "dsql:GetClusterPolicy",
         "dsql:TagResource",
+        "dsql:GetVpcEndpointServiceName",
         "dsql:ListTagsForResource",
-        "iam:CreateServiceLinkedRole"
+        "iam:CreateServiceLinkedRole",
+        "dsql:PutMultiRegionProperties",
+        "dsql:AddPeerCluster",
+        "dsql:PutClusterPolicy",
+        "dsql:PutWitnessRegion",
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey",
+        "kms:DescribeKey"
       ]
     },
     "delete": {
@@ -53,6 +65,8 @@
     "read": {
       "permissions": [
         "dsql:GetCluster",
+        "dsql:GetClusterPolicy",
+        "dsql:GetVpcEndpointServiceName",
         "dsql:ListTagsForResource",
         "tag:GetTagKeys",
         "tag:GetTagValues"
@@ -62,9 +76,21 @@
       "permissions": [
         "dsql:UpdateCluster",
         "dsql:GetCluster",
+        "dsql:GetClusterPolicy",
         "dsql:UntagResource",
         "dsql:TagResource",
-        "dsql:ListTagsForResource"
+        "dsql:GetVpcEndpointServiceName",
+        "dsql:ListTagsForResource",
+        "dsql:PutClusterPolicy",
+        "dsql:PutMultiRegionProperties",
+        "dsql:PutWitnessRegion",
+        "dsql:AddPeerCluster",
+        "dsql:RemovePeerCluster",
+        "dsql:DeleteClusterPolicy",
+        "kms:Decrypt",
+        "kms:Encrypt",
+        "kms:GenerateDataKey",
+        "kms:DescribeKey"
       ]
     }
   },
@@ -80,8 +106,63 @@
       "description": "Whether deletion protection is enabled in this cluster.",
       "type": "boolean"
     },
+    "EncryptionDetails": {
+      "additionalProperties": false,
+      "description": "The encryption configuration details for the cluster.",
+      "properties": {
+        "EncryptionStatus": {
+          "description": "The status of encryption for the cluster.",
+          "type": "string"
+        },
+        "EncryptionType": {
+          "description": "The type of encryption that protects data in the cluster.",
+          "type": "string"
+        },
+        "KmsKeyArn": {
+          "description": "The Amazon Resource Name (ARN) of the KMS key that encrypts data in the cluster.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Endpoint": {
+      "description": "The DSQL cluster endpoint.",
+      "type": "string"
+    },
     "Identifier": {
       "description": "The ID of the created cluster.",
+      "type": "string"
+    },
+    "KmsEncryptionKey": {
+      "description": "The KMS key that encrypts data on the cluster.",
+      "type": "string"
+    },
+    "MultiRegionProperties": {
+      "additionalProperties": false,
+      "description": "The Multi-region properties associated to this cluster.",
+      "properties": {
+        "Clusters": {
+          "insertionOrder": false,
+          "items": {
+            "description": "The cluster Amazon Resource Name (ARN) in a multi-region cluster.",
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "WitnessRegion": {
+          "description": "The witness region in a multi-region cluster.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "PolicyDocument": {
+      "description": "The IAM policy applied to the cluster resource.",
+      "type": "string"
+    },
+    "PolicyVersion": {
+      "description": "The version number of the cluster's resource based policy",
       "type": "string"
     },
     "ResourceArn": {
@@ -99,13 +180,21 @@
       },
       "type": "array",
       "uniqueItems": false
+    },
+    "VpcEndpointServiceName": {
+      "description": "The VPC endpoint service name.",
+      "type": "string"
     }
   },
   "readOnlyProperties": [
     "/properties/ResourceArn",
     "/properties/Identifier",
     "/properties/CreationTime",
-    "/properties/Status"
+    "/properties/Status",
+    "/properties/VpcEndpointServiceName",
+    "/properties/EncryptionDetails",
+    "/properties/PolicyVersion",
+    "/properties/Endpoint"
   ],
   "required": [],
   "tagging": {
@@ -120,5 +209,8 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::DSQL::Cluster"
+  "typeName": "AWS::DSQL::Cluster",
+  "writeOnlyProperties": [
+    "/properties/KmsEncryptionKey"
+  ]
 }

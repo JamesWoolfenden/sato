@@ -99,6 +99,29 @@
       "description": "For SSE-KMS and CSE-KMS, this is the KMS key ARN or ID. ",
       "type": "string"
     },
+    "ManagedQueryResultsConfiguration": {
+      "additionalProperties": false,
+      "description": "The configuration for the managed query results and encryption option. ResultConfiguration and ManagedQueryResultsConfiguration cannot be set at the same time",
+      "properties": {
+        "Enabled": {
+          "type": "boolean"
+        },
+        "EncryptionConfiguration": {
+          "$ref": "#/definitions/ManagedStorageEncryptionConfiguration"
+        }
+      },
+      "type": "object"
+    },
+    "ManagedStorageEncryptionConfiguration": {
+      "additionalProperties": false,
+      "description": "Indicates the encryption configuration for Athena Managed Storage. If not setting this field, Managed Storage will encrypt the query results with Athena's encryption key",
+      "properties": {
+        "KmsKey": {
+          "$ref": "#/definitions/KmsKey"
+        }
+      },
+      "type": "object"
+    },
     "OutputLocation": {
       "description": "The location in Amazon S3 where your query results are stored, such as s3://path/to/query/bucket/. To run the query, you must specify the query results location using one of the ways: either for individual queries using either this setting (client-side), or in the workgroup, using WorkGroupConfiguration",
       "type": "string"
@@ -239,6 +262,9 @@
         "ExecutionRole": {
           "$ref": "#/definitions/ExecutionRole"
         },
+        "ManagedQueryResultsConfiguration": {
+          "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+        },
         "PublishCloudWatchMetricsEnabled": {
           "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"
         },
@@ -272,6 +298,9 @@
         },
         "ExecutionRole": {
           "$ref": "#/definitions/ExecutionRole"
+        },
+        "ManagedQueryResultsConfiguration": {
+          "$ref": "#/definitions/ManagedQueryResultsConfiguration"
         },
         "PublishCloudWatchMetricsEnabled": {
           "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"

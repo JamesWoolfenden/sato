@@ -122,6 +122,39 @@
       ],
       "type": "object"
     },
+    "ContextKeySelector": {
+      "additionalProperties": false,
+      "description": "An object that contains information types to be included in CloudTrail enriched events.",
+      "properties": {
+        "Equals": {
+          "description": "An operator that includes events that match the exact value of the event record field specified in Type.",
+          "insertionOrder": false,
+          "items": {
+            "maxLength": 128,
+            "minLength": 1,
+            "pattern": "(.+)",
+            "type": "string"
+          },
+          "maxItems": 50,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "Type": {
+          "description": "Specifies the type of the event record field in ContextKeySelector. Valid values include RequestContext, TagContext.",
+          "enum": [
+            "RequestContext",
+            "TagContext"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Type",
+        "Equals"
+      ],
+      "type": "object"
+    },
     "InsightSelector": {
       "additionalProperties": false,
       "description": "A string that contains Insights types that are logged on an event data store.",
@@ -165,6 +198,7 @@
         "CloudTrail:PutInsightSelectors",
         "CloudTrail:EnableFederation",
         "CloudTrail:GetEventDataStore",
+        "CloudTrail:PutEventConfiguration",
         "iam:PassRole",
         "iam:GetRole",
         "iam:CreateServiceLinkedRole",
@@ -200,6 +234,7 @@
         "CloudTrail:GetEventDataStore",
         "CloudTrail:ListEventDataStores",
         "CloudTrail:GetInsightSelectors",
+        "CloudTrail:GetEventConfiguration",
         "CloudTrail:ListTags"
       ]
     },
@@ -216,6 +251,7 @@
         "CloudTrail:GetInsightSelectors",
         "CloudTrail:EnableFederation",
         "CloudTrail:DisableFederation",
+        "CloudTrail:PutEventConfiguration",
         "iam:PassRole",
         "iam:GetRole",
         "iam:CreateServiceLinkedRole",
@@ -247,6 +283,16 @@
     "BillingMode": {
       "description": "The mode that the event data store will use to charge for event storage.",
       "type": "string"
+    },
+    "ContextKeySelectors": {
+      "description": "An array that enriches event records in an existing event data store by including additional information specified in individual ContexKeySelector entries. If you add ContextKeySelectors, you must set MaxEventSize to Large.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/ContextKeySelector"
+      },
+      "maxItems": 2,
+      "type": "array",
+      "uniqueItems": true
     },
     "CreatedTimestamp": {
       "$ref": "#/definitions/Timestamp",
@@ -283,6 +329,14 @@
     },
     "KmsKeyId": {
       "description": "Specifies the KMS key ID to use to encrypt the events delivered by CloudTrail. The value can be an alias name prefixed by 'alias/', a fully specified ARN to an alias, a fully specified ARN to a key, or a globally unique identifier.",
+      "type": "string"
+    },
+    "MaxEventSize": {
+      "description": "Specifies the maximum size allowed for the event. Valid values are Standard and Large. If you add ContextKeySelectors, this value must be set to Large.",
+      "enum": [
+        "Standard",
+        "Large"
+      ],
       "type": "string"
     },
     "MultiRegionEnabled": {
@@ -329,8 +383,7 @@
     "/properties/EventDataStoreArn",
     "/properties/CreatedTimestamp",
     "/properties/UpdatedTimestamp",
-    "/properties/Status",
-    "/properties/FederationStatus"
+    "/properties/Status"
   ],
   "required": [],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",

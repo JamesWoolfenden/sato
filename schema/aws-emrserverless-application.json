@@ -160,6 +160,20 @@
       "pattern": "^arn:(aws[a-zA-Z0-9-]*):kms:[a-zA-Z0-9\\-]*:(\\d{12})?:key\\/[a-zA-Z0-9-]+$",
       "type": "string"
     },
+    "IdentityCenterConfiguration": {
+      "additionalProperties": false,
+      "description": "The IAM IdentityCenter configuration for trusted-identity-propagation on this application. Supported with release labels emr-7.8.0 and above.",
+      "properties": {
+        "IdentityCenterInstanceArn": {
+          "description": "The IAM IdentityCenter instance arn",
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^arn:(aws[a-zA-Z0-9-]*):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "ImageConfigurationInput": {
       "additionalProperties": false,
       "description": "The image configuration.",
@@ -564,13 +578,21 @@
         "ec2:CreateNetworkInterface",
         "ecr:BatchGetImage",
         "ecr:DescribeImages",
-        "ecr:GetDownloadUrlForLayer"
+        "ecr:GetDownloadUrlForLayer",
+        "sso:DescribeInstance",
+        "sso:CreateApplication",
+        "sso:DeleteApplication",
+        "sso:PutApplicationAuthenticationMethod",
+        "sso:PutApplicationAssignmentConfiguration",
+        "sso:PutApplicationGrant",
+        "sso:PutApplicationAccessScope"
       ]
     },
     "delete": {
       "permissions": [
         "emr-serverless:DeleteApplication",
-        "emr-serverless:GetApplication"
+        "emr-serverless:GetApplication",
+        "sso:DeleteApplication"
       ]
     },
     "list": {
@@ -645,6 +667,10 @@
     "AutoStopConfiguration": {
       "$ref": "#/definitions/AutoStopConfiguration",
       "description": "Configuration for Auto Stop of Application."
+    },
+    "IdentityCenterConfiguration": {
+      "$ref": "#/definitions/IdentityCenterConfiguration",
+      "description": "The IAM IdentityCenter configuration for trusted-identity-propagation on this application. Supported with release labels emr-7.8.0 and above."
     },
     "ImageConfiguration": {
       "$ref": "#/definitions/ImageConfigurationInput"

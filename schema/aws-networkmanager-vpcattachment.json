@@ -87,9 +87,19 @@
           "description": "Indicates whether to enable ApplianceModeSupport Support for Vpc Attachment. Valid Values: true | false",
           "type": "boolean"
         },
+        "DnsSupport": {
+          "default": true,
+          "description": "Indicates whether to enable private DNS Support for Vpc Attachment. Valid Values: true | false",
+          "type": "boolean"
+        },
         "Ipv6Support": {
           "default": false,
           "description": "Indicates whether to enable Ipv6 Support for Vpc Attachment. Valid Values: enable | disable",
+          "type": "boolean"
+        },
+        "SecurityGroupReferencingSupport": {
+          "default": true,
+          "description": "Indicates whether to enable Security Group Referencing Support for Vpc Attachment. Valid Values: true | false",
           "type": "boolean"
         }
       },
@@ -171,6 +181,13 @@
       "description": "The Region where the edge is located.",
       "type": "string"
     },
+    "LastModificationErrors": {
+      "description": "Errors from the last modification of the attachment.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
     "NetworkFunctionGroupName": {
       "description": "The name of the network function group attachment.",
       "type": "string"
@@ -241,7 +258,8 @@
     "/properties/AttachmentPolicyRuleNumber",
     "/properties/SegmentName",
     "/properties/NetworkFunctionGroupName",
-    "/properties/ResourceArn"
+    "/properties/ResourceArn",
+    "/properties/LastModificationErrors"
   ],
   "required": [
     "CoreNetworkId",

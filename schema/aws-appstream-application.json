@@ -83,17 +83,22 @@
     },
     "delete": {
       "permissions": [
-        "appstream:DeleteApplication"
+        "appstream:DeleteApplication",
+        "appstream:DescribeApplications"
       ]
     },
     "read": {
       "permissions": [
-        "appstream:DescribeApplications"
+        "appstream:DescribeApplications",
+        "appstream:ListTagsForResource"
       ]
     },
     "update": {
       "permissions": [
         "appstream:UpdateApplication",
+        "appstream:DescribeApplications",
+        "appstream:TagResource",
+        "appstream:UntagResource",
         "s3:GetObject"
       ]
     }
@@ -180,14 +185,18 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
   "tagging": {
     "cloudFormationSystemTags": false,
+    "permissions": [
+      "appstream:TagResource",
+      "appstream:ListTagsForResource",
+      "appstream:UntagResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
+    "tagUpdatable": true,
     "taggable": true
   },
   "typeName": "AWS::AppStream::Application",
   "writeOnlyProperties": [
-    "/properties/Tags",
     "/properties/AttributesToDelete"
   ]
 }

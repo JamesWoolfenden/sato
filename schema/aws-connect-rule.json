@@ -219,7 +219,7 @@
       "description": "Information about the reference when the ``referenceType`` is ``URL``. Otherwise, null. (Supports variable injection in the ``Value`` field.)",
       "properties": {
         "Type": {
-          "description": "The type of the reference. ``DATE`` must be of type Epoch timestamp. \n  *Allowed values*: ``URL`` | ``ATTACHMENT`` | ``NUMBER`` | ``STRING`` | ``DATE`` | ``EMAIL``",
+          "description": "The type of the reference. ``DATE`` must be of type Epoch timestamp. \n *Allowed values*: ``URL`` | ``ATTACHMENT`` | ``NUMBER`` | ``STRING`` | ``DATE`` | ``EMAIL``",
           "enum": [
             "URL",
             "ATTACHMENT",
@@ -285,14 +285,14 @@
           "type": "string"
         },
         "ContentType": {
-          "description": "Content type format.\n  *Allowed value*: ``PLAIN_TEXT``",
+          "description": "Content type format.\n *Allowed value*: ``PLAIN_TEXT``",
           "enum": [
             "PLAIN_TEXT"
           ],
           "type": "string"
         },
         "DeliveryMethod": {
-          "description": "Notification delivery method.\n  *Allowed value*: ``EMAIL``",
+          "description": "Notification delivery method.\n *Allowed value*: ``EMAIL``",
           "enum": [
             "EMAIL"
           ],
@@ -451,8 +451,8 @@
       "uniqueItems": true
     },
     "UserArn": {
-      "description": "The Amazon Resource Name (ARN) of the user.",
-      "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$",
+      "description": "The Amazon Resource Name (ARN) of the user or a dynamic recipient string starting with '$.'.",
+      "pattern": "^$|arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$|^\\$\\..+$",
       "type": "string"
     }
   },
@@ -511,7 +511,7 @@
       "type": "string"
     },
     "PublishStatus": {
-      "description": "The publish status of the rule.\n  *Allowed values*: ``DRAFT`` | ``PUBLISHED``",
+      "description": "The publish status of the rule.\n *Allowed values*: ``DRAFT`` | ``PUBLISHED``",
       "enum": [
         "DRAFT",
         "PUBLISHED"
@@ -553,6 +553,10 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "connect:TagResource",
+      "connect:UntagResource"
+    ],
     "tagOnCreate": false,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

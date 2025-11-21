@@ -4,10 +4,34 @@
     "/properties/Name",
     "/properties/Networking",
     "/properties/Scheduler",
-    "/properties/Size",
-    "/properties/SlurmConfiguration"
+    "/properties/Size"
   ],
   "definitions": {
+    "Accounting": {
+      "description": "The accounting configuration includes configurable settings for Slurm accounting.",
+      "properties": {
+        "DefaultPurgeTimeInDays": {
+          "default": -1,
+          "description": "The default value for all purge settings for `slurmdbd.conf`. For more information, see the [slurmdbd.conf documentation at SchedMD](https://slurm.schedmd.com/slurmdbd.conf.html). The default value is `-1`. A value of `-1` means there is no purge time and records persist as long as the cluster exists.",
+          "maximum": 10000,
+          "minimum": -1,
+          "type": "integer"
+        },
+        "Mode": {
+          "default": "NONE",
+          "description": "The default value is `STANDARD`. A value of `STANDARD` means that Slurm accounting is enabled.",
+          "enum": [
+            "STANDARD",
+            "NONE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Mode"
+      ],
+      "type": "object"
+    },
     "AuthKey": {
       "additionalProperties": false,
       "description": "The shared Slurm key for authentication, also known as the cluster secret.",
@@ -31,6 +55,10 @@
       "additionalProperties": false,
       "description": "An endpoint available for interaction with the scheduler.",
       "properties": {
+        "Ipv6Address": {
+          "description": "The endpoint's IPv6 address.",
+          "type": "string"
+        },
         "Port": {
           "description": "The endpoint's connection port number.",
           "type": "string"
@@ -164,6 +192,7 @@
     "update": {
       "permissions": [
         "pcs:GetCluster",
+        "pcs:UpdateCluster",
         "pcs:ListTagsForResource",
         "pcs:TagResource",
         "pcs:UntagResource"
@@ -208,6 +237,15 @@
       "additionalProperties": false,
       "description": "The networking configuration for the cluster's control plane.",
       "properties": {
+        "NetworkType": {
+          "description": "The IP of the cluster (IPV4 or IPV6)",
+          "enum": [
+            "IPV4",
+            "IPV6"
+          ],
+          "insertionOrder": false,
+          "type": "string"
+        },
         "SecurityGroupIds": {
           "description": "The list of security group IDs associated with the Elastic Network Interface (ENI) created in subnets.",
           "insertionOrder": false,
@@ -262,6 +300,9 @@
       "additionalProperties": false,
       "description": "Additional options related to the Slurm scheduler.",
       "properties": {
+        "Accounting": {
+          "$ref": "#/definitions/Accounting"
+        },
         "AuthKey": {
           "$ref": "#/definitions/AuthKey"
         },

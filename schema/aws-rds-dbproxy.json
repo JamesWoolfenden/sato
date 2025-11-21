@@ -3,6 +3,8 @@
   "createOnlyProperties": [
     "/properties/DBProxyName",
     "/properties/EngineFamily",
+    "/properties/EndpointNetworkType",
+    "/properties/TargetConnectionNetworkType",
     "/properties/VpcSubnetIds"
   ],
   "definitions": {
@@ -20,6 +22,7 @@
           "description": "The type of authentication the proxy uses for connections from clients.",
           "enum": [
             "MYSQL_NATIVE_PASSWORD",
+            "MYSQL_CACHING_SHA2_PASSWORD",
             "POSTGRES_SCRAM_SHA_256",
             "POSTGRES_MD5",
             "SQL_SERVER_AUTHENTICATION"
@@ -124,8 +127,25 @@
       "description": "Whether the proxy includes detailed information about SQL statements in its logs.",
       "type": "boolean"
     },
+    "DefaultAuthScheme": {
+      "description": "The default authentication scheme that the proxy uses for client connections to the proxy and connections from the proxy to the underlying database.",
+      "enum": [
+        "IAM_AUTH",
+        "NONE"
+      ],
+      "type": "string"
+    },
     "Endpoint": {
       "description": "The endpoint that you can use to connect to the proxy. You include the endpoint value in the connection string for a database client application.",
+      "type": "string"
+    },
+    "EndpointNetworkType": {
+      "description": "The network type of the DB proxy endpoint. The network type determines the IP version that the proxy endpoint supports.",
+      "enum": [
+        "IPV4",
+        "IPV6",
+        "DUAL"
+      ],
       "type": "string"
     },
     "EngineFamily": {
@@ -157,6 +177,14 @@
       },
       "type": "array"
     },
+    "TargetConnectionNetworkType": {
+      "description": "The network type that the proxy uses to connect to the target database. The network type determines the IP version that the proxy uses for connections to the database.",
+      "enum": [
+        "IPV4",
+        "IPV6"
+      ],
+      "type": "string"
+    },
     "VpcId": {
       "description": "VPC ID to associate with the new DB proxy.",
       "type": "string"
@@ -186,7 +214,6 @@
     "/properties/VpcId"
   ],
   "required": [
-    "Auth",
     "DBProxyName",
     "EngineFamily",
     "RoleArn",

@@ -1,17 +1,77 @@
 {
   "additionalProperties": false,
   "definitions": {
-    "SchemaDefinition": {
+    "DeletionMode": {
+      "default": "DISABLED",
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "DeletionProtection": {
       "additionalProperties": false,
       "properties": {
-        "CedarJson": {
-          "$ref": "#/definitions/SchemaJson"
+        "Mode": {
+          "$ref": "#/definitions/DeletionMode"
         }
       },
+      "required": [
+        "Mode"
+      ],
       "type": "object"
+    },
+    "SchemaCedarFormat": {
+      "type": "string"
+    },
+    "SchemaDefinition": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "CedarJson": {
+              "$ref": "#/definitions/SchemaJson"
+            }
+          },
+          "required": [
+            "CedarJson"
+          ],
+          "title": "CedarJson",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "CedarFormat": {
+              "$ref": "#/definitions/SchemaCedarFormat"
+            }
+          },
+          "required": [
+            "CedarFormat"
+          ],
+          "title": "CedarFormat",
+          "type": "object"
+        }
+      ]
     },
     "SchemaJson": {
       "type": "string"
+    },
+    "Tag": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "Value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "Key",
+        "Value"
+      ],
+      "type": "object"
     },
     "ValidationMode": {
       "enum": [
@@ -38,6 +98,7 @@
     "create": {
       "permissions": [
         "verifiedpermissions:CreatePolicyStore",
+        "verifiedpermissions:TagResource",
         "verifiedpermissions:GetPolicyStore",
         "verifiedpermissions:PutSchema"
       ]
@@ -58,6 +119,7 @@
     "read": {
       "permissions": [
         "verifiedpermissions:GetPolicyStore",
+        "verifiedpermissions:ListTagsForResource",
         "verifiedpermissions:GetSchema"
       ]
     },
@@ -65,6 +127,8 @@
       "permissions": [
         "verifiedpermissions:UpdatePolicyStore",
         "verifiedpermissions:GetPolicyStore",
+        "verifiedpermissions:TagResource",
+        "verifiedpermissions:UntagResource",
         "verifiedpermissions:GetSchema",
         "verifiedpermissions:PutSchema"
       ]
@@ -80,6 +144,9 @@
       "pattern": "^arn:[^:]*:[^:]*:[^:]*:[^:]*:.*$",
       "type": "string"
     },
+    "DeletionProtection": {
+      "$ref": "#/definitions/DeletionProtection"
+    },
     "Description": {
       "maxLength": 150,
       "minLength": 0,
@@ -93,6 +160,15 @@
     },
     "Schema": {
       "$ref": "#/definitions/SchemaDefinition"
+    },
+    "Tags": {
+      "description": "The tags to add to the policy store",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "type": "array",
+      "uniqueItems": false
     },
     "ValidationSettings": {
       "$ref": "#/definitions/ValidationSettings"
@@ -110,10 +186,16 @@
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-avp",
   "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "verifiedpermissions:TagResource",
+      "verifiedpermissions:ListTagsForResource",
+      "verifiedpermissions:UntagResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
   },
   "typeName": "AWS::VerifiedPermissions::PolicyStore"
 }

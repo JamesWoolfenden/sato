@@ -60,12 +60,16 @@
   "handlers": {
     "create": {
       "permissions": [
-        "ses:CreateContactList"
+        "ses:CreateContactList",
+        "ses:UntagResource",
+        "ses:TagResource",
+        "ses:GetContactList"
       ]
     },
     "delete": {
       "permissions": [
-        "ses:DeleteContactList"
+        "ses:DeleteContactList",
+        "ses:GetContactList"
       ]
     },
     "list": {
@@ -75,14 +79,16 @@
     },
     "read": {
       "permissions": [
-        "ses:GetContactList"
+        "ses:GetContactList",
+        "ses:ListTagsForResource"
       ]
     },
     "update": {
       "permissions": [
         "ses:UpdateContactList",
         "ses:UntagResource",
-        "ses:TagResource"
+        "ses:TagResource",
+        "ses:GetContactList"
       ]
     }
   },
@@ -122,5 +128,17 @@
     }
   },
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses.git",
+  "tagging": {
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "ses:TagResource",
+      "ses:UntagResource",
+      "ses:ListTagsForResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::SES::ContactList"
 }

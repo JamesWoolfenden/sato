@@ -3,8 +3,7 @@
   "additionalProperties": false,
   "createOnlyProperties": [
     "/properties/InstanceType",
-    "/properties/BillingType",
-    "/properties/Locations"
+    "/properties/BillingType"
   ],
   "definitions": {
     "ConnectionPortRange": {
@@ -140,7 +139,7 @@
       "description": "Current resource capacity settings in a specified fleet or location. The location value might refer to a fleet's remote location or its home Region.",
       "properties": {
         "DesiredEC2Instances": {
-          "description": "The number of EC2 instances you want to maintain in the specified fleet location. This value must fall between the minimum and maximum size limits.",
+          "description": "Defaults to MinSize if not defined. The number of EC2 instances you want to maintain in the specified fleet location. This value must fall between the minimum and maximum size limits. If any auto-scaling policy is defined for the container fleet, the desired instance will only be applied once during fleet creation and will be ignored in updates to avoid conflicts with auto-scaling. During updates with any auto-scaling policy defined, if current desired instance is lower than the new MinSize, it will be increased to the new MinSize; if current desired instance is larger than the new MaxSize, it will be decreased to the new MaxSize.",
           "minimum": 0,
           "type": "integer"
         },
@@ -156,7 +155,6 @@
         }
       },
       "required": [
-        "DesiredEC2Instances",
         "MinSize",
         "MaxSize"
       ],
@@ -187,6 +185,13 @@
       "properties": {
         "LogDestination": {
           "$ref": "#/definitions/LogDestination"
+        },
+        "LogGroupArn": {
+          "description": "If log destination is CLOUDWATCH, logs are sent to the specified log group in Amazon CloudWatch.",
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "[a-zA-Z0-9:/\\-\\*]+",
+          "type": "string"
         },
         "S3BucketName": {
           "description": "The name of the S3 bucket to pull logs from if S3 is the LogDestination",
@@ -593,10 +598,7 @@
   },
   "typeName": "AWS::GameLift::ContainerFleet",
   "writeOnlyProperties": [
-    "/properties/ScalingPolicies",
-    "/properties/Locations",
     "/properties/DeploymentConfiguration",
-    "/properties/GameServerContainerGroupsPerInstance",
     "/properties/GameServerContainerGroupDefinitionName",
     "/properties/PerInstanceContainerGroupDefinitionName"
   ]

@@ -25,6 +25,21 @@
       "pattern": "^[a-zA-Z_0-9-]*$",
       "type": "string"
     },
+    "IdMappingIncrementalRunConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "IncrementalRunType": {
+          "enum": [
+            "ON_DEMAND"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "IncrementalRunType"
+      ],
+      "type": "object"
+    },
     "IdMappingRuleBasedProperties": {
       "additionalProperties": false,
       "properties": {
@@ -73,6 +88,9 @@
             "PROVIDER",
             "RULE_BASED"
           ],
+          "type": "string"
+        },
+        "NormalizationVersion": {
           "type": "string"
         },
         "ProviderProperties": {
@@ -286,6 +304,9 @@
     "Description": {
       "$ref": "#/definitions/Description",
       "description": "The description of the IdMappingWorkflow"
+    },
+    "IdMappingIncrementalRunConfig": {
+      "$ref": "#/definitions/IdMappingIncrementalRunConfig"
     },
     "IdMappingTechniques": {
       "$ref": "#/definitions/IdMappingTechniques"

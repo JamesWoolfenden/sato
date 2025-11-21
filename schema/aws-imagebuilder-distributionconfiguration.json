@@ -104,6 +104,14 @@
         "Region": {
           "description": "region",
           "type": "string"
+        },
+        "SsmParameterConfigurations": {
+          "description": "The SSM parameter configurations to use for AMI distribution.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/SsmParameterConfiguration"
+          },
+          "type": "array"
         }
       },
       "required": [
@@ -230,6 +238,32 @@
       "description": "The Amazon Resource Name (ARN) of the License Manager configuration.",
       "type": "string"
     },
+    "SsmParameterConfiguration": {
+      "additionalProperties": false,
+      "description": "The SSM parameter configuration for AMI distribution.",
+      "properties": {
+        "AmiAccountId": {
+          "description": "The account ID for the AMI to update the parameter with.",
+          "type": "string"
+        },
+        "DataType": {
+          "description": "The data type of the SSM parameter.",
+          "enum": [
+            "text",
+            "aws:ec2:image"
+          ],
+          "type": "string"
+        },
+        "ParameterName": {
+          "description": "The name of the SSM parameter.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ParameterName"
+      ],
+      "type": "object"
+    },
     "TargetContainerRepository": {
       "additionalProperties": false,
       "description": "The destination repository for the container image.",
@@ -258,6 +292,7 @@
         "ec2:DescribeLaunchTemplates",
         "ec2:CreateLaunchTemplateVersion",
         "ec2:ModifyLaunchTemplate",
+        "ssm:GetParameter",
         "imagebuilder:TagResource",
         "imagebuilder:GetDistributionConfiguration",
         "imagebuilder:CreateDistributionConfiguration"
@@ -266,7 +301,7 @@
     "delete": {
       "permissions": [
         "imagebuilder:GetDistributionConfiguration",
-        "imagebuilder:UnTagResource",
+        "imagebuilder:UntagResource",
         "imagebuilder:DeleteDistributionConfiguration"
       ]
     },
@@ -285,8 +320,11 @@
         "ec2:DescribeLaunchTemplates",
         "ec2:CreateLaunchTemplateVersion",
         "ec2:ModifyLaunchTemplate",
+        "ssm:GetParameter",
         "imagebuilder:GetDistributionConfiguration",
-        "imagebuilder:UpdateDistributionConfiguration"
+        "imagebuilder:UpdateDistributionConfiguration",
+        "imagebuilder:TagResource",
+        "imagebuilder:UntagResource"
       ]
     }
   },
@@ -335,6 +373,10 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "imagebuilder:TagResource",
+      "imagebuilder:UntagResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

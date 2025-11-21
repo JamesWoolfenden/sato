@@ -986,6 +986,16 @@
       },
       "type": "object"
     },
+    "ResourceRetentionPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "SkipDeregisterOnUpdate": {
+          "default": false,
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "RetryStrategy": {
       "additionalProperties": false,
       "properties": {
@@ -1304,6 +1314,9 @@
     "PropagateTags": {
       "type": "boolean"
     },
+    "ResourceRetentionPolicy": {
+      "$ref": "#/definitions/ResourceRetentionPolicy"
+    },
     "RetryStrategy": {
       "$ref": "#/definitions/RetryStrategy"
     },
@@ -1345,5 +1358,9 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::Batch::JobDefinition"
+  "typeName": "AWS::Batch::JobDefinition",
+  "writeOnlyProperties": [
+    "/properties/ResourceRetentionPolicy",
+    "/properties/ResourceRetentionPolicy/SkipDeregisterOnUpdate"
+  ]
 }

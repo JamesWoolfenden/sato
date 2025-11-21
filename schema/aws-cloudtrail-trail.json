@@ -6,7 +6,7 @@
   "definitions": {
     "AdvancedEventSelector": {
       "additionalProperties": false,
-      "description": "Advanced event selectors let you create fine-grained selectors for the following AWS CloudTrail event record \ufb01elds. They help you control costs by logging only those events that are important to you.",
+      "description": "Advanced event selectors let you create fine-grained selectors for the following AWS CloudTrail event record fields. They help you control costs by logging only those events that are important to you.",
       "properties": {
         "FieldSelectors": {
           "description": "Contains all selector statements in an advanced event selector.",
@@ -189,12 +189,29 @@
       "additionalProperties": false,
       "description": "A string that contains insight types that are logged on a trail.",
       "properties": {
+        "EventCategories": {
+          "description": "The categories of events for which to log insights. By default, insights are logged for management events only.",
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/SourceEventCategory"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
         "InsightType": {
           "description": "The type of insight to log on a trail.",
           "type": "string"
         }
       },
       "type": "object"
+    },
+    "SourceEventCategory": {
+      "description": "Event category for an insight selector.",
+      "enum": [
+        "Management",
+        "Data"
+      ],
+      "type": "string"
     },
     "Tag": {
       "additionalProperties": false,
@@ -225,6 +242,7 @@
         "CloudTrail:AddTags",
         "CloudTrail:PutEventSelectors",
         "CloudTrail:PutInsightSelectors",
+        "CloudTrail:PutEventConfiguration",
         "iam:GetRole",
         "iam:PassRole",
         "iam:CreateServiceLinkedRole",
@@ -255,6 +273,7 @@
         "CloudTrail:ListTags",
         "CloudTrail:GetEventSelectors",
         "CloudTrail:GetInsightSelectors",
+        "CloudTrail:GetEventConfiguration",
         "CloudTrail:DescribeTrails"
       ]
     },
@@ -267,6 +286,7 @@
         "CloudTrail:RemoveTags",
         "CloudTrail:PutEventSelectors",
         "CloudTrail:PutInsightSelectors",
+        "CloudTrail:PutEventConfiguration",
         "iam:GetRole",
         "iam:PassRole",
         "iam:CreateServiceLinkedRole",

@@ -59,6 +59,18 @@
       },
       "type": "object"
     },
+    "ResourcePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "Policy": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "Policy"
+      ],
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "description": "A key-value pair to associate with a resource.",
@@ -169,6 +181,8 @@
         "osis:GetPipeline",
         "osis:TagResource",
         "osis:ListTagsForResource",
+        "osis:GetResourcePolicy",
+        "osis:PutResourcePolicy",
         "iam:PassRole",
         "iam:CreateServiceLinkedRole",
         "logs:CreateLogDelivery",
@@ -192,7 +206,8 @@
     "read": {
       "permissions": [
         "osis:GetPipeline",
-        "osis:ListTagsForResource"
+        "osis:ListTagsForResource",
+        "osis:GetResourcePolicy"
       ]
     },
     "update": {
@@ -202,6 +217,9 @@
         "osis:ListTagsForResource",
         "osis:TagResource",
         "osis:UntagResource",
+        "osis:GetResourcePolicy",
+        "osis:PutResourcePolicy",
+        "osis:DeleteResourcePolicy",
         "iam:PassRole",
         "logs:GetLogDelivery",
         "logs:UpdateLogDelivery",
@@ -245,14 +263,14 @@
     },
     "PipelineArn": {
       "description": "The Amazon Resource Name (ARN) of the pipeline.",
-      "maxLength": 76,
+      "maxLength": 78,
       "minLength": 46,
       "pattern": "^arn:(aws|aws\\-cn|aws\\-us\\-gov|aws\\-iso|aws\\-iso\\-b):osis:.+:pipeline\\/.+$",
       "type": "string"
     },
     "PipelineConfigurationBody": {
       "description": "The Data Prepper pipeline configuration.",
-      "maxLength": 24000,
+      "maxLength": 100000,
       "minLength": 1,
       "type": "string"
     },
@@ -262,6 +280,16 @@
       "minLength": 3,
       "pattern": "[a-z][a-z0-9\\-]+",
       "type": "string"
+    },
+    "PipelineRoleArn": {
+      "description": "The Pipeline Role (ARN) for the pipeline.",
+      "maxLength": 2048,
+      "minLength": 20,
+      "pattern": "^arn:(aws|aws\\-cn|aws\\-us\\-gov|aws\\-iso|aws\\-iso\\-b|aws\\-iso\\-e|aws\\-iso\\-f):iam::[0-9]+:role\\/.*$",
+      "type": "string"
+    },
+    "ResourcePolicy": {
+      "$ref": "#/definitions/ResourcePolicy"
     },
     "Tags": {
       "description": "An array of key-value pairs to apply to this resource.",
@@ -305,6 +333,11 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-osis.git",
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "osis:TagResource",
+      "osis:UntagResource",
+      "osis:ListTagsForResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

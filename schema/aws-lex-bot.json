@@ -243,7 +243,7 @@
     "BotArn": {
       "maxLength": 1011,
       "minLength": 1,
-      "pattern": "^arn:aws[a-zA-Z-]*:lex:[a-z]+-[a-z]+-[0-9]:[0-9]{12}:bot/[0-9a-zA-Z]+$",
+      "pattern": "^arn:aws[a-zA-Z-]*:lex:[a-z]+-(?:[a-z]+-)*[0-9]:[0-9]{12}:bot/[0-9a-zA-Z]+$",
       "type": "string"
     },
     "BotLocale": {
@@ -254,6 +254,9 @@
         },
         "Description": {
           "$ref": "#/definitions/Description"
+        },
+        "GenerativeAISettings": {
+          "$ref": "#/definitions/GenerativeAISettings"
         },
         "Intents": {
           "insertionOrder": false,
@@ -583,7 +586,7 @@
     },
     "Description": {
       "description": "A description of the resource",
-      "maxLength": 200,
+      "maxLength": 2000,
       "type": "string"
     },
     "DialogAction": {
@@ -687,6 +690,20 @@
       ],
       "type": "object"
     },
+    "ErrorLogSettings": {
+      "additionalProperties": false,
+      "description": "Error logs configuration for this bot. This is used by Amazon Lex to emit any errors that occur during Lex Runtime API invocations.",
+      "properties": {
+        "Enabled": {
+          "description": "Specify whether error log feature has been enabled",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "Enabled"
+      ],
+      "type": "object"
+    },
     "ExternalSourceSetting": {
       "additionalProperties": false,
       "properties": {
@@ -780,6 +797,81 @@
       "required": [
         "Active"
       ],
+      "type": "object"
+    },
+    "GenerativeAISettings": {
+      "additionalProperties": false,
+      "properties": {
+        "BuildtimeSettings": {
+          "additionalProperties": false,
+          "properties": {
+            "DescriptiveBotBuilderSpecification": {
+              "additionalProperties": false,
+              "properties": {
+                "BedrockModelSpecification": {
+                  "$ref": "#/definitions/BedrockModelSpecification"
+                },
+                "Enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "Enabled"
+              ],
+              "type": "object"
+            },
+            "SampleUtteranceGenerationSpecification": {
+              "additionalProperties": false,
+              "properties": {
+                "BedrockModelSpecification": {
+                  "$ref": "#/definitions/BedrockModelSpecification"
+                },
+                "Enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "Enabled"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        },
+        "RuntimeSettings": {
+          "additionalProperties": false,
+          "properties": {
+            "NluImprovementSpecification": {
+              "additionalProperties": false,
+              "properties": {
+                "Enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "Enabled"
+              ],
+              "type": "object"
+            },
+            "SlotResolutionImprovementSpecification": {
+              "additionalProperties": false,
+              "properties": {
+                "BedrockModelSpecification": {
+                  "$ref": "#/definitions/BedrockModelSpecification"
+                },
+                "Enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "Enabled"
+              ],
+              "type": "object"
+            }
+          },
+          "type": "object"
+        }
+      },
       "type": "object"
     },
     "GrammarSlotTypeSetting": {
@@ -1058,7 +1150,7 @@
     "KendraIndexArn": {
       "maxLength": 2048,
       "minLength": 32,
-      "pattern": "^arn:aws[a-zA-Z-]*:kendra:[a-z]+-[a-z]+-[0-9]:[0-9]{12}:index/[a-zA-Z0-9][a-zA-Z0-9_-]*$",
+      "pattern": "^arn:aws[a-zA-Z-]*:kendra:[a-z]+-(?:[a-z]+-)*[0-9]:[0-9]{12}:index/[a-zA-Z0-9][a-zA-Z0-9_-]*$",
       "type": "string"
     },
     "LambdaCodeHook": {
@@ -1682,6 +1774,9 @@
         "SlotTypeName": {
           "$ref": "#/definitions/SlotTypeName"
         },
+        "SubSlotSetting": {
+          "$ref": "#/definitions/SubSlotSetting"
+        },
         "ValueElicitationSetting": {
           "$ref": "#/definitions/SlotValueElicitationSetting"
         }
@@ -1821,6 +1916,12 @@
       ],
       "type": "object"
     },
+    "SlotTypeId": {
+      "maxLength": 25,
+      "minLength": 1,
+      "pattern": "^((AMAZON\\.)[a-zA-Z_]+?|[0-9a-zA-Z]+)$",
+      "type": "string"
+    },
     "SlotTypeName": {
       "type": "string"
     },
@@ -1959,6 +2060,22 @@
       },
       "type": "array"
     },
+    "Specifications": {
+      "additionalProperties": false,
+      "properties": {
+        "SlotTypeId": {
+          "$ref": "#/definitions/SlotTypeId"
+        },
+        "ValueElicitationSetting": {
+          "$ref": "#/definitions/SubSlotValueElicitationSetting"
+        }
+      },
+      "required": [
+        "SlotTypeId",
+        "ValueElicitationSetting"
+      ],
+      "type": "object"
+    },
     "StillWaitingResponseFrequency": {
       "maximum": 300,
       "minimum": 1,
@@ -1992,6 +2109,29 @@
       "minimum": 1,
       "type": "integer"
     },
+    "SubSlotSetting": {
+      "additionalProperties": false,
+      "properties": {
+        "Expression": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "pattern": "[0-9A-Za-z_\\-\\s\\(\\)]+",
+          "type": "string"
+        },
+        "SlotSpecifications": {
+          "additionalProperties": false,
+          "maxProperties": 6,
+          "minProperties": 0,
+          "patternProperties": {
+            "^([0-9a-zA-Z][_-]?){1,100}$": {
+              "$ref": "#/definitions/Specifications"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
     "SubSlotTypeComposition": {
       "additionalProperties": false,
       "properties": {
@@ -2002,16 +2142,31 @@
           "type": "string"
         },
         "SlotTypeId": {
-          "maxLength": 25,
-          "minLength": 1,
-          "pattern": "^((AMAZON\\.)[a-zA-Z_]+?|[0-9a-zA-Z]+)$",
-          "type": "string"
+          "$ref": "#/definitions/SlotTypeId"
         }
       },
       "required": [
         "Name",
         "SlotTypeId"
       ],
+      "type": "object"
+    },
+    "SubSlotValueElicitationSetting": {
+      "additionalProperties": false,
+      "properties": {
+        "DefaultValueSpecification": {
+          "$ref": "#/definitions/SlotDefaultValueSpecification"
+        },
+        "PromptSpecification": {
+          "$ref": "#/definitions/PromptSpecification"
+        },
+        "SampleUtterances": {
+          "$ref": "#/definitions/SampleUtterancesList"
+        },
+        "WaitAndContinueSpecification": {
+          "$ref": "#/definitions/WaitAndContinueSpecification"
+        }
+      },
       "type": "object"
     },
     "SynonymList": {
@@ -2318,6 +2473,18 @@
     },
     "Description": {
       "$ref": "#/definitions/Description"
+    },
+    "ErrorLogSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "Enabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "Enabled"
+      ],
+      "type": "object"
     },
     "Id": {
       "$ref": "#/definitions/Id"

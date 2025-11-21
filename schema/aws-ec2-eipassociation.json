@@ -44,6 +44,20 @@
       "type": "string"
     },
     "EIP": {
+      "anyOf": [
+        {
+          "relationshipRef": {
+            "propertyPath": "/properties/PublicIp",
+            "typeName": "AWS::EC2::EIP"
+          }
+        },
+        {
+          "relationshipRef": {
+            "propertyPath": "/properties/AllocationId",
+            "typeName": "AWS::EC2::EIP"
+          }
+        }
+      ],
       "description": "",
       "type": "string"
     },

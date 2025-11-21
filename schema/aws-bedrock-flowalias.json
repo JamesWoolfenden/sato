@@ -4,6 +4,31 @@
     "/properties/FlowArn"
   ],
   "definitions": {
+    "ConcurrencyType": {
+      "enum": [
+        "Automatic",
+        "Manual"
+      ],
+      "type": "string"
+    },
+    "FlowAliasConcurrencyConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "MaxConcurrency": {
+          "description": "Number of nodes executed concurrently at a time",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "Type": {
+          "$ref": "#/definitions/ConcurrencyType"
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "type": "object"
+    },
     "FlowAliasRoutingConfigurationListItem": {
       "additionalProperties": false,
       "description": "Details about the routing configuration for a Flow alias.",
@@ -89,6 +114,9 @@
       "maxLength": 2048,
       "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:flow/[0-9a-zA-Z]{10}/alias/[0-9a-zA-Z]{10}$",
       "type": "string"
+    },
+    "ConcurrencyConfiguration": {
+      "$ref": "#/definitions/FlowAliasConcurrencyConfiguration"
     },
     "CreatedAt": {
       "description": "Time Stamp.",

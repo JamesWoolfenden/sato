@@ -1,8 +1,7 @@
 {
   "additionalProperties": false,
   "createOnlyProperties": [
-    "/properties/AppImageConfigName",
-    "/properties/Tags"
+    "/properties/AppImageConfigName"
   ],
   "definitions": {
     "CodeEditorAppImageConfig": {
@@ -196,29 +195,37 @@
     "create": {
       "permissions": [
         "sagemaker:CreateAppImageConfig",
-        "sagemaker:DescribeAppImageConfig"
+        "sagemaker:DescribeAppImageConfig",
+        "sagemaker:AddTags",
+        "sagemaker:ListTags"
       ]
     },
     "delete": {
       "permissions": [
         "sagemaker:DeleteAppImageConfig",
-        "sagemaker:DescribeAppImageConfig"
+        "sagemaker:DescribeAppImageConfig",
+        "sagemaker:DeleteTags"
       ]
     },
     "list": {
       "permissions": [
-        "sagemaker:ListAppImageConfigs"
+        "sagemaker:ListAppImageConfigs",
+        "sagemaker:ListTags"
       ]
     },
     "read": {
       "permissions": [
-        "sagemaker:DescribeAppImageConfig"
+        "sagemaker:DescribeAppImageConfig",
+        "sagemaker:ListTags"
       ]
     },
     "update": {
       "permissions": [
         "sagemaker:UpdateAppImageConfig",
-        "sagemaker:DescribeAppImageConfig"
+        "sagemaker:DescribeAppImageConfig",
+        "sagemaker:AddTags",
+        "sagemaker:DeleteTags",
+        "sagemaker:ListTags"
       ]
     }
   },
@@ -263,14 +270,26 @@
       "uniqueItems": false
     }
   },
+  "propertyTransform": {
+    "/properties/AppImageConfigName": "$lowercase(AppImageConfigName) $OR AppImageConfigName"
+  },
   "readOnlyProperties": [
     "/properties/AppImageConfigArn"
   ],
   "required": [
     "AppImageConfigName"
   ],
-  "typeName": "AWS::SageMaker::AppImageConfig",
-  "writeOnlyProperties": [
-    "/properties/Tags"
-  ]
+  "tagging": {
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "sagemaker:AddTags",
+      "sagemaker:ListTags",
+      "sagemaker:DeleteTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
+  "typeName": "AWS::SageMaker::AppImageConfig"
 }

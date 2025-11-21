@@ -131,6 +131,14 @@
       "description": "Id of the IPAM.",
       "type": "string"
     },
+    "MeteredAccount": {
+      "description": "A metered account is an account that is charged for active IP addresses managed in IPAM",
+      "enum": [
+        "ipam-owner",
+        "resource-owner"
+      ],
+      "type": "string"
+    },
     "OperatingRegions": {
       "description": "The regions IPAM is enabled for. Allows pools to be created in these regions, as well as enabling monitoring",
       "insertionOrder": false,
@@ -188,7 +196,7 @@
   "required": [],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ipam.git",
   "tagging": {
-    "cloudFormationSystemTags": false,
+    "cloudFormationSystemTags": true,
     "permissions": [
       "ec2:DeleteTags",
       "ec2:CreateTags"

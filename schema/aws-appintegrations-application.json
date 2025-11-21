@@ -1,11 +1,36 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "ApplicationConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "ContactHandling": {
+          "$ref": "#/definitions/ContactHandling"
+        }
+      },
+      "type": "object"
+    },
     "ApprovedOrigins": {
       "maxLength": 1000,
       "minLength": 1,
       "pattern": "^\\w+\\:\\/\\/.*$",
       "type": "string"
+    },
+    "ContactHandling": {
+      "additionalProperties": false,
+      "properties": {
+        "Scope": {
+          "enum": [
+            "CROSS_CONTACTS",
+            "PER_CONTACT"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Scope"
+      ],
+      "type": "object"
     },
     "ExternalUrlConfig": {
       "additionalProperties": false,
@@ -29,6 +54,26 @@
       "required": [
         "AccessUrl"
       ],
+      "type": "object"
+    },
+    "IframeConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "Allow": {
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "Sandbox": {
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
       "type": "object"
     },
     "Permissions": {
@@ -106,6 +151,10 @@
       "pattern": "^arn:aws[-a-z0-9]*:app-integrations:[-a-z0-9]*:[0-9]{12}:application/[-a-zA-Z0-9]*",
       "type": "string"
     },
+    "ApplicationConfig": {
+      "$ref": "#/definitions/ApplicationConfig",
+      "description": "The application configuration. Cannot be used when IsService is true."
+    },
     "ApplicationSourceConfig": {
       "additionalProperties": false,
       "description": "Application source config",
@@ -131,6 +180,19 @@
       "minLength": 1,
       "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
       "type": "string"
+    },
+    "IframeConfig": {
+      "$ref": "#/definitions/IframeConfig",
+      "description": "The iframe configuration"
+    },
+    "InitializationTimeout": {
+      "description": "The initialization timeout in milliseconds. Required when IsService is true.",
+      "type": "integer"
+    },
+    "IsService": {
+      "default": false,
+      "description": "Indicates if the application is a service",
+      "type": "boolean"
     },
     "Name": {
       "description": "The name of the application.",

@@ -2,7 +2,6 @@
   "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
   "additionalProperties": false,
   "createOnlyProperties": [
-    "/properties/ApplyCapacity",
     "/properties/BuildId",
     "/properties/CertificateConfiguration",
     "/properties/EC2InstanceType",
@@ -100,7 +99,7 @@
       "description": "Current resource capacity settings in a specified fleet or location. The location value might refer to a fleet's remote location or its home Region.",
       "properties": {
         "DesiredEC2Instances": {
-          "description": "The number of EC2 instances you want to maintain in the specified fleet location. This value must fall between the minimum and maximum size limits.",
+          "description": "Defaults to MinSize if not defined. The number of EC2 instances you want to maintain in the specified fleet location. This value must fall between the minimum and maximum size limits.",
           "minimum": 0,
           "type": "integer"
         },
@@ -116,7 +115,6 @@
         }
       },
       "required": [
-        "DesiredEC2Instances",
         "MinSize",
         "MaxSize"
       ],
@@ -314,6 +312,29 @@
       ],
       "type": "object"
     },
+    "Tag": {
+      "additionalProperties": false,
+      "description": "A key-value pair to associate with a resource.",
+      "properties": {
+        "Key": {
+          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length.",
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "Value": {
+          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length.",
+          "maxLength": 256,
+          "minLength": 0,
+          "type": "string"
+        }
+      },
+      "required": [
+        "Key",
+        "Value"
+      ],
+      "type": "object"
+    },
     "TargetConfiguration": {
       "additionalProperties": false,
       "description": "Settings for a target-based scaling policy. A target-based policy tracks a particular fleet metric specifies a target value for the metric. As player usage changes, the policy triggers Amazon GameLift to adjust capacity so that the metric returns to the target value. The target configuration specifies settings as needed for the target based policy, including the target value.",
@@ -332,25 +353,39 @@
   "deprecatedProperties": [
     "/properties/LogPaths",
     "/properties/ServerLaunchParameters",
-    "/properties/ServerLaunchPath"
+    "/properties/ServerLaunchPath",
+    "/properties/MinSize",
+    "/properties/MaxSize",
+    "/properties/DesiredEC2Instances"
   ],
   "description": "The AWS::GameLift::Fleet resource creates an Amazon GameLift (GameLift) fleet to host game servers. A fleet is a set of EC2 or Anywhere instances, each of which can host multiple game sessions.",
   "handlers": {
     "create": {
       "permissions": [
         "gamelift:CreateFleet",
+        "gamelift:CreateFleetLocations",
         "gamelift:DescribeFleetAttributes",
         "gamelift:DescribeFleetLocationAttributes",
         "gamelift:UpdateFleetCapacity",
         "gamelift:DescribeFleetLocationCapacity",
+        "gamelift:DescribeFleetCapacity",
+        "gamelift:DescribeFleetPortSettings",
+        "gamelift:DescribeRuntimeConfiguration",
         "gamelift:PutScalingPolicy",
-        "gamelift:DescribeScalingPolicies"
+        "gamelift:DescribeScalingPolicies",
+        "gamelift:ListTagsForResource",
+        "gamelift:UpdateFleetCapacity",
+        "gamelift:TagResource"
       ]
     },
     "delete": {
       "permissions": [
         "gamelift:DeleteFleet",
         "gamelift:DescribeFleetLocationCapacity",
+        "gamelift:DescribeFleetAttributes",
+        "gamelift:DescribeFleetCapacity",
+        "gamelift:DescribeFleetLocationCapacity",
+        "gamelift:UpdateFleetCapacity",
         "gamelift:DescribeScalingPolicies",
         "gamelift:DeleteScalingPolicy"
       ]
@@ -364,13 +399,12 @@
       "permissions": [
         "gamelift:DescribeFleetAttributes",
         "gamelift:DescribeFleetLocationAttributes",
+        "gamelift:DescribeFleetLocationCapacity",
         "gamelift:DescribeFleetCapacity",
         "gamelift:DescribeFleetPortSettings",
-        "gamelift:DescribeFleetUtilization",
         "gamelift:DescribeRuntimeConfiguration",
-        "gamelift:DescribeEC2InstanceLimits",
-        "gamelift:DescribeFleetEvents",
-        "gamelift:DescribeScalingPolicies"
+        "gamelift:DescribeScalingPolicies",
+        "gamelift:ListTagsForResource"
       ]
     },
     "update": {
@@ -386,7 +420,13 @@
         "gamelift:DescribeFleetLocationAttributes",
         "gamelift:PutScalingPolicy",
         "gamelift:DescribeScalingPolicies",
-        "gamelift:DeleteScalingPolicy"
+        "gamelift:DeleteScalingPolicy",
+        "gamelift:DescribeFleetAttributes",
+        "gamelift:DescribeFleetCapacity",
+        "gamelift:DescribeRuntimeConfiguration",
+        "gamelift:TagResource",
+        "gamelift:UntagResource",
+        "gamelift:ListTagsForResource"
       ]
     }
   },
@@ -399,10 +439,11 @@
       "description": "Configuration for Anywhere fleet."
     },
     "ApplyCapacity": {
-      "description": "Determines whether to apply fleet or location capacities on fleet creation.",
+      "description": "Determines when and how to apply fleet or location capacities. Allowed options are ON_UPDATE (default), ON_CREATE_AND_UPDATE and ON_CREATE_AND_UPDATE_WITH_AUTOSCALING. If you choose ON_CREATE_AND_UPDATE_WITH_AUTOSCALING, MinSize and MaxSize will still be applied on creation and on updates, but DesiredEC2Instances will only be applied once on fleet creation and will be ignored during updates to prevent conflicts with auto-scaling. During updates with ON_CREATE_AND_UPDATE_WITH_AUTOSCALING chosen, if current desired instance is lower than the new MinSize, it will be increased to the new MinSize; if current desired instance is larger than the new MaxSize, it will be decreased to the new MaxSize.",
       "enum": [
         "ON_UPDATE",
-        "ON_CREATE_AND_UPDATE"
+        "ON_CREATE_AND_UPDATE",
+        "ON_CREATE_AND_UPDATE_WITH_AUTOSCALING"
       ],
       "type": "string"
     },
@@ -446,6 +487,11 @@
     "EC2InstanceType": {
       "description": "The name of an EC2 instance type that is supported in Amazon GameLift. A fleet instance type determines the computing resources of each instance in the fleet, including CPU, memory, storage, and networking capacity. Amazon GameLift supports the following EC2 instance types. See Amazon EC2 Instance Types for detailed descriptions.",
       "pattern": "^.*..*$",
+      "type": "string"
+    },
+    "FleetArn": {
+      "description": "The Amazon Resource Name (ARN) that is assigned to a Amazon GameLift Servers Fleet resource and uniquely identifies it. ARNs are unique across all Regions. In a GameLift Fleet ARN, the resource ID matches the FleetId value.",
+      "pattern": "^arn:.*:fleet/[a-z]*fleet-[a-zA-Z0-9\\-]+$",
       "type": "string"
     },
     "FleetId": {
@@ -571,16 +617,41 @@
       "maxLength": 1024,
       "minLength": 1,
       "type": "string"
+    },
+    "Tags": {
+      "description": "An array of key-value pairs to apply to this resource.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "maxItems": 200,
+      "type": "array",
+      "uniqueItems": true
     }
   },
+  "propertyTransform": {
+    "/properties/AnywhereConfiguration/Cost": "$contains(Cost, \".\") ? Cost : Cost & \".0\""
+  },
   "readOnlyProperties": [
-    "/properties/FleetId"
+    "/properties/FleetId",
+    "/properties/FleetArn"
   ],
   "required": [
     "Name"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
-  "taggable": true,
+  "tagging": {
+    "cloudFormationSystemTags": false,
+    "permissions": [
+      "gamelift:ListTagsForResource",
+      "gamelift:TagResource",
+      "gamelift:UntagResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::GameLift::Fleet",
   "writeOnlyProperties": [
     "/properties/ApplyCapacity"

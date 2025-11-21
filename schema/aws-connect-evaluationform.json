@@ -1,6 +1,29 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "AutoEvaluationConfiguration": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Enabled": {
+          "description": "",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "AutomaticFailConfiguration": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "TargetSection": {
+          "description": "The target section refId to control failure propagation boundary.",
+          "pattern": "^[a-zA-Z0-9._-]{1,40}$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "EvaluationFormBaseItem": {
       "additionalProperties": false,
       "description": "An item at the root level. All items must be sections.",
@@ -30,18 +53,159 @@
       },
       "type": "object"
     },
+    "EvaluationFormItemEnablementCondition": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Operands": {
+          "description": "The list of operands that compose the condition. Each operand represents a specific criteria to be evaluated.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/EvaluationFormItemEnablementConditionOperand"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "Operator": {
+          "description": "The logical operator used to combine multiple operands, determining how the condition is evaluated as a whole.",
+          "enum": [
+            "OR",
+            "AND"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Operands"
+      ],
+      "type": "object"
+    },
+    "EvaluationFormItemEnablementConditionOperand": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Expression": {
+          "$ref": "#/definitions/EvaluationFormItemEnablementExpression",
+          "description": "A direct comparison expression that evaluates a form item's value against specified criteria."
+        }
+      },
+      "type": "object"
+    },
+    "EvaluationFormItemEnablementConfiguration": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Action": {
+          "description": "Defines the enablement status to be applied when the specified condition is met.",
+          "enum": [
+            "DISABLE",
+            "ENABLE"
+          ],
+          "type": "string"
+        },
+        "Condition": {
+          "$ref": "#/definitions/EvaluationFormItemEnablementCondition",
+          "description": "Specifies the logical condition that determines when to apply the enablement rules."
+        },
+        "DefaultAction": {
+          "description": "Specifies the default enablement status to be applied when the condition is not satisfied.",
+          "enum": [
+            "DISABLE",
+            "ENABLE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Condition",
+        "Action"
+      ],
+      "type": "object"
+    },
+    "EvaluationFormItemEnablementExpression": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Comparator": {
+          "description": "Specifies the comparison method to determine if the source value matches any of the specified values.",
+          "enum": [
+            "IN",
+            "NOT_IN"
+          ],
+          "type": "string"
+        },
+        "Source": {
+          "$ref": "#/definitions/EvaluationFormItemEnablementSource",
+          "description": "Identifies the form item whose value will be evaluated in the expression."
+        },
+        "Values": {
+          "description": "The list of possible values to compare against the source form item's value.",
+          "insertionOrder": true,
+          "items": {
+            "$ref": "#/definitions/EvaluationFormItemEnablementSourceValue"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "Source",
+        "Values",
+        "Comparator"
+      ],
+      "type": "object"
+    },
+    "EvaluationFormItemEnablementSource": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "RefId": {
+          "$ref": "#/definitions/RefId"
+        },
+        "Type": {
+          "description": "The type of the source entity.",
+          "enum": [
+            "QUESTION_REF_ID"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "type": "object"
+    },
+    "EvaluationFormItemEnablementSourceValue": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "RefId": {
+          "$ref": "#/definitions/RefId",
+          "description": "The reference id of the source entity value."
+        },
+        "Type": {
+          "description": "Type of the source entity value.",
+          "enum": [
+            "OPTION_REF_ID"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "EvaluationFormNumericQuestionAutomation": {
       "additionalProperties": false,
       "description": "Information about the automation configuration in numeric questions.",
       "properties": {
+        "AnswerSource": {
+          "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource",
+          "description": ""
+        },
         "PropertyValue": {
           "$ref": "#/definitions/NumericQuestionPropertyValueAutomation",
           "description": "The property value of the automation."
         }
       },
-      "required": [
-        "PropertyValue"
-      ],
       "type": "object"
     },
     "EvaluationFormNumericQuestionOption": {
@@ -51,6 +215,10 @@
         "AutomaticFail": {
           "description": "The flag to mark the option as automatic fail. If an automatic fail answer is provided, the overall evaluation gets a score of 0.",
           "type": "boolean"
+        },
+        "AutomaticFailConfiguration": {
+          "$ref": "#/definitions/AutomaticFailConfiguration",
+          "description": ""
         },
         "MaxValue": {
           "description": "The maximum answer value of the range option.",
@@ -62,7 +230,7 @@
         },
         "Score": {
           "$ref": "#/definitions/Score",
-          "description": "The score assigned to answer values within the range option.\n  *Minimum*: 0\n  *Maximum*: 10"
+          "description": "The score assigned to answer values within the range option.\n *Minimum*: 0\n *Maximum*: 10"
         }
       },
       "required": [
@@ -108,8 +276,12 @@
       "additionalProperties": false,
       "description": "Information about a question from an evaluation form.",
       "properties": {
+        "Enablement": {
+          "$ref": "#/definitions/EvaluationFormItemEnablementConfiguration",
+          "description": ""
+        },
         "Instructions": {
-          "description": "The instructions of the section.\n  *Length Constraints*: Minimum length of 0. Maximum length of 1024.",
+          "description": "The instructions of the section.\n *Length Constraints*: Minimum length of 0. Maximum length of 1024.",
           "maxLength": 1024,
           "type": "string"
         },
@@ -118,7 +290,7 @@
           "type": "boolean"
         },
         "QuestionType": {
-          "description": "The type of the question.\n  *Allowed values*: ``NUMERIC`` | ``SINGLESELECT`` | ``TEXT``",
+          "description": "The type of the question.\n *Allowed values*: ``NUMERIC`` | ``SINGLESELECT`` | ``TEXT``",
           "enum": [
             "NUMERIC",
             "SINGLESELECT",
@@ -132,23 +304,41 @@
         },
         "RefId": {
           "$ref": "#/definitions/RefId",
-          "description": "The identifier of the question. An identifier must be unique within the evaluation form.\n  *Length Constraints*: Minimum length of 1. Maximum length of 40."
+          "description": "The identifier of the question. An identifier must be unique within the evaluation form.\n *Length Constraints*: Minimum length of 1. Maximum length of 40."
         },
         "Title": {
-          "description": "The title of the question.\n  *Length Constraints*: Minimum length of 1. Maximum length of 350.",
+          "description": "The title of the question.\n *Length Constraints*: Minimum length of 1. Maximum length of 350.",
           "maxLength": 350,
           "minLength": 1,
           "type": "string"
         },
         "Weight": {
           "$ref": "#/definitions/Weight",
-          "description": "The scoring weight of the section.\n  *Minimum*: 0\n  *Maximum*: 100"
+          "description": "The scoring weight of the section.\n *Minimum*: 0\n *Maximum*: 100"
         }
       },
       "required": [
         "RefId",
         "Title",
         "QuestionType"
+      ],
+      "type": "object"
+    },
+    "EvaluationFormQuestionAutomationAnswerSource": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "SourceType": {
+          "description": "The type of the answer sourcr",
+          "enum": [
+            "CONTACT_LENS_DATA",
+            "GEN_AI"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "SourceType"
       ],
       "type": "object"
     },
@@ -163,6 +353,10 @@
         "SingleSelect": {
           "$ref": "#/definitions/EvaluationFormSingleSelectQuestionProperties",
           "description": "The properties of the numeric question."
+        },
+        "Text": {
+          "$ref": "#/definitions/EvaluationFormTextQuestionProperties",
+          "description": ""
         }
       },
       "type": "object"
@@ -177,7 +371,7 @@
           "type": "string"
         },
         "Items": {
-          "description": "The items of the section.\n  *Minimum*: 1",
+          "description": "The items of the section.\n *Minimum*: 1",
           "insertionOrder": true,
           "items": {
             "$ref": "#/definitions/EvaluationFormItem"
@@ -188,17 +382,17 @@
         },
         "RefId": {
           "$ref": "#/definitions/RefId",
-          "description": "The identifier of the section. An identifier must be unique within the evaluation form.\n  *Length Constraints*: Minimum length of 1. Maximum length of 40."
+          "description": "The identifier of the section. An identifier must be unique within the evaluation form.\n *Length Constraints*: Minimum length of 1. Maximum length of 40."
         },
         "Title": {
-          "description": "The title of the section.\n  *Length Constraints*: Minimum length of 1. Maximum length of 128.",
+          "description": "The title of the section.\n *Length Constraints*: Minimum length of 1. Maximum length of 128.",
           "maxLength": 128,
           "minLength": 1,
           "type": "string"
         },
         "Weight": {
           "$ref": "#/definitions/Weight",
-          "description": "The scoring weight of the section.\n  *Minimum*: 0 \n  *Maximum*: 100"
+          "description": "The scoring weight of the section.\n *Minimum*: 0 \n *Maximum*: 100"
         }
       },
       "required": [
@@ -211,12 +405,16 @@
       "additionalProperties": false,
       "description": "Information about the automation configuration in single select questions. Automation options are evaluated in order, and the first matched option is applied. If no automation option matches, and there is a default option, then the default option is applied.",
       "properties": {
+        "AnswerSource": {
+          "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource",
+          "description": ""
+        },
         "DefaultOptionRefId": {
           "$ref": "#/definitions/RefId",
-          "description": "The identifier of the default answer option, when none of the automation options match the criteria.\n  *Length Constraints*: Minimum length of 1. Maximum length of 40."
+          "description": "The identifier of the default answer option, when none of the automation options match the criteria.\n *Length Constraints*: Minimum length of 1. Maximum length of 40."
         },
         "Options": {
-          "description": "The automation options of the single select question.\n  *Minimum*: 1\n  *Maximum*: 20",
+          "description": "The automation options of the single select question.\n *Minimum*: 1\n *Maximum*: 20",
           "insertionOrder": true,
           "items": {
             "$ref": "#/definitions/EvaluationFormSingleSelectQuestionAutomationOption"
@@ -253,16 +451,20 @@
           "description": "The flag to mark the option as automatic fail. If an automatic fail answer is provided, the overall evaluation gets a score of 0.",
           "type": "boolean"
         },
+        "AutomaticFailConfiguration": {
+          "$ref": "#/definitions/AutomaticFailConfiguration",
+          "description": ""
+        },
         "RefId": {
           "$ref": "#/definitions/RefId",
-          "description": "The identifier of the answer option. An identifier must be unique within the question.\n  *Length Constraints*: Minimum length of 1. Maximum length of 40."
+          "description": "The identifier of the answer option. An identifier must be unique within the question.\n *Length Constraints*: Minimum length of 1. Maximum length of 40."
         },
         "Score": {
           "$ref": "#/definitions/Score",
-          "description": "The score assigned to the answer option.\n  *Minimum*: 0\n  *Maximum*: 10"
+          "description": "The score assigned to the answer option.\n *Minimum*: 0\n *Maximum*: 10"
         },
         "Text": {
-          "description": "The title of the answer option.\n  *Length Constraints*: Minimum length of 1. Maximum length of 128.",
+          "description": "The title of the answer option.\n *Length Constraints*: Minimum length of 1. Maximum length of 128.",
           "maxLength": 128,
           "minLength": 1,
           "type": "string"
@@ -283,7 +485,7 @@
           "description": "The display mode of the single select question."
         },
         "DisplayAs": {
-          "description": "The display mode of the single select question.\n  *Allowed values*: ``DROPDOWN`` | ``RADIO``",
+          "description": "The display mode of the single select question.\n *Allowed values*: ``DROPDOWN`` | ``RADIO``",
           "enum": [
             "DROPDOWN",
             "RADIO"
@@ -291,7 +493,7 @@
           "type": "string"
         },
         "Options": {
-          "description": "The answer options of the single select question.\n  *Minimum*: 2\n  *Maximum*: 256",
+          "description": "The answer options of the single select question.\n *Minimum*: 2\n *Maximum*: 256",
           "insertionOrder": true,
           "items": {
             "$ref": "#/definitions/EvaluationFormSingleSelectQuestionOption"
@@ -304,6 +506,28 @@
       "required": [
         "Options"
       ],
+      "type": "object"
+    },
+    "EvaluationFormTextQuestionAutomation": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "AnswerSource": {
+          "$ref": "#/definitions/EvaluationFormQuestionAutomationAnswerSource",
+          "description": "The source of automation answer of the question."
+        }
+      },
+      "type": "object"
+    },
+    "EvaluationFormTextQuestionProperties": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Automation": {
+          "$ref": "#/definitions/EvaluationFormTextQuestionAutomation",
+          "description": "Specifies how the question can be automatically answered."
+        }
+      },
       "type": "object"
     },
     "NumericQuestionPropertyValueAutomation": {
@@ -320,7 +544,10 @@
             "NUMBER_OF_INTERRUPTIONS",
             "CONTACT_DURATION",
             "AGENT_INTERACTION_DURATION",
-            "CUSTOMER_HOLD_TIME"
+            "CUSTOMER_HOLD_TIME",
+            "LONGEST_HOLD_DURATION",
+            "NUMBER_OF_HOLDS",
+            "AGENT_INTERACTION_AND_HOLD_DURATION"
           ],
           "type": "string"
         }
@@ -346,7 +573,7 @@
       "description": "A scoring strategy of the evaluation form.",
       "properties": {
         "Mode": {
-          "description": "The scoring mode of the evaluation form.\n  *Allowed values*: ``QUESTION_ONLY`` | ``SECTION_ONLY``",
+          "description": "The scoring mode of the evaluation form.\n *Allowed values*: ``QUESTION_ONLY`` | ``SECTION_ONLY``",
           "enum": [
             "QUESTION_ONLY",
             "SECTION_ONLY"
@@ -354,7 +581,7 @@
           "type": "string"
         },
         "Status": {
-          "description": "The scoring status of the evaluation form.\n  *Allowed values*: ``ENABLED`` | ``DISABLED``",
+          "description": "The scoring status of the evaluation form.\n *Allowed values*: ``ENABLED`` | ``DISABLED``",
           "enum": [
             "ENABLED",
             "DISABLED"
@@ -370,16 +597,16 @@
     },
     "SingleSelectQuestionRuleCategoryAutomation": {
       "additionalProperties": false,
-      "description": "Information about the automation option based on a rule category for a single select question.\n  *Length Constraints*: Minimum length of 1. Maximum length of 50.",
+      "description": "Information about the automation option based on a rule category for a single select question.\n *Length Constraints*: Minimum length of 1. Maximum length of 50.",
       "properties": {
         "Category": {
-          "description": "The category name, as defined in Rules.\n  *Minimum*: 1\n  *Maximum*: 50",
+          "description": "The category name, as defined in Rules.\n *Minimum*: 1\n *Maximum*: 50",
           "maxLength": 50,
           "minLength": 1,
           "type": "string"
         },
         "Condition": {
-          "description": "The condition to apply for the automation option. If the condition is PRESENT, then the option is applied when the contact data includes the category. Similarly, if the condition is NOT_PRESENT, then the option is applied when the contact data does not include the category.\n  *Allowed values*: ``PRESENT`` | ``NOT_PRESENT`` \n  *Maximum*: 50",
+          "description": "The condition to apply for the automation option. If the condition is PRESENT, then the option is applied when the contact data includes the category. Similarly, if the condition is NOT_PRESENT, then the option is applied when the contact data does not include the category.\n *Allowed values*: ``PRESENT`` | ``NOT_PRESENT``\n *Maximum*: 50",
           "enum": [
             "PRESENT",
             "NOT_PRESENT"
@@ -388,7 +615,7 @@
         },
         "OptionRefId": {
           "$ref": "#/definitions/RefId",
-          "description": "The identifier of the answer option. An identifier must be unique within the question.\n  *Length Constraints*: Minimum length of 1. Maximum length of 40."
+          "description": "The identifier of the answer option. An identifier must be unique within the question.\n *Length Constraints*: Minimum length of 1. Maximum length of 40."
         }
       },
       "required": [
@@ -469,8 +696,12 @@
     "/properties/EvaluationFormArn"
   ],
   "properties": {
+    "AutoEvaluationConfiguration": {
+      "$ref": "#/definitions/AutoEvaluationConfiguration",
+      "description": ""
+    },
     "Description": {
-      "description": "The description of the evaluation form.\n  *Length Constraints*: Minimum length of 0. Maximum length of 1024.",
+      "description": "The description of the evaluation form.\n *Length Constraints*: Minimum length of 0. Maximum length of 1024.",
       "maxLength": 1024,
       "type": "string"
     },
@@ -485,7 +716,7 @@
       "type": "string"
     },
     "Items": {
-      "description": "Items that are part of the evaluation form. The total number of sections and questions must not exceed 100 each. Questions must be contained in a section.\n  *Minimum size*: 1\n  *Maximum size*: 100",
+      "description": "Items that are part of the evaluation form. The total number of sections and questions must not exceed 100 each. Questions must be contained in a section.\n *Minimum size*: 1\n *Maximum size*: 100",
       "insertionOrder": true,
       "items": {
         "$ref": "#/definitions/EvaluationFormBaseItem"
@@ -500,7 +731,7 @@
     },
     "Status": {
       "default": "DRAFT",
-      "description": "The status of the evaluation form.\n  *Allowed values*: ``DRAFT`` | ``ACTIVE``",
+      "description": "The status of the evaluation form.\n *Allowed values*: ``DRAFT`` | ``ACTIVE``",
       "enum": [
         "DRAFT",
         "ACTIVE"

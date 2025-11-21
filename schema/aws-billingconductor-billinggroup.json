@@ -1,5 +1,31 @@
 {
   "additionalProperties": false,
+  "anyOf": [
+    {
+      "properties": {
+        "AccountGrouping": {
+          "required": [
+            "LinkedAccountIds"
+          ]
+        }
+      },
+      "required": [
+        "PrimaryAccountId"
+      ]
+    },
+    {
+      "properties": {
+        "AccountGrouping": {
+          "required": [
+            "ResponsibilityTransferArn"
+          ]
+        }
+      },
+      "required": [
+        "AccountGrouping"
+      ]
+    }
+  ],
   "createOnlyProperties": [
     "/properties/PrimaryAccountId"
   ],
@@ -19,11 +45,12 @@
           "minItems": 1,
           "type": "array",
           "uniqueItems": true
+        },
+        "ResponsibilityTransferArn": {
+          "pattern": "arn:[a-z0-9][a-z0-9-.]{0,62}:organizations::[0-9]{12}:transfer/o-[a-z0-9]{10,32}/(billing)/(inbound|outbound)/rt-[0-9a-z]{8,32}",
+          "type": "string"
         }
       },
-      "required": [
-        "LinkedAccountIds"
-      ],
       "type": "object"
     },
     "BillingGroupStatus": {
@@ -38,7 +65,7 @@
       "properties": {
         "PricingPlanArn": {
           "description": "ARN of the attached pricing plan",
-          "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:pricingplan/[a-zA-Z0-9]{10}",
+          "pattern": "arn:aws(-cn)?:billingconductor::(aws|[0-9]{12}):pricingplan/(BasicPricingPlan|[a-zA-Z0-9]{10})",
           "type": "string"
         }
       },
@@ -76,7 +103,8 @@
         "billingconductor:AssociateAccounts",
         "billingconductor:ListBillingGroups",
         "billingconductor:TagResource",
-        "billingconductor:ListTagsForResource"
+        "billingconductor:ListTagsForResource",
+        "organizations:DescribeResponsibilityTransfer"
       ]
     },
     "delete": {
@@ -125,7 +153,7 @@
     },
     "Arn": {
       "description": "Billing Group ARN",
-      "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[0-9]{12}",
+      "pattern": "arn:aws(-cn)?:billingconductor::[0-9]{12}:billinggroup/?[a-zA-Z0-9]{10,12}",
       "type": "string"
     },
     "ComputationPreference": {
@@ -184,7 +212,6 @@
   "required": [
     "Name",
     "AccountGrouping",
-    "PrimaryAccountId",
     "ComputationPreference"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-billing-conductor.git",

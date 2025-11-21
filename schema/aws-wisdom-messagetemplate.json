@@ -24,6 +24,17 @@
       },
       "type": "object"
     },
+    "AttachmentName": {
+      "description": "The name of the attachment file being uploaded. The name should include the file extension.",
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+    },
+    "AttachmentUrl": {
+      "description": "The S3 Presigned URL for the attachment file. When generating the PreSignedUrl, please ensure that the expires-in time is set to 30 minutes. The URL can be generated through the AWS Console or through the AWS CLI (https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html). ",
+      "minLength": 1,
+      "type": "string"
+    },
     "ChannelSubtype": {
       "description": "The channel subtype this message template applies to.",
       "enum": [
@@ -521,6 +532,27 @@
       "minLength": 1,
       "type": "string"
     },
+    "MessageTemplateAttachment": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "AttachmentId": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "AttachmentName": {
+          "$ref": "#/definitions/AttachmentName"
+        },
+        "S3PresignedUrl": {
+          "$ref": "#/definitions/AttachmentUrl"
+        }
+      },
+      "required": [
+        "AttachmentName",
+        "S3PresignedUrl"
+      ],
+      "type": "object"
+    },
     "MessageTemplateAttributes": {
       "additionalProperties": false,
       "description": "An object that specifies the default values to use for variables in the message template. This object contains different categories of key-value pairs. Each key defines a variable or placeholder in the message template. The corresponding value defines the default value for that variable.",
@@ -641,13 +673,16 @@
         "wisdom:GetMessageTemplate",
         "wisdom:TagResource",
         "connect:SearchRoutingProfiles",
-        "connect:DescribeRoutingProfile"
+        "connect:DescribeRoutingProfile",
+        "wisdom:CreateMessageTemplateAttachment",
+        "wisdom:DeleteMessageTemplateAttachment"
       ]
     },
     "delete": {
       "permissions": [
         "wisdom:DeleteMessageTemplate",
-        "wisdom:UntagResource"
+        "wisdom:UntagResource",
+        "wisdom:DeleteMessageTemplateAttachment"
       ]
     },
     "list": {
@@ -678,7 +713,9 @@
         "wisdom:TagResource",
         "wisdom:UntagResource",
         "connect:SearchRoutingProfiles",
-        "connect:DescribeRoutingProfile"
+        "connect:DescribeRoutingProfile",
+        "wisdom:CreateMessageTemplateAttachment",
+        "wisdom:DeleteMessageTemplateAttachment"
       ]
     }
   },
@@ -721,6 +758,14 @@
       "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
       "type": "string"
     },
+    "MessageTemplateAttachments": {
+      "description": "List of message template attachments",
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/MessageTemplateAttachment"
+      },
+      "type": "array"
+    },
     "MessageTemplateContentSha256": {
       "description": "The content SHA256 of the message template.",
       "maxLength": 64,
@@ -752,7 +797,8 @@
   "readOnlyProperties": [
     "/properties/MessageTemplateId",
     "/properties/MessageTemplateArn",
-    "/properties/MessageTemplateContentSha256"
+    "/properties/MessageTemplateContentSha256",
+    "/properties/MessageTemplateAttachments/*/AttachmentId"
   ],
   "replacementStrategy": "create_then_delete",
   "required": [
@@ -773,5 +819,8 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::Wisdom::MessageTemplate"
+  "typeName": "AWS::Wisdom::MessageTemplate",
+  "writeOnlyProperties": [
+    "/properties/MessageTemplateAttachments/*/S3PresignedUrl"
+  ]
 }

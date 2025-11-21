@@ -29,11 +29,19 @@
     },
     "ContributorInsightsSpecification": {
       "additionalProperties": false,
-      "description": "The settings used to enable or disable CloudWatch Contributor Insights.",
+      "description": "Configures contributor insights settings for a table or one of its indexes.",
       "properties": {
         "Enabled": {
           "description": "Indicates whether CloudWatch Contributor Insights are to be enabled (true) or disabled (false).",
           "type": "boolean"
+        },
+        "Mode": {
+          "description": "Specifies the CloudWatch Contributor Insights mode for a table. Valid values are ``ACCESSED_AND_THROTTLED_KEYS`` (tracks all access and throttled events) or ``THROTTLED_KEYS`` (tracks only throttled events). This setting determines what type of contributor insights data is collected for the table.",
+          "enum": [
+            "ACCESSED_AND_THROTTLED_KEYS",
+            "THROTTLED_KEYS"
+          ],
+          "type": "string"
         }
       },
       "required": [
@@ -96,7 +104,7 @@
       "properties": {
         "ContributorInsightsSpecification": {
           "$ref": "#/definitions/ContributorInsightsSpecification",
-          "description": "The settings used to enable or disable CloudWatch Contributor Insights for the specified global secondary index."
+          "description": "The settings used to specify whether to enable CloudWatch Contributor Insights for the global table and define which events to monitor."
         },
         "IndexName": {
           "description": "The name of the global secondary index. The name must be unique among all other indexes on this table.",
@@ -112,7 +120,7 @@
         },
         "OnDemandThroughput": {
           "$ref": "#/definitions/OnDemandThroughput",
-          "description": "The maximum number of read and write units for the specified global secondary index. If you use this parameter, you must specify ``MaxReadRequestUnits``, ``MaxWriteRequestUnits``, or both."
+          "description": "The maximum number of read and write units for the specified global secondary index. If you use this parameter, you must specify ``MaxReadRequestUnits``, ``MaxWriteRequestUnits``, or both. You must use either ``OnDemandThroughput`` or ``ProvisionedThroughput`` based on your table's capacity mode."
         },
         "Projection": {
           "$ref": "#/definitions/Projection",
@@ -120,7 +128,7 @@
         },
         "ProvisionedThroughput": {
           "$ref": "#/definitions/ProvisionedThroughput",
-          "description": "Represents the provisioned throughput settings for the specified global secondary index.\n For current minimum and maximum provisioned throughput values, see [Service, Account, and Table Quotas](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html) in the *Amazon DynamoDB Developer Guide*."
+          "description": "Represents the provisioned throughput settings for the specified global secondary index. You must use either ``OnDemandThroughput`` or ``ProvisionedThroughput`` based on your table's capacity mode.\n For current minimum and maximum provisioned throughput values, see [Service, Account, and Table Quotas](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Limits.html) in the *Amazon DynamoDB Developer Guide*."
         },
         "WarmThroughput": {
           "$ref": "#/definitions/WarmThroughput",
@@ -205,10 +213,6 @@
         },
         "StreamArn": {
           "description": "The ARN for a specific Kinesis data stream.\n Length Constraints: Minimum length of 37. Maximum length of 1024.",
-          "relationshipRef": {
-            "propertyPath": "/properties/Arn",
-            "typeName": "AWS::Kinesis::Stream"
-          },
           "type": "string"
         }
       },
@@ -342,10 +346,6 @@
       "properties": {
         "S3Bucket": {
           "description": "The S3 bucket that is being imported from.",
-          "relationshipRef": {
-            "propertyPath": "/properties/BucketName",
-            "typeName": "AWS::S3::Bucket"
-          },
           "type": "string"
         },
         "S3BucketOwner": {
@@ -410,7 +410,7 @@
       "properties": {
         "ResourcePolicy": {
           "$ref": "#/definitions/ResourcePolicy",
-          "description": "Creates or updates a resource-based policy document that contains the permissions for DDB resources, such as a table's streams. Resource-based policies let you define access permissions by specifying who has access to each resource, and the actions they are allowed to perform on each resource.\n In a CFNshort template, you can provide the policy in JSON or YAML format because CFNshort converts YAML to JSON before submitting it to DDB. For more information about resource-based policies, see [Using resource-based policies for](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/access-control-resource-based.html) and [Resource-based policy examples](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-examples.html)."
+          "description": "Creates or updates a resource-based policy document that contains the permissions for DDB resources, such as a table's streams. Resource-based policies let you define access permissions by specifying who has access to each resource, and the actions they are allowed to perform on each resource.\n  When you remove the ``StreamSpecification`` property from the template, DynamoDB disables the stream but retains any attached resource policy until the stream is deleted after 24 hours. When you modify the ``StreamViewType`` property, DynamoDB creates a new stream and retains the old stream's resource policy. The old stream and its resource policy are deleted after the 24-hour retention period.\n  In a CFNshort template, you can provide the policy in JSON or YAML format because CFNshort converts YAML to JSON before submitting it to DDB. For more information about resource-based policies, see [Using resource-based policies for](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/access-control-resource-based.html) and [Resource-based policy examples](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-examples.html)."
         },
         "StreamViewType": {
           "description": "When an item in the table is modified, ``StreamViewType`` determines what information is written to the stream for this table. Valid values for ``StreamViewType`` are:\n  +  ``KEYS_ONLY`` - Only the key attributes of the modified item are written to the stream.\n  +  ``NEW_IMAGE`` - The entire item, as it appears after it was modified, is written to the stream.\n  +  ``OLD_IMAGE`` - The entire item, as it appeared before it was modified, is written to the stream.\n  +  ``NEW_AND_OLD_IMAGES`` - Both the new and the old item images of the item are written to the stream.",
@@ -511,6 +511,15 @@
         "dynamodb:UpdateTable",
         "dynamodb:GetResourcePolicy",
         "dynamodb:PutResourcePolicy",
+        "dynamodb:CreateTableReplica",
+        "dynamodb:Scan",
+        "dynamodb:Query",
+        "dynamodb:UpdateItem",
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:AssociateTableReplica",
         "kinesis:DescribeStream",
         "kinesis:PutRecords",
         "iam:CreateServiceLinkedRole",
@@ -551,7 +560,8 @@
         "dynamodb:DescribeContributorInsights",
         "dynamodb:DescribeKinesisStreamingDestination",
         "dynamodb:ListTagsOfResource",
-        "dynamodb:GetResourcePolicy"
+        "dynamodb:GetResourcePolicy",
+        "dynamodb:DescribeTimeToLive"
       ]
     },
     "update": {
@@ -574,6 +584,16 @@
         "dynamodb:GetResourcePolicy",
         "dynamodb:PutResourcePolicy",
         "dynamodb:DeleteResourcePolicy",
+        "dynamodb:CreateTable",
+        "dynamodb:CreateTableReplica",
+        "dynamodb:Scan",
+        "dynamodb:Query",
+        "dynamodb:UpdateItem",
+        "dynamodb:PutItem",
+        "dynamodb:GetItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:BatchWriteItem",
+        "dynamodb:AssociateTableReplica",
         "kinesis:DescribeStream",
         "kinesis:PutRecords",
         "iam:CreateServiceLinkedRole",
@@ -607,7 +627,7 @@
     },
     "ContributorInsightsSpecification": {
       "$ref": "#/definitions/ContributorInsightsSpecification",
-      "description": "The settings used to enable or disable CloudWatch Contributor Insights for the specified table."
+      "description": "The settings used to specify whether to enable CloudWatch Contributor Insights for the table and define which events to monitor."
     },
     "DeletionProtectionEnabled": {
       "description": "Determines if a table is protected from deletion. When enabled, the table cannot be deleted by any user or process. This setting is disabled by default. For more information, see [Using deletion protection](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/WorkingWithTables.Basics.html#WorkingWithTables.Basics.DeletionProtection) in the *Developer Guide*.",
@@ -666,7 +686,7 @@
     },
     "ResourcePolicy": {
       "$ref": "#/definitions/ResourcePolicy",
-      "description": "A resource-based policy document that contains permissions to add to the specified table. In a CFNshort template, you can provide the policy in JSON or YAML format because CFNshort converts YAML to JSON before submitting it to DDB. For more information about resource-based policies, see [Using resource-based policies for](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/access-control-resource-based.html) and [Resource-based policy examples](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-examples.html).\n When you attach a resource-based policy while creating a table, the policy creation is *strongly consistent*. For information about the considerations that you should keep in mind while attaching a resource-based policy, see [Resource-based policy considerations](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-considerations.html)."
+      "description": "An AWS resource-based policy document in JSON format that will be attached to the table.\n When you attach a resource-based policy while creating a table, the policy application is *strongly consistent*.\n The maximum size supported for a resource-based policy document is 20 KB. DynamoDB counts whitespaces when calculating the size of a policy against this limit. For a full list of all considerations that apply for resource-based policies, see [Resource-based policy considerations](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/rbac-considerations.html).\n  You need to specify the ``CreateTable`` and ``PutResourcePolicy`` IAM actions for authorizing a user to create a table with a resource-based policy."
     },
     "SSESpecification": {
       "$ref": "#/definitions/SSESpecification",
@@ -678,7 +698,7 @@
     },
     "StreamSpecification": {
       "$ref": "#/definitions/StreamSpecification",
-      "description": "The settings for the DDB table stream, which capture changes to items stored in the table."
+      "description": "The settings for the DDB table stream, which captures changes to items stored in the table. Including this property in your CFNlong template automatically enables streaming."
     },
     "TableClass": {
       "description": "The table class of the new table. Valid values are ``STANDARD`` and ``STANDARD_INFREQUENT_ACCESS``.",

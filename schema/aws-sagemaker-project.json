@@ -4,9 +4,75 @@
     "/properties/ProjectName",
     "/properties/ProjectDescription",
     "/properties/ServiceCatalogProvisioningDetails",
+    "/properties/TemplateProviderDetails",
     "/properties/Tags"
   ],
   "definitions": {
+    "CfnStackParameter": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "description": "The key of the parameter.",
+          "maxLength": 255,
+          "minLength": 1,
+          "type": "string"
+        },
+        "Value": {
+          "description": "The value of the parameter.",
+          "maxLength": 4096,
+          "type": "string"
+        }
+      },
+      "required": [
+        "Key",
+        "Value"
+      ],
+      "type": "object"
+    },
+    "CfnStackParameters": {
+      "description": "A list of parameters used in the CloudFormation template.",
+      "items": {
+        "$ref": "#/definitions/CfnStackParameter"
+      },
+      "maxItems": 180,
+      "minItems": 0,
+      "type": "array"
+    },
+    "CfnTemplateProviderDetail": {
+      "additionalProperties": false,
+      "description": "CloudFormation template provider details for a SageMaker project.",
+      "properties": {
+        "Parameters": {
+          "$ref": "#/definitions/CfnStackParameters"
+        },
+        "RoleARN": {
+          "description": "The Amazon Resource Name (ARN) of the IAM role used by the template provider.",
+          "maxLength": 2048,
+          "minLength": 20,
+          "pattern": "arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+          "type": "string"
+        },
+        "TemplateName": {
+          "description": "The name of the template used for the project.",
+          "maxLength": 32,
+          "minLength": 1,
+          "pattern": "(?=.{1,32}$)[a-zA-Z0-9](-*[a-zA-Z0-9])*",
+          "type": "string"
+        },
+        "TemplateURL": {
+          "description": "The URL of the CloudFormation template.",
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "(?=.{1,1024}$)(https)://([^/]+)/(.+)",
+          "type": "string"
+        }
+      },
+      "required": [
+        "TemplateName",
+        "TemplateURL"
+      ],
+      "type": "object"
+    },
     "PathId": {
       "description": "The path identifier of the product.",
       "maxLength": 100,
@@ -102,6 +168,23 @@
         "Value"
       ],
       "type": "object"
+    },
+    "TemplateProviderDetail": {
+      "additionalProperties": false,
+      "description": "Details about the template provider for the SageMaker project.",
+      "oneOf": [
+        {
+          "required": [
+            "CfnTemplateProviderDetail"
+          ]
+        }
+      ],
+      "properties": {
+        "CfnTemplateProviderDetail": {
+          "$ref": "#/definitions/CfnTemplateProviderDetail"
+        }
+      },
+      "type": "object"
     }
   },
   "description": "Resource Type definition for AWS::SageMaker::Project",
@@ -116,7 +199,11 @@
         "servicecatalog:DescribeProvisioningArtifact",
         "servicecatalog:ProvisionProduct",
         "servicecatalog:DescribeProvisionedProduct",
-        "servicecatalog:TerminateProvisionedProduct"
+        "servicecatalog:TerminateProvisionedProduct",
+        "cloudformation:DescribeStacks",
+        "cloudformation:CreateStack",
+        "iam:PassRole",
+        "s3:GetObject"
       ]
     },
     "delete": {
@@ -124,7 +211,9 @@
         "sagemaker:DeleteProject",
         "sagemaker:DescribeProject",
         "servicecatalog:TerminateProvisionedProduct",
-        "servicecatalog:DescribeRecord"
+        "servicecatalog:DescribeRecord",
+        "cloudformation:DescribeStacks",
+        "cloudformation:DeleteStack"
       ]
     },
     "list": {
@@ -147,6 +236,18 @@
       ]
     }
   },
+  "oneOf": [
+    {
+      "required": [
+        "ServiceCatalogProvisioningDetails"
+      ]
+    },
+    {
+      "required": [
+        "TemplateProviderDetails"
+      ]
+    }
+  ],
   "primaryIdentifier": [
     "/properties/ProjectArn"
   ],
@@ -226,6 +327,16 @@
       },
       "maxItems": 40,
       "type": "array"
+    },
+    "TemplateProviderDetails": {
+      "description": "An array of template providers associated with the project.",
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/TemplateProviderDetail"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array"
     }
   },
   "readOnlyProperties": [
@@ -235,8 +346,7 @@
     "/properties/ProjectStatus"
   ],
   "required": [
-    "ProjectName",
-    "ServiceCatalogProvisioningDetails"
+    "ProjectName"
   ],
   "tagging": {
     "cloudFormationSystemTags": false,

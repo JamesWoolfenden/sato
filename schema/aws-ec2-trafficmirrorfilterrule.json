@@ -20,13 +20,19 @@
       ],
       "type": "object"
     },
+    "TrafficDirection": {
+      "description": "The type of traffic.",
+      "type": "string"
+    },
     "TrafficMirrorPortRange": {
       "additionalProperties": false,
       "properties": {
         "FromPort": {
+          "description": "The first port in the Traffic Mirror port range.",
           "type": "integer"
         },
         "ToPort": {
+          "description": "The last port in the Traffic Mirror port range.",
           "type": "integer"
         }
       },
@@ -35,41 +41,83 @@
         "ToPort"
       ],
       "type": "object"
+    },
+    "TrafficMirrorRuleAction": {
+      "description": "The action to take on the filtered traffic.",
+      "type": "string"
     }
   },
-  "description": "Resource Type definition for AWS::EC2::TrafficMirrorFilterRule",
+  "description": "Resource Type definition for for AWS::EC2::TrafficMirrorFilterRule",
+  "handlers": {
+    "create": {
+      "permissions": [
+        "ec2:CreateTrafficMirrorFilterRule",
+        "ec2:CreateTags",
+        "ec2:DescribeTrafficMirrorFilterRules"
+      ]
+    },
+    "delete": {
+      "permissions": [
+        "ec2:DeleteTrafficMirrorFilterRule"
+      ]
+    },
+    "list": {
+      "permissions": [
+        "ec2:DescribeTrafficMirrorFilterRules"
+      ]
+    },
+    "read": {
+      "permissions": [
+        "ec2:DescribeTrafficMirrorFilterRules"
+      ]
+    },
+    "update": {
+      "permissions": [
+        "ec2:ModifyTrafficMirrorFilterRule",
+        "ec2:CreateTags",
+        "ec2:DeleteTags"
+      ]
+    }
+  },
   "primaryIdentifier": [
-    "/properties/Id"
+    "/properties/TrafficMirrorFilterRuleId"
   ],
   "properties": {
     "Description": {
+      "description": "The description of the Traffic Mirror Filter rule.",
       "type": "string"
     },
     "DestinationCidrBlock": {
+      "description": "The destination CIDR block to assign to the Traffic Mirror rule.",
       "type": "string"
     },
     "DestinationPortRange": {
-      "$ref": "#/definitions/TrafficMirrorPortRange"
-    },
-    "Id": {
-      "type": "string"
+      "$ref": "#/definitions/TrafficMirrorPortRange",
+      "description": "The destination port range."
     },
     "Protocol": {
+      "description": "The number of protocol, for example 17 (UDP), to assign to the Traffic Mirror rule.",
       "type": "integer"
     },
     "RuleAction": {
-      "type": "string"
+      "$ref": "#/definitions/TrafficMirrorRuleAction",
+      "description": "The action to take on the filtered traffic (accept/reject)."
     },
     "RuleNumber": {
+      "description": "The number of the Traffic Mirror rule.",
       "type": "integer"
     },
     "SourceCidrBlock": {
+      "description": "The source CIDR block to assign to the Traffic Mirror Filter rule.",
       "type": "string"
     },
     "SourcePortRange": {
-      "$ref": "#/definitions/TrafficMirrorPortRange"
+      "$ref": "#/definitions/TrafficMirrorPortRange",
+      "description": "The source port range."
     },
     "Tags": {
+      "description": "Any tags assigned to the Traffic Mirror Filter rule.",
+      "insertionOrder": false,
       "items": {
         "$ref": "#/definitions/Tag"
       },
@@ -77,14 +125,20 @@
       "uniqueItems": false
     },
     "TrafficDirection": {
-      "type": "string"
+      "$ref": "#/definitions/TrafficDirection",
+      "description": "The direction of traffic (ingress/egress)."
     },
     "TrafficMirrorFilterId": {
+      "description": "The ID of the filter that this rule is associated with.",
+      "type": "string"
+    },
+    "TrafficMirrorFilterRuleId": {
+      "description": "The ID of the Traffic Mirror Filter rule.",
       "type": "string"
     }
   },
   "readOnlyProperties": [
-    "/properties/Id"
+    "/properties/TrafficMirrorFilterRuleId"
   ],
   "required": [
     "RuleAction",
@@ -94,5 +148,17 @@
     "TrafficMirrorFilterId",
     "TrafficDirection"
   ],
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging": {
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "ec2:CreateTags",
+      "ec2:DeleteTags"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
+  },
   "typeName": "AWS::EC2::TrafficMirrorFilterRule"
 }

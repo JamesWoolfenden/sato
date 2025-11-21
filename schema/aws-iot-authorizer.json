@@ -29,14 +29,16 @@
         "iot:CreateAuthorizer",
         "iot:DescribeAuthorizer",
         "iot:TagResource",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "delete": {
       "permissions": [
         "iot:UpdateAuthorizer",
         "iot:DeleteAuthorizer",
-        "iot:DescribeAuthorizer"
+        "iot:DescribeAuthorizer",
+        "kms:Decrypt"
       ]
     },
     "list": {
@@ -47,7 +49,8 @@
     "read": {
       "permissions": [
         "iot:DescribeAuthorizer",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     },
     "update": {
@@ -56,7 +59,8 @@
         "iot:DescribeAuthorizer",
         "iot:TagResource",
         "iot:UntagResource",
-        "iot:ListTagsForResource"
+        "iot:ListTagsForResource",
+        "kms:Decrypt"
       ]
     }
   },
@@ -120,6 +124,11 @@
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
   "tagging": {
     "cloudFormationSystemTags": true,
+    "permissions": [
+      "iot:ListTagsForResource",
+      "iot:TagResource",
+      "iot:UntagResource"
+    ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",
     "tagUpdatable": true,

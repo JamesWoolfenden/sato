@@ -38,11 +38,80 @@
       "minLength": 1,
       "type": "string"
     },
+    "DataTableAccessControlConfiguration": {
+      "additionalProperties": false,
+      "description": "Defines the access control configuration for data tables.",
+      "properties": {
+        "PrimaryAttributeAccessControlConfiguration": {
+          "$ref": "#/definitions/PrimaryAttributeAccessControlConfigurationItem"
+        }
+      },
+      "type": "object"
+    },
     "Permission": {
       "description": "A permission associated with the security profile.",
       "maxLength": 128,
       "minLength": 1,
       "type": "string"
+    },
+    "PrimaryAttributeAccessControlConfigurationItem": {
+      "additionalProperties": false,
+      "description": "Contains the configuration for record-based access control.",
+      "properties": {
+        "PrimaryAttributeValues": {
+          "description": "An array of PrimaryAttributeValue objects.",
+          "items": {
+            "$ref": "#/definitions/PrimaryAttributeValue"
+          },
+          "maxItems": 5,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "PrimaryAttributeValues"
+      ],
+      "type": "object"
+    },
+    "PrimaryAttributeValue": {
+      "additionalProperties": false,
+      "description": "An object defining the access control for a specific attribute and its values.",
+      "properties": {
+        "AccessType": {
+          "description": "Specifies the type of access granted. Currently, only \"ALLOW\" is supported",
+          "enum": [
+            "ALLOW"
+          ],
+          "type": "string"
+        },
+        "AttributeName": {
+          "description": "The name of the primary attribute.",
+          "maxLength": 127,
+          "minLength": 1,
+          "pattern": "^(?!aws:|connect:)[\\p{L}\\p{Z}\\p{N}\\-_.:=@'|]+$",
+          "type": "string"
+        },
+        "Values": {
+          "description": "An array of allowed primary values for the specified primary attribute.",
+          "items": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]+$",
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "AccessType",
+        "AttributeName",
+        "Values"
+      ],
+      "type": "object"
     },
     "ResourceName": {
       "description": "A resource that a security profile applies tag or hierarchy restrictions to in Amazon Connect.",
@@ -155,6 +224,15 @@
       "maxLength": 250,
       "minLength": 0,
       "type": "string"
+    },
+    "GranularAccessControlConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "DataTableAccessControlConfiguration": {
+          "$ref": "#/definitions/DataTableAccessControlConfiguration"
+        }
+      },
+      "type": "object"
     },
     "HierarchyRestrictedResources": {
       "description": "The list of resources that a security profile applies hierarchy restrictions to in Amazon Connect.",

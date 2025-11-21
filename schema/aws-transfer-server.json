@@ -7,11 +7,11 @@
   "additionalProperties": false,
   "conditionalCreateOnlyProperties": [
     "/properties/EndpointDetails",
-    "/properties/EndpointDetails/AddressAllocationIds"
+    "/properties/EndpointDetails/AddressAllocationIds",
+    "/properties/IpAddressType"
   ],
   "createOnlyProperties": [
-    "/properties/Domain",
-    "/properties/IdentityProviderType"
+    "/properties/Domain"
   ],
   "definitions": {
     "As2Transport": {
@@ -120,6 +120,13 @@
         "API_GATEWAY",
         "AWS_DIRECTORY_SERVICE",
         "AWS_LAMBDA"
+      ],
+      "type": "string"
+    },
+    "IpAddressType": {
+      "enum": [
+        "IPV4",
+        "DUALSTACK"
       ],
       "type": "string"
     },
@@ -327,6 +334,9 @@
     "update": {
       "permissions": [
         "apigateway:GET",
+        "ds:AuthorizeApplication",
+        "ds:DescribeDirectories",
+        "ds:UnauthorizeApplication",
         "ec2:AssociateAddress",
         "ec2:CreateVpcEndpoint",
         "ec2:DeleteVpcEndpoints",
@@ -391,6 +401,9 @@
     },
     "IdentityProviderType": {
       "$ref": "#/definitions/IdentityProviderType"
+    },
+    "IpAddressType": {
+      "$ref": "#/definitions/IpAddressType"
     },
     "LoggingRole": {
       "maxLength": 2048,
@@ -484,8 +497,5 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::Transfer::Server",
-  "writeOnlyProperties": [
-    "/properties/IdentityProviderType"
-  ]
+  "typeName": "AWS::Transfer::Server"
 }

@@ -96,6 +96,16 @@
       "minLength": 1,
       "type": "string"
     },
+    "DisableSessionTags": {
+      "description": "The Disable Session Tags of the pod identity association.",
+      "minLength": 1,
+      "type": "boolean"
+    },
+    "ExternalId": {
+      "description": "The External Id of the pod identity association.",
+      "minLength": 1,
+      "type": "string"
+    },
     "Namespace": {
       "description": "The Kubernetes namespace that the pod identity association is created for.",
       "type": "string"
@@ -116,11 +126,17 @@
       },
       "type": "array",
       "uniqueItems": true
+    },
+    "TargetRoleArn": {
+      "description": "The Target Role Arn of the pod identity association.",
+      "minLength": 1,
+      "type": "string"
     }
   },
   "readOnlyProperties": [
     "/properties/AssociationArn",
-    "/properties/AssociationId"
+    "/properties/AssociationId",
+    "/properties/ExternalId"
   ],
   "replacementStrategy": "create_then_delete",
   "required": [

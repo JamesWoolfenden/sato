@@ -6,6 +6,9 @@
   ],
   "additionalProperties": false,
   "definitions": {
+    "AdditionalModelRequestFields": {
+      "type": "object"
+    },
     "AgentFlowNodeConfiguration": {
       "additionalProperties": false,
       "description": "Agent flow node configuration",
@@ -21,6 +24,13 @@
         "AgentAliasArn"
       ],
       "type": "object"
+    },
+    "BedrockRerankingModelArn": {
+      "description": "Arn of a Bedrock Reranking model",
+      "maxLength": 2048,
+      "minLength": 1,
+      "pattern": "^(arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}::foundation-model/(.*))?$",
+      "type": "string"
     },
     "CollectorFlowNodeConfiguration": {
       "additionalProperties": false,
@@ -68,6 +78,32 @@
         }
       },
       "type": "object"
+    },
+    "FieldForReranking": {
+      "additionalProperties": false,
+      "description": "Field name for reranking",
+      "properties": {
+        "FieldName": {
+          "description": "Field name for reranking",
+          "maxLength": 2000,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "FieldName"
+      ],
+      "type": "object"
+    },
+    "FieldsForReranking": {
+      "description": "List of Fields For Reranking",
+      "insertionOrder": true,
+      "items": {
+        "$ref": "#/definitions/FieldForReranking"
+      },
+      "maxItems": 100,
+      "minItems": 1,
+      "type": "array"
     },
     "FlowCondition": {
       "additionalProperties": false,
@@ -237,7 +273,7 @@
           "items": {
             "$ref": "#/definitions/FlowNodeInput"
           },
-          "maxItems": 5,
+          "maxItems": 20,
           "type": "array"
         },
         "Name": {
@@ -422,6 +458,58 @@
           ],
           "title": "Retrieval",
           "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "InlineCode": {
+              "$ref": "#/definitions/InlineCodeFlowNodeConfiguration"
+            }
+          },
+          "required": [
+            "InlineCode"
+          ],
+          "title": "InlineCode",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "Loop": {
+              "$ref": "#/definitions/LoopFlowNodeConfiguration"
+            }
+          },
+          "required": [
+            "Loop"
+          ],
+          "title": "Loop",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "LoopInput": {
+              "$ref": "#/definitions/LoopInputFlowNodeConfiguration"
+            }
+          },
+          "required": [
+            "LoopInput"
+          ],
+          "title": "LoopInput",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "LoopController": {
+              "$ref": "#/definitions/LoopControllerFlowNodeConfiguration"
+            }
+          },
+          "required": [
+            "LoopController"
+          ],
+          "title": "LoopController",
+          "type": "object"
         }
       ]
     },
@@ -440,6 +528,9 @@
       "additionalProperties": false,
       "description": "Input to a node in a flow",
       "properties": {
+        "Category": {
+          "$ref": "#/definitions/FlowNodeInputCategory"
+        },
         "Expression": {
           "description": "Expression for a node input in a flow",
           "maxLength": 64,
@@ -461,6 +552,15 @@
         "Type"
       ],
       "type": "object"
+    },
+    "FlowNodeInputCategory": {
+      "description": "Optional tag to classify input type, currently exclusive to LoopNode",
+      "enum": [
+        "LoopCondition",
+        "ReturnValueToLoopStart",
+        "ExitLoop"
+      ],
+      "type": "string"
     },
     "FlowNodeOutput": {
       "additionalProperties": false,
@@ -495,7 +595,11 @@
         "Storage",
         "Retrieval",
         "Iterator",
-        "Collector"
+        "Collector",
+        "InlineCode",
+        "Loop",
+        "LoopInput",
+        "LoopController"
       ],
       "type": "string"
     },
@@ -549,6 +653,25 @@
       },
       "type": "object"
     },
+    "InlineCodeFlowNodeConfiguration": {
+      "additionalProperties": false,
+      "description": "Inline code config strucuture, contains code configs",
+      "properties": {
+        "Code": {
+          "description": "The inline code entered by customers. max size is 5MB.",
+          "maxLength": 5000000,
+          "type": "string"
+        },
+        "Language": {
+          "$ref": "#/definitions/SupportedLanguages"
+        }
+      },
+      "required": [
+        "Code",
+        "Language"
+      ],
+      "type": "object"
+    },
     "InputFlowNodeConfiguration": {
       "additionalProperties": false,
       "description": "Input flow node configuration",
@@ -566,6 +689,9 @@
         "GuardrailConfiguration": {
           "$ref": "#/definitions/GuardrailConfiguration"
         },
+        "InferenceConfiguration": {
+          "$ref": "#/definitions/PromptInferenceConfiguration"
+        },
         "KnowledgeBaseId": {
           "description": "Identifier of the KnowledgeBase",
           "maxLength": 10,
@@ -578,12 +704,66 @@
           "minLength": 1,
           "pattern": "^(arn:aws(-[^:]{1,12})?:(bedrock|sagemaker):[a-z0-9-]{1,20}:([0-9]{12})?:([a-z-]+/)?)?([a-zA-Z0-9.-]{1,63}){0,2}(([:][a-z0-9-]{1,63}){0,2})?(/[a-z0-9]{1,12})?$",
           "type": "string"
+        },
+        "NumberOfResults": {
+          "description": "Number Of Results to Retrieve",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        },
+        "OrchestrationConfiguration": {
+          "$ref": "#/definitions/KnowledgeBaseOrchestrationConfiguration"
+        },
+        "PromptTemplate": {
+          "$ref": "#/definitions/KnowledgeBasePromptTemplate"
+        },
+        "RerankingConfiguration": {
+          "$ref": "#/definitions/VectorSearchRerankingConfiguration"
         }
       },
       "required": [
         "KnowledgeBaseId"
       ],
       "type": "object"
+    },
+    "KnowledgeBaseOrchestrationConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "AdditionalModelRequestFields": {
+          "$ref": "#/definitions/AdditionalModelRequestFields"
+        },
+        "InferenceConfig": {
+          "$ref": "#/definitions/PromptInferenceConfiguration"
+        },
+        "PerformanceConfig": {
+          "$ref": "#/definitions/PerformanceConfiguration"
+        },
+        "PromptTemplate": {
+          "$ref": "#/definitions/KnowledgeBasePromptTemplate"
+        }
+      },
+      "title": "KnowledgeBaseOrchestrationConfiguration",
+      "type": "object"
+    },
+    "KnowledgeBasePromptTemplate": {
+      "description": "Knowledge Base Prompt template",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "TextPromptTemplate": {
+              "maxLength": 100000,
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "TextPromptTemplate"
+          ],
+          "title": "Text",
+          "type": "object"
+        }
+      ]
     },
     "LambdaFunctionFlowNodeConfiguration": {
       "additionalProperties": false,
@@ -624,10 +804,82 @@
       ],
       "type": "object"
     },
+    "LoopControllerFlowNodeConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration for the LoopController node, which manages loop execution",
+      "properties": {
+        "ContinueCondition": {
+          "$ref": "#/definitions/FlowCondition"
+        },
+        "MaxIterations": {
+          "default": 10,
+          "description": "Maximum number of iterations the loop can perform",
+          "maximum": 1000,
+          "minimum": 1,
+          "type": "number"
+        }
+      },
+      "required": [
+        "ContinueCondition"
+      ],
+      "type": "object"
+    },
+    "LoopFlowNodeConfiguration": {
+      "additionalProperties": false,
+      "description": "Loop node config, contains loop's internal definition",
+      "properties": {
+        "Definition": {
+          "$ref": "#/definitions/FlowDefinition"
+        }
+      },
+      "required": [
+        "Definition"
+      ],
+      "type": "object"
+    },
+    "LoopInputFlowNodeConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration for the LoopInput node",
+      "type": "object"
+    },
+    "MetadataConfigurationForReranking": {
+      "additionalProperties": false,
+      "properties": {
+        "SelectionMode": {
+          "$ref": "#/definitions/RerankingMetadataSelectionMode"
+        },
+        "SelectiveModeConfiguration": {
+          "$ref": "#/definitions/RerankingMetadataSelectiveModeConfiguration"
+        }
+      },
+      "required": [
+        "SelectionMode"
+      ],
+      "title": "MetadataConfigurationForReranking",
+      "type": "object"
+    },
     "OutputFlowNodeConfiguration": {
       "additionalProperties": false,
       "description": "Output flow node configuration",
       "type": "object"
+    },
+    "PerformanceConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "Latency": {
+          "$ref": "#/definitions/PerformanceConfigurationLatency"
+        }
+      },
+      "title": "PerformanceConfiguration",
+      "type": "object"
+    },
+    "PerformanceConfigurationLatency": {
+      "description": "Performance Configuration Latency",
+      "enum": [
+        "standard",
+        "optimized"
+      ],
+      "type": "string"
     },
     "PromptFlowNodeConfiguration": {
       "additionalProperties": false,
@@ -809,6 +1061,45 @@
       ],
       "type": "string"
     },
+    "RerankingMetadataSelectionMode": {
+      "description": "Reranking Metadata Selection Mode",
+      "enum": [
+        "SELECTIVE",
+        "ALL"
+      ],
+      "type": "string"
+    },
+    "RerankingMetadataSelectiveModeConfiguration": {
+      "description": "Reranking Metadata Selective Mode Configuration",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "FieldsToInclude": {
+              "$ref": "#/definitions/FieldsForReranking"
+            }
+          },
+          "required": [
+            "FieldsToInclude"
+          ],
+          "title": "FieldsToInclude",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "FieldsToExclude": {
+              "$ref": "#/definitions/FieldsForReranking"
+            }
+          },
+          "required": [
+            "FieldsToExclude"
+          ],
+          "title": "FieldsToExclude",
+          "type": "object"
+        }
+      ]
+    },
     "RetrievalFlowNodeConfiguration": {
       "additionalProperties": false,
       "description": "Retrieval flow node configuration",
@@ -925,6 +1216,13 @@
         }
       ]
     },
+    "SupportedLanguages": {
+      "description": "Enum encodes the supported language type",
+      "enum": [
+        "Python_3"
+      ],
+      "type": "string"
+    },
     "TagsMap": {
       "additionalProperties": false,
       "description": "A map of tag keys and values",
@@ -964,6 +1262,67 @@
         "Text"
       ],
       "type": "object"
+    },
+    "VectorSearchBedrockRerankingConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "MetadataConfiguration": {
+          "$ref": "#/definitions/MetadataConfigurationForReranking"
+        },
+        "ModelConfiguration": {
+          "$ref": "#/definitions/VectorSearchBedrockRerankingModelConfiguration"
+        },
+        "NumberOfRerankedResults": {
+          "description": "Number Of Results For Reranking",
+          "maximum": 100,
+          "minimum": 1,
+          "type": "number"
+        }
+      },
+      "required": [
+        "ModelConfiguration"
+      ],
+      "title": "VectorSearchBedrockRerankingConfiguration",
+      "type": "object"
+    },
+    "VectorSearchBedrockRerankingModelConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "AdditionalModelRequestFields": {
+          "$ref": "#/definitions/AdditionalModelRequestFields"
+        },
+        "ModelArn": {
+          "$ref": "#/definitions/BedrockRerankingModelArn"
+        }
+      },
+      "required": [
+        "ModelArn"
+      ],
+      "title": "VectorSearchBedrockRerankingModelConfiguration",
+      "type": "object"
+    },
+    "VectorSearchRerankingConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "BedrockRerankingConfiguration": {
+          "$ref": "#/definitions/VectorSearchBedrockRerankingConfiguration"
+        },
+        "Type": {
+          "$ref": "#/definitions/VectorSearchRerankingConfigurationType"
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "title": "VectorSearchRerankingConfiguration",
+      "type": "object"
+    },
+    "VectorSearchRerankingConfigurationType": {
+      "description": "Enum of Rerank Configuration Types",
+      "enum": [
+        "BEDROCK_RERANKING_MODEL"
+      ],
+      "type": "string"
     }
   },
   "description": "Definition of AWS::Bedrock::Flow Resource Type",

@@ -34,22 +34,71 @@
       ],
       "type": "object"
     },
+    "BrowserConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "BrowserType": {
+          "$ref": "#/definitions/BrowserType"
+        }
+      },
+      "required": [
+        "BrowserType"
+      ],
+      "type": "object"
+    },
+    "BrowserType": {
+      "enum": [
+        "CHROME",
+        "FIREFOX"
+      ],
+      "type": "string"
+    },
     "Code": {
       "additionalProperties": false,
       "oneOf": [
         {
           "required": [
+            "Handler",
             "S3Bucket",
             "S3Key"
           ]
         },
         {
           "required": [
+            "BlueprintTypes",
+            "S3Bucket",
+            "S3Key"
+          ]
+        },
+        {
+          "required": [
+            "Handler",
+            "Script"
+          ]
+        },
+        {
+          "required": [
+            "BlueprintTypes",
             "Script"
           ]
         }
       ],
       "properties": {
+        "BlueprintTypes": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 1,
+          "type": "array"
+        },
+        "Dependencies": {
+          "description": "List of Lambda layers to attach to the canary",
+          "items": {
+            "$ref": "#/definitions/Dependency"
+          },
+          "maxItems": 1,
+          "type": "array"
+        },
         "Handler": {
           "type": "string"
         },
@@ -69,8 +118,28 @@
           "type": "string"
         }
       },
+      "type": "object"
+    },
+    "Dependency": {
+      "additionalProperties": false,
+      "properties": {
+        "Reference": {
+          "description": "ARN of the Lambda layer",
+          "maxLength": 140,
+          "minLength": 1,
+          "pattern": "arn:[a-zA-Z0-9-]+:lambda:[a-zA-Z0-9-]+:\\d{12}:layer:[a-zA-Z0-9-_]+:[0-9]+",
+          "type": "string"
+        },
+        "Type": {
+          "description": "Type of dependency",
+          "enum": [
+            "LambdaLayer"
+          ],
+          "type": "string"
+        }
+      },
       "required": [
-        "Handler"
+        "Reference"
       ],
       "type": "object"
     },
@@ -80,6 +149,19 @@
         "lambda-function"
       ],
       "type": "string"
+    },
+    "RetryConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "MaxRetries": {
+          "description": "maximum times the canary will be retried upon the scheduled run failure",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "MaxRetries"
+      ],
+      "type": "object"
     },
     "RunConfig": {
       "additionalProperties": false,
@@ -97,6 +179,10 @@
             }
           },
           "type": "object"
+        },
+        "EphemeralStorage": {
+          "description": "Provide ephemeralStorage available for canary in MB",
+          "type": "integer"
         },
         "MemoryInMB": {
           "description": "Provide maximum memory available for canary in MB",
@@ -131,6 +217,10 @@
         },
         "Expression": {
           "type": "string"
+        },
+        "RetryConfig": {
+          "$ref": "#/definitions/RetryConfig",
+          "description": "Provide canary auto retry configuration"
         }
       },
       "required": [
@@ -203,6 +293,9 @@
             "$ref": "#/definitions/BaseScreenshot"
           },
           "type": "array"
+        },
+        "BrowserType": {
+          "$ref": "#/definitions/BrowserType"
         }
       },
       "required": [
@@ -212,7 +305,8 @@
     }
   },
   "deprecatedProperties": [
-    "/properties/DeleteLambdaResourcesOnCanaryDeletion"
+    "/properties/DeleteLambdaResourcesOnCanaryDeletion",
+    "/properties/VisualReference"
   ],
   "description": "Resource Type definition for AWS::Synthetics::Canary",
   "handlers": {
@@ -271,8 +365,10 @@
       "permissions": [
         "synthetics:UpdateCanary",
         "synthetics:StartCanary",
+        "synthetics:StartCanaryDryRun",
         "synthetics:StopCanary",
         "synthetics:GetCanary",
+        "synthetics:GetCanaryRuns",
         "synthetics:TagResource",
         "synthetics:UntagResource",
         "s3:GetObject",
@@ -311,12 +407,25 @@
       "pattern": "^(s3|S3)://",
       "type": "string"
     },
+    "BrowserConfigs": {
+      "description": "List of browser configurations for the canary",
+      "items": {
+        "$ref": "#/definitions/BrowserConfig"
+      },
+      "maxItems": 2,
+      "minItems": 1,
+      "type": "array"
+    },
     "Code": {
       "$ref": "#/definitions/Code",
       "description": "Provide the canary script source"
     },
     "DeleteLambdaResourcesOnCanaryDeletion": {
       "description": "Deletes associated lambda resources created by Synthetics if set to True. Default is False",
+      "type": "boolean"
+    },
+    "DryRunAndUpdate": {
+      "description": "Setting to control if UpdateCanary will perform a DryRun and validate it is PASSING before performing the Update. Default is FALSE.",
       "type": "boolean"
     },
     "ExecutionRoleArn": {
@@ -390,6 +499,15 @@
     "VisualReference": {
       "$ref": "#/definitions/VisualReference",
       "description": "Visual reference configuration for visual testing"
+    },
+    "VisualReferences": {
+      "description": "List of visual references for the canary",
+      "items": {
+        "$ref": "#/definitions/VisualReference"
+      },
+      "maxItems": 2,
+      "minItems": 1,
+      "type": "array"
     }
   },
   "readOnlyProperties": [
@@ -427,6 +545,8 @@
     "/properties/StartCanaryAfterCreation",
     "/properties/ResourcesToReplicateTags",
     "/properties/RunConfig/EnvironmentVariables",
-    "/properties/VisualReference"
+    "/properties/VisualReference",
+    "/properties/VisualReferences",
+    "/properties/DryRunAndUpdate"
   ]
 }

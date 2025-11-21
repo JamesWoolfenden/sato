@@ -32,7 +32,12 @@
         "events:TagResource",
         "kms:DescribeKey",
         "kms:GenerateDataKey",
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:ReEncrypt",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo",
+        "kms:Encrypt"
       ]
     },
     "delete": {
@@ -66,7 +71,12 @@
         "events:UpdateEventBus",
         "kms:DescribeKey",
         "kms:GenerateDataKey",
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "kms:GenerateDataKeyWithoutPlaintext",
+        "kms:ReEncrypt",
+        "kms:ReEncryptFrom",
+        "kms:ReEncryptTo",
+        "kms:Encrypt"
       ]
     }
   },
@@ -99,6 +109,31 @@
     "KmsKeyIdentifier": {
       "description": "Kms Key Identifier used to encrypt events at rest in the event bus.",
       "type": "string"
+    },
+    "LogConfig": {
+      "additionalProperties": false,
+      "description": "The logging configuration settings for vended logs.",
+      "properties": {
+        "IncludeDetail": {
+          "description": "Configures whether or not to include event detail, input transformer details, target properties, and target input in the applicable log messages.",
+          "enum": [
+            "FULL",
+            "NONE"
+          ],
+          "type": "string"
+        },
+        "Level": {
+          "description": "Configures the log level of the EventBus and determines which log messages are sent to Ingestion Hub for delivery.",
+          "enum": [
+            "INFO",
+            "ERROR",
+            "TRACE",
+            "OFF"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "Name": {
       "description": "The name of the event bus.",

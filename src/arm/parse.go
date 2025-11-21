@@ -121,8 +121,11 @@ func Parse(file string, destination string) error {
 	}
 
 	// defer the closing of our jsonFile so that we can parse it later on
-	//goland:noinspection GoUnhandledErrorResult
-	defer jsonFile.Close()
+	defer func() {
+		if closeErr := jsonFile.Close(); closeErr != nil {
+			log.Warn().Err(closeErr).Msg("failed to close file")
+		}
+	}()
 
 	byteValue, err := io.ReadAll(jsonFile)
 	if err != nil {
@@ -435,8 +438,8 @@ func Replace(
 		}
 	case "subscription().tenantId":
 		{
-			Attribute = strings.Replace(newAttribute, "subscription().tenantId",
-				"data.azurerm_client_config.sato.tenant_id", -1)
+			Attribute = strings.ReplaceAll(newAttribute, "subscription().tenantId",
+				"data.azurerm_client_config.sato.tenant_id")
 			data := make(map[string]interface{})
 
 			if result["data"] == nil {
@@ -665,7 +668,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 
 	if resourceName != nil {
 		temp := *resourceName + "." + name
-		return strings.Replace(Match, Attribute[0], temp, -1), nil
+		return strings.ReplaceAll(Match, Attribute[0], temp), nil
 	}
 
 	return "", err

@@ -1,6 +1,64 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "CmkSecretConfig": {
+      "additionalProperties": false,
+      "description": "Specifies configuration information for a DataSync-managed secret, such as a password or set of credentials that DataSync uses to access a specific transfer location, and a customer-managed AWS KMS key.",
+      "properties": {
+        "KmsKeyArn": {
+          "description": "Specifies the ARN for the customer-managed AWS KMS key used to encrypt the secret specified for SecretArn. DataSync provides this key to AWS Secrets Manager.",
+          "maxLength": 2048,
+          "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):kms:[a-z-0-9]+:[0-9]{12}:key/.*|)$",
+          "type": "string"
+        },
+        "SecretArn": {
+          "description": "Specifies the ARN for an AWS Secrets Manager secret, managed by DataSync.",
+          "maxLength": 2048,
+          "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "CustomSecretConfig": {
+      "additionalProperties": false,
+      "description": "Specifies configuration information for a customer-managed secret, such as a password or set of credentials that DataSync uses to access a specific transfer location, and an IAM role that DataSync can assume and access the customer-managed secret.",
+      "properties": {
+        "SecretAccessRoleArn": {
+          "description": "Specifies the ARN for the AWS Identity and Access Management role that DataSync uses to access the secret specified for SecretArn.",
+          "maxLength": 2048,
+          "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):iam::[0-9]{12}:role/.*|)$",
+          "type": "string"
+        },
+        "SecretArn": {
+          "description": "Specifies the ARN for a customer created AWS Secrets Manager secret.",
+          "maxLength": 2048,
+          "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "SecretArn",
+        "SecretAccessRoleArn"
+      ],
+      "type": "object"
+    },
+    "ManagedSecretConfig": {
+      "additionalProperties": false,
+      "description": "Specifies configuration information for a DataSync-managed secret, such as a password or set of credentials that DataSync uses to access a specific transfer location. DataSync uses the default AWS-managed KMS key to encrypt this secret in AWS Secrets Manager.",
+      "properties": {
+        "SecretArn": {
+          "description": "Specifies the ARN for an AWS Secrets Manager secret.",
+          "maxLength": 2048,
+          "pattern": "^(arn:(aws|aws-cn|aws-us-gov|aws-iso|aws-iso-b):secretsmanager:[a-z-0-9]+:[0-9]{12}:secret:.*|)$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "SecretArn"
+      ],
+      "type": "object"
+    },
     "MountOptions": {
       "additionalProperties": false,
       "description": "The mount options used by DataSync to access the SMB server.",
@@ -45,19 +103,28 @@
       "type": "object"
     }
   },
-  "description": "Resource schema for AWS::DataSync::LocationSMB.",
+  "description": "Resource Type definition for AWS::DataSync::LocationSMB.",
   "handlers": {
     "create": {
       "permissions": [
         "datasync:CreateLocationSmb",
         "datasync:DescribeLocationSmb",
         "datasync:ListTagsForResource",
-        "datasync:TagResource"
+        "datasync:TagResource",
+        "secretsmanager:CreateSecret",
+        "secretsmanager:PutSecretValue",
+        "secretsmanager:DeleteSecret",
+        "iam:CreateServiceLinkedRole",
+        "iam:PassRole",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
       ]
     },
     "delete": {
       "permissions": [
-        "datasync:DeleteLocation"
+        "datasync:DeleteLocation",
+        "secretsmanager:DeleteSecret"
       ]
     },
     "list": {
@@ -77,7 +144,16 @@
         "datasync:ListTagsForResource",
         "datasync:TagResource",
         "datasync:UntagResource",
-        "datasync:UpdateLocationSmb"
+        "datasync:UpdateLocationSmb",
+        "secretsmanager:UpdateSecret",
+        "secretsmanager:DeleteSecret",
+        "secretsmanager:PutSecretValue",
+        "secretsmanager:CreateSecret",
+        "iam:CreateServiceLinkedRole",
+        "iam:PassRole",
+        "kms:Encrypt",
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
       ]
     }
   },
@@ -104,6 +180,12 @@
         "KERBEROS"
       ],
       "type": "string"
+    },
+    "CmkSecretConfig": {
+      "$ref": "#/definitions/CmkSecretConfig"
+    },
+    "CustomSecretConfig": {
+      "$ref": "#/definitions/CustomSecretConfig"
     },
     "DnsIpAddresses": {
       "default": null,
@@ -153,6 +235,9 @@
       "pattern": "^(efs|nfs|s3|smb|fsxw)://[a-zA-Z0-9./\\-]+$",
       "type": "string"
     },
+    "ManagedSecretConfig": {
+      "$ref": "#/definitions/ManagedSecretConfig"
+    },
     "MountOptions": {
       "$ref": "#/definitions/MountOptions",
       "default": {
@@ -196,7 +281,9 @@
   },
   "readOnlyProperties": [
     "/properties/LocationArn",
-    "/properties/LocationUri"
+    "/properties/LocationUri",
+    "/properties/ManagedSecretConfig",
+    "/properties/CmkSecretConfig/SecretArn"
   ],
   "required": [
     "AgentArns"

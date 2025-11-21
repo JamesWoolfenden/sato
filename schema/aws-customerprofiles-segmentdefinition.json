@@ -321,6 +321,9 @@
         "PhoneNumber": {
           "$ref": "#/definitions/ProfileDimension"
         },
+        "ProfileType": {
+          "$ref": "#/definitions/ProfileTypeDimension"
+        },
         "ShippingAddress": {
           "$ref": "#/definitions/AddressDimension"
         }
@@ -352,20 +355,59 @@
       ],
       "type": "object"
     },
+    "ProfileType": {
+      "description": "The type of profile.",
+      "enum": [
+        "ACCOUNT_PROFILE",
+        "PROFILE"
+      ],
+      "type": "string"
+    },
+    "ProfileTypeDimension": {
+      "additionalProperties": false,
+      "description": "Specifies profile type based criteria for a segment.",
+      "properties": {
+        "DimensionType": {
+          "$ref": "#/definitions/ProfileTypeDimensionType"
+        },
+        "Values": {
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/ProfileType"
+          },
+          "maxItems": 1,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "DimensionType",
+        "Values"
+      ],
+      "type": "object"
+    },
+    "ProfileTypeDimensionType": {
+      "description": "The type of segment dimension to use for a profile type dimension.",
+      "enum": [
+        "INCLUSIVE",
+        "EXCLUSIVE"
+      ],
+      "type": "string"
+    },
     "RangeOverride": {
       "additionalProperties": false,
       "description": "Defines the range to be applied to the calculated attribute definition.",
       "properties": {
         "End": {
-          "description": "The ending point for this overridden range.",
-          "maximum": 366,
-          "minimum": 0,
+          "description": "The ending point for this overridden range. Positive numbers indicate how many days in the past data should be included, and negative numbers indicate how many days in the future.",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
           "type": "integer"
         },
         "Start": {
-          "description": "The starting point for this overridden range.",
-          "maximum": 366,
-          "minimum": 1,
+          "description": "The starting point for this overridden range. Positive numbers indicate how many days in the past data should be included, and negative numbers indicate how many days in the future.",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
           "type": "integer"
         },
         "Unit": {

@@ -1,12 +1,38 @@
 {
   "additionalProperties": false,
   "createOnlyProperties": [
+    "/properties/VpcId",
     "/properties/SubnetId",
     "/properties/ConnectivityType",
     "/properties/AllocationId",
-    "/properties/PrivateIpAddress"
+    "/properties/PrivateIpAddress",
+    "/properties/AvailabilityMode"
   ],
   "definitions": {
+    "AvailabilityZoneAddress": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "AllocationIds": {
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "AvailabilityZone": {
+          "type": "string"
+        },
+        "AvailabilityZoneId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "AllocationIds"
+      ],
+      "type": "object"
+    },
     "Tag": {
       "additionalProperties": false,
       "description": "Specifies a tag. For more information, see [Resource tags](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-resource-tags.html).",
@@ -61,7 +87,8 @@
         "ec2:DisassociateNatGatewayAddress",
         "ec2:AssignPrivateNatGatewayAddress",
         "ec2:UnassignPrivateNatGatewayAddress"
-      ]
+      ],
+      "timeoutInMinutes": 90
     }
   },
   "primaryIdentifier": [
@@ -72,8 +99,33 @@
       "description": "[Public NAT gateway only] The allocation ID of the Elastic IP address that's associated with the NAT gateway. This property is required for a public NAT gateway and cannot be specified with a private NAT gateway.",
       "type": "string"
     },
+    "AutoProvisionZones": {
+      "description": "",
+      "type": "string"
+    },
+    "AutoScalingIps": {
+      "description": "",
+      "type": "string"
+    },
+    "AvailabilityMode": {
+      "description": "",
+      "type": "string"
+    },
+    "AvailabilityZoneAddresses": {
+      "description": "",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AvailabilityZoneAddress"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
     "ConnectivityType": {
       "description": "Indicates whether the NAT gateway supports public or private connectivity. The default is public connectivity.",
+      "type": "string"
+    },
+    "EniId": {
+      "description": "",
       "type": "string"
     },
     "MaxDrainDurationSeconds": {
@@ -88,6 +140,10 @@
       "description": "The private IPv4 address to assign to the NAT gateway. If you don't provide an address, a private IPv4 address will be automatically assigned.",
       "type": "string"
     },
+    "RouteTableId": {
+      "description": "",
+      "type": "string"
+    },
     "SecondaryAllocationIds": {
       "description": "Secondary EIP allocation IDs. For more information, see [Create a NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-working-with.html) in the *Amazon VPC User Guide*.",
       "insertionOrder": true,
@@ -98,12 +154,12 @@
       "uniqueItems": true
     },
     "SecondaryPrivateIpAddressCount": {
-      "description": "[Private NAT gateway only] The number of secondary private IPv4 addresses you want to assign to the NAT gateway. For more information about secondary addresses, see [Create a NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-creating) in the *Amazon Virtual Private Cloud User Guide*.\n  ``SecondaryPrivateIpAddressCount`` and ``SecondaryPrivateIpAddresses`` cannot be set at the same time.",
+      "description": "[Private NAT gateway only] The number of secondary private IPv4 addresses you want to assign to the NAT gateway. For more information about secondary addresses, see [Create a NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-creating) in the *Amazon Virtual Private Cloud User Guide*.\n ``SecondaryPrivateIpAddressCount`` and ``SecondaryPrivateIpAddresses`` cannot be set at the same time.",
       "minimum": 1,
       "type": "integer"
     },
     "SecondaryPrivateIpAddresses": {
-      "description": "Secondary private IPv4 addresses. For more information about secondary addresses, see [Create a NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-creating) in the *Amazon Virtual Private Cloud User Guide*.\n  ``SecondaryPrivateIpAddressCount`` and ``SecondaryPrivateIpAddresses`` cannot be set at the same time.",
+      "description": "Secondary private IPv4 addresses. For more information about secondary addresses, see [Create a NAT gateway](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html#nat-gateway-creating) in the *Amazon Virtual Private Cloud User Guide*.\n ``SecondaryPrivateIpAddressCount`` and ``SecondaryPrivateIpAddresses`` cannot be set at the same time.",
       "insertionOrder": true,
       "items": {
         "type": "string"
@@ -123,13 +179,18 @@
       },
       "type": "array",
       "uniqueItems": false
+    },
+    "VpcId": {
+      "description": "The ID of the VPC in which the NAT gateway is located.",
+      "type": "string"
     }
   },
   "readOnlyProperties": [
-    "/properties/NatGatewayId"
-  ],
-  "required": [
-    "SubnetId"
+    "/properties/NatGatewayId",
+    "/properties/EniId",
+    "/properties/AutoProvisionZones",
+    "/properties/AutoScalingIps",
+    "/properties/RouteTableId"
   ],
   "tagging": {
     "cloudFormationSystemTags": true,

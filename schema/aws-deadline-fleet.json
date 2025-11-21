@@ -114,6 +114,9 @@
           "pattern": "^sp-[0-9a-f]{32}$",
           "type": "string"
         },
+        "TagPropagationMode": {
+          "$ref": "#/definitions/TagPropagationMode"
+        },
         "WorkerCapabilities": {
           "$ref": "#/definitions/CustomerManagedWorkerCapabilities"
         }
@@ -209,7 +212,8 @@
     "Ec2MarketType": {
       "enum": [
         "on-demand",
-        "spot"
+        "spot",
+        "wait-and-save"
       ],
       "type": "string"
     },
@@ -320,9 +324,30 @@
         "CREATE_IN_PROGRESS",
         "UPDATE_IN_PROGRESS",
         "CREATE_FAILED",
-        "UPDATE_FAILED"
+        "UPDATE_FAILED",
+        "SUSPENDED"
       ],
       "type": "string"
+    },
+    "HostConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "ScriptBody": {
+          "maxLength": 15000,
+          "minLength": 0,
+          "type": "string"
+        },
+        "ScriptTimeoutSeconds": {
+          "default": 300,
+          "maximum": 3600,
+          "minimum": 300,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "ScriptBody"
+      ],
+      "type": "object"
     },
     "MemoryMiBRange": {
       "additionalProperties": false,
@@ -351,6 +376,13 @@
         },
         "InstanceMarketOptions": {
           "$ref": "#/definitions/ServiceManagedEc2InstanceMarketOptions"
+        },
+        "StorageProfileId": {
+          "pattern": "^sp-[0-9a-f]{32}$",
+          "type": "string"
+        },
+        "VpcConfiguration": {
+          "$ref": "#/definitions/VpcConfiguration"
         }
       },
       "required": [
@@ -465,6 +497,13 @@
       ],
       "type": "object"
     },
+    "TagPropagationMode": {
+      "enum": [
+        "NO_PROPAGATION",
+        "PROPAGATE_TAGS_TO_WORKERS_AT_LAUNCH"
+      ],
+      "type": "string"
+    },
     "VCpuCountRange": {
       "additionalProperties": false,
       "properties": {
@@ -483,6 +522,20 @@
         "Min"
       ],
       "type": "object"
+    },
+    "VpcConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "ResourceConfigurationArns": {
+          "items": {
+            "maxLength": 2048,
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
     }
   },
   "description": "Definition of AWS::Deadline::Fleet Resource Type",
@@ -495,7 +548,13 @@
         "identitystore:ListGroupMembershipsForMember",
         "logs:CreateLogGroup",
         "deadline:TagResource",
-        "deadline:ListTagsForResource"
+        "deadline:ListTagsForResource",
+        "vpc-lattice:GetResourceGateway",
+        "vpc-lattice:GetResourceConfiguration",
+        "ec2:CreateVpcEndpoint",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs"
       ]
     },
     "delete": {
@@ -538,7 +597,13 @@
         "identitystore:ListGroupMembershipsForMember",
         "deadline:TagResource",
         "deadline:UntagResource",
-        "deadline:ListTagsForResource"
+        "deadline:ListTagsForResource",
+        "vpc-lattice:GetResourceGateway",
+        "vpc-lattice:GetResourceConfiguration",
+        "ec2:CreateVpcEndpoint",
+        "ec2:DescribeSubnets",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeVpcs"
       ]
     }
   },
@@ -575,6 +640,9 @@
       "pattern": "^fleet-[0-9a-f]{32}$",
       "type": "string"
     },
+    "HostConfiguration": {
+      "$ref": "#/definitions/HostConfiguration"
+    },
     "MaxWorkerCount": {
       "maximum": 2147483647,
       "minimum": 0,
@@ -592,6 +660,9 @@
     },
     "Status": {
       "$ref": "#/definitions/FleetStatus"
+    },
+    "StatusMessage": {
+      "type": "string"
     },
     "Tags": {
       "description": "An array of key-value pairs to apply to this resource.",
@@ -611,6 +682,7 @@
     "/properties/Capabilities",
     "/properties/FleetId",
     "/properties/Status",
+    "/properties/StatusMessage",
     "/properties/WorkerCount",
     "/properties/Arn"
   ],

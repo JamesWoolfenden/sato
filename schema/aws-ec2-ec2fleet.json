@@ -174,6 +174,13 @@
         "AvailabilityZone": {
           "type": "string"
         },
+        "BlockDeviceMappings": {
+          "items": {
+            "$ref": "#/definitions/BlockDeviceMapping"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
         "InstanceRequirements": {
           "$ref": "#/definitions/InstanceRequirementsRequest"
         },
@@ -253,7 +260,14 @@
               "t4",
               "t4g",
               "vu9p",
-              "v100"
+              "v100",
+              "l40s",
+              "l4",
+              "gaudi-hl-205",
+              "inferentia2",
+              "trainium",
+              "trainium2",
+              "u30"
             ],
             "type": "string"
           },
@@ -268,7 +282,8 @@
             "enum": [
               "gpu",
               "fpga",
-              "inference"
+              "inference",
+              "media"
             ],
             "type": "string"
           },
@@ -713,6 +728,13 @@
       ]
     },
     "list": {
+      "handlerSchema": {
+        "properties": {
+          "Type": {
+            "$ref": "resource-schema.json#/properties/Type"
+          }
+        }
+      },
       "permissions": [
         "ec2:DescribeFleets"
       ]
@@ -798,5 +820,9 @@
     "TargetCapacitySpecification",
     "LaunchTemplateConfigs"
   ],
+  "sourceUrl": "https://github.com/aws-cloudformation",
+  "tagging": {
+    "taggable": false
+  },
   "typeName": "AWS::EC2::EC2Fleet"
 }

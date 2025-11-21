@@ -63,6 +63,13 @@
       "properties": {
         "Enabled": {
           "type": "boolean"
+        },
+        "Mode": {
+          "enum": [
+            "ACCESSED_AND_THROTTLED_KEYS",
+            "THROTTLED_KEYS"
+          ],
+          "type": "string"
         }
       },
       "required": [
@@ -82,7 +89,7 @@
           "items": {
             "$ref": "#/definitions/KeySchema"
           },
-          "maxItems": 2,
+          "maxItems": 8,
           "minItems": 1,
           "type": "array",
           "uniqueItems": true
@@ -105,6 +112,15 @@
         "Projection",
         "KeySchema"
       ],
+      "type": "object"
+    },
+    "GlobalTableWitness": {
+      "additionalProperties": false,
+      "properties": {
+        "Region": {
+          "type": "string"
+        }
+      },
       "type": "object"
     },
     "KeySchema": {
@@ -136,10 +152,6 @@
           "type": "string"
         },
         "StreamArn": {
-          "relationshipRef": {
-            "propertyPath": "/properties/Arn",
-            "typeName": "AWS::Kinesis::Stream"
-          },
           "type": "string"
         }
       },
@@ -507,6 +519,7 @@
         "dynamodb:CreateTable",
         "dynamodb:CreateTableReplica",
         "dynamodb:Describe*",
+        "dynamodb:UpdateTable",
         "dynamodb:UpdateTimeToLive",
         "dynamodb:UpdateContributorInsights",
         "dynamodb:UpdateContinuousBackups",
@@ -522,7 +535,6 @@
         "dynamodb:EnableKinesisStreamingDestination",
         "dynamodb:DisableKinesisStreamingDestination",
         "dynamodb:UpdateTableReplicaAutoScaling",
-        "dynamodb:TagResource",
         "dynamodb:GetResourcePolicy",
         "dynamodb:PutResourcePolicy",
         "application-autoscaling:DeleteScalingPolicy",
@@ -647,6 +659,16 @@
       "type": "array",
       "uniqueItems": true
     },
+    "GlobalTableWitnesses": {
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/GlobalTableWitness"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
     "KeySchema": {
       "items": {
         "$ref": "#/definitions/KeySchema"
@@ -663,6 +685,13 @@
       },
       "type": "array",
       "uniqueItems": true
+    },
+    "MultiRegionConsistency": {
+      "enum": [
+        "EVENTUAL",
+        "STRONG"
+      ],
+      "type": "string"
     },
     "Replicas": {
       "insertionOrder": false,

@@ -2,10 +2,36 @@
   "additionalProperties": false,
   "createOnlyProperties": [
     "/properties/DomainIdentifier",
+    "/properties/EnableTrustedIdentityPropagation",
     "/properties/EnvironmentIdentifier",
-    "/properties/Name"
+    "/properties/ProjectIdentifier",
+    "/properties/Name",
+    "/properties/Scope"
   ],
   "definitions": {
+    "AmazonQPropertiesInput": {
+      "additionalProperties": false,
+      "description": "Amazon Q properties of the connection.",
+      "properties": {
+        "AuthMode": {
+          "description": "The authentication mode of the connection's AmazonQ properties",
+          "maxLength": 128,
+          "minLength": 0,
+          "type": "string"
+        },
+        "IsEnabled": {
+          "description": "Specifies whether Amazon Q is enabled for the connection",
+          "type": "boolean"
+        },
+        "ProfileArn": {
+          "maxLength": 2048,
+          "minLength": 0,
+          "pattern": "arn:aws[a-z\\-]*:[a-z0-9\\-]+:[a-z0-9\\-]*:[0-9]*:.*",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "AthenaPropertiesInput": {
       "additionalProperties": false,
       "description": "Athena Properties Input",
@@ -79,7 +105,7 @@
       "properties": {
         "AccessRole": {
           "maxLength": 2048,
-          "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+          "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$",
           "type": "string"
         },
         "AwsAccountId": {
@@ -214,6 +240,19 @@
         {
           "additionalProperties": false,
           "properties": {
+            "AmazonQProperties": {
+              "$ref": "#/definitions/AmazonQPropertiesInput"
+            }
+          },
+          "required": [
+            "AmazonQProperties"
+          ],
+          "title": "AmazonQProperties",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
             "SparkGlueProperties": {
               "$ref": "#/definitions/SparkGluePropertiesInput"
             }
@@ -222,6 +261,19 @@
             "SparkGlueProperties"
           ],
           "title": "SparkGlueProperties",
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "S3Properties": {
+              "$ref": "#/definitions/S3PropertiesInput"
+            }
+          },
+          "required": [
+            "S3Properties"
+          ],
+          "title": "S3Properties",
           "type": "object"
         }
       ]
@@ -550,7 +602,7 @@
         "DatabaseName": {
           "maxLength": 64,
           "minLength": 1,
-          "pattern": "^[a-z0-9]+$",
+          "pattern": "^[a-z0-9_-]+$",
           "type": "string"
         },
         "Host": {
@@ -608,6 +660,30 @@
         }
       ]
     },
+    "S3PropertiesInput": {
+      "additionalProperties": false,
+      "description": "S3 Properties Input",
+      "properties": {
+        "S3AccessGrantLocationId": {
+          "description": "The Amazon S3 Access Grant location ID that's part of the Amazon S3 properties of a connection.",
+          "maxLength": 64,
+          "minLength": 0,
+          "pattern": "[a-zA-Z0-9\\-]+",
+          "type": "string"
+        },
+        "S3Uri": {
+          "description": "The Amazon S3 URI that's part of the Amazon S3 properties of a connection.",
+          "maxLength": 2048,
+          "minLength": 0,
+          "pattern": "s3://.+",
+          "type": "string"
+        }
+      },
+      "required": [
+        "S3Uri"
+      ],
+      "type": "object"
+    },
     "SparkEmrPropertiesInput": {
       "additionalProperties": false,
       "description": "Spark EMR Properties Input.",
@@ -619,7 +695,7 @@
         },
         "InstanceProfileArn": {
           "maxLength": 2048,
-          "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+          "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$",
           "type": "string"
         },
         "JavaVirtualEnv": {
@@ -639,7 +715,7 @@
         },
         "RuntimeRole": {
           "maxLength": 2048,
-          "pattern": "^arn:aws[^:]*:iam::\\d{12}:(role|role/service-role)/[\\w+=,.@-]*$",
+          "pattern": "^arn:aws[^:]*:iam::\\d{12}:role(/[a-zA-Z0-9+=,.@_-]+)*/[a-zA-Z0-9+=,.@_-]+$",
           "type": "string"
         },
         "TrustedCertificatesS3Uri": {
@@ -749,7 +825,8 @@
       "permissions": [
         "datazone:CreateConnection",
         "datazone:GetConnection",
-        "datazone:DeleteConnection"
+        "datazone:DeleteConnection",
+        "datazone:ListEnvironments"
       ]
     },
     "delete": {
@@ -811,12 +888,12 @@
     },
     "DomainId": {
       "description": "The ID of the domain in which the connection is created.",
-      "pattern": "^dzd[_][a-zA-Z0-9_-]{1,36}$",
+      "pattern": "^dzd[_-][a-zA-Z0-9_-]{1,36}$",
       "type": "string"
     },
     "DomainIdentifier": {
       "description": "The identifier of the domain in which the connection is created.",
-      "pattern": "^dzd[_][a-zA-Z0-9_-]{1,36}$",
+      "pattern": "^dzd[_-][a-zA-Z0-9_-]{1,36}$",
       "type": "string"
     },
     "DomainUnitId": {
@@ -825,6 +902,10 @@
       "minLength": 1,
       "pattern": "^[a-z0-9_\\-]+$",
       "type": "string"
+    },
+    "EnableTrustedIdentityPropagation": {
+      "description": "Specifies whether the trusted identity propagation is enabled",
+      "type": "boolean"
     },
     "EnvironmentId": {
       "description": "The ID of the environment in which the connection is created.",
@@ -850,8 +931,20 @@
       "pattern": "^[a-zA-Z0-9_-]{1,36}$",
       "type": "string"
     },
+    "ProjectIdentifier": {
+      "description": "The identifier of the project in which the connection should be created. If ",
+      "type": "string"
+    },
     "Props": {
       "$ref": "#/definitions/ConnectionPropertiesInput"
+    },
+    "Scope": {
+      "description": "The scope of the connection.",
+      "enum": [
+        "DOMAIN",
+        "PROJECT"
+      ],
+      "type": "string"
     },
     "Type": {
       "$ref": "#/definitions/ConnectionType"
@@ -868,7 +961,6 @@
   ],
   "required": [
     "DomainIdentifier",
-    "EnvironmentIdentifier",
     "Name"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-datazone",
@@ -882,7 +974,10 @@
   "writeOnlyProperties": [
     "/properties/AwsLocation",
     "/properties/DomainIdentifier",
+    "/properties/EnableTrustedIdentityPropagation",
     "/properties/EnvironmentIdentifier",
-    "/properties/Props"
+    "/properties/ProjectIdentifier",
+    "/properties/Props",
+    "/properties/Scope"
   ]
 }

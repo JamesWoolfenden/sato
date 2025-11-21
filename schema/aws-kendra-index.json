@@ -66,6 +66,7 @@
       "type": "object"
     },
     "DocumentMetadataConfigurationList": {
+      "insertionOrder": false,
       "items": {
         "$ref": "#/definitions/DocumentMetadataConfiguration"
       },
@@ -275,6 +276,7 @@
     },
     "TagList": {
       "description": "List of tags",
+      "insertionOrder": false,
       "items": {
         "$ref": "#/definitions/Tag"
       },
@@ -312,6 +314,7 @@
       "type": "object"
     },
     "UserTokenConfigurationList": {
+      "insertionOrder": false,
       "items": {
         "$ref": "#/definitions/UserTokenConfiguration"
       },
@@ -336,6 +339,7 @@
       "type": "string"
     },
     "ValueImportanceItems": {
+      "insertionOrder": false,
       "items": {
         "$ref": "#/definitions/ValueImportanceItem"
       },
@@ -351,14 +355,17 @@
         "kendra:UpdateIndex",
         "kendra:ListTagsForResource",
         "iam:PassRole",
-        "kendra:TagResource"
+        "kendra:TagResource",
+        "kms:DescribeKey",
+        "kms:CreateGrant"
       ],
       "timeoutInMinutes": 240
     },
     "delete": {
       "permissions": [
         "kendra:DescribeIndex",
-        "kendra:DeleteIndex"
+        "kendra:DeleteIndex",
+        "kms:RetireGrant"
       ],
       "timeoutInMinutes": 720
     },

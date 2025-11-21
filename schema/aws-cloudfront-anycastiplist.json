@@ -25,6 +25,10 @@
           "description": "The ID of the Anycast static IP list.",
           "type": "string"
         },
+        "IpAddressType": {
+          "$ref": "#/definitions/IpAddressType",
+          "description": ""
+        },
         "IpCount": {
           "description": "The number of IP addresses in the Anycast static IP list.",
           "type": "integer"
@@ -56,6 +60,13 @@
         "Status"
       ],
       "type": "object"
+    },
+    "IpAddressType": {
+      "enum": [
+        "ipv4",
+        "dualstack"
+      ],
+      "type": "string"
     },
     "Tag": {
       "additionalProperties": false,
@@ -120,6 +131,15 @@
         "cloudfront:GetAnycastIpList",
         "cloudfront:ListTagsForResource"
       ]
+    },
+    "update": {
+      "permissions": [
+        "cloudfront:UpdateAnycastIpList",
+        "cloudfront:GetAnycastIpList",
+        "cloudfront:ListTagsForResource",
+        "cloudfront:TagResource",
+        "cloudfront:UntagResource"
+      ]
     }
   },
   "primaryIdentifier": [
@@ -137,6 +157,10 @@
     "Id": {
       "description": "",
       "type": "string"
+    },
+    "IpAddressType": {
+      "$ref": "#/definitions/IpAddressType",
+      "description": ""
     },
     "IpCount": {
       "description": "The number of IP addresses in the Anycast static IP list.",
@@ -167,6 +191,7 @@
     "cloudFormationSystemTags": false,
     "permissions": [
       "cloudfront:TagResource",
+      "cloudfront:UntagResource",
       "cloudfront:ListTagsForResource"
     ],
     "tagOnCreate": true,

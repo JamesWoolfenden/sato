@@ -1,6 +1,36 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "AutomatedReasoningPolicyConfig": {
+      "additionalProperties": false,
+      "description": "Optional configuration for integrating Automated Reasoning policies with the guardrail.",
+      "properties": {
+        "ConfidenceThreshold": {
+          "description": "The confidence threshold for triggering guardrail actions based on Automated Reasoning policy violations.",
+          "maximum": 1,
+          "minimum": 0,
+          "type": "number"
+        },
+        "Policies": {
+          "description": "The list of Automated Reasoning policy ARNs to include in the guardrail configuration",
+          "items": {
+            "description": "The Amazon Resource Name (ARN) of the Automated Reasoning policy",
+            "maxLength": 2048,
+            "minLength": 15,
+            "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}(:([1-9][0-9]{0,11}))?$",
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "Policies"
+      ],
+      "type": "object"
+    },
     "ContentFilterAction": {
       "enum": [
         "BLOCK",
@@ -69,10 +99,31 @@
       ],
       "type": "string"
     },
+    "ContentFiltersTierName": {
+      "description": "Tier name for tier configuration in content filters policy",
+      "enum": [
+        "CLASSIC",
+        "STANDARD"
+      ],
+      "type": "string"
+    },
     "ContentPolicyConfig": {
       "additionalProperties": false,
       "description": "Content policy config for a guardrail.",
       "properties": {
+        "ContentFiltersTierConfig": {
+          "additionalProperties": false,
+          "description": "Guardrail tier config for content policy",
+          "properties": {
+            "TierName": {
+              "$ref": "#/definitions/ContentFiltersTierName"
+            }
+          },
+          "required": [
+            "TierName"
+          ],
+          "type": "object"
+        },
         "FiltersConfig": {
           "description": "List of content filter configs in content policy.",
           "items": {
@@ -155,6 +206,23 @@
         "HIGH"
       ],
       "type": "string"
+    },
+    "GuardrailCrossRegionConfig": {
+      "additionalProperties": false,
+      "description": "The system-defined guardrail profile that you\u2019re using with your guardrail",
+      "properties": {
+        "GuardrailProfileArn": {
+          "description": "The Amazon Resource Name (ARN) of the guardrail profile",
+          "maxLength": 2048,
+          "minLength": 15,
+          "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:guardrail-profile/[a-z0-9-]+[.]{1}guardrail[.]{1}v[0-9:]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "GuardrailProfileArn"
+      ],
+      "type": "object"
     },
     "GuardrailStatus": {
       "description": "Status of the guardrail",
@@ -389,7 +457,7 @@
       "properties": {
         "Definition": {
           "description": "Definition of topic in topic policy",
-          "maxLength": 200,
+          "maxLength": 1000,
           "minLength": 1,
           "type": "string"
         },
@@ -445,6 +513,19 @@
           },
           "minItems": 1,
           "type": "array"
+        },
+        "TopicsTierConfig": {
+          "additionalProperties": false,
+          "description": "Guardrail tier config for topic policy",
+          "properties": {
+            "TierName": {
+              "$ref": "#/definitions/TopicsTierName"
+            }
+          },
+          "required": [
+            "TierName"
+          ],
+          "type": "object"
         }
       },
       "required": [
@@ -456,6 +537,14 @@
       "description": "Type of topic in a policy",
       "enum": [
         "DENY"
+      ],
+      "type": "string"
+    },
+    "TopicsTierName": {
+      "description": "Tier name for tier configuration in topic policy",
+      "enum": [
+        "CLASSIC",
+        "STANDARD"
       ],
       "type": "string"
     },
@@ -568,6 +657,9 @@
     "/properties/GuardrailArn"
   ],
   "properties": {
+    "AutomatedReasoningPolicyConfig": {
+      "$ref": "#/definitions/AutomatedReasoningPolicyConfig"
+    },
     "BlockedInputMessaging": {
       "description": "Messaging for when violations are detected in text",
       "maxLength": 500,
@@ -590,6 +682,9 @@
       "description": "Time Stamp",
       "format": "date-time",
       "type": "string"
+    },
+    "CrossRegionConfig": {
+      "$ref": "#/definitions/GuardrailCrossRegionConfig"
     },
     "Description": {
       "description": "Description of the guardrail or its version",

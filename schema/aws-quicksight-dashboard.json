@@ -158,6 +158,17 @@
     "AssetOptions": {
       "additionalProperties": false,
       "properties": {
+        "ExcludedDataSetArns": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 100,
+          "minItems": 0,
+          "type": "array"
+        },
+        "QBusinessInsightsStatus": {
+          "$ref": "#/definitions/QBusinessInsightsStatus"
+        },
         "Timezone": {
           "type": "string"
         },
@@ -2136,11 +2147,23 @@
         "DataPointTooltipOption": {
           "$ref": "#/definitions/DataPointTooltipOption"
         },
+        "DataQAEnabledOption": {
+          "$ref": "#/definitions/DataQAEnabledOption"
+        },
+        "DataStoriesSharingOption": {
+          "$ref": "#/definitions/DataStoriesSharingOption"
+        },
+        "ExecutiveSummaryOption": {
+          "$ref": "#/definitions/ExecutiveSummaryOption"
+        },
         "ExportToCSVOption": {
           "$ref": "#/definitions/ExportToCSVOption"
         },
         "ExportWithHiddenFieldsOption": {
           "$ref": "#/definitions/ExportWithHiddenFieldsOption"
+        },
+        "QuickSuiteActionsOption": {
+          "$ref": "#/definitions/QuickSuiteActionsOption"
         },
         "SheetControlsOption": {
           "$ref": "#/definitions/SheetControlsOption"
@@ -2612,6 +2635,15 @@
       },
       "type": "object"
     },
+    "DataQAEnabledOption": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityStatus": {
+          "$ref": "#/definitions/DashboardBehavior"
+        }
+      },
+      "type": "object"
+    },
     "DataSetIdentifierDeclaration": {
       "additionalProperties": false,
       "properties": {
@@ -2648,6 +2680,15 @@
         "DataSetArn",
         "DataSetPlaceholder"
       ],
+      "type": "object"
+    },
+    "DataStoriesSharingOption": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityStatus": {
+          "$ref": "#/definitions/DashboardBehavior"
+        }
+      },
       "type": "object"
     },
     "DateAggregationFunction": {
@@ -3385,6 +3426,15 @@
         "Amount",
         "Granularity"
       ],
+      "type": "object"
+    },
+    "ExecutiveSummaryOption": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityStatus": {
+          "$ref": "#/definitions/DashboardBehavior"
+        }
+      },
       "type": "object"
     },
     "ExplicitHierarchy": {
@@ -9114,6 +9164,22 @@
       },
       "type": "object"
     },
+    "QBusinessInsightsStatus": {
+      "enum": [
+        "ENABLED",
+        "DISABLED"
+      ],
+      "type": "string"
+    },
+    "QuickSuiteActionsOption": {
+      "additionalProperties": false,
+      "properties": {
+        "AvailabilityStatus": {
+          "$ref": "#/definitions/DashboardBehavior"
+        }
+      },
+      "type": "object"
+    },
     "RadarChartAggregatedFieldWells": {
       "additionalProperties": false,
       "properties": {
@@ -9629,6 +9695,7 @@
         "UPDATE_IN_PROGRESS",
         "UPDATE_SUCCESSFUL",
         "UPDATE_FAILED",
+        "PENDING_UPDATE",
         "DELETED"
       ],
       "type": "string"

@@ -25,6 +25,9 @@
         "AutoAdjustData": {
           "$ref": "#/definitions/AutoAdjustData"
         },
+        "BillingViewArn": {
+          "type": "string"
+        },
         "BudgetLimit": {
           "$ref": "#/definitions/Spend"
         },
@@ -40,6 +43,16 @@
         "CostTypes": {
           "$ref": "#/definitions/CostTypes"
         },
+        "FilterExpression": {
+          "$ref": "#/definitions/Expression"
+        },
+        "Metrics": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
         "PlannedBudgetLimits": {
           "type": "object"
         },
@@ -54,6 +67,29 @@
         "TimeUnit",
         "BudgetType"
       ],
+      "type": "object"
+    },
+    "CostCategoryValues": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "MatchOptions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "Values": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        }
+      },
       "type": "object"
     },
     "CostTypes": {
@@ -91,6 +127,61 @@
         },
         "UseBlended": {
           "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Expression": {
+      "additionalProperties": false,
+      "properties": {
+        "And": {
+          "items": {
+            "$ref": "#/definitions/Expression"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "CostCategories": {
+          "$ref": "#/definitions/CostCategoryValues"
+        },
+        "Dimensions": {
+          "$ref": "#/definitions/ExpressionDimensionValues"
+        },
+        "Not": {
+          "$ref": "#/definitions/Expression"
+        },
+        "Or": {
+          "items": {
+            "$ref": "#/definitions/Expression"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "Tags": {
+          "$ref": "#/definitions/TagValues"
+        }
+      },
+      "type": "object"
+    },
+    "ExpressionDimensionValues": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "MatchOptions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "Values": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
         }
       },
       "type": "object"
@@ -195,6 +286,29 @@
         "SubscriptionType",
         "Address"
       ],
+      "type": "object"
+    },
+    "TagValues": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "type": "string"
+        },
+        "MatchOptions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        },
+        "Values": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": false
+        }
+      },
       "type": "object"
     },
     "TimePeriod": {

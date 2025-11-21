@@ -32,6 +32,25 @@
       },
       "type": "object"
     },
+    "Tag": {
+      "additionalProperties": false,
+      "properties": {
+        "Key": {
+          "maxLength": 128,
+          "minLength": 1,
+          "type": "string"
+        },
+        "Value": {
+          "maxLength": 256,
+          "type": "string"
+        }
+      },
+      "required": [
+        "Value",
+        "Key"
+      ],
+      "type": "object"
+    },
     "VpcConfiguration": {
       "description": "The Virtual Private Cloud (VPC) configuration for a bucket access point.",
       "properties": {
@@ -52,7 +71,8 @@
         "s3:CreateAccessPoint",
         "s3:PutAccessPointPolicy",
         "s3:GetAccessPoint",
-        "s3:PutAccessPointPublicAccessBlock"
+        "s3:PutAccessPointPublicAccessBlock",
+        "s3:TagResource"
       ]
     },
     "delete": {
@@ -69,7 +89,8 @@
     "read": {
       "permissions": [
         "s3:GetAccessPoint",
-        "s3:GetAccessPointPolicy"
+        "s3:GetAccessPointPolicy",
+        "s3:ListTagsForResource"
       ]
     },
     "update": {
@@ -78,7 +99,9 @@
         "s3:PutAccessPointPublicAccessBlock",
         "s3:DeleteAccessPointPolicy",
         "s3:GetAccessPoint",
-        "s3:GetAccessPointPolicy"
+        "s3:GetAccessPointPolicy",
+        "s3:TagResource",
+        "s3:UntagResource"
       ]
     }
   },
@@ -135,6 +158,14 @@
       "$ref": "#/definitions/PublicAccessBlockConfiguration",
       "description": "The PublicAccessBlock configuration that you want to apply to this Access Point. You can enable the configuration options in any combination. For more information about when Amazon S3 considers a bucket or object public, see https://docs.aws.amazon.com/AmazonS3/latest/dev/access-control-block-public-access.html#access-control-block-public-access-policy-status 'The Meaning of Public' in the Amazon Simple Storage Service Developer Guide."
     },
+    "Tags": {
+      "description": "An arbitrary set of tags (key-value pairs) for this S3 Access Point.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Tag"
+      },
+      "type": "array"
+    },
     "VpcConfiguration": {
       "$ref": "#/definitions/VpcConfiguration",
       "description": "If you include this field, Amazon S3 restricts access to this Access Point to requests from the specified Virtual Private Cloud (VPC)."
@@ -150,7 +181,16 @@
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3",
   "tagging": {
-    "taggable": false
+    "cloudFormationSystemTags": true,
+    "permissions": [
+      "s3:TagResource",
+      "s3:UntagResource",
+      "s3:ListTagsForResource"
+    ],
+    "tagOnCreate": true,
+    "tagProperty": "/properties/Tags",
+    "tagUpdatable": true,
+    "taggable": true
   },
   "typeName": "AWS::S3::AccessPoint"
 }
