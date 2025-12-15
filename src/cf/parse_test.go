@@ -220,7 +220,150 @@ func TestGetVariableType(t *testing.T) {
 		want1 Variable
 		want2 map[string]bool
 	}{
-		//{},
+		{
+			name: "String type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "String", Default: "test"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{provider: true},
+		},
+		{
+			name: "String type with bool default",
+			args: args{
+				param:         cloudformation.Parameter{Type: "String", Default: "true"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{provider},
+			want1: Variable{Type: "bool"},
+			want2: map[string]bool{provider: true},
+		},
+		{
+			name: "Number type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "Number"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{provider},
+			want1: Variable{Type: "number"},
+			want2: map[string]bool{provider: true},
+		},
+		{
+			name: "CommaDelimitedList type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "CommaDelimitedList"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{provider},
+			want1: Variable{Type: "list(string)"},
+			want2: map[string]bool{provider: true},
+		},
+		{
+			name: "AWS::EC2::Subnet::Id type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "AWS::EC2::Subnet::Id"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{dataSubnet, provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{dataSubnet: true, provider: true},
+		},
+		{
+			name: "AWS::EC2::KeyPair::KeyName type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "AWS::EC2::KeyPair::KeyName"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{dataKeyPair, provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{dataKeyPair: true, provider: true},
+		},
+		{
+			name: "AWS::EC2::VPC::Id type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "AWS::EC2::VPC::Id"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{dataVpc, provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{dataVpc: true, provider: true},
+		},
+		{
+			name: "AWS::Region type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "AWS::Region"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{dataRegion, provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{dataRegion: true, provider: true},
+		},
+		{
+			name: "List<AWS::EC2::Subnet::Id> type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "List<AWS::EC2::Subnet::Id>"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{provider},
+			want1: Variable{Type: "list(string)"},
+			want2: map[string]bool{provider: true},
+		},
+		{
+			name: "List<AWS::EC2::AvailabilityZone::Name> type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "List<AWS::EC2::AvailabilityZone::Name>"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{dataAvailabilityZone, provider},
+			want1: Variable{Type: "list(string)"},
+			want2: map[string]bool{dataAvailabilityZone: true, provider: true},
+		},
+		{
+			name: "AWS::EC2::SecurityGroup::Id type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "AWS::EC2::SecurityGroup::Id"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{dataSecurityGroup, provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{dataSecurityGroup: true, provider: true},
+		},
+		{
+			name: "AWS::EC2::Image::Id type",
+			args: args{
+				param:         cloudformation.Parameter{Type: "AWS::EC2::Image::Id"},
+				myVariable:    Variable{},
+				DataResources: []string{},
+				m:             make(map[string]bool),
+			},
+			want:  []string{provider},
+			want1: Variable{Type: "string"},
+			want2: map[string]bool{provider: true},
+		},
 	}
 
 	for _, tt := range tests {
@@ -255,7 +398,70 @@ func TestGetVariableDefault(t *testing.T) {
 		args args
 		want Variable
 	}{
-		//{},
+		{
+			name: "String default value",
+			args: args{
+				param:      cloudformation.Parameter{Default: "my-default-value"},
+				myVariable: Variable{Type: "string"},
+			},
+			want: Variable{Type: "string", Default: "\"my-default-value\""},
+		},
+		{
+			name: "Boolean string default",
+			args: args{
+				param:      cloudformation.Parameter{Default: "true"},
+				myVariable: Variable{Type: "bool"},
+			},
+			want: Variable{Type: "bool", Default: "true"},
+		},
+		{
+			name: "Boolean value default",
+			args: args{
+				param:      cloudformation.Parameter{Default: true},
+				myVariable: Variable{Type: "bool"},
+			},
+			want: Variable{Type: "bool", Default: "true"},
+		},
+		{
+			name: "Numeric string default",
+			args: args{
+				param:      cloudformation.Parameter{Default: "42"},
+				myVariable: Variable{},
+			},
+			want: Variable{Type: "number", Default: "42"},
+		},
+		{
+			name: "Float default",
+			args: args{
+				param:      cloudformation.Parameter{Default: 3.14},
+				myVariable: Variable{},
+			},
+			want: Variable{Type: "number", Default: "3.14"},
+		},
+		{
+			name: "Empty list default",
+			args: args{
+				param:      cloudformation.Parameter{Default: []interface{}{}},
+				myVariable: Variable{Type: "list(string)"},
+			},
+			want: Variable{Type: "list(string)", Default: "[]"},
+		},
+		{
+			name: "Map string with equals",
+			args: args{
+				param:      cloudformation.Parameter{Default: "Name=MyApp"},
+				myVariable: Variable{},
+			},
+			want: Variable{Type: "map(string)", Default: "{ \"Name\" = \"MyApp\"}"},
+		},
+		{
+			name: "False boolean default",
+			args: args{
+				param:      cloudformation.Parameter{Default: false},
+				myVariable: Variable{Type: "bool"},
+			},
+			want: Variable{Type: "bool", Default: "false"},
+		},
 	}
 
 	for _, tt := range tests {

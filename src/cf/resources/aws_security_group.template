@@ -9,8 +9,6 @@ resource "aws_security_group" "{{.item}}" {
   egress {
 {{- if $a.CidrIp}}
     cidr_blocks=["{{$a.CidrIp}}"]
-{{- else}}
-    cidr_blocks=[]
 {{- end}}
 {{- if $a.CidrIpv6}}
     ipv6_cidr_blocks= ["{{$a.CidrIpv6}}"]
@@ -43,8 +41,6 @@ resource "aws_security_group" "{{.item}}" {
   ingress {
 {{- if $a.CidrIp}}
     cidr_blocks=["{{$a.CidrIp}}"]
-{{- else}}
-    cidr_blocks=[]
 {{- end}}
 {{- if $a.CidrIpv6}}
     ipv6_cidr_blocks=["{{$a.CidrIpv6}}"]

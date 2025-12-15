@@ -324,3 +324,74 @@ func ReplaceDependant(str1 string) string {
 
 	return replacer.Replace(str1)
 }
+
+// ParseRef converts CloudFormation Ref intrinsic function to Terraform references.
+// Handles both ${Ref::ResourceName} and plain Ref patterns.
+func ParseRef(input string, parameters map[string]cloudformation.Parameter, resources cloudformation.Resources) string {
+	// Pattern: ${Ref::ResourceName} or ${ResourceName}
+	refPattern := regexp.MustCompile(`\$\{(?:Ref::)?([^}]+)\}`)
+
+	return refPattern.ReplaceAllStringFunc(input, func(match string) string {
+		// Extract the resource/parameter name
+		name := refPattern.FindStringSubmatch(match)[1]
+
+		// Check if it's a parameter
+		if _, isParam := parameters[name]; isParam {
+			return fmt.Sprintf("var.%s", strings.ToLower(name))
+		}
+
+		// Check if it's a resource
+		if resource, isResource := resources[name]; isResource {
+			resourceType := ToTFName(resource.AWSCloudFormationType())
+			return fmt.Sprintf("%s.%s.id", resourceType, strings.ToLower(name))
+		}
+
+		// Return as variable if unknown
+		return fmt.Sprintf("var.%s", strings.ToLower(name))
+	})
+}
+
+// ParseGetAtt converts CloudFormation GetAtt intrinsic function to Terraform attribute references.
+// Handles patterns like ${ResourceName.AttributeName} or Fn::GetAtt syntax.
+func ParseGetAtt(input string) string {
+	// Pattern: ${ResourceName.AttributeName}
+	getAttPattern := regexp.MustCompile(`\$\{([^.]+)\.([^}]+)\}`)
+
+	return getAttPattern.ReplaceAllStringFunc(input, func(match string) string {
+		parts := getAttPattern.FindStringSubmatch(match)
+		if len(parts) != 3 {
+			return match
+		}
+
+		resourceName := parts[1]
+		attributeName := parts[2]
+
+		// Convert attribute name to Terraform format (CamelCase to snake_case)
+		// Handle transitions from lowercase/digit to uppercase
+		tfAttribute := regexp.MustCompile(`([a-z0-9])([A-Z])`).ReplaceAllString(attributeName, "${1}_${2}")
+		// Handle transitions from multiple uppercase to lowercase (e.g., "DNSName" -> "DNS_Name")
+		tfAttribute = regexp.MustCompile(`([A-Z]+)([A-Z][a-z])`).ReplaceAllString(tfAttribute, "${1}_${2}")
+		tfAttribute = strings.ToLower(tfAttribute)
+
+		// Common CloudFormation to Terraform attribute mappings
+		attributeMap := map[string]string{
+			"arn":                  "arn",
+			"id":                   "id",
+			"name":                 "name",
+			"dns_name":             "dns_name",
+			"hosted_zone_id":       "hosted_zone_id",
+			"regional_domain_name": "regional_domain_name",
+			"queue_url":            "url",
+			"topic_arn":            "arn",
+			"function_arn":         "arn",
+			"role_arn":             "arn",
+		}
+
+		if mappedAttr, ok := attributeMap[tfAttribute]; ok {
+			tfAttribute = mappedAttr
+		}
+
+		// For unknown resources, we can't determine the type, so use a placeholder
+		return fmt.Sprintf("${%s.%s}", strings.ToLower(resourceName), tfAttribute)
+	})
+}

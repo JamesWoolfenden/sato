@@ -12,7 +12,5 @@ resource "aws_vpc_endpoint" "{{.item}}" {
    security_group_ids=[{{range $i, $v := .resource.SecurityGroupIds}}{{if $i}}, {{end}}"{{.}}"{{end}}]
 {{- if .resource.VpcEndpointType}}
    vpc_endpoint_type="{{ .resource.VpcEndpointType}}"
-{{- else }}
-   vpc_endpoint_type="Gateway"
 {{- end }}
 }

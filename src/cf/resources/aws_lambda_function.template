@@ -59,13 +59,21 @@ resource "aws_lambda_function" "{{.item}}" {
   timeout={{ .resource.Timeout}}
 {{- if .resource.TracingConfig}}
   tracing_config {
+{{- if .resource.TracingConfig.Mode}}
+    mode="{{ .resource.TracingConfig.Mode}}"
+{{- else}}
     mode="Active"
+{{- end}}
   }
 {{- end}}
 {{- if .resource.VpcConfig}}
   vpc_config {
-    security_group_ids=[]
-    subnet_ids=[]
+{{- if .resource.VpcConfig.SecurityGroupIds}}
+    security_group_ids=[{{range $i, $v := .resource.VpcConfig.SecurityGroupIds}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- end}}
+{{- if .resource.VpcConfig.SubnetIds}}
+    subnet_ids=[{{range $i, $v := .resource.VpcConfig.SubnetIds}}{{if $i}}, {{end}}"{{.}}"{{end}}]
+{{- end}}
   }
 {{- end}}
 {{- if .resource.Code.S3Key}}
