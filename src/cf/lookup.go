@@ -38,13 +38,19 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 		}
 
 		_ = tmpl.Execute(&output, M{
-			"resource": resource,
-			"item":     item,
+			"resource":    resource,
+			"item":        item,
+			"destination": destination,
 		})
 
-		err = Write(
-			ReplaceDependant(
-				ReplaceVariables(output.String())), destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+		result := ReplaceDependant(ReplaceVariables(output.String()))
+
+		// Special processing for Step Functions state machines to convert resource references
+		if myType == "AWS::StepFunctions::StateMachine" {
+			result = ReplaceStepFunctionsReferences(result, resources)
+		}
+
+		err = Write(result, destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 		if err != nil {
 			return &writeError{destination: destination, err: err}
 		}

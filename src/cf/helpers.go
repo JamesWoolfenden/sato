@@ -8,6 +8,7 @@ import (
 	"io"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -174,8 +175,9 @@ func Contains(target string, substring string) bool {
 	return strings.Contains(target, substring)
 }
 
-// Zipfile is a template function.
-func Zipfile(code string, filename string, runtime string) string {
+// Zipfile is a template function that creates a zip file from inline code.
+// If destination is provided, files are written to that directory.
+func Zipfile(code string, filename string, runtime string, destination ...string) string {
 	var extension string
 
 	switch runtime {
@@ -189,14 +191,26 @@ func Zipfile(code string, filename string, runtime string) string {
 		extension = ".txt"
 	}
 
-	codeFile := filename + extension
+	// Determine the destination directory
+	var destDir string
+	if len(destination) > 0 && destination[0] != "" {
+		destDir = destination[0]
+	} else {
+		destDir = "."
+	}
+
+	// Create full paths for code file and zip file
+	codeFileName := filename + extension
+	codeFile := filepath.Join(destDir, codeFileName)
+	zipFileName := filename + ".zip"
+	output := filepath.Join(destDir, zipFileName)
+
 	d1 := []byte(code)
 	if err := os.WriteFile(codeFile, d1, 0o600); err != nil {
 		log.Error().Err(err).Msgf("failed to write code file: %s", codeFile)
 		return ""
 	}
 
-	output := filename + ".zip"
 	archive, err := os.Create(output) // #nosec G304 -- Creating zip from controlled filename
 	if err != nil {
 		log.Error().Err(err).Msgf("failed to create zip archive: %s", output)
@@ -223,7 +237,8 @@ func Zipfile(code string, filename string, runtime string) string {
 		}
 	}(file)
 
-	w1, err := zipWriter.Create(codeFile)
+	// Use only the filename (not full path) for the zip entry
+	w1, err := zipWriter.Create(codeFileName)
 	if err != nil {
 		log.Error().Err(err).Msgf("failed to create zip entry: %s", filename)
 		return ""
@@ -239,7 +254,8 @@ func Zipfile(code string, filename string, runtime string) string {
 		return ""
 	}
 
-	return output
+	// Return just the filename for use in Terraform
+	return zipFileName
 }
 
 // Demap is a template function.

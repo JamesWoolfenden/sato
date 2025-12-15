@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
@@ -67,6 +68,8 @@ var funcMap = template.FuncMap{
 	"Snake":        Snake,
 	"Kebab":        Kebab,
 	"ZipFile":      Zipfile,
+	"TFJoin":       ParseJoin,  // CloudFormation !Join → Terraform join()
+	"TFSplit":      ParseSplit, // CloudFormation !Split → Terraform split()
 }
 
 // Parse turn CFN into Terraform.
@@ -292,6 +295,15 @@ func Write(output string, location string, name string) error {
 		if err != nil {
 			return &writeFileError{Destination: destination, Err: err}
 		}
+
+		// Format the generated Terraform file with tofu fmt
+		cmd := exec.Command("tofu", "fmt", destination) // #nosec G204 -- destination is validated filepath from Write function
+		if err := cmd.Run(); err != nil {
+			// If tofu is not available, log a warning but don't fail
+			log.Warn().Msgf("Could not format %s with tofu fmt: %v", destination, err)
+		} else {
+			log.Info().Msgf("Formatted %s with tofu fmt", destination)
+		}
 	}
 
 	return nil
@@ -393,5 +405,112 @@ func ParseGetAtt(input string) string {
 
 		// For unknown resources, we can't determine the type, so use a placeholder
 		return fmt.Sprintf("${%s.%s}", strings.ToLower(resourceName), tfAttribute)
+	})
+}
+
+// ParseSub converts CloudFormation !Sub intrinsic function to Terraform string interpolation.
+// Handles variable substitution patterns like ${VariableName} and pseudo-parameters like ${AWS::Region}.
+func ParseSub(input string, parameters map[string]cloudformation.Parameter) string {
+	// Pattern for ${Variable} substitution
+	subPattern := regexp.MustCompile(`\$\{([^}]+)\}`)
+
+	return subPattern.ReplaceAllStringFunc(input, func(match string) string {
+		varName := subPattern.FindStringSubmatch(match)[1]
+
+		// Handle pseudo-parameters
+		pseudoParams := map[string]string{
+			"AWS::Region":           "data.aws_region.current.name",
+			"AWS::AccountId":        "data.aws_caller_identity.current.account_id",
+			"AWS::StackName":        "var.stack_name",
+			"AWS::StackId":          "var.stack_id",
+			"AWS::Partition":        "data.aws_partition.current.partition",
+			"AWS::URLSuffix":        "data.aws_partition.current.dns_suffix",
+			"AWS::NotificationARNs": "var.notification_arns",
+		}
+
+		if tfValue, isPseudo := pseudoParams[varName]; isPseudo {
+			return fmt.Sprintf("${%s}", tfValue)
+		}
+
+		// Check if it's a parameter
+		if _, isParam := parameters[varName]; isParam {
+			return fmt.Sprintf("${var.%s}", strings.ToLower(varName))
+		}
+
+		// Assume it's a resource reference (GetAtt pattern: Resource.Attribute)
+		if strings.Contains(varName, ".") {
+			parts := strings.SplitN(varName, ".", 2)
+			resourceName := strings.ToLower(parts[0])
+			attribute := strings.ToLower(parts[1])
+			return fmt.Sprintf("${%s.%s}", resourceName, attribute)
+		}
+
+		// Plain variable reference
+		return fmt.Sprintf("${var.%s}", strings.ToLower(varName))
+	})
+}
+
+// ParseJoin converts CloudFormation !Join intrinsic function to Terraform join().
+// Example: !Join ["-", ["a", "b", "c"]] becomes join("-", ["a", "b", "c"]).
+func ParseJoin(delimiter string, values []string) string {
+	// Escape any quotes in values
+	escapedValues := make([]string, len(values))
+	for i, v := range values {
+		escapedValues[i] = fmt.Sprintf("\"%s\"", strings.ReplaceAll(v, "\"", "\\\""))
+	}
+
+	return fmt.Sprintf("join(\"%s\", [%s])", delimiter, strings.Join(escapedValues, ", "))
+}
+
+// ParseSplit converts CloudFormation !Split intrinsic function to Terraform split().
+// Example: !Split ["|", "a|b|c"] becomes split("|", "a|b|c").
+func ParseSplit(delimiter string, sourceString string) string {
+	// Escape quotes in delimiter and source
+	escapedDelimiter := strings.ReplaceAll(delimiter, "\"", "\\\"")
+	escapedSource := strings.ReplaceAll(sourceString, "\"", "\\\"")
+
+	return fmt.Sprintf("split(\"%s\", \"%s\")", escapedDelimiter, escapedSource)
+}
+
+// ReplaceStepFunctionsReferences converts variable references in Step Functions definitions
+// from ${var.ResourceNameArn} to ${aws_lambda_function.ResourceName.arn}.
+func ReplaceStepFunctionsReferences(definition string, resources cloudformation.Resources) string {
+	// Pattern to match ${var.XXX} references
+	varPattern := regexp.MustCompile(`\$\{var\.([^}]+)\}`)
+
+	return varPattern.ReplaceAllStringFunc(definition, func(match string) string {
+		// Extract the variable name (e.g., "TerminateEC2Arn" from "${var.TerminateEC2Arn}")
+		varName := varPattern.FindStringSubmatch(match)[1]
+
+		// Try to find a matching resource by checking if varName matches or is a prefix
+		for resourceName, resource := range resources {
+			// Check if varName starts with resourceName (e.g., "TerminateEC2Arn" starts with "TerminateEC2")
+			// or if varName equals resourceName
+			if strings.EqualFold(varName, resourceName) ||
+				strings.HasPrefix(strings.ToLower(varName), strings.ToLower(resourceName)) {
+
+				resourceType := ToTFName(resource.AWSCloudFormationType())
+
+				// Determine the attribute based on the suffix
+				lowerVarName := strings.ToLower(varName)
+				var attribute string
+				switch {
+				case strings.HasSuffix(lowerVarName, "topicarn"):
+					attribute = "arn"
+				case strings.HasSuffix(lowerVarName, "arn"):
+					attribute = "arn"
+				case strings.HasSuffix(lowerVarName, "url"):
+					attribute = "url"
+				default:
+					attribute = "id"
+				}
+
+				// Preserve the original resource name case
+				return fmt.Sprintf("${%s.%s.%s}", resourceType, resourceName, attribute)
+			}
+		}
+
+		// If no matching resource found, leave as variable reference
+		return match
 	})
 }
