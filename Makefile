@@ -41,6 +41,19 @@ test:
 testacc:
 	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
+coverage: ## Generate coverage report (excluding main.go)
+	go test ./src/... -coverprofile=cover.out -covermode=atomic
+	go tool cover -func=cover.out | grep total | awk '{print "Total coverage: " $$3}'
+
+coverage-html: ## Generate HTML coverage report (excluding main.go)
+	go test ./src/... -coverprofile=cover.out -covermode=atomic
+	go tool cover -html=cover.out -o coverage.html
+	@echo "Coverage report generated: coverage.html"
+
+coverage-all: ## Generate coverage report (including all packages)
+	go test ./... -coverprofile=cover.out -covermode=atomic
+	go tool cover -func=cover.out | grep total | awk '{print "Total coverage: " $$3}'
+
 
 destroy:
 	cd $(TERRAFORM) && terraform destroy --auto-approve
