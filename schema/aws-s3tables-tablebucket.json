@@ -39,6 +39,21 @@
       },
       "type": "object"
     },
+    "StorageClassConfiguration": {
+      "additionalProperties": false,
+      "description": "Specifies storage class settings for the table bucket",
+      "properties": {
+        "StorageClass": {
+          "description": "The storage class for the table bucket",
+          "enum": [
+            "STANDARD",
+            "INTELLIGENT_TIERING"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "TableBucketARN": {
       "description": "The Amazon Resource Name (ARN) of the specified table bucket.",
       "examples": [
@@ -107,10 +122,12 @@
         "s3tables:PutTableBucketMaintenanceConfiguration",
         "s3tables:PutTableBucketMetricsConfiguration",
         "s3tables:PutTableBucketEncryption",
+        "s3tables:PutTableBucketStorageClass",
         "s3tables:GetTableBucket",
         "s3tables:GetTableBucketMaintenanceConfiguration",
         "s3tables:GetTableBucketMetricsConfiguration",
         "s3tables:GetTableBucketEncryption",
+        "s3tables:GetTableBucketStorageClass",
         "kms:DescribeKey",
         "s3tables:TagResource",
         "s3tables:ListTagsForResource"
@@ -132,6 +149,7 @@
         "s3tables:GetTableBucketMaintenanceConfiguration",
         "s3tables:GetTableBucketMetricsConfiguration",
         "s3tables:GetTableBucketEncryption",
+        "s3tables:GetTableBucketStorageClass",
         "s3tables:ListTagsForResource"
       ]
     },
@@ -141,9 +159,11 @@
         "s3tables:PutTableBucketMaintenanceConfiguration",
         "s3tables:PutTableBucketMetricsConfiguration",
         "s3tables:PutTableBucketEncryption",
+        "s3tables:PutTableBucketStorageClass",
         "s3tables:GetTableBucketMaintenanceConfiguration",
         "s3tables:GetTableBucketMetricsConfiguration",
         "s3tables:GetTableBucketEncryption",
+        "s3tables:GetTableBucketStorageClass",
         "s3tables:DeleteTableBucketEncryption",
         "s3tables:GetTableBucket",
         "kms:DescribeKey",
@@ -162,6 +182,9 @@
     },
     "MetricsConfiguration": {
       "$ref": "#/definitions/MetricsConfiguration"
+    },
+    "StorageClassConfiguration": {
+      "$ref": "#/definitions/StorageClassConfiguration"
     },
     "TableBucketARN": {
       "$ref": "#/definitions/TableBucketARN"

@@ -30,7 +30,7 @@ repos:
     hooks:
       - id: shell-lint
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.46.0
+    rev: v0.47.0
     hooks:
       - # noinspection SpellCheckingInspection
         id: markdownlint
@@ -53,22 +53,22 @@ repos:
       - id: go-mod-tidy
       - id: go-generate
   - repo: https://github.com/golangci/golangci-lint
-    rev: v2.6.2
+    rev: v2.7.2
     hooks:
       - id: golangci-lint
   - repo: https://github.com/bridgecrewio/checkov
-    rev: 3.2.494
+    rev: 3.2.495
     hooks:
       - id: checkov
         language_version: python3.11
   - repo: https://github.com/jameswoolfenden/ghat
-    rev: v0.1.13
+    rev: v0.1.14
     hooks:
       - id: ghat-go
         name: ghat
         description: upgrade action dependencies
         language: golang
-        entry: ghat swot -d . --continue-on-error true --stable 14
+        entry: ghat swot -d . --stable 14
         always_run: true
         pass_filenames: false
         types: [ yaml ]

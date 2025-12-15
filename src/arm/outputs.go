@@ -2,9 +2,10 @@ package arm
 
 import (
 	"bytes"
-	"log"
 	"sato/src/cf"
 	tftemplate "text/template"
+
+	"github.com/rs/zerolog/log"
 )
 
 // ParseOutputs writes out to outputs.tf.
@@ -31,7 +32,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		temp, ok := value.(map[string]interface{})
 
 		if !ok {
-			log.Printf("fail to assert value to map[string]interface{}")
+			log.Warn().Msg("fail to assert value to map[string]interface{}")
 		}
 
 		someString, result = ParseString(temp["value"].(string), result)

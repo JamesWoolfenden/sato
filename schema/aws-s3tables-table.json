@@ -4,7 +4,8 @@
     "/properties/TableBucketARN",
     "/properties/OpenTableFormat",
     "/properties/IcebergMetadata",
-    "/properties/WithoutMetadata"
+    "/properties/WithoutMetadata",
+    "/properties/StorageClassConfiguration"
   ],
   "definitions": {
     "Compaction": {
@@ -120,6 +121,21 @@
       },
       "type": "object"
     },
+    "StorageClassConfiguration": {
+      "additionalProperties": false,
+      "description": "Specifies storage class settings for the table",
+      "properties": {
+        "StorageClass": {
+          "description": "The storage class for the table",
+          "enum": [
+            "STANDARD",
+            "INTELLIGENT_TIERING"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "TableARN": {
       "description": "The Amazon Resource Name (ARN) of the specified table.",
       "examples": [
@@ -184,6 +200,8 @@
         "s3tables:GetTable",
         "s3tables:PutTableMaintenanceConfiguration",
         "s3tables:GetTableMaintenanceConfiguration",
+        "s3tables:PutTableStorageClass",
+        "s3tables:GetTableStorageClass",
         "s3tables:TagResource",
         "s3tables:ListTagsForResource"
       ]
@@ -223,6 +241,7 @@
       "permissions": [
         "s3tables:GetTable",
         "s3tables:GetTableMaintenanceConfiguration",
+        "s3tables:GetTableStorageClass",
         "s3tables:ListTagsForResource"
       ]
     },
@@ -256,6 +275,9 @@
     },
     "SnapshotManagement": {
       "$ref": "#/definitions/SnapshotManagement"
+    },
+    "StorageClassConfiguration": {
+      "$ref": "#/definitions/StorageClassConfiguration"
     },
     "TableARN": {
       "$ref": "#/definitions/TableARN"

@@ -33,6 +33,10 @@
           "description": "The number of IP addresses in the Anycast static IP list.",
           "type": "integer"
         },
+        "IpamCidrConfigResults": {
+          "$ref": "#/definitions/IpamCidrConfigResults",
+          "description": ""
+        },
         "LastModifiedTime": {
           "description": "The last time the Anycast static IP list was modified.",
           "format": "date-time",
@@ -67,6 +71,58 @@
         "dualstack"
       ],
       "type": "string"
+    },
+    "IpamCidrConfig": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "Cidr": {
+          "type": "string"
+        },
+        "IpamPoolArn": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "Cidr",
+        "IpamPoolArn"
+      ],
+      "type": "object"
+    },
+    "IpamCidrConfigResult": {
+      "additionalProperties": false,
+      "description": "",
+      "properties": {
+        "AnycastIp": {
+          "type": "string"
+        },
+        "Cidr": {
+          "type": "string"
+        },
+        "IpamPoolArn": {
+          "type": "string"
+        },
+        "Status": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "IpamCidrConfigResults": {
+      "additionalProperties": false,
+      "items": {
+        "$ref": "#/definitions/IpamCidrConfigResult"
+      },
+      "type": "array",
+      "uniqueItems": false
+    },
+    "IpamCidrConfigs": {
+      "additionalProperties": false,
+      "items": {
+        "$ref": "#/definitions/IpamCidrConfig"
+      },
+      "type": "array",
+      "uniqueItems": false
     },
     "Tag": {
       "additionalProperties": false,
@@ -166,6 +222,14 @@
       "description": "The number of IP addresses in the Anycast static IP list.",
       "type": "integer"
     },
+    "IpamCidrConfigResults": {
+      "$ref": "#/definitions/IpamCidrConfigResults",
+      "description": ""
+    },
+    "IpamCidrConfigs": {
+      "$ref": "#/definitions/IpamCidrConfigs",
+      "description": ""
+    },
     "Name": {
       "description": "The name of the Anycast static IP list.",
       "maxLength": 64,
@@ -181,7 +245,8 @@
   "readOnlyProperties": [
     "/properties/AnycastIpList",
     "/properties/ETag",
-    "/properties/Id"
+    "/properties/Id",
+    "/properties/IpamCidrConfigResults"
   ],
   "required": [
     "IpCount",
@@ -199,5 +264,8 @@
     "tagUpdatable": false,
     "taggable": true
   },
-  "typeName": "AWS::CloudFront::AnycastIpList"
+  "typeName": "AWS::CloudFront::AnycastIpList",
+  "writeOnlyProperties": [
+    "/properties/IpamCidrConfigs"
+  ]
 }

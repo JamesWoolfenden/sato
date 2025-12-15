@@ -28,6 +28,59 @@
       "minimum": 10000000,
       "type": "integer"
     },
+    "Classification": {
+      "additionalProperties": false,
+      "description": "A classification refers to a set of specific configurations.",
+      "properties": {
+        "Name": {
+          "description": "The name of the configuration classification.",
+          "type": "string"
+        },
+        "Properties": {
+          "additionalProperties": false,
+          "description": "A set of properties specified within a configuration classification.",
+          "patternProperties": {
+            "^.+$": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "CloudWatchLoggingConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration settings for delivering logs to Amazon CloudWatch log groups.",
+      "properties": {
+        "Enabled": {
+          "description": "Enables CloudWatch logging.",
+          "type": "boolean"
+        },
+        "LogGroup": {
+          "description": "The name of the log group in Amazon CloudWatch Logs where you want to publish your logs.",
+          "type": "string"
+        },
+        "LogStreamNamePrefix": {
+          "description": "Prefix for the CloudWatch log stream name.",
+          "type": "string"
+        },
+        "LogTypes": {
+          "additionalProperties": false,
+          "description": "The types of logs that you want to publish to CloudWatch.",
+          "patternProperties": {
+            "^.+$": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
     "CustomerContentEncryptionConfiguration": {
       "additionalProperties": false,
       "description": "Indicates the KMS key for encrypting notebook content.",
@@ -74,6 +127,52 @@
       "description": "If set to \"true\", the settings for the workgroup override client-side settings. If set to \"false\", client-side settings are used",
       "type": "boolean"
     },
+    "EngineConfiguration": {
+      "additionalProperties": false,
+      "description": "The engine configuration for running queries.",
+      "properties": {
+        "AdditionalConfigs": {
+          "additionalProperties": false,
+          "description": "Contains additional notebook engine MAP<string, string> parameter mappings in the form of key-value pairs. To specify an Athena notebook that the Jupyter server will download and serve, specify a value for the StartSessionRequest$NotebookVersion field, and then add a key named NotebookId to AdditionalConfigs that has the value of the Athena notebook ID.",
+          "patternProperties": {
+            "^.+$": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Classifications": {
+          "description": "The configuration classifications that can be specified for the engine.",
+          "items": {
+            "$ref": "#/definitions/Classification"
+          },
+          "type": "array"
+        },
+        "CoordinatorDpuSize": {
+          "description": "The number of DPUs to use for the coordinator. A coordinator is a special executor that orchestrates processing work and manages other executors in a notebook session. The default is 1.",
+          "type": "integer"
+        },
+        "DefaultExecutorDpuSize": {
+          "description": "The default number of DPUs to use for executors. An executor is the smallest unit of compute that a notebook session can request from Athena. The default is 1.",
+          "type": "integer"
+        },
+        "MaxConcurrentDpus": {
+          "description": "The maximum number of DPUs that can run concurrently.",
+          "type": "integer"
+        },
+        "SparkProperties": {
+          "additionalProperties": false,
+          "description": "Specifies custom jar files and Spark properties for use cases like cluster encryption, table formats, and general Spark tuning.",
+          "patternProperties": {
+            "^.+$": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
     "EngineVersion": {
       "additionalProperties": false,
       "description": "The Athena engine version for running queries.",
@@ -88,7 +187,7 @@
       "type": "object"
     },
     "ExecutionRole": {
-      "description": "Execution Role ARN required to run Athena Spark Calculations",
+      "description": "The ARN of the execution role used to access user resources for Spark sessions and Identity Center enabled workgroups. This property applies only to Spark enabled workgroups and Identity Center enabled workgroups.",
       "type": "string"
     },
     "ExpectedBucketOwner": {
@@ -98,6 +197,21 @@
     "KmsKey": {
       "description": "For SSE-KMS and CSE-KMS, this is the KMS key ARN or ID. ",
       "type": "string"
+    },
+    "ManagedLoggingConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration settings for managed log persistence.",
+      "properties": {
+        "Enabled": {
+          "description": "Enables managed log persistence.",
+          "type": "boolean"
+        },
+        "KmsKey": {
+          "description": "The KMS key ARN to encrypt the logs stored in managed log persistence.",
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "ManagedQueryResultsConfiguration": {
       "additionalProperties": false,
@@ -118,6 +232,22 @@
       "properties": {
         "KmsKey": {
           "$ref": "#/definitions/KmsKey"
+        }
+      },
+      "type": "object"
+    },
+    "MonitoringConfiguration": {
+      "additionalProperties": false,
+      "description": "Contains the configuration settings for managed log persistence, delivering logs to Amazon S3 buckets, Amazon CloudWatch log groups etc.",
+      "properties": {
+        "CloudWatchLoggingConfiguration": {
+          "$ref": "#/definitions/CloudWatchLoggingConfiguration"
+        },
+        "ManagedLoggingConfiguration": {
+          "$ref": "#/definitions/ManagedLoggingConfiguration"
+        },
+        "S3LoggingConfiguration": {
+          "$ref": "#/definitions/S3LoggingConfiguration"
         }
       },
       "type": "object"
@@ -210,6 +340,25 @@
       ],
       "type": "string"
     },
+    "S3LoggingConfiguration": {
+      "additionalProperties": false,
+      "description": "Configuration settings for delivering logs to Amazon S3 buckets.",
+      "properties": {
+        "Enabled": {
+          "description": "Enables S3 log delivery.",
+          "type": "boolean"
+        },
+        "KmsKey": {
+          "description": "The KMS key ARN to encrypt the logs published to the given Amazon S3 destination.",
+          "type": "string"
+        },
+        "LogLocation": {
+          "description": "The Amazon S3 destination URI for log publishing.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SelectedEngineVersion": {
       "description": "The engine version requested by the user. Possible values are determined by the output of ListEngineVersions, including Auto. The default is Auto.",
       "type": "string"
@@ -256,6 +405,9 @@
         "EnforceWorkGroupConfiguration": {
           "$ref": "#/definitions/EnforceWorkGroupConfiguration"
         },
+        "EngineConfiguration": {
+          "$ref": "#/definitions/EngineConfiguration"
+        },
         "EngineVersion": {
           "$ref": "#/definitions/EngineVersion"
         },
@@ -264,6 +416,9 @@
         },
         "ManagedQueryResultsConfiguration": {
           "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+        },
+        "MonitoringConfiguration": {
+          "$ref": "#/definitions/MonitoringConfiguration"
         },
         "PublishCloudWatchMetricsEnabled": {
           "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"
@@ -293,6 +448,9 @@
         "EnforceWorkGroupConfiguration": {
           "$ref": "#/definitions/EnforceWorkGroupConfiguration"
         },
+        "EngineConfiguration": {
+          "$ref": "#/definitions/EngineConfiguration"
+        },
         "EngineVersion": {
           "$ref": "#/definitions/EngineVersion"
         },
@@ -301,6 +459,9 @@
         },
         "ManagedQueryResultsConfiguration": {
           "$ref": "#/definitions/ManagedQueryResultsConfiguration"
+        },
+        "MonitoringConfiguration": {
+          "$ref": "#/definitions/MonitoringConfiguration"
         },
         "PublishCloudWatchMetricsEnabled": {
           "$ref": "#/definitions/PublishCloudWatchMetricsEnabled"

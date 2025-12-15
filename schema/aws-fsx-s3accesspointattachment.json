@@ -3,6 +3,7 @@
   "createOnlyProperties": [
     "/properties/Name",
     "/properties/Type",
+    "/properties/OntapConfiguration",
     "/properties/OpenZFSConfiguration",
     "/properties/S3AccessPoint"
   ],
@@ -11,7 +12,7 @@
       "additionalProperties": false,
       "properties": {
         "Gid": {
-          "description": "",
+          "description": "The GID of the file system user.",
           "maximum": 4294967295,
           "minimum": 0,
           "type": "number"
@@ -22,15 +23,84 @@
       ],
       "type": "object"
     },
+    "OntapFileSystemIdentity": {
+      "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "UnixUser"
+          ]
+        },
+        {
+          "required": [
+            "WindowsUser"
+          ]
+        }
+      ],
+      "properties": {
+        "Type": {
+          "description": "Specifies the FSx for ONTAP user identity type, accepts either UNIX or WINDOWS.",
+          "enum": [
+            "UNIX",
+            "WINDOWS"
+          ],
+          "type": "string"
+        },
+        "UnixUser": {
+          "$ref": "#/definitions/OntapUnixFileSystemUser",
+          "description": "Specifies the properties of the file system UNIX user."
+        },
+        "WindowsUser": {
+          "$ref": "#/definitions/OntapWindowsFileSystemUser",
+          "description": "Specifies the properties of the file system Windows user."
+        }
+      },
+      "required": [
+        "Type"
+      ],
+      "type": "object"
+    },
+    "OntapUnixFileSystemUser": {
+      "additionalProperties": false,
+      "properties": {
+        "Name": {
+          "description": "The name of the UNIX user.",
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^[^\\u0000\\u0085\\u2028\\u2029\\r\\n]{1,256}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "Name"
+      ],
+      "type": "object"
+    },
+    "OntapWindowsFileSystemUser": {
+      "additionalProperties": false,
+      "properties": {
+        "Name": {
+          "description": "The name of the Windows user.",
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^[^\\u0000\\u0085\\u2028\\u2029\\r\\n]{1,256}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "Name"
+      ],
+      "type": "object"
+    },
     "OpenZFSFileSystemIdentity": {
       "additionalProperties": false,
       "properties": {
         "PosixUser": {
           "$ref": "#/definitions/OpenZFSPosixFileSystemUser",
-          "description": ""
+          "description": "Specifies the UID and GIDs of the file system POSIX user."
         },
         "Type": {
-          "description": "",
+          "description": "Specifies the FSx for OpenZFS user identity type, accepts only POSIX.",
           "enum": [
             "POSIX"
           ],
@@ -47,20 +117,20 @@
       "additionalProperties": false,
       "properties": {
         "Gid": {
-          "description": "",
+          "description": "The GID of the file system user.",
           "maximum": 4294967295,
           "minimum": 0,
           "type": "number"
         },
         "SecondaryGids": {
-          "description": "",
+          "description": "The list of secondary GIDs for the file system user.",
           "items": {
             "$ref": "#/definitions/FileSystemGID"
           },
           "type": "array"
         },
         "Uid": {
-          "description": "",
+          "description": "The UID of the file system user.",
           "maximum": 4294967295,
           "minimum": 0,
           "type": "number"
@@ -76,14 +146,14 @@
       "additionalProperties": false,
       "properties": {
         "Alias": {
-          "description": "",
+          "description": "The S3 access point's alias.",
           "maxLength": 63,
           "minLength": 1,
           "pattern": "^[0-9a-z\\\\-]{1,63}",
           "type": "string"
         },
         "Policy": {
-          "description": "",
+          "description": "The S3 access point's policy.",
           "maxLength": 200000,
           "minLength": 1,
           "type": [
@@ -92,7 +162,7 @@
           ]
         },
         "ResourceARN": {
-          "description": "",
+          "description": "The S3 access point's ARN.",
           "maxLength": 1024,
           "minLength": 8,
           "pattern": "^arn:[^:]{1,63}:[^:]{0,63}:[^:]{0,63}:(?:|\\d{12}):[^/].{0,1023}$",
@@ -100,9 +170,30 @@
         },
         "VpcConfiguration": {
           "$ref": "#/definitions/S3AccessPointVpcConfiguration",
-          "description": ""
+          "description": "The S3 access point's virtual private cloud (VPC) configuration."
         }
       },
+      "type": "object"
+    },
+    "S3AccessPointOntapConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "FileSystemIdentity": {
+          "$ref": "#/definitions/OntapFileSystemIdentity",
+          "description": "The file system identity used to authorize file access requests made using the S3 access point."
+        },
+        "VolumeId": {
+          "description": "The ID of the FSx for ONTAP volume that the S3 access point is attached to.",
+          "maxLength": 23,
+          "minLength": 23,
+          "pattern": "^(fsvol-[0-9a-f]{17,})$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "VolumeId",
+        "FileSystemIdentity"
+      ],
       "type": "object"
     },
     "S3AccessPointOpenZFSConfiguration": {
@@ -110,10 +201,10 @@
       "properties": {
         "FileSystemIdentity": {
           "$ref": "#/definitions/OpenZFSFileSystemIdentity",
-          "description": ""
+          "description": "The file system identity used to authorize file access requests made using the S3 access point."
         },
         "VolumeId": {
-          "description": "",
+          "description": "The ID of the FSx for OpenZFS volume that the S3 access point is attached to.",
           "maxLength": 23,
           "minLength": 23,
           "pattern": "^(fsvol-[0-9a-f]{17,})$",
@@ -130,7 +221,7 @@
       "additionalProperties": false,
       "properties": {
         "VpcId": {
-          "description": "",
+          "description": "Specifies the virtual private cloud (VPC) for the S3 access point VPC configuration, if one exists.",
           "maxLength": 21,
           "minLength": 12,
           "pattern": "^(vpc-[0-9a-f]{8,})$",
@@ -175,29 +266,46 @@
       ]
     }
   },
+  "oneOf": [
+    {
+      "required": [
+        "OntapConfiguration"
+      ]
+    },
+    {
+      "required": [
+        "OpenZFSConfiguration"
+      ]
+    }
+  ],
   "primaryIdentifier": [
     "/properties/Name"
   ],
   "properties": {
     "Name": {
-      "description": "The Name of the S3AccessPointAttachment",
+      "description": "The name of the S3 access point attachment; also used for the name of the S3 access point.",
       "maxLength": 50,
       "minLength": 3,
       "pattern": "^(?=[a-z0-9])[a-z0-9-]{1,48}[a-z0-9]$",
       "type": "string"
     },
+    "OntapConfiguration": {
+      "$ref": "#/definitions/S3AccessPointOntapConfiguration",
+      "description": "The OntapConfiguration of the S3 access point attachment."
+    },
     "OpenZFSConfiguration": {
       "$ref": "#/definitions/S3AccessPointOpenZFSConfiguration",
-      "description": ""
+      "description": "The OpenZFSConfiguration of the S3 access point attachment."
     },
     "S3AccessPoint": {
       "$ref": "#/definitions/S3AccessPoint",
-      "description": ""
+      "description": "The S3 access point configuration of the S3 access point attachment."
     },
     "Type": {
-      "description": "",
+      "description": "The type of Amazon FSx volume that the S3 access point is attached to.",
       "enum": [
-        "OPENZFS"
+        "OPENZFS",
+        "ONTAP"
       ],
       "type": "string"
     }
@@ -209,8 +317,7 @@
   "replacementStrategy": "delete_then_create",
   "required": [
     "Name",
-    "Type",
-    "OpenZFSConfiguration"
+    "Type"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
   "tagging": {

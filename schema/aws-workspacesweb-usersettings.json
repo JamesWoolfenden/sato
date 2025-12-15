@@ -1,6 +1,50 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "BrandingConfiguration": {
+      "additionalProperties": false,
+      "properties": {
+        "ColorTheme": {
+          "$ref": "#/definitions/ColorTheme"
+        },
+        "Favicon": {
+          "pattern": "(^s3://[a-z0-9][a-z0-9\\.\\-]{1,61}[a-z0-9]/.+$)|(^(?=(.{4})*$)[A-Za-z0-9+/]*={0,2}$)",
+          "type": "string"
+        },
+        "FaviconMetadata": {
+          "$ref": "#/definitions/ImageMetadata"
+        },
+        "LocalizedStrings": {
+          "$ref": "#/definitions/LocalizedBrandingStringMap"
+        },
+        "Logo": {
+          "pattern": "(^s3://[a-z0-9][a-z0-9\\.\\-]{1,61}[a-z0-9]/.+$)|(^(?=(.{4})*$)[A-Za-z0-9+/]*={0,2}$)",
+          "type": "string"
+        },
+        "LogoMetadata": {
+          "$ref": "#/definitions/ImageMetadata"
+        },
+        "TermsOfService": {
+          "maxLength": 153600,
+          "type": "string"
+        },
+        "Wallpaper": {
+          "pattern": "(^s3://[a-z0-9][a-z0-9\\.\\-]{1,61}[a-z0-9]/.+$)|(^(?=(.{4})*$)[A-Za-z0-9+/]*={0,2}$)",
+          "type": "string"
+        },
+        "WallpaperMetadata": {
+          "$ref": "#/definitions/ImageMetadata"
+        }
+      },
+      "type": "object"
+    },
+    "ColorTheme": {
+      "enum": [
+        "Light",
+        "Dark"
+      ],
+      "type": "string"
+    },
     "CookieSpecification": {
       "additionalProperties": false,
       "properties": {
@@ -73,6 +117,97 @@
       },
       "type": "object"
     },
+    "ImageMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "FileExtension": {
+          "maxLength": 131072,
+          "minLength": 0,
+          "pattern": "^[\\s\\S]*$",
+          "type": "string"
+        },
+        "LastUploadTimestamp": {
+          "format": "date-time",
+          "type": "string"
+        },
+        "MimeType": {
+          "$ref": "#/definitions/MimeType"
+        }
+      },
+      "required": [
+        "FileExtension",
+        "LastUploadTimestamp",
+        "MimeType"
+      ],
+      "type": "object"
+    },
+    "Locale": {
+      "enum": [
+        "de-DE",
+        "en-US",
+        "es-ES",
+        "fr-FR",
+        "id-ID",
+        "it-IT",
+        "ja-JP",
+        "ko-KR",
+        "pt-BR",
+        "zh-CN",
+        "zh-TW"
+      ],
+      "type": "string"
+    },
+    "LocalizedBrandingStringMap": {
+      "additionalProperties": false,
+      "patternProperties": {
+        ".+": {
+          "$ref": "#/definitions/LocalizedBrandingStrings"
+        }
+      },
+      "type": "object"
+    },
+    "LocalizedBrandingStrings": {
+      "additionalProperties": false,
+      "properties": {
+        "BrowserTabTitle": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        },
+        "ContactButtonText": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        },
+        "ContactLink": {
+          "pattern": "^(https?://|mailto:).*",
+          "type": "string"
+        },
+        "LoadingText": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        },
+        "LoginButtonText": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        },
+        "LoginDescription": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        },
+        "LoginTitle": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        },
+        "WelcomeText": {
+          "pattern": "^[^<>&'`~\\\\]*$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "BrowserTabTitle",
+        "WelcomeText"
+      ],
+      "type": "object"
+    },
     "MaxDisplayResolution": {
       "enum": [
         "size4096X2160",
@@ -83,6 +218,14 @@
         "size1280X720",
         "size1024X768",
         "size800X600"
+      ],
+      "type": "string"
+    },
+    "MimeType": {
+      "enum": [
+        "image/png",
+        "image/jpeg",
+        "image/x-icon"
       ],
       "type": "string"
     },
@@ -167,7 +310,8 @@
         "kms:Decrypt",
         "kms:GenerateDataKeyWithoutPlaintext",
         "kms:ReEncryptTo",
-        "kms:ReEncryptFrom"
+        "kms:ReEncryptFrom",
+        "s3:GetObject"
       ]
     },
     "delete": {
@@ -209,7 +353,8 @@
         "kms:CreateGrant",
         "kms:DescribeKey",
         "kms:GenerateDataKey",
-        "kms:Decrypt"
+        "kms:Decrypt",
+        "s3:GetObject"
       ]
     }
   },
@@ -229,6 +374,9 @@
         "type": "string"
       },
       "type": "array"
+    },
+    "BrandingConfiguration": {
+      "$ref": "#/definitions/BrandingConfiguration"
     },
     "CookieSynchronizationConfiguration": {
       "$ref": "#/definitions/CookieSynchronizationConfiguration"
@@ -290,7 +438,10 @@
   },
   "readOnlyProperties": [
     "/properties/AssociatedPortalArns",
-    "/properties/UserSettingsArn"
+    "/properties/UserSettingsArn",
+    "/properties/BrandingConfiguration/LogoMetadata",
+    "/properties/BrandingConfiguration/FaviconMetadata",
+    "/properties/BrandingConfiguration/WallpaperMetadata"
   ],
   "required": [
     "CopyAllowed",
@@ -311,5 +462,10 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::WorkSpacesWeb::UserSettings"
+  "typeName": "AWS::WorkSpacesWeb::UserSettings",
+  "writeOnlyProperties": [
+    "/properties/BrandingConfiguration/Logo",
+    "/properties/BrandingConfiguration/Favicon",
+    "/properties/BrandingConfiguration/Wallpaper"
+  ]
 }

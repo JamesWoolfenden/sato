@@ -7,10 +7,6 @@
 
 version: 2
 
-before:
-  hooks:
-    - ./set-version.sh
-
 builds:
   - goos:
       - darwin
@@ -25,6 +21,8 @@ builds:
     ignore:
       - goarch: "386"
         goos: darwin
+    ldflags:
+      - -X sato/src/version.Version={{.Version}}
 archives:
   - format_overrides:
       - goos: windows

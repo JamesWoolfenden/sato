@@ -7,30 +7,32 @@ VERSION_PLACEHOLDER=version.ProviderVersion
 HOSTNAME=jameswoolfenden
 # Output binary name
 BINARY=sato
-# Version placeholder
-VERSION=
+# Version - use git tag if not set, default to dev
+VERSION?=$(shell git describe --tags 2>/dev/null || echo "dev")
 OS_ARCH=darwin_amd64
+# Build flags for version injection
+LDFLAGS=-ldflags "-X sato/src/version.Version=$(VERSION)"
 TERRAFORM=./terraform/
 TF_TEST=./terraform_test/
 
 default:
 
 build:
-	go build -o ${BINARY}
+	go build $(LDFLAGS) -o ${BINARY}
 
 release:
-	GOOS=darwin GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_darwin_amd64
-	GOOS=freebsd GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_freebsd_386
-	GOOS=freebsd GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_freebsd_amd64
-	GOOS=freebsd GOARCH=arm go build -o ./bin/${BINARY}_${VERSION}_freebsd_arm
-	GOOS=linux GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_linux_386
-	GOOS=linux GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_linux_amd64
-	GOOS=linux GOARCH=arm go build -o ./bin/${BINARY}_${VERSION}_linux_arm
-	GOOS=openbsd GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_openbsd_386
-	GOOS=openbsd GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_openbsd_amd64
-	GOOS=solaris GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_solaris_amd64
-	GOOS=windows GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_windows_386
-	GOOS=windows GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_windows_amd64
+	GOOS=darwin GOARCH=amd64 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_darwin_amd64
+	GOOS=freebsd GOARCH=386 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_freebsd_386
+	GOOS=freebsd GOARCH=amd64 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_freebsd_amd64
+	GOOS=freebsd GOARCH=arm go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_freebsd_arm
+	GOOS=linux GOARCH=386 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_linux_386
+	GOOS=linux GOARCH=amd64 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_linux_amd64
+	GOOS=linux GOARCH=arm go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_linux_arm
+	GOOS=openbsd GOARCH=386 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_openbsd_386
+	GOOS=openbsd GOARCH=amd64 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_openbsd_amd64
+	GOOS=solaris GOARCH=amd64 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_solaris_amd64
+	GOOS=windows GOARCH=386 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_windows_386
+	GOOS=windows GOARCH=amd64 go build $(LDFLAGS) -o ./bin/${BINARY}_${VERSION}_windows_amd64
 
 test:
 	go test $(TEST) || exit 1
@@ -83,6 +85,32 @@ gci:
 fmt:
 	gofumpt -l -w .
 
+staticcheck: ## Run staticcheck
+	@./scripts/run-staticcheck.sh
+
+gosec: ## Run security scanner
+	gosec -quiet -exclude-generated ./...
+
+govulncheck: ## Check for known vulnerabilities
+	govulncheck ./...
+
+complexity: ## Check cyclomatic complexity
+	gocyclo -over 15 -avg .
+
+check-all: ## Run all checks (vet, staticcheck, gosec, govulncheck)
+	@echo "Running all code checks..."
+	@$(MAKE) vet
+	@$(MAKE) staticcheck
+	@$(MAKE) gosec
+	@$(MAKE) govulncheck
+	@echo "All checks passed!"
+
+security-scan: ## Run security-focused checks
+	@echo "Running security scans..."
+	@$(MAKE) gosec
+	@$(MAKE) govulncheck
+	@echo "Security scan complete!"
+
 .PHONY: schema
 schema:
-	wget -qO- https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip  |tar xvz -C ./schema
+	wget -qO /tmp/cloudformation-schema.zip https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip && unzip -o /tmp/cloudformation-schema.zip -d ./schema && rm /tmp/cloudformation-schema.zip

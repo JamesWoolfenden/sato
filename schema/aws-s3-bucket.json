@@ -1,8 +1,7 @@
 {
   "additionalProperties": false,
   "createOnlyProperties": [
-    "/properties/BucketName",
-    "/properties/MetadataConfiguration/JournalTableConfiguration/EncryptionConfiguration"
+    "/properties/BucketName"
   ],
   "definitions": {
     "AbortIncompleteMultipartUpload": {
@@ -1720,6 +1719,8 @@
       "permissions": [
         "s3:CreateBucket",
         "s3:PutBucketTagging",
+        "s3:TagResource",
+        "s3:PutBucketAbac",
         "s3:PutAnalyticsConfiguration",
         "s3:PutEncryptionConfiguration",
         "s3:PutBucketCORS",
@@ -1785,6 +1786,8 @@
         "s3:GetBucketPublicAccessBlock",
         "s3:GetBucketObjectLockConfiguration",
         "s3:GetBucketTagging",
+        "s3:ListTagsForResource",
+        "s3:GetBucketAbac",
         "s3:GetBucketOwnershipControls",
         "s3:GetIntelligentTieringConfiguration",
         "s3:GetBucketMetadataTableConfiguration",
@@ -1795,6 +1798,9 @@
       "permissions": [
         "s3:PutBucketAcl",
         "s3:PutBucketTagging",
+        "s3:TagResource",
+        "s3:UntagResource",
+        "s3:PutBucketAbac",
         "s3:PutAnalyticsConfiguration",
         "s3:PutEncryptionConfiguration",
         "s3:PutBucketCORS",
@@ -1843,6 +1849,14 @@
     "/properties/BucketName"
   ],
   "properties": {
+    "AbacStatus": {
+      "description": "",
+      "enum": [
+        "Enabled",
+        "Disabled"
+      ],
+      "type": "string"
+    },
     "AccelerateConfiguration": {
       "$ref": "#/definitions/AccelerateConfiguration",
       "description": "Configures the transfer acceleration state for an Amazon S3 bucket. For more information, see [Amazon S3 Transfer Acceleration](https://docs.aws.amazon.com/AmazonS3/latest/dev/transfer-acceleration.html) in the *Amazon S3 User Guide*."
@@ -2027,7 +2041,10 @@
     "permissions": [
       "s3:PutBucketTagging",
       "s3:GetBucketTagging",
-      "s3:DeleteBucketTagging"
+      "s3:DeleteBucketTagging",
+      "s3:TagResource",
+      "s3:UntagResource",
+      "s3:ListTagsForResource"
     ],
     "tagOnCreate": true,
     "tagProperty": "/properties/Tags",

@@ -60,7 +60,7 @@ func ParseVariables(
 			if reflect.TypeOf(value).String() == typeString {
 				value, ok := value.(string)
 				if !ok {
-					log.Printf("type assertion failed")
+					log.Warn().Msg("type assertion failed")
 
 					continue
 				}
@@ -93,7 +93,7 @@ func ParseVariables(
 
 		myItem, err = FixType(myItem)
 		if err != nil {
-			log.Print(err)
+			log.Warn().Err(err).Msg("failed to fix type")
 		}
 
 		var output bytes.Buffer

@@ -2,7 +2,8 @@
   "additionalProperties": false,
   "createOnlyProperties": [
     "/properties/PeeringId",
-    "/properties/TransitGatewayRouteTableArn"
+    "/properties/TransitGatewayRouteTableArn",
+    "/properties/RoutingPolicyLabel"
   ],
   "definitions": {
     "ProposedNetworkFunctionGroupChange": {
@@ -175,6 +176,10 @@
       "description": "The ARN of the Resource.",
       "type": "string"
     },
+    "RoutingPolicyLabel": {
+      "description": "Routing policy label",
+      "type": "string"
+    },
     "SegmentName": {
       "description": "The name of the segment that attachment is in.",
       "type": "string"
@@ -233,5 +238,8 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::NetworkManager::TransitGatewayRouteTableAttachment"
+  "typeName": "AWS::NetworkManager::TransitGatewayRouteTableAttachment",
+  "writeOnlyProperties": [
+    "/properties/RoutingPolicyLabel"
+  ]
 }

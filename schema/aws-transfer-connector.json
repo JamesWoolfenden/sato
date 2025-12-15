@@ -246,6 +246,11 @@
       "$ref": "#/definitions/ConnectorEgressType",
       "description": "Specifies the egress type for the connector."
     },
+    "ErrorMessage": {
+      "description": "Detailed error message when Connector in ERRORED status",
+      "maxLength": 2048,
+      "type": "string"
+    },
     "LoggingRole": {
       "description": "Specifies the logging role for the connector.",
       "maxLength": 2048,
@@ -321,7 +326,8 @@
     "/properties/Arn",
     "/properties/ConnectorId",
     "/properties/ServiceManagedEgressIpAddresses",
-    "/properties/Status"
+    "/properties/Status",
+    "/properties/ErrorMessage"
   ],
   "required": [
     "AccessRole"

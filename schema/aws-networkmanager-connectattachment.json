@@ -4,7 +4,8 @@
     "/properties/CoreNetworkId",
     "/properties/EdgeLocation",
     "/properties/TransportAttachmentId",
-    "/properties/Options"
+    "/properties/Options",
+    "/properties/RoutingPolicyLabel"
   ],
   "definitions": {
     "ConnectAttachmentOptions": {
@@ -186,6 +187,10 @@
       "description": "The attachment resource ARN.",
       "type": "string"
     },
+    "RoutingPolicyLabel": {
+      "description": "Routing policy label",
+      "type": "string"
+    },
     "SegmentName": {
       "description": "The name of the segment attachment.",
       "type": "string"
@@ -244,5 +249,8 @@
     "tagUpdatable": true,
     "taggable": true
   },
-  "typeName": "AWS::NetworkManager::ConnectAttachment"
+  "typeName": "AWS::NetworkManager::ConnectAttachment",
+  "writeOnlyProperties": [
+    "/properties/RoutingPolicyLabel"
+  ]
 }

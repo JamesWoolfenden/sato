@@ -59,9 +59,8 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 	switch myType {
 	case "object":
 		{
-			var types string
-
-			var result string
+			var typesBuilder strings.Builder
+			var resultBuilder strings.Builder
 
 			defaultValue, ok := myItem["defaultValue"].(map[string]interface{})
 			if !ok {
@@ -72,11 +71,8 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 				switch item := item.(type) {
 				case []interface{}:
 					{
-						var temp string
-
-						var temptTypes string
-
-						var myType string
+						var tempBuilder strings.Builder
+						var tempTypesBuilder strings.Builder
 
 						for _, y := range item {
 							y, ok := y.(map[string]interface{})
@@ -85,20 +81,35 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 							}
 
 							for name, value := range y {
-								temp += "\t   " + name + " = \"" + value.(string) + "\"\n"
-								myType += "\t   " + name + " = string\n"
+								tempBuilder.WriteString("\t   ")
+								tempBuilder.WriteString(name)
+								tempBuilder.WriteString(" = \"")
+								tempBuilder.WriteString(value.(string))
+								tempBuilder.WriteString("\"\n")
+
+								tempTypesBuilder.WriteString("\t   ")
+								tempTypesBuilder.WriteString(name)
+								tempTypesBuilder.WriteString(" = string\n")
 							}
 
-							temp = "{\n" + strings.TrimSuffix(temp, "\n") + "}"
-							temptTypes = "{\n" + strings.TrimSuffix(myType, "\n") + "}"
-						}
+							temp := "{\n" + strings.TrimSuffix(tempBuilder.String(), "\n") + "}"
+							temptTypes := "{\n" + strings.TrimSuffix(tempTypesBuilder.String(), "\n") + "}"
 
-						if result != "" {
-							result += "," + name + "= [" + temp + "]"
-							types += "," + name + "= list(object(" + temptTypes + "))"
-						} else {
-							result += name + "= [" + temp + "]"
-							types += name + "= list(object(" + temptTypes + "))"
+							if resultBuilder.Len() > 0 {
+								resultBuilder.WriteString(",")
+							}
+							resultBuilder.WriteString(name)
+							resultBuilder.WriteString("= [")
+							resultBuilder.WriteString(temp)
+							resultBuilder.WriteString("]")
+
+							if typesBuilder.Len() > 0 {
+								typesBuilder.WriteString(",")
+							}
+							typesBuilder.WriteString(name)
+							typesBuilder.WriteString("= list(object(")
+							typesBuilder.WriteString(temptTypes)
+							typesBuilder.WriteString("))")
 						}
 					}
 				case map[string]interface{}:
@@ -107,35 +118,43 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 					}
 				case string:
 					{
-						if result == "" {
-							result = name + " = " + "\"" + EscapeQuote(item) + "\""
-							types = name + " = " + "string"
-						} else {
-							result += ",\n\t" + name + " = " + "\"" + EscapeQuote(item) + "\""
-							types += ",\n\t" + name + " = " + "string"
+						if resultBuilder.Len() > 0 {
+							resultBuilder.WriteString(",\n\t")
+							typesBuilder.WriteString(",\n\t")
 						}
+						resultBuilder.WriteString(name)
+						resultBuilder.WriteString(" = \"")
+						resultBuilder.WriteString(EscapeQuote(item))
+						resultBuilder.WriteString("\"")
+
+						typesBuilder.WriteString(name)
+						typesBuilder.WriteString(" = string")
 					}
 				case bool:
 					{
-						if result == "" {
-							result = name + " = " + strconv.FormatBool(item)
-							types = name + " = " + "bool"
-						} else {
-							temp := result
-							result = temp + ",\n\t" + name + " = " + strconv.FormatBool(item)
-							types = types + ",\n\t" + name + " = " + "bool"
+						if resultBuilder.Len() > 0 {
+							resultBuilder.WriteString(",\n\t")
+							typesBuilder.WriteString(",\n\t")
 						}
+						resultBuilder.WriteString(name)
+						resultBuilder.WriteString(" = ")
+						resultBuilder.WriteString(strconv.FormatBool(item))
+
+						typesBuilder.WriteString(name)
+						typesBuilder.WriteString(" = bool")
 					}
 				case int:
 					{
-						if result == "" {
-							result = name + " = " + strconv.Itoa(item)
-							types = name + " = " + "number"
-						} else {
-							temp := result
-							result = temp + ",\n\t" + name + " = " + strconv.Itoa(item)
-							types = types + ",\n\t" + name + " = " + "number"
+						if resultBuilder.Len() > 0 {
+							resultBuilder.WriteString(",\n\t")
+							typesBuilder.WriteString(",\n\t")
 						}
+						resultBuilder.WriteString(name)
+						resultBuilder.WriteString(" = ")
+						resultBuilder.WriteString(strconv.Itoa(item))
+
+						typesBuilder.WriteString(name)
+						typesBuilder.WriteString(" = number")
 					}
 				default:
 					{
@@ -144,9 +163,8 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 				}
 			}
 
-			myItem["default"] = "{\n\t" + result + "}"
-
-			myItem["type"] = "object({\n\t" + types + "})"
+			myItem["default"] = "{\n\t" + resultBuilder.String() + "}"
+			myItem["type"] = "object({\n\t" + typesBuilder.String() + "})"
 		}
 	case "int", "float":
 		{

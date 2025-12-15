@@ -4,6 +4,157 @@
     "/properties/RuleName"
   ],
   "definitions": {
+    "Action": {
+      "description": "The enumerated action to take.",
+      "enum": [
+        "ALLOW",
+        "BLOCK",
+        "COUNT",
+        "CAPTCHA",
+        "CHALLENGE",
+        "EXCLUDED_AS_COUNT"
+      ],
+      "type": "string"
+    },
+    "ActionCondition": {
+      "description": "The condition of the action desired in the filter.",
+      "properties": {
+        "Action": {
+          "$ref": "#/definitions/Action"
+        }
+      },
+      "type": "object"
+    },
+    "AdvancedEventSelector": {
+      "additionalProperties": false,
+      "description": "An advanced event selector that includes optional name and field selectors",
+      "properties": {
+        "FieldSelectors": {
+          "description": "Contains all selector statements in an advanced event selector.",
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/AdvancedFieldSelector"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "Name": {
+          "description": "An optional descriptive name for the advanced event selector",
+          "type": "string"
+        }
+      },
+      "required": [
+        "FieldSelectors"
+      ],
+      "type": "object"
+    },
+    "AdvancedFieldSelector": {
+      "description": "A single selector statement in an advanced event selector.",
+      "properties": {
+        "EndsWith": {
+          "description": "An operator that includes events that match the last few characters of the event record field specified as the value of Field.",
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "Equals": {
+          "description": "An operator that includes events that match the exact value of the event record field specified as the value of Field.",
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "Field": {
+          "description": "A field in a CloudTrail event record on which to filter events to be logged",
+          "maxLength": 1000,
+          "minLength": 1,
+          "type": "string"
+        },
+        "NotEndsWith": {
+          "description": "An operator that excludes events that match the last few characters of the event record field specified as the value of Field.",
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "NotEquals": {
+          "description": "An operator that excludes events that match the exact value of the event record field specified as the value of Field.",
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "NotStartsWith": {
+          "description": "An operator that excludes events that match the first few characters of the event record field specified as the value of Field.",
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "StartsWith": {
+          "description": "An operator that includes events that match the first few characters of the event record field specified as the value of Field.",
+          "insertionOrder": false,
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "type": "object"
+    },
+    "CloudtrailParameters": {
+      "additionalProperties": false,
+      "description": "Telemetry parameters for Cloudtrail",
+      "properties": {
+        "AdvancedEventSelectors": {
+          "description": "Create fine-grained selectors for AWS CloudTrail management and data.",
+          "insertionOrder": false,
+          "items": {
+            "$ref": "#/definitions/AdvancedEventSelector"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "AdvancedEventSelectors"
+      ],
+      "type": "object"
+    },
+    "Condition": {
+      "description": "A condition for a filter.",
+      "properties": {
+        "ActionCondition": {
+          "$ref": "#/definitions/ActionCondition"
+        },
+        "LabelNameCondition": {
+          "$ref": "#/definitions/LabelNameCondition"
+        }
+      },
+      "type": "object"
+    },
+    "Conditions": {
+      "description": "A list of conditions for a filter.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Condition"
+      },
+      "minLength": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
     "DestinationPattern": {
       "description": "Pattern for telemetry data destination",
       "type": "string"
@@ -15,10 +166,131 @@
       ],
       "type": "string"
     },
+    "ELBLoadBalancerLoggingParameters": {
+      "description": "Telemetry parameters for ELB/NLB Load Balancer Logs",
+      "properties": {
+        "FieldDelimiter": {
+          "description": "A delimiter to delineate log fields",
+          "type": "string"
+        },
+        "OutputFormat": {
+          "enum": [
+            "plain",
+            "json"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "FieldToMatch": {
+      "description": "The field that we want to match this rule to.",
+      "properties": {
+        "Method": {
+          "description": "The method with which to match this rule.",
+          "type": "string"
+        },
+        "QueryString": {
+          "description": "The query string to find the resource to match this field to.",
+          "type": "string"
+        },
+        "SingleHeader": {
+          "$ref": "#/definitions/SingleHeader"
+        },
+        "UriPath": {
+          "description": "This is the URI path to match this rule to.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Filter": {
+      "description": "A filter to be applied",
+      "properties": {
+        "Behavior": {
+          "$ref": "#/definitions/FilterBehavior"
+        },
+        "Conditions": {
+          "$ref": "#/definitions/Conditions"
+        },
+        "Requirement": {
+          "$ref": "#/definitions/FilterRequirement"
+        }
+      },
+      "type": "object"
+    },
+    "FilterBehavior": {
+      "description": "The behavior required of the filter.",
+      "enum": [
+        "KEEP",
+        "DROP"
+      ],
+      "type": "string"
+    },
+    "FilterRequirement": {
+      "description": "The requirement portion of the filter.",
+      "enum": [
+        "MEETS_ALL",
+        "MEETS_ANY"
+      ],
+      "type": "string"
+    },
+    "Filters": {
+      "description": "A list of filters to be applied.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/Filter"
+      },
+      "minLength": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "LabelNameCondition": {
+      "description": "The label name of the condition.",
+      "properties": {
+        "LabelName": {
+          "description": "The label name of the condition.",
+          "maxLength": 1024,
+          "minLength": 1,
+          "pattern": "^[0-9A-Za-z_\\-:]+$",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "LoggingFilter": {
+      "description": "Default handling for logs that don't match any of the specified filtering conditions.",
+      "properties": {
+        "DefaultBehavior": {
+          "$ref": "#/definitions/FilterBehavior"
+        },
+        "Filters": {
+          "$ref": "#/definitions/Filters"
+        }
+      },
+      "type": "object"
+    },
+    "RedactedFields": {
+      "description": "Fields not to be included in the logs.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/FieldToMatch"
+      },
+      "maxItems": 100,
+      "type": "array",
+      "uniqueItems": true
+    },
     "ResourceType": {
       "description": "Resource Type associated with the Telemetry Rule",
       "enum": [
-        "AWS::EC2::VPC"
+        "AWS::EC2::VPC",
+        "AWS::WAFv2::WebACL",
+        "AWS::CloudTrail",
+        "AWS::EKS::Cluster",
+        "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "AWS::BedrockAgentCore::Runtime",
+        "AWS::BedrockAgentCore::Browser",
+        "AWS::BedrockAgentCore::CodeInterpreter"
       ],
       "type": "string"
     },
@@ -33,6 +305,22 @@
     "SelectionCriteria": {
       "description": "Selection Criteria on resource level for rule application",
       "type": "string"
+    },
+    "SingleHeader": {
+      "additionalProperties": false,
+      "description": "Header for the field to match.",
+      "properties": {
+        "Name": {
+          "description": "The name of the header",
+          "maxLength": 64,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "Name"
+      ],
+      "type": "object"
     },
     "Tag": {
       "additionalProperties": false,
@@ -61,17 +349,46 @@
       "additionalProperties": false,
       "description": "The destination configuration for telemetry data",
       "properties": {
+        "CloudtrailParameters": {
+          "$ref": "#/definitions/CloudtrailParameters"
+        },
         "DestinationPattern": {
           "$ref": "#/definitions/DestinationPattern"
         },
         "DestinationType": {
           "$ref": "#/definitions/DestinationType"
         },
+        "ELBLoadBalancerLoggingParameters": {
+          "$ref": "#/definitions/ELBLoadBalancerLoggingParameters"
+        },
+        "LogDeliveryParameters": {
+          "description": "Parameters for BedrockAgentCore log delivery",
+          "properties": {
+            "LogTypes": {
+              "description": "Types of logs to deliver for BedrockAgentCore resources",
+              "insertionOrder": false,
+              "items": {
+                "enum": [
+                  "APPLICATION_LOGS",
+                  "USAGE_LOGS"
+                ],
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            }
+          },
+          "type": "object"
+        },
         "RetentionInDays": {
           "$ref": "#/definitions/RetentionInDays"
         },
         "VPCFlowLogParameters": {
           "$ref": "#/definitions/VPCFlowLogParameters"
+        },
+        "WAFLoggingParameters": {
+          "$ref": "#/definitions/WAFLoggingParameters"
         }
       },
       "required": [],
@@ -90,6 +407,9 @@
         "SelectionCriteria": {
           "$ref": "#/definitions/SelectionCriteria"
         },
+        "TelemetrySourceTypes": {
+          "$ref": "#/definitions/TelemetrySourceTypes"
+        },
         "TelemetryType": {
           "$ref": "#/definitions/TelemetryType"
         }
@@ -100,10 +420,33 @@
       ],
       "type": "object"
     },
+    "TelemetrySourceType": {
+      "description": "The telemetry source type that goes into the array.",
+      "enum": [
+        "VPC_FLOW_LOGS",
+        "ROUTE53_RESOLVER_QUERY_LOGS",
+        "EKS_AUDIT_LOGS",
+        "EKS_AUTHENTICATOR_LOGS",
+        "EKS_CONTROLLER_MANAGER_LOGS",
+        "EKS_SCHEDULER_LOGS",
+        "EKS_API_LOGS"
+      ],
+      "type": "string"
+    },
+    "TelemetrySourceTypes": {
+      "description": "The telemetry source types for a telemetry rule.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/TelemetrySourceType"
+      },
+      "type": "array",
+      "uniqueItems": true
+    },
     "TelemetryType": {
       "description": "Telemetry Type associated with the Telemetry Rule",
       "enum": [
-        "Logs"
+        "Logs",
+        "Traces"
       ],
       "type": "string"
     },
@@ -126,6 +469,29 @@
       },
       "required": [],
       "type": "object"
+    },
+    "WAFLogType": {
+      "description": "The type of logs to generate for WAF.",
+      "enum": [
+        "WAF_LOGS"
+      ],
+      "type": "string"
+    },
+    "WAFLoggingParameters": {
+      "description": "Telemetry parameters for WAF v2 Web ACL",
+      "properties": {
+        "LogType": {
+          "$ref": "#/definitions/WAFLogType"
+        },
+        "LoggingFilter": {
+          "$ref": "#/definitions/LoggingFilter"
+        },
+        "RedactedFields": {
+          "$ref": "#/definitions/RedactedFields",
+          "description": "Fields not to be included in the logs."
+        }
+      },
+      "type": "object"
     }
   },
   "description": "The AWS::ObservabilityAdmin::TelemetryRule resource defines a CloudWatch Observability Admin Telemetry Rule.",
@@ -137,7 +503,8 @@
         "observabilityadmin:TagResource",
         "observabilityadmin:ListTagsForResource",
         "observabilityadmin:GetTelemetryEvaluationStatus",
-        "iam:CreateServiceLinkedRole"
+        "iam:CreateServiceLinkedRole",
+        "xray:GetTraceSegmentDestination"
       ]
     },
     "delete": {
@@ -166,7 +533,8 @@
         "observabilityadmin:TagResource",
         "observabilityadmin:UntagResource",
         "observabilityadmin:ListTagsForResource",
-        "observabilityadmin:GetTelemetryEvaluationStatus"
+        "observabilityadmin:GetTelemetryEvaluationStatus",
+        "xray:GetTraceSegmentDestination"
       ]
     }
   },

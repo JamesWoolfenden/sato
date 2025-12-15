@@ -1,3 +1,5 @@
+// Package see provides resource type mapping and lookup functionality for converting
+// cloud provider resource types (AWS CloudFormation and Azure ARM) to Terraform resource types.
 package see
 
 import (

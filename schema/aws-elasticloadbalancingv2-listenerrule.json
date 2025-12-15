@@ -26,7 +26,7 @@
         },
         "JwtValidationConfig": {
           "$ref": "#/definitions/JwtValidationConfig",
-          "description": ""
+          "description": "[HTTPS listeners] Information for validating JWT access tokens in client requests. Specify only when ``Type`` is ``jwt-validation``."
         },
         "Order": {
           "description": "The order for the action. This value is required for rules with multiple actions. The action with the lowest value for order is performed first.",
@@ -269,18 +269,18 @@
     },
     "JwtValidationActionAdditionalClaim": {
       "additionalProperties": false,
-      "description": "",
+      "description": "Information about an additional claim to validate.",
       "properties": {
         "Format": {
-          "description": "",
+          "description": "The format of the claim value.",
           "type": "string"
         },
         "Name": {
-          "description": "",
+          "description": "The name of the claim. You can't specify ``exp``, ``iss``, ``nbf``, or ``iat`` because we validate them by default.",
           "type": "string"
         },
         "Values": {
-          "description": "",
+          "description": "The claim value. The maximum size of the list is 10. Each value can be up to 256 characters in length. If the format is ``space-separated-values``, the values can't include spaces.",
           "items": {
             "type": "string"
           },

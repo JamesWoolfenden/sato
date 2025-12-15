@@ -62,6 +62,14 @@
       "minLength": 1,
       "type": "string"
     },
+    "CampaignType": {
+      "description": "Campaign type",
+      "enum": [
+        "MANAGED",
+        "JOURNEY"
+      ],
+      "type": "string"
+    },
     "Capacity": {
       "description": "Allocates outbound capacity for the specific channel of this campaign between multiple active campaigns",
       "maximum": 1,
@@ -85,6 +93,11 @@
           "required": [
             "Email"
           ]
+        },
+        {
+          "required": [
+            "WhatsApp"
+          ]
         }
       ],
       "description": "The possible types of channel subtype config parameters",
@@ -97,6 +110,9 @@
         },
         "Telephony": {
           "$ref": "#/definitions/TelephonyChannelSubtypeConfig"
+        },
+        "WhatsApp": {
+          "$ref": "#/definitions/WhatsAppChannelSubtypeConfig"
         }
       },
       "type": "object"
@@ -177,6 +193,9 @@
         },
         "Telephony": {
           "$ref": "#/definitions/TimeWindow"
+        },
+        "WhatsApp": {
+          "$ref": "#/definitions/TimeWindow"
         }
       },
       "required": [
@@ -253,7 +272,7 @@
     },
     "EmailOutboundConfig": {
       "additionalProperties": false,
-      "description": "Default SMS outbound config",
+      "description": "Default Email outbound config",
       "properties": {
         "ConnectSourceEmailAddress": {
           "$ref": "#/definitions/EmailAddress"
@@ -463,6 +482,12 @@
       },
       "type": "object"
     },
+    "RingTimeout": {
+      "description": "Maximum ring time for outbound calls in seconds",
+      "maximum": 60,
+      "minimum": 15,
+      "type": "integer"
+    },
     "Schedule": {
       "additionalProperties": false,
       "description": "Campaign schedule",
@@ -619,6 +644,9 @@
         },
         "ConnectSourcePhoneNumber": {
           "$ref": "#/definitions/SourcePhoneNumber"
+        },
+        "RingTimeout": {
+          "$ref": "#/definitions/RingTimeout"
         }
       },
       "required": [
@@ -731,6 +759,53 @@
       "maximum": 300,
       "minimum": 10,
       "type": "integer"
+    },
+    "WhatsAppChannelSubtypeConfig": {
+      "additionalProperties": false,
+      "description": "WhatsApp Channel Subtype config",
+      "properties": {
+        "Capacity": {
+          "$ref": "#/definitions/Capacity"
+        },
+        "DefaultOutboundConfig": {
+          "$ref": "#/definitions/WhatsAppOutboundConfig"
+        },
+        "OutboundMode": {
+          "$ref": "#/definitions/WhatsAppOutboundMode"
+        }
+      },
+      "required": [
+        "OutboundMode",
+        "DefaultOutboundConfig"
+      ],
+      "type": "object"
+    },
+    "WhatsAppOutboundConfig": {
+      "additionalProperties": false,
+      "description": "Default WhatsApp outbound config",
+      "properties": {
+        "ConnectSourcePhoneNumberArn": {
+          "$ref": "#/definitions/Arn"
+        },
+        "WisdomTemplateArn": {
+          "$ref": "#/definitions/Arn"
+        }
+      },
+      "required": [
+        "ConnectSourcePhoneNumberArn",
+        "WisdomTemplateArn"
+      ],
+      "type": "object"
+    },
+    "WhatsAppOutboundMode": {
+      "additionalProperties": false,
+      "description": "WhatsApp Outbound Mode",
+      "properties": {
+        "AgentlessConfig": {
+          "$ref": "#/definitions/AgentlessConfig"
+        }
+      },
+      "type": "object"
     }
   },
   "description": "Definition of AWS::ConnectCampaignsV2::Campaign Resource Type",
@@ -845,6 +920,9 @@
       "maxItems": 50,
       "type": "array",
       "uniqueItems": true
+    },
+    "Type": {
+      "$ref": "#/definitions/CampaignType"
     }
   },
   "readOnlyProperties": [
@@ -852,8 +930,7 @@
   ],
   "required": [
     "Name",
-    "ConnectInstanceId",
-    "ChannelSubtypeConfig"
+    "ConnectInstanceId"
   ],
   "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect-campaigns",
   "tagging": {

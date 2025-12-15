@@ -1,4 +1,6 @@
+// Package version provides version information for the sato application.
 package version
 
 // Version controls the application version.
-const Version = "9.9.9"
+// This value is set at build time via -ldflags.
+var Version = "dev"

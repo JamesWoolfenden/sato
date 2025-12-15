@@ -1,3 +1,5 @@
+// Package cf provides functionality for parsing and converting AWS CloudFormation
+// templates to Terraform configuration files.
 package cf
 
 import (
@@ -267,16 +269,24 @@ func StringToMap(param cloudformation.Parameter) Variable {
 // Write out Terraform.
 func Write(output string, location string, name string) error {
 	if output != "" {
-		newPath, _ := filepath.Abs(location)
-		err := os.MkdirAll(newPath, os.ModePerm)
+		newPath, err := filepath.Abs(location)
+		if err != nil {
+			return &filepathError{Path: location, err: err}
+		}
+
+		err = os.MkdirAll(newPath, 0o750)
 		if err != nil {
 			return &makeDirError{err}
 		}
 
 		d1 := []byte(output)
 
-		destination, _ := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
-		err = os.WriteFile(destination, d1, 0o644)
+		destination, err := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
+		if err != nil {
+			return &filepathError{Path: fmt.Sprint(location, "/", name, ".tf"), err: err}
+		}
+
+		err = os.WriteFile(destination, d1, 0o600)
 		log.Info().Msgf("Created %s", destination)
 
 		if err != nil {

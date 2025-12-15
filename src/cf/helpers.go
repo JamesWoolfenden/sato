@@ -78,7 +78,11 @@ func Boolean(test *bool) bool {
 
 // Decode64 is a template function.
 func Decode64(str string) string {
-	temp, _ := base64.StdEncoding.DecodeString(str)
+	temp, err := base64.StdEncoding.DecodeString(str)
+	if err != nil {
+		log.Warn().Err(err).Msgf("failed to decode base64 string: %s", str)
+		return ""
+	}
 
 	return string(temp)
 }
@@ -187,26 +191,53 @@ func Zipfile(code string, filename string, runtime string) string {
 
 	codeFile := filename + extension
 	d1 := []byte(code)
-	_ = os.WriteFile(codeFile, d1, 0o644)
+	if err := os.WriteFile(codeFile, d1, 0o600); err != nil {
+		log.Error().Err(err).Msgf("failed to write code file: %s", codeFile)
+		return ""
+	}
 
 	output := filename + ".zip"
-	archive, _ := os.Create(output)
+	archive, err := os.Create(output) // #nosec G304 -- Creating zip from controlled filename
+	if err != nil {
+		log.Error().Err(err).Msgf("failed to create zip archive: %s", output)
+		return ""
+	}
 
 	defer func(archive *os.File) {
-		_ = archive.Close()
+		if err := archive.Close(); err != nil {
+			log.Warn().Err(err).Msg("failed to close archive")
+		}
 	}(archive)
 
 	zipWriter := zip.NewWriter(archive)
 
-	file, _ := os.Open(filename)
+	file, err := os.Open(codeFile) // #nosec G304 -- Opening file created by this function
+	if err != nil {
+		log.Error().Err(err).Msgf("failed to open file: %s", codeFile)
+		return ""
+	}
 
 	defer func(f1 *os.File) {
-		_ = f1.Close()
+		if err := f1.Close(); err != nil {
+			log.Warn().Err(err).Msg("failed to close file")
+		}
 	}(file)
 
-	w1, _ := zipWriter.Create(filename)
-	_, _ = io.Copy(w1, file)
-	_ = zipWriter.Close()
+	w1, err := zipWriter.Create(codeFile)
+	if err != nil {
+		log.Error().Err(err).Msgf("failed to create zip entry: %s", filename)
+		return ""
+	}
+
+	if _, err := io.Copy(w1, file); err != nil {
+		log.Error().Err(err).Msg("failed to copy file to zip")
+		return ""
+	}
+
+	if err := zipWriter.Close(); err != nil {
+		log.Error().Err(err).Msg("failed to close zip writer")
+		return ""
+	}
 
 	return output
 }
@@ -224,27 +255,30 @@ func Demap(str string) []string {
 
 // Tags is a template function.
 func Tags(v []tags.Tag) string {
-	var temp string
+	var builder strings.Builder
 
 	for _, item := range v {
 		if item.Key != "" {
-			temp = temp + "\t\"" + item.Key + "\"" + "=" + "\"" + item.Value + "\"" + "\n"
+			builder.WriteString("\t\"")
+			builder.WriteString(item.Key)
+			builder.WriteString("\"=\"")
+			builder.WriteString(item.Value)
+			builder.WriteString("\"\n")
 		}
 	}
 
-	return temp
+	return builder.String()
 }
 
 // RandomString is a template function.
 func RandomString(n int) string {
-	rand.New(rand.NewSource(time.Now().UnixNano())) //nolint:gosec
+	rand.New(rand.NewSource(time.Now().UnixNano())) // #nosec G404 -- Non-crypto random OK for resource naming
 
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	myString := make([]rune, n)
 
 	for i := range myString {
-		//goland:noinspection GoLinter
-		myString[i] = letters[rand.Intn(len(letters))] //nolint:gosec
+		myString[i] = letters[rand.Intn(len(letters))] // #nosec G404 -- Non-crypto random OK for resource naming
 	}
 
 	return string(myString)
@@ -252,14 +286,20 @@ func RandomString(n int) string {
 
 // Map is a template function.
 func Map(myMap map[string]string) string {
-	result := "{ \n"
+	var builder strings.Builder
+	builder.WriteString("{ \n")
+
 	for item, stuff := range myMap {
-		result = result + "\t\"" + item + "\"" + "=" + "\"" + stuff + "\"\n"
+		builder.WriteString("\t\"")
+		builder.WriteString(item)
+		builder.WriteString("\"=\"")
+		builder.WriteString(stuff)
+		builder.WriteString("\"\n")
 	}
 
-	result += " }"
+	builder.WriteString(" }")
 
-	return result
+	return builder.String()
 }
 
 //goland:noinspection GoUnnecessarilyExportedIdentifiers

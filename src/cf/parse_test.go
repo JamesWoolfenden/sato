@@ -10,8 +10,7 @@ import (
 
 //goland:noinspection GoLinter
 func TestParse(t *testing.T) {
-	t.Parallel()
-
+	// Note: Not using t.Parallel() due to concurrent map writes bug in goformation library
 	type args struct {
 		file        string
 		destination string
@@ -30,7 +29,7 @@ func TestParse(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
+			// Not using t.Parallel() here because goformation library is not thread-safe
 			if err := Parse(tt.args.file, tt.args.destination); (err != nil) != tt.wantErr {
 				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 			}

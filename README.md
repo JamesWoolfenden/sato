@@ -50,7 +50,7 @@ go install
 
 ```shell
 brew tap jameswoolfenden/homebrew-tap
-brew install jameswoolfenden/tap/pike
+brew install jameswoolfenden/tap/sato
 ```
 
 ### Windows

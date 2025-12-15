@@ -71,8 +71,31 @@
     "Arn": {
       "type": "string"
     },
+    "CreationTime": {
+      "description": "The date and time when the resource share was created.",
+      "format": "date-time",
+      "type": "string"
+    },
+    "FeatureSet": {
+      "description": "The feature set of the resource share.",
+      "enum": [
+        "CREATED_FROM_POLICY",
+        "PROMOTING_TO_STANDARD",
+        "STANDARD"
+      ],
+      "type": "string"
+    },
+    "LastUpdatedTime": {
+      "description": "The date and time when the resource share was last updated.",
+      "format": "date-time",
+      "type": "string"
+    },
     "Name": {
       "description": "Specifies the name of the resource share.",
+      "type": "string"
+    },
+    "OwningAccountId": {
+      "description": "The ID of the AWS account that owns the resource share.",
       "type": "string"
     },
     "PermissionArns": {
@@ -107,6 +130,17 @@
       },
       "type": "array"
     },
+    "Status": {
+      "description": "The current status of the resource share.",
+      "enum": [
+        "PENDING",
+        "ACTIVE",
+        "FAILED",
+        "DELETING",
+        "DELETED"
+      ],
+      "type": "string"
+    },
     "Tags": {
       "description": "Specifies one or more tags to attach to the resource share itself. It doesn't attach the tags to the resources associated with the resource share.",
       "insertionOrder": false,
@@ -118,7 +152,12 @@
     }
   },
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/Status",
+    "/properties/CreationTime",
+    "/properties/LastUpdatedTime",
+    "/properties/FeatureSet",
+    "/properties/OwningAccountId"
   ],
   "required": [
     "Name"

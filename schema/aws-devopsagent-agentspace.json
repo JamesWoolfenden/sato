@@ -1,0 +1,86 @@
+{
+  "additionalProperties": false,
+  "definitions": {},
+  "description": "Resource Type definition for AWS::DevOpsAgent::AgentSpace",
+  "handlers": {
+    "create": {
+      "permissions": [
+        "aidevops:CreateAgentSpace",
+        "aidevops:GetAgentSpace"
+      ]
+    },
+    "delete": {
+      "permissions": [
+        "aidevops:DeleteAgentSpace",
+        "aidevops:GetAgentSpace"
+      ]
+    },
+    "list": {
+      "permissions": [
+        "aidevops:ListAgentSpaces"
+      ]
+    },
+    "read": {
+      "permissions": [
+        "aidevops:GetAgentSpace"
+      ]
+    },
+    "update": {
+      "permissions": [
+        "aidevops:UpdateAgentSpace",
+        "aidevops:GetAgentSpace"
+      ]
+    }
+  },
+  "primaryIdentifier": [
+    "/properties/AgentSpaceId"
+  ],
+  "properties": {
+    "AgentSpaceId": {
+      "description": "The unique identifier of the AgentSpace",
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Arn": {
+      "description": "The Amazon Resource Name (ARN) of the AgentSpace.",
+      "type": "string"
+    },
+    "CreatedAt": {
+      "description": "The timestamp when the resource was created.",
+      "format": "date-time",
+      "type": "string"
+    },
+    "Description": {
+      "description": "The description of the AgentSpace.",
+      "maxLength": 1000,
+      "minLength": 1,
+      "type": "string"
+    },
+    "Name": {
+      "description": "The name of the AgentSpace.",
+      "maxLength": 255,
+      "minLength": 1,
+      "type": "string"
+    },
+    "UpdatedAt": {
+      "description": "The timestamp when the resource was last updated.",
+      "format": "date-time",
+      "type": "string"
+    }
+  },
+  "readOnlyProperties": [
+    "/properties/AgentSpaceId",
+    "/properties/CreatedAt",
+    "/properties/UpdatedAt",
+    "/properties/Arn"
+  ],
+  "required": [
+    "Name"
+  ],
+  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging": {
+    "taggable": false
+  },
+  "typeName": "AWS::DevOpsAgent::AgentSpace"
+}

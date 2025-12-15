@@ -14,6 +14,30 @@
       "description": "The time of this MatchingWorkflow got created",
       "type": "string"
     },
+    "CustomerProfilesDomainArn": {
+      "pattern": "^arn:(aws|aws-us-gov|aws-cn):profile:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(domains/[a-zA-Z_0-9-]{1,255})$",
+      "type": "string"
+    },
+    "CustomerProfilesIntegrationConfig": {
+      "additionalProperties": false,
+      "properties": {
+        "DomainArn": {
+          "$ref": "#/definitions/CustomerProfilesDomainArn"
+        },
+        "ObjectTypeArn": {
+          "$ref": "#/definitions/CustomerProfilesObjectTypeArn"
+        }
+      },
+      "required": [
+        "DomainArn",
+        "ObjectTypeArn"
+      ],
+      "type": "object"
+    },
+    "CustomerProfilesObjectTypeArn": {
+      "pattern": "^arn:(aws|aws-us-gov|aws-cn):profile:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:(domains/[a-zA-Z_0-9-]{1,255}/object-types/[a-zA-Z_0-9-]{1,255})$",
+      "type": "string"
+    },
     "Description": {
       "maxLength": 255,
       "minLength": 0,
@@ -105,6 +129,9 @@
         "ApplyNormalization": {
           "type": "boolean"
         },
+        "CustomerProfilesIntegrationConfig": {
+          "$ref": "#/definitions/CustomerProfilesIntegrationConfig"
+        },
         "KMSArn": {
           "$ref": "#/definitions/KMSArn"
         },
@@ -124,8 +151,7 @@
         }
       },
       "required": [
-        "Output",
-        "OutputS3Path"
+        "Output"
       ],
       "type": "object"
     },
@@ -228,7 +254,7 @@
           "items": {
             "$ref": "#/definitions/Rule"
           },
-          "maxItems": 15,
+          "maxItems": 25,
           "minItems": 1,
           "type": "array"
         }
@@ -259,7 +285,7 @@
           "items": {
             "$ref": "#/definitions/RuleCondition"
           },
-          "maxItems": 15,
+          "maxItems": 25,
           "minItems": 1,
           "type": "array"
         }
@@ -315,7 +341,8 @@
         "events:PutRule",
         "events:DeleteRule",
         "events:PutTargets",
-        "events:ListTargetsByRule"
+        "events:ListTargetsByRule",
+        "profile:PutIntegration"
       ]
     },
     "delete": {
@@ -327,7 +354,8 @@
         "events:DeleteRule",
         "events:PutTargets",
         "events:RemoveTargets",
-        "events:ListTargetsByRule"
+        "events:ListTargetsByRule",
+        "profile:DeleteIntegration"
       ]
     },
     "list": {

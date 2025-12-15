@@ -93,6 +93,19 @@
       ],
       "type": "object"
     },
+    "ClusterCapacityRequirements": {
+      "additionalProperties": false,
+      "description": "Specifies the capacity requirements configuration for an instance group",
+      "properties": {
+        "OnDemand": {
+          "$ref": "#/definitions/ClusterOnDemandOptions"
+        },
+        "Spot": {
+          "$ref": "#/definitions/ClusterSpotOptions"
+        }
+      },
+      "type": "object"
+    },
     "ClusterEbsVolumeConfig": {
       "additionalProperties": false,
       "description": "Defines the configuration for attaching additional Amazon Elastic Block Store (EBS) volumes to the instances in the SageMaker HyperPod cluster instance group. The additional EBS volume is attached to each instance within the SageMaker HyperPod cluster instance group and mounted to /opt/sagemaker.",
@@ -119,6 +132,9 @@
       "additionalProperties": false,
       "description": "Details of an instance group in a SageMaker HyperPod cluster.",
       "properties": {
+        "CapacityRequirements": {
+          "$ref": "#/definitions/ClusterCapacityRequirements"
+        },
         "CurrentCount": {
           "description": "The number of instances that are currently in the instance group of a SageMaker HyperPod cluster.",
           "minimum": 0,
@@ -144,8 +160,16 @@
         "InstanceType": {
           "$ref": "#/definitions/InstanceType"
         },
+        "KubernetesConfig": {
+          "$ref": "#/definitions/ClusterKubernetesConfig"
+        },
         "LifeCycleConfig": {
           "$ref": "#/definitions/ClusterLifeCycleConfig"
+        },
+        "MinInstanceCount": {
+          "description": "The minimum number of instances required for the instance group to be InService. MinInstanceCount must be less than or equal to InstanceCount.",
+          "minimum": 0,
+          "type": "integer"
         },
         "OnStartDeepHealthChecks": {
           "$ref": "#/definitions/OnStartDeepHealthChecks"
@@ -212,6 +236,66 @@
       "maxItems": 1,
       "type": "array"
     },
+    "ClusterKubernetesConfig": {
+      "additionalProperties": false,
+      "description": "Kubernetes configuration for cluster nodes including labels and taints.",
+      "properties": {
+        "Labels": {
+          "$ref": "#/definitions/ClusterKubernetesLabels"
+        },
+        "Taints": {
+          "$ref": "#/definitions/ClusterKubernetesTaints"
+        }
+      },
+      "type": "object"
+    },
+    "ClusterKubernetesLabels": {
+      "additionalProperties": false,
+      "description": "A map of Kubernetes labels to apply to cluster nodes.",
+      "patternProperties": {
+        "^.+$": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ClusterKubernetesTaint": {
+      "additionalProperties": false,
+      "description": "A Kubernetes taint to apply to cluster nodes.",
+      "properties": {
+        "Effect": {
+          "description": "The effect of the taint.",
+          "enum": [
+            "NoSchedule",
+            "PreferNoSchedule",
+            "NoExecute"
+          ],
+          "type": "string"
+        },
+        "Key": {
+          "description": "The key of the taint.",
+          "type": "string"
+        },
+        "Value": {
+          "description": "The value of the taint.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "Key",
+        "Effect"
+      ],
+      "type": "object"
+    },
+    "ClusterKubernetesTaints": {
+      "description": "A list of Kubernetes taints to apply to cluster nodes. Maximum of 50 taints.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/ClusterKubernetesTaint"
+      },
+      "maxItems": 50,
+      "type": "array"
+    },
     "ClusterLifeCycleConfig": {
       "additionalProperties": false,
       "description": "The lifecycle configuration for a SageMaker HyperPod cluster.",
@@ -234,6 +318,11 @@
         "OnCreate",
         "SourceS3Uri"
       ],
+      "type": "object"
+    },
+    "ClusterOnDemandOptions": {
+      "additionalProperties": false,
+      "description": "Options for OnDemand capacity",
       "type": "object"
     },
     "ClusterOrchestratorEksConfig": {
@@ -316,6 +405,11 @@
       },
       "minItems": 1,
       "type": "array"
+    },
+    "ClusterSpotOptions": {
+      "additionalProperties": false,
+      "description": "Options for Spot capacity",
+      "type": "object"
     },
     "DeepHealthCheckType": {
       "description": "The type of deep health check(s) to be performed on the instances in the SageMaker HyperPod cluster instance group.",

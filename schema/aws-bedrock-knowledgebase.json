@@ -10,6 +10,42 @@
     "/properties/KnowledgeBaseConfiguration/SqlKnowledgeBaseConfiguration/RedshiftConfiguration/QueryEngineConfiguration"
   ],
   "definitions": {
+    "AudioConfiguration": {
+      "additionalProperties": false,
+      "description": "Configure the audio configuration for multi modal ingestion.",
+      "properties": {
+        "SegmentationConfiguration": {
+          "$ref": "#/definitions/AudioSegmentationConfiguration"
+        }
+      },
+      "required": [
+        "SegmentationConfiguration"
+      ],
+      "type": "object"
+    },
+    "AudioConfigurations": {
+      "description": "List of audio configurations for multi modal ingestion.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/AudioConfiguration"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array"
+    },
+    "AudioSegmentationConfiguration": {
+      "additionalProperties": false,
+      "description": "Configure the audio segmentation configuration for multi modal ingestion.",
+      "properties": {
+        "FixedLengthDuration": {
+          "$ref": "#/definitions/FixedLengthDuration"
+        }
+      },
+      "required": [
+        "FixedLengthDuration"
+      ],
+      "type": "object"
+    },
     "AwsDataCatalogTableName": {
       "description": "AWS Data Catalog table name",
       "maxLength": 200,
@@ -31,6 +67,9 @@
       "additionalProperties": false,
       "description": "The vector configuration details for the Bedrock embeddings model.",
       "properties": {
+        "Audio": {
+          "$ref": "#/definitions/AudioConfigurations"
+        },
         "Dimensions": {
           "description": "The dimensions details for the vector configuration used on the Bedrock embeddings model.",
           "maximum": 4096,
@@ -44,6 +83,9 @@
             "BINARY"
           ],
           "type": "string"
+        },
+        "Video": {
+          "$ref": "#/definitions/VideoConfigurations"
         }
       },
       "type": "object"
@@ -89,6 +131,12 @@
         }
       },
       "type": "object"
+    },
+    "FixedLengthDuration": {
+      "description": "Duration in seconds to segment the multi modal media",
+      "maximum": 30,
+      "minimum": 1,
+      "type": "integer"
     },
     "InclusionType": {
       "description": "Include or Exclude status for an entity",
@@ -158,6 +206,7 @@
         "RDS",
         "MONGO_DB_ATLAS",
         "NEPTUNE_ANALYTICS",
+        "S3_VECTORS",
         "OPENSEARCH_MANAGED_CLUSTER"
       ],
       "type": "string"
@@ -963,6 +1012,40 @@
       ],
       "type": "object"
     },
+    "S3VectorsConfiguration": {
+      "additionalProperties": false,
+      "description": "Contains the storage configuration of the knowledge base for S3 vectors.",
+      "oneOf": [
+        {
+          "required": [
+            "IndexArn"
+          ]
+        },
+        {
+          "required": [
+            "VectorBucketArn",
+            "IndexName"
+          ]
+        }
+      ],
+      "properties": {
+        "IndexArn": {
+          "description": "The Amazon Resource Name (ARN) of the vector index used for the knowledge base. This ARN identifies the specific vector index resource within Amazon Bedrock.",
+          "type": "string"
+        },
+        "IndexName": {
+          "description": "The name of the vector index used for the knowledge base. This name identifies the vector index within the Amazon Bedrock service.",
+          "maxLength": 63,
+          "minLength": 3,
+          "type": "string"
+        },
+        "VectorBucketArn": {
+          "description": "The Amazon Resource Name (ARN) of the S3 bucket where vector embeddings are stored. This bucket contains the vector data used by the knowledge base.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SecretArn": {
       "description": "Arn of a SecretsManager Secret",
       "pattern": "^arn:aws(|-cn|-us-gov):secretsmanager:[a-z0-9-]{1,20}:([0-9]{12}|):secret:[a-zA-Z0-9!/_+=.@-]{1,512}$",
@@ -1016,6 +1099,11 @@
         },
         {
           "required": [
+            "S3VectorsConfiguration"
+          ]
+        },
+        {
+          "required": [
             "MongoDbAtlasConfiguration"
           ]
         },
@@ -1043,6 +1131,9 @@
         },
         "RdsConfiguration": {
           "$ref": "#/definitions/RdsConfiguration"
+        },
+        "S3VectorsConfiguration": {
+          "$ref": "#/definitions/S3VectorsConfiguration"
         },
         "Type": {
           "$ref": "#/definitions/KnowledgeBaseStorageType"
@@ -1133,6 +1224,42 @@
       },
       "required": [
         "EmbeddingModelArn"
+      ],
+      "type": "object"
+    },
+    "VideoConfiguration": {
+      "additionalProperties": false,
+      "description": "Configure the video configuration for multi modal ingestion.",
+      "properties": {
+        "SegmentationConfiguration": {
+          "$ref": "#/definitions/VideoSegmentationConfiguration"
+        }
+      },
+      "required": [
+        "SegmentationConfiguration"
+      ],
+      "type": "object"
+    },
+    "VideoConfigurations": {
+      "description": "List of video configurations for multi modal ingestion.",
+      "insertionOrder": false,
+      "items": {
+        "$ref": "#/definitions/VideoConfiguration"
+      },
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array"
+    },
+    "VideoSegmentationConfiguration": {
+      "additionalProperties": false,
+      "description": "Configure the video segmentation configuration for multi modal ingestion.",
+      "properties": {
+        "FixedLengthDuration": {
+          "$ref": "#/definitions/FixedLengthDuration"
+        }
+      },
+      "required": [
+        "FixedLengthDuration"
       ],
       "type": "object"
     },

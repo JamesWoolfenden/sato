@@ -1,3 +1,5 @@
+// Package arm provides functionality for parsing and converting Azure Resource Manager (ARM)
+// templates to Terraform configuration files.
 package arm
 
 import (
@@ -40,7 +42,7 @@ var funcMap = tftemplate.FuncMap{
 	"Marshal": func(v interface{}) string {
 		a, err := json.Marshal(v)
 		if err != nil {
-			log.Printf("marshal failure")
+			log.Error().Err(err).Msg("marshal failure")
 		}
 
 		return string(a)
@@ -115,7 +117,7 @@ func Parse(file string, destination string) error {
 		return &filepathError{Path: file}
 	}
 
-	jsonFile, err := os.Open(fileAbs)
+	jsonFile, err := os.Open(fileAbs) // #nosec G304 -- User-provided file path is expected for CLI tool
 	if err != nil {
 		return &openFileError{path: file, err: err}
 	}
@@ -243,6 +245,82 @@ func ParseString(attribute string, result map[string]interface{}) (string, map[s
 	return attribute, result
 }
 
+// ensureDataMap ensures the data map exists and returns it.
+func ensureDataMap(result map[string]interface{}) map[string]interface{} {
+	if result["data"] == nil {
+		return make(map[string]interface{})
+	}
+
+	data, ok := result["data"].(map[string]interface{})
+	if !ok {
+		log.Warn().Msgf("assertion failure %s", result["data"])
+		return make(map[string]interface{})
+	}
+
+	return data
+}
+
+// replaceUUID handles the uuid ARM function conversion.
+func replaceUUID(newAttribute string, result map[string]interface{}) (string, map[string]interface{}) {
+	data := ensureDataMap(result)
+
+	if data["uuid"] != nil {
+		data["uuid"] = data["uuid"].(int) + 1
+	} else {
+		data["uuid"] = 0
+	}
+
+	result["data"] = data
+	replacement := "random_uuid.sato" + strconv.Itoa(data["uuid"].(int)) + ".result"
+	return strings.Replace(newAttribute, "uuid()", replacement, 1), result
+}
+
+// replaceConcat handles the concat ARM function conversion.
+func replaceConcat(newAttribute string, result map[string]interface{}) string {
+	Attribute := LoseSQBrackets(newAttribute)
+	ditched := Ditch(Attribute, "concat")
+
+	raw := strings.Split(ditched, ",")
+
+	var after string
+
+	for item, value := range raw {
+		if value == "/" {
+			value = "_"
+		}
+
+		if strings.Contains(value, "Microsoft") {
+			var err error
+			value, err = resourceToName(value, result)
+
+			if err != nil {
+				log.Debug().Msgf("Concat failed: %v", err)
+			}
+		}
+
+		s := []string{"var.", "azurerm_", "local.", "substr"}
+		for _, v := range s {
+			if strings.Contains(strings.ToLower(value), strings.ToLower(v)) {
+				if v == "substr" {
+					after = "${" + strings.TrimSpace(strings.Join(raw[1:], ",")) + "}"
+
+					continue
+				}
+
+				raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
+			}
+		}
+
+		raw[item] = strings.ReplaceAll(strings.TrimSpace(raw[item]), "'", "")
+	}
+
+	if after == "" {
+		return strings.Join(raw, "")
+	}
+
+	return raw[0] + after
+}
+
 // Replace convert ARM functions to tf
 func Replace(
 	matches []string,
@@ -259,48 +337,7 @@ func Replace(
 		}
 	case "concat":
 		{
-			Attribute = LoseSQBrackets(newAttribute)
-			ditched := Ditch(Attribute, "concat")
-
-			raw := strings.Split(ditched, ",")
-
-			var after string
-
-			for item, value := range raw {
-				if value == "/" {
-					value = "_"
-				}
-
-				if strings.Contains(value, "Microsoft") {
-					var err error
-					value, err = resourceToName(value, result)
-
-					if err != nil {
-						log.Debug().Msgf("Concat failed: %v", err)
-					}
-				}
-
-				s := []string{"var.", "azurerm_", "local.", "substr"}
-				for _, v := range s {
-					if strings.Contains(strings.ToLower(value), strings.ToLower(v)) {
-						if v == "substr" {
-							after = "${" + strings.TrimSpace(strings.Join(raw[1:], ",")) + "}"
-
-							continue
-						}
-
-						raw[item] = fmt.Sprintf("${%s}", strings.ReplaceAll(strings.TrimSpace(value), "'", ""))
-					}
-				}
-
-				raw[item] = strings.ReplaceAll(strings.TrimSpace(raw[item]), "'", "")
-			}
-
-			if after == "" {
-				Attribute = strings.Join(raw, "")
-			} else {
-				Attribute = raw[0] + after
-			}
+			Attribute = replaceConcat(newAttribute, result)
 		}
 	case "reference":
 		{
@@ -364,7 +401,7 @@ func Replace(
 
 				Attribute = LoseSQBrackets(strings.ReplaceAll(newAttribute, Match[0], temp))
 			} else {
-				log.Printf("no match found %s", newAttribute)
+				log.Warn().Msgf("no match found %s", newAttribute)
 			}
 		}
 	case "variables":
@@ -382,7 +419,7 @@ func Replace(
 
 				Attribute = strings.ReplaceAll(newAttribute, Match[0], myTemp)
 			} else {
-				log.Printf("not found %s", newAttribute)
+				log.Warn().Msgf("not found %s", newAttribute)
 			}
 		}
 	case "toLower", "tolower":
@@ -394,65 +431,20 @@ func Replace(
 		{
 			Attribute = strings.ReplaceAll(newAttribute, "resourceGroup().location",
 				"data.azurerm_resource_group.sato.location")
-			data := make(map[string]interface{})
-
-			if result["data"] == nil {
-				data["resource_group"] = true
-			} else {
-				var ok bool
-
-				data, ok = result["data"].(map[string]interface{})
-				if !ok {
-					log.Printf("assertion failure %s", result["data"])
-
-					break
-				}
-
-				data["resource_group"] = true
-			}
-
+			data := ensureDataMap(result)
+			data["resource_group"] = true
 			result["data"] = data
 		}
 	case "uuid":
 		{
-			data := make(map[string]interface{})
-			if result["data"] == nil {
-				data["uuid"] = 0
-			} else {
-				data, ok := result["data"].(map[string]interface{})
-
-				if !ok {
-					log.Printf("assertion failure %s", result["data"])
-				}
-
-				if data["uuid"] != nil {
-					data["uuid"] = data["uuid"].(int) + 1
-				} else {
-					data["uuid"] = 0
-				}
-			}
-
-			result["data"] = data
-			replacement := "random_uuid.sato" + strconv.Itoa(data["uuid"].(int)) + ".result"
-			Attribute = strings.Replace(newAttribute, "uuid()", replacement, 1)
+			Attribute, result = replaceUUID(newAttribute, result)
 		}
 	case "subscription().tenantId":
 		{
 			Attribute = strings.ReplaceAll(newAttribute, "subscription().tenantId",
 				"data.azurerm_client_config.sato.tenant_id")
-			data := make(map[string]interface{})
-
-			if result["data"] == nil {
-				data["client_config"] = true
-			} else {
-				data, ok := result["data"].(map[string]interface{})
-				if !ok {
-					log.Printf("assertion failure %s", result["data"])
-				}
-
-				data["client_config"] = true
-			}
-
+			data := ensureDataMap(result)
+			data["client_config"] = true
 			result["data"] = data
 		}
 	case "resourceGroup().id":
@@ -475,7 +467,7 @@ func Replace(
 		if Attribute != newAttribute {
 			Attribute, result = Replace(matches, Attribute, again, result)
 		} else {
-			log.Printf("having a problem parsing %s", newAttribute)
+			log.Warn().Msgf("having a problem parsing %s", newAttribute)
 		}
 	}
 
@@ -518,7 +510,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 	if FindResourceType(result, arm) {
 		resourceName, err = see.Lookup(arm, false)
 		if err != nil {
-			log.Printf("no match found %s", arm)
+			log.Warn().Msgf("no match found %s", arm)
 		}
 	} else {
 		if strings.Contains(arm, " ") {
@@ -894,6 +886,50 @@ func FindResourceType(result map[string]interface{}, name string) bool {
 	return false
 }
 
+// processParameterType processes a single parameter based on its type.
+func processParameterType(item string, myResult map[string]interface{}, newLocals, newParams map[string]interface{}) {
+	_, ok := myResult["defaultValue"]
+
+	if !ok {
+		myResult["default"] = ""
+		newParams[item] = myResult
+		return
+	}
+
+	myType := myResult["type"].(string)
+	switch strings.ToLower(myType) {
+	case "string", "securestring":
+		defaultValue := myResult["defaultValue"].(string)
+		if strings.Contains(defaultValue, "[") {
+			newLocals[item] = defaultValue
+			return
+		}
+
+		myResult["default"] = myResult["defaultValue"].(string)
+		newParams[item] = myResult
+	case "int":
+		myResult["type"] = "number"
+		myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"].(float64))
+		newParams[item] = myResult
+	case "object", "list(string)":
+		// todo
+		// myResult["default"] = myResult["defaultValue"]
+		myResult["default"] = ""
+		newParams[item] = myResult
+	case "array":
+		myResult["type"] = "list(string)"
+		myResult["default"] = ArrayToString(myResult["defaultValue"].([]interface{}))
+		newParams[item] = myResult
+	case "map[string]interface{}":
+		log.Debug().Msgf("handled %s", myType)
+	case "bool":
+		myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"])
+		newParams[item] = myResult
+	default:
+		log.Warn().Msgf("unhandled type %s", myType)
+	}
+}
+
 // Preprocess examines raw ARM loads.
 func Preprocess(results map[string]interface{}) map[string]interface{} {
 	results["resources"] = SetResourceNames(results)
@@ -910,12 +946,10 @@ func Preprocess(results map[string]interface{}) map[string]interface{} {
 		for item, result := range paraVariables {
 			switch result := result.(type) {
 			case string:
-				{
-					if strings.Contains(result, "[") {
-						locals[item] = result
-					} else {
-						newVariables[item] = result
-					}
+				if strings.Contains(result, "[") {
+					locals[item] = result
+				} else {
+					newVariables[item] = result
 				}
 			default:
 				jasoned, _ := json.Marshal(result)
@@ -937,59 +971,7 @@ func Preprocess(results map[string]interface{}) map[string]interface{} {
 
 	for item, result := range paraParameters {
 		myResult := result.(map[string]interface{})
-		_, ok := myResult["defaultValue"]
-
-		if ok {
-			myType := myResult["type"].(string)
-			switch strings.ToLower(myType) {
-			case "string", "securestring":
-				{
-					defaultValue := myResult["defaultValue"].(string)
-					if strings.Contains(defaultValue, "[") {
-						newLocals[item] = defaultValue
-						break
-					}
-
-					myResult["default"] = myResult["defaultValue"].(string)
-					newParams[item] = myResult
-				}
-			case "int":
-				{
-					myResult["type"] = "number"
-					myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"].(float64))
-					newParams[item] = myResult
-				}
-			case "object", "list(string)":
-				{
-					// todo
-					// myResult["default"] = myResult["defaultValue"]
-					myResult["default"] = ""
-					newParams[item] = myResult
-				}
-			case "array":
-				{
-					myResult["type"] = "list(string)"
-					myResult["default"] = ArrayToString(myResult["defaultValue"].([]interface{}))
-					newParams[item] = myResult
-				}
-			case "map[string]interface{}":
-				{
-					log.Printf("handled %s", myType)
-				}
-			case "bool":
-				{
-					myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"])
-					newParams[item] = myResult
-				}
-			default:
-				{
-					log.Printf("unhandled %s", myType)
-				}
-			}
-		} else {
-			myResult["default"] = ""
-			newParams[item] = myResult
-		}
+		processParameterType(item, myResult, newLocals, newParams)
 	}
 
 	results["parameters"] = newParams
@@ -1000,15 +982,69 @@ func Preprocess(results map[string]interface{}) map[string]interface{} {
 	return results
 }
 
+// generateResourceName creates a meaningful resource name from type and resource name.
+func generateResourceName(resourceType string, resourceName string, index int) string {
+	// Extract the last part of the resource type
+	// e.g., "Microsoft.Network/virtualNetworks" -> "virtualNetworks"
+	parts := strings.Split(resourceType, "/")
+	typeName := parts[len(parts)-1]
+
+	// Convert to snake case
+	typeName = cf.Snake(typeName)
+
+	// Clean up the resource name if it's a simple string
+	cleanName := strings.ToLower(resourceName)
+	cleanName = strings.ReplaceAll(cleanName, "-", "_")
+	cleanName = strings.ReplaceAll(cleanName, " ", "_")
+	cleanName = regexp.MustCompile(`[^\w_]`).ReplaceAllString(cleanName, "")
+
+	// If the name contains template expressions like [parameters or [variables, just use type with index
+	if strings.Contains(resourceName, "[") || cleanName == "" {
+		return fmt.Sprintf("%s_%d", typeName, index)
+	}
+
+	// Truncate if too long
+	const maxLength = 50
+	combined := fmt.Sprintf("%s_%s", typeName, cleanName)
+	if len(combined) > maxLength {
+		combined = combined[:maxLength]
+	}
+
+	return combined
+}
+
 // SetResourceNames gets resource names for results
 func SetResourceNames(results map[string]interface{}) []interface{} {
 	resources := results["resources"].([]interface{})
 
 	var newResults []interface{}
+	nameCounter := make(map[string]int)
 
 	for item, result := range resources {
 		inside := result.(map[string]interface{})
-		counter := map[string]interface{}{"resource": fmt.Sprintf("sato%d", item)}
+
+		// Get resource type and name
+		resourceType, typeOk := inside["type"].(string)
+		resourceName, nameOk := inside["name"].(string)
+
+		var generatedName string
+		if typeOk && nameOk {
+			baseName := generateResourceName(resourceType, resourceName, item)
+
+			// Handle duplicate names by adding a suffix
+			if count, exists := nameCounter[baseName]; exists {
+				nameCounter[baseName] = count + 1
+				generatedName = fmt.Sprintf("%s_%d", baseName, count+1)
+			} else {
+				nameCounter[baseName] = 0
+				generatedName = baseName
+			}
+		} else {
+			// Fallback to old naming scheme if type or name is missing
+			generatedName = fmt.Sprintf("sato%d", item)
+		}
+
+		counter := map[string]interface{}{"resource": generatedName}
 		maps.Copy(inside, counter)
 		newResults = append(newResults, inside)
 	}

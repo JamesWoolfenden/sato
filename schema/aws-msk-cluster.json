@@ -115,6 +115,9 @@
     "ConnectivityInfo": {
       "additionalProperties": false,
       "properties": {
+        "NetworkType": {
+          "$ref": "#/definitions/NetworkType"
+        },
         "PublicAccess": {
           "$ref": "#/definitions/PublicAccess"
         },
@@ -230,6 +233,13 @@
       ],
       "type": "object"
     },
+    "NetworkType": {
+      "enum": [
+        "IPV4",
+        "DUAL"
+      ],
+      "type": "string"
+    },
     "NodeExporter": {
       "additionalProperties": false,
       "properties": {
@@ -287,6 +297,22 @@
           "type": "string"
         }
       },
+      "type": "object"
+    },
+    "Rebalancing": {
+      "additionalProperties": false,
+      "properties": {
+        "Status": {
+          "enum": [
+            "PAUSED",
+            "ACTIVE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "Status"
+      ],
       "type": "object"
     },
     "S3": {
@@ -497,13 +523,16 @@
         "kafka:UpdateStorage",
         "kafka:UpdateSecurity",
         "kafka:UpdateConnectivity",
+        "kafka:UpdateRebalancing",
         "kafka:DescribeCluster",
         "kafka:DescribeClusterOperation",
         "kafka:TagResource",
         "kafka:UntagResource",
+        "ec2:CreateTags",
         "ec2:DescribeSubnets",
         "ec2:DescribeVpcs",
         "ec2:DescribeSecurityGroups",
+        "ec2:DescribeRouteTables",
         "iam:AttachRolePolicy",
         "iam:CreateServiceLinkedRole",
         "iam:PutRolePolicy",
@@ -577,6 +606,9 @@
     "OpenMonitoring": {
       "$ref": "#/definitions/OpenMonitoring"
     },
+    "Rebalancing": {
+      "$ref": "#/definitions/Rebalancing"
+    },
     "StorageMode": {
       "enum": [
         "LOCAL",
@@ -598,7 +630,8 @@
     }
   },
   "readOnlyProperties": [
-    "/properties/Arn"
+    "/properties/Arn",
+    "/properties/CurrentVersion"
   ],
   "required": [
     "BrokerNodeGroupInfo",

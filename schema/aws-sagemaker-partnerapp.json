@@ -137,6 +137,12 @@
     "/properties/Arn"
   ],
   "properties": {
+    "AppVersion": {
+      "description": "The version of the PartnerApp.",
+      "maxLength": 64,
+      "minLength": 1,
+      "type": "string"
+    },
     "ApplicationConfig": {
       "$ref": "#/definitions/PartnerAppConfig",
       "description": "A collection of settings that specify the maintenance schedule for the PartnerApp."
@@ -166,6 +172,14 @@
       "minLength": 1,
       "pattern": "^[a-zA-Z0-9-]+$",
       "type": "string"
+    },
+    "CurrentVersionEolDate": {
+      "description": "The end-of-life date for the current version of the PartnerApp.",
+      "type": "string"
+    },
+    "EnableAutoMinorVersionUpgrade": {
+      "description": "Enables automatic minor version upgrades for the PartnerApp.",
+      "type": "boolean"
     },
     "EnableIamSessionBasedIdentity": {
       "description": "Enables IAM Session based Identity for PartnerApp.",
@@ -225,7 +239,8 @@
   },
   "readOnlyProperties": [
     "/properties/Arn",
-    "/properties/BaseUrl"
+    "/properties/BaseUrl",
+    "/properties/CurrentVersionEolDate"
   ],
   "replacementStrategy": "delete_then_create",
   "required": [

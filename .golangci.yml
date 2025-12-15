@@ -1,0 +1,93 @@
+version: 2
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    # Enabled by default - keeping them enabled
+    - errcheck      # Check for unchecked errors
+    - govet         # Vet examines Go source code
+    - ineffassign   # Detect ineffectual assignments
+    - staticcheck   # Go static analysis
+    - unused        # Check for unused constants, variables, functions and types
+
+    # Additional useful linters
+    - misspell      # Check for misspelled English words
+    - revive        # Fast, configurable, extensible linter
+    - unconvert     # Remove unnecessary type conversions
+    - gosec         # Security-focused linter
+    - errname       # Check error names
+    - errorlint     # Find error wrapping issues
+    - gocritic      # Opinionated Go source code linter
+    - gocyclo       # Detect cyclomatic complexity
+    - bodyclose     # Check HTTP response bodies are closed
+    - nilerr        # Find code that returns nil even if it checks error != nil
+    - nolintlint    # Report ill-formed or insufficient nolint directives
+    - godot         # Check if comments end in a period
+    - prealloc      # Find slice declarations that could be pre-allocated
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: false
+
+  govet:
+    enable-all: true
+    disable:
+      - shadow      # Too noisy for this codebase
+
+  gocyclo:
+    min-complexity: 20  # Lower than default (30) to catch complex functions
+
+  revive:
+    rules:
+      - name: exported
+        disabled: true  # Disabled to avoid requiring doc comments everywhere initially
+      - name: package-comments
+        disabled: true
+
+  gosec:
+    excludes:
+      - G204  # Subprocess with variable - needed for terraform exec
+      - G304  # File path provided as taint input - needed for file operations
+      - G404  # Weak random generator - only used for non-crypto resource naming
+
+  gocritic:
+    enabled-checks:
+      - ruleguard
+      - truncateCmp
+    disabled-checks:
+      - appendAssign
+      - ifElseChain
+
+  nolintlint:
+    allow-unused: false
+    require-explanation: true
+    require-specific: true
+
+issues:
+  exclude-rules:
+    # Exclude some linters from running on test files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - gosec
+        - godot
+
+    # Exclude vendor directory
+    - path: vendor/
+      linters:
+        - all
+
+  # Maximum issues count per one linter
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text
+  max-same-issues: 0
+
+  # Show only new issues created after git revision
+  new: false
