@@ -1,102 +1,71 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/TransitGatewayId"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "The key of the associated tag key-value pair",
-          "type": "string"
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
+  "tagging" : {
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ],
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "ec2:DescribeTransitGatewayRouteTables" ]
+    },
+    "create" : {
+      "permissions" : [ "ec2:CreateTransitGatewayRouteTable", "ec2:CreateTags", "ec2:DescribeTransitGatewayRouteTables" ]
+    },
+    "update" : {
+      "permissions" : [ "ec2:DescribeTransitGatewayRouteTables", "ec2:CreateTags", "ec2:DeleteTags" ]
+    },
+    "list" : {
+      "permissions" : [ "ec2:DescribeTransitGatewayRouteTables" ]
+    },
+    "delete" : {
+      "permissions" : [ "ec2:DeleteTransitGatewayRouteTable", "ec2:DescribeTransitGatewayRouteTables", "ec2:GetTransitGatewayRouteTableAssociations", "ec2:DisassociateTransitGatewayRouteTable" ]
+    }
+  },
+  "typeName" : "AWS::EC2::TransitGatewayRouteTable",
+  "readOnlyProperties" : [ "/properties/TransitGatewayRouteTableId" ],
+  "description" : "Resource Type definition for AWS::EC2::TransitGatewayRouteTable",
+  "createOnlyProperties" : [ "/properties/TransitGatewayId" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/TransitGatewayRouteTableId" ],
+  "definitions" : {
+    "Tag" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "description" : "The value of the associated tag key-value pair",
+          "type" : "string"
         },
-        "Value": {
-          "description": "The value of the associated tag key-value pair",
-          "type": "string"
+        "Key" : {
+          "description" : "The key of the associated tag key-value pair",
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::EC2::TransitGatewayRouteTable",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateTransitGatewayRouteTable",
-        "ec2:CreateTags",
-        "ec2:DescribeTransitGatewayRouteTables"
-      ]
+  "properties" : {
+    "TransitGatewayRouteTableId" : {
+      "description" : "Transit Gateway Route Table primary identifier",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteTransitGatewayRouteTable",
-        "ec2:DescribeTransitGatewayRouteTables",
-        "ec2:GetTransitGatewayRouteTableAssociations",
-        "ec2:DisassociateTransitGatewayRouteTable"
-      ]
+    "TransitGatewayId" : {
+      "description" : "The ID of the transit gateway.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeTransitGatewayRouteTables"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "ec2:DescribeTransitGatewayRouteTables"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "ec2:DescribeTransitGatewayRouteTables",
-        "ec2:CreateTags",
-        "ec2:DeleteTags"
-      ]
+    "Tags" : {
+      "uniqueItems" : false,
+      "description" : "Tags are composed of a Key/Value pair. You can use tags to categorize and track each parameter group. The tag value null is permitted.",
+      "insertionOrder" : false,
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/TransitGatewayRouteTableId"
-  ],
-  "properties": {
-    "Tags": {
-      "description": "Tags are composed of a Key/Value pair. You can use tags to categorize and track each parameter group. The tag value null is permitted.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "TransitGatewayId": {
-      "description": "The ID of the transit gateway.",
-      "type": "string"
-    },
-    "TransitGatewayRouteTableId": {
-      "description": "Transit Gateway Route Table primary identifier",
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/TransitGatewayRouteTableId"
-  ],
-  "required": [
-    "TransitGatewayId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::TransitGatewayRouteTable"
+  "required" : [ "TransitGatewayId" ]
 }

@@ -1,696 +1,604 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/LogGroupIdentifier"
-  ],
-  "definitions": {
-    "AddKeyEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-        },
-        "OverwriteIfExists": {
-          "type": "boolean"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
+  "typeName" : "AWS::Logs::Transformer",
+  "description" : "Specifies a transformer on the log group to transform logs into consistent structured and information rich format.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+  "properties" : {
+    "LogGroupIdentifier" : {
+      "description" : "Existing log group that you want to associate with this transformer.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048,
+      "pattern" : "[\\w#+=/:,.@-]*"
+    },
+    "TransformerConfig" : {
+      "description" : "List of processors in a transformer",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Processor"
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "Column": {
-      "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-    },
-    "CopyValueEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "OverwriteIfExists": {
-          "type": "boolean"
-        },
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        },
-        "Target": {
-          "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-        }
-      },
-      "required": [
-        "Source",
-        "Target"
-      ],
-      "type": "object"
-    },
-    "EventSource": {
-      "enum": [
-        "CloudTrail",
-        "Route53Resolver",
-        "VPCFlow",
-        "EKSAudit",
-        "AWSWAF"
-      ],
-      "type": "string"
-    },
-    "MatchPattern": {
-      "$ref": "#/definitions/NonEmptyString"
-    },
-    "MaxLengthString": {
-      "maxLength": 128,
-      "type": "string"
-    },
-    "MoveKeyEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "OverwriteIfExists": {
-          "type": "boolean"
-        },
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        },
-        "Target": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "required": [
-        "Source",
-        "Target"
-      ],
-      "type": "object"
-    },
-    "NonEmptyAndMaxLengthString": {
-      "maxLength": 128,
-      "pattern": "^.*[a-zA-Z0-9]+.*$",
-      "type": "string"
-    },
-    "NonEmptyString": {
-      "pattern": "^.*[a-zA-Z0-9]+.*$",
-      "type": "string"
-    },
-    "OcsfVersion": {
-      "enum": [
-        "V1.1"
-      ],
-      "type": "string"
-    },
-    "ParseCloudfront": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "type": "object"
-    },
-    "ParsePostgres": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "type": "object"
-    },
-    "ParseRoute53": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "type": "object"
-    },
-    "ParseToOCSF": {
-      "additionalProperties": false,
-      "properties": {
-        "EventSource": {
-          "$ref": "#/definitions/EventSource"
-        },
-        "OcsfVersion": {
-          "$ref": "#/definitions/OcsfVersion"
-        },
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "required": [
-        "EventSource",
-        "OcsfVersion"
-      ],
-      "type": "object"
-    },
-    "ParseVPC": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "type": "object"
-    },
-    "ParseWAF": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "type": "object"
-    },
-    "Processor": {
-      "additionalProperties": false,
-      "description": "Individual processor configuration",
-      "maxProperties": 1,
-      "minProperties": 1,
-      "properties": {
-        "AddKeys": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/AddKeyEntry"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "CopyValue": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/CopyValueEntry"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "Csv": {
-          "additionalProperties": false,
-          "properties": {
-            "Columns": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/Column"
-              },
-              "maxItems": 100,
-              "minItems": 1,
-              "type": "array"
-            },
-            "Delimiter": {
-              "maxLength": 2,
-              "type": "string"
-            },
-            "QuoteCharacter": {
-              "maxLength": 1,
-              "type": "string"
-            },
-            "Source": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "DateTimeConverter": {
-          "additionalProperties": false,
-          "properties": {
-            "Locale": {
-              "type": "string"
-            },
-            "MatchPatterns": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/MatchPattern"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            },
-            "Source": {
-              "$ref": "#/definitions/NonEmptyString"
-            },
-            "SourceTimezone": {
-              "type": "string"
-            },
-            "Target": {
-              "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-            },
-            "TargetFormat": {
-              "type": "string"
-            },
-            "TargetTimezone": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "Source",
-            "Target",
-            "MatchPatterns"
-          ],
-          "type": "object"
-        },
-        "DeleteKeys": {
-          "additionalProperties": false,
-          "properties": {
-            "WithKeys": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/WithKey"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "required": [
-            "WithKeys"
-          ],
-          "type": "object"
-        },
-        "Grok": {
-          "additionalProperties": false,
-          "properties": {
-            "Match": {
-              "maxLength": 512,
-              "type": "string"
-            },
-            "Source": {
-              "$ref": "#/definitions/NonEmptyString"
-            }
-          },
-          "required": [
-            "Match"
-          ],
-          "type": "object"
-        },
-        "ListToMap": {
-          "additionalProperties": false,
-          "properties": {
-            "Flatten": {
-              "type": "boolean"
-            },
-            "FlattenedElement": {
-              "enum": [
-                "first",
-                "last"
-              ],
-              "type": "string"
-            },
-            "Key": {
-              "$ref": "#/definitions/NonEmptyString"
-            },
-            "Source": {
-              "$ref": "#/definitions/NonEmptyString"
-            },
-            "Target": {
-              "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-            },
-            "ValueKey": {
-              "$ref": "#/definitions/NonEmptyString"
-            }
-          },
-          "required": [
-            "Source",
-            "Key"
-          ],
-          "type": "object"
-        },
-        "LowerCaseString": {
-          "additionalProperties": false,
-          "properties": {
-            "WithKeys": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/WithKey"
-              },
-              "maxItems": 10,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "required": [
-            "WithKeys"
-          ],
-          "type": "object"
-        },
-        "MoveKeys": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/MoveKeyEntry"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "ParseCloudfront": {
-          "$ref": "#/definitions/ParseCloudfront"
-        },
-        "ParseJSON": {
-          "additionalProperties": false,
-          "properties": {
-            "Destination": {
-              "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-            },
-            "Source": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "ParseKeyValue": {
-          "additionalProperties": false,
-          "properties": {
-            "Destination": {
-              "$ref": "#/definitions/NonEmptyString"
-            },
-            "FieldDelimiter": {
-              "type": "string"
-            },
-            "KeyPrefix": {
-              "$ref": "#/definitions/NonEmptyString"
-            },
-            "KeyValueDelimiter": {
-              "type": "string"
-            },
-            "NonMatchValue": {
-              "$ref": "#/definitions/NonEmptyString"
-            },
-            "OverwriteIfExists": {
-              "type": "boolean"
-            },
-            "Source": {
-              "$ref": "#/definitions/NonEmptyString"
-            }
-          },
-          "type": "object"
-        },
-        "ParsePostgres": {
-          "$ref": "#/definitions/ParsePostgres"
-        },
-        "ParseRoute53": {
-          "$ref": "#/definitions/ParseRoute53"
-        },
-        "ParseToOCSF": {
-          "$ref": "#/definitions/ParseToOCSF"
-        },
-        "ParseVPC": {
-          "$ref": "#/definitions/ParseVPC"
-        },
-        "ParseWAF": {
-          "$ref": "#/definitions/ParseWAF"
-        },
-        "RenameKeys": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/RenameKeyEntry"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "SplitString": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/SplitStringEntry"
-              },
-              "maxItems": 10,
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "SubstituteString": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/SubstituteStringEntry"
-              },
-              "maxItems": 10,
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "TrimString": {
-          "additionalProperties": false,
-          "properties": {
-            "WithKeys": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/WithKey"
-              },
-              "maxItems": 10,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "required": [
-            "WithKeys"
-          ],
-          "type": "object"
-        },
-        "TypeConverter": {
-          "additionalProperties": false,
-          "properties": {
-            "Entries": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/TypeConverterEntry"
-              },
-              "maxItems": 5,
-              "minItems": 1,
-              "type": "array"
-            }
-          },
-          "required": [
-            "Entries"
-          ],
-          "type": "object"
-        },
-        "UpperCaseString": {
-          "additionalProperties": false,
-          "properties": {
-            "WithKeys": {
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/WithKey"
-              },
-              "maxItems": 10,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "required": [
-            "WithKeys"
-          ],
-          "type": "object"
-        }
-      },
-      "type": "object"
-    },
-    "RenameKeyEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "$ref": "#/definitions/NonEmptyString"
-        },
-        "OverwriteIfExists": {
-          "type": "boolean"
-        },
-        "RenameTo": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "required": [
-        "Key",
-        "RenameTo"
-      ],
-      "type": "object"
-    },
-    "SplitStringEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "Delimiter": {
-          "maxLength": 128,
-          "type": "string"
-        },
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        }
-      },
-      "required": [
-        "Source",
-        "Delimiter"
-      ],
-      "type": "object"
-    },
-    "SubstituteStringEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "From": {
-          "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-        },
-        "Source": {
-          "$ref": "#/definitions/NonEmptyString"
-        },
-        "To": {
-          "$ref": "#/definitions/NonEmptyAndMaxLengthString"
-        }
-      },
-      "required": [
-        "Source",
-        "From",
-        "To"
-      ],
-      "type": "object"
-    },
-    "TypeConverterEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "$ref": "#/definitions/NonEmptyString"
-        },
-        "Type": {
-          "enum": [
-            "boolean",
-            "integer",
-            "double",
-            "string"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Type"
-      ],
-      "type": "object"
-    },
-    "WithKey": {
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
+      "minItems" : 1,
+      "maxItems" : 20,
+      "insertionOrder" : false
     }
   },
-  "description": "Specifies a transformer on the log group to transform logs into consistent structured and information rich format.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "logs:PutTransformer",
-        "logs:GetTransformer"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "logs:DeleteTransformer"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "logs:DescribeLogGroups",
-        "logs:GetTransformer"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "logs:GetTransformer"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "logs:GetTransformer",
-        "logs:PutTransformer"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/LogGroupIdentifier"
-  ],
-  "properties": {
-    "LogGroupIdentifier": {
-      "description": "Existing log group that you want to associate with this transformer.",
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "[\\w#+=/:,.@-]*",
-      "type": "string"
-    },
-    "TransformerConfig": {
-      "description": "List of processors in a transformer",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Processor"
+  "required" : [ "LogGroupIdentifier", "TransformerConfig" ],
+  "additionalProperties" : false,
+  "definitions" : {
+    "Processor" : {
+      "description" : "Individual processor configuration",
+      "type" : "object",
+      "properties" : {
+        "ParseCloudfront" : {
+          "$ref" : "#/definitions/ParseCloudfront"
+        },
+        "ParseVPC" : {
+          "$ref" : "#/definitions/ParseVPC"
+        },
+        "ParseWAF" : {
+          "$ref" : "#/definitions/ParseWAF"
+        },
+        "ParseJSON" : {
+          "type" : "object",
+          "properties" : {
+            "Source" : {
+              "type" : "string"
+            },
+            "Destination" : {
+              "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+            }
+          },
+          "additionalProperties" : false
+        },
+        "ParseRoute53" : {
+          "$ref" : "#/definitions/ParseRoute53"
+        },
+        "ParsePostgres" : {
+          "$ref" : "#/definitions/ParsePostgres"
+        },
+        "ParseToOCSF" : {
+          "$ref" : "#/definitions/ParseToOCSF"
+        },
+        "ParseKeyValue" : {
+          "type" : "object",
+          "properties" : {
+            "Source" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "Destination" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "FieldDelimiter" : {
+              "type" : "string"
+            },
+            "KeyValueDelimiter" : {
+              "type" : "string"
+            },
+            "KeyPrefix" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "NonMatchValue" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "OverwriteIfExists" : {
+              "type" : "boolean"
+            }
+          },
+          "additionalProperties" : false
+        },
+        "CopyValue" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/CopyValueEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        },
+        "Csv" : {
+          "type" : "object",
+          "properties" : {
+            "QuoteCharacter" : {
+              "type" : "string",
+              "maxLength" : 1
+            },
+            "Delimiter" : {
+              "type" : "string",
+              "maxLength" : 2
+            },
+            "Source" : {
+              "type" : "string"
+            },
+            "Columns" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Column"
+              },
+              "minItems" : 1,
+              "maxItems" : 100,
+              "insertionOrder" : false
+            }
+          },
+          "additionalProperties" : false
+        },
+        "DateTimeConverter" : {
+          "type" : "object",
+          "properties" : {
+            "Source" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "Target" : {
+              "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+            },
+            "TargetFormat" : {
+              "type" : "string"
+            },
+            "MatchPatterns" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/MatchPattern"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "uniqueItems" : true,
+              "insertionOrder" : false
+            },
+            "SourceTimezone" : {
+              "type" : "string"
+            },
+            "TargetTimezone" : {
+              "type" : "string"
+            },
+            "Locale" : {
+              "type" : "string"
+            }
+          },
+          "required" : [ "Source", "Target", "MatchPatterns" ],
+          "additionalProperties" : false
+        },
+        "DeleteKeys" : {
+          "type" : "object",
+          "properties" : {
+            "WithKeys" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WithKey"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "uniqueItems" : true,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "WithKeys" ],
+          "additionalProperties" : false
+        },
+        "Grok" : {
+          "type" : "object",
+          "properties" : {
+            "Source" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "Match" : {
+              "type" : "string",
+              "maxLength" : 512
+            }
+          },
+          "required" : [ "Match" ],
+          "additionalProperties" : false
+        },
+        "ListToMap" : {
+          "type" : "object",
+          "properties" : {
+            "Source" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "Key" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "ValueKey" : {
+              "$ref" : "#/definitions/NonEmptyString"
+            },
+            "Target" : {
+              "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+            },
+            "Flatten" : {
+              "type" : "boolean"
+            },
+            "FlattenedElement" : {
+              "type" : "string",
+              "enum" : [ "first", "last" ]
+            }
+          },
+          "required" : [ "Source", "Key" ],
+          "additionalProperties" : false
+        },
+        "AddKeys" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AddKeyEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "uniqueItems" : true,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        },
+        "MoveKeys" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/MoveKeyEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        },
+        "RenameKeys" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RenameKeyEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        },
+        "LowerCaseString" : {
+          "type" : "object",
+          "properties" : {
+            "WithKeys" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WithKey"
+              },
+              "minItems" : 1,
+              "maxItems" : 10,
+              "uniqueItems" : true,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "WithKeys" ],
+          "additionalProperties" : false
+        },
+        "SplitString" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SplitStringEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 10,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        },
+        "SubstituteString" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/SubstituteStringEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 10,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        },
+        "TrimString" : {
+          "type" : "object",
+          "properties" : {
+            "WithKeys" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WithKey"
+              },
+              "minItems" : 1,
+              "maxItems" : 10,
+              "uniqueItems" : true,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "WithKeys" ],
+          "additionalProperties" : false
+        },
+        "UpperCaseString" : {
+          "type" : "object",
+          "properties" : {
+            "WithKeys" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WithKey"
+              },
+              "minItems" : 1,
+              "maxItems" : 10,
+              "uniqueItems" : true,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "WithKeys" ],
+          "additionalProperties" : false
+        },
+        "TypeConverter" : {
+          "type" : "object",
+          "properties" : {
+            "Entries" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TypeConverterEntry"
+              },
+              "minItems" : 1,
+              "maxItems" : 5,
+              "insertionOrder" : false
+            }
+          },
+          "required" : [ "Entries" ],
+          "additionalProperties" : false
+        }
       },
-      "maxItems": 20,
-      "minItems": 1,
-      "type": "array"
+      "additionalProperties" : false,
+      "minProperties" : 1,
+      "maxProperties" : 1
+    },
+    "ParseCloudfront" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ParseVPC" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ParseWAF" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ParseRoute53" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ParsePostgres" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ParseToOCSF" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "EventSource" : {
+          "$ref" : "#/definitions/EventSource"
+        },
+        "OcsfVersion" : {
+          "$ref" : "#/definitions/OcsfVersion"
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "EventSource", "OcsfVersion" ]
+    },
+    "AddKeyEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
+        },
+        "OverwriteIfExists" : {
+          "type" : "boolean"
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
+    },
+    "CopyValueEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "Target" : {
+          "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+        },
+        "OverwriteIfExists" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Source", "Target" ],
+      "additionalProperties" : false
+    },
+    "Column" : {
+      "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+    },
+    "WithKey" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
+    },
+    "MatchPattern" : {
+      "$ref" : "#/definitions/NonEmptyString"
+    },
+    "MoveKeyEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "Target" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "OverwriteIfExists" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Source", "Target" ],
+      "additionalProperties" : false
+    },
+    "RenameKeyEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "RenameTo" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "OverwriteIfExists" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Key", "RenameTo" ],
+      "additionalProperties" : false
+    },
+    "SplitStringEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "Delimiter" : {
+          "type" : "string",
+          "maxLength" : 128
+        }
+      },
+      "required" : [ "Source", "Delimiter" ],
+      "additionalProperties" : false
+    },
+    "SubstituteStringEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "From" : {
+          "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+        },
+        "To" : {
+          "$ref" : "#/definitions/NonEmptyAndMaxLengthString"
+        }
+      },
+      "required" : [ "Source", "From", "To" ],
+      "additionalProperties" : false
+    },
+    "TypeConverterEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/NonEmptyString"
+        },
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "boolean", "integer", "double", "string" ]
+        }
+      },
+      "required" : [ "Key", "Type" ],
+      "additionalProperties" : false
+    },
+    "NonEmptyAndMaxLengthString" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "pattern" : "^.*[a-zA-Z0-9]+.*$"
+    },
+    "NonEmptyString" : {
+      "type" : "string",
+      "pattern" : "^.*[a-zA-Z0-9]+.*$"
+    },
+    "MaxLengthString" : {
+      "type" : "string",
+      "maxLength" : 128
+    },
+    "EventSource" : {
+      "type" : "string",
+      "enum" : [ "CloudTrail", "Route53Resolver", "VPCFlow", "EKSAudit", "AWSWAF" ]
+    },
+    "OcsfVersion" : {
+      "type" : "string",
+      "enum" : [ "V1.1" ]
     }
   },
-  "required": [
-    "LogGroupIdentifier",
-    "TransformerConfig"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "primaryIdentifier" : [ "/properties/LogGroupIdentifier" ],
+  "createOnlyProperties" : [ "/properties/LogGroupIdentifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "logs:PutTransformer", "logs:GetTransformer" ]
+    },
+    "read" : {
+      "permissions" : [ "logs:GetTransformer" ]
+    },
+    "update" : {
+      "permissions" : [ "logs:GetTransformer", "logs:PutTransformer" ]
+    },
+    "delete" : {
+      "permissions" : [ "logs:DeleteTransformer" ]
+    },
+    "list" : {
+      "permissions" : [ "logs:DescribeLogGroups", "logs:GetTransformer" ]
+    }
   },
-  "typeName": "AWS::Logs::Transformer"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  }
 }

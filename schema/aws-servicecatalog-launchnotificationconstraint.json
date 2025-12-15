@@ -1,93 +1,64 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PortfolioId",
-    "/properties/ProductId"
-  ],
-  "description": "Resource Type definition for AWS::ServiceCatalog::LaunchNotificationConstraint",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "servicecatalog:CreateConstraint",
-        "servicecatalog:DescribeConstraint",
-        "sns:GetTopicAttributes"
-      ]
+  "typeName" : "AWS::ServiceCatalog::LaunchNotificationConstraint",
+  "description" : "Resource Type definition for AWS::ServiceCatalog::LaunchNotificationConstraint",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog/tree/main/aws-servicecatalog-launchnotificationconstraint",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string",
+      "description" : "Unique identifier for the constraint"
     },
-    "delete": {
-      "permissions": [
-        "servicecatalog:DeleteConstraint"
-      ]
+    "Description" : {
+      "type" : "string"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "PortfolioId": {
-            "$ref": "resource-schema.json#/properties/PortfolioId"
+    "NotificationArns" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "AcceptLanguage" : {
+      "type" : "string"
+    },
+    "PortfolioId" : {
+      "type" : "string"
+    },
+    "ProductId" : {
+      "type" : "string"
+    }
+  },
+  "required" : [ "NotificationArns", "PortfolioId", "ProductId" ],
+  "createOnlyProperties" : [ "/properties/PortfolioId", "/properties/ProductId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "writeOnlyProperties" : [ "/properties/AcceptLanguage" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "servicecatalog:DescribeConstraint" ]
+    },
+    "create" : {
+      "permissions" : [ "servicecatalog:CreateConstraint", "servicecatalog:DescribeConstraint", "sns:GetTopicAttributes" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "PortfolioId" : {
+            "$ref" : "resource-schema.json#/properties/PortfolioId"
           }
         },
-        "required": [
-          "PortfolioId"
-        ]
+        "required" : [ "PortfolioId" ]
       },
-      "permissions": [
-        "servicecatalog:ListConstraintsForPortfolio"
-      ]
+      "permissions" : [ "servicecatalog:ListConstraintsForPortfolio" ]
     },
-    "read": {
-      "permissions": [
-        "servicecatalog:DescribeConstraint"
-      ]
+    "update" : {
+      "permissions" : [ "servicecatalog:UpdateConstraint", "servicecatalog:DescribeConstraint", "sns:GetTopicAttributes" ]
     },
-    "update": {
-      "permissions": [
-        "servicecatalog:UpdateConstraint",
-        "servicecatalog:DescribeConstraint",
-        "sns:GetTopicAttributes"
-      ]
+    "delete" : {
+      "permissions" : [ "servicecatalog:DeleteConstraint" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AcceptLanguage": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "Id": {
-      "description": "Unique identifier for the constraint",
-      "type": "string"
-    },
-    "NotificationArns": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "PortfolioId": {
-      "type": "string"
-    },
-    "ProductId": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "NotificationArns",
-    "PortfolioId",
-    "ProductId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog/tree/main/aws-servicecatalog-launchnotificationconstraint",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ServiceCatalog::LaunchNotificationConstraint",
-  "writeOnlyProperties": [
-    "/properties/AcceptLanguage"
-  ]
+  }
 }

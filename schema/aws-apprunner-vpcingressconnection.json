@@ -1,161 +1,110 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/VpcIngressConnectionName",
-    "/properties/ServiceArn",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "IngressVpcConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration of customer\u2019s VPC and related VPC endpoint",
-      "properties": {
-        "VpcEndpointId": {
-          "description": "The ID of the VPC endpoint that your App Runner service connects to.",
-          "type": "string"
+  "typeName" : "AWS::AppRunner::VpcIngressConnection",
+  "description" : "The AWS::AppRunner::VpcIngressConnection resource is an App Runner resource that specifies an App Runner VpcIngressConnection.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
+  "definitions" : {
+    "IngressVpcConfiguration" : {
+      "description" : "The configuration of customer’s VPC and related VPC endpoint",
+      "type" : "object",
+      "properties" : {
+        "VpcId" : {
+          "description" : "The ID of the VPC that the VPC endpoint is used in.",
+          "type" : "string"
         },
-        "VpcId": {
-          "description": "The ID of the VPC that the VPC endpoint is used in.",
-          "type": "string"
+        "VpcEndpointId" : {
+          "description" : "The ID of the VPC endpoint that your App Runner service connects to.",
+          "type" : "string"
         }
       },
-      "required": [
-        "VpcId",
-        "VpcEndpointId"
-      ],
-      "type": "object"
+      "required" : [ "VpcId", "VpcEndpointId" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "The AWS::AppRunner::VpcIngressConnection resource is an App Runner resource that specifies an App Runner VpcIngressConnection.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "apprunner:CreateVpcIngressConnection",
-        "apprunner:DescribeVpcIngressConnection",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeVpcEndpoints",
-        "ec2:DescribeSubnets",
-        "apprunner:TagResource"
-      ]
+  "properties" : {
+    "VpcIngressConnectionArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the VpcIngressConnection.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1011,
+      "pattern" : "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}"
     },
-    "delete": {
-      "permissions": [
-        "apprunner:DeleteVpcIngressConnection",
-        "apprunner:DescribeVpcIngressConnection"
-      ]
+    "VpcIngressConnectionName" : {
+      "description" : "The customer-provided Vpc Ingress Connection name.",
+      "type" : "string",
+      "minLength" : 4,
+      "maxLength" : 40,
+      "pattern" : "[A-Za-z0-9][A-Za-z0-9\\-_]{3,39}"
     },
-    "list": {
-      "permissions": [
-        "apprunner:ListVpcIngressConnections"
-      ]
+    "ServiceArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the service.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1011,
+      "pattern" : "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}"
     },
-    "read": {
-      "permissions": [
-        "apprunner:DescribeVpcIngressConnection"
-      ]
+    "Status" : {
+      "description" : "The current status of the VpcIngressConnection.",
+      "type" : "string",
+      "enum" : [ "AVAILABLE", "PENDING_CREATION", "PENDING_UPDATE", "PENDING_DELETION", "FAILED_CREATION", "FAILED_UPDATE", "FAILED_DELETION", "DELETED" ]
     },
-    "update": {
-      "permissions": [
-        "apprunner:UpdateVpcIngressConnection",
-        "apprunner:DescribeVpcIngressConnection",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeVpcEndpoints",
-        "ec2:DescribeSubnets"
-      ]
+    "DomainName" : {
+      "description" : "The Domain name associated with the VPC Ingress Connection.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255,
+      "pattern" : "[A-Za-z0-9*.-]{1,255}"
+    },
+    "IngressVpcConfiguration" : {
+      "$ref" : "#/definitions/IngressVpcConfiguration"
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/VpcIngressConnectionArn"
-  ],
-  "properties": {
-    "DomainName": {
-      "description": "The Domain name associated with the VPC Ingress Connection.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "[A-Za-z0-9*.-]{1,255}",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "apprunner:TagResource", "apprunner:UntagResource", "apprunner:ListTagsForResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "ServiceArn", "IngressVpcConfiguration" ],
+  "createOnlyProperties" : [ "/properties/VpcIngressConnectionName", "/properties/ServiceArn", "/properties/Tags" ],
+  "writeOnlyProperties" : [ "/properties/Tags" ],
+  "readOnlyProperties" : [ "/properties/VpcIngressConnectionArn", "/properties/DomainName", "/properties/Status" ],
+  "primaryIdentifier" : [ "/properties/VpcIngressConnectionArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "apprunner:CreateVpcIngressConnection", "apprunner:DescribeVpcIngressConnection", "ec2:DescribeVpcs", "ec2:DescribeVpcEndpoints", "ec2:DescribeSubnets", "apprunner:TagResource" ]
     },
-    "IngressVpcConfiguration": {
-      "$ref": "#/definitions/IngressVpcConfiguration"
+    "read" : {
+      "permissions" : [ "apprunner:DescribeVpcIngressConnection" ]
     },
-    "ServiceArn": {
-      "description": "The Amazon Resource Name (ARN) of the service.",
-      "maxLength": 1011,
-      "minLength": 1,
-      "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "apprunner:UpdateVpcIngressConnection", "apprunner:DescribeVpcIngressConnection", "ec2:DescribeVpcs", "ec2:DescribeVpcEndpoints", "ec2:DescribeSubnets" ]
     },
-    "Status": {
-      "description": "The current status of the VpcIngressConnection.",
-      "enum": [
-        "AVAILABLE",
-        "PENDING_CREATION",
-        "PENDING_UPDATE",
-        "PENDING_DELETION",
-        "FAILED_CREATION",
-        "FAILED_UPDATE",
-        "FAILED_DELETION",
-        "DELETED"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "apprunner:DeleteVpcIngressConnection", "apprunner:DescribeVpcIngressConnection" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
-    },
-    "VpcIngressConnectionArn": {
-      "description": "The Amazon Resource Name (ARN) of the VpcIngressConnection.",
-      "maxLength": 1011,
-      "minLength": 1,
-      "pattern": "arn:aws(-[\\w]+)*:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[0-9]{12}:(\\w|/|-){1,1011}",
-      "type": "string"
-    },
-    "VpcIngressConnectionName": {
-      "description": "The customer-provided Vpc Ingress Connection name.",
-      "maxLength": 40,
-      "minLength": 4,
-      "pattern": "[A-Za-z0-9][A-Za-z0-9\\-_]{3,39}",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "apprunner:ListVpcIngressConnections" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/VpcIngressConnectionArn",
-    "/properties/DomainName",
-    "/properties/Status"
-  ],
-  "required": [
-    "ServiceArn",
-    "IngressVpcConfiguration"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apprunner.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "apprunner:TagResource",
-      "apprunner:UntagResource",
-      "apprunner:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
-  },
-  "typeName": "AWS::AppRunner::VpcIngressConnection",
-  "writeOnlyProperties": [
-    "/properties/Tags"
-  ]
+  }
 }

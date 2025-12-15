@@ -1,189 +1,143 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ClusterName",
-    "/properties/FargateProfileName",
-    "/properties/PodExecutionRoleArn",
-    "/properties/Subnets",
-    "/properties/Selectors"
-  ],
-  "definitions": {
-    "Label": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a pod.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the label.",
-          "maxLength": 127,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::EKS::FargateProfile",
+  "description" : "Resource Schema for AWS::EKS::FargateProfile",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 127
         },
-        "Value": {
-          "description": "The value for the label. ",
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 255
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     },
-    "Selector": {
-      "additionalProperties": false,
-      "properties": {
-        "Labels": {
-          "items": {
-            "$ref": "#/definitions/Label"
-          },
-          "type": "array"
+    "Selector" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Namespace" : {
+          "type" : "string",
+          "minLength" : 1
         },
-        "Namespace": {
-          "minLength": 1,
-          "type": "string"
+        "Labels" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Label"
+          }
         }
       },
-      "required": [
-        "Namespace"
-      ],
-      "type": "object"
+      "required" : [ "Namespace" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 127,
-          "minLength": 1,
-          "type": "string"
+    "Label" : {
+      "description" : "A key-value pair to associate with a pod.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the label.",
+          "minLength" : 1,
+          "maxLength" : 127
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the label. ",
+          "minLength" : 1,
+          "maxLength" : 255
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Resource Schema for AWS::EKS::FargateProfile",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "eks:CreateFargateProfile",
-        "eks:DescribeFargateProfile",
-        "iam:GetRole",
-        "iam:PassRole",
-        "iam:CreateServiceLinkedRole",
-        "eks:TagResource"
-      ]
+  "properties" : {
+    "ClusterName" : {
+      "description" : "Name of the Cluster",
+      "type" : "string",
+      "minLength" : 1
     },
-    "delete": {
-      "permissions": [
-        "eks:DeleteFargateProfile",
-        "eks:DescribeFargateProfile"
-      ]
+    "FargateProfileName" : {
+      "description" : "Name of FargateProfile",
+      "type" : "string",
+      "minLength" : 1
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "ClusterName": {
-            "$ref": "resource-schema.json#/properties/ClusterName"
+    "PodExecutionRoleArn" : {
+      "description" : "The IAM policy arn for pods",
+      "type" : "string",
+      "minLength" : 1
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Subnets" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Selectors" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Selector"
+      },
+      "minItems" : 1
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "eks:TagResource", "eks:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "ClusterName", "PodExecutionRoleArn", "Selectors" ],
+  "createOnlyProperties" : [ "/properties/ClusterName", "/properties/FargateProfileName", "/properties/PodExecutionRoleArn", "/properties/Subnets", "/properties/Selectors" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/ClusterName", "/properties/FargateProfileName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "eks:CreateFargateProfile", "eks:DescribeFargateProfile", "iam:GetRole", "iam:PassRole", "iam:CreateServiceLinkedRole", "eks:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "eks:DescribeFargateProfile" ]
+    },
+    "delete" : {
+      "permissions" : [ "eks:DeleteFargateProfile", "eks:DescribeFargateProfile" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "ClusterName" : {
+            "$ref" : "resource-schema.json#/properties/ClusterName"
           }
         },
-        "required": [
-          "ClusterName"
-        ]
+        "required" : [ "ClusterName" ]
       },
-      "permissions": [
-        "eks:ListFargateProfiles"
-      ]
+      "permissions" : [ "eks:ListFargateProfiles" ]
     },
-    "read": {
-      "permissions": [
-        "eks:DescribeFargateProfile"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "eks:DescribeFargateProfile",
-        "eks:TagResource",
-        "eks:UntagResource"
-      ]
+    "update" : {
+      "permissions" : [ "eks:DescribeFargateProfile", "eks:TagResource", "eks:UntagResource" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/ClusterName",
-    "/properties/FargateProfileName"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "ClusterName": {
-      "description": "Name of the Cluster",
-      "minLength": 1,
-      "type": "string"
-    },
-    "FargateProfileName": {
-      "description": "Name of FargateProfile",
-      "minLength": 1,
-      "type": "string"
-    },
-    "PodExecutionRoleArn": {
-      "description": "The IAM policy arn for pods",
-      "minLength": 1,
-      "type": "string"
-    },
-    "Selectors": {
-      "items": {
-        "$ref": "#/definitions/Selector"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "Subnets": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "ClusterName",
-    "PodExecutionRoleArn",
-    "Selectors"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "eks:TagResource",
-      "eks:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EKS::FargateProfile"
+  }
 }

@@ -1,574 +1,478 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AgentRuntimeName"
-  ],
-  "definitions": {
-    "AgentManagedRuntimeType": {
-      "description": "Managed runtime types",
-      "enum": [
-        "PYTHON_3_10",
-        "PYTHON_3_11",
-        "PYTHON_3_12",
-        "PYTHON_3_13"
-      ],
-      "type": "string"
+  "typeName" : "AWS::BedrockAgentCore::Runtime",
+  "description" : "Resource Type definition for AWS::BedrockAgentCore::Runtime",
+  "additionalProperties" : false,
+  "definitions" : {
+    "AgentRuntimeArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "pattern" : "arn:(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:agent/[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}:([0-9]{0,4}[1-9][0-9]{0,4})"
     },
-    "AgentRuntimeArn": {
-      "maxLength": 2048,
-      "pattern": "arn:(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:agent/[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}:([0-9]{0,4}[1-9][0-9]{0,4})",
-      "type": "string"
+    "AgentRuntimeId" : {
+      "type" : "string",
+      "pattern" : "[a-zA-Z][a-zA-Z0-9_]{0,99}-[a-zA-Z0-9]{10}"
     },
-    "AgentRuntimeArtifact": {
-      "additionalProperties": false,
-      "properties": {
-        "CodeConfiguration": {
-          "$ref": "#/definitions/CodeConfiguration"
+    "AgentRuntimeName" : {
+      "type" : "string",
+      "pattern" : "[a-zA-Z][a-zA-Z0-9_]{0,47}"
+    },
+    "ClientToken" : {
+      "type" : "string",
+      "minLength" : 33,
+      "maxLength" : 256,
+      "pattern" : "^[a-zA-Z0-9-_]+$"
+    },
+    "CreatedAt" : {
+      "type" : "string"
+    },
+    "AgentRuntimeVersion" : {
+      "type" : "string",
+      "maxLength" : 5,
+      "pattern" : "([1-9][0-9]{0,4})",
+      "minLength" : 1
+    },
+    "LastUpdatedAt" : {
+      "type" : "string"
+    },
+    "AgentStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "CREATE_FAILED", "UPDATING", "UPDATE_FAILED", "READY", "DELETING" ]
+    },
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1200,
+      "minLength" : 1
+    },
+    "NetworkConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "NetworkMode" : {
+          "$ref" : "#/definitions/NetworkMode"
         },
-        "ContainerConfiguration": {
-          "$ref": "#/definitions/ContainerConfiguration"
+        "NetworkModeConfig" : {
+          "$ref" : "#/definitions/VpcConfig"
         }
       },
-      "type": "object"
+      "required" : [ "NetworkMode" ],
+      "additionalProperties" : false
     },
-    "AgentRuntimeId": {
-      "pattern": "[a-zA-Z][a-zA-Z0-9_]{0,99}-[a-zA-Z0-9]{10}",
-      "type": "string"
+    "NetworkMode" : {
+      "type" : "string",
+      "description" : "Network mode configuration type",
+      "enum" : [ "PUBLIC", "VPC" ]
     },
-    "AgentRuntimeName": {
-      "pattern": "[a-zA-Z][a-zA-Z0-9_]{0,47}",
-      "type": "string"
-    },
-    "AgentRuntimeVersion": {
-      "maxLength": 5,
-      "minLength": 1,
-      "pattern": "([1-9][0-9]{0,4})",
-      "type": "string"
-    },
-    "AgentStatus": {
-      "enum": [
-        "CREATING",
-        "CREATE_FAILED",
-        "UPDATING",
-        "UPDATE_FAILED",
-        "READY",
-        "DELETING"
-      ],
-      "type": "string"
-    },
-    "AllowedAudience": {
-      "description": "Allowed audience value",
-      "type": "string"
-    },
-    "AllowedAudienceList": {
-      "description": "List of allowed audiences",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AllowedAudience"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "AllowedClient": {
-      "description": "Allowed client value",
-      "type": "string"
-    },
-    "AllowedClientsList": {
-      "description": "List of allowed clients",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AllowedClient"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "AuthorizerConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration for the authorizer",
-      "properties": {
-        "CustomJWTAuthorizer": {
-          "$ref": "#/definitions/CustomJWTAuthorizerConfiguration"
-        }
-      },
-      "type": "object"
-    },
-    "ClientToken": {
-      "maxLength": 256,
-      "minLength": 33,
-      "pattern": "^[a-zA-Z0-9-_]+$",
-      "type": "string"
-    },
-    "Code": {
-      "additionalProperties": false,
-      "description": "Object represents source code from zip file",
-      "properties": {
-        "S3": {
-          "$ref": "#/definitions/S3Location"
-        }
-      },
-      "type": "object"
-    },
-    "CodeConfiguration": {
-      "additionalProperties": false,
-      "description": "Representation of a code configuration",
-      "properties": {
-        "Code": {
-          "$ref": "#/definitions/Code"
+    "VpcConfig" : {
+      "type" : "object",
+      "description" : "Network mode configuration for VPC",
+      "properties" : {
+        "SecurityGroups" : {
+          "$ref" : "#/definitions/SecurityGroups"
         },
-        "EntryPoint": {
-          "$ref": "#/definitions/EntryPoints"
+        "Subnets" : {
+          "$ref" : "#/definitions/Subnets"
+        }
+      },
+      "required" : [ "SecurityGroups", "Subnets" ],
+      "additionalProperties" : false
+    },
+    "SecurityGroups" : {
+      "type" : "array",
+      "description" : "Security groups for VPC",
+      "minItems" : 1,
+      "maxItems" : 16,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/SecurityGroupId"
+      }
+    },
+    "SecurityGroupId" : {
+      "type" : "string",
+      "description" : "Security group id",
+      "pattern" : "^sg-[0-9a-zA-Z]{8,17}$"
+    },
+    "Subnets" : {
+      "type" : "array",
+      "description" : "Subnets for VPC",
+      "minItems" : 1,
+      "maxItems" : 16,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/SubnetId"
+      }
+    },
+    "SubnetId" : {
+      "type" : "string",
+      "description" : "Subnet id",
+      "pattern" : "^subnet-[0-9a-zA-Z]{8,17}$"
+    },
+    "ProtocolConfiguration" : {
+      "type" : "string",
+      "enum" : [ "MCP", "HTTP", "A2A" ]
+    },
+    "AuthorizerConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for the authorizer",
+      "properties" : {
+        "CustomJWTAuthorizer" : {
+          "$ref" : "#/definitions/CustomJWTAuthorizerConfiguration"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "CustomJWTAuthorizerConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for custom JWT authorizer",
+      "properties" : {
+        "DiscoveryUrl" : {
+          "$ref" : "#/definitions/DiscoveryUrl"
         },
-        "Runtime": {
-          "$ref": "#/definitions/AgentManagedRuntimeType"
-        }
-      },
-      "required": [
-        "Code",
-        "Runtime",
-        "EntryPoint"
-      ],
-      "type": "object"
-    },
-    "ContainerConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ContainerUri": {
-          "$ref": "#/definitions/RuntimeContainerUri"
-        }
-      },
-      "required": [
-        "ContainerUri"
-      ],
-      "type": "object"
-    },
-    "CreatedAt": {
-      "type": "string"
-    },
-    "CustomJWTAuthorizerConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration for custom JWT authorizer",
-      "properties": {
-        "AllowedAudience": {
-          "$ref": "#/definitions/AllowedAudienceList"
+        "AllowedAudience" : {
+          "$ref" : "#/definitions/AllowedAudienceList"
         },
-        "AllowedClients": {
-          "$ref": "#/definitions/AllowedClientsList"
+        "AllowedClients" : {
+          "$ref" : "#/definitions/AllowedClientsList"
+        }
+      },
+      "required" : [ "DiscoveryUrl" ],
+      "additionalProperties" : false
+    },
+    "DiscoveryUrl" : {
+      "type" : "string",
+      "pattern" : "^.+/\\.well-known/openid-configuration$",
+      "description" : "OpenID Connect discovery URL"
+    },
+    "AllowedAudienceList" : {
+      "type" : "array",
+      "description" : "List of allowed audiences",
+      "minItems" : 1,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/AllowedAudience"
+      }
+    },
+    "AllowedAudience" : {
+      "type" : "string",
+      "description" : "Allowed audience value"
+    },
+    "AllowedClientsList" : {
+      "type" : "array",
+      "description" : "List of allowed clients",
+      "minItems" : 1,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/AllowedClient"
+      }
+    },
+    "AllowedClient" : {
+      "type" : "string",
+      "description" : "Allowed client value"
+    },
+    "WorkloadIdentityDetails" : {
+      "type" : "object",
+      "description" : "Configuration for workload identity",
+      "properties" : {
+        "WorkloadIdentityArn" : {
+          "$ref" : "#/definitions/WorkloadIdentityArn"
+        }
+      },
+      "required" : [ "WorkloadIdentityArn" ],
+      "additionalProperties" : false
+    },
+    "WorkloadIdentityArn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024,
+      "description" : "ARN of the workload identity"
+    },
+    "AgentRuntimeArtifact" : {
+      "type" : "object",
+      "properties" : {
+        "ContainerConfiguration" : {
+          "$ref" : "#/definitions/ContainerConfiguration"
         },
-        "DiscoveryUrl": {
-          "$ref": "#/definitions/DiscoveryUrl"
+        "CodeConfiguration" : {
+          "$ref" : "#/definitions/CodeConfiguration"
         }
       },
-      "required": [
-        "DiscoveryUrl"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Description": {
-      "maxLength": 1200,
-      "minLength": 1,
-      "type": "string"
-    },
-    "DiscoveryUrl": {
-      "description": "OpenID Connect discovery URL",
-      "pattern": "^.+/\\.well-known/openid-configuration$",
-      "type": "string"
-    },
-    "EntryPoints": {
-      "description": "List of entry points",
-      "insertionOrder": true,
-      "items": {
-        "description": "Entry point",
-        "type": "string"
-      },
-      "maxItems": 2,
-      "minItems": 1,
-      "type": "array"
-    },
-    "EnvironmentVariableKey": {
-      "description": "Environment variable key",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
-      "type": "string"
-    },
-    "EnvironmentVariableValue": {
-      "description": "Environment variable value",
-      "maxLength": 2048,
-      "type": "string"
-    },
-    "EnvironmentVariablesMap": {
-      "additionalProperties": false,
-      "description": "Environment variable attributes",
-      "maxProperties": 50,
-      "patternProperties": {
-        "^[a-zA-Z_][a-zA-Z0-9_]*$": {
-          "description": "Environment variable value",
-          "maxLength": 2048,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "HeaderName": {
-      "description": "HTTP header name",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^(Authorization|X-Amzn-Bedrock-AgentCore-Runtime-Custom-[a-zA-Z0-9_-]+)$",
-      "type": "string"
-    },
-    "LastUpdatedAt": {
-      "type": "string"
-    },
-    "LifecycleConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration for managing the lifecycle of runtime sessions and resources",
-      "properties": {
-        "IdleRuntimeSessionTimeout": {
-          "description": "Timeout in seconds for idle runtime sessions",
-          "maximum": 28800,
-          "minimum": 60,
-          "type": "integer"
+    "CodeConfiguration" : {
+      "type" : "object",
+      "description" : "Representation of a code configuration",
+      "properties" : {
+        "Code" : {
+          "$ref" : "#/definitions/Code"
         },
-        "MaxLifetime": {
-          "description": "Maximum lifetime in seconds for runtime sessions",
-          "maximum": 28800,
-          "minimum": 60,
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "NetworkConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "NetworkMode": {
-          "$ref": "#/definitions/NetworkMode"
+        "Runtime" : {
+          "$ref" : "#/definitions/AgentManagedRuntimeType"
         },
-        "NetworkModeConfig": {
-          "$ref": "#/definitions/VpcConfig"
+        "EntryPoint" : {
+          "$ref" : "#/definitions/EntryPoints"
         }
       },
-      "required": [
-        "NetworkMode"
-      ],
-      "type": "object"
+      "required" : [ "Code", "Runtime", "EntryPoint" ],
+      "additionalProperties" : false
     },
-    "NetworkMode": {
-      "description": "Network mode configuration type",
-      "enum": [
-        "PUBLIC",
-        "VPC"
-      ],
-      "type": "string"
-    },
-    "ProtocolConfiguration": {
-      "enum": [
-        "MCP",
-        "HTTP",
-        "A2A"
-      ],
-      "type": "string"
-    },
-    "RequestHeaderAllowlist": {
-      "description": "List of allowed HTTP headers for agent runtime requests",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/HeaderName"
-      },
-      "maxItems": 20,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "RequestHeaderConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration for HTTP request headers",
-      "properties": {
-        "RequestHeaderAllowlist": {
-          "$ref": "#/definitions/RequestHeaderAllowlist"
+    "Code" : {
+      "type" : "object",
+      "description" : "Object represents source code from zip file",
+      "properties" : {
+        "S3" : {
+          "$ref" : "#/definitions/S3Location"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "RoleArn": {
-      "pattern": "arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+",
-      "type": "string"
-    },
-    "RuntimeContainerUri": {
-      "description": "The ECR URI of the container",
-      "maxLength": 1024,
-      "minLength": 1,
-      "pattern": "^\\d{12}\\.dkr\\.ecr\\.([a-z0-9-]+)\\.amazonaws\\.com/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)([:@]\\S+)$",
-      "type": "string"
-    },
-    "S3Location": {
-      "additionalProperties": false,
-      "description": "S3 Location Configuration",
-      "properties": {
-        "Bucket": {
-          "description": "S3 bucket name",
-          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
-          "type": "string"
+    "S3Location" : {
+      "type" : "object",
+      "description" : "S3 Location Configuration",
+      "properties" : {
+        "Bucket" : {
+          "type" : "string",
+          "pattern" : "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
+          "description" : "S3 bucket name"
         },
-        "Prefix": {
-          "description": "S3 object key prefix",
-          "maxLength": 1024,
-          "minLength": 1,
-          "type": "string"
+        "Prefix" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1024,
+          "description" : "S3 object key prefix"
         },
-        "VersionId": {
-          "description": "S3 object version ID",
-          "maxLength": 1024,
-          "minLength": 3,
-          "type": "string"
+        "VersionId" : {
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 1024,
+          "description" : "S3 object version ID"
         }
       },
-      "required": [
-        "Bucket",
-        "Prefix"
-      ],
-      "type": "object"
+      "required" : [ "Bucket", "Prefix" ],
+      "additionalProperties" : false
     },
-    "SecurityGroupId": {
-      "description": "Security group id",
-      "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
-      "type": "string"
+    "AgentManagedRuntimeType" : {
+      "type" : "string",
+      "description" : "Managed runtime types",
+      "enum" : [ "PYTHON_3_10", "PYTHON_3_11", "PYTHON_3_12", "PYTHON_3_13" ]
     },
-    "SecurityGroups": {
-      "description": "Security groups for VPC",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/SecurityGroupId"
-      },
-      "maxItems": 16,
-      "minItems": 1,
-      "type": "array"
+    "EntryPoints" : {
+      "type" : "array",
+      "description" : "List of entry points",
+      "minItems" : 1,
+      "maxItems" : 2,
+      "insertionOrder" : true,
+      "items" : {
+        "type" : "string",
+        "description" : "Entry point"
+      }
     },
-    "SubnetId": {
-      "description": "Subnet id",
-      "pattern": "^subnet-[0-9a-zA-Z]{8,17}$",
-      "type": "string"
-    },
-    "Subnets": {
-      "description": "Subnets for VPC",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/SubnetId"
-      },
-      "maxItems": 16,
-      "minItems": 1,
-      "type": "array"
-    },
-    "TagsMap": {
-      "additionalProperties": false,
-      "description": "A map of tag keys and values",
-      "patternProperties": {
-        "^[a-zA-Z0-9\\s._:/=+@-]*$": {
-          "description": "Value of a tag",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+    "ContainerConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ContainerUri" : {
+          "$ref" : "#/definitions/RuntimeContainerUri"
         }
       },
-      "type": "object"
+      "required" : [ "ContainerUri" ],
+      "additionalProperties" : false
     },
-    "VpcConfig": {
-      "additionalProperties": false,
-      "description": "Network mode configuration for VPC",
-      "properties": {
-        "SecurityGroups": {
-          "$ref": "#/definitions/SecurityGroups"
+    "RuntimeContainerUri" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024,
+      "pattern" : "^\\d{12}\\.dkr\\.ecr\\.([a-z0-9-]+)\\.amazonaws\\.com/((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*)([:@]\\S+)$",
+      "description" : "The ECR URI of the container"
+    },
+    "RoleArn" : {
+      "type" : "string",
+      "pattern" : "arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+"
+    },
+    "EnvironmentVariableKey" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z_][a-zA-Z0-9_]*$",
+      "description" : "Environment variable key"
+    },
+    "EnvironmentVariableValue" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "description" : "Environment variable value"
+    },
+    "EnvironmentVariablesMap" : {
+      "type" : "object",
+      "description" : "Environment variable attributes",
+      "maxProperties" : 50,
+      "patternProperties" : {
+        "^[a-zA-Z_][a-zA-Z0-9_]*$" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "description" : "Environment variable value"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "TagsMap" : {
+      "type" : "object",
+      "description" : "A map of tag keys and values",
+      "patternProperties" : {
+        "^[a-zA-Z0-9\\s._:/=+@-]*$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$",
+          "description" : "Value of a tag"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "LifecycleConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for managing the lifecycle of runtime sessions and resources",
+      "properties" : {
+        "IdleRuntimeSessionTimeout" : {
+          "type" : "integer",
+          "minimum" : 60,
+          "maximum" : 28800,
+          "description" : "Timeout in seconds for idle runtime sessions"
         },
-        "Subnets": {
-          "$ref": "#/definitions/Subnets"
+        "MaxLifetime" : {
+          "type" : "integer",
+          "minimum" : 60,
+          "maximum" : 28800,
+          "description" : "Maximum lifetime in seconds for runtime sessions"
         }
       },
-      "required": [
-        "SecurityGroups",
-        "Subnets"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "WorkloadIdentityArn": {
-      "description": "ARN of the workload identity",
-      "maxLength": 1024,
-      "minLength": 1,
-      "type": "string"
-    },
-    "WorkloadIdentityDetails": {
-      "additionalProperties": false,
-      "description": "Configuration for workload identity",
-      "properties": {
-        "WorkloadIdentityArn": {
-          "$ref": "#/definitions/WorkloadIdentityArn"
+    "RequestHeaderConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for HTTP request headers",
+      "properties" : {
+        "RequestHeaderAllowlist" : {
+          "$ref" : "#/definitions/RequestHeaderAllowlist"
         }
       },
-      "required": [
-        "WorkloadIdentityArn"
-      ],
-      "type": "object"
+      "additionalProperties" : false
+    },
+    "RequestHeaderAllowlist" : {
+      "type" : "array",
+      "description" : "List of allowed HTTP headers for agent runtime requests",
+      "minItems" : 1,
+      "maxItems" : 20,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/HeaderName"
+      }
+    },
+    "HeaderName" : {
+      "type" : "string",
+      "description" : "HTTP header name",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "^(Authorization|X-Amzn-Bedrock-AgentCore-Runtime-Custom-[a-zA-Z0-9_-]+)$"
     }
   },
-  "description": "Resource Type definition for AWS::BedrockAgentCore::Runtime",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock-agentcore:CreateAgentRuntime",
-        "bedrock-agentcore:CreateAgentRuntimeEndpoint",
-        "bedrock-agentcore:GetAgentRuntime",
-        "bedrock-agentcore:GetAgentRuntimeEndpoint",
-        "bedrock-agentcore:CreateWorkloadIdentity",
-        "bedrock-agentcore:TagResource",
-        "bedrock-agentcore:ListTagsForResource",
-        "iam:CreateServiceLinkedRole",
-        "iam:PassRole",
-        "s3:GetObject",
-        "s3:GetObjectVersion",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "AgentRuntimeArn" : {
+      "$ref" : "#/definitions/AgentRuntimeArn",
+      "description" : "The Amazon Resource Name(ARN) that uniquely identifies the Agent"
     },
-    "delete": {
-      "permissions": [
-        "bedrock-agentcore:DeleteAgentRuntime",
-        "bedrock-agentcore:DeleteAgentRuntimeEndpoint",
-        "bedrock-agentcore:GetAgentRuntime",
-        "bedrock-agentcore:GetAgentRuntimeEndpoint"
-      ]
+    "AgentRuntimeId" : {
+      "$ref" : "#/definitions/AgentRuntimeId",
+      "description" : "Identifier for a resource"
     },
-    "list": {
-      "permissions": [
-        "bedrock-agentcore:ListAgentRuntimes",
-        "bedrock-agentcore:ListAgentRuntimeEndpoints"
-      ]
+    "AgentRuntimeName" : {
+      "$ref" : "#/definitions/AgentRuntimeName",
+      "description" : "Name for a resource"
     },
-    "read": {
-      "permissions": [
-        "bedrock-agentcore:GetAgentRuntime",
-        "bedrock-agentcore:GetAgentRuntimeEndpoint",
-        "bedrock-agentcore:ListTagsForResource"
-      ]
+    "Description" : {
+      "$ref" : "#/definitions/Description",
+      "description" : "Description of the resource"
     },
-    "update": {
-      "permissions": [
-        "bedrock-agentcore:UpdateAgentRuntime",
-        "bedrock-agentcore:UpdateAgentRuntimeEndpoint",
-        "bedrock-agentcore:GetAgentRuntime",
-        "bedrock-agentcore:GetAgentRuntimeEndpoint",
-        "bedrock-agentcore:TagResource",
-        "bedrock-agentcore:UntagResource",
-        "bedrock-agentcore:ListTagsForResource",
-        "iam:CreateServiceLinkedRole",
-        "iam:PassRole",
-        "s3:GetObject",
-        "s3:GetObjectVersion",
-        "kms:Decrypt"
-      ]
+    "AgentRuntimeArtifact" : {
+      "$ref" : "#/definitions/AgentRuntimeArtifact",
+      "description" : "The artifact of the agent"
+    },
+    "RoleArn" : {
+      "$ref" : "#/definitions/RoleArn",
+      "description" : "Amazon Resource Name (ARN) of an IAM role"
+    },
+    "NetworkConfiguration" : {
+      "$ref" : "#/definitions/NetworkConfiguration",
+      "description" : "Network access configuration for the Agent"
+    },
+    "ProtocolConfiguration" : {
+      "$ref" : "#/definitions/ProtocolConfiguration",
+      "description" : "Protocol configuration for the agent runtime"
+    },
+    "EnvironmentVariables" : {
+      "$ref" : "#/definitions/EnvironmentVariablesMap",
+      "description" : "Environment variables for the agent runtime"
+    },
+    "AuthorizerConfiguration" : {
+      "$ref" : "#/definitions/AuthorizerConfiguration",
+      "description" : "Authorizer configuration for the agent runtime"
+    },
+    "LifecycleConfiguration" : {
+      "$ref" : "#/definitions/LifecycleConfiguration",
+      "description" : "Lifecycle configuration for managing runtime sessions"
+    },
+    "RequestHeaderConfiguration" : {
+      "$ref" : "#/definitions/RequestHeaderConfiguration",
+      "description" : "Configuration for HTTP request headers"
+    },
+    "AgentRuntimeVersion" : {
+      "$ref" : "#/definitions/AgentRuntimeVersion",
+      "description" : "Version of the Agent"
+    },
+    "WorkloadIdentityDetails" : {
+      "$ref" : "#/definitions/WorkloadIdentityDetails",
+      "description" : "Workload identity details for the agent"
+    },
+    "CreatedAt" : {
+      "$ref" : "#/definitions/CreatedAt",
+      "description" : "Timestamp when the Agent was created"
+    },
+    "LastUpdatedAt" : {
+      "$ref" : "#/definitions/LastUpdatedAt",
+      "description" : "When resource was last updated"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/AgentStatus",
+      "description" : "Current status of the agent"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagsMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AgentRuntimeId"
-  ],
-  "properties": {
-    "AgentRuntimeArn": {
-      "$ref": "#/definitions/AgentRuntimeArn",
-      "description": "The Amazon Resource Name(ARN) that uniquely identifies the Agent"
+  "primaryIdentifier" : [ "/properties/AgentRuntimeId" ],
+  "required" : [ "AgentRuntimeName", "AgentRuntimeArtifact", "RoleArn", "NetworkConfiguration" ],
+  "createOnlyProperties" : [ "/properties/AgentRuntimeName" ],
+  "readOnlyProperties" : [ "/properties/AgentRuntimeArn", "/properties/AgentRuntimeId", "/properties/AgentRuntimeVersion", "/properties/Status", "/properties/CreatedAt", "/properties/LastUpdatedAt", "/properties/WorkloadIdentityDetails" ],
+  "replacementStrategy" : "create_then_delete",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock-agentcore:CreateAgentRuntime", "bedrock-agentcore:CreateAgentRuntimeEndpoint", "bedrock-agentcore:GetAgentRuntime", "bedrock-agentcore:GetAgentRuntimeEndpoint", "bedrock-agentcore:CreateWorkloadIdentity", "bedrock-agentcore:TagResource", "bedrock-agentcore:ListTagsForResource", "iam:CreateServiceLinkedRole", "iam:PassRole", "s3:GetObject", "s3:GetObjectVersion", "kms:Decrypt" ]
     },
-    "AgentRuntimeArtifact": {
-      "$ref": "#/definitions/AgentRuntimeArtifact",
-      "description": "The artifact of the agent"
+    "read" : {
+      "permissions" : [ "bedrock-agentcore:GetAgentRuntime", "bedrock-agentcore:GetAgentRuntimeEndpoint", "bedrock-agentcore:ListTagsForResource" ]
     },
-    "AgentRuntimeId": {
-      "$ref": "#/definitions/AgentRuntimeId",
-      "description": "Identifier for a resource"
+    "update" : {
+      "permissions" : [ "bedrock-agentcore:UpdateAgentRuntime", "bedrock-agentcore:UpdateAgentRuntimeEndpoint", "bedrock-agentcore:GetAgentRuntime", "bedrock-agentcore:GetAgentRuntimeEndpoint", "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:ListTagsForResource", "iam:CreateServiceLinkedRole", "iam:PassRole", "s3:GetObject", "s3:GetObjectVersion", "kms:Decrypt" ]
     },
-    "AgentRuntimeName": {
-      "$ref": "#/definitions/AgentRuntimeName",
-      "description": "Name for a resource"
+    "delete" : {
+      "permissions" : [ "bedrock-agentcore:DeleteAgentRuntime", "bedrock-agentcore:DeleteAgentRuntimeEndpoint", "bedrock-agentcore:GetAgentRuntime", "bedrock-agentcore:GetAgentRuntimeEndpoint" ]
     },
-    "AgentRuntimeVersion": {
-      "$ref": "#/definitions/AgentRuntimeVersion",
-      "description": "Version of the Agent"
-    },
-    "AuthorizerConfiguration": {
-      "$ref": "#/definitions/AuthorizerConfiguration",
-      "description": "Authorizer configuration for the agent runtime"
-    },
-    "CreatedAt": {
-      "$ref": "#/definitions/CreatedAt",
-      "description": "Timestamp when the Agent was created"
-    },
-    "Description": {
-      "$ref": "#/definitions/Description",
-      "description": "Description of the resource"
-    },
-    "EnvironmentVariables": {
-      "$ref": "#/definitions/EnvironmentVariablesMap",
-      "description": "Environment variables for the agent runtime"
-    },
-    "LastUpdatedAt": {
-      "$ref": "#/definitions/LastUpdatedAt",
-      "description": "When resource was last updated"
-    },
-    "LifecycleConfiguration": {
-      "$ref": "#/definitions/LifecycleConfiguration",
-      "description": "Lifecycle configuration for managing runtime sessions"
-    },
-    "NetworkConfiguration": {
-      "$ref": "#/definitions/NetworkConfiguration",
-      "description": "Network access configuration for the Agent"
-    },
-    "ProtocolConfiguration": {
-      "$ref": "#/definitions/ProtocolConfiguration",
-      "description": "Protocol configuration for the agent runtime"
-    },
-    "RequestHeaderConfiguration": {
-      "$ref": "#/definitions/RequestHeaderConfiguration",
-      "description": "Configuration for HTTP request headers"
-    },
-    "RoleArn": {
-      "$ref": "#/definitions/RoleArn",
-      "description": "Amazon Resource Name (ARN) of an IAM role"
-    },
-    "Status": {
-      "$ref": "#/definitions/AgentStatus",
-      "description": "Current status of the agent"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagsMap"
-    },
-    "WorkloadIdentityDetails": {
-      "$ref": "#/definitions/WorkloadIdentityDetails",
-      "description": "Workload identity details for the agent"
+    "list" : {
+      "permissions" : [ "bedrock-agentcore:ListAgentRuntimes", "bedrock-agentcore:ListAgentRuntimeEndpoints" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/AgentRuntimeArn",
-    "/properties/AgentRuntimeId",
-    "/properties/AgentRuntimeVersion",
-    "/properties/Status",
-    "/properties/CreatedAt",
-    "/properties/LastUpdatedAt",
-    "/properties/WorkloadIdentityDetails"
-  ],
-  "replacementStrategy": "create_then_delete",
-  "required": [
-    "AgentRuntimeName",
-    "AgentRuntimeArtifact",
-    "RoleArn",
-    "NetworkConfiguration"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "bedrock-agentcore:TagResource",
-      "bedrock-agentcore:UntagResource",
-      "bedrock-agentcore:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::BedrockAgentCore::Runtime"
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:ListTagsForResource" ]
+  }
 }

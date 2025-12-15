@@ -1,159 +1,112 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AmazonSideAsn",
-    "/properties/MulticastSupport"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::EC2::TransitGateway",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway",
+  "description" : "Resource Type definition for AWS::EC2::TransitGateway",
+  "additionalProperties" : false,
+  "properties" : {
+    "DefaultRouteTablePropagation" : {
+      "type" : "string"
+    },
+    "TransitGatewayArn" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "AutoAcceptSharedAttachments" : {
+      "type" : "string"
+    },
+    "DefaultRouteTableAssociation" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "VpnEcmpSupport" : {
+      "type" : "string"
+    },
+    "DnsSupport" : {
+      "type" : "string"
+    },
+    "SecurityGroupReferencingSupport" : {
+      "type" : "string"
+    },
+    "MulticastSupport" : {
+      "type" : "string"
+    },
+    "AmazonSideAsn" : {
+      "type" : "integer",
+      "format" : "int64"
+    },
+    "TransitGatewayCidrBlocks" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "AssociationDefaultRouteTableId" : {
+      "type" : "string"
+    },
+    "PropagationDefaultRouteTableId" : {
+      "type" : "string"
+    },
+    "EncryptionSupport" : {
+      "type" : "string",
+      "enum" : [ "disable", "enable" ]
+    },
+    "EncryptionSupportState" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::EC2::TransitGateway",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateTransitGateway",
-        "ec2:CreateTags",
-        "ec2:DescribeTransitGateways",
-        "ec2:DescribeTags",
-        "ec2:ModifyTransitGateway",
-        "ec2:ModifyTransitGatewayOptions"
-      ]
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/TransitGatewayArn", "/properties/EncryptionSupportState" ],
+  "createOnlyProperties" : [ "/properties/AmazonSideAsn", "/properties/MulticastSupport" ],
+  "writeOnlyProperties" : [ "/properties/EncryptionSupport" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateTransitGateway", "ec2:CreateTags", "ec2:DescribeTransitGateways", "ec2:DescribeTags", "ec2:ModifyTransitGateway", "ec2:ModifyTransitGatewayOptions" ]
     },
-    "delete": {
-      "permissions": [
-        "ec2:DescribeTransitGateways",
-        "ec2:DescribeTags",
-        "ec2:DeleteTransitGateway",
-        "ec2:DeleteTags"
-      ]
+    "read" : {
+      "permissions" : [ "ec2:DescribeTransitGateways", "ec2:DescribeTags" ]
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeTransitGateways",
-        "ec2:DescribeTags"
-      ]
+    "delete" : {
+      "permissions" : [ "ec2:DescribeTransitGateways", "ec2:DescribeTags", "ec2:DeleteTransitGateway", "ec2:DeleteTags" ]
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribeTransitGateways",
-        "ec2:DescribeTags"
-      ]
+    "update" : {
+      "permissions" : [ "ec2:CreateTransitGateway", "ec2:CreateTags", "ec2:DescribeTransitGateways", "ec2:DescribeTags", "ec2:DeleteTransitGateway", "ec2:DeleteTags", "ec2:ModifyTransitGateway", "ec2:ModifyTransitGatewayOptions" ]
     },
-    "update": {
-      "permissions": [
-        "ec2:CreateTransitGateway",
-        "ec2:CreateTags",
-        "ec2:DescribeTransitGateways",
-        "ec2:DescribeTags",
-        "ec2:DeleteTransitGateway",
-        "ec2:DeleteTags",
-        "ec2:ModifyTransitGateway",
-        "ec2:ModifyTransitGatewayOptions"
-      ]
+    "list" : {
+      "permissions" : [ "ec2:DescribeTransitGateways", "ec2:DescribeTags" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AmazonSideAsn": {
-      "format": "int64",
-      "type": "integer"
-    },
-    "AssociationDefaultRouteTableId": {
-      "type": "string"
-    },
-    "AutoAcceptSharedAttachments": {
-      "type": "string"
-    },
-    "DefaultRouteTableAssociation": {
-      "type": "string"
-    },
-    "DefaultRouteTablePropagation": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "DnsSupport": {
-      "type": "string"
-    },
-    "EncryptionSupport": {
-      "enum": [
-        "disable",
-        "enable"
-      ],
-      "type": "string"
-    },
-    "EncryptionSupportState": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "MulticastSupport": {
-      "type": "string"
-    },
-    "PropagationDefaultRouteTableId": {
-      "type": "string"
-    },
-    "SecurityGroupReferencingSupport": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "TransitGatewayArn": {
-      "type": "string"
-    },
-    "TransitGatewayCidrBlocks": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "VpnEcmpSupport": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/TransitGatewayArn",
-    "/properties/EncryptionSupportState"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::TransitGateway",
-  "writeOnlyProperties": [
-    "/properties/EncryptionSupport"
-  ]
+  }
 }

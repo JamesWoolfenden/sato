@@ -1,55 +1,35 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/StackName",
-    "/properties/EntitlementName",
-    "/properties/ApplicationIdentifier"
-  ],
-  "definitions": {},
-  "description": "Resource Type definition for AWS::AppStream::ApplicationEntitlementAssociation",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "appstream:AssociateApplicationToEntitlement",
-        "appstream:ListEntitledApplications"
-      ]
+  "typeName" : "AWS::AppStream::ApplicationEntitlementAssociation",
+  "description" : "Resource Type definition for AWS::AppStream::ApplicationEntitlementAssociation",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+  "definitions" : { },
+  "properties" : {
+    "StackName" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "appstream:DisassociateApplicationFromEntitlement",
-        "appstream:ListEntitledApplications"
-      ]
+    "EntitlementName" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "appstream:ListEntitledApplications"
-      ]
+    "ApplicationIdentifier" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/StackName",
-    "/properties/EntitlementName",
-    "/properties/ApplicationIdentifier"
-  ],
-  "properties": {
-    "ApplicationIdentifier": {
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  },
+  "required" : [ "StackName", "EntitlementName", "ApplicationIdentifier" ],
+  "createOnlyProperties" : [ "/properties/StackName", "/properties/EntitlementName", "/properties/ApplicationIdentifier" ],
+  "primaryIdentifier" : [ "/properties/StackName", "/properties/EntitlementName", "/properties/ApplicationIdentifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "appstream:AssociateApplicationToEntitlement", "appstream:ListEntitledApplications" ]
     },
-    "EntitlementName": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "appstream:ListEntitledApplications" ]
     },
-    "StackName": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "appstream:DisassociateApplicationFromEntitlement", "appstream:ListEntitledApplications" ]
     }
-  },
-  "required": [
-    "StackName",
-    "EntitlementName",
-    "ApplicationIdentifier"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::AppStream::ApplicationEntitlementAssociation"
+  }
 }

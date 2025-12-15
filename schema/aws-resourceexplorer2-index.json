@@ -1,107 +1,66 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "IndexState": {
-      "enum": [
-        "ACTIVE",
-        "CREATING",
-        "DELETING",
-        "DELETED",
-        "UPDATING"
-      ],
-      "type": "string"
+  "typeName" : "AWS::ResourceExplorer2::Index",
+  "description" : "Definition of AWS::ResourceExplorer2::Index Resource Type",
+  "definitions" : {
+    "IndexType" : {
+      "type" : "string",
+      "enum" : [ "LOCAL", "AGGREGATOR" ]
     },
-    "IndexType": {
-      "enum": [
-        "LOCAL",
-        "AGGREGATOR"
-      ],
-      "type": "string"
-    },
-    "TagMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
+    },
+    "IndexState" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "CREATING", "DELETING", "DELETED", "UPDATING" ]
     }
   },
-  "description": "Definition of AWS::ResourceExplorer2::Index Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "resource-explorer-2:CreateIndex",
-        "resource-explorer-2:GetIndex",
-        "resource-explorer-2:TagResource",
-        "resource-explorer-2:UpdateIndexType",
-        "resource-explorer-2:DeleteIndex",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "resource-explorer-2:DeleteIndex",
-        "resource-explorer-2:GetIndex",
-        "resource-explorer-2:UntagResource"
-      ]
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     },
-    "list": {
-      "permissions": [
-        "resource-explorer-2:ListIndexes"
-      ]
+    "Type" : {
+      "$ref" : "#/definitions/IndexType"
     },
-    "read": {
-      "permissions": [
-        "resource-explorer-2:GetIndex"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "resource-explorer-2:GetIndex",
-        "resource-explorer-2:UpdateIndexType",
-        "resource-explorer-2:TagResource",
-        "resource-explorer-2:UntagResource",
-        "resource-explorer-2:ListTagsForResource"
-      ]
+    "IndexState" : {
+      "$ref" : "#/definitions/IndexState"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "required" : [ "Type" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/IndexState" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resource-explorer-2:CreateIndex", "resource-explorer-2:GetIndex", "resource-explorer-2:TagResource", "resource-explorer-2:UpdateIndexType", "resource-explorer-2:DeleteIndex", "iam:CreateServiceLinkedRole" ]
     },
-    "IndexState": {
-      "$ref": "#/definitions/IndexState"
+    "update" : {
+      "permissions" : [ "resource-explorer-2:GetIndex", "resource-explorer-2:UpdateIndexType", "resource-explorer-2:TagResource", "resource-explorer-2:UntagResource", "resource-explorer-2:ListTagsForResource" ]
     },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "delete" : {
+      "permissions" : [ "resource-explorer-2:DeleteIndex", "resource-explorer-2:GetIndex", "resource-explorer-2:UntagResource" ]
     },
-    "Type": {
-      "$ref": "#/definitions/IndexType"
+    "list" : {
+      "permissions" : [ "resource-explorer-2:ListIndexes" ]
+    },
+    "read" : {
+      "permissions" : [ "resource-explorer-2:GetIndex" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/IndexState"
-  ],
-  "required": [
-    "Type"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "resource-explorer-2:ListTagsForResource",
-      "resource-explorer-2:TagResource",
-      "resource-explorer-2:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "cloudFormationSystemTags" : false,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "resource-explorer-2:ListTagsForResource", "resource-explorer-2:TagResource", "resource-explorer-2:UntagResource" ]
   },
-  "typeName": "AWS::ResourceExplorer2::Index"
+  "additionalProperties" : false
 }

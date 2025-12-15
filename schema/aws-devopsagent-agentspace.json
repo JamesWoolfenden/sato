@@ -1,86 +1,64 @@
 {
-  "additionalProperties": false,
-  "definitions": {},
-  "description": "Resource Type definition for AWS::DevOpsAgent::AgentSpace",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "aidevops:CreateAgentSpace",
-        "aidevops:GetAgentSpace"
-      ]
+  "typeName" : "AWS::DevOpsAgent::AgentSpace",
+  "description" : "Resource Type definition for AWS::DevOpsAgent::AgentSpace",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : { },
+  "properties" : {
+    "AgentSpaceId" : {
+      "description" : "The unique identifier of the AgentSpace",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "delete": {
-      "permissions": [
-        "aidevops:DeleteAgentSpace",
-        "aidevops:GetAgentSpace"
-      ]
+    "Name" : {
+      "description" : "The name of the AgentSpace.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "list": {
-      "permissions": [
-        "aidevops:ListAgentSpaces"
-      ]
+    "Description" : {
+      "description" : "The description of the AgentSpace.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1000
     },
-    "read": {
-      "permissions": [
-        "aidevops:GetAgentSpace"
-      ]
+    "CreatedAt" : {
+      "description" : "The timestamp when the resource was created.",
+      "type" : "string",
+      "format" : "date-time"
     },
-    "update": {
-      "permissions": [
-        "aidevops:UpdateAgentSpace",
-        "aidevops:GetAgentSpace"
-      ]
+    "UpdatedAt" : {
+      "description" : "The timestamp when the resource was last updated.",
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of the AgentSpace.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AgentSpaceId"
-  ],
-  "properties": {
-    "AgentSpaceId": {
-      "description": "The unique identifier of the AgentSpace",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  },
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/AgentSpaceId", "/properties/CreatedAt", "/properties/UpdatedAt", "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/AgentSpaceId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "aidevops:CreateAgentSpace", "aidevops:GetAgentSpace" ]
     },
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the AgentSpace.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "aidevops:GetAgentSpace" ]
     },
-    "CreatedAt": {
-      "description": "The timestamp when the resource was created.",
-      "format": "date-time",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "aidevops:UpdateAgentSpace", "aidevops:GetAgentSpace" ]
     },
-    "Description": {
-      "description": "The description of the AgentSpace.",
-      "maxLength": 1000,
-      "minLength": 1,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "aidevops:DeleteAgentSpace", "aidevops:GetAgentSpace" ]
     },
-    "Name": {
-      "description": "The name of the AgentSpace.",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "UpdatedAt": {
-      "description": "The timestamp when the resource was last updated.",
-      "format": "date-time",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "aidevops:ListAgentSpaces" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/AgentSpaceId",
-    "/properties/CreatedAt",
-    "/properties/UpdatedAt",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::DevOpsAgent::AgentSpace"
+  }
 }

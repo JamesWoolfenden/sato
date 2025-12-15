@@ -1,169 +1,127 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "IpPool": {
-      "additionalProperties": false,
-      "description": "IP address cidr pool",
-      "properties": {
-        "Cidr": {
-          "description": "IP address cidr pool",
-          "type": "string"
+  "typeName" : "AWS::MediaLive::Network",
+  "description" : "Resource schema for AWS::MediaLive::Network.",
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "The ARN of the Network."
+    },
+    "AssociatedClusterIds" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "description" : "Cluster Ids which have this network ID in their Interface Network Mappings"
+      }
+    },
+    "Id" : {
+      "type" : "string",
+      "description" : "The unique ID of the Network."
+    },
+    "IpPools" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/IpPool"
+      },
+      "description" : "The list of IP address cidr pools for the network"
+    },
+    "Name" : {
+      "type" : "string",
+      "description" : "The user-specified name of the Network to be created."
+    },
+    "Routes" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Route"
+      },
+      "description" : "The routes for the network"
+    },
+    "State" : {
+      "$ref" : "#/definitions/NetworkState",
+      "description" : "The current state of the Network."
+    },
+    "Tags" : {
+      "description" : "A collection of key-value pairs.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tags"
+      }
+    }
+  },
+  "definitions" : {
+    "IpPool" : {
+      "type" : "object",
+      "description" : "IP address cidr pool",
+      "properties" : {
+        "Cidr" : {
+          "type" : "string",
+          "description" : "IP address cidr pool"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NetworkState": {
-      "enum": [
-        "CREATING",
-        "CREATE_FAILED",
-        "ACTIVE",
-        "DELETING",
-        "IDLE",
-        "IN_USE",
-        "UPDATING",
-        "DELETED",
-        "DELETE_FAILED"
-      ],
-      "type": "string"
+    "NetworkState" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "CREATE_FAILED", "ACTIVE", "DELETING", "IDLE", "IN_USE", "UPDATING", "DELETED", "DELETE_FAILED" ]
     },
-    "Route": {
-      "additionalProperties": false,
-      "properties": {
-        "Cidr": {
-          "description": "Ip address cidr",
-          "type": "string"
+    "Route" : {
+      "type" : "object",
+      "properties" : {
+        "Cidr" : {
+          "type" : "string",
+          "description" : "Ip address cidr"
         },
-        "Gateway": {
-          "description": "IP address for the route packet paths",
-          "type": "string"
+        "Gateway" : {
+          "type" : "string",
+          "description" : "IP address for the route packet paths"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tags": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "type": "string"
+    "Tags" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource schema for AWS::MediaLive::Network.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "medialive:CreateNetwork",
-        "medialive:CreateTags",
-        "medialive:DescribeNetwork",
-        "medialive:ListTagsForResource"
-      ]
+  "required" : [ "Name", "IpPools" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id", "/properties/State", "/properties/AssociatedClusterIds" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "medialive:CreateTags", "medialive:DeleteTags" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "medialive:CreateNetwork", "medialive:CreateTags", "medialive:DescribeNetwork", "medialive:ListTagsForResource" ]
     },
-    "delete": {
-      "permissions": [
-        "medialive:DeleteNetwork",
-        "medialive:DescribeNetwork"
-      ]
+    "read" : {
+      "permissions" : [ "medialive:DescribeNetwork", "medialive:ListTagsForResource" ]
     },
-    "list": {
-      "permissions": [
-        "medialive:ListNetworks"
-      ]
+    "update" : {
+      "permissions" : [ "medialive:UpdateNetwork", "medialive:CreateTags", "medialive:DeleteTags", "medialive:DescribeNetwork", "medialive:ListTagsForResource" ]
     },
-    "read": {
-      "permissions": [
-        "medialive:DescribeNetwork",
-        "medialive:ListTagsForResource"
-      ]
+    "delete" : {
+      "permissions" : [ "medialive:DeleteNetwork", "medialive:DescribeNetwork" ]
     },
-    "update": {
-      "permissions": [
-        "medialive:UpdateNetwork",
-        "medialive:CreateTags",
-        "medialive:DeleteTags",
-        "medialive:DescribeNetwork",
-        "medialive:ListTagsForResource"
-      ]
+    "list" : {
+      "permissions" : [ "medialive:ListNetworks" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The ARN of the Network.",
-      "type": "string"
-    },
-    "AssociatedClusterIds": {
-      "insertionOrder": false,
-      "items": {
-        "description": "Cluster Ids which have this network ID in their Interface Network Mappings",
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Id": {
-      "description": "The unique ID of the Network.",
-      "type": "string"
-    },
-    "IpPools": {
-      "description": "The list of IP address cidr pools for the network",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/IpPool"
-      },
-      "type": "array"
-    },
-    "Name": {
-      "description": "The user-specified name of the Network to be created.",
-      "type": "string"
-    },
-    "Routes": {
-      "description": "The routes for the network",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Route"
-      },
-      "type": "array"
-    },
-    "State": {
-      "$ref": "#/definitions/NetworkState",
-      "description": "The current state of the Network."
-    },
-    "Tags": {
-      "description": "A collection of key-value pairs.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tags"
-      },
-      "type": "array"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id",
-    "/properties/State",
-    "/properties/AssociatedClusterIds"
-  ],
-  "required": [
-    "Name",
-    "IpPools"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "medialive:CreateTags",
-      "medialive:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MediaLive::Network"
+  "additionalProperties" : false
 }

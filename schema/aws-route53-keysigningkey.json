@@ -1,92 +1,51 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/HostedZoneId",
-    "/properties/Name",
-    "/properties/KeyManagementServiceArn"
-  ],
-  "description": "Represents a key signing key (KSK) associated with a hosted zone. You can only have two KSKs per hosted zone.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "route53:CreateKeySigningKey",
-        "kms:DescribeKey",
-        "kms:GetPublicKey",
-        "kms:Sign",
-        "kms:CreateGrant"
-      ]
+  "typeName" : "AWS::Route53::KeySigningKey",
+  "description" : "Represents a key signing key (KSK) associated with a hosted zone. You can only have two KSKs per hosted zone.",
+  "properties" : {
+    "HostedZoneId" : {
+      "description" : "The unique string (ID) used to identify a hosted zone.",
+      "type" : "string",
+      "pattern" : "^[A-Z0-9]{1,32}$"
     },
-    "delete": {
-      "permissions": [
-        "route53:DeactivateKeySigningKey",
-        "route53:DeleteKeySigningKey",
-        "kms:DescribeKey",
-        "kms:GetPublicKey",
-        "kms:Sign",
-        "kms:CreateGrant"
-      ]
+    "Status" : {
+      "description" : "A string specifying the initial status of the key signing key (KSK). You can set the value to ACTIVE or INACTIVE.",
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE" ]
     },
-    "list": {
-      "permissions": [
-        "route53:GetDNSSEC",
-        "route53:ListHostedZones"
-      ]
+    "Name" : {
+      "description" : "An alphanumeric string used to identify a key signing key (KSK). Name must be unique for each key signing key in the same hosted zone.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_]{3,128}$"
     },
-    "read": {
-      "permissions": [
-        "route53:GetDNSSEC"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "route53:GetDNSSEC",
-        "route53:ActivateKeySigningKey",
-        "route53:DeactivateKeySigningKey",
-        "kms:DescribeKey",
-        "kms:GetPublicKey",
-        "kms:Sign",
-        "kms:CreateGrant"
-      ]
+    "KeyManagementServiceArn" : {
+      "description" : "The Amazon resource name (ARN) for a customer managed key (CMK) in AWS Key Management Service (KMS). The KeyManagementServiceArn must be unique for each key signing key (KSK) in a single hosted zone.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
     }
   },
-  "primaryIdentifier": [
-    "/properties/HostedZoneId",
-    "/properties/Name"
-  ],
-  "properties": {
-    "HostedZoneId": {
-      "description": "The unique string (ID) used to identify a hosted zone.",
-      "pattern": "^[A-Z0-9]{1,32}$",
-      "type": "string"
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/HostedZoneId", "/properties/Name", "/properties/KeyManagementServiceArn" ],
+  "required" : [ "Status", "HostedZoneId", "Name", "KeyManagementServiceArn" ],
+  "primaryIdentifier" : [ "/properties/HostedZoneId", "/properties/Name" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "route53:CreateKeySigningKey", "kms:DescribeKey", "kms:GetPublicKey", "kms:Sign", "kms:CreateGrant" ]
     },
-    "KeyManagementServiceArn": {
-      "description": "The Amazon resource name (ARN) for a customer managed key (CMK) in AWS Key Management Service (KMS). The KeyManagementServiceArn must be unique for each key signing key (KSK) in a single hosted zone.",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "route53:GetDNSSEC" ]
     },
-    "Name": {
-      "description": "An alphanumeric string used to identify a key signing key (KSK). Name must be unique for each key signing key in the same hosted zone.",
-      "pattern": "^[a-zA-Z0-9_]{3,128}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "route53:GetDNSSEC", "route53:ActivateKeySigningKey", "route53:DeactivateKeySigningKey", "kms:DescribeKey", "kms:GetPublicKey", "kms:Sign", "kms:CreateGrant" ]
     },
-    "Status": {
-      "description": "A string specifying the initial status of the key signing key (KSK). You can set the value to ACTIVE or INACTIVE.",
-      "enum": [
-        "ACTIVE",
-        "INACTIVE"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "route53:DeactivateKeySigningKey", "route53:DeleteKeySigningKey", "kms:DescribeKey", "kms:GetPublicKey", "kms:Sign", "kms:CreateGrant" ]
+    },
+    "list" : {
+      "permissions" : [ "route53:GetDNSSEC", "route53:ListHostedZones" ]
     }
-  },
-  "required": [
-    "Status",
-    "HostedZoneId",
-    "Name",
-    "KeyManagementServiceArn"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Route53::KeySigningKey"
+  }
 }

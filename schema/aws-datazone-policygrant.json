@@ -1,626 +1,488 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Detail",
-    "/properties/DomainIdentifier",
-    "/properties/EntityIdentifier",
-    "/properties/EntityType",
-    "/properties/PolicyType",
-    "/properties/Principal"
-  ],
-  "definitions": {
-    "AddToProjectMemberPoolPolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+  "typeName" : "AWS::DataZone::PolicyGrant",
+  "description" : "Policy Grant in AWS DataZone is an explicit authorization assignment that allows a specific principal (user, group, or project) to perform particular actions (such as creating glossary terms, managing projects, or accessing resources) on governed resources within a certain scope (like a Domain Unit or Project). Policy Grants are essentially the mechanism by which DataZone enforces fine-grained, role-based access control beyond what is possible through AWS IAM alone.",
+  "definitions" : {
+    "AddToProjectMemberPoolPolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AllDomainUnitsGrantFilter": {
-      "additionalProperties": false,
-      "type": "object"
+    "AllDomainUnitsGrantFilter" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "AllUsersGrantFilter": {
-      "additionalProperties": false,
-      "type": "object"
+    "AllUsersGrantFilter" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "CreateAssetTypePolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "CreateAssetTypePolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CreateDomainUnitPolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "CreateDomainUnitPolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CreateEnvironmentProfilePolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "DomainUnitId": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[a-z0-9_\\-]+$",
-          "type": "string"
+    "CreateEnvironmentProfilePolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "DomainUnitId" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[a-z0-9_\\-]+$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CreateFormTypePolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "CreateFormTypePolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CreateGlossaryPolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "CreateGlossaryPolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CreateProjectFromProjectProfilePolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "CreateProjectFromProjectProfilePolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         },
-        "ProjectProfiles": {
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "ProjectProfiles" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CreateProjectPolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "CreateProjectPolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DomainUnitDesignation": {
-      "enum": [
-        "OWNER"
-      ],
-      "type": "string"
+    "DomainUnitDesignation" : {
+      "type" : "string",
+      "enum" : [ "OWNER" ]
     },
-    "DomainUnitFilterForProject": {
-      "additionalProperties": false,
-      "properties": {
-        "DomainUnit": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[a-z0-9_\\-]+$",
-          "type": "string"
+    "DomainUnitFilterForProject" : {
+      "type" : "object",
+      "properties" : {
+        "DomainUnit" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[a-z0-9_\\-]+$"
         },
-        "IncludeChildDomainUnits": {
-          "default": false,
-          "type": "boolean"
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean",
+          "default" : false
         }
       },
-      "required": [
-        "DomainUnit"
-      ],
-      "type": "object"
+      "required" : [ "DomainUnit" ],
+      "additionalProperties" : false
     },
-    "DomainUnitGrantFilter": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "AllDomainUnitsGrantFilter": {
-              "$ref": "#/definitions/AllDomainUnitsGrantFilter"
-            }
-          },
-          "required": [
-            "AllDomainUnitsGrantFilter"
-          ],
-          "title": "AllDomainUnitsGrantFilter",
-          "type": "object"
-        }
-      ]
+    "DomainUnitGrantFilter" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "AllDomainUnitsGrantFilter",
+        "properties" : {
+          "AllDomainUnitsGrantFilter" : {
+            "$ref" : "#/definitions/AllDomainUnitsGrantFilter"
+          }
+        },
+        "required" : [ "AllDomainUnitsGrantFilter" ],
+        "additionalProperties" : false
+      } ]
     },
-    "DomainUnitPolicyGrantPrincipal": {
-      "additionalProperties": false,
-      "properties": {
-        "DomainUnitDesignation": {
-          "$ref": "#/definitions/DomainUnitDesignation"
+    "DomainUnitPolicyGrantPrincipal" : {
+      "type" : "object",
+      "properties" : {
+        "DomainUnitDesignation" : {
+          "$ref" : "#/definitions/DomainUnitDesignation"
         },
-        "DomainUnitGrantFilter": {
-          "$ref": "#/definitions/DomainUnitGrantFilter"
+        "DomainUnitIdentifier" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[a-z0-9_\\-]+$"
         },
-        "DomainUnitIdentifier": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[a-z0-9_\\-]+$",
-          "type": "string"
+        "DomainUnitGrantFilter" : {
+          "$ref" : "#/definitions/DomainUnitGrantFilter"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "GroupPolicyGrantPrincipal": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "GroupIdentifier": {
-              "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  ]+)",
-              "type": "string"
-            }
-          },
-          "required": [
-            "GroupIdentifier"
-          ],
-          "title": "GroupIdentifier",
-          "type": "object"
-        }
-      ]
+    "GroupPolicyGrantPrincipal" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "GroupIdentifier",
+        "properties" : {
+          "GroupIdentifier" : {
+            "type" : "string",
+            "pattern" : "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|[\\p{L}\\p{M}\\p{S}\\p{N}\\p{P}\\t\\n\\r  ]+)"
+          }
+        },
+        "required" : [ "GroupIdentifier" ],
+        "additionalProperties" : false
+      } ]
     },
-    "ManagedPolicyType": {
-      "enum": [
-        "CREATE_DOMAIN_UNIT",
-        "OVERRIDE_DOMAIN_UNIT_OWNERS",
-        "ADD_TO_PROJECT_MEMBER_POOL",
-        "OVERRIDE_PROJECT_OWNERS",
-        "CREATE_GLOSSARY",
-        "CREATE_FORM_TYPE",
-        "CREATE_ASSET_TYPE",
-        "CREATE_PROJECT",
-        "CREATE_ENVIRONMENT_PROFILE",
-        "DELEGATE_CREATE_ENVIRONMENT_PROFILE",
-        "CREATE_ENVIRONMENT",
-        "CREATE_ENVIRONMENT_FROM_BLUEPRINT",
-        "CREATE_PROJECT_FROM_PROJECT_PROFILE"
-      ],
-      "type": "string"
+    "ManagedPolicyType" : {
+      "type" : "string",
+      "enum" : [ "CREATE_DOMAIN_UNIT", "OVERRIDE_DOMAIN_UNIT_OWNERS", "ADD_TO_PROJECT_MEMBER_POOL", "OVERRIDE_PROJECT_OWNERS", "CREATE_GLOSSARY", "CREATE_FORM_TYPE", "CREATE_ASSET_TYPE", "CREATE_PROJECT", "CREATE_ENVIRONMENT_PROFILE", "DELEGATE_CREATE_ENVIRONMENT_PROFILE", "CREATE_ENVIRONMENT", "CREATE_ENVIRONMENT_FROM_BLUEPRINT", "CREATE_PROJECT_FROM_PROJECT_PROFILE" ]
     },
-    "OverrideDomainUnitOwnersPolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "OverrideDomainUnitOwnersPolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "OverrideProjectOwnersPolicyGrantDetail": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeChildDomainUnits": {
-          "type": "boolean"
+    "OverrideProjectOwnersPolicyGrantDetail" : {
+      "type" : "object",
+      "properties" : {
+        "IncludeChildDomainUnits" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PolicyGrantDetail": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateDomainUnit": {
-              "$ref": "#/definitions/CreateDomainUnitPolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateDomainUnit"
-          ],
-          "title": "CreateDomainUnit",
-          "type": "object"
+    "PolicyGrantDetail" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "CreateDomainUnit",
+        "properties" : {
+          "CreateDomainUnit" : {
+            "$ref" : "#/definitions/CreateDomainUnitPolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "OverrideDomainUnitOwners": {
-              "$ref": "#/definitions/OverrideDomainUnitOwnersPolicyGrantDetail"
-            }
-          },
-          "required": [
-            "OverrideDomainUnitOwners"
-          ],
-          "title": "OverrideDomainUnitOwners",
-          "type": "object"
+        "required" : [ "CreateDomainUnit" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "OverrideDomainUnitOwners",
+        "properties" : {
+          "OverrideDomainUnitOwners" : {
+            "$ref" : "#/definitions/OverrideDomainUnitOwnersPolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "AddToProjectMemberPool": {
-              "$ref": "#/definitions/AddToProjectMemberPoolPolicyGrantDetail"
-            }
-          },
-          "required": [
-            "AddToProjectMemberPool"
-          ],
-          "title": "AddToProjectMemberPool",
-          "type": "object"
+        "required" : [ "OverrideDomainUnitOwners" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "AddToProjectMemberPool",
+        "properties" : {
+          "AddToProjectMemberPool" : {
+            "$ref" : "#/definitions/AddToProjectMemberPoolPolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "OverrideProjectOwners": {
-              "$ref": "#/definitions/OverrideProjectOwnersPolicyGrantDetail"
-            }
-          },
-          "required": [
-            "OverrideProjectOwners"
-          ],
-          "title": "OverrideProjectOwners",
-          "type": "object"
+        "required" : [ "AddToProjectMemberPool" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "OverrideProjectOwners",
+        "properties" : {
+          "OverrideProjectOwners" : {
+            "$ref" : "#/definitions/OverrideProjectOwnersPolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateGlossary": {
-              "$ref": "#/definitions/CreateGlossaryPolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateGlossary"
-          ],
-          "title": "CreateGlossary",
-          "type": "object"
+        "required" : [ "OverrideProjectOwners" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateGlossary",
+        "properties" : {
+          "CreateGlossary" : {
+            "$ref" : "#/definitions/CreateGlossaryPolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateFormType": {
-              "$ref": "#/definitions/CreateFormTypePolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateFormType"
-          ],
-          "title": "CreateFormType",
-          "type": "object"
+        "required" : [ "CreateGlossary" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateFormType",
+        "properties" : {
+          "CreateFormType" : {
+            "$ref" : "#/definitions/CreateFormTypePolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateAssetType": {
-              "$ref": "#/definitions/CreateAssetTypePolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateAssetType"
-          ],
-          "title": "CreateAssetType",
-          "type": "object"
+        "required" : [ "CreateFormType" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateAssetType",
+        "properties" : {
+          "CreateAssetType" : {
+            "$ref" : "#/definitions/CreateAssetTypePolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateProject": {
-              "$ref": "#/definitions/CreateProjectPolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateProject"
-          ],
-          "title": "CreateProject",
-          "type": "object"
+        "required" : [ "CreateAssetType" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateProject",
+        "properties" : {
+          "CreateProject" : {
+            "$ref" : "#/definitions/CreateProjectPolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateEnvironmentProfile": {
-              "$ref": "#/definitions/CreateEnvironmentProfilePolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateEnvironmentProfile"
-          ],
-          "title": "CreateEnvironmentProfile",
-          "type": "object"
+        "required" : [ "CreateProject" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateEnvironmentProfile",
+        "properties" : {
+          "CreateEnvironmentProfile" : {
+            "$ref" : "#/definitions/CreateEnvironmentProfilePolicyGrantDetail"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "DelegateCreateEnvironmentProfile": {
-              "$ref": "#/definitions/Unit"
-            }
-          },
-          "required": [
-            "DelegateCreateEnvironmentProfile"
-          ],
-          "title": "DelegateCreateEnvironmentProfile",
-          "type": "object"
+        "required" : [ "CreateEnvironmentProfile" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "DelegateCreateEnvironmentProfile",
+        "properties" : {
+          "DelegateCreateEnvironmentProfile" : {
+            "$ref" : "#/definitions/Unit"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateEnvironment": {
-              "$ref": "#/definitions/Unit"
-            }
-          },
-          "required": [
-            "CreateEnvironment"
-          ],
-          "title": "CreateEnvironment",
-          "type": "object"
+        "required" : [ "DelegateCreateEnvironmentProfile" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateEnvironment",
+        "properties" : {
+          "CreateEnvironment" : {
+            "$ref" : "#/definitions/Unit"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateEnvironmentFromBlueprint": {
-              "$ref": "#/definitions/Unit"
-            }
-          },
-          "required": [
-            "CreateEnvironmentFromBlueprint"
-          ],
-          "title": "CreateEnvironmentFromBlueprint",
-          "type": "object"
+        "required" : [ "CreateEnvironment" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateEnvironmentFromBlueprint",
+        "properties" : {
+          "CreateEnvironmentFromBlueprint" : {
+            "$ref" : "#/definitions/Unit"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CreateProjectFromProjectProfile": {
-              "$ref": "#/definitions/CreateProjectFromProjectProfilePolicyGrantDetail"
-            }
-          },
-          "required": [
-            "CreateProjectFromProjectProfile"
-          ],
-          "title": "CreateProjectFromProjectProfile",
-          "type": "object"
-        }
-      ]
+        "required" : [ "CreateEnvironmentFromBlueprint" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CreateProjectFromProjectProfile",
+        "properties" : {
+          "CreateProjectFromProjectProfile" : {
+            "$ref" : "#/definitions/CreateProjectFromProjectProfilePolicyGrantDetail"
+          }
+        },
+        "required" : [ "CreateProjectFromProjectProfile" ],
+        "additionalProperties" : false
+      } ]
     },
-    "PolicyGrantPrincipal": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "User": {
-              "$ref": "#/definitions/UserPolicyGrantPrincipal"
-            }
-          },
-          "required": [
-            "User"
-          ],
-          "title": "User",
-          "type": "object"
+    "PolicyGrantPrincipal" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "User",
+        "properties" : {
+          "User" : {
+            "$ref" : "#/definitions/UserPolicyGrantPrincipal"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Group": {
-              "$ref": "#/definitions/GroupPolicyGrantPrincipal"
-            }
-          },
-          "required": [
-            "Group"
-          ],
-          "title": "Group",
-          "type": "object"
+        "required" : [ "User" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Group",
+        "properties" : {
+          "Group" : {
+            "$ref" : "#/definitions/GroupPolicyGrantPrincipal"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Project": {
-              "$ref": "#/definitions/ProjectPolicyGrantPrincipal"
-            }
-          },
-          "required": [
-            "Project"
-          ],
-          "title": "Project",
-          "type": "object"
+        "required" : [ "Group" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Project",
+        "properties" : {
+          "Project" : {
+            "$ref" : "#/definitions/ProjectPolicyGrantPrincipal"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "DomainUnit": {
-              "$ref": "#/definitions/DomainUnitPolicyGrantPrincipal"
-            }
-          },
-          "required": [
-            "DomainUnit"
-          ],
-          "title": "DomainUnit",
-          "type": "object"
-        }
-      ]
+        "required" : [ "Project" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "DomainUnit",
+        "properties" : {
+          "DomainUnit" : {
+            "$ref" : "#/definitions/DomainUnitPolicyGrantPrincipal"
+          }
+        },
+        "required" : [ "DomainUnit" ],
+        "additionalProperties" : false
+      } ]
     },
-    "ProjectDesignation": {
-      "enum": [
-        "OWNER",
-        "CONTRIBUTOR",
-        "PROJECT_CATALOG_STEWARD"
-      ],
-      "type": "string"
+    "ProjectDesignation" : {
+      "type" : "string",
+      "enum" : [ "OWNER", "CONTRIBUTOR", "PROJECT_CATALOG_STEWARD" ]
     },
-    "ProjectGrantFilter": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "DomainUnitFilter": {
-              "$ref": "#/definitions/DomainUnitFilterForProject"
-            }
-          },
-          "required": [
-            "DomainUnitFilter"
-          ],
-          "title": "DomainUnitFilter",
-          "type": "object"
-        }
-      ]
+    "ProjectGrantFilter" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "DomainUnitFilter",
+        "properties" : {
+          "DomainUnitFilter" : {
+            "$ref" : "#/definitions/DomainUnitFilterForProject"
+          }
+        },
+        "required" : [ "DomainUnitFilter" ],
+        "additionalProperties" : false
+      } ]
     },
-    "ProjectPolicyGrantPrincipal": {
-      "additionalProperties": false,
-      "properties": {
-        "ProjectDesignation": {
-          "$ref": "#/definitions/ProjectDesignation"
+    "ProjectPolicyGrantPrincipal" : {
+      "type" : "object",
+      "properties" : {
+        "ProjectDesignation" : {
+          "$ref" : "#/definitions/ProjectDesignation"
         },
-        "ProjectGrantFilter": {
-          "$ref": "#/definitions/ProjectGrantFilter"
+        "ProjectIdentifier" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_-]{1,36}$"
         },
-        "ProjectIdentifier": {
-          "pattern": "^[a-zA-Z0-9_-]{1,36}$",
-          "type": "string"
+        "ProjectGrantFilter" : {
+          "$ref" : "#/definitions/ProjectGrantFilter"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TargetEntityType": {
-      "enum": [
-        "DOMAIN_UNIT",
-        "ENVIRONMENT_BLUEPRINT_CONFIGURATION",
-        "ENVIRONMENT_PROFILE",
-        "ASSET_TYPE"
-      ],
-      "type": "string"
+    "TargetEntityType" : {
+      "type" : "string",
+      "enum" : [ "DOMAIN_UNIT", "ENVIRONMENT_BLUEPRINT_CONFIGURATION", "ENVIRONMENT_PROFILE", "ASSET_TYPE" ]
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "UserPolicyGrantPrincipal": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "UserIdentifier": {
-              "pattern": "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|^[a-zA-Z_0-9+=,.@-]+$|^arn:aws[^:]*:iam::\\d{12}:.+$)",
-              "type": "string"
-            }
-          },
-          "required": [
-            "UserIdentifier"
-          ],
-          "title": "UserIdentifier",
-          "type": "object"
+    "UserPolicyGrantPrincipal" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "UserIdentifier",
+        "properties" : {
+          "UserIdentifier" : {
+            "type" : "string",
+            "pattern" : "(^([0-9a-f]{10}-|)[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$|^[a-zA-Z_0-9+=,.@-]+$|^arn:aws[^:]*:iam::\\d{12}:.+$)"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "AllUsersGrantFilter": {
-              "$ref": "#/definitions/AllUsersGrantFilter"
-            }
-          },
-          "required": [
-            "AllUsersGrantFilter"
-          ],
-          "title": "AllUsersGrantFilter",
-          "type": "object"
-        }
-      ]
+        "required" : [ "UserIdentifier" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "AllUsersGrantFilter",
+        "properties" : {
+          "AllUsersGrantFilter" : {
+            "$ref" : "#/definitions/AllUsersGrantFilter"
+          }
+        },
+        "required" : [ "AllUsersGrantFilter" ],
+        "additionalProperties" : false
+      } ]
     }
   },
-  "description": "Policy Grant in AWS DataZone is an explicit authorization assignment that allows a specific principal (user, group, or project) to perform particular actions (such as creating glossary terms, managing projects, or accessing resources) on governed resources within a certain scope (like a Domain Unit or Project). Policy Grants are essentially the mechanism by which DataZone enforces fine-grained, role-based access control beyond what is possible through AWS IAM alone.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "datazone:AddPolicyGrant",
-        "datazone:ListPolicyGrants"
-      ]
+  "properties" : {
+    "Detail" : {
+      "type" : "object",
+      "$ref" : "#/definitions/PolicyGrantDetail"
     },
-    "delete": {
-      "permissions": [
-        "datazone:RemovePolicyGrant",
-        "datazone:ListPolicyGrants"
-      ]
+    "DomainIdentifier" : {
+      "type" : "string",
+      "pattern" : "^dzd[-_][a-zA-Z0-9_-]{1,36}$"
     },
-    "list": {
-      "permissions": [
-        "datazone:ListPolicyGrants"
-      ]
+    "EntityIdentifier" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "datazone:ListPolicyGrants"
-      ]
+    "EntityType" : {
+      "$ref" : "#/definitions/TargetEntityType"
+    },
+    "GrantId" : {
+      "type" : "string",
+      "description" : "The unique identifier of the policy grant returned by the AddPolicyGrant API",
+      "pattern" : "^[A-Za-z0-9+/]{10}$"
+    },
+    "CreatedAt" : {
+      "description" : "Specifies the timestamp at which policy grant member was created.",
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "CreatedBy" : {
+      "description" : "Specifies the user who created the policy grant member.",
+      "type" : "string"
+    },
+    "PolicyType" : {
+      "$ref" : "#/definitions/ManagedPolicyType"
+    },
+    "Principal" : {
+      "type" : "object",
+      "$ref" : "#/definitions/PolicyGrantPrincipal"
     }
   },
-  "primaryIdentifier": [
-    "/properties/DomainIdentifier",
-    "/properties/GrantId",
-    "/properties/EntityIdentifier",
-    "/properties/EntityType",
-    "/properties/PolicyType"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "description": "Specifies the timestamp at which policy grant member was created.",
-      "format": "date-time",
-      "type": "string"
+  "required" : [ "DomainIdentifier", "EntityIdentifier", "EntityType", "PolicyType" ],
+  "readOnlyProperties" : [ "/properties/GrantId", "/properties/CreatedAt", "/properties/CreatedBy" ],
+  "writeOnlyProperties" : [ "/properties/Principal/Project/ProjectGrantFilter", "/properties/Principal/Project/ProjectGrantFilter/DomainUnitFilter", "/properties/Principal/Project/ProjectGrantFilter/DomainUnitFilter/DomainUnit", "/properties/Principal/Project/ProjectGrantFilter/DomainUnitFilter/IncludeChildDomainUnits", "/properties/Principal/DomainUnit/DomainUnitGrantFilter", "/properties/Principal/DomainUnit/DomainUnitGrantFilter/AllDomainUnitsGrantFilter" ],
+  "createOnlyProperties" : [ "/properties/Detail", "/properties/DomainIdentifier", "/properties/EntityIdentifier", "/properties/EntityType", "/properties/PolicyType", "/properties/Principal" ],
+  "primaryIdentifier" : [ "/properties/DomainIdentifier", "/properties/GrantId", "/properties/EntityIdentifier", "/properties/EntityType", "/properties/PolicyType" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "datazone:AddPolicyGrant", "datazone:ListPolicyGrants" ]
     },
-    "CreatedBy": {
-      "description": "Specifies the user who created the policy grant member.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "datazone:ListPolicyGrants" ]
     },
-    "Detail": {
-      "$ref": "#/definitions/PolicyGrantDetail",
-      "type": "object"
+    "delete" : {
+      "permissions" : [ "datazone:RemovePolicyGrant", "datazone:ListPolicyGrants" ]
     },
-    "DomainIdentifier": {
-      "pattern": "^dzd[-_][a-zA-Z0-9_-]{1,36}$",
-      "type": "string"
-    },
-    "EntityIdentifier": {
-      "type": "string"
-    },
-    "EntityType": {
-      "$ref": "#/definitions/TargetEntityType"
-    },
-    "GrantId": {
-      "description": "The unique identifier of the policy grant returned by the AddPolicyGrant API",
-      "pattern": "^[A-Za-z0-9+/]{10}$",
-      "type": "string"
-    },
-    "PolicyType": {
-      "$ref": "#/definitions/ManagedPolicyType"
-    },
-    "Principal": {
-      "$ref": "#/definitions/PolicyGrantPrincipal",
-      "type": "object"
+    "list" : {
+      "permissions" : [ "datazone:ListPolicyGrants" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/GrantId",
-    "/properties/CreatedAt",
-    "/properties/CreatedBy"
-  ],
-  "required": [
-    "DomainIdentifier",
-    "EntityIdentifier",
-    "EntityType",
-    "PolicyType"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::DataZone::PolicyGrant",
-  "writeOnlyProperties": [
-    "/properties/Principal/Project/ProjectGrantFilter",
-    "/properties/Principal/Project/ProjectGrantFilter/DomainUnitFilter",
-    "/properties/Principal/Project/ProjectGrantFilter/DomainUnitFilter/DomainUnit",
-    "/properties/Principal/Project/ProjectGrantFilter/DomainUnitFilter/IncludeChildDomainUnits",
-    "/properties/Principal/DomainUnit/DomainUnitGrantFilter",
-    "/properties/Principal/DomainUnit/DomainUnitGrantFilter/AllDomainUnitsGrantFilter"
-  ]
+  "additionalProperties" : false
 }

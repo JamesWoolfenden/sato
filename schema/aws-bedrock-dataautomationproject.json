@@ -1,976 +1,770 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ProjectName",
-    "/properties/ProjectType"
-  ],
-  "definitions": {
-    "AudioExtractionCategory": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+  "typeName" : "AWS::Bedrock::DataAutomationProject",
+  "description" : "Definition of AWS::Bedrock::DataAutomationProject Resource Type",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "description" : "Definition of the key/value pair for a tag",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "Key for the tag",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$"
         },
-        "TypeConfiguration": {
-          "$ref": "#/definitions/AudioExtractionCategoryTypeConfiguration"
-        },
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/AudioExtractionCategoryType"
-          },
-          "type": "array",
-          "uniqueItems": true
+        "Value" : {
+          "type" : "string",
+          "description" : "Value for the tag",
+          "minLength" : 0,
+          "maxLength" : 256,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$"
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "AudioExtractionCategoryType": {
-      "enum": [
-        "AUDIO_CONTENT_MODERATION",
-        "TRANSCRIPT",
-        "TOPIC_CONTENT_MODERATION"
-      ],
-      "type": "string"
-    },
-    "AudioExtractionCategoryTypeConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Transcript": {
-          "$ref": "#/definitions/TranscriptConfiguration"
-        }
-      },
-      "type": "object"
-    },
-    "AudioGenerativeOutputLanguage": {
-      "enum": [
-        "DEFAULT",
-        "EN"
-      ],
-      "type": "string"
-    },
-    "AudioLanguageConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "GenerativeOutputLanguage": {
-          "$ref": "#/definitions/AudioGenerativeOutputLanguage"
+    "AudioExtractionCategory" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         },
-        "IdentifyMultipleLanguages": {
-          "type": "boolean"
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/AudioExtractionCategoryType"
+          }
         },
-        "InputLanguages": {
-          "items": {
-            "$ref": "#/definitions/Language"
-          },
-          "type": "array"
+        "TypeConfiguration" : {
+          "$ref" : "#/definitions/AudioExtractionCategoryTypeConfiguration"
         }
       },
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "AudioOverrideConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "LanguageConfiguration": {
-          "$ref": "#/definitions/AudioLanguageConfiguration"
+    "AudioExtractionCategoryTypeConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Transcript" : {
+          "$ref" : "#/definitions/TranscriptConfiguration"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "TranscriptConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "SpeakerLabeling" : {
+          "$ref" : "#/definitions/SpeakerLabelingConfiguration"
         },
-        "ModalityProcessing": {
-          "$ref": "#/definitions/ModalityProcessingConfiguration"
+        "ChannelLabeling" : {
+          "$ref" : "#/definitions/ChannelLabelingConfiguration"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "SpeakerLabelingConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
+        }
+      },
+      "required" : [ "State" ],
+      "additionalProperties" : false
+    },
+    "ChannelLabelingConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
+        }
+      },
+      "required" : [ "State" ],
+      "additionalProperties" : false
+    },
+    "AudioExtractionCategoryType" : {
+      "type" : "string",
+      "enum" : [ "AUDIO_CONTENT_MODERATION", "TRANSCRIPT", "TOPIC_CONTENT_MODERATION" ]
+    },
+    "AudioStandardExtraction" : {
+      "type" : "object",
+      "properties" : {
+        "Category" : {
+          "$ref" : "#/definitions/AudioExtractionCategory"
+        }
+      },
+      "required" : [ "Category" ],
+      "additionalProperties" : false
+    },
+    "AudioStandardGenerativeField" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         },
-        "SensitiveDataConfiguration": {
-          "$ref": "#/definitions/SensitiveDataConfiguration"
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/AudioStandardGenerativeFieldType"
+          }
         }
       },
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "AudioStandardExtraction": {
-      "additionalProperties": false,
-      "properties": {
-        "Category": {
-          "$ref": "#/definitions/AudioExtractionCategory"
-        }
-      },
-      "required": [
-        "Category"
-      ],
-      "type": "object"
+    "AudioStandardGenerativeFieldType" : {
+      "type" : "string",
+      "enum" : [ "AUDIO_SUMMARY", "IAB", "TOPIC_SUMMARY" ]
     },
-    "AudioStandardGenerativeField": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "AudioStandardOutputConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Extraction" : {
+          "$ref" : "#/definitions/AudioStandardExtraction"
         },
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/AudioStandardGenerativeFieldType"
-          },
-          "type": "array",
-          "uniqueItems": true
+        "GenerativeField" : {
+          "$ref" : "#/definitions/AudioStandardGenerativeField"
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AudioStandardGenerativeFieldType": {
-      "enum": [
-        "AUDIO_SUMMARY",
-        "IAB",
-        "TOPIC_SUMMARY"
-      ],
-      "type": "string"
-    },
-    "AudioStandardOutputConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Extraction": {
-          "$ref": "#/definitions/AudioStandardExtraction"
+    "BlueprintItem" : {
+      "type" : "object",
+      "properties" : {
+        "BlueprintArn" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "pattern" : "^arn:aws(|-cn|-us-gov):bedrock:[a-zA-Z0-9-]*:(aws|[0-9]{12}):blueprint/(bedrock-data-automation-public-[a-zA-Z0-9-_]{1,30}|[a-zA-Z0-9-]{12,36})$",
+          "description" : "ARN of a Blueprint"
         },
-        "GenerativeField": {
-          "$ref": "#/definitions/AudioStandardGenerativeField"
-        }
-      },
-      "type": "object"
-    },
-    "BlueprintItem": {
-      "additionalProperties": false,
-      "properties": {
-        "BlueprintArn": {
-          "description": "ARN of a Blueprint",
-          "maxLength": 128,
-          "pattern": "^arn:aws(|-cn|-us-gov):bedrock:[a-zA-Z0-9-]*:(aws|[0-9]{12}):blueprint/(bedrock-data-automation-public-[a-zA-Z0-9-_]{1,30}|[a-zA-Z0-9-]{12,36})$",
-          "type": "string"
+        "BlueprintVersion" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[0-9]*$",
+          "description" : "Blueprint Version"
         },
-        "BlueprintStage": {
-          "$ref": "#/definitions/BlueprintStage"
+        "BlueprintStage" : {
+          "$ref" : "#/definitions/BlueprintStage"
+        }
+      },
+      "required" : [ "BlueprintArn" ],
+      "additionalProperties" : false
+    },
+    "BlueprintStage" : {
+      "type" : "string",
+      "description" : "Stage of the Blueprint",
+      "enum" : [ "DEVELOPMENT", "LIVE" ]
+    },
+    "CustomOutputConfiguration" : {
+      "type" : "object",
+      "description" : "Custom output configuration",
+      "properties" : {
+        "Blueprints" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BlueprintItem"
+          }
+        }
+      },
+      "additionalProperties" : false
+    },
+    "DataAutomationProjectStage" : {
+      "type" : "string",
+      "description" : "Stage of the Project",
+      "enum" : [ "DEVELOPMENT", "LIVE" ]
+    },
+    "DataAutomationProjectStatus" : {
+      "type" : "string",
+      "enum" : [ "COMPLETED", "IN_PROGRESS", "FAILED" ]
+    },
+    "DocumentBoundingBox" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
+        }
+      },
+      "required" : [ "State" ],
+      "additionalProperties" : false
+    },
+    "DocumentExtractionGranularity" : {
+      "type" : "object",
+      "properties" : {
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/DocumentExtractionGranularityType"
+          }
+        }
+      },
+      "additionalProperties" : false
+    },
+    "DocumentExtractionGranularityType" : {
+      "type" : "string",
+      "enum" : [ "DOCUMENT", "PAGE", "ELEMENT", "WORD", "LINE" ]
+    },
+    "DocumentOutputAdditionalFileFormat" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
+        }
+      },
+      "required" : [ "State" ],
+      "additionalProperties" : false
+    },
+    "DocumentOutputFormat" : {
+      "type" : "object",
+      "properties" : {
+        "TextFormat" : {
+          "$ref" : "#/definitions/DocumentOutputTextFormat"
         },
-        "BlueprintVersion": {
-          "description": "Blueprint Version",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[0-9]*$",
-          "type": "string"
+        "AdditionalFileFormat" : {
+          "$ref" : "#/definitions/DocumentOutputAdditionalFileFormat"
         }
       },
-      "required": [
-        "BlueprintArn"
-      ],
-      "type": "object"
+      "required" : [ "AdditionalFileFormat", "TextFormat" ],
+      "additionalProperties" : false
     },
-    "BlueprintStage": {
-      "description": "Stage of the Blueprint",
-      "enum": [
-        "DEVELOPMENT",
-        "LIVE"
-      ],
-      "type": "string"
-    },
-    "ChannelLabelingConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "DocumentOutputTextFormat" : {
+      "type" : "object",
+      "properties" : {
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/DocumentOutputTextFormatType"
+          }
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CustomOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "Custom output configuration",
-      "properties": {
-        "Blueprints": {
-          "items": {
-            "$ref": "#/definitions/BlueprintItem"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
+    "DocumentOutputTextFormatType" : {
+      "type" : "string",
+      "enum" : [ "PLAIN_TEXT", "MARKDOWN", "HTML", "CSV" ]
     },
-    "DataAutomationProjectStage": {
-      "description": "Stage of the Project",
-      "enum": [
-        "DEVELOPMENT",
-        "LIVE"
-      ],
-      "type": "string"
-    },
-    "DataAutomationProjectStatus": {
-      "enum": [
-        "COMPLETED",
-        "IN_PROGRESS",
-        "FAILED"
-      ],
-      "type": "string"
-    },
-    "DesiredModality": {
-      "enum": [
-        "DOCUMENT",
-        "IMAGE",
-        "VIDEO",
-        "AUDIO"
-      ],
-      "type": "string"
-    },
-    "DocumentBoundingBox": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        }
-      },
-      "required": [
-        "State"
-      ],
-      "type": "object"
-    },
-    "DocumentExtractionGranularity": {
-      "additionalProperties": false,
-      "properties": {
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/DocumentExtractionGranularityType"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
-    },
-    "DocumentExtractionGranularityType": {
-      "enum": [
-        "DOCUMENT",
-        "PAGE",
-        "ELEMENT",
-        "WORD",
-        "LINE"
-      ],
-      "type": "string"
-    },
-    "DocumentOutputAdditionalFileFormat": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        }
-      },
-      "required": [
-        "State"
-      ],
-      "type": "object"
-    },
-    "DocumentOutputFormat": {
-      "additionalProperties": false,
-      "properties": {
-        "AdditionalFileFormat": {
-          "$ref": "#/definitions/DocumentOutputAdditionalFileFormat"
+    "DocumentOverrideConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Splitter" : {
+          "$ref" : "#/definitions/SplitterConfiguration"
         },
-        "TextFormat": {
-          "$ref": "#/definitions/DocumentOutputTextFormat"
+        "ModalityProcessing" : {
+          "$ref" : "#/definitions/ModalityProcessingConfiguration"
+        },
+        "SensitiveDataConfiguration" : {
+          "$ref" : "#/definitions/SensitiveDataConfiguration"
         }
       },
-      "required": [
-        "AdditionalFileFormat",
-        "TextFormat"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DocumentOutputTextFormat": {
-      "additionalProperties": false,
-      "properties": {
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/DocumentOutputTextFormatType"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "AudioOverrideConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ModalityProcessing" : {
+          "$ref" : "#/definitions/ModalityProcessingConfiguration"
+        },
+        "LanguageConfiguration" : {
+          "$ref" : "#/definitions/AudioLanguageConfiguration"
+        },
+        "SensitiveDataConfiguration" : {
+          "$ref" : "#/definitions/SensitiveDataConfiguration"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DocumentOutputTextFormatType": {
-      "enum": [
-        "PLAIN_TEXT",
-        "MARKDOWN",
-        "HTML",
-        "CSV"
-      ],
-      "type": "string"
-    },
-    "DocumentOverrideConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ModalityProcessing": {
-          "$ref": "#/definitions/ModalityProcessingConfiguration"
+    "VideoOverrideConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ModalityProcessing" : {
+          "$ref" : "#/definitions/ModalityProcessingConfiguration"
         },
-        "SensitiveDataConfiguration": {
-          "$ref": "#/definitions/SensitiveDataConfiguration"
-        },
-        "Splitter": {
-          "$ref": "#/definitions/SplitterConfiguration"
+        "SensitiveDataConfiguration" : {
+          "$ref" : "#/definitions/SensitiveDataConfiguration"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DocumentStandardExtraction": {
-      "additionalProperties": false,
-      "properties": {
-        "BoundingBox": {
-          "$ref": "#/definitions/DocumentBoundingBox"
+    "ImageOverrideConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ModalityProcessing" : {
+          "$ref" : "#/definitions/ModalityProcessingConfiguration"
         },
-        "Granularity": {
-          "$ref": "#/definitions/DocumentExtractionGranularity"
+        "SensitiveDataConfiguration" : {
+          "$ref" : "#/definitions/SensitiveDataConfiguration"
         }
       },
-      "required": [
-        "BoundingBox",
-        "Granularity"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DocumentStandardGenerativeField": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "DocumentStandardExtraction" : {
+      "type" : "object",
+      "properties" : {
+        "Granularity" : {
+          "$ref" : "#/definitions/DocumentExtractionGranularity"
+        },
+        "BoundingBox" : {
+          "$ref" : "#/definitions/DocumentBoundingBox"
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "required" : [ "BoundingBox", "Granularity" ],
+      "additionalProperties" : false
     },
-    "DocumentStandardOutputConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Extraction": {
-          "$ref": "#/definitions/DocumentStandardExtraction"
-        },
-        "GenerativeField": {
-          "$ref": "#/definitions/DocumentStandardGenerativeField"
-        },
-        "OutputFormat": {
-          "$ref": "#/definitions/DocumentOutputFormat"
+    "DocumentStandardGenerativeField" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         }
       },
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "ImageBoundingBox": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "DocumentStandardOutputConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Extraction" : {
+          "$ref" : "#/definitions/DocumentStandardExtraction"
+        },
+        "GenerativeField" : {
+          "$ref" : "#/definitions/DocumentStandardGenerativeField"
+        },
+        "OutputFormat" : {
+          "$ref" : "#/definitions/DocumentOutputFormat"
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ImageExtractionCategory": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        },
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/ImageExtractionCategoryType"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "ImageBoundingBox" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "ImageExtractionCategoryType": {
-      "enum": [
-        "CONTENT_MODERATION",
-        "TEXT_DETECTION",
-        "LOGOS"
-      ],
-      "type": "string"
-    },
-    "ImageOverrideConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ModalityProcessing": {
-          "$ref": "#/definitions/ModalityProcessingConfiguration"
+    "ImageExtractionCategory" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         },
-        "SensitiveDataConfiguration": {
-          "$ref": "#/definitions/SensitiveDataConfiguration"
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ImageExtractionCategoryType"
+          }
         }
       },
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "ImageStandardExtraction": {
-      "additionalProperties": false,
-      "properties": {
-        "BoundingBox": {
-          "$ref": "#/definitions/ImageBoundingBox"
+    "ImageExtractionCategoryType" : {
+      "type" : "string",
+      "enum" : [ "CONTENT_MODERATION", "TEXT_DETECTION", "LOGOS" ]
+    },
+    "ImageStandardExtraction" : {
+      "type" : "object",
+      "properties" : {
+        "Category" : {
+          "$ref" : "#/definitions/ImageExtractionCategory"
         },
-        "Category": {
-          "$ref": "#/definitions/ImageExtractionCategory"
+        "BoundingBox" : {
+          "$ref" : "#/definitions/ImageBoundingBox"
         }
       },
-      "required": [
-        "BoundingBox",
-        "Category"
-      ],
-      "type": "object"
+      "required" : [ "BoundingBox", "Category" ],
+      "additionalProperties" : false
     },
-    "ImageStandardGenerativeField": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "ImageStandardGenerativeField" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         },
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/ImageStandardGenerativeFieldType"
-          },
-          "type": "array",
-          "uniqueItems": true
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ImageStandardGenerativeFieldType"
+          }
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "ImageStandardGenerativeFieldType": {
-      "enum": [
-        "IMAGE_SUMMARY",
-        "IAB"
-      ],
-      "type": "string"
+    "ImageStandardGenerativeFieldType" : {
+      "type" : "string",
+      "enum" : [ "IMAGE_SUMMARY", "IAB" ]
     },
-    "ImageStandardOutputConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Extraction": {
-          "$ref": "#/definitions/ImageStandardExtraction"
+    "ImageStandardOutputConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Extraction" : {
+          "$ref" : "#/definitions/ImageStandardExtraction"
         },
-        "GenerativeField": {
-          "$ref": "#/definitions/ImageStandardGenerativeField"
+        "GenerativeField" : {
+          "$ref" : "#/definitions/ImageStandardGenerativeField"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Language": {
-      "enum": [
-        "EN",
-        "DE",
-        "ES",
-        "FR",
-        "IT",
-        "PT",
-        "JA",
-        "KO",
-        "CN",
-        "TW",
-        "HK"
-      ],
-      "type": "string"
-    },
-    "ModalityProcessingConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "OverrideConfiguration" : {
+      "type" : "object",
+      "description" : "Override configuration",
+      "properties" : {
+        "Document" : {
+          "$ref" : "#/definitions/DocumentOverrideConfiguration"
+        },
+        "Audio" : {
+          "$ref" : "#/definitions/AudioOverrideConfiguration"
+        },
+        "Video" : {
+          "$ref" : "#/definitions/VideoOverrideConfiguration"
+        },
+        "Image" : {
+          "$ref" : "#/definitions/ImageOverrideConfiguration"
+        },
+        "ModalityRouting" : {
+          "$ref" : "#/definitions/ModalityRoutingConfiguration"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ModalityRoutingConfiguration": {
-      "additionalProperties": false,
-      "description": "Modality routing configuration",
-      "properties": {
-        "jpeg": {
-          "$ref": "#/definitions/DesiredModality"
+    "ModalityRoutingConfiguration" : {
+      "type" : "object",
+      "description" : "Modality routing configuration",
+      "properties" : {
+        "jpeg" : {
+          "$ref" : "#/definitions/DesiredModality"
         },
-        "mov": {
-          "$ref": "#/definitions/DesiredModality"
+        "png" : {
+          "$ref" : "#/definitions/DesiredModality"
         },
-        "mp4": {
-          "$ref": "#/definitions/DesiredModality"
+        "mp4" : {
+          "$ref" : "#/definitions/DesiredModality"
         },
-        "png": {
-          "$ref": "#/definitions/DesiredModality"
+        "mov" : {
+          "$ref" : "#/definitions/DesiredModality"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "OverrideConfiguration": {
-      "additionalProperties": false,
-      "description": "Override configuration",
-      "properties": {
-        "Audio": {
-          "$ref": "#/definitions/AudioOverrideConfiguration"
-        },
-        "Document": {
-          "$ref": "#/definitions/DocumentOverrideConfiguration"
-        },
-        "Image": {
-          "$ref": "#/definitions/ImageOverrideConfiguration"
-        },
-        "ModalityRouting": {
-          "$ref": "#/definitions/ModalityRoutingConfiguration"
-        },
-        "Video": {
-          "$ref": "#/definitions/VideoOverrideConfiguration"
+    "DesiredModality" : {
+      "type" : "string",
+      "enum" : [ "DOCUMENT", "IMAGE", "VIDEO", "AUDIO" ]
+    },
+    "SplitterConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PIIEntitiesConfiguration": {
-      "properties": {
-        "PiiEntityTypes": {
-          "items": {
-            "$ref": "#/definitions/PIIEntityTypes"
-          },
-          "type": "array"
-        },
-        "RedactionMaskMode": {
-          "$ref": "#/definitions/PIIRedactionMaskMode"
+    "ModalityProcessingConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PIIEntityTypes": {
-      "enum": [
-        "ALL",
-        "ADDRESS",
-        "AGE",
-        "NAME",
-        "EMAIL",
-        "PHONE",
-        "USERNAME",
-        "PASSWORD",
-        "DRIVER_ID",
-        "LICENSE_PLATE",
-        "VEHICLE_IDENTIFICATION_NUMBER",
-        "CREDIT_DEBIT_CARD_CVV",
-        "CREDIT_DEBIT_CARD_EXPIRY",
-        "CREDIT_DEBIT_CARD_NUMBER",
-        "PIN",
-        "INTERNATIONAL_BANK_ACCOUNT_NUMBER",
-        "SWIFT_CODE",
-        "IP_ADDRESS",
-        "MAC_ADDRESS",
-        "URL",
-        "AWS_ACCESS_KEY",
-        "AWS_SECRET_KEY",
-        "US_BANK_ACCOUNT_NUMBER",
-        "US_BANK_ROUTING_NUMBER",
-        "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER",
-        "US_PASSPORT_NUMBER",
-        "US_SOCIAL_SECURITY_NUMBER",
-        "CA_HEALTH_NUMBER",
-        "CA_SOCIAL_INSURANCE_NUMBER",
-        "UK_NATIONAL_HEALTH_SERVICE_NUMBER",
-        "UK_NATIONAL_INSURANCE_NUMBER",
-        "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER"
-      ],
-      "type": "string"
-    },
-    "PIIRedactionMaskMode": {
-      "enum": [
-        "PII",
-        "ENTITY_TYPE"
-      ],
-      "type": "string"
-    },
-    "SensitiveDataConfiguration": {
-      "properties": {
-        "DetectionMode": {
-          "$ref": "#/definitions/SensitiveDataDetectionMode"
+    "AudioLanguageConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "InputLanguages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Language"
+          }
         },
-        "DetectionScope": {
-          "items": {
-            "$ref": "#/definitions/SensitiveDataDetectionScope"
-          },
-          "type": "array"
+        "GenerativeOutputLanguage" : {
+          "$ref" : "#/definitions/AudioGenerativeOutputLanguage"
         },
-        "PiiEntitiesConfiguration": {
-          "$ref": "#/definitions/PIIEntitiesConfiguration"
+        "IdentifyMultipleLanguages" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SensitiveDataDetectionMode": {
-      "enum": [
-        "DETECTION",
-        "DETECTION_AND_REDACTION"
-      ],
-      "type": "string"
-    },
-    "SensitiveDataDetectionScope": {
-      "enum": [
-        "STANDARD",
-        "CUSTOM"
-      ],
-      "type": "string"
-    },
-    "SpeakerLabelingConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        }
-      },
-      "required": [
-        "State"
-      ],
-      "type": "object"
-    },
-    "SplitterConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        }
-      },
-      "type": "object"
-    },
-    "StandardOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "Standard output configuration",
-      "properties": {
-        "Audio": {
-          "$ref": "#/definitions/AudioStandardOutputConfiguration"
+    "SensitiveDataConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "DetectionMode" : {
+          "$ref" : "#/definitions/SensitiveDataDetectionMode"
         },
-        "Document": {
-          "$ref": "#/definitions/DocumentStandardOutputConfiguration"
+        "DetectionScope" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SensitiveDataDetectionScope"
+          }
         },
-        "Image": {
-          "$ref": "#/definitions/ImageStandardOutputConfiguration"
+        "PiiEntitiesConfiguration" : {
+          "$ref" : "#/definitions/PIIEntitiesConfiguration"
+        }
+      }
+    },
+    "SensitiveDataDetectionMode" : {
+      "type" : "string",
+      "enum" : [ "DETECTION", "DETECTION_AND_REDACTION" ]
+    },
+    "SensitiveDataDetectionScope" : {
+      "type" : "string",
+      "enum" : [ "STANDARD", "CUSTOM" ]
+    },
+    "PIIEntitiesConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "PiiEntityTypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PIIEntityTypes"
+          }
         },
-        "Video": {
-          "$ref": "#/definitions/VideoStandardOutputConfiguration"
+        "RedactionMaskMode" : {
+          "$ref" : "#/definitions/PIIRedactionMaskMode"
+        }
+      }
+    },
+    "PIIRedactionMaskMode" : {
+      "type" : "string",
+      "enum" : [ "PII", "ENTITY_TYPE" ]
+    },
+    "PIIEntityTypes" : {
+      "type" : "string",
+      "enum" : [ "ALL", "ADDRESS", "AGE", "NAME", "EMAIL", "PHONE", "USERNAME", "PASSWORD", "DRIVER_ID", "LICENSE_PLATE", "VEHICLE_IDENTIFICATION_NUMBER", "CREDIT_DEBIT_CARD_CVV", "CREDIT_DEBIT_CARD_EXPIRY", "CREDIT_DEBIT_CARD_NUMBER", "PIN", "INTERNATIONAL_BANK_ACCOUNT_NUMBER", "SWIFT_CODE", "IP_ADDRESS", "MAC_ADDRESS", "URL", "AWS_ACCESS_KEY", "AWS_SECRET_KEY", "US_BANK_ACCOUNT_NUMBER", "US_BANK_ROUTING_NUMBER", "US_INDIVIDUAL_TAX_IDENTIFICATION_NUMBER", "US_PASSPORT_NUMBER", "US_SOCIAL_SECURITY_NUMBER", "CA_HEALTH_NUMBER", "CA_SOCIAL_INSURANCE_NUMBER", "UK_NATIONAL_HEALTH_SERVICE_NUMBER", "UK_NATIONAL_INSURANCE_NUMBER", "UK_UNIQUE_TAXPAYER_REFERENCE_NUMBER" ]
+    },
+    "AudioGenerativeOutputLanguage" : {
+      "type" : "string",
+      "enum" : [ "DEFAULT", "EN" ]
+    },
+    "Language" : {
+      "type" : "string",
+      "enum" : [ "EN", "DE", "ES", "FR", "IT", "PT", "JA", "KO", "CN", "TW", "HK" ]
+    },
+    "StandardOutputConfiguration" : {
+      "type" : "object",
+      "description" : "Standard output configuration",
+      "properties" : {
+        "Document" : {
+          "$ref" : "#/definitions/DocumentStandardOutputConfiguration"
+        },
+        "Image" : {
+          "$ref" : "#/definitions/ImageStandardOutputConfiguration"
+        },
+        "Video" : {
+          "$ref" : "#/definitions/VideoStandardOutputConfiguration"
+        },
+        "Audio" : {
+          "$ref" : "#/definitions/AudioStandardOutputConfiguration"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "State": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "State" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "Definition of the key/value pair for a tag",
-      "properties": {
-        "Key": {
-          "description": "Key for the tag",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "VideoBoundingBox" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
+        }
+      },
+      "required" : [ "State" ],
+      "additionalProperties" : false
+    },
+    "VideoExtractionCategory" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         },
-        "Value": {
-          "description": "Value for the tag",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/VideoExtractionCategoryType"
+          }
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "TranscriptConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ChannelLabeling": {
-          "$ref": "#/definitions/ChannelLabelingConfiguration"
+    "VideoExtractionCategoryType" : {
+      "type" : "string",
+      "enum" : [ "CONTENT_MODERATION", "TEXT_DETECTION", "TRANSCRIPT", "LOGOS" ]
+    },
+    "VideoStandardExtraction" : {
+      "type" : "object",
+      "properties" : {
+        "Category" : {
+          "$ref" : "#/definitions/VideoExtractionCategory"
         },
-        "SpeakerLabeling": {
-          "$ref": "#/definitions/SpeakerLabelingConfiguration"
+        "BoundingBox" : {
+          "$ref" : "#/definitions/VideoBoundingBox"
         }
       },
-      "type": "object"
+      "required" : [ "BoundingBox", "Category" ],
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "VideoBoundingBox": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        }
-      },
-      "required": [
-        "State"
-      ],
-      "type": "object"
-    },
-    "VideoExtractionCategory": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
+    "VideoStandardGenerativeField" : {
+      "type" : "object",
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/State"
         },
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/VideoExtractionCategoryType"
-          },
-          "type": "array",
-          "uniqueItems": true
+        "Types" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/VideoStandardGenerativeFieldType"
+          }
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "required" : [ "State" ],
+      "additionalProperties" : false
     },
-    "VideoExtractionCategoryType": {
-      "enum": [
-        "CONTENT_MODERATION",
-        "TEXT_DETECTION",
-        "TRANSCRIPT",
-        "LOGOS"
-      ],
-      "type": "string"
+    "VideoStandardGenerativeFieldType" : {
+      "type" : "string",
+      "enum" : [ "VIDEO_SUMMARY", "IAB", "CHAPTER_SUMMARY" ]
     },
-    "VideoOverrideConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ModalityProcessing": {
-          "$ref": "#/definitions/ModalityProcessingConfiguration"
+    "VideoStandardOutputConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Extraction" : {
+          "$ref" : "#/definitions/VideoStandardExtraction"
         },
-        "SensitiveDataConfiguration": {
-          "$ref": "#/definitions/SensitiveDataConfiguration"
+        "GenerativeField" : {
+          "$ref" : "#/definitions/VideoStandardGenerativeField"
         }
       },
-      "type": "object"
-    },
-    "VideoStandardExtraction": {
-      "additionalProperties": false,
-      "properties": {
-        "BoundingBox": {
-          "$ref": "#/definitions/VideoBoundingBox"
-        },
-        "Category": {
-          "$ref": "#/definitions/VideoExtractionCategory"
-        }
-      },
-      "required": [
-        "BoundingBox",
-        "Category"
-      ],
-      "type": "object"
-    },
-    "VideoStandardGenerativeField": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/State"
-        },
-        "Types": {
-          "items": {
-            "$ref": "#/definitions/VideoStandardGenerativeFieldType"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "required": [
-        "State"
-      ],
-      "type": "object"
-    },
-    "VideoStandardGenerativeFieldType": {
-      "enum": [
-        "VIDEO_SUMMARY",
-        "IAB",
-        "CHAPTER_SUMMARY"
-      ],
-      "type": "string"
-    },
-    "VideoStandardOutputConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Extraction": {
-          "$ref": "#/definitions/VideoStandardExtraction"
-        },
-        "GenerativeField": {
-          "$ref": "#/definitions/VideoStandardGenerativeField"
-        }
-      },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::Bedrock::DataAutomationProject Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock:CreateDataAutomationProject",
-        "bedrock:GetDataAutomationProject",
-        "bedrock:TagResource",
-        "bedrock:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:Decrypt",
-        "kms:GenerateDataKey"
-      ]
+  "properties" : {
+    "CreationTime" : {
+      "type" : "string",
+      "description" : "Time Stamp",
+      "format" : "date-time"
     },
-    "delete": {
-      "permissions": [
-        "bedrock:DeleteDataAutomationProject",
-        "bedrock:GetDataAutomationProject",
-        "kms:DescribeKey",
-        "kms:Decrypt"
-      ]
+    "CustomOutputConfiguration" : {
+      "$ref" : "#/definitions/CustomOutputConfiguration"
     },
-    "list": {
-      "permissions": [
-        "bedrock:ListDataAutomationProjects"
-      ]
+    "LastModifiedTime" : {
+      "type" : "string",
+      "description" : "Time Stamp",
+      "format" : "date-time"
     },
-    "read": {
-      "permissions": [
-        "bedrock:GetDataAutomationProject",
-        "bedrock:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:Decrypt"
-      ]
+    "OverrideConfiguration" : {
+      "$ref" : "#/definitions/OverrideConfiguration"
     },
-    "update": {
-      "permissions": [
-        "bedrock:UpdateDataAutomationProject",
-        "bedrock:GetDataAutomationProject",
-        "bedrock:TagResource",
-        "bedrock:UntagResource",
-        "bedrock:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:Decrypt",
-        "kms:GenerateDataKey"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ProjectArn"
-  ],
-  "properties": {
-    "CreationTime": {
-      "description": "Time Stamp",
-      "format": "date-time",
-      "type": "string"
+    "ProjectArn" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "pattern" : "^arn:aws(|-cn|-us-gov):bedrock:[a-zA-Z0-9-]*:(aws|[0-9]{12}):data-automation-project/[a-zA-Z0-9-]{12,36}$",
+      "description" : "ARN of a DataAutomationProject"
     },
-    "CustomOutputConfiguration": {
-      "$ref": "#/definitions/CustomOutputConfiguration"
+    "ProjectDescription" : {
+      "type" : "string",
+      "description" : "Description of the DataAutomationProject"
     },
-    "KmsEncryptionContext": {
-      "additionalProperties": false,
-      "dependencies": {
-        "KmsEncryptionContext": [
-          "KmsKeyId"
-        ]
-      },
-      "description": "KMS encryption context",
-      "patternProperties": {
-        "^.*$": {
-          "type": "string"
+    "ProjectName" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9-_]+$",
+      "description" : "Name of the DataAutomationProject"
+    },
+    "ProjectType" : {
+      "type" : "string",
+      "description" : "Type of the DataAutomationProject - Sync or Async",
+      "enum" : [ "ASYNC", "SYNC" ]
+    },
+    "ProjectStage" : {
+      "$ref" : "#/definitions/DataAutomationProjectStage"
+    },
+    "StandardOutputConfiguration" : {
+      "$ref" : "#/definitions/StandardOutputConfiguration"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/DataAutomationProjectStatus"
+    },
+    "KmsKeyId" : {
+      "type" : "string",
+      "description" : "KMS key identifier",
+      "minLength" : 1,
+      "maxLength" : 2048
+    },
+    "KmsEncryptionContext" : {
+      "type" : "object",
+      "description" : "KMS encryption context",
+      "patternProperties" : {
+        "^.*$" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "dependencies" : {
+        "KmsEncryptionContext" : [ "KmsKeyId" ]
+      }
     },
-    "KmsKeyId": {
-      "description": "KMS key identifier",
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "LastModifiedTime": {
-      "description": "Time Stamp",
-      "format": "date-time",
-      "type": "string"
-    },
-    "OverrideConfiguration": {
-      "$ref": "#/definitions/OverrideConfiguration"
-    },
-    "ProjectArn": {
-      "description": "ARN of a DataAutomationProject",
-      "maxLength": 128,
-      "pattern": "^arn:aws(|-cn|-us-gov):bedrock:[a-zA-Z0-9-]*:(aws|[0-9]{12}):data-automation-project/[a-zA-Z0-9-]{12,36}$",
-      "type": "string"
-    },
-    "ProjectDescription": {
-      "description": "Description of the DataAutomationProject",
-      "type": "string"
-    },
-    "ProjectName": {
-      "description": "Name of the DataAutomationProject",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-_]+$",
-      "type": "string"
-    },
-    "ProjectStage": {
-      "$ref": "#/definitions/DataAutomationProjectStage"
-    },
-    "ProjectType": {
-      "description": "Type of the DataAutomationProject - Sync or Async",
-      "enum": [
-        "ASYNC",
-        "SYNC"
-      ],
-      "type": "string"
-    },
-    "StandardOutputConfiguration": {
-      "$ref": "#/definitions/StandardOutputConfiguration"
-    },
-    "Status": {
-      "$ref": "#/definitions/DataAutomationProjectStatus"
-    },
-    "Tags": {
-      "description": "List of Tags",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+    "Tags" : {
+      "description" : "List of Tags",
+      "type" : "array",
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreationTime",
-    "/properties/LastModifiedTime",
-    "/properties/ProjectArn",
-    "/properties/ProjectStage",
-    "/properties/Status"
-  ],
-  "required": [
-    "ProjectName"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "bedrock:TagResource",
-      "bedrock:UntagResource",
-      "bedrock:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "ProjectName" ],
+  "readOnlyProperties" : [ "/properties/CreationTime", "/properties/LastModifiedTime", "/properties/ProjectArn", "/properties/ProjectStage", "/properties/Status" ],
+  "createOnlyProperties" : [ "/properties/ProjectName", "/properties/ProjectType" ],
+  "primaryIdentifier" : [ "/properties/ProjectArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock:CreateDataAutomationProject", "bedrock:GetDataAutomationProject", "bedrock:TagResource", "bedrock:ListTagsForResource", "kms:DescribeKey", "kms:Decrypt", "kms:GenerateDataKey" ]
+    },
+    "read" : {
+      "permissions" : [ "bedrock:GetDataAutomationProject", "bedrock:ListTagsForResource", "kms:DescribeKey", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "bedrock:UpdateDataAutomationProject", "bedrock:GetDataAutomationProject", "bedrock:TagResource", "bedrock:UntagResource", "bedrock:ListTagsForResource", "kms:DescribeKey", "kms:Decrypt", "kms:GenerateDataKey" ]
+    },
+    "delete" : {
+      "permissions" : [ "bedrock:DeleteDataAutomationProject", "bedrock:GetDataAutomationProject", "kms:DescribeKey", "kms:Decrypt" ]
+    },
+    "list" : {
+      "permissions" : [ "bedrock:ListDataAutomationProjects" ]
+    }
   },
-  "typeName": "AWS::Bedrock::DataAutomationProject"
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "bedrock:TagResource", "bedrock:UntagResource", "bedrock:ListTagsForResource" ]
+  },
+  "additionalProperties" : false
 }

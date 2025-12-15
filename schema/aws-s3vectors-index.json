@@ -1,222 +1,162 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/IndexName",
-      "/properties/VectorBucketName"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DataType",
-    "/properties/Dimension",
-    "/properties/DistanceMetric",
-    "/properties/EncryptionConfiguration",
-    "/properties/IndexName",
-    "/properties/MetadataConfiguration",
-    "/properties/VectorBucketArn",
-    "/properties/VectorBucketName"
-  ],
-  "definitions": {
-    "CreationTime": {
-      "description": "Date and time when the vector index was created.",
-      "format": "date-time",
-      "type": "string"
+  "typeName" : "AWS::S3Vectors::Index",
+  "description" : "Resource Type definition for AWS::S3Vectors::Index",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "CreationTime" : {
+      "description" : "Date and time when the vector index was created.",
+      "type" : "string",
+      "format" : "date-time"
     },
-    "DataType": {
-      "description": "The data type of the vectors to be inserted into the vector index.",
-      "enum": [
-        "float32"
-      ],
-      "type": "string"
+    "DataType" : {
+      "description" : "The data type of the vectors to be inserted into the vector index.",
+      "type" : "string",
+      "enum" : [ "float32" ]
     },
-    "Dimension": {
-      "description": "The dimensions of the vectors to be inserted into the vector index.",
-      "maximum": 4096,
-      "minimum": 1,
-      "type": "integer"
+    "Dimension" : {
+      "description" : "The dimensions of the vectors to be inserted into the vector index.",
+      "type" : "integer",
+      "minimum" : 1,
+      "maximum" : 4096
     },
-    "DistanceMetric": {
-      "description": "The distance metric to be used for similarity search.",
-      "enum": [
-        "cosine",
-        "euclidean"
-      ],
-      "type": "string"
+    "DistanceMetric" : {
+      "description" : "The distance metric to be used for similarity search.",
+      "type" : "string",
+      "enum" : [ "cosine", "euclidean" ]
     },
-    "EncryptionConfiguration": {
-      "additionalProperties": false,
-      "description": "The encryption configuration for the index.",
-      "properties": {
-        "KmsKeyArn": {
-          "description": "AWS Key Management Service (KMS) customer managed key ID to use for the encryption configuration. This parameter is allowed if and only if sseType is set to aws:kms",
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^(arn:aws[-a-z0-9]*:kms:[-a-z0-9]*:[0-9]{12}:key/.+)$",
-          "type": "string"
+    "EncryptionConfiguration" : {
+      "type" : "object",
+      "description" : "The encryption configuration for the index.",
+      "properties" : {
+        "SseType" : {
+          "type" : "string",
+          "description" : "Defines the server-side encryption type for index encryption configuration. Defaults to the parent vector bucket's encryption settings when unspecified.",
+          "enum" : [ "AES256", "aws:kms" ]
         },
-        "SseType": {
-          "description": "Defines the server-side encryption type for index encryption configuration. Defaults to the parent vector bucket's encryption settings when unspecified.",
-          "enum": [
-            "AES256",
-            "aws:kms"
-          ],
-          "type": "string"
+        "KmsKeyArn" : {
+          "type" : "string",
+          "description" : "AWS Key Management Service (KMS) customer managed key ID to use for the encryption configuration. This parameter is allowed if and only if sseType is set to aws:kms",
+          "minLength" : 1,
+          "maxLength" : 2048,
+          "pattern" : "^(arn:aws[-a-z0-9]*:kms:[-a-z0-9]*:[0-9]{12}:key/.+)$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "IndexArn": {
-      "description": "The Amazon Resource Name (ARN) of the index",
-      "examples": [
-        "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket/index/myindex"
-      ],
-      "type": "string"
+    "IndexArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the index",
+      "type" : "string",
+      "examples" : [ "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket/index/myindex" ]
     },
-    "IndexName": {
-      "description": "The name of the vector index to create.",
-      "maxLength": 63,
-      "minLength": 3,
-      "type": "string"
+    "IndexName" : {
+      "description" : "The name of the vector index to create.",
+      "type" : "string",
+      "minLength" : 3,
+      "maxLength" : 63
     },
-    "MetadataConfiguration": {
-      "additionalProperties": false,
-      "description": "The metadata configuration for the vector index.",
-      "properties": {
-        "NonFilterableMetadataKeys": {
-          "description": "Non-filterable metadata keys allow you to enrich vectors with additional context during storage and retrieval. Unlike default metadata keys, these keys cannot be used as query filters. Non-filterable metadata keys can be retrieved but cannot be searched, queried, or filtered. You can access non-filterable metadata keys of your vectors after finding the vectors.",
-          "insertionOrder": false,
-          "items": {
-            "maxLength": 63,
-            "minLength": 1,
-            "type": "string"
+    "MetadataConfiguration" : {
+      "description" : "The metadata configuration for the vector index.",
+      "type" : "object",
+      "properties" : {
+        "NonFilterableMetadataKeys" : {
+          "description" : "Non-filterable metadata keys allow you to enrich vectors with additional context during storage and retrieval. Unlike default metadata keys, these keys cannot be used as query filters. Non-filterable metadata keys can be retrieved but cannot be searched, queried, or filtered. You can access non-filterable metadata keys of your vectors after finding the vectors.",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 63
           },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+          "minItems" : 1,
+          "maxItems" : 10,
+          "insertionOrder" : false,
+          "uniqueItems" : true
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "VectorBucketArn": {
-      "description": "The Amazon Resource Name (ARN) of the vector bucket.",
-      "examples": [
-        "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket"
-      ],
-      "type": "string"
+    "VectorBucketArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the vector bucket.",
+      "type" : "string",
+      "examples" : [ "arn:aws:s3vectors:us-east-1:123456789012:bucket/myvectorbucket" ]
     },
-    "VectorBucketName": {
-      "description": "The name of the vector bucket that contains the vector index.",
-      "maxLength": 63,
-      "minLength": 3,
-      "type": "string"
+    "VectorBucketName" : {
+      "description" : "The name of the vector bucket that contains the vector index.",
+      "type" : "string",
+      "minLength" : 3,
+      "maxLength" : 63
     }
   },
-  "description": "Resource Type definition for AWS::S3Vectors::Index",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "s3vectors:GetIndex",
-        "s3vectors:CreateIndex",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "CreationTime" : {
+      "$ref" : "#/definitions/CreationTime"
     },
-    "delete": {
-      "permissions": [
-        "s3vectors:GetIndex",
-        "s3vectors:DeleteIndex",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+    "DataType" : {
+      "$ref" : "#/definitions/DataType"
     },
-    "list": {
-      "handlerSchema": {
-        "oneOf": [
-          {
-            "required": [
-              "VectorBucketName"
-            ]
+    "Dimension" : {
+      "$ref" : "#/definitions/Dimension"
+    },
+    "DistanceMetric" : {
+      "$ref" : "#/definitions/DistanceMetric"
+    },
+    "EncryptionConfiguration" : {
+      "$ref" : "#/definitions/EncryptionConfiguration"
+    },
+    "IndexArn" : {
+      "$ref" : "#/definitions/IndexArn"
+    },
+    "IndexName" : {
+      "$ref" : "#/definitions/IndexName"
+    },
+    "MetadataConfiguration" : {
+      "$ref" : "#/definitions/MetadataConfiguration"
+    },
+    "VectorBucketArn" : {
+      "$ref" : "#/definitions/VectorBucketArn"
+    },
+    "VectorBucketName" : {
+      "$ref" : "#/definitions/VectorBucketName"
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "DataType", "Dimension", "DistanceMetric" ],
+  "readOnlyProperties" : [ "/properties/CreationTime", "/properties/IndexArn" ],
+  "createOnlyProperties" : [ "/properties/DataType", "/properties/Dimension", "/properties/DistanceMetric", "/properties/EncryptionConfiguration", "/properties/IndexName", "/properties/MetadataConfiguration", "/properties/VectorBucketArn", "/properties/VectorBucketName" ],
+  "primaryIdentifier" : [ "/properties/IndexArn" ],
+  "additionalIdentifiers" : [ [ "/properties/IndexName", "/properties/VectorBucketName" ] ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "s3vectors:GetIndex", "s3vectors:CreateIndex", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "read" : {
+      "permissions" : [ "s3vectors:GetIndex", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "delete" : {
+      "permissions" : [ "s3vectors:GetIndex", "s3vectors:DeleteIndex", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "list" : {
+      "permissions" : [ "s3vectors:ListIndexes", "kms:GenerateDataKey", "kms:Decrypt" ],
+      "handlerSchema" : {
+        "properties" : {
+          "VectorBucketArn" : {
+            "$ref" : "resource-schema.json#/properties/VectorBucketArn"
           },
-          {
-            "required": [
-              "VectorBucketArn"
-            ]
+          "VectorBucketName" : {
+            "$ref" : "resource-schema.json#/properties/VectorBucketName"
           }
-        ],
-        "properties": {
-          "VectorBucketArn": {
-            "$ref": "resource-schema.json#/properties/VectorBucketArn"
-          },
-          "VectorBucketName": {
-            "$ref": "resource-schema.json#/properties/VectorBucketName"
-          }
-        }
-      },
-      "permissions": [
-        "s3vectors:ListIndexes",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "s3vectors:GetIndex",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+        },
+        "oneOf" : [ {
+          "required" : [ "VectorBucketName" ]
+        }, {
+          "required" : [ "VectorBucketArn" ]
+        } ]
+      }
     }
-  },
-  "primaryIdentifier": [
-    "/properties/IndexArn"
-  ],
-  "properties": {
-    "CreationTime": {
-      "$ref": "#/definitions/CreationTime"
-    },
-    "DataType": {
-      "$ref": "#/definitions/DataType"
-    },
-    "Dimension": {
-      "$ref": "#/definitions/Dimension"
-    },
-    "DistanceMetric": {
-      "$ref": "#/definitions/DistanceMetric"
-    },
-    "EncryptionConfiguration": {
-      "$ref": "#/definitions/EncryptionConfiguration"
-    },
-    "IndexArn": {
-      "$ref": "#/definitions/IndexArn"
-    },
-    "IndexName": {
-      "$ref": "#/definitions/IndexName"
-    },
-    "MetadataConfiguration": {
-      "$ref": "#/definitions/MetadataConfiguration"
-    },
-    "VectorBucketArn": {
-      "$ref": "#/definitions/VectorBucketArn"
-    },
-    "VectorBucketName": {
-      "$ref": "#/definitions/VectorBucketName"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/CreationTime",
-    "/properties/IndexArn"
-  ],
-  "required": [
-    "DataType",
-    "Dimension",
-    "DistanceMetric"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::S3Vectors::Index"
+  }
 }

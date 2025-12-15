@@ -1,147 +1,112 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "FunctionConfig": {
-      "additionalProperties": false,
-      "description": "Contains configuration information about a CloudFront function.",
-      "properties": {
-        "Comment": {
-          "description": "A comment to describe the function.",
-          "type": "string"
+  "additionalProperties" : false,
+  "definitions" : {
+    "FunctionConfig" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "Comment" : {
+          "type" : "string",
+          "description" : "A comment to describe the function."
         },
-        "KeyValueStoreAssociations": {
-          "description": "The configuration for the key value store associations.",
-          "items": {
-            "$ref": "#/definitions/KeyValueStoreAssociation"
+        "Runtime" : {
+          "type" : "string",
+          "description" : "The function's runtime environment version."
+        },
+        "KeyValueStoreAssociations" : {
+          "items" : {
+            "$ref" : "#/definitions/KeyValueStoreAssociation"
           },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "Runtime": {
-          "description": "The function's runtime environment version.",
-          "type": "string"
+          "type" : "array",
+          "uniqueItems" : true,
+          "description" : "The configuration for the key value store associations."
         }
       },
-      "required": [
-        "Comment",
-        "Runtime"
-      ],
-      "type": "object"
+      "required" : [ "Comment", "Runtime" ],
+      "type" : "object",
+      "description" : "Contains configuration information about a CloudFront function."
     },
-    "FunctionMetadata": {
-      "additionalProperties": false,
-      "description": "Contains metadata about a CloudFront function.",
-      "properties": {
-        "FunctionARN": {
-          "description": "The Amazon Resource Name (ARN) of the function. The ARN uniquely identifies the function.",
-          "type": "string"
+    "FunctionMetadata" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "FunctionARN" : {
+          "type" : "string",
+          "description" : "The Amazon Resource Name (ARN) of the function. The ARN uniquely identifies the function."
         }
       },
-      "type": "object"
+      "type" : "object",
+      "description" : "Contains metadata about a CloudFront function."
     },
-    "KeyValueStoreAssociation": {
-      "additionalProperties": false,
-      "description": "The key value store association.",
-      "properties": {
-        "KeyValueStoreARN": {
-          "description": "The Amazon Resource Name (ARN) of the key value store association.",
-          "type": "string"
+    "KeyValueStoreAssociation" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "KeyValueStoreARN" : {
+          "type" : "string",
+          "description" : "The Amazon Resource Name (ARN) of the key value store association."
         }
       },
-      "required": [
-        "KeyValueStoreARN"
-      ],
-      "type": "object"
+      "required" : [ "KeyValueStoreARN" ],
+      "type" : "object",
+      "description" : "The key value store association."
     }
   },
-  "description": "Creates a CF function.\n To create a function, you provide the function code and some configuration information about the function. The response contains an Amazon Resource Name (ARN) that uniquely identifies the function, and the function\u2019s stage.\n By default, when you create a function, it\u2019s in the ``DEVELOPMENT`` stage. In this stage, you can [test the function](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/test-function.html) in the CF console (or with ``TestFunction`` in the CF API).\n When you\u2019re ready to use your function with a CF distribution, publish the function to the ``LIVE`` stage. You can do this in the CF console, with ``PublishFunction`` in the CF API, or by updating the ``AWS::CloudFront::Function`` resource with the ``AutoPublish`` property set to ``true``. When the function is published to the ``LIVE`` stage, you can attach it to a distribution\u2019s cache behavior, using the function\u2019s ARN.\n To automatically publish the function to the ``LIVE`` stage when it\u2019s created, set the ``AutoPublish`` property to ``true``.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cloudfront:CreateFunction",
-        "cloudfront:PublishFunction",
-        "cloudfront:DescribeFunction"
-      ]
+  "description" : "Creates a CF function.\n To create a function, you provide the function code and some configuration information about the function. The response contains an Amazon Resource Name (ARN) that uniquely identifies the function, and the function’s stage.\n By default, when you create a function, it’s in the ``DEVELOPMENT`` stage. In this stage, you can [test the function](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/test-function.html) in the CF console (or with ``TestFunction`` in the CF API).\n When you’re ready to use your function with a CF distribution, publish the function to the ``LIVE`` stage. You can do this in the CF console, with ``PublishFunction`` in the CF API, or by updating the ``AWS::CloudFront::Function`` resource with the ``AutoPublish`` property set to ``true``. When the function is published to the ``LIVE`` stage, you can attach it to a distribution’s cache behavior, using the function’s ARN.\n To automatically publish the function to the ``LIVE`` stage when it’s created, set the ``AutoPublish`` property to ``true``.",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cloudfront:CreateFunction", "cloudfront:PublishFunction", "cloudfront:DescribeFunction" ]
     },
-    "delete": {
-      "permissions": [
-        "cloudfront:DeleteFunction",
-        "cloudfront:DescribeFunction"
-      ]
+    "delete" : {
+      "permissions" : [ "cloudfront:DeleteFunction", "cloudfront:DescribeFunction" ]
     },
-    "list": {
-      "permissions": [
-        "cloudfront:ListFunctions"
-      ]
+    "list" : {
+      "permissions" : [ "cloudfront:ListFunctions" ]
     },
-    "read": {
-      "permissions": [
-        "cloudfront:DescribeFunction",
-        "cloudfront:GetFunction"
-      ]
+    "read" : {
+      "permissions" : [ "cloudfront:DescribeFunction", "cloudfront:GetFunction" ]
     },
-    "update": {
-      "permissions": [
-        "cloudfront:UpdateFunction",
-        "cloudfront:PublishFunction",
-        "cloudfront:DescribeFunction"
-      ]
+    "update" : {
+      "permissions" : [ "cloudfront:UpdateFunction", "cloudfront:PublishFunction", "cloudfront:DescribeFunction" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/FunctionARN"
-  ],
-  "properties": {
-    "AutoPublish": {
-      "description": "A flag that determines whether to automatically publish the function to the ``LIVE`` stage when it\u2019s created. To automatically publish to the ``LIVE`` stage, set this property to ``true``.",
-      "type": "boolean"
+  "primaryIdentifier" : [ "/properties/FunctionARN" ],
+  "properties" : {
+    "AutoPublish" : {
+      "type" : "boolean",
+      "description" : "A flag that determines whether to automatically publish the function to the ``LIVE`` stage when it’s created. To automatically publish to the ``LIVE`` stage, set this property to ``true``."
     },
-    "FunctionARN": {
-      "description": "",
-      "type": "string"
+    "FunctionARN" : {
+      "type" : "string",
+      "description" : ""
     },
-    "FunctionCode": {
-      "description": "The function code. For more information about writing a CloudFront function, see [Writing function code for CloudFront Functions](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/writing-function-code.html) in the *Amazon CloudFront Developer Guide*.",
-      "type": "string"
+    "FunctionCode" : {
+      "type" : "string",
+      "description" : "The function code. For more information about writing a CloudFront function, see [Writing function code for CloudFront Functions](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/writing-function-code.html) in the *Amazon CloudFront Developer Guide*."
     },
-    "FunctionConfig": {
-      "$ref": "#/definitions/FunctionConfig",
-      "description": "Contains configuration information about a CloudFront function."
+    "FunctionConfig" : {
+      "$ref" : "#/definitions/FunctionConfig",
+      "description" : "Contains configuration information about a CloudFront function."
     },
-    "FunctionMetadata": {
-      "$ref": "#/definitions/FunctionMetadata",
-      "description": "Contains metadata about a CloudFront function."
+    "FunctionMetadata" : {
+      "$ref" : "#/definitions/FunctionMetadata",
+      "description" : "Contains metadata about a CloudFront function."
     },
-    "Name": {
-      "description": "A name to identify the function.",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "description" : "A name to identify the function."
     },
-    "Stage": {
-      "description": "",
-      "type": "string"
+    "Stage" : {
+      "type" : "string",
+      "description" : ""
     }
   },
-  "readOnlyProperties": [
-    "/properties/FunctionARN",
-    "/properties/FunctionMetadata/FunctionARN",
-    "/properties/Stage"
-  ],
-  "required": [
-    "Name",
-    "FunctionConfig",
-    "FunctionCode"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/FunctionARN", "/properties/FunctionMetadata/FunctionARN", "/properties/Stage" ],
+  "required" : [ "Name", "FunctionConfig", "FunctionCode" ],
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "taggable" : false
   },
-  "typeName": "AWS::CloudFront::Function",
-  "writeOnlyProperties": [
-    "/properties/AutoPublish"
-  ]
+  "typeName" : "AWS::CloudFront::Function",
+  "writeOnlyProperties" : [ "/properties/AutoPublish" ]
 }

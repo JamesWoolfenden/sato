@@ -1,285 +1,210 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ActionType",
-    "/properties/BudgetName"
-  ],
-  "definitions": {
-    "ActionThreshold": {
-      "additionalProperties": false,
-      "properties": {
-        "Type": {
-          "enum": [
-            "PERCENTAGE",
-            "ABSOLUTE_VALUE"
-          ],
-          "type": "string"
+  "typeName" : "AWS::Budgets::BudgetsAction",
+  "description" : "An example resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Subscriber" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "SNS", "EMAIL" ]
         },
-        "Value": {
-          "type": "number"
+        "Address" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Type", "Address" ],
+      "additionalProperties" : false
     },
-    "Definition": {
-      "additionalProperties": false,
-      "properties": {
-        "IamActionDefinition": {
-          "$ref": "#/definitions/IamActionDefinition"
+    "ActionThreshold" : {
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "type" : "number"
         },
-        "ScpActionDefinition": {
-          "$ref": "#/definitions/ScpActionDefinition"
-        },
-        "SsmActionDefinition": {
-          "$ref": "#/definitions/SsmActionDefinition"
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "PERCENTAGE", "ABSOLUTE_VALUE" ]
         }
       },
-      "type": "object"
+      "required" : [ "Value", "Type" ],
+      "additionalProperties" : false
     },
-    "IamActionDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "Groups": {
-          "items": {
-            "type": "string"
+    "IamActionDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "PolicyArn" : {
+          "type" : "string"
+        },
+        "Roles" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "minItems" : 1,
+          "maxItems" : 100
         },
-        "PolicyArn": {
-          "type": "string"
-        },
-        "Roles": {
-          "items": {
-            "type": "string"
+        "Groups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "minItems" : 1,
+          "maxItems" : 100
         },
-        "Users": {
-          "items": {
-            "type": "string"
+        "Users" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "minItems" : 1,
+          "maxItems" : 100
         }
       },
-      "required": [
-        "PolicyArn"
-      ],
-      "type": "object"
+      "required" : [ "PolicyArn" ],
+      "additionalProperties" : false
     },
-    "ResourceTag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "ScpActionDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "PolicyId" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "ScpActionDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "PolicyId": {
-          "type": "string"
-        },
-        "TargetIds": {
-          "items": {
-            "type": "string"
+        "TargetIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "minItems" : 1,
+          "maxItems" : 100
         }
       },
-      "required": [
-        "PolicyId",
-        "TargetIds"
-      ],
-      "type": "object"
+      "required" : [ "PolicyId", "TargetIds" ],
+      "additionalProperties" : false
     },
-    "SsmActionDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "InstanceIds": {
-          "items": {
-            "type": "string"
+    "SsmActionDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "Subtype" : {
+          "type" : "string",
+          "enum" : [ "STOP_EC2_INSTANCES", "STOP_RDS_INSTANCES" ]
+        },
+        "Region" : {
+          "type" : "string"
+        },
+        "InstanceIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
-        },
-        "Region": {
-          "type": "string"
-        },
-        "Subtype": {
-          "enum": [
-            "STOP_EC2_INSTANCES",
-            "STOP_RDS_INSTANCES"
-          ],
-          "type": "string"
+          "minItems" : 1,
+          "maxItems" : 100
         }
       },
-      "required": [
-        "Subtype",
-        "Region",
-        "InstanceIds"
-      ],
-      "type": "object"
+      "required" : [ "Subtype", "Region", "InstanceIds" ],
+      "additionalProperties" : false
     },
-    "Subscriber": {
-      "additionalProperties": false,
-      "properties": {
-        "Address": {
-          "type": "string"
+    "Definition" : {
+      "type" : "object",
+      "properties" : {
+        "IamActionDefinition" : {
+          "$ref" : "#/definitions/IamActionDefinition"
         },
-        "Type": {
-          "enum": [
-            "SNS",
-            "EMAIL"
-          ],
-          "type": "string"
+        "ScpActionDefinition" : {
+          "$ref" : "#/definitions/ScpActionDefinition"
+        },
+        "SsmActionDefinition" : {
+          "$ref" : "#/definitions/SsmActionDefinition"
         }
       },
-      "required": [
-        "Type",
-        "Address"
-      ],
-      "type": "object"
+      "additionalProperties" : false
+    },
+    "ResourceTag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "budgets:CreateBudgetAction",
-        "iam:PassRole",
-        "budgets:TagResource"
-      ]
+  "properties" : {
+    "ActionId" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "budgets:DeleteBudgetAction"
-      ]
+    "BudgetName" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "budgets:DescribeBudgetActionsForAccount",
-        "budgets:DescribeBudgetActionsForBudget"
-      ]
+    "NotificationType" : {
+      "type" : "string",
+      "enum" : [ "ACTUAL", "FORECASTED" ]
     },
-    "read": {
-      "permissions": [
-        "budgets:DescribeBudgetAction",
-        "budgets:ListTagsForResource"
-      ]
+    "ActionType" : {
+      "type" : "string",
+      "enum" : [ "APPLY_IAM_POLICY", "APPLY_SCP_POLICY", "RUN_SSM_DOCUMENTS" ]
     },
-    "update": {
-      "permissions": [
-        "budgets:UpdateBudgetAction",
-        "iam:PassRole",
-        "budgets:TagResource",
-        "budgets:UntagResource",
-        "budgets:ListTagsForResource"
-      ]
+    "ActionThreshold" : {
+      "$ref" : "#/definitions/ActionThreshold"
+    },
+    "ExecutionRoleArn" : {
+      "type" : "string"
+    },
+    "ApprovalModel" : {
+      "type" : "string",
+      "enum" : [ "AUTOMATIC", "MANUAL" ]
+    },
+    "Subscribers" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Subscriber"
+      },
+      "maxItems" : 11,
+      "minItems" : 1
+    },
+    "Definition" : {
+      "$ref" : "#/definitions/Definition"
+    },
+    "ResourceTags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ResourceTag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/ActionId",
-    "/properties/BudgetName"
-  ],
-  "properties": {
-    "ActionId": {
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "BudgetName", "NotificationType", "ActionType", "ActionThreshold", "ExecutionRoleArn", "Definition", "Subscribers" ],
+  "readOnlyProperties" : [ "/properties/ActionId" ],
+  "createOnlyProperties" : [ "/properties/ActionType", "/properties/BudgetName" ],
+  "primaryIdentifier" : [ "/properties/ActionId", "/properties/BudgetName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "budgets:CreateBudgetAction", "iam:PassRole", "budgets:TagResource" ]
     },
-    "ActionThreshold": {
-      "$ref": "#/definitions/ActionThreshold"
+    "read" : {
+      "permissions" : [ "budgets:DescribeBudgetAction", "budgets:ListTagsForResource" ]
     },
-    "ActionType": {
-      "enum": [
-        "APPLY_IAM_POLICY",
-        "APPLY_SCP_POLICY",
-        "RUN_SSM_DOCUMENTS"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "budgets:UpdateBudgetAction", "iam:PassRole", "budgets:TagResource", "budgets:UntagResource", "budgets:ListTagsForResource" ]
     },
-    "ApprovalModel": {
-      "enum": [
-        "AUTOMATIC",
-        "MANUAL"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "budgets:DeleteBudgetAction" ]
     },
-    "BudgetName": {
-      "type": "string"
-    },
-    "Definition": {
-      "$ref": "#/definitions/Definition"
-    },
-    "ExecutionRoleArn": {
-      "type": "string"
-    },
-    "NotificationType": {
-      "enum": [
-        "ACTUAL",
-        "FORECASTED"
-      ],
-      "type": "string"
-    },
-    "ResourceTags": {
-      "items": {
-        "$ref": "#/definitions/ResourceTag"
-      },
-      "type": "array"
-    },
-    "Subscribers": {
-      "items": {
-        "$ref": "#/definitions/Subscriber"
-      },
-      "maxItems": 11,
-      "minItems": 1,
-      "type": "array"
+    "list" : {
+      "permissions" : [ "budgets:DescribeBudgetActionsForAccount", "budgets:DescribeBudgetActionsForBudget" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ActionId"
-  ],
-  "required": [
-    "BudgetName",
-    "NotificationType",
-    "ActionType",
-    "ActionThreshold",
-    "ExecutionRoleArn",
-    "Definition",
-    "Subscribers"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "budgets:TagResource",
-      "budgets:UntagResource",
-      "budgets:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/ResourceTags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Budgets::BudgetsAction"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/ResourceTags",
+    "permissions" : [ "budgets:TagResource", "budgets:UntagResource", "budgets:ListTagsForResource" ]
+  }
 }

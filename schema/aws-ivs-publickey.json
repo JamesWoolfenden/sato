@@ -1,119 +1,88 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PublicKeyMaterial",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::IVS::PublicKey",
+  "description" : "Resource Type definition for AWS::IVS::PublicKey",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::IVS::PublicKey",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ivs:ImportPublicKey",
-        "ivs:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of the public key to be imported. The value does not need to be unique.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9-_]*$",
+      "minLength" : 0,
+      "maxLength" : 128
     },
-    "delete": {
-      "permissions": [
-        "ivs:DeletePublicKey",
-        "ivs:UntagResource"
-      ]
+    "PublicKeyMaterial" : {
+      "description" : "The public portion of a customer-generated key pair. This field is required to create the AWS::IVS::PublicKey resource.",
+      "type" : "string",
+      "pattern" : "-----BEGIN PUBLIC KEY-----\\r?\\n([a-zA-Z0-9+/=\\r\\n]+)\\r?\\n-----END PUBLIC KEY-----(\\r?\\n)?"
     },
-    "list": {
-      "permissions": [
-        "ivs:ListPublicKeys",
-        "ivs:ListTagsForResource"
-      ]
+    "Fingerprint" : {
+      "description" : "Key-pair identifier.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "ivs:GetPublicKey"
-      ]
+    "Arn" : {
+      "description" : "Key-pair identifier.",
+      "type" : "string",
+      "pattern" : "^arn:aws:ivs:[a-z0-9-]+:[0-9]+:public-key/[a-zA-Z0-9-]+$",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "update": {
-      "permissions": [
-        "ivs:GetPublicKey",
-        "ivs:ListTagsForResource",
-        "ivs:UntagResource",
-        "ivs:TagResource"
-      ]
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the asset model.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Key-pair identifier.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^arn:aws:ivs:[a-z0-9-]+:[0-9]+:public-key/[a-zA-Z0-9-]+$",
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ivs:TagResource", "ivs:UntagResource", "ivs:ListTagsForResource" ]
+  },
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Fingerprint" ],
+  "createOnlyProperties" : [ "/properties/PublicKeyMaterial", "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ivs:ImportPublicKey", "ivs:TagResource" ]
     },
-    "Fingerprint": {
-      "description": "Key-pair identifier.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ivs:GetPublicKey" ]
     },
-    "Name": {
-      "description": "Name of the public key to be imported. The value does not need to be unique.",
-      "maxLength": 128,
-      "minLength": 0,
-      "pattern": "^[a-zA-Z0-9-_]*$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "ivs:GetPublicKey", "ivs:ListTagsForResource", "ivs:UntagResource", "ivs:TagResource" ]
     },
-    "PublicKeyMaterial": {
-      "description": "The public portion of a customer-generated key pair. This field is required to create the AWS::IVS::PublicKey resource.",
-      "pattern": "-----BEGIN PUBLIC KEY-----\\r?\\n([a-zA-Z0-9+/=\\r\\n]+)\\r?\\n-----END PUBLIC KEY-----(\\r?\\n)?",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ivs:DeletePublicKey", "ivs:UntagResource" ]
     },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the asset model.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "ivs:ListPublicKeys", "ivs:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Fingerprint"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ivs:TagResource",
-      "ivs:UntagResource",
-      "ivs:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IVS::PublicKey"
+  }
 }

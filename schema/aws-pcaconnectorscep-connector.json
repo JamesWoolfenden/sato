@@ -1,183 +1,132 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CertificateAuthorityArn",
-    "/properties/MobileDeviceManagement"
-  ],
-  "definitions": {
-    "ConnectorType": {
-      "enum": [
-        "GENERAL_PURPOSE",
-        "INTUNE"
-      ],
-      "type": "string"
+  "typeName" : "AWS::PCAConnectorSCEP::Connector",
+  "description" : "Represents a Connector that allows certificate issuance through Simple Certificate Enrollment Protocol (SCEP)",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorscep",
+  "definitions" : {
+    "ConnectorType" : {
+      "type" : "string",
+      "enum" : [ "GENERAL_PURPOSE", "INTUNE" ]
     },
-    "IntuneConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AzureApplicationId": {
-          "maxLength": 100,
-          "minLength": 15,
-          "pattern": "^[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}$",
-          "type": "string"
+    "IntuneConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "AzureApplicationId" : {
+          "type" : "string",
+          "maxLength" : 100,
+          "minLength" : 15,
+          "pattern" : "^[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}-[a-zA-Z0-9]{2,15}$"
         },
-        "Domain": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9._-]+$",
-          "type": "string"
+        "Domain" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9._-]+$"
         }
       },
-      "required": [
-        "AzureApplicationId",
-        "Domain"
-      ],
-      "type": "object"
+      "required" : [ "AzureApplicationId", "Domain" ],
+      "additionalProperties" : false
     },
-    "MobileDeviceManagement": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Intune": {
-              "$ref": "#/definitions/IntuneConfiguration"
-            }
-          },
-          "required": [
-            "Intune"
-          ],
-          "title": "Intune"
-        }
-      ],
-      "type": "object"
+    "MobileDeviceManagement" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "title" : "Intune",
+        "properties" : {
+          "Intune" : {
+            "$ref" : "#/definitions/IntuneConfiguration"
+          }
+        },
+        "required" : [ "Intune" ],
+        "additionalProperties" : false
+      } ]
     },
-    "OpenIdConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Audience": {
-          "type": "string"
+    "OpenIdConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Issuer" : {
+          "type" : "string"
         },
-        "Issuer": {
-          "type": "string"
+        "Subject" : {
+          "type" : "string"
         },
-        "Subject": {
-          "type": "string"
+        "Audience" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tags": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "type": "string"
+    "Tags" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     }
   },
-  "description": "Represents a Connector that allows certificate issuance through Simple Certificate Enrollment Protocol (SCEP)",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "acm-pca:DescribeCertificateAuthority",
-        "acm-pca:GetCertificate",
-        "acm-pca:GetCertificateAuthorityCertificate",
-        "acm-pca:IssueCertificate",
-        "pca-connector-scep:GetConnector",
-        "pca-connector-scep:CreateConnector",
-        "pca-connector-scep:TagResource"
-      ]
+  "properties" : {
+    "CertificateAuthorityArn" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 5,
+      "pattern" : "^arn:aws(-[a-z]+)*:acm-pca:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
     },
-    "delete": {
-      "permissions": [
-        "acm-pca:DescribeCertificateAuthority",
-        "acm-pca:GetCertificate",
-        "acm-pca:GetCertificateAuthorityCertificate",
-        "acm-pca:IssueCertificate",
-        "pca-connector-scep:GetConnector",
-        "pca-connector-scep:DeleteConnector",
-        "pca-connector-scep:UntagResource"
-      ]
+    "ConnectorArn" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 5,
+      "pattern" : "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
     },
-    "list": {
-      "permissions": [
-        "pca-connector-scep:ListConnectors"
-      ]
+    "Type" : {
+      "$ref" : "#/definitions/ConnectorType"
     },
-    "read": {
-      "permissions": [
-        "pca-connector-scep:ListTagsForResource",
-        "pca-connector-scep:GetConnector"
-      ]
+    "Endpoint" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 5
     },
-    "update": {
-      "permissions": [
-        "pca-connector-scep:ListTagsForResource",
-        "pca-connector-scep:TagResource",
-        "pca-connector-scep:UntagResource"
-      ]
+    "MobileDeviceManagement" : {
+      "$ref" : "#/definitions/MobileDeviceManagement"
+    },
+    "OpenIdConfiguration" : {
+      "$ref" : "#/definitions/OpenIdConfiguration"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ConnectorArn"
-  ],
-  "properties": {
-    "CertificateAuthorityArn": {
-      "maxLength": 200,
-      "minLength": 5,
-      "pattern": "^arn:aws(-[a-z]+)*:acm-pca:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "pca-connector-scep:ListTagsForResource", "pca-connector-scep:TagResource", "pca-connector-scep:UntagResource" ]
+  },
+  "required" : [ "CertificateAuthorityArn" ],
+  "readOnlyProperties" : [ "/properties/ConnectorArn", "/properties/Endpoint", "/properties/OpenIdConfiguration", "/properties/Type" ],
+  "createOnlyProperties" : [ "/properties/CertificateAuthorityArn", "/properties/MobileDeviceManagement" ],
+  "primaryIdentifier" : [ "/properties/ConnectorArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "acm-pca:DescribeCertificateAuthority", "acm-pca:GetCertificate", "acm-pca:GetCertificateAuthorityCertificate", "acm-pca:IssueCertificate", "pca-connector-scep:GetConnector", "pca-connector-scep:CreateConnector", "pca-connector-scep:TagResource" ]
     },
-    "ConnectorArn": {
-      "maxLength": 200,
-      "minLength": 5,
-      "pattern": "^arn:aws(-[a-z]+)*:pca-connector-scep:[a-z]+(-[a-z]+)+-[1-9]\\d*:\\d{12}:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "pca-connector-scep:ListTagsForResource", "pca-connector-scep:GetConnector" ]
     },
-    "Endpoint": {
-      "maxLength": 200,
-      "minLength": 5,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "acm-pca:DescribeCertificateAuthority", "acm-pca:GetCertificate", "acm-pca:GetCertificateAuthorityCertificate", "acm-pca:IssueCertificate", "pca-connector-scep:GetConnector", "pca-connector-scep:DeleteConnector", "pca-connector-scep:UntagResource" ]
     },
-    "MobileDeviceManagement": {
-      "$ref": "#/definitions/MobileDeviceManagement"
+    "list" : {
+      "permissions" : [ "pca-connector-scep:ListConnectors" ]
     },
-    "OpenIdConfiguration": {
-      "$ref": "#/definitions/OpenIdConfiguration"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
-    },
-    "Type": {
-      "$ref": "#/definitions/ConnectorType"
+    "update" : {
+      "permissions" : [ "pca-connector-scep:ListTagsForResource", "pca-connector-scep:TagResource", "pca-connector-scep:UntagResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ConnectorArn",
-    "/properties/Endpoint",
-    "/properties/OpenIdConfiguration",
-    "/properties/Type"
-  ],
-  "required": [
-    "CertificateAuthorityArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-pcaconnectorscep",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "pca-connector-scep:ListTagsForResource",
-      "pca-connector-scep:TagResource",
-      "pca-connector-scep:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::PCAConnectorSCEP::Connector"
+  "additionalProperties" : false
 }

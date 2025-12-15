@@ -37,23 +37,26 @@ func TestFilepathError(t *testing.T) {
 	tests := []struct {
 		name     string
 		path     string
+		err      error
 		expected string
 	}{
 		{
-			name:     "valid path",
+			name:     "valid_path",
 			path:     "/path/to/file",
-			expected: "not implemented /path/to/file",
+			err:      errors.New("test error"),
+			expected: "filepath error for /path/to/file: test error",
 		},
 		{
-			name:     "empty path",
+			name:     "empty_path",
 			path:     "",
-			expected: "not implemented ",
+			err:      errors.New("no path"),
+			expected: "filepath error for : no path",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := &filepathError{Path: tt.path}
+			err := &filepathError{Path: tt.path, Err: tt.err}
 			if got := err.Error(); got != tt.expected {
 				t.Errorf("filepathError.Error() = %v, want %v", got, tt.expected)
 			}

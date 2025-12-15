@@ -1,354 +1,306 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "AntennaDownlinkConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "SpectrumConfig": {
-          "$ref": "#/definitions/SpectrumConfig"
+  "typeName" : "AWS::GroundStation::Config",
+  "description" : "AWS Ground Station config resource type for CloudFormation.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+  "definitions" : {
+    "JsonString" : {
+      "type" : "string",
+      "pattern" : "^[{}\\[\\]:.,\"0-9A-z\\-_\\s]{1,8192}$"
+    },
+    "ConfigData" : {
+      "type" : "object",
+      "minProperties" : 1,
+      "maxProperties" : 1,
+      "properties" : {
+        "AntennaDownlinkConfig" : {
+          "$ref" : "#/definitions/AntennaDownlinkConfig"
+        },
+        "TrackingConfig" : {
+          "$ref" : "#/definitions/TrackingConfig"
+        },
+        "DataflowEndpointConfig" : {
+          "$ref" : "#/definitions/DataflowEndpointConfig"
+        },
+        "AntennaDownlinkDemodDecodeConfig" : {
+          "$ref" : "#/definitions/AntennaDownlinkDemodDecodeConfig"
+        },
+        "AntennaUplinkConfig" : {
+          "$ref" : "#/definitions/AntennaUplinkConfig"
+        },
+        "UplinkEchoConfig" : {
+          "$ref" : "#/definitions/UplinkEchoConfig"
+        },
+        "S3RecordingConfig" : {
+          "$ref" : "#/definitions/S3RecordingConfig"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AntennaDownlinkDemodDecodeConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "DecodeConfig": {
-          "$ref": "#/definitions/DecodeConfig"
+    "EirpUnits" : {
+      "type" : "string",
+      "enum" : [ "dBW" ]
+    },
+    "Eirp" : {
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "type" : "number"
         },
-        "DemodulationConfig": {
-          "$ref": "#/definitions/DemodulationConfig"
-        },
-        "SpectrumConfig": {
-          "$ref": "#/definitions/SpectrumConfig"
+        "Units" : {
+          "$ref" : "#/definitions/EirpUnits"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AntennaUplinkConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "SpectrumConfig": {
-          "$ref": "#/definitions/UplinkSpectrumConfig"
+    "FrequencyUnits" : {
+      "type" : "string",
+      "enum" : [ "GHz", "MHz", "kHz" ]
+    },
+    "BandwidthUnits" : {
+      "type" : "string",
+      "enum" : [ "GHz", "MHz", "kHz" ]
+    },
+    "FrequencyBandwidth" : {
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "type" : "number"
         },
-        "TargetEirp": {
-          "$ref": "#/definitions/Eirp"
-        },
-        "TransmitDisabled": {
-          "type": "boolean"
+        "Units" : {
+          "$ref" : "#/definitions/BandwidthUnits"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "BandwidthUnits": {
-      "enum": [
-        "GHz",
-        "MHz",
-        "kHz"
-      ],
-      "type": "string"
-    },
-    "BucketArn": {
-      "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:s3:::[A-Za-z0-9-]{1,64}$",
-      "type": "string"
-    },
-    "ConfigData": {
-      "additionalProperties": false,
-      "maxProperties": 1,
-      "minProperties": 1,
-      "properties": {
-        "AntennaDownlinkConfig": {
-          "$ref": "#/definitions/AntennaDownlinkConfig"
+    "Frequency" : {
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "type" : "number"
         },
-        "AntennaDownlinkDemodDecodeConfig": {
-          "$ref": "#/definitions/AntennaDownlinkDemodDecodeConfig"
-        },
-        "AntennaUplinkConfig": {
-          "$ref": "#/definitions/AntennaUplinkConfig"
-        },
-        "DataflowEndpointConfig": {
-          "$ref": "#/definitions/DataflowEndpointConfig"
-        },
-        "S3RecordingConfig": {
-          "$ref": "#/definitions/S3RecordingConfig"
-        },
-        "TrackingConfig": {
-          "$ref": "#/definitions/TrackingConfig"
-        },
-        "UplinkEchoConfig": {
-          "$ref": "#/definitions/UplinkEchoConfig"
+        "Units" : {
+          "$ref" : "#/definitions/FrequencyUnits"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DataflowEndpointConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "DataflowEndpointName": {
-          "type": "string"
+    "Polarization" : {
+      "type" : "string",
+      "enum" : [ "LEFT_HAND", "RIGHT_HAND", "NONE" ]
+    },
+    "S3KeyPrefix" : {
+      "type" : "string",
+      "pattern" : "^([a-zA-Z0-9_\\-=/]|\\{satellite_id\\}|\\{config\\-name}|\\{s3\\-config-id}|\\{year\\}|\\{month\\}|\\{day\\}){1,900}$"
+    },
+    "BucketArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws[A-Za-z0-9-]{0,64}:s3:::[A-Za-z0-9-]{1,64}$"
+    },
+    "RoleArn" : {
+      "type" : "string",
+      "pattern" : "^arn:[^:\\n]+:iam::[^:\\n]+:role\\/.+$"
+    },
+    "UplinkSpectrumConfig" : {
+      "type" : "object",
+      "properties" : {
+        "CenterFrequency" : {
+          "$ref" : "#/definitions/Frequency"
         },
-        "DataflowEndpointRegion": {
-          "type": "string"
+        "Polarization" : {
+          "$ref" : "#/definitions/Polarization"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DecodeConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "UnvalidatedJSON": {
-          "$ref": "#/definitions/JsonString"
-        }
-      },
-      "type": "object"
-    },
-    "DemodulationConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "UnvalidatedJSON": {
-          "$ref": "#/definitions/JsonString"
-        }
-      },
-      "type": "object"
-    },
-    "Eirp": {
-      "additionalProperties": false,
-      "properties": {
-        "Units": {
-          "$ref": "#/definitions/EirpUnits"
+    "SpectrumConfig" : {
+      "type" : "object",
+      "properties" : {
+        "CenterFrequency" : {
+          "$ref" : "#/definitions/Frequency"
         },
-        "Value": {
-          "type": "number"
+        "Bandwidth" : {
+          "$ref" : "#/definitions/FrequencyBandwidth"
+        },
+        "Polarization" : {
+          "$ref" : "#/definitions/Polarization"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "EirpUnits": {
-      "enum": [
-        "dBW"
-      ],
-      "type": "string"
-    },
-    "Frequency": {
-      "additionalProperties": false,
-      "properties": {
-        "Units": {
-          "$ref": "#/definitions/FrequencyUnits"
-        },
-        "Value": {
-          "type": "number"
+    "AntennaDownlinkConfig" : {
+      "type" : "object",
+      "properties" : {
+        "SpectrumConfig" : {
+          "$ref" : "#/definitions/SpectrumConfig"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "FrequencyBandwidth": {
-      "additionalProperties": false,
-      "properties": {
-        "Units": {
-          "$ref": "#/definitions/BandwidthUnits"
-        },
-        "Value": {
-          "type": "number"
+    "TrackingConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Autotrack" : {
+          "type" : "string",
+          "enum" : [ "REQUIRED", "PREFERRED", "REMOVED" ]
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "FrequencyUnits": {
-      "enum": [
-        "GHz",
-        "MHz",
-        "kHz"
-      ],
-      "type": "string"
-    },
-    "JsonString": {
-      "pattern": "^[{}\\[\\]:.,\"0-9A-z\\-_\\s]{1,8192}$",
-      "type": "string"
-    },
-    "Polarization": {
-      "enum": [
-        "LEFT_HAND",
-        "RIGHT_HAND",
-        "NONE"
-      ],
-      "type": "string"
-    },
-    "RoleArn": {
-      "pattern": "^arn:[^:\\n]+:iam::[^:\\n]+:role\\/.+$",
-      "type": "string"
-    },
-    "S3KeyPrefix": {
-      "pattern": "^([a-zA-Z0-9_\\-=/]|\\{satellite_id\\}|\\{config\\-name}|\\{s3\\-config-id}|\\{year\\}|\\{month\\}|\\{day\\}){1,900}$",
-      "type": "string"
-    },
-    "S3RecordingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "BucketArn": {
-          "$ref": "#/definitions/BucketArn"
+    "DataflowEndpointConfig" : {
+      "type" : "object",
+      "properties" : {
+        "DataflowEndpointName" : {
+          "type" : "string"
         },
-        "Prefix": {
-          "$ref": "#/definitions/S3KeyPrefix"
-        },
-        "RoleArn": {
-          "$ref": "#/definitions/RoleArn"
+        "DataflowEndpointRegion" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SpectrumConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Bandwidth": {
-          "$ref": "#/definitions/FrequencyBandwidth"
-        },
-        "CenterFrequency": {
-          "$ref": "#/definitions/Frequency"
-        },
-        "Polarization": {
-          "$ref": "#/definitions/Polarization"
+    "DemodulationConfig" : {
+      "type" : "object",
+      "properties" : {
+        "UnvalidatedJSON" : {
+          "$ref" : "#/definitions/JsonString"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
-          "type": "string"
+    "DecodeConfig" : {
+      "type" : "object",
+      "properties" : {
+        "UnvalidatedJSON" : {
+          "$ref" : "#/definitions/JsonString"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "AntennaDownlinkDemodDecodeConfig" : {
+      "type" : "object",
+      "properties" : {
+        "SpectrumConfig" : {
+          "$ref" : "#/definitions/SpectrumConfig"
         },
-        "Value": {
-          "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TrackingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Autotrack": {
-          "enum": [
-            "REQUIRED",
-            "PREFERRED",
-            "REMOVED"
-          ],
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "UplinkEchoConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "AntennaUplinkConfigArn": {
-          "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
-          "type": "string"
+        "DemodulationConfig" : {
+          "$ref" : "#/definitions/DemodulationConfig"
         },
-        "Enabled": {
-          "type": "boolean"
+        "DecodeConfig" : {
+          "$ref" : "#/definitions/DecodeConfig"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "UplinkSpectrumConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "CenterFrequency": {
-          "$ref": "#/definitions/Frequency"
+    "AntennaUplinkConfig" : {
+      "type" : "object",
+      "properties" : {
+        "SpectrumConfig" : {
+          "$ref" : "#/definitions/UplinkSpectrumConfig"
         },
-        "Polarization": {
-          "$ref": "#/definitions/Polarization"
+        "TargetEirp" : {
+          "$ref" : "#/definitions/Eirp"
+        },
+        "TransmitDisabled" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
+    },
+    "UplinkEchoConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "AntennaUplinkConfigArn" : {
+          "type" : "string",
+          "pattern" : "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "S3RecordingConfig" : {
+      "type" : "object",
+      "properties" : {
+        "BucketArn" : {
+          "$ref" : "#/definitions/BucketArn"
+        },
+        "RoleArn" : {
+          "$ref" : "#/definitions/RoleArn"
+        },
+        "Prefix" : {
+          "$ref" : "#/definitions/S3KeyPrefix"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$"
+        },
+        "Value" : {
+          "type" : "string",
+          "pattern" : "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$"
+        }
+      },
+      "additionalProperties" : false
     }
   },
-  "description": "AWS Ground Station config resource type for CloudFormation.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "groundstation:CreateConfig",
-        "groundstation:TagResource",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^[ a-zA-Z0-9_:-]{1,256}$"
     },
-    "delete": {
-      "permissions": [
-        "groundstation:DeleteConfig"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "list": {
-      "permissions": [
-        "groundstation:ListConfigs"
-      ]
+    "Type" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "groundstation:GetConfig",
-        "groundstation:ListTagsForResource"
-      ]
+    "ConfigData" : {
+      "$ref" : "#/definitions/ConfigData"
     },
-    "update": {
-      "permissions": [
-        "groundstation:UpdateConfig",
-        "groundstation:ListTagsForResource",
-        "groundstation:TagResource",
-        "groundstation:UntagResource",
-        "iam:PassRole"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+    },
+    "Id" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
-      "type": "string"
+  "required" : [ "Name", "ConfigData" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id", "/properties/Type" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "groundstation:TagResource", "groundstation:UntagResource", "groundstation:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "groundstation:CreateConfig", "groundstation:TagResource", "iam:PassRole" ]
     },
-    "ConfigData": {
-      "$ref": "#/definitions/ConfigData"
+    "read" : {
+      "permissions" : [ "groundstation:GetConfig", "groundstation:ListTagsForResource" ]
     },
-    "Id": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "groundstation:UpdateConfig", "groundstation:ListTagsForResource", "groundstation:TagResource", "groundstation:UntagResource", "iam:PassRole" ]
     },
-    "Name": {
-      "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "groundstation:DeleteConfig" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
-    },
-    "Type": {
-      "type": "string"
+    "list" : {
+      "permissions" : [ "groundstation:ListConfigs" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id",
-    "/properties/Type"
-  ],
-  "required": [
-    "Name",
-    "ConfigData"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "groundstation:TagResource",
-      "groundstation:UntagResource",
-      "groundstation:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::GroundStation::Config"
+  "additionalProperties" : false
 }

@@ -1,221 +1,202 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/TableName",
-    "/properties/DatabaseName",
-    "/properties/CatalogId"
-  ],
-  "definitions": {
-    "Column": {
-      "additionalProperties": false,
-      "properties": {
-        "Comment": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Glue::Partition",
+  "description" : "Resource Type definition for AWS::Glue::Partition",
+  "additionalProperties" : false,
+  "properties" : {
+    "DatabaseName" : {
+      "type" : "string"
     },
-    "Order": {
-      "additionalProperties": false,
-      "properties": {
-        "Column": {
-          "type": "string"
-        },
-        "SortOrder": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Column"
-      ],
-      "type": "object"
+    "TableName" : {
+      "type" : "string"
     },
-    "PartitionInput": {
-      "additionalProperties": false,
-      "properties": {
-        "Parameters": {
-          "type": "object"
-        },
-        "StorageDescriptor": {
-          "$ref": "#/definitions/StorageDescriptor"
-        },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Values"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "SchemaId": {
-      "additionalProperties": false,
-      "properties": {
-        "RegistryName": {
-          "type": "string"
-        },
-        "SchemaArn": {
-          "type": "string"
-        },
-        "SchemaName": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "CatalogId" : {
+      "type" : "string"
     },
-    "SchemaReference": {
-      "additionalProperties": false,
-      "properties": {
-        "SchemaId": {
-          "$ref": "#/definitions/SchemaId"
-        },
-        "SchemaVersionId": {
-          "type": "string"
-        },
-        "SchemaVersionNumber": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "SerdeInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        },
-        "Parameters": {
-          "type": "object"
-        },
-        "SerializationLibrary": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "SkewedInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "SkewedColumnNames": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "SkewedColumnValueLocationMaps": {
-          "type": "object"
-        },
-        "SkewedColumnValues": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "StorageDescriptor": {
-      "additionalProperties": false,
-      "properties": {
-        "BucketColumns": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Columns": {
-          "items": {
-            "$ref": "#/definitions/Column"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Compressed": {
-          "type": "boolean"
-        },
-        "InputFormat": {
-          "type": "string"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "NumberOfBuckets": {
-          "type": "integer"
-        },
-        "OutputFormat": {
-          "type": "string"
-        },
-        "Parameters": {
-          "type": "object"
-        },
-        "SchemaReference": {
-          "$ref": "#/definitions/SchemaReference"
-        },
-        "SerdeInfo": {
-          "$ref": "#/definitions/SerdeInfo"
-        },
-        "SkewedInfo": {
-          "$ref": "#/definitions/SkewedInfo"
-        },
-        "SortColumns": {
-          "items": {
-            "$ref": "#/definitions/Order"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "StoredAsSubDirectories": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
+    "PartitionInput" : {
+      "$ref" : "#/definitions/PartitionInput"
     }
   },
-  "description": "Resource Type definition for AWS::Glue::Partition",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CatalogId": {
-      "type": "string"
+  "definitions" : {
+    "SchemaReference" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SchemaId" : {
+          "$ref" : "#/definitions/SchemaId"
+        },
+        "SchemaVersionId" : {
+          "type" : "string"
+        },
+        "SchemaVersionNumber" : {
+          "type" : "integer"
+        }
+      }
     },
-    "DatabaseName": {
-      "type": "string"
+    "Order" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Column" : {
+          "type" : "string"
+        },
+        "SortOrder" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Column" ]
     },
-    "Id": {
-      "type": "string"
+    "SkewedInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SkewedColumnValues" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SkewedColumnValueLocationMaps" : {
+          "type" : "object"
+        },
+        "SkewedColumnNames" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
     },
-    "PartitionInput": {
-      "$ref": "#/definitions/PartitionInput"
+    "Column" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Comment" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Name" ]
     },
-    "TableName": {
-      "type": "string"
+    "StorageDescriptor" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StoredAsSubDirectories" : {
+          "type" : "boolean"
+        },
+        "Parameters" : {
+          "type" : "object"
+        },
+        "BucketColumns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "NumberOfBuckets" : {
+          "type" : "integer"
+        },
+        "OutputFormat" : {
+          "type" : "string"
+        },
+        "Columns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Column"
+          }
+        },
+        "SerdeInfo" : {
+          "$ref" : "#/definitions/SerdeInfo"
+        },
+        "SortColumns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Order"
+          }
+        },
+        "Compressed" : {
+          "type" : "boolean"
+        },
+        "SchemaReference" : {
+          "$ref" : "#/definitions/SchemaReference"
+        },
+        "SkewedInfo" : {
+          "$ref" : "#/definitions/SkewedInfo"
+        },
+        "InputFormat" : {
+          "type" : "string"
+        },
+        "Location" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SchemaId" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RegistryName" : {
+          "type" : "string"
+        },
+        "SchemaName" : {
+          "type" : "string"
+        },
+        "SchemaArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SerdeInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Parameters" : {
+          "type" : "object"
+        },
+        "SerializationLibrary" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PartitionInput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StorageDescriptor" : {
+          "$ref" : "#/definitions/StorageDescriptor"
+        },
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Parameters" : {
+          "type" : "object"
+        }
+      },
+      "required" : [ "Values" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "TableName",
-    "DatabaseName",
-    "CatalogId",
-    "PartitionInput"
-  ],
-  "typeName": "AWS::Glue::Partition"
+  "required" : [ "TableName", "DatabaseName", "CatalogId", "PartitionInput" ],
+  "createOnlyProperties" : [ "/properties/TableName", "/properties/DatabaseName", "/properties/CatalogId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

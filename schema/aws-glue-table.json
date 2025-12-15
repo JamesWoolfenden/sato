@@ -1,284 +1,268 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DatabaseName",
-    "/properties/CatalogId"
-  ],
-  "definitions": {
-    "Column": {
-      "additionalProperties": false,
-      "properties": {
-        "Comment": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Glue::Table",
+  "description" : "Resource Type definition for AWS::Glue::Table",
+  "additionalProperties" : false,
+  "properties" : {
+    "DatabaseName" : {
+      "type" : "string"
     },
-    "IcebergInput": {
-      "additionalProperties": false,
-      "properties": {
-        "MetadataOperation": {
-          "$ref": "#/definitions/MetadataOperation"
-        },
-        "Version": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "TableInput" : {
+      "$ref" : "#/definitions/TableInput"
     },
-    "MetadataOperation": {
-      "additionalProperties": false,
-      "type": "object"
+    "OpenTableFormatInput" : {
+      "$ref" : "#/definitions/OpenTableFormatInput"
     },
-    "OpenTableFormatInput": {
-      "additionalProperties": false,
-      "properties": {
-        "IcebergInput": {
-          "$ref": "#/definitions/IcebergInput"
-        }
-      },
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "Order": {
-      "additionalProperties": false,
-      "properties": {
-        "Column": {
-          "type": "string"
-        },
-        "SortOrder": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Column",
-        "SortOrder"
-      ],
-      "type": "object"
-    },
-    "SchemaId": {
-      "additionalProperties": false,
-      "properties": {
-        "RegistryName": {
-          "type": "string"
-        },
-        "SchemaArn": {
-          "type": "string"
-        },
-        "SchemaName": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "SchemaReference": {
-      "additionalProperties": false,
-      "properties": {
-        "SchemaId": {
-          "$ref": "#/definitions/SchemaId"
-        },
-        "SchemaVersionId": {
-          "type": "string"
-        },
-        "SchemaVersionNumber": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "SerdeInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        },
-        "Parameters": {
-          "type": "object"
-        },
-        "SerializationLibrary": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "SkewedInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "SkewedColumnNames": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "SkewedColumnValueLocationMaps": {
-          "type": "object"
-        },
-        "SkewedColumnValues": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "StorageDescriptor": {
-      "additionalProperties": false,
-      "properties": {
-        "BucketColumns": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Columns": {
-          "items": {
-            "$ref": "#/definitions/Column"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Compressed": {
-          "type": "boolean"
-        },
-        "InputFormat": {
-          "type": "string"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "NumberOfBuckets": {
-          "type": "integer"
-        },
-        "OutputFormat": {
-          "type": "string"
-        },
-        "Parameters": {
-          "type": "object"
-        },
-        "SchemaReference": {
-          "$ref": "#/definitions/SchemaReference"
-        },
-        "SerdeInfo": {
-          "$ref": "#/definitions/SerdeInfo"
-        },
-        "SkewedInfo": {
-          "$ref": "#/definitions/SkewedInfo"
-        },
-        "SortColumns": {
-          "items": {
-            "$ref": "#/definitions/Order"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "StoredAsSubDirectories": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "TableIdentifier": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "type": "string"
-        },
-        "DatabaseName": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Region": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TableInput": {
-      "additionalProperties": false,
-      "properties": {
-        "Description": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Owner": {
-          "type": "string"
-        },
-        "Parameters": {
-          "type": "object"
-        },
-        "PartitionKeys": {
-          "items": {
-            "$ref": "#/definitions/Column"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Retention": {
-          "type": "integer"
-        },
-        "StorageDescriptor": {
-          "$ref": "#/definitions/StorageDescriptor"
-        },
-        "TableType": {
-          "type": "string"
-        },
-        "TargetTable": {
-          "$ref": "#/definitions/TableIdentifier"
-        },
-        "ViewExpandedText": {
-          "type": "string"
-        },
-        "ViewOriginalText": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "CatalogId" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::Glue::Table",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CatalogId": {
-      "type": "string"
+  "definitions" : {
+    "TableIdentifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DatabaseName" : {
+          "type" : "string"
+        },
+        "Region" : {
+          "type" : "string"
+        },
+        "CatalogId" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
     },
-    "DatabaseName": {
-      "type": "string"
+    "Order" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Column" : {
+          "type" : "string"
+        },
+        "SortOrder" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Column", "SortOrder" ]
     },
-    "Id": {
-      "type": "string"
+    "SchemaReference" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SchemaId" : {
+          "$ref" : "#/definitions/SchemaId"
+        },
+        "SchemaVersionId" : {
+          "type" : "string"
+        },
+        "SchemaVersionNumber" : {
+          "type" : "integer"
+        }
+      }
     },
-    "OpenTableFormatInput": {
-      "$ref": "#/definitions/OpenTableFormatInput"
+    "TableInput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Owner" : {
+          "type" : "string"
+        },
+        "ViewOriginalText" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "TableType" : {
+          "type" : "string"
+        },
+        "Parameters" : {
+          "type" : "object"
+        },
+        "ViewExpandedText" : {
+          "type" : "string"
+        },
+        "StorageDescriptor" : {
+          "$ref" : "#/definitions/StorageDescriptor"
+        },
+        "TargetTable" : {
+          "$ref" : "#/definitions/TableIdentifier"
+        },
+        "PartitionKeys" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Column"
+          }
+        },
+        "Retention" : {
+          "type" : "integer"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
     },
-    "TableInput": {
-      "$ref": "#/definitions/TableInput"
+    "MetadataOperation" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "OpenTableFormatInput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IcebergInput" : {
+          "$ref" : "#/definitions/IcebergInput"
+        }
+      }
+    },
+    "SkewedInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SkewedColumnValues" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SkewedColumnValueLocationMaps" : {
+          "type" : "object"
+        },
+        "SkewedColumnNames" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Column" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Comment" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Name" ]
+    },
+    "StorageDescriptor" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StoredAsSubDirectories" : {
+          "type" : "boolean"
+        },
+        "Parameters" : {
+          "type" : "object"
+        },
+        "BucketColumns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "NumberOfBuckets" : {
+          "type" : "integer"
+        },
+        "OutputFormat" : {
+          "type" : "string"
+        },
+        "Columns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Column"
+          }
+        },
+        "SerdeInfo" : {
+          "$ref" : "#/definitions/SerdeInfo"
+        },
+        "SortColumns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Order"
+          }
+        },
+        "Compressed" : {
+          "type" : "boolean"
+        },
+        "SchemaReference" : {
+          "$ref" : "#/definitions/SchemaReference"
+        },
+        "SkewedInfo" : {
+          "$ref" : "#/definitions/SkewedInfo"
+        },
+        "InputFormat" : {
+          "type" : "string"
+        },
+        "Location" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SchemaId" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RegistryName" : {
+          "type" : "string"
+        },
+        "SchemaName" : {
+          "type" : "string"
+        },
+        "SchemaArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "IcebergInput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetadataOperation" : {
+          "$ref" : "#/definitions/MetadataOperation"
+        },
+        "Version" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SerdeInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Parameters" : {
+          "type" : "object"
+        },
+        "SerializationLibrary" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "TableInput",
-    "DatabaseName",
-    "CatalogId"
-  ],
-  "typeName": "AWS::Glue::Table"
+  "required" : [ "TableInput", "DatabaseName", "CatalogId" ],
+  "createOnlyProperties" : [ "/properties/DatabaseName", "/properties/CatalogId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

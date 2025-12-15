@@ -1,120 +1,73 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PolicyName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::IoT::Policy",
+  "description" : "Resource Type definition for AWS::IoT::Policy",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Resource Type definition for AWS::IoT::Policy",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreatePolicy",
-        "iot:GetPolicy",
-        "iot:TagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource" ]
+  },
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iot:DeletePolicy",
-        "iot:GetPolicy",
-        "iot:ListPolicyVersions",
-        "iot:DeletePolicyVersion",
-        "kms:Decrypt"
-      ]
+    "Arn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iot:ListPolicies"
-      ]
+    "PolicyDocument" : {
+      "type" : [ "object", "string" ],
+      "minLength" : 1,
+      "maxLength" : 404600
     },
-    "read": {
-      "permissions": [
-        "iot:GetPolicy",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "PolicyName" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iot:GetPolicy",
-        "iot:ListPolicyVersions",
-        "iot:CreatePolicyVersion",
-        "iot:DeletePolicyVersion",
-        "iot:SetDefaultPolicyVersion",
-        "iot:TagResource",
-        "iot:UntagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "required" : [ "PolicyDocument" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id" ],
+  "createOnlyProperties" : [ "/properties/PolicyName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreatePolicy", "iot:GetPolicy", "iot:TagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "Id": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iot:GetPolicy", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "PolicyDocument": {
-      "maxLength": 404600,
-      "minLength": 1,
-      "type": [
-        "object",
-        "string"
-      ]
+    "delete" : {
+      "permissions" : [ "iot:DeletePolicy", "iot:GetPolicy", "iot:ListPolicyVersions", "iot:DeletePolicyVersion", "kms:Decrypt" ]
     },
-    "PolicyName": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iot:GetPolicy", "iot:ListPolicyVersions", "iot:CreatePolicyVersion", "iot:DeletePolicyVersion", "iot:SetDefaultPolicyVersion", "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iot:ListPolicies" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [
-    "PolicyDocument"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:ListTagsForResource",
-      "iot:TagResource",
-      "iot:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::Policy"
+  }
 }

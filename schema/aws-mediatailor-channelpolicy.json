@@ -1,58 +1,37 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ChannelName"
-  ],
-  "description": "Definition of AWS::MediaTailor::ChannelPolicy Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mediatailor:PutChannelPolicy",
-        "mediatailor:GetChannelPolicy"
-      ]
+  "typeName" : "AWS::MediaTailor::ChannelPolicy",
+  "description" : "Definition of AWS::MediaTailor::ChannelPolicy Resource Type",
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "properties" : {
+    "ChannelName" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "mediatailor:DeleteChannelPolicy",
-        "mediatailor:GetChannelPolicy"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "mediatailor:GetChannelPolicy"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "mediatailor:PutChannelPolicy",
-        "mediatailor:GetChannelPolicy"
-      ]
+    "Policy" : {
+      "type" : [ "object", "string" ],
+      "description" : "<p>The IAM policy for the channel. IAM policies are used to control access to your channel.</p>"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ChannelName"
-  ],
-  "properties": {
-    "ChannelName": {
-      "type": "string"
+  "createOnlyProperties" : [ "/properties/ChannelName" ],
+  "primaryIdentifier" : [ "/properties/ChannelName" ],
+  "required" : [ "ChannelName", "Policy" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mediatailor:PutChannelPolicy", "mediatailor:GetChannelPolicy" ]
     },
-    "Policy": {
-      "description": "<p>The IAM policy for the channel. IAM policies are used to control access to your channel.</p>",
-      "type": [
-        "object",
-        "string"
-      ]
+    "read" : {
+      "permissions" : [ "mediatailor:GetChannelPolicy" ]
+    },
+    "update" : {
+      "permissions" : [ "mediatailor:PutChannelPolicy", "mediatailor:GetChannelPolicy" ]
+    },
+    "delete" : {
+      "permissions" : [ "mediatailor:DeleteChannelPolicy", "mediatailor:GetChannelPolicy" ]
     }
   },
-  "required": [
-    "ChannelName",
-    "Policy"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::MediaTailor::ChannelPolicy"
+  "additionalProperties" : false
 }

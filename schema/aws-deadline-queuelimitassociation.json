@@ -1,80 +1,51 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/FarmId",
-    "/properties/LimitId",
-    "/properties/QueueId"
-  ],
-  "description": "Definition of AWS::Deadline::QueueLimitAssociation Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "deadline:CreateQueueLimitAssociation",
-        "deadline:GetQueueLimitAssociation",
-        "identitystore:ListGroupMembershipsForMember"
-      ]
+  "typeName" : "AWS::Deadline::QueueLimitAssociation",
+  "description" : "Definition of AWS::Deadline::QueueLimitAssociation Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+  "properties" : {
+    "FarmId" : {
+      "type" : "string",
+      "pattern" : "^farm-[0-9a-f]{32}$"
     },
-    "delete": {
-      "permissions": [
-        "deadline:DeleteQueueLimitAssociation",
-        "deadline:GetQueueLimitAssociation",
-        "deadline:UpdateQueueLimitAssociation",
-        "identitystore:ListGroupMembershipsForMember"
-      ]
+    "LimitId" : {
+      "type" : "string",
+      "pattern" : "^limit-[0-9a-f]{32}$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "FarmId": {
-            "$ref": "resource-schema.json#/properties/FarmId"
+    "QueueId" : {
+      "type" : "string",
+      "pattern" : "^queue-[0-9a-f]{32}$"
+    }
+  },
+  "required" : [ "FarmId", "LimitId", "QueueId" ],
+  "createOnlyProperties" : [ "/properties/FarmId", "/properties/LimitId", "/properties/QueueId" ],
+  "primaryIdentifier" : [ "/properties/FarmId", "/properties/LimitId", "/properties/QueueId" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "deadline:CreateQueueLimitAssociation", "deadline:GetQueueLimitAssociation", "identitystore:ListGroupMembershipsForMember" ]
+    },
+    "read" : {
+      "permissions" : [ "deadline:GetQueueLimitAssociation", "identitystore:ListGroupMembershipsForMember" ]
+    },
+    "delete" : {
+      "permissions" : [ "deadline:DeleteQueueLimitAssociation", "deadline:GetQueueLimitAssociation", "deadline:UpdateQueueLimitAssociation", "identitystore:ListGroupMembershipsForMember" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "FarmId" : {
+            "$ref" : "resource-schema.json#/properties/FarmId"
           }
         },
-        "required": [
-          "FarmId"
-        ]
+        "required" : [ "FarmId" ]
       },
-      "permissions": [
-        "deadline:ListQueueLimitAssociations",
-        "identitystore:ListGroupMembershipsForMember"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "deadline:GetQueueLimitAssociation",
-        "identitystore:ListGroupMembershipsForMember"
-      ]
+      "permissions" : [ "deadline:ListQueueLimitAssociations", "identitystore:ListGroupMembershipsForMember" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/FarmId",
-    "/properties/LimitId",
-    "/properties/QueueId"
-  ],
-  "properties": {
-    "FarmId": {
-      "pattern": "^farm-[0-9a-f]{32}$",
-      "type": "string"
-    },
-    "LimitId": {
-      "pattern": "^limit-[0-9a-f]{32}$",
-      "type": "string"
-    },
-    "QueueId": {
-      "pattern": "^queue-[0-9a-f]{32}$",
-      "type": "string"
-    }
-  },
-  "required": [
-    "FarmId",
-    "LimitId",
-    "QueueId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Deadline::QueueLimitAssociation"
+  "additionalProperties" : false
 }

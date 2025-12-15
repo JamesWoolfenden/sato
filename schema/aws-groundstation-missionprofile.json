@@ -1,198 +1,143 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "DataflowEdge": {
-      "additionalProperties": false,
-      "properties": {
-        "Destination": {
-          "type": "string"
+  "typeName" : "AWS::GroundStation::MissionProfile",
+  "description" : "AWS Ground Station Mission Profile resource type for CloudFormation.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
+  "definitions" : {
+    "DataflowEdge" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "type" : "string"
         },
-        "Source": {
-          "type": "string"
+        "Destination" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "StreamsKmsKey": {
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "KmsKeyArn"
-          ]
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$"
         },
-        {
-          "required": [
-            "KmsAliasArn"
-          ]
-        },
-        {
-          "required": [
-            "KmsAliasName"
-          ]
-        }
-      ],
-      "properties": {
-        "KmsAliasArn": {
-          "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
-          "type": "string"
-        },
-        "KmsAliasName": {
-          "pattern": "^alias/[a-zA-Z0-9:/_-]+$",
-          "type": "string"
-        },
-        "KmsKeyArn": {
-          "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "pattern" : "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,128}$",
-          "type": "string"
+    "StreamsKmsKey" : {
+      "type" : "object",
+      "properties" : {
+        "KmsKeyArn" : {
+          "type" : "string",
+          "pattern" : "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
         },
-        "Value": {
-          "pattern": "^[ a-zA-Z0-9\\+\\-=._:/@]{1,256}$",
-          "type": "string"
+        "KmsAliasArn" : {
+          "type" : "string",
+          "pattern" : "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+        },
+        "KmsAliasName" : {
+          "type" : "string",
+          "pattern" : "^alias/[a-zA-Z0-9:/_-]+$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "oneOf" : [ {
+        "required" : [ "KmsKeyArn" ]
+      }, {
+        "required" : [ "KmsAliasArn" ]
+      }, {
+        "required" : [ "KmsAliasName" ]
+      } ],
+      "additionalProperties" : false
     }
   },
-  "description": "AWS Ground Station Mission Profile resource type for CloudFormation.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "groundstation:CreateMissionProfile",
-        "groundstation:GetMissionProfile",
-        "groundstation:TagResource",
-        "iam:PassRole",
-        "kms:DescribeKey",
-        "kms:CreateGrant"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "A name used to identify a mission profile.",
+      "type" : "string",
+      "pattern" : "^[ a-zA-Z0-9_:-]{1,256}$"
     },
-    "delete": {
-      "permissions": [
-        "groundstation:DeleteMissionProfile",
-        "groundstation:GetMissionProfile"
-      ]
+    "ContactPrePassDurationSeconds" : {
+      "description" : "Pre-pass time needed before the contact.",
+      "type" : "integer"
     },
-    "list": {
-      "permissions": [
-        "groundstation:ListMissionProfiles"
-      ]
+    "ContactPostPassDurationSeconds" : {
+      "description" : "Post-pass time needed after the contact.",
+      "type" : "integer"
     },
-    "read": {
-      "permissions": [
-        "groundstation:GetMissionProfile",
-        "groundstation:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:CreateGrant"
-      ]
+    "MinimumViableContactDurationSeconds" : {
+      "description" : "Visibilities with shorter duration than the specified minimum viable contact duration will be ignored when searching for available contacts.",
+      "type" : "integer"
     },
-    "update": {
-      "permissions": [
-        "groundstation:UpdateMissionProfile",
-        "groundstation:GetMissionProfile",
-        "groundstation:ListTagsForResource",
-        "groundstation:TagResource",
-        "groundstation:UntagResource",
-        "iam:PassRole",
-        "kms:DescribeKey",
-        "kms:CreateGrant"
-      ]
+    "StreamsKmsKey" : {
+      "description" : "The ARN of a KMS Key used for encrypting data during transmission from the source to destination locations.",
+      "$ref" : "#/definitions/StreamsKmsKey"
+    },
+    "StreamsKmsRole" : {
+      "description" : "The ARN of the KMS Key or Alias Key role used to define permissions on KMS Key usage.",
+      "type" : "string"
+    },
+    "DataflowEdges" : {
+      "description" : "",
+      "type" : "array",
+      "minItems" : 1,
+      "items" : {
+        "$ref" : "#/definitions/DataflowEdge"
+      }
+    },
+    "TrackingConfigArn" : {
+      "type" : "string",
+      "pattern" : "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$"
+    },
+    "Region" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
-      "type": "string"
+  "required" : [ "Name", "MinimumViableContactDurationSeconds", "DataflowEdges", "TrackingConfigArn" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/Region" ],
+  "primaryIdentifier" : [ "/properties/Id", "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "groundstation:TagResource", "groundstation:UntagResource", "groundstation:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "groundstation:CreateMissionProfile", "groundstation:GetMissionProfile", "groundstation:TagResource", "iam:PassRole", "kms:DescribeKey", "kms:CreateGrant" ]
     },
-    "ContactPostPassDurationSeconds": {
-      "description": "Post-pass time needed after the contact.",
-      "type": "integer"
+    "read" : {
+      "permissions" : [ "groundstation:GetMissionProfile", "groundstation:ListTagsForResource", "kms:DescribeKey", "kms:CreateGrant" ]
     },
-    "ContactPrePassDurationSeconds": {
-      "description": "Pre-pass time needed before the contact.",
-      "type": "integer"
+    "update" : {
+      "permissions" : [ "groundstation:UpdateMissionProfile", "groundstation:GetMissionProfile", "groundstation:ListTagsForResource", "groundstation:TagResource", "groundstation:UntagResource", "iam:PassRole", "kms:DescribeKey", "kms:CreateGrant" ]
     },
-    "DataflowEdges": {
-      "description": "",
-      "items": {
-        "$ref": "#/definitions/DataflowEdge"
-      },
-      "minItems": 1,
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "groundstation:DeleteMissionProfile", "groundstation:GetMissionProfile" ]
     },
-    "Id": {
-      "type": "string"
-    },
-    "MinimumViableContactDurationSeconds": {
-      "description": "Visibilities with shorter duration than the specified minimum viable contact duration will be ignored when searching for available contacts.",
-      "type": "integer"
-    },
-    "Name": {
-      "description": "A name used to identify a mission profile.",
-      "pattern": "^[ a-zA-Z0-9_:-]{1,256}$",
-      "type": "string"
-    },
-    "Region": {
-      "type": "string"
-    },
-    "StreamsKmsKey": {
-      "$ref": "#/definitions/StreamsKmsKey",
-      "description": "The ARN of a KMS Key used for encrypting data during transmission from the source to destination locations."
-    },
-    "StreamsKmsRole": {
-      "description": "The ARN of the KMS Key or Alias Key role used to define permissions on KMS Key usage.",
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
-    },
-    "TrackingConfigArn": {
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:[a-z0-9-.]+:.*)|()$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "groundstation:ListMissionProfiles" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/Region"
-  ],
-  "required": [
-    "Name",
-    "MinimumViableContactDurationSeconds",
-    "DataflowEdges",
-    "TrackingConfigArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ground-station.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "groundstation:TagResource",
-      "groundstation:UntagResource",
-      "groundstation:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::GroundStation::MissionProfile"
+  "additionalProperties" : false
 }

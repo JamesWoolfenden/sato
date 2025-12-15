@@ -1,310 +1,229 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "AuthorizerConfiguration": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CustomJWTAuthorizer": {
-              "$ref": "#/definitions/CustomJWTAuthorizerConfiguration"
-            }
-          },
-          "required": [
-            "CustomJWTAuthorizer"
-          ],
-          "title": "CustomJWTAuthorizer",
-          "type": "object"
-        }
-      ]
-    },
-    "AuthorizerType": {
-      "enum": [
-        "CUSTOM_JWT",
-        "AWS_IAM"
-      ],
-      "type": "string"
-    },
-    "CustomJWTAuthorizerConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedAudience": {
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1,
-          "type": "array"
+  "typeName" : "AWS::BedrockAgentCore::Gateway",
+  "description" : "Definition of AWS::BedrockAgentCore::Gateway Resource Type",
+  "definitions" : {
+    "AuthorizerConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "CustomJWTAuthorizer",
+        "properties" : {
+          "CustomJWTAuthorizer" : {
+            "$ref" : "#/definitions/CustomJWTAuthorizerConfiguration"
+          }
         },
-        "AllowedClients": {
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1,
-          "type": "array"
+        "required" : [ "CustomJWTAuthorizer" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "AuthorizerType" : {
+      "type" : "string",
+      "enum" : [ "CUSTOM_JWT", "AWS_IAM" ]
+    },
+    "CustomJWTAuthorizerConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "DiscoveryUrl" : {
+          "type" : "string",
+          "pattern" : "^.+/\\.well-known/openid-configuration$"
         },
-        "DiscoveryUrl": {
-          "pattern": "^.+/\\.well-known/openid-configuration$",
-          "type": "string"
+        "AllowedAudience" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "minItems" : 1
+        },
+        "AllowedClients" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "minItems" : 1
         }
       },
-      "required": [
-        "DiscoveryUrl"
-      ],
-      "type": "object"
+      "required" : [ "DiscoveryUrl" ],
+      "additionalProperties" : false
     },
-    "ExceptionLevel": {
-      "enum": [
-        "DEBUG"
-      ],
-      "type": "string"
+    "ExceptionLevel" : {
+      "type" : "string",
+      "enum" : [ "DEBUG" ]
     },
-    "GatewayProtocolConfiguration": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Mcp": {
-              "$ref": "#/definitions/MCPGatewayConfiguration"
-            }
-          },
-          "required": [
-            "Mcp"
-          ],
-          "title": "Mcp",
-          "type": "object"
-        }
-      ]
-    },
-    "GatewayProtocolType": {
-      "enum": [
-        "MCP"
-      ],
-      "type": "string"
-    },
-    "GatewayStatus": {
-      "enum": [
-        "CREATING",
-        "UPDATING",
-        "UPDATE_UNSUCCESSFUL",
-        "DELETING",
-        "READY",
-        "FAILED"
-      ],
-      "type": "string"
-    },
-    "MCPGatewayConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Instructions": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+    "GatewayProtocolConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Mcp",
+        "properties" : {
+          "Mcp" : {
+            "$ref" : "#/definitions/MCPGatewayConfiguration"
+          }
         },
-        "SearchType": {
-          "$ref": "#/definitions/SearchType"
+        "required" : [ "Mcp" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "GatewayProtocolType" : {
+      "type" : "string",
+      "enum" : [ "MCP" ]
+    },
+    "GatewayStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "UPDATING", "UPDATE_UNSUCCESSFUL", "DELETING", "READY", "FAILED" ]
+    },
+    "MCPGatewayConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "SupportedVersions" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "default" : "2025-03-26"
+          }
         },
-        "SupportedVersions": {
-          "items": {
-            "default": "2025-03-26",
-            "type": "string"
-          },
-          "type": "array"
+        "Instructions" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1
+        },
+        "SearchType" : {
+          "$ref" : "#/definitions/SearchType"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SearchType": {
-      "enum": [
-        "SEMANTIC"
-      ],
-      "type": "string"
+    "SearchType" : {
+      "type" : "string",
+      "enum" : [ "SEMANTIC" ]
     },
-    "TagsMap": {
-      "additionalProperties": false,
-      "maxProperties": 50,
-      "minProperties": 0,
-      "patternProperties": {
-        "^[a-zA-Z0-9\\s._:/=+@-]*$": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+    "TagsMap" : {
+      "type" : "object",
+      "maxProperties" : 50,
+      "minProperties" : 0,
+      "patternProperties" : {
+        "^[a-zA-Z0-9\\s._:/=+@-]*$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "WorkloadIdentityDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "WorkloadIdentityArn": {
-          "maxLength": 1024,
-          "minLength": 1,
-          "type": "string"
+    "WorkloadIdentityDetails" : {
+      "type" : "object",
+      "properties" : {
+        "WorkloadIdentityArn" : {
+          "type" : "string",
+          "maxLength" : 1024,
+          "minLength" : 1
         }
       },
-      "required": [
-        "WorkloadIdentityArn"
-      ],
-      "type": "object"
+      "required" : [ "WorkloadIdentityArn" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::BedrockAgentCore::Gateway Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock-agentcore:CreateGateway",
-        "bedrock-agentcore:CreateWorkloadIdentity",
-        "bedrock-agentcore:DeleteWorkloadIdentity",
-        "bedrock-agentcore:GetGateway",
-        "bedrock-agentcore:ListTagsForResource",
-        "bedrock-agentcore:SynchronizeGatewayTargets",
-        "bedrock-agentcore:TagResource",
-        "iam:PassRole",
-        "kms:CreateGrant",
-        "kms:Decrypt",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey"
-      ]
+  "properties" : {
+    "AuthorizerConfiguration" : {
+      "$ref" : "#/definitions/AuthorizerConfiguration"
     },
-    "delete": {
-      "permissions": [
-        "bedrock-agentcore:DeleteGateway",
-        "bedrock-agentcore:DeleteWorkloadIdentity",
-        "bedrock-agentcore:GetGateway"
-      ]
+    "AuthorizerType" : {
+      "$ref" : "#/definitions/AuthorizerType"
     },
-    "list": {
-      "permissions": [
-        "bedrock-agentcore:ListGateways"
-      ]
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "read": {
-      "permissions": [
-        "bedrock-agentcore:GetGateway",
-        "bedrock-agentcore:ListTagsForResource"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 1
     },
-    "update": {
-      "permissions": [
-        "bedrock-agentcore:GetGateway",
-        "bedrock-agentcore:ListTagsForResource",
-        "bedrock-agentcore:TagResource",
-        "bedrock-agentcore:UntagResource",
-        "bedrock-agentcore:UpdateGateway",
-        "iam:PassRole",
-        "kms:Decrypt",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:ListGrants"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/GatewayIdentifier"
-  ],
-  "properties": {
-    "AuthorizerConfiguration": {
-      "$ref": "#/definitions/AuthorizerConfiguration"
+    "ExceptionLevel" : {
+      "$ref" : "#/definitions/ExceptionLevel"
     },
-    "AuthorizerType": {
-      "$ref": "#/definitions/AuthorizerType"
+    "GatewayArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(|-cn|-us-gov):bedrock-agentcore:[a-z0-9-]{1,20}:[0-9]{12}:gateway/([0-9a-z][-]?){1,100}-[a-z0-9]{10}$"
     },
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "GatewayIdentifier" : {
+      "type" : "string",
+      "pattern" : "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$"
     },
-    "Description": {
-      "maxLength": 200,
-      "minLength": 1,
-      "type": "string"
+    "GatewayUrl" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 1
     },
-    "ExceptionLevel": {
-      "$ref": "#/definitions/ExceptionLevel"
+    "KmsKeyArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$"
     },
-    "GatewayArn": {
-      "pattern": "^arn:aws(|-cn|-us-gov):bedrock-agentcore:[a-z0-9-]{1,20}:[0-9]{12}:gateway/([0-9a-z][-]?){1,100}-[a-z0-9]{10}$",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^([0-9a-zA-Z][-]?){1,100}$"
     },
-    "GatewayIdentifier": {
-      "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
-      "type": "string"
+    "ProtocolConfiguration" : {
+      "$ref" : "#/definitions/GatewayProtocolConfiguration"
     },
-    "GatewayUrl": {
-      "maxLength": 1024,
-      "minLength": 1,
-      "type": "string"
+    "ProtocolType" : {
+      "$ref" : "#/definitions/GatewayProtocolType"
     },
-    "KmsKeyArn": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-zA-Z0-9-]*:[0-9]{12}:key/[a-zA-Z0-9-]{36}$",
-      "type": "string"
+    "RoleArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+$"
     },
-    "Name": {
-      "pattern": "^([0-9a-zA-Z][-]?){1,100}$",
-      "type": "string"
+    "Status" : {
+      "$ref" : "#/definitions/GatewayStatus"
     },
-    "ProtocolConfiguration": {
-      "$ref": "#/definitions/GatewayProtocolConfiguration"
-    },
-    "ProtocolType": {
-      "$ref": "#/definitions/GatewayProtocolType"
-    },
-    "RoleArn": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^arn:aws(-[^:]+)?:iam::([0-9]{12})?:role/.+$",
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/GatewayStatus"
-    },
-    "StatusReasons": {
-      "items": {
-        "maxLength": 2048,
-        "type": "string"
+    "StatusReasons" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048
       },
-      "maxItems": 100,
-      "type": "array"
+      "maxItems" : 100
     },
-    "Tags": {
-      "$ref": "#/definitions/TagsMap"
+    "Tags" : {
+      "$ref" : "#/definitions/TagsMap"
     },
-    "UpdatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "UpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "WorkloadIdentityDetails": {
-      "$ref": "#/definitions/WorkloadIdentityDetails"
+    "WorkloadIdentityDetails" : {
+      "$ref" : "#/definitions/WorkloadIdentityDetails"
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreatedAt",
-    "/properties/GatewayArn",
-    "/properties/GatewayIdentifier",
-    "/properties/GatewayUrl",
-    "/properties/Status",
-    "/properties/StatusReasons",
-    "/properties/UpdatedAt",
-    "/properties/WorkloadIdentityDetails"
-  ],
-  "required": [
-    "AuthorizerType",
-    "Name",
-    "ProtocolType",
-    "RoleArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "bedrock-agentcore:ListTagsForResource",
-      "bedrock-agentcore:TagResource",
-      "bedrock-agentcore:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "AuthorizerType", "Name", "ProtocolType", "RoleArn" ],
+  "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/GatewayArn", "/properties/GatewayIdentifier", "/properties/GatewayUrl", "/properties/Status", "/properties/StatusReasons", "/properties/UpdatedAt", "/properties/WorkloadIdentityDetails" ],
+  "primaryIdentifier" : [ "/properties/GatewayIdentifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock-agentcore:CreateGateway", "bedrock-agentcore:CreateWorkloadIdentity", "bedrock-agentcore:DeleteWorkloadIdentity", "bedrock-agentcore:GetGateway", "bedrock-agentcore:ListTagsForResource", "bedrock-agentcore:SynchronizeGatewayTargets", "bedrock-agentcore:TagResource", "iam:PassRole", "kms:CreateGrant", "kms:Decrypt", "kms:DescribeKey", "kms:GenerateDataKey" ]
+    },
+    "read" : {
+      "permissions" : [ "bedrock-agentcore:GetGateway", "bedrock-agentcore:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "bedrock-agentcore:GetGateway", "bedrock-agentcore:ListTagsForResource", "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:UpdateGateway", "iam:PassRole", "kms:Decrypt", "kms:DescribeKey", "kms:GenerateDataKey", "kms:ListGrants" ]
+    },
+    "delete" : {
+      "permissions" : [ "bedrock-agentcore:DeleteGateway", "bedrock-agentcore:DeleteWorkloadIdentity", "bedrock-agentcore:GetGateway" ]
+    },
+    "list" : {
+      "permissions" : [ "bedrock-agentcore:ListGateways" ]
+    }
   },
-  "typeName": "AWS::BedrockAgentCore::Gateway"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "bedrock-agentcore:ListTagsForResource", "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource" ]
+  }
 }

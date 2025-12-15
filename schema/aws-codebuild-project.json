@@ -1,605 +1,553 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Artifacts": {
-      "additionalProperties": false,
-      "properties": {
-        "ArtifactIdentifier": {
-          "type": "string"
-        },
-        "EncryptionDisabled": {
-          "type": "boolean"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "NamespaceType": {
-          "type": "string"
-        },
-        "OverrideArtifactName": {
-          "type": "boolean"
-        },
-        "Packaging": {
-          "type": "string"
-        },
-        "Path": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+  "typeName" : "AWS::CodeBuild::Project",
+  "description" : "Resource Type definition for AWS::CodeBuild::Project",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
     },
-    "BatchRestrictions": {
-      "additionalProperties": false,
-      "properties": {
-        "ComputeTypesAllowed": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "MaximumBuildsAllowed": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "ResourceAccessRole" : {
+      "type" : "string"
     },
-    "BuildStatusConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Context": {
-          "type": "string"
-        },
-        "TargetUrl": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "VpcConfig" : {
+      "$ref" : "#/definitions/VpcConfig"
     },
-    "CloudWatchLogsConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "GroupName": {
-          "type": "string"
-        },
-        "Status": {
-          "type": "string"
-        },
-        "StreamName": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Status"
-      ],
-      "type": "object"
+    "SecondarySources" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Source"
+      }
     },
-    "DockerServer": {
-      "additionalProperties": false,
-      "properties": {
-        "ComputeType": {
-          "type": "string"
-        },
-        "SecurityGroupIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "ComputeType"
-      ],
-      "type": "object"
+    "EncryptionKey" : {
+      "type" : "string"
     },
-    "Environment": {
-      "additionalProperties": false,
-      "properties": {
-        "Certificate": {
-          "type": "string"
-        },
-        "ComputeType": {
-          "type": "string"
-        },
-        "DockerServer": {
-          "$ref": "#/definitions/DockerServer"
-        },
-        "EnvironmentVariables": {
-          "items": {
-            "$ref": "#/definitions/EnvironmentVariable"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Fleet": {
-          "$ref": "#/definitions/ProjectFleet"
-        },
-        "Image": {
-          "type": "string"
-        },
-        "ImagePullCredentialsType": {
-          "type": "string"
-        },
-        "PrivilegedMode": {
-          "type": "boolean"
-        },
-        "RegistryCredential": {
-          "$ref": "#/definitions/RegistryCredential"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type",
-        "Image",
-        "ComputeType"
-      ],
-      "type": "object"
+    "SecondaryArtifacts" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Artifacts"
+      }
     },
-    "EnvironmentVariable": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Name"
-      ],
-      "type": "object"
+    "Source" : {
+      "$ref" : "#/definitions/Source"
     },
-    "FilterGroup": {
-      "additionalProperties": false,
-      "type": "object"
+    "Name" : {
+      "type" : "string"
     },
-    "GitSubmodulesConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "FetchSubmodules": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "FetchSubmodules"
-      ],
-      "type": "object"
+    "LogsConfig" : {
+      "$ref" : "#/definitions/LogsConfig"
     },
-    "LogsConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "CloudWatchLogs": {
-          "$ref": "#/definitions/CloudWatchLogsConfig"
-        },
-        "S3Logs": {
-          "$ref": "#/definitions/S3LogsConfig"
-        }
-      },
-      "type": "object"
+    "ServiceRole" : {
+      "type" : "string"
     },
-    "ProjectBuildBatchConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "BatchReportMode": {
-          "type": "string"
-        },
-        "CombineArtifacts": {
-          "type": "boolean"
-        },
-        "Restrictions": {
-          "$ref": "#/definitions/BatchRestrictions"
-        },
-        "ServiceRole": {
-          "type": "string"
-        },
-        "TimeoutInMins": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "QueuedTimeoutInMinutes" : {
+      "type" : "integer"
     },
-    "ProjectCache": {
-      "additionalProperties": false,
-      "properties": {
-        "CacheNamespace": {
-          "type": "string"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "Modes": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+    "SecondarySourceVersions" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ProjectSourceVersion"
+      }
     },
-    "ProjectFileSystemLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "Identifier": {
-          "type": "string"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "MountOptions": {
-          "type": "string"
-        },
-        "MountPoint": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "MountPoint",
-        "Type",
-        "Identifier",
-        "Location"
-      ],
-      "type": "object"
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "ProjectFleet": {
-      "additionalProperties": false,
-      "properties": {
-        "FleetArn": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "AutoRetryLimit" : {
+      "type" : "integer"
     },
-    "ProjectSourceVersion": {
-      "additionalProperties": false,
-      "properties": {
-        "SourceIdentifier": {
-          "type": "string"
-        },
-        "SourceVersion": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "SourceIdentifier"
-      ],
-      "type": "object"
+    "SourceVersion" : {
+      "type" : "string"
     },
-    "ProjectTriggers": {
-      "additionalProperties": false,
-      "properties": {
-        "BuildType": {
-          "type": "string"
-        },
-        "FilterGroups": {
-          "items": {
-            "$ref": "#/definitions/FilterGroup"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "PullRequestBuildPolicy": {
-          "$ref": "#/definitions/PullRequestBuildPolicy"
-        },
-        "ScopeConfiguration": {
-          "$ref": "#/definitions/ScopeConfiguration"
-        },
-        "Webhook": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
+    "Triggers" : {
+      "$ref" : "#/definitions/ProjectTriggers"
     },
-    "PullRequestBuildPolicy": {
-      "additionalProperties": false,
-      "properties": {
-        "ApproverRoles": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "RequiresCommentApproval": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "RequiresCommentApproval"
-      ],
-      "type": "object"
+    "Artifacts" : {
+      "$ref" : "#/definitions/Artifacts"
     },
-    "RegistryCredential": {
-      "additionalProperties": false,
-      "properties": {
-        "Credential": {
-          "type": "string"
-        },
-        "CredentialProvider": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Credential",
-        "CredentialProvider"
-      ],
-      "type": "object"
+    "BadgeEnabled" : {
+      "type" : "boolean"
     },
-    "S3LogsConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "EncryptionDisabled": {
-          "type": "boolean"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "Status": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Status"
-      ],
-      "type": "object"
+    "FileSystemLocations" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ProjectFileSystemLocation"
+      }
     },
-    "ScopeConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Domain": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Scope": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+    "Environment" : {
+      "$ref" : "#/definitions/Environment"
     },
-    "Source": {
-      "additionalProperties": false,
-      "properties": {
-        "Auth": {
-          "$ref": "#/definitions/SourceAuth"
-        },
-        "BuildSpec": {
-          "type": "string"
-        },
-        "BuildStatusConfig": {
-          "$ref": "#/definitions/BuildStatusConfig"
-        },
-        "GitCloneDepth": {
-          "type": "integer"
-        },
-        "GitSubmodulesConfig": {
-          "$ref": "#/definitions/GitSubmodulesConfig"
-        },
-        "InsecureSsl": {
-          "type": "boolean"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "ReportBuildStatus": {
-          "type": "boolean"
-        },
-        "SourceIdentifier": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+    "ConcurrentBuildLimit" : {
+      "type" : "integer"
     },
-    "SourceAuth": {
-      "additionalProperties": false,
-      "properties": {
-        "Resource": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+    "Visibility" : {
+      "type" : "string"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "VpcConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "SecurityGroupIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Subnets": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "VpcId": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Arn" : {
+      "type" : "string"
+    },
+    "BuildBatchConfig" : {
+      "$ref" : "#/definitions/ProjectBuildBatchConfig"
+    },
+    "TimeoutInMinutes" : {
+      "type" : "integer"
+    },
+    "Cache" : {
+      "$ref" : "#/definitions/ProjectCache"
     }
   },
-  "description": "Resource Type definition for AWS::CodeBuild::Project",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "Artifacts": {
-      "$ref": "#/definitions/Artifacts"
-    },
-    "AutoRetryLimit": {
-      "type": "integer"
-    },
-    "BadgeEnabled": {
-      "type": "boolean"
-    },
-    "BuildBatchConfig": {
-      "$ref": "#/definitions/ProjectBuildBatchConfig"
-    },
-    "Cache": {
-      "$ref": "#/definitions/ProjectCache"
-    },
-    "ConcurrentBuildLimit": {
-      "type": "integer"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "EncryptionKey": {
-      "type": "string"
-    },
-    "Environment": {
-      "$ref": "#/definitions/Environment"
-    },
-    "FileSystemLocations": {
-      "items": {
-        "$ref": "#/definitions/ProjectFileSystemLocation"
+  "definitions" : {
+    "ProjectSourceVersion" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SourceIdentifier" : {
+          "type" : "string"
+        },
+        "SourceVersion" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "SourceIdentifier" ]
     },
-    "Id": {
-      "type": "string"
+    "VpcConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Subnets" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "VpcId" : {
+          "type" : "string"
+        },
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
     },
-    "LogsConfig": {
-      "$ref": "#/definitions/LogsConfig"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "QueuedTimeoutInMinutes": {
-      "type": "integer"
-    },
-    "ResourceAccessRole": {
-      "type": "string"
-    },
-    "SecondaryArtifacts": {
-      "items": {
-        "$ref": "#/definitions/Artifacts"
+    "SourceAuth" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Resource" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Type" ]
     },
-    "SecondarySourceVersions": {
-      "items": {
-        "$ref": "#/definitions/ProjectSourceVersion"
+    "ScopeConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Scope" : {
+          "type" : "string"
+        },
+        "Domain" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Name" ]
     },
-    "SecondarySources": {
-      "items": {
-        "$ref": "#/definitions/Source"
+    "RegistryCredential" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Credential" : {
+          "type" : "string"
+        },
+        "CredentialProvider" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Credential", "CredentialProvider" ]
     },
-    "ServiceRole": {
-      "type": "string"
+    "FilterGroup" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "Source": {
-      "$ref": "#/definitions/Source"
-    },
-    "SourceVersion": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Source" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "ReportBuildStatus" : {
+          "type" : "boolean"
+        },
+        "Auth" : {
+          "$ref" : "#/definitions/SourceAuth"
+        },
+        "SourceIdentifier" : {
+          "type" : "string"
+        },
+        "BuildSpec" : {
+          "type" : "string"
+        },
+        "GitCloneDepth" : {
+          "type" : "integer"
+        },
+        "BuildStatusConfig" : {
+          "$ref" : "#/definitions/BuildStatusConfig"
+        },
+        "GitSubmodulesConfig" : {
+          "$ref" : "#/definitions/GitSubmodulesConfig"
+        },
+        "InsecureSsl" : {
+          "type" : "boolean"
+        },
+        "Location" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Type" ]
     },
-    "TimeoutInMinutes": {
-      "type": "integer"
+    "PullRequestBuildPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RequiresCommentApproval" : {
+          "type" : "string"
+        },
+        "ApproverRoles" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "RequiresCommentApproval" ]
     },
-    "Triggers": {
-      "$ref": "#/definitions/ProjectTriggers"
+    "ProjectCache" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Modes" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "CacheNamespace" : {
+          "type" : "string"
+        },
+        "Location" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
     },
-    "Visibility": {
-      "type": "string"
+    "Artifacts" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Path" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "ArtifactIdentifier" : {
+          "type" : "string"
+        },
+        "OverrideArtifactName" : {
+          "type" : "boolean"
+        },
+        "Packaging" : {
+          "type" : "string"
+        },
+        "EncryptionDisabled" : {
+          "type" : "boolean"
+        },
+        "Location" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "NamespaceType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
     },
-    "VpcConfig": {
-      "$ref": "#/definitions/VpcConfig"
+    "LogsConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CloudWatchLogs" : {
+          "$ref" : "#/definitions/CloudWatchLogsConfig"
+        },
+        "S3Logs" : {
+          "$ref" : "#/definitions/S3LogsConfig"
+        }
+      }
+    },
+    "BatchRestrictions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ComputeTypesAllowed" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "MaximumBuildsAllowed" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "ProjectBuildBatchConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CombineArtifacts" : {
+          "type" : "boolean"
+        },
+        "ServiceRole" : {
+          "type" : "string"
+        },
+        "BatchReportMode" : {
+          "type" : "string"
+        },
+        "TimeoutInMins" : {
+          "type" : "integer"
+        },
+        "Restrictions" : {
+          "$ref" : "#/definitions/BatchRestrictions"
+        }
+      }
+    },
+    "CloudWatchLogsConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Status" : {
+          "type" : "string"
+        },
+        "GroupName" : {
+          "type" : "string"
+        },
+        "StreamName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Status" ]
+    },
+    "Environment" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "EnvironmentVariables" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/EnvironmentVariable"
+          }
+        },
+        "Fleet" : {
+          "$ref" : "#/definitions/ProjectFleet"
+        },
+        "PrivilegedMode" : {
+          "type" : "boolean"
+        },
+        "ImagePullCredentialsType" : {
+          "type" : "string"
+        },
+        "Image" : {
+          "type" : "string"
+        },
+        "RegistryCredential" : {
+          "$ref" : "#/definitions/RegistryCredential"
+        },
+        "ComputeType" : {
+          "type" : "string"
+        },
+        "DockerServer" : {
+          "$ref" : "#/definitions/DockerServer"
+        },
+        "Certificate" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "Image", "ComputeType" ]
+    },
+    "EnvironmentVariable" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Name" ]
+    },
+    "ProjectFileSystemLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MountPoint" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Identifier" : {
+          "type" : "string"
+        },
+        "MountOptions" : {
+          "type" : "string"
+        },
+        "Location" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "MountPoint", "Type", "Identifier", "Location" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "ProjectTriggers" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BuildType" : {
+          "type" : "string"
+        },
+        "FilterGroups" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/FilterGroup"
+          }
+        },
+        "Webhook" : {
+          "type" : "boolean"
+        },
+        "ScopeConfiguration" : {
+          "$ref" : "#/definitions/ScopeConfiguration"
+        },
+        "PullRequestBuildPolicy" : {
+          "$ref" : "#/definitions/PullRequestBuildPolicy"
+        }
+      }
+    },
+    "BuildStatusConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Context" : {
+          "type" : "string"
+        },
+        "TargetUrl" : {
+          "type" : "string"
+        }
+      }
+    },
+    "GitSubmodulesConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FetchSubmodules" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "FetchSubmodules" ]
+    },
+    "DockerServer" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ComputeType" : {
+          "type" : "string"
+        },
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "ComputeType" ]
+    },
+    "S3LogsConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Status" : {
+          "type" : "string"
+        },
+        "EncryptionDisabled" : {
+          "type" : "boolean"
+        },
+        "Location" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Status" ]
+    },
+    "ProjectFleet" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FleetArn" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Artifacts",
-    "ServiceRole",
-    "Environment",
-    "Source"
-  ],
-  "typeName": "AWS::CodeBuild::Project"
+  "required" : [ "Artifacts", "ServiceRole", "Environment", "Source" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
 }

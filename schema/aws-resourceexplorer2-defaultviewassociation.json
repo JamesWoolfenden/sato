@@ -1,52 +1,35 @@
 {
-  "additionalProperties": false,
-  "description": "Definition of AWS::ResourceExplorer2::DefaultViewAssociation Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "resource-explorer-2:GetDefaultView",
-        "resource-explorer-2:AssociateDefaultView"
-      ]
+  "typeName" : "AWS::ResourceExplorer2::DefaultViewAssociation",
+  "description" : "Definition of AWS::ResourceExplorer2::DefaultViewAssociation Resource Type",
+  "properties" : {
+    "ViewArn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "resource-explorer-2:GetDefaultView",
-        "resource-explorer-2:DisassociateDefaultView"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "resource-explorer-2:GetDefaultView"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "resource-explorer-2:GetDefaultView",
-        "resource-explorer-2:AssociateDefaultView"
-      ]
+    "AssociatedAwsPrincipal" : {
+      "description" : "The AWS principal that the default view is associated with, used as the unique identifier for this resource.",
+      "type" : "string",
+      "pattern" : "^[0-9]{12}$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AssociatedAwsPrincipal"
-  ],
-  "properties": {
-    "AssociatedAwsPrincipal": {
-      "description": "The AWS principal that the default view is associated with, used as the unique identifier for this resource.",
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false
+  },
+  "required" : [ "ViewArn" ],
+  "primaryIdentifier" : [ "/properties/AssociatedAwsPrincipal" ],
+  "readOnlyProperties" : [ "/properties/AssociatedAwsPrincipal" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resource-explorer-2:GetDefaultView", "resource-explorer-2:AssociateDefaultView" ]
     },
-    "ViewArn": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "resource-explorer-2:GetDefaultView", "resource-explorer-2:AssociateDefaultView" ]
+    },
+    "read" : {
+      "permissions" : [ "resource-explorer-2:GetDefaultView" ]
+    },
+    "delete" : {
+      "permissions" : [ "resource-explorer-2:GetDefaultView", "resource-explorer-2:DisassociateDefaultView" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/AssociatedAwsPrincipal"
-  ],
-  "required": [
-    "ViewArn"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ResourceExplorer2::DefaultViewAssociation"
+  "additionalProperties" : false
 }

@@ -1,111 +1,94 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/KmsKeyId",
-    "/properties/ResourceIdentifier",
-    "/properties/DnsNameServers",
-    "/properties/ReplicationSubnetGroupIdentifier",
-    "/properties/PubliclyAccessible"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::DMS::ReplicationInstance",
+  "description" : "Resource Type definition for AWS::DMS::ReplicationInstance",
+  "additionalProperties" : false,
+  "properties" : {
+    "DnsNameServers" : {
+      "type" : "string"
+    },
+    "ReplicationInstanceIdentifier" : {
+      "type" : "string"
+    },
+    "EngineVersion" : {
+      "type" : "string"
+    },
+    "KmsKeyId" : {
+      "type" : "string"
+    },
+    "AvailabilityZone" : {
+      "type" : "string"
+    },
+    "PreferredMaintenanceWindow" : {
+      "type" : "string"
+    },
+    "AutoMinorVersionUpgrade" : {
+      "type" : "boolean"
+    },
+    "ReplicationSubnetGroupIdentifier" : {
+      "type" : "string"
+    },
+    "ReplicationInstancePrivateIpAddresses" : {
+      "type" : "string"
+    },
+    "AllocatedStorage" : {
+      "type" : "integer"
+    },
+    "ResourceIdentifier" : {
+      "type" : "string"
+    },
+    "VpcSecurityGroupIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "NetworkType" : {
+      "type" : "string"
+    },
+    "AllowMajorVersionUpgrade" : {
+      "type" : "boolean"
+    },
+    "ReplicationInstanceClass" : {
+      "type" : "string"
+    },
+    "PubliclyAccessible" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "MultiAZ" : {
+      "type" : "boolean"
+    },
+    "ReplicationInstancePublicIpAddresses" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::DMS::ReplicationInstance",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AllocatedStorage": {
-      "type": "integer"
-    },
-    "AllowMajorVersionUpgrade": {
-      "type": "boolean"
-    },
-    "AutoMinorVersionUpgrade": {
-      "type": "boolean"
-    },
-    "AvailabilityZone": {
-      "type": "string"
-    },
-    "DnsNameServers": {
-      "type": "string"
-    },
-    "EngineVersion": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "KmsKeyId": {
-      "type": "string"
-    },
-    "MultiAZ": {
-      "type": "boolean"
-    },
-    "NetworkType": {
-      "type": "string"
-    },
-    "PreferredMaintenanceWindow": {
-      "type": "string"
-    },
-    "PubliclyAccessible": {
-      "type": "boolean"
-    },
-    "ReplicationInstanceClass": {
-      "type": "string"
-    },
-    "ReplicationInstanceIdentifier": {
-      "type": "string"
-    },
-    "ReplicationInstancePrivateIpAddresses": {
-      "type": "string"
-    },
-    "ReplicationInstancePublicIpAddresses": {
-      "type": "string"
-    },
-    "ReplicationSubnetGroupIdentifier": {
-      "type": "string"
-    },
-    "ResourceIdentifier": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "VpcSecurityGroupIds": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/ReplicationInstancePublicIpAddresses",
-    "/properties/Id",
-    "/properties/ReplicationInstancePrivateIpAddresses"
-  ],
-  "required": [
-    "ReplicationInstanceClass"
-  ],
-  "typeName": "AWS::DMS::ReplicationInstance"
+  "required" : [ "ReplicationInstanceClass" ],
+  "createOnlyProperties" : [ "/properties/KmsKeyId", "/properties/ResourceIdentifier", "/properties/DnsNameServers", "/properties/ReplicationSubnetGroupIdentifier", "/properties/PubliclyAccessible" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/ReplicationInstancePublicIpAddresses", "/properties/Id", "/properties/ReplicationInstancePrivateIpAddresses" ]
 }

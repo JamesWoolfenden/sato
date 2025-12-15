@@ -1,189 +1,146 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/LoRaWAN"
-  ],
-  "definitions": {
-    "LoRaWANServiceProfile": {
-      "additionalProperties": false,
-      "properties": {
-        "AddGwMetadata": {
-          "type": "boolean"
+  "typeName" : "AWS::IoTWireless::ServiceProfile",
+  "description" : "An example resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "LoRaWANServiceProfile" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "UlRate" : {
+          "type" : "integer"
         },
-        "ChannelMask": {
-          "type": "string"
+        "UlBucketSize" : {
+          "type" : "integer"
         },
-        "DevStatusReqFreq": {
-          "type": "integer"
+        "UlRatePolicy" : {
+          "type" : "string"
         },
-        "DlBucketSize": {
-          "type": "integer"
+        "DlRate" : {
+          "type" : "integer"
         },
-        "DlRate": {
-          "type": "integer"
+        "DlBucketSize" : {
+          "type" : "integer"
         },
-        "DlRatePolicy": {
-          "type": "string"
+        "DlRatePolicy" : {
+          "type" : "string"
         },
-        "DrMax": {
-          "type": "integer"
+        "AddGwMetadata" : {
+          "type" : "boolean"
         },
-        "DrMin": {
-          "type": "integer"
+        "DevStatusReqFreq" : {
+          "type" : "integer"
         },
-        "HrAllowed": {
-          "type": "boolean"
+        "ReportDevStatusBattery" : {
+          "type" : "boolean"
         },
-        "MinGwDiversity": {
-          "type": "integer"
+        "ReportDevStatusMargin" : {
+          "type" : "boolean"
         },
-        "NwkGeoLoc": {
-          "type": "boolean"
+        "DrMin" : {
+          "type" : "integer"
         },
-        "PrAllowed": {
-          "type": "boolean"
+        "DrMax" : {
+          "type" : "integer"
         },
-        "RaAllowed": {
-          "type": "boolean"
+        "ChannelMask" : {
+          "type" : "string"
         },
-        "ReportDevStatusBattery": {
-          "type": "boolean"
+        "PrAllowed" : {
+          "type" : "boolean"
         },
-        "ReportDevStatusMargin": {
-          "type": "boolean"
+        "HrAllowed" : {
+          "type" : "boolean"
         },
-        "TargetPer": {
-          "type": "integer"
+        "RaAllowed" : {
+          "type" : "boolean"
         },
-        "UlBucketSize": {
-          "type": "integer"
+        "NwkGeoLoc" : {
+          "type" : "boolean"
         },
-        "UlRate": {
-          "type": "integer"
+        "TargetPer" : {
+          "type" : "integer"
         },
-        "UlRatePolicy": {
-          "type": "string"
+        "MinGwDiversity" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotwireless:CreateServiceProfile",
-        "iotwireless:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of service profile",
+      "type" : "string",
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "iotwireless:DeleteServiceProfile"
-      ]
+    "LoRaWAN" : {
+      "description" : "LoRaWAN supports all LoRa specific attributes for service profile for CreateServiceProfile operation",
+      "$ref" : "#/definitions/LoRaWANServiceProfile"
     },
-    "list": {
-      "permissions": [
-        "iotwireless:ListServiceProfiles",
-        "iotwireless:ListTagsForResource"
-      ]
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the service profile.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "maxItems" : 200,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "read": {
-      "permissions": [
-        "iotwireless:GetServiceProfile",
-        "iotwireless:ListTagsForResource"
-      ]
+    "Arn" : {
+      "description" : "Service profile Arn. Returned after successful create.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iotwireless:GetServiceProfile",
-        "iotwireless:TagResource",
-        "iotwireless:UntagResource"
-      ]
+    "Id" : {
+      "description" : "Service profile Id. Returned after successful create.",
+      "type" : "string",
+      "maxLength" : 256
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Service profile Arn. Returned after successful create.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/LoRaWAN/UlRate", "/properties/LoRaWAN/UlBucketSize", "/properties/LoRaWAN/UlRatePolicy", "/properties/LoRaWAN/DlRate", "/properties/LoRaWAN/DlBucketSize", "/properties/LoRaWAN/DlRatePolicy", "/properties/LoRaWAN/DevStatusReqFreq", "/properties/LoRaWAN/ReportDevStatusBattery", "/properties/LoRaWAN/ReportDevStatusMargin", "/properties/LoRaWAN/DrMin", "/properties/LoRaWAN/DrMax", "/properties/LoRaWAN/ChannelMask", "/properties/LoRaWAN/HrAllowed", "/properties/LoRaWAN/NwkGeoLoc", "/properties/LoRaWAN/TargetPer", "/properties/LoRaWAN/MinGwDiversity" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/LoRaWAN" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotwireless:TagResource", "iotwireless:UntagResource", "iotwireless:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotwireless:CreateServiceProfile", "iotwireless:TagResource" ]
     },
-    "Id": {
-      "description": "Service profile Id. Returned after successful create.",
-      "maxLength": 256,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iotwireless:GetServiceProfile", "iotwireless:TagResource", "iotwireless:UntagResource" ]
     },
-    "LoRaWAN": {
-      "$ref": "#/definitions/LoRaWANServiceProfile",
-      "description": "LoRaWAN supports all LoRa specific attributes for service profile for CreateServiceProfile operation"
+    "read" : {
+      "permissions" : [ "iotwireless:GetServiceProfile", "iotwireless:ListTagsForResource" ]
     },
-    "Name": {
-      "description": "Name of service profile",
-      "maxLength": 256,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotwireless:DeleteServiceProfile" ]
     },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the service profile.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iotwireless:ListServiceProfiles", "iotwireless:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/LoRaWAN/UlRate",
-    "/properties/LoRaWAN/UlBucketSize",
-    "/properties/LoRaWAN/UlRatePolicy",
-    "/properties/LoRaWAN/DlRate",
-    "/properties/LoRaWAN/DlBucketSize",
-    "/properties/LoRaWAN/DlRatePolicy",
-    "/properties/LoRaWAN/DevStatusReqFreq",
-    "/properties/LoRaWAN/ReportDevStatusBattery",
-    "/properties/LoRaWAN/ReportDevStatusMargin",
-    "/properties/LoRaWAN/DrMin",
-    "/properties/LoRaWAN/DrMax",
-    "/properties/LoRaWAN/ChannelMask",
-    "/properties/LoRaWAN/HrAllowed",
-    "/properties/LoRaWAN/NwkGeoLoc",
-    "/properties/LoRaWAN/TargetPer",
-    "/properties/LoRaWAN/MinGwDiversity"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotwireless:TagResource",
-      "iotwireless:UntagResource",
-      "iotwireless:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTWireless::ServiceProfile"
+  }
 }

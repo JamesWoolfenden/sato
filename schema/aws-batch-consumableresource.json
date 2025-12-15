@@ -1,122 +1,88 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ConsumableResourceName",
-    "/properties/ResourceType",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "ResourceArn": {
-      "description": "ARN of the Consumable Resource.",
-      "type": "string"
+  "typeName" : "AWS::Batch::ConsumableResource",
+  "description" : "Resource Type definition for AWS::Batch::ConsumableResource",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-batch.git",
+  "definitions" : {
+    "ResourceArn" : {
+      "description" : "ARN of the Consumable Resource.",
+      "type" : "string"
     },
-    "ResourceType": {
-      "description": "Type of Consumable Resource.",
-      "enum": [
-        "REPLENISHABLE",
-        "NON_REPLENISHABLE"
-      ],
-      "type": "string"
+    "ResourceType" : {
+      "description" : "Type of Consumable Resource.",
+      "type" : "string",
+      "enum" : [ "REPLENISHABLE", "NON_REPLENISHABLE" ]
     }
   },
-  "description": "Resource Type definition for AWS::Batch::ConsumableResource",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "Batch:CreateConsumableResource",
-        "Batch:TagResource"
-      ]
+  "properties" : {
+    "ConsumableResourceName" : {
+      "description" : "Name of ConsumableResource.",
+      "type" : "string",
+      "pattern" : ""
     },
-    "delete": {
-      "permissions": [
-        "Batch:DescribeConsumableResource",
-        "Batch:DeleteConsumableResource"
-      ]
+    "ConsumableResourceArn" : {
+      "$ref" : "#/definitions/ResourceArn"
     },
-    "list": {
-      "permissions": [
-        "Batch:ListConsumableResources"
-      ]
+    "TotalQuantity" : {
+      "description" : "Total Quantity of ConsumableResource.",
+      "type" : "integer",
+      "format" : "int64"
     },
-    "read": {
-      "permissions": [
-        "Batch:DescribeConsumableResource"
-      ]
+    "InUseQuantity" : {
+      "description" : "In-use Quantity of ConsumableResource.",
+      "type" : "integer",
+      "format" : "int64"
     },
-    "update": {
-      "permissions": [
-        "Batch:UpdateConsumableResource",
-        "Batch:TagResource",
-        "Batch:UnTagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ConsumableResourceArn"
-  ],
-  "properties": {
-    "AvailableQuantity": {
-      "description": "Available Quantity of ConsumableResource.",
-      "format": "int64",
-      "type": "integer"
+    "AvailableQuantity" : {
+      "description" : "Available Quantity of ConsumableResource.",
+      "type" : "integer",
+      "format" : "int64"
     },
-    "ConsumableResourceArn": {
-      "$ref": "#/definitions/ResourceArn"
+    "ResourceType" : {
+      "$ref" : "#/definitions/ResourceType"
     },
-    "ConsumableResourceName": {
-      "description": "Name of ConsumableResource.",
-      "pattern": "",
-      "type": "string"
+    "CreatedAt" : {
+      "type" : "integer",
+      "format" : "int64"
     },
-    "CreatedAt": {
-      "format": "int64",
-      "type": "integer"
-    },
-    "InUseQuantity": {
-      "description": "In-use Quantity of ConsumableResource.",
-      "format": "int64",
-      "type": "integer"
-    },
-    "ResourceType": {
-      "$ref": "#/definitions/ResourceType"
-    },
-    "Tags": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "patternProperties": {
-        ".*": {
-          "type": "string"
+    "Tags" : {
+      "type" : "object",
+      "description" : "A key-value pair to associate with a resource.",
+      "patternProperties" : {
+        ".*" : {
+          "type" : "string"
         }
       },
-      "type": "object"
-    },
-    "TotalQuantity": {
-      "description": "Total Quantity of ConsumableResource.",
-      "format": "int64",
-      "type": "integer"
+      "additionalProperties" : false
     }
   },
-  "readOnlyProperties": [
-    "/properties/ConsumableResourceArn",
-    "/properties/CreatedAt",
-    "/properties/InUseQuantity",
-    "/properties/AvailableQuantity"
-  ],
-  "required": [
-    "ResourceType",
-    "TotalQuantity"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-batch.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "Batch:TagResource",
-      "Batch:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
+  "required" : [ "ResourceType", "TotalQuantity" ],
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "Batch:TagResource", "Batch:UntagResource" ]
   },
-  "typeName": "AWS::Batch::ConsumableResource"
+  "primaryIdentifier" : [ "/properties/ConsumableResourceArn" ],
+  "createOnlyProperties" : [ "/properties/ConsumableResourceName", "/properties/ResourceType", "/properties/Tags" ],
+  "readOnlyProperties" : [ "/properties/ConsumableResourceArn", "/properties/CreatedAt", "/properties/InUseQuantity", "/properties/AvailableQuantity" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "Batch:CreateConsumableResource", "Batch:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "Batch:DescribeConsumableResource" ]
+    },
+    "update" : {
+      "permissions" : [ "Batch:UpdateConsumableResource", "Batch:TagResource", "Batch:UnTagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "Batch:DescribeConsumableResource", "Batch:DeleteConsumableResource" ]
+    },
+    "list" : {
+      "permissions" : [ "Batch:ListConsumableResources" ]
+    }
+  }
 }

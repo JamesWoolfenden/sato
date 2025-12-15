@@ -1,168 +1,134 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Source"
-  ],
-  "definitions": {
-    "ChannelArn": {
-      "description": "The Amazon Resource Name (ARN) of a channel.",
-      "maxLength": 256,
-      "minLength": 3,
-      "pattern": "(^[a-zA-Z0-9._/\\-:]+$)",
-      "type": "string"
-    },
-    "ChannelName": {
-      "description": "The name of the channel.",
-      "maxLength": 128,
-      "minLength": 3,
-      "pattern": "(^[a-zA-Z0-9._\\-]+$)",
-      "type": "string"
-    },
-    "Destination": {
-      "additionalProperties": false,
-      "description": "The resource that receives events arriving from a channel.",
-      "properties": {
-        "Location": {
-          "description": "The ARN of a resource that receives events from a channel.",
-          "maxLength": 1024,
-          "minLength": 3,
-          "pattern": "(^[a-zA-Z0-9._/\\-:]+$)",
-          "type": "string"
+  "typeName" : "AWS::CloudTrail::Channel",
+  "description" : "A channel receives events from a specific source (such as an on-premises storage solution or application, or a partner event data source), and delivers the events to one or more event data stores. You use channels to ingest events into CloudTrail from sources outside AWS.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
+  "definitions" : {
+    "Destination" : {
+      "description" : "The resource that receives events arriving from a channel.",
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "description" : "The type of destination for events arriving from a channel.",
+          "type" : "string",
+          "enum" : [ "EVENT_DATA_STORE" ]
         },
-        "Type": {
-          "description": "The type of destination for events arriving from a channel.",
-          "enum": [
-            "EVENT_DATA_STORE"
-          ],
-          "type": "string"
+        "Location" : {
+          "description" : "The ARN of a resource that receives events from a channel.",
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 1024,
+          "pattern" : "(^[a-zA-Z0-9._/\\-:]+$)"
         }
       },
-      "required": [
-        "Type",
-        "Location"
-      ],
-      "type": "object"
+      "required" : [ "Type", "Location" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "UUID" : {
+      "type" : "string",
+      "minLength" : 36,
+      "maxLength" : 36,
+      "pattern" : "(^[a-f0-9\\-]+$)"
+    },
+    "Timestamp" : {
+      "type" : "string"
+    },
+    "ChannelArn" : {
+      "description" : "The Amazon Resource Name (ARN) of a channel.",
+      "type" : "string",
+      "minLength" : 3,
+      "maxLength" : 256,
+      "pattern" : "(^[a-zA-Z0-9._/\\-:]+$)"
+    },
+    "ChannelName" : {
+      "description" : "The name of the channel.",
+      "type" : "string",
+      "minLength" : 3,
+      "maxLength" : 128,
+      "pattern" : "(^[a-zA-Z0-9._\\-]+$)"
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "Timestamp": {
-      "type": "string"
-    },
-    "UUID": {
-      "maxLength": 36,
-      "minLength": 36,
-      "pattern": "(^[a-f0-9\\-]+$)",
-      "type": "string"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "A channel receives events from a specific source (such as an on-premises storage solution or application, or a partner event data source), and delivers the events to one or more event data stores. You use channels to ingest events into CloudTrail from sources outside AWS.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "CloudTrail:CreateChannel",
-        "CloudTrail:AddTags"
-      ]
+  "properties" : {
+    "Name" : {
+      "$ref" : "#/definitions/ChannelName"
     },
-    "delete": {
-      "permissions": [
-        "CloudTrail:DeleteChannel"
-      ]
+    "Source" : {
+      "description" : "The ARN of an on-premises storage solution or application, or a partner event source.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "(.*)"
     },
-    "list": {
-      "permissions": [
-        "CloudTrail:ListChannels"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "CloudTrail:GetChannel",
-        "CloudTrail:ListChannels",
-        "CloudTrail:ListTags"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "CloudTrail:UpdateChannel",
-        "CloudTrail:GetChannel",
-        "CloudTrail:AddTags",
-        "CloudTrail:RemoveTags"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ChannelArn"
-  ],
-  "properties": {
-    "ChannelArn": {
-      "$ref": "#/definitions/ChannelArn"
-    },
-    "Destinations": {
-      "description": "One or more resources to which events arriving through a channel are logged and stored.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Destination"
+    "Destinations" : {
+      "description" : "One or more resources to which events arriving through a channel are logged and stored.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Destination"
       },
-      "maxItems": 10,
-      "type": "array",
-      "uniqueItems": true
+      "maxItems" : 10,
+      "uniqueItems" : true,
+      "insertionOrder" : false
     },
-    "Name": {
-      "$ref": "#/definitions/ChannelName"
+    "ChannelArn" : {
+      "$ref" : "#/definitions/ChannelArn"
     },
-    "Source": {
-      "description": "The ARN of an on-premises storage solution or application, or a partner event source.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "(.*)",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/ChannelArn"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cloudtrail.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "CloudTrail:AddTags",
-      "CloudTrail:RemoveTags",
-      "CloudTrail:ListTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ ],
+  "readOnlyProperties" : [ "/properties/ChannelArn" ],
+  "createOnlyProperties" : [ "/properties/Source" ],
+  "primaryIdentifier" : [ "/properties/ChannelArn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "CloudTrail:AddTags", "CloudTrail:RemoveTags", "CloudTrail:ListTags" ]
   },
-  "typeName": "AWS::CloudTrail::Channel"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "CloudTrail:CreateChannel", "CloudTrail:AddTags" ]
+    },
+    "read" : {
+      "permissions" : [ "CloudTrail:GetChannel", "CloudTrail:ListChannels", "CloudTrail:ListTags" ]
+    },
+    "update" : {
+      "permissions" : [ "CloudTrail:UpdateChannel", "CloudTrail:GetChannel", "CloudTrail:AddTags", "CloudTrail:RemoveTags" ]
+    },
+    "delete" : {
+      "permissions" : [ "CloudTrail:DeleteChannel" ]
+    },
+    "list" : {
+      "permissions" : [ "CloudTrail:ListChannels" ]
+    }
+  },
+  "additionalProperties" : false
 }

@@ -1,192 +1,145 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PolicyArn",
-    "/properties/LastUpdatedDefinitionHash",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "CreatedAt": {
-      "description": "Time this policy version was created",
-      "format": "date-time",
-      "type": "string"
+  "typeName" : "AWS::Bedrock::AutomatedReasoningPolicyVersion",
+  "description" : "Definition of AWS::Bedrock::AutomatedReasoningPolicyVersion Resource Type",
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/PolicyArn", "/properties/Version" ],
+  "readOnlyProperties" : [ "/properties/Version", "/properties/Name", "/properties/Description", "/properties/CreatedAt", "/properties/UpdatedAt", "/properties/PolicyId", "/properties/DefinitionHash" ],
+  "createOnlyProperties" : [ "/properties/PolicyArn", "/properties/LastUpdatedDefinitionHash", "/properties/Tags" ],
+  "writeOnlyProperties" : [ "/properties/LastUpdatedDefinitionHash" ],
+  "definitions" : {
+    "PolicyArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}$",
+      "minLength" : 1,
+      "maxLength" : 2048,
+      "description" : "Arn of the policy "
     },
-    "DefinitionHash": {
-      "description": "The hash for this version",
-      "maxLength": 128,
-      "minLength": 128,
-      "pattern": "^[0-9a-z]{128}$",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^[0-9a-zA-Z-_ ]+$",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "description" : "The name inherited from the policy"
     },
-    "Description": {
-      "description": "The description inherited from the policy",
-      "maxLength": 1024,
-      "pattern": "^[\\s\\S]+$",
-      "type": "string"
+    "Description" : {
+      "type" : "string",
+      "pattern" : "^[\\s\\S]+$",
+      "maxLength" : 1024,
+      "description" : "The description inherited from the policy"
     },
-    "Name": {
-      "description": "The name inherited from the policy",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[0-9a-zA-Z-_ ]+$",
-      "type": "string"
+    "Version" : {
+      "type" : "string",
+      "pattern" : "^([1-9][0-9]{0,11})$",
+      "maxLength" : 12,
+      "description" : "The version of the policy"
     },
-    "PolicyArn": {
-      "description": "Arn of the policy ",
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^arn:aws(-[^:]+)?:bedrock:[a-z0-9-]{1,20}:[0-9]{12}:automated-reasoning-policy\\/[a-z0-9]{12}$",
-      "type": "string"
+    "DefinitionHash" : {
+      "type" : "string",
+      "pattern" : "^[0-9a-z]{128}$",
+      "minLength" : 128,
+      "maxLength" : 128,
+      "description" : "The hash for this version"
     },
-    "PolicyId": {
-      "description": "The id of the associated policy",
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[a-z0-9]{12}$",
-      "type": "string"
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time",
+      "description" : "Time this policy version was created"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "Definition of the key/value pair for a tag",
-      "properties": {
-        "Key": {
-          "description": "Tag Key",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+    "UpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time",
+      "description" : "Time this policy was last updated"
+    },
+    "PolicyId" : {
+      "type" : "string",
+      "pattern" : "^[a-z0-9]{12}$",
+      "minLength" : 1,
+      "maxLength" : 2048,
+      "description" : "The id of the associated policy"
+    },
+    "Tag" : {
+      "type" : "object",
+      "description" : "Definition of the key/value pair for a tag",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$",
+          "description" : "Tag Key"
         },
-        "Value": {
-          "description": "Tag Value",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$",
+          "description" : "Tag Value"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
-    },
-    "UpdatedAt": {
-      "description": "Time this policy was last updated",
-      "format": "date-time",
-      "type": "string"
-    },
-    "Version": {
-      "description": "The version of the policy",
-      "maxLength": 12,
-      "pattern": "^([1-9][0-9]{0,11})$",
-      "type": "string"
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Definition of AWS::Bedrock::AutomatedReasoningPolicyVersion Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock:CreateAutomatedReasoningPolicyVersion",
-        "bedrock:GetAutomatedReasoningPolicy",
-        "bedrock:ExportAutomatedReasoningPolicyVersion",
-        "bedrock:TagResource",
-        "bedrock:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "PolicyArn" : {
+      "$ref" : "#/definitions/PolicyArn"
     },
-    "delete": {
-      "permissions": [
-        "bedrock:DeleteAutomatedReasoningPolicy",
-        "bedrock:GetAutomatedReasoningPolicy"
-      ]
+    "Name" : {
+      "$ref" : "#/definitions/Name"
     },
-    "list": {
-      "permissions": [
-        "bedrock:ListAutomatedReasoningPolicies"
-      ]
+    "Description" : {
+      "$ref" : "#/definitions/Description"
     },
-    "read": {
-      "permissions": [
-        "bedrock:GetAutomatedReasoningPolicy",
-        "bedrock:ExportAutomatedReasoningPolicyVersion",
-        "bedrock:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+    "Version" : {
+      "$ref" : "#/definitions/Version"
+    },
+    "DefinitionHash" : {
+      "$ref" : "#/definitions/DefinitionHash"
+    },
+    "LastUpdatedDefinitionHash" : {
+      "$ref" : "#/definitions/DefinitionHash"
+    },
+    "CreatedAt" : {
+      "$ref" : "#/definitions/CreatedAt"
+    },
+    "UpdatedAt" : {
+      "$ref" : "#/definitions/UpdatedAt"
+    },
+    "PolicyId" : {
+      "$ref" : "#/definitions/PolicyId"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
     }
   },
-  "primaryIdentifier": [
-    "/properties/PolicyArn",
-    "/properties/Version"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "$ref": "#/definitions/CreatedAt"
+  "required" : [ "PolicyArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock:CreateAutomatedReasoningPolicyVersion", "bedrock:GetAutomatedReasoningPolicy", "bedrock:ExportAutomatedReasoningPolicyVersion", "bedrock:TagResource", "bedrock:ListTagsForResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
     },
-    "DefinitionHash": {
-      "$ref": "#/definitions/DefinitionHash"
+    "read" : {
+      "permissions" : [ "bedrock:GetAutomatedReasoningPolicy", "bedrock:ExportAutomatedReasoningPolicyVersion", "bedrock:ListTagsForResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
     },
-    "Description": {
-      "$ref": "#/definitions/Description"
+    "delete" : {
+      "permissions" : [ "bedrock:DeleteAutomatedReasoningPolicy", "bedrock:GetAutomatedReasoningPolicy" ]
     },
-    "LastUpdatedDefinitionHash": {
-      "$ref": "#/definitions/DefinitionHash"
-    },
-    "Name": {
-      "$ref": "#/definitions/Name"
-    },
-    "PolicyArn": {
-      "$ref": "#/definitions/PolicyArn"
-    },
-    "PolicyId": {
-      "$ref": "#/definitions/PolicyId"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
-    },
-    "UpdatedAt": {
-      "$ref": "#/definitions/UpdatedAt"
-    },
-    "Version": {
-      "$ref": "#/definitions/Version"
+    "list" : {
+      "permissions" : [ "bedrock:ListAutomatedReasoningPolicies" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Version",
-    "/properties/Name",
-    "/properties/Description",
-    "/properties/CreatedAt",
-    "/properties/UpdatedAt",
-    "/properties/PolicyId",
-    "/properties/DefinitionHash"
-  ],
-  "required": [
-    "PolicyArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "bedrock:TagResource",
-      "bedrock:ListTagsForResource",
-      "bedrock:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
-  },
-  "typeName": "AWS::Bedrock::AutomatedReasoningPolicyVersion",
-  "writeOnlyProperties": [
-    "/properties/LastUpdatedDefinitionHash"
-  ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "bedrock:TagResource", "bedrock:ListTagsForResource", "bedrock:UntagResource" ]
+  }
 }

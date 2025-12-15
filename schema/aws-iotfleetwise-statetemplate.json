@@ -1,177 +1,137 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/SignalCatalogArn"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::IoTFleetWise::StateTemplate",
+  "description" : "Definition of AWS::IoTFleetWise::StateTemplate Resource Type",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::IoTFleetWise::StateTemplate Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotfleetwise:GetStateTemplate",
-        "iotfleetwise:CreateStateTemplate",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iotfleetwise:DeleteStateTemplate",
-        "iotfleetwise:GetStateTemplate"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "list": {
-      "permissions": [
-        "iotfleetwise:ListStateTemplates"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
     },
-    "read": {
-      "permissions": [
-        "iotfleetwise:GetStateTemplate",
-        "iotfleetwise:ListTagsForResource"
-      ]
+    "LastModificationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "update": {
-      "permissions": [
-        "iotfleetwise:UpdateStateTemplate",
-        "iotfleetwise:GetStateTemplate",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource",
-        "iotfleetwise:UntagResource"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z\\d\\-_:]+$"
+    },
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 26,
+      "minLength" : 26,
+      "pattern" : "^[A-Z0-9]+$"
+    },
+    "SignalCatalogArn" : {
+      "type" : "string"
+    },
+    "StateTemplateProperties" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "maxLength" : 150,
+        "minLength" : 1,
+        "pattern" : "^[a-zA-Z0-9_.]+$"
+      },
+      "maxItems" : 500,
+      "minItems" : 1
+    },
+    "DataExtraDimensions" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "maxLength" : 150,
+        "minLength" : 1,
+        "pattern" : "^[a-zA-Z0-9_.]+$"
+      },
+      "maxItems" : 5,
+      "minItems" : 0
+    },
+    "MetadataExtraDimensions" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "maxLength" : 150,
+        "minLength" : 1,
+        "pattern" : "^[a-zA-Z0-9_.]+$"
+      },
+      "maxItems" : 5,
+      "minItems" : 0
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 50,
+      "minItems" : 0
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "required" : [ "Name", "SignalCatalogArn", "StateTemplateProperties" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id", "/properties/CreationTime", "/properties/LastModificationTime" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/SignalCatalogArn" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotfleetwise:GetStateTemplate", "iotfleetwise:CreateStateTemplate", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource" ]
     },
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iotfleetwise:GetStateTemplate", "iotfleetwise:ListTagsForResource" ]
     },
-    "DataExtraDimensions": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 150,
-        "minLength": 1,
-        "pattern": "^[a-zA-Z0-9_.]+$",
-        "type": "string"
-      },
-      "maxItems": 5,
-      "minItems": 0,
-      "type": "array"
+    "update" : {
+      "permissions" : [ "iotfleetwise:UpdateStateTemplate", "iotfleetwise:GetStateTemplate", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource", "iotfleetwise:UntagResource" ]
     },
-    "Description": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotfleetwise:DeleteStateTemplate", "iotfleetwise:GetStateTemplate" ]
     },
-    "Id": {
-      "maxLength": 26,
-      "minLength": 26,
-      "pattern": "^[A-Z0-9]+$",
-      "type": "string"
-    },
-    "LastModificationTime": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "MetadataExtraDimensions": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 150,
-        "minLength": 1,
-        "pattern": "^[a-zA-Z0-9_.]+$",
-        "type": "string"
-      },
-      "maxItems": 5,
-      "minItems": 0,
-      "type": "array"
-    },
-    "Name": {
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z\\d\\-_:]+$",
-      "type": "string"
-    },
-    "SignalCatalogArn": {
-      "type": "string"
-    },
-    "StateTemplateProperties": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 150,
-        "minLength": 1,
-        "pattern": "^[a-zA-Z0-9_.]+$",
-        "type": "string"
-      },
-      "maxItems": 500,
-      "minItems": 1,
-      "type": "array"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iotfleetwise:ListStateTemplates" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id",
-    "/properties/CreationTime",
-    "/properties/LastModificationTime"
-  ],
-  "required": [
-    "Name",
-    "SignalCatalogArn",
-    "StateTemplateProperties"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotfleetwise:ListTagsForResource",
-      "iotfleetwise:TagResource",
-      "iotfleetwise:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTFleetWise::StateTemplate"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource", "iotfleetwise:UntagResource" ]
+  }
 }

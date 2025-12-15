@@ -1,101 +1,68 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/ResourceArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResourceArn"
-  ],
-  "definitions": {
-    "PhysicalId": {
-      "description": "The Physical ID of the resource policy.",
-      "type": "string"
+  "typeName" : "AWS::Lex::ResourcePolicy",
+  "description" : "Resource Type definition for a resource policy with specified policy statements that attaches to a Lex bot or bot alias.",
+  "sourceUrl" : "https://docs.aws.amazon.com/lexv2/latest/dg/security_iam_service-with-iam.html#security_iam_service-with-iam-resource-based-policies",
+  "definitions" : {
+    "ResourceArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the bot or bot alias that the resource policy is attached to.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1011
     },
-    "Policy": {
-      "description": "A resource policy to add to the resource. The policy is a JSON structure following the IAM syntax that contains one or more statements that define the policy.",
-      "type": "object"
+    "Policy" : {
+      "description" : "A resource policy to add to the resource. The policy is a JSON structure following the IAM syntax that contains one or more statements that define the policy.",
+      "type" : "object"
     },
-    "ResourceArn": {
-      "description": "The Amazon Resource Name (ARN) of the bot or bot alias that the resource policy is attached to.",
-      "maxLength": 1011,
-      "minLength": 1,
-      "type": "string"
+    "RevisionId" : {
+      "description" : "The current revision of the resource policy. Use the revision ID to make sure that you are updating the most current version of a resource policy when you add a policy statement to a resource, delete a resource, or update a resource.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 5,
+      "pattern" : "^[0-9]+$"
     },
-    "RevisionId": {
-      "description": "The current revision of the resource policy. Use the revision ID to make sure that you are updating the most current version of a resource policy when you add a policy statement to a resource, delete a resource, or update a resource.",
-      "maxLength": 5,
-      "minLength": 1,
-      "pattern": "^[0-9]+$",
-      "type": "string"
+    "PhysicalId" : {
+      "description" : "The Physical ID of the resource policy.",
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for a resource policy with specified policy statements that attaches to a Lex bot or bot alias.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lex:CreateResourcePolicy",
-        "lex:DescribeResourcePolicy",
-        "lex:CreateResourcePolicyStatement"
-      ]
+  "properties" : {
+    "ResourceArn" : {
+      "$ref" : "#/definitions/ResourceArn"
     },
-    "delete": {
-      "permissions": [
-        "lex:DeleteResourcePolicy",
-        "lex:DescribeResourcePolicy",
-        "lex:DeleteResourcePolicyStatement"
-      ]
+    "RevisionId" : {
+      "$ref" : "#/definitions/RevisionId"
     },
-    "list": {
-      "permissions": [
-        "lex:DescribeResourcePolicy"
-      ]
+    "Policy" : {
+      "$ref" : "#/definitions/Policy"
     },
-    "read": {
-      "permissions": [
-        "lex:DescribeResourcePolicy"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "lex:CreateResourcePolicy",
-        "lex:UpdateResourcePolicy",
-        "lex:DescribeResourcePolicy",
-        "lex:DeleteResourcePolicy",
-        "lex:CreateResourcePolicyStatement",
-        "lex:DeleteResourcePolicyStatement"
-      ]
+    "Id" : {
+      "$ref" : "#/definitions/PhysicalId"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "$ref": "#/definitions/PhysicalId"
+  "additionalProperties" : false,
+  "required" : [ "Policy", "ResourceArn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalIdentifiers" : [ [ "/properties/ResourceArn" ] ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/RevisionId" ],
+  "createOnlyProperties" : [ "/properties/ResourceArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lex:CreateResourcePolicy", "lex:DescribeResourcePolicy", "lex:CreateResourcePolicyStatement" ]
     },
-    "Policy": {
-      "$ref": "#/definitions/Policy"
+    "read" : {
+      "permissions" : [ "lex:DescribeResourcePolicy" ]
     },
-    "ResourceArn": {
-      "$ref": "#/definitions/ResourceArn"
+    "update" : {
+      "permissions" : [ "lex:CreateResourcePolicy", "lex:UpdateResourcePolicy", "lex:DescribeResourcePolicy", "lex:DeleteResourcePolicy", "lex:CreateResourcePolicyStatement", "lex:DeleteResourcePolicyStatement" ]
     },
-    "RevisionId": {
-      "$ref": "#/definitions/RevisionId"
+    "delete" : {
+      "permissions" : [ "lex:DeleteResourcePolicy", "lex:DescribeResourcePolicy", "lex:DeleteResourcePolicyStatement" ]
+    },
+    "list" : {
+      "permissions" : [ "lex:DescribeResourcePolicy" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/RevisionId"
-  ],
-  "required": [
-    "Policy",
-    "ResourceArn"
-  ],
-  "sourceUrl": "https://docs.aws.amazon.com/lexv2/latest/dg/security_iam_service-with-iam.html#security_iam_service-with-iam-resource-based-policies",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Lex::ResourcePolicy"
+  "tagging" : {
+    "taggable" : false
+  }
 }

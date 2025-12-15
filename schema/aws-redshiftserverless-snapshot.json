@@ -1,203 +1,138 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/NamespaceName",
-    "/properties/SnapshotName",
-    "/properties/Tags",
-    "/properties/Tags/*/Key",
-    "/properties/Tags/*/Value"
-  ],
-  "definitions": {
-    "Snapshot": {
-      "additionalProperties": false,
-      "properties": {
-        "AdminUsername": {
-          "type": "string"
+  "typeName" : "AWS::RedshiftServerless::Snapshot",
+  "description" : "Resource Type definition for AWS::RedshiftServerless::Snapshot Resource Type.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
+  "definitions" : {
+    "SnapshotStatus" : {
+      "type" : "string",
+      "enum" : [ "AVAILABLE", "CREATING", "DELETED", "CANCELLED", "FAILED", "COPYING" ]
+    },
+    "Snapshot" : {
+      "type" : "object",
+      "properties" : {
+        "NamespaceArn" : {
+          "type" : "string"
         },
-        "KmsKeyId": {
-          "type": "string"
+        "NamespaceName" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 3,
+          "pattern" : "^[a-z0-9-]+$"
         },
-        "NamespaceArn": {
-          "type": "string"
+        "SnapshotName" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 3,
+          "pattern" : "^[a-z0-9-]+$"
         },
-        "NamespaceName": {
-          "maxLength": 64,
-          "minLength": 3,
-          "pattern": "^[a-z0-9-]+$",
-          "type": "string"
+        "SnapshotCreateTime" : {
+          "type" : "string"
         },
-        "OwnerAccount": {
-          "type": "string"
+        "Status" : {
+          "$ref" : "#/definitions/SnapshotStatus"
         },
-        "RetentionPeriod": {
-          "type": "integer"
+        "AdminUsername" : {
+          "type" : "string"
         },
-        "SnapshotArn": {
-          "type": "string"
+        "KmsKeyId" : {
+          "type" : "string"
         },
-        "SnapshotCreateTime": {
-          "type": "string"
+        "OwnerAccount" : {
+          "type" : "string"
         },
-        "SnapshotName": {
-          "maxLength": 64,
-          "minLength": 3,
-          "pattern": "^[a-z0-9-]+$",
-          "type": "string"
+        "RetentionPeriod" : {
+          "type" : "integer"
         },
-        "Status": {
-          "$ref": "#/definitions/SnapshotStatus"
+        "SnapshotArn" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SnapshotStatus": {
-      "enum": [
-        "AVAILABLE",
-        "CREATING",
-        "DELETED",
-        "CANCELLED",
-        "FAILED",
-        "COPYING"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::RedshiftServerless::Snapshot Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "redshift-serverless:CreateSnapshot",
-        "redshift-serverless:GetSnapshot",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:TagResource",
-        "redshift-serverless:GetNamespace"
-      ]
+  "properties" : {
+    "SnapshotName" : {
+      "description" : "The name of the snapshot.",
+      "type" : "string",
+      "pattern" : "^(?=^[a-z0-9-]+$).{3,64}$",
+      "maxLength" : 64,
+      "minLength" : 3
     },
-    "delete": {
-      "permissions": [
-        "redshift-serverless:DeleteSnapshot",
-        "redshift-serverless:GetSnapshot",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:UntagResource",
-        "redshift-serverless:GetNamespace"
-      ]
+    "NamespaceName" : {
+      "description" : "The namespace the snapshot is associated with.",
+      "type" : "string",
+      "pattern" : "^(?=^[a-z0-9-]+$).{3,64}$",
+      "maxLength" : 64,
+      "minLength" : 3
     },
-    "list": {
-      "permissions": [
-        "redshift-serverless:ListSnapshots",
-        "redshift-serverless:GetSnapshot",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:GetNamespace"
-      ]
+    "OwnerAccount" : {
+      "description" : "The owner account of the snapshot.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "redshift-serverless:GetSnapshot",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:GetNamespace"
-      ]
+    "RetentionPeriod" : {
+      "description" : "The retention period of the snapshot.",
+      "type" : "integer"
     },
-    "update": {
-      "permissions": [
-        "redshift-serverless:UpdateSnapshot",
-        "redshift-serverless:GetSnapshot",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:TagResource",
-        "redshift-serverless:UntagResource",
-        "redshift-serverless:GetNamespace"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/SnapshotName"
-  ],
-  "properties": {
-    "NamespaceName": {
-      "description": "The namespace the snapshot is associated with.",
-      "maxLength": 64,
-      "minLength": 3,
-      "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
-      "type": "string"
-    },
-    "OwnerAccount": {
-      "description": "The owner account of the snapshot.",
-      "type": "string"
-    },
-    "RetentionPeriod": {
-      "description": "The retention period of the snapshot.",
-      "type": "integer"
-    },
-    "Snapshot": {
-      "$ref": "#/definitions/Snapshot",
-      "description": "Definition for snapshot resource"
-    },
-    "SnapshotName": {
-      "description": "The name of the snapshot.",
-      "maxLength": 64,
-      "minLength": 3,
-      "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0
+    },
+    "Snapshot" : {
+      "description" : "Definition for snapshot resource",
+      "$ref" : "#/definitions/Snapshot"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Snapshot",
-    "/properties/OwnerAccount",
-    "/properties/Snapshot/SnapshotName",
-    "/properties/Snapshot/NamespaceName",
-    "/properties/Snapshot/NamespaceArn",
-    "/properties/Snapshot/SnapshotArn",
-    "/properties/Snapshot/SnapshotCreateTime",
-    "/properties/Snapshot/Status",
-    "/properties/Snapshot/AdminUsername",
-    "/properties/Snapshot/KmsKeyId",
-    "/properties/Snapshot/OwnerAccount",
-    "/properties/Snapshot/RetentionPeriod"
-  ],
-  "required": [
-    "SnapshotName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "redshift-serverless:ListTagsForResource",
-      "redshift-serverless:TagResource",
-      "redshift-serverless:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:UntagResource" ]
   },
-  "typeName": "AWS::RedshiftServerless::Snapshot"
+  "required" : [ "SnapshotName" ],
+  "createOnlyProperties" : [ "/properties/NamespaceName", "/properties/SnapshotName", "/properties/Tags", "/properties/Tags/*/Key", "/properties/Tags/*/Value" ],
+  "readOnlyProperties" : [ "/properties/Snapshot", "/properties/OwnerAccount", "/properties/Snapshot/SnapshotName", "/properties/Snapshot/NamespaceName", "/properties/Snapshot/NamespaceArn", "/properties/Snapshot/SnapshotArn", "/properties/Snapshot/SnapshotCreateTime", "/properties/Snapshot/Status", "/properties/Snapshot/AdminUsername", "/properties/Snapshot/KmsKeyId", "/properties/Snapshot/OwnerAccount", "/properties/Snapshot/RetentionPeriod" ],
+  "primaryIdentifier" : [ "/properties/SnapshotName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "redshift-serverless:CreateSnapshot", "redshift-serverless:GetSnapshot", "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:GetNamespace" ]
+    },
+    "read" : {
+      "permissions" : [ "redshift-serverless:GetSnapshot", "redshift-serverless:ListTagsForResource", "redshift-serverless:GetNamespace" ]
+    },
+    "update" : {
+      "permissions" : [ "redshift-serverless:UpdateSnapshot", "redshift-serverless:GetSnapshot", "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:UntagResource", "redshift-serverless:GetNamespace" ]
+    },
+    "delete" : {
+      "permissions" : [ "redshift-serverless:DeleteSnapshot", "redshift-serverless:GetSnapshot", "redshift-serverless:ListTagsForResource", "redshift-serverless:UntagResource", "redshift-serverless:GetNamespace" ]
+    },
+    "list" : {
+      "permissions" : [ "redshift-serverless:ListSnapshots", "redshift-serverless:GetSnapshot", "redshift-serverless:ListTagsForResource", "redshift-serverless:GetNamespace" ]
+    }
+  },
+  "additionalProperties" : false
 }

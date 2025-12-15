@@ -1,352 +1,248 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ClientIdsForOIDC",
-    "/properties/EncryptionConfiguration",
-    "/properties/IamIdentityProviderArn",
-    "/properties/IdentityType",
-    "/properties/QuickSightConfiguration"
-  ],
-  "definitions": {
-    "ApplicationStatus": {
-      "enum": [
-        "CREATING",
-        "ACTIVE",
-        "DELETING",
-        "FAILED",
-        "UPDATING"
-      ],
-      "type": "string"
+  "typeName" : "AWS::QBusiness::Application",
+  "description" : "Definition of AWS::QBusiness::Application Resource Type",
+  "definitions" : {
+    "ApplicationStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "ACTIVE", "DELETING", "FAILED", "UPDATING" ]
     },
-    "AttachmentsConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AttachmentsControlMode": {
-          "$ref": "#/definitions/AttachmentsControlMode"
+    "AttachmentsConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "AttachmentsControlMode" : {
+          "$ref" : "#/definitions/AttachmentsControlMode"
         }
       },
-      "required": [
-        "AttachmentsControlMode"
-      ],
-      "type": "object"
+      "required" : [ "AttachmentsControlMode" ],
+      "additionalProperties" : false
     },
-    "AttachmentsControlMode": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "AttachmentsControlMode" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "AutoSubscriptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AutoSubscribe": {
-          "$ref": "#/definitions/AutoSubscriptionStatus"
+    "AutoSubscriptionConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "AutoSubscribe" : {
+          "$ref" : "#/definitions/AutoSubscriptionStatus"
         },
-        "DefaultSubscriptionType": {
-          "$ref": "#/definitions/SubscriptionType"
+        "DefaultSubscriptionType" : {
+          "$ref" : "#/definitions/SubscriptionType"
         }
       },
-      "required": [
-        "AutoSubscribe"
-      ],
-      "type": "object"
+      "required" : [ "AutoSubscribe" ],
+      "additionalProperties" : false
     },
-    "AutoSubscriptionStatus": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "AutoSubscriptionStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "EncryptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "KmsKeyId": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+    "EncryptionConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "KmsKeyId" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "IdentityType": {
-      "enum": [
-        "AWS_IAM_IDP_SAML",
-        "AWS_IAM_IDP_OIDC",
-        "AWS_IAM_IDC",
-        "AWS_QUICKSIGHT_IDP",
-        "ANONYMOUS"
-      ],
-      "type": "string"
+    "IdentityType" : {
+      "type" : "string",
+      "enum" : [ "AWS_IAM_IDP_SAML", "AWS_IAM_IDP_OIDC", "AWS_IAM_IDC", "AWS_QUICKSIGHT_IDP", "ANONYMOUS" ]
     },
-    "PersonalizationConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "PersonalizationControlMode": {
-          "$ref": "#/definitions/PersonalizationControlMode"
+    "PersonalizationConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "PersonalizationControlMode" : {
+          "$ref" : "#/definitions/PersonalizationControlMode"
         }
       },
-      "required": [
-        "PersonalizationControlMode"
-      ],
-      "type": "object"
+      "required" : [ "PersonalizationControlMode" ],
+      "additionalProperties" : false
     },
-    "PersonalizationControlMode": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "PersonalizationControlMode" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "QAppsConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "QAppsControlMode": {
-          "$ref": "#/definitions/QAppsControlMode"
+    "QAppsConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "QAppsControlMode" : {
+          "$ref" : "#/definitions/QAppsControlMode"
         }
       },
-      "required": [
-        "QAppsControlMode"
-      ],
-      "type": "object"
+      "required" : [ "QAppsControlMode" ],
+      "additionalProperties" : false
     },
-    "QAppsControlMode": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "QAppsControlMode" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "QuickSightConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ClientNamespace": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9._-]*$",
-          "type": "string"
+    "QuickSightConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ClientNamespace" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9._-]*$"
         }
       },
-      "required": [
-        "ClientNamespace"
-      ],
-      "type": "object"
+      "required" : [ "ClientNamespace" ],
+      "additionalProperties" : false
     },
-    "SubscriptionType": {
-      "enum": [
-        "Q_LITE",
-        "Q_BUSINESS"
-      ],
-      "type": "string"
+    "SubscriptionType" : {
+      "type" : "string",
+      "enum" : [ "Q_LITE", "Q_BUSINESS" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::QBusiness::Application Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:GetSAMLProvider",
-        "iam:PassRole",
-        "kms:CreateGrant",
-        "kms:DescribeKey",
-        "qbusiness:CreateApplication",
-        "qbusiness:GetApplication",
-        "qbusiness:ListTagsForResource",
-        "qbusiness:TagResource",
-        "qbusiness:UpdateApplication",
-        "quicksight:DescribeAccountSubscription",
-        "quicksight:ListNamespaces",
-        "sso:CreateApplication",
-        "sso:DeleteApplication",
-        "sso:DescribeInstance",
-        "sso:PutApplicationAccessScope",
-        "sso:PutApplicationAuthenticationMethod",
-        "sso:PutApplicationGrant"
-      ]
+  "properties" : {
+    "ApplicationArn" : {
+      "type" : "string",
+      "maxLength" : 1284,
+      "minLength" : 0,
+      "pattern" : "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$"
     },
-    "delete": {
-      "permissions": [
-        "kms:RetireGrant",
-        "qbusiness:DeleteApplication",
-        "qbusiness:GetApplication",
-        "sso:DeleteApplication"
-      ]
+    "ApplicationId" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 36,
+      "pattern" : "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$"
     },
-    "list": {
-      "permissions": [
-        "qbusiness:ListApplications"
-      ]
+    "AttachmentsConfiguration" : {
+      "$ref" : "#/definitions/AttachmentsConfiguration"
     },
-    "read": {
-      "permissions": [
-        "qbusiness:GetApplication",
-        "qbusiness:ListTagsForResource"
-      ]
+    "AutoSubscriptionConfiguration" : {
+      "$ref" : "#/definitions/AutoSubscriptionConfiguration"
     },
-    "update": {
-      "permissions": [
-        "iam:PassRole",
-        "qbusiness:GetApplication",
-        "qbusiness:ListTagsForResource",
-        "qbusiness:TagResource",
-        "qbusiness:UntagResource",
-        "qbusiness:UpdateApplication",
-        "sso:CreateApplication",
-        "sso:DeleteApplication",
-        "sso:DescribeInstance",
-        "sso:PutApplicationAccessScope",
-        "sso:PutApplicationAuthenticationMethod",
-        "sso:PutApplicationGrant"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ApplicationId"
-  ],
-  "properties": {
-    "ApplicationArn": {
-      "maxLength": 1284,
-      "minLength": 0,
-      "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
-      "type": "string"
+    "ClientIdsForOIDC" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 255,
+        "minLength" : 1,
+        "pattern" : "^[a-zA-Z0-9_.:/()*?=-]*$"
+      }
     },
-    "ApplicationId": {
-      "maxLength": 36,
-      "minLength": 36,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]{35}$",
-      "type": "string"
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "AttachmentsConfiguration": {
-      "$ref": "#/definitions/AttachmentsConfiguration"
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 0,
+      "pattern" : "^[\\s\\S]*$"
     },
-    "AutoSubscriptionConfiguration": {
-      "$ref": "#/definitions/AutoSubscriptionConfiguration"
+    "DisplayName" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
     },
-    "ClientIdsForOIDC": {
-      "items": {
-        "maxLength": 255,
-        "minLength": 1,
-        "pattern": "^[a-zA-Z0-9_.:/()*?=-]*$",
-        "type": "string"
+    "EncryptionConfiguration" : {
+      "$ref" : "#/definitions/EncryptionConfiguration"
+    },
+    "IamIdentityProviderArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:aws:iam::\\d{12}:(oidc-provider|saml-provider)/[a-zA-Z0-9_\\.\\/@\\-]+$"
+    },
+    "IdentityCenterApplicationArn" : {
+      "type" : "string",
+      "maxLength" : 1224,
+      "minLength" : 10,
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$"
+    },
+    "IdentityCenterInstanceArn" : {
+      "type" : "string",
+      "maxLength" : 1224,
+      "minLength" : 10,
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$"
+    },
+    "IdentityType" : {
+      "$ref" : "#/definitions/IdentityType"
+    },
+    "PersonalizationConfiguration" : {
+      "$ref" : "#/definitions/PersonalizationConfiguration"
+    },
+    "QAppsConfiguration" : {
+      "$ref" : "#/definitions/QAppsConfiguration"
+    },
+    "QuickSightConfiguration" : {
+      "$ref" : "#/definitions/QuickSightConfiguration"
+    },
+    "RoleArn" : {
+      "type" : "string",
+      "maxLength" : 1284,
+      "minLength" : 0,
+      "pattern" : "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/ApplicationStatus"
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0
     },
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "Description": {
-      "maxLength": 1000,
-      "minLength": 0,
-      "pattern": "^[\\s\\S]*$",
-      "type": "string"
-    },
-    "DisplayName": {
-      "maxLength": 1000,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
-      "type": "string"
-    },
-    "EncryptionConfiguration": {
-      "$ref": "#/definitions/EncryptionConfiguration"
-    },
-    "IamIdentityProviderArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:aws:iam::\\d{12}:(oidc-provider|saml-provider)/[a-zA-Z0-9_\\.\\/@\\-]+$",
-      "type": "string"
-    },
-    "IdentityCenterApplicationArn": {
-      "maxLength": 1224,
-      "minLength": 10,
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso::\\d{12}:application/(sso)?ins-[a-zA-Z0-9-.]{16}/apl-[a-zA-Z0-9]{16}$",
-      "type": "string"
-    },
-    "IdentityCenterInstanceArn": {
-      "maxLength": 1224,
-      "minLength": 10,
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
-      "type": "string"
-    },
-    "IdentityType": {
-      "$ref": "#/definitions/IdentityType"
-    },
-    "PersonalizationConfiguration": {
-      "$ref": "#/definitions/PersonalizationConfiguration"
-    },
-    "QAppsConfiguration": {
-      "$ref": "#/definitions/QAppsConfiguration"
-    },
-    "QuickSightConfiguration": {
-      "$ref": "#/definitions/QuickSightConfiguration"
-    },
-    "RoleArn": {
-      "maxLength": 1284,
-      "minLength": 0,
-      "pattern": "^arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/ApplicationStatus"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
-    },
-    "UpdatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "UpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     }
   },
-  "readOnlyProperties": [
-    "/properties/ApplicationArn",
-    "/properties/ApplicationId",
-    "/properties/CreatedAt",
-    "/properties/IdentityCenterApplicationArn",
-    "/properties/Status",
-    "/properties/UpdatedAt"
-  ],
-  "required": [
-    "DisplayName"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "qbusiness:UntagResource",
-      "qbusiness:TagResource",
-      "qbusiness:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "DisplayName" ],
+  "readOnlyProperties" : [ "/properties/ApplicationArn", "/properties/ApplicationId", "/properties/CreatedAt", "/properties/IdentityCenterApplicationArn", "/properties/Status", "/properties/UpdatedAt" ],
+  "writeOnlyProperties" : [ "/properties/IdentityCenterInstanceArn" ],
+  "createOnlyProperties" : [ "/properties/ClientIdsForOIDC", "/properties/EncryptionConfiguration", "/properties/IamIdentityProviderArn", "/properties/IdentityType", "/properties/QuickSightConfiguration" ],
+  "primaryIdentifier" : [ "/properties/ApplicationId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:GetSAMLProvider", "iam:PassRole", "kms:CreateGrant", "kms:DescribeKey", "qbusiness:CreateApplication", "qbusiness:GetApplication", "qbusiness:ListTagsForResource", "qbusiness:TagResource", "qbusiness:UpdateApplication", "quicksight:DescribeAccountSubscription", "quicksight:ListNamespaces", "sso:CreateApplication", "sso:DeleteApplication", "sso:DescribeInstance", "sso:PutApplicationAccessScope", "sso:PutApplicationAuthenticationMethod", "sso:PutApplicationGrant" ]
+    },
+    "read" : {
+      "permissions" : [ "qbusiness:GetApplication", "qbusiness:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "iam:PassRole", "qbusiness:GetApplication", "qbusiness:ListTagsForResource", "qbusiness:TagResource", "qbusiness:UntagResource", "qbusiness:UpdateApplication", "sso:CreateApplication", "sso:DeleteApplication", "sso:DescribeInstance", "sso:PutApplicationAccessScope", "sso:PutApplicationAuthenticationMethod", "sso:PutApplicationGrant" ]
+    },
+    "delete" : {
+      "permissions" : [ "kms:RetireGrant", "qbusiness:DeleteApplication", "qbusiness:GetApplication", "sso:DeleteApplication" ]
+    },
+    "list" : {
+      "permissions" : [ "qbusiness:ListApplications" ]
+    }
   },
-  "typeName": "AWS::QBusiness::Application",
-  "writeOnlyProperties": [
-    "/properties/IdentityCenterInstanceArn"
-  ]
+  "tagging" : {
+    "taggable" : true,
+    "tagUpdatable" : true,
+    "tagOnCreate" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "qbusiness:UntagResource", "qbusiness:TagResource", "qbusiness:ListTagsForResource" ]
+  },
+  "additionalProperties" : false
 }

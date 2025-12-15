@@ -1,105 +1,65 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResolverQueryLogConfigId",
-    "/properties/ResourceId"
-  ],
-  "description": "Resource schema for AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "resolverquerylogging:AssociateConfig",
-        "resolverquerylogging:GetConfigAssociation",
-        "route53resolver:AssociateResolverQueryLogConfig",
-        "ec2:DescribeVpcs",
-        "route53resolver:GetResolverQueryLogConfigAssociation"
-      ]
+  "typeName" : "AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation",
+  "description" : "Resource schema for AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation.",
+  "properties" : {
+    "Id" : {
+      "description" : "Id",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "resolverquerylogging:DisassociateConfig",
-        "resolverquerylogging:ListConfigAssociation",
-        "route53resolver:DisassociateResolverQueryLogConfig",
-        "route53resolver:ListResolverQueryLogConfigAssociations",
-        "route53resolver:GetResolverQueryLogConfigAssociation"
-      ]
+    "ResolverQueryLogConfigId" : {
+      "description" : "ResolverQueryLogConfigId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "list": {
-      "permissions": [
-        "resolverquerylogging:ListConfigAssociations",
-        "route53resolver:ListResolverQueryLogConfigAssociations"
-      ]
+    "ResourceId" : {
+      "description" : "ResourceId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "read": {
-      "permissions": [
-        "resolverquerylogging:GetConfigAssociation",
-        "route53resolver:GetResolverQueryLogConfigAssociation"
-      ]
+    "Status" : {
+      "description" : "ResolverQueryLogConfigAssociationStatus",
+      "type" : "string",
+      "enum" : [ "CREATING", "ACTIVE", "ACTION_NEEDED", "DELETING", "FAILED", "OVERRIDDEN" ]
+    },
+    "Error" : {
+      "description" : "ResolverQueryLogConfigAssociationError",
+      "type" : "string",
+      "enum" : [ "NONE", "DESTINATION_NOT_FOUND", "ACCESS_DENIED" ]
+    },
+    "ErrorMessage" : {
+      "description" : "ResolverQueryLogConfigAssociationErrorMessage",
+      "type" : "string"
+    },
+    "CreationTime" : {
+      "description" : "Rfc3339TimeString",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 40
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CreationTime": {
-      "description": "Rfc3339TimeString",
-      "maxLength": 40,
-      "minLength": 20,
-      "type": "string"
+  "tagging" : {
+    "taggable" : false
+  },
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "createOnlyProperties" : [ "/properties/ResolverQueryLogConfigId", "/properties/ResourceId" ],
+  "readOnlyProperties" : [ "/properties/Status", "/properties/Error", "/properties/ErrorMessage", "/properties/CreationTime", "/properties/Id" ],
+  "additionalProperties" : false,
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resolverquerylogging:AssociateConfig", "resolverquerylogging:GetConfigAssociation", "route53resolver:AssociateResolverQueryLogConfig", "ec2:DescribeVpcs", "route53resolver:GetResolverQueryLogConfigAssociation" ]
     },
-    "Error": {
-      "description": "ResolverQueryLogConfigAssociationError",
-      "enum": [
-        "NONE",
-        "DESTINATION_NOT_FOUND",
-        "ACCESS_DENIED"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "resolverquerylogging:GetConfigAssociation", "route53resolver:GetResolverQueryLogConfigAssociation" ]
     },
-    "ErrorMessage": {
-      "description": "ResolverQueryLogConfigAssociationErrorMessage",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "resolverquerylogging:DisassociateConfig", "resolverquerylogging:ListConfigAssociation", "route53resolver:DisassociateResolverQueryLogConfig", "route53resolver:ListResolverQueryLogConfigAssociations", "route53resolver:GetResolverQueryLogConfigAssociation" ]
     },
-    "Id": {
-      "description": "Id",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "ResolverQueryLogConfigId": {
-      "description": "ResolverQueryLogConfigId",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "ResourceId": {
-      "description": "ResourceId",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Status": {
-      "description": "ResolverQueryLogConfigAssociationStatus",
-      "enum": [
-        "CREATING",
-        "ACTIVE",
-        "ACTION_NEEDED",
-        "DELETING",
-        "FAILED",
-        "OVERRIDDEN"
-      ],
-      "type": "string"
+    "list" : {
+      "permissions" : [ "resolverquerylogging:ListConfigAssociations", "route53resolver:ListResolverQueryLogConfigAssociations" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Status",
-    "/properties/Error",
-    "/properties/ErrorMessage",
-    "/properties/CreationTime",
-    "/properties/Id"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Route53Resolver::ResolverQueryLoggingConfigAssociation"
+  }
 }

@@ -1,63 +1,48 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Family",
-    "/properties/Description",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::DocDB::DBClusterParameterGroup",
+  "description" : "Resource Type definition for AWS::DocDB::DBClusterParameterGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Parameters" : {
+      "type" : "object"
+    },
+    "Family" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::DocDB::DBClusterParameterGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Description": {
-      "type": "string"
-    },
-    "Family": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Parameters": {
-      "type": "object"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Family",
-    "Description",
-    "Parameters"
-  ],
-  "typeName": "AWS::DocDB::DBClusterParameterGroup"
+  "required" : [ "Family", "Description", "Parameters" ],
+  "createOnlyProperties" : [ "/properties/Family", "/properties/Description", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

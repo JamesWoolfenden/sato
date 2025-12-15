@@ -1,105 +1,71 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ ",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::Detective::Graph",
+  "description" : "Resource schema for AWS::Detective::Graph",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-detective.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ ",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ ",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. Valid characters are Unicode letters, digits, white space, and any of the following symbols: _ . : / = + - @ ",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource schema for AWS::Detective::Graph",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "detective:CreateGraph",
-        "detective:ListGraphs",
-        "detective:TagResource",
-        "detective:UpdateOrganizationConfiguration",
-        "organizations:DescribeOrganization"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "The Detective graph ARN"
     },
-    "delete": {
-      "permissions": [
-        "detective:DeleteGraph",
-        "detective:ListGraphs"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "list": {
-      "permissions": [
-        "detective:ListGraphs",
-        "detective:ListTagsForResource",
-        "detective:DescribeOrganizationConfiguration",
-        "organizations:DescribeOrganization"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "detective:ListGraphs",
-        "detective:ListTagsForResource",
-        "detective:DescribeOrganizationConfiguration",
-        "organizations:DescribeOrganization"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "detective:ListGraphs",
-        "detective:UntagResource",
-        "detective:TagResource",
-        "detective:ListTagsForResource",
-        "detective:UpdateOrganizationConfiguration",
-        "organizations:DescribeOrganization"
-      ]
+    "AutoEnableMembers" : {
+      "type" : "boolean",
+      "default" : false,
+      "description" : "Indicates whether to automatically enable new organization accounts as member accounts in the organization behavior graph."
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Detective graph ARN",
-      "type": "string"
+  "additionalProperties" : false,
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "detective:UntagResource", "detective:TagResource", "detective:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "detective:CreateGraph", "detective:ListGraphs", "detective:TagResource", "detective:UpdateOrganizationConfiguration", "organizations:DescribeOrganization" ]
     },
-    "AutoEnableMembers": {
-      "default": false,
-      "description": "Indicates whether to automatically enable new organization accounts as member accounts in the organization behavior graph.",
-      "type": "boolean"
+    "update" : {
+      "permissions" : [ "detective:ListGraphs", "detective:UntagResource", "detective:TagResource", "detective:ListTagsForResource", "detective:UpdateOrganizationConfiguration", "organizations:DescribeOrganization" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "read" : {
+      "permissions" : [ "detective:ListGraphs", "detective:ListTagsForResource", "detective:DescribeOrganizationConfiguration", "organizations:DescribeOrganization" ]
+    },
+    "delete" : {
+      "permissions" : [ "detective:DeleteGraph", "detective:ListGraphs" ]
+    },
+    "list" : {
+      "permissions" : [ "detective:ListGraphs", "detective:ListTagsForResource", "detective:DescribeOrganizationConfiguration", "organizations:DescribeOrganization" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-detective.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "detective:UntagResource",
-      "detective:TagResource",
-      "detective:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Detective::Graph"
+  }
 }

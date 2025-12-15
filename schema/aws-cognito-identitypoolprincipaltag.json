@@ -1,82 +1,57 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/IdentityPoolId",
-    "/properties/IdentityProviderName"
-  ],
-  "description": "Resource Type definition for AWS::Cognito::IdentityPoolPrincipalTag",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cognito-identity:GetPrincipalTagAttributeMap",
-        "cognito-identity:SetPrincipalTagAttributeMap"
-      ]
+  "typeName" : "AWS::Cognito::IdentityPoolPrincipalTag",
+  "description" : "Resource Type definition for AWS::Cognito::IdentityPoolPrincipalTag",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "properties" : {
+    "IdentityPoolId" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "cognito-identity:GetPrincipalTagAttributeMap",
-        "cognito-identity:SetPrincipalTagAttributeMap"
-      ]
+    "IdentityProviderName" : {
+      "type" : "string"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "IdentityPoolId": {
-            "$ref": "resource-schema.json#/properties/IdentityPoolId"
+    "UseDefaults" : {
+      "type" : "boolean"
+    },
+    "PrincipalTags" : {
+      "type" : "object"
+    }
+  },
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "IdentityPoolId", "IdentityProviderName" ],
+  "createOnlyProperties" : [ "/properties/IdentityPoolId", "/properties/IdentityProviderName" ],
+  "primaryIdentifier" : [ "/properties/IdentityPoolId", "/properties/IdentityProviderName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cognito-identity:GetPrincipalTagAttributeMap", "cognito-identity:SetPrincipalTagAttributeMap" ]
+    },
+    "read" : {
+      "permissions" : [ "cognito-identity:GetPrincipalTagAttributeMap" ]
+    },
+    "update" : {
+      "permissions" : [ "cognito-identity:GetPrincipalTagAttributeMap", "cognito-identity:SetPrincipalTagAttributeMap" ]
+    },
+    "delete" : {
+      "permissions" : [ "cognito-identity:GetPrincipalTagAttributeMap", "cognito-identity:SetPrincipalTagAttributeMap" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "IdentityPoolId" : {
+            "$ref" : "resource-schema.json#/properties/IdentityPoolId"
           },
-          "IdentityProviderName": {
-            "$ref": "resource-schema.json#/properties/IdentityProviderName"
+          "IdentityProviderName" : {
+            "$ref" : "resource-schema.json#/properties/IdentityProviderName"
           }
         },
-        "required": [
-          "IdentityPoolId",
-          "IdentityProviderName"
-        ]
+        "required" : [ "IdentityPoolId", "IdentityProviderName" ]
       },
-      "permissions": [
-        "cognito-identity:GetPrincipalTagAttributeMap"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "cognito-identity:GetPrincipalTagAttributeMap"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "cognito-identity:GetPrincipalTagAttributeMap",
-        "cognito-identity:SetPrincipalTagAttributeMap"
-      ]
+      "permissions" : [ "cognito-identity:GetPrincipalTagAttributeMap" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/IdentityPoolId",
-    "/properties/IdentityProviderName"
-  ],
-  "properties": {
-    "IdentityPoolId": {
-      "type": "string"
-    },
-    "IdentityProviderName": {
-      "type": "string"
-    },
-    "PrincipalTags": {
-      "type": "object"
-    },
-    "UseDefaults": {
-      "type": "boolean"
-    }
-  },
-  "required": [
-    "IdentityPoolId",
-    "IdentityProviderName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Cognito::IdentityPoolPrincipalTag"
+  }
 }

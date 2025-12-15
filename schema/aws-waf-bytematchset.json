@@ -1,75 +1,61 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "ByteMatchTuple": {
-      "additionalProperties": false,
-      "properties": {
-        "FieldToMatch": {
-          "$ref": "#/definitions/FieldToMatch"
-        },
-        "PositionalConstraint": {
-          "type": "string"
-        },
-        "TargetString": {
-          "type": "string"
-        },
-        "TargetStringBase64": {
-          "type": "string"
-        },
-        "TextTransformation": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "PositionalConstraint",
-        "TextTransformation",
-        "FieldToMatch"
-      ],
-      "type": "object"
+  "typeName" : "AWS::WAF::ByteMatchSet",
+  "description" : "Resource Type definition for AWS::WAF::ByteMatchSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "FieldToMatch": {
-      "additionalProperties": false,
-      "properties": {
-        "Data": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+    "ByteMatchTuples" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/ByteMatchTuple"
+      }
+    },
+    "Name" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::WAF::ByteMatchSet",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "ByteMatchTuples": {
-      "items": {
-        "$ref": "#/definitions/ByteMatchTuple"
+  "definitions" : {
+    "ByteMatchTuple" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FieldToMatch" : {
+          "$ref" : "#/definitions/FieldToMatch"
+        },
+        "PositionalConstraint" : {
+          "type" : "string"
+        },
+        "TargetString" : {
+          "type" : "string"
+        },
+        "TargetStringBase64" : {
+          "type" : "string"
+        },
+        "TextTransformation" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "PositionalConstraint", "TextTransformation", "FieldToMatch" ]
     },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
+    "FieldToMatch" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Data" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Name"
-  ],
-  "typeName": "AWS::WAF::ByteMatchSet"
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

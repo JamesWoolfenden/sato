@@ -1,85 +1,63 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Application",
-    "/properties/AttributeGroup"
-  ],
-  "description": "Resource Schema for AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation.",
-  "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-attributegroupassociation.html",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "servicecatalog:AssociateAttributeGroup"
-      ]
+  "typeName" : "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation",
+  "description" : "Resource Schema for AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry",
+  "documentationUrl" : "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-attributegroupassociation.html",
+  "properties" : {
+    "Application" : {
+      "type" : "string",
+      "description" : "The name or the Id of the Application.",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "\\w+|[a-z0-9]{12}"
     },
-    "delete": {
-      "permissions": [
-        "servicecatalog:DisassociateAttributeGroup"
-      ]
+    "AttributeGroup" : {
+      "type" : "string",
+      "description" : "The name or the Id of the AttributeGroup.",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "\\w+|[a-z0-9]{12}"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "ApplicationArn": {
-            "$ref": "resource-schema.json#/properties/ApplicationArn"
+    "ApplicationArn" : {
+      "type" : "string",
+      "pattern" : "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/applications/[a-z0-9]+"
+    },
+    "AttributeGroupArn" : {
+      "type" : "string",
+      "pattern" : "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/attribute-groups/[a-z0-9]+"
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "Application", "AttributeGroup" ],
+  "readOnlyProperties" : [ "/properties/ApplicationArn", "/properties/AttributeGroupArn" ],
+  "createOnlyProperties" : [ "/properties/Application", "/properties/AttributeGroup" ],
+  "primaryIdentifier" : [ "/properties/ApplicationArn", "/properties/AttributeGroupArn" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "servicecatalog:AssociateAttributeGroup" ]
+    },
+    "read" : {
+      "permissions" : [ "servicecatalog:ListAttributeGroupsForApplication" ]
+    },
+    "delete" : {
+      "permissions" : [ "servicecatalog:DisassociateAttributeGroup" ]
+    },
+    "list" : {
+      "permissions" : [ "servicecatalog:ListAttributeGroupsForApplication" ],
+      "handlerSchema" : {
+        "properties" : {
+          "ApplicationArn" : {
+            "$ref" : "resource-schema.json#/properties/ApplicationArn"
           }
         },
-        "required": [
-          "ApplicationArn"
-        ]
-      },
-      "permissions": [
-        "servicecatalog:ListAttributeGroupsForApplication"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "servicecatalog:ListAttributeGroupsForApplication"
-      ]
+        "required" : [ "ApplicationArn" ]
+      }
     }
-  },
-  "primaryIdentifier": [
-    "/properties/ApplicationArn",
-    "/properties/AttributeGroupArn"
-  ],
-  "properties": {
-    "Application": {
-      "description": "The name or the Id of the Application.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "\\w+|[a-z0-9]{12}",
-      "type": "string"
-    },
-    "ApplicationArn": {
-      "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/applications/[a-z0-9]+",
-      "type": "string"
-    },
-    "AttributeGroup": {
-      "description": "The name or the Id of the AttributeGroup.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "\\w+|[a-z0-9]{12}",
-      "type": "string"
-    },
-    "AttributeGroupArn": {
-      "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/attribute-groups/[a-z0-9]+",
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/ApplicationArn",
-    "/properties/AttributeGroupArn"
-  ],
-  "required": [
-    "Application",
-    "AttributeGroup"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::ServiceCatalogAppRegistry::AttributeGroupAssociation"
+  }
 }

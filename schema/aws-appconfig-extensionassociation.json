@@ -1,134 +1,98 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ExtensionIdentifier",
-    "/properties/ResourceIdentifier",
-    "/properties/ExtensionVersionNumber"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::AppConfig::ExtensionAssociation",
+  "description" : "An example resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "ExtensionArn" : {
+      "type" : "string"
+    },
+    "ResourceArn" : {
+      "type" : "string"
+    },
+    "ExtensionIdentifier" : {
+      "type" : "string"
+    },
+    "ResourceIdentifier" : {
+      "type" : "string"
+    },
+    "ExtensionVersionNumber" : {
+      "type" : "integer"
+    },
+    "Parameters" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^.+$" : {
+          "type" : "string"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "appconfig:CreateExtensionAssociation",
-        "appconfig:TagResource"
-      ]
+  "additionalProperties" : false,
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/ResourceArn", "/properties/ExtensionArn" ],
+  "createOnlyProperties" : [ "/properties/ExtensionIdentifier", "/properties/ResourceIdentifier", "/properties/ExtensionVersionNumber" ],
+  "writeOnlyProperties" : [ "/properties/ExtensionIdentifier", "/properties/ResourceIdentifier" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "appconfig:CreateExtensionAssociation", "appconfig:TagResource" ]
     },
-    "delete": {
-      "permissions": [
-        "appconfig:DeleteExtensionAssociation",
-        "appconfig:UntagResource"
-      ]
+    "read" : {
+      "permissions" : [ "appconfig:GetExtensionAssociation", "appconfig:ListTagsForResource" ]
     },
-    "list": {
-      "permissions": [
-        "appconfig:ListExtensionAssociations"
-      ]
+    "update" : {
+      "permissions" : [ "appconfig:UpdateExtensionAssociation", "appconfig:TagResource", "appconfig:UntagResource" ]
     },
-    "read": {
-      "permissions": [
-        "appconfig:GetExtensionAssociation",
-        "appconfig:ListTagsForResource"
-      ]
+    "delete" : {
+      "permissions" : [ "appconfig:DeleteExtensionAssociation", "appconfig:UntagResource" ]
     },
-    "update": {
-      "permissions": [
-        "appconfig:UpdateExtensionAssociation",
-        "appconfig:TagResource",
-        "appconfig:UntagResource"
-      ]
+    "list" : {
+      "permissions" : [ "appconfig:ListExtensionAssociations" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "ExtensionArn": {
-      "type": "string"
-    },
-    "ExtensionIdentifier": {
-      "type": "string"
-    },
-    "ExtensionVersionNumber": {
-      "type": "integer"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Parameters": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^.+$": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "ResourceArn": {
-      "type": "string"
-    },
-    "ResourceIdentifier": {
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/ResourceArn",
-    "/properties/ExtensionArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "appconfig:TagResource",
-      "appconfig:UntagResource",
-      "appconfig:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::AppConfig::ExtensionAssociation",
-  "writeOnlyProperties": [
-    "/properties/ExtensionIdentifier",
-    "/properties/ResourceIdentifier"
-  ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "appconfig:TagResource", "appconfig:UntagResource", "appconfig:ListTagsForResource" ]
+  }
 }

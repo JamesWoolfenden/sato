@@ -1,106 +1,85 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "AccountId": {
-      "description": "The identifier for the specified AWS account.",
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
+  "typeName" : "AWS::ApplicationSignals::GroupingConfiguration",
+  "description" : "Resource Type definition for AWS::ApplicationSignals::GroupingConfiguration",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationsignals",
+  "definitions" : {
+    "AccountId" : {
+      "description" : "The identifier for the specified AWS account.",
+      "type" : "string",
+      "maxLength" : 12,
+      "minLength" : 12,
+      "pattern" : "^[0-9]{12}$"
     },
-    "GroupingAttributeDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "DefaultGroupingValue": {
-          "$ref": "#/definitions/GroupingString"
+    "GroupingString" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
+    },
+    "GroupingAttributeDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "GroupingName" : {
+          "$ref" : "#/definitions/GroupingString"
         },
-        "GroupingName": {
-          "$ref": "#/definitions/GroupingString"
+        "GroupingSourceKeys" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "minItems" : 1,
+          "items" : {
+            "$ref" : "#/definitions/GroupingString"
+          }
         },
-        "GroupingSourceKeys": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/GroupingString"
-          },
-          "minItems": 1,
-          "type": "array"
+        "DefaultGroupingValue" : {
+          "$ref" : "#/definitions/GroupingString"
         }
       },
-      "required": [
-        "GroupingName",
-        "GroupingSourceKeys"
-      ],
-      "type": "object"
+      "required" : [ "GroupingName", "GroupingSourceKeys" ],
+      "additionalProperties" : false
     },
-    "GroupingAttributeDefinitions": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/GroupingAttributeDefinition"
-      },
-      "type": "array"
+    "GroupingAttributeDefinitions" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/GroupingAttributeDefinition"
+      }
     },
-    "GroupingString": {
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Timestamp": {
-      "type": "string"
+    "Timestamp" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::ApplicationSignals::GroupingConfiguration",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "application-signals:PutGroupingConfiguration",
-        "application-signals:ListGroupingAttributeDefinitions"
-      ]
+  "properties" : {
+    "GroupingAttributeDefinitions" : {
+      "$ref" : "#/definitions/GroupingAttributeDefinitions"
     },
-    "delete": {
-      "permissions": [
-        "application-signals:DeleteGroupingConfiguration",
-        "application-signals:ListGroupingAttributeDefinitions"
-      ]
+    "UpdatedAt" : {
+      "$ref" : "#/definitions/Timestamp"
     },
-    "list": {
-      "permissions": []
-    },
-    "read": {
-      "permissions": [
-        "application-signals:ListGroupingAttributeDefinitions"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "application-signals:PutGroupingConfiguration",
-        "application-signals:ListGroupingAttributeDefinitions"
-      ]
+    "AccountId" : {
+      "$ref" : "#/definitions/AccountId"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AccountId"
-  ],
-  "properties": {
-    "AccountId": {
-      "$ref": "#/definitions/AccountId"
+  "additionalProperties" : false,
+  "required" : [ "GroupingAttributeDefinitions" ],
+  "readOnlyProperties" : [ "/properties/UpdatedAt", "/properties/AccountId" ],
+  "primaryIdentifier" : [ "/properties/AccountId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "application-signals:PutGroupingConfiguration", "application-signals:ListGroupingAttributeDefinitions" ]
     },
-    "GroupingAttributeDefinitions": {
-      "$ref": "#/definitions/GroupingAttributeDefinitions"
+    "read" : {
+      "permissions" : [ "application-signals:ListGroupingAttributeDefinitions" ]
     },
-    "UpdatedAt": {
-      "$ref": "#/definitions/Timestamp"
+    "update" : {
+      "permissions" : [ "application-signals:PutGroupingConfiguration", "application-signals:ListGroupingAttributeDefinitions" ]
+    },
+    "delete" : {
+      "permissions" : [ "application-signals:DeleteGroupingConfiguration", "application-signals:ListGroupingAttributeDefinitions" ]
+    },
+    "list" : {
+      "permissions" : [ ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/UpdatedAt",
-    "/properties/AccountId"
-  ],
-  "required": [
-    "GroupingAttributeDefinitions"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-applicationsignals",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ApplicationSignals::GroupingConfiguration"
+  "tagging" : {
+    "taggable" : false
+  }
 }

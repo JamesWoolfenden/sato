@@ -1,105 +1,80 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Tags",
-    "/properties/Strategy",
-    "/properties/SpreadLevel",
-    "/properties/PartitionCount"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::EC2::PlacementGroup",
+  "description" : "Resource Type definition for AWS::EC2::PlacementGroup",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::EC2::PlacementGroup",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreatePlacementGroup",
-        "ec2:DescribePlacementGroups",
-        "ec2:CreateTags"
-      ]
+  "properties" : {
+    "Strategy" : {
+      "description" : "The placement strategy.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeletePlacementGroup",
-        "ec2:DescribePlacementGroups"
-      ]
+    "GroupName" : {
+      "description" : "The Group Name of Placement Group.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribePlacementGroups"
-      ]
+    "SpreadLevel" : {
+      "description" : "The Spread Level of Placement Group is an enum where it accepts either host or rack when strategy is spread",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribePlacementGroups"
-      ]
+    "PartitionCount" : {
+      "description" : "The number of partitions. Valid only when **Strategy** is set to `partition`",
+      "type" : "integer"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/GroupName"
-  ],
-  "properties": {
-    "GroupName": {
-      "description": "The Group Name of Placement Group.",
-      "type": "string"
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/Tags", "/properties/Strategy", "/properties/SpreadLevel", "/properties/PartitionCount" ],
+  "primaryIdentifier" : [ "/properties/GroupName" ],
+  "readOnlyProperties" : [ "/properties/GroupName" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ec2:CreateTags" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreatePlacementGroup", "ec2:DescribePlacementGroups", "ec2:CreateTags" ]
     },
-    "PartitionCount": {
-      "description": "The number of partitions. Valid only when **Strategy** is set to `partition`",
-      "type": "integer"
+    "read" : {
+      "permissions" : [ "ec2:DescribePlacementGroups" ]
     },
-    "SpreadLevel": {
-      "description": "The Spread Level of Placement Group is an enum where it accepts either host or rack when strategy is spread",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ec2:DeletePlacementGroup", "ec2:DescribePlacementGroups" ]
     },
-    "Strategy": {
-      "description": "The placement strategy.",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "ec2:DescribePlacementGroups" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/GroupName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ec2:CreateTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::PlacementGroup"
+  }
 }

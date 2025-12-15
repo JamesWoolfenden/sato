@@ -1,256 +1,217 @@
 {
-  "$schema": "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "AllowedLocations": {
-      "description": "A list of locations to allow game session placement in, in the form of AWS Region codes such as us-west-2.",
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 64,
-        "minLength": 1,
-        "pattern": "^[a-z]+(-([a-z]+|\\d))*",
-        "type": "string"
-      },
-      "maxItems": 100,
-      "minItems": 1,
-      "type": "array"
-    },
-    "FilterConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedLocations": {
-          "$ref": "#/definitions/AllowedLocations"
-        }
-      },
-      "type": "object"
-    },
-    "GameSessionQueueDestination": {
-      "additionalProperties": false,
-      "description": "A fleet or alias designated in a game session queue.",
-      "properties": {
-        "DestinationArn": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "[a-zA-Z0-9:/-]+",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "LocationOrder": {
-      "description": "The prioritization order to use for fleet locations, when the PriorityOrder property includes LOCATION.",
-      "insertionOrder": true,
-      "items": {
-        "maxLength": 64,
-        "minLength": 1,
-        "pattern": "^[A-Za-z0-9\\-]+",
-        "type": "string"
-      },
-      "maxItems": 100,
-      "minItems": 1,
-      "type": "array"
-    },
-    "PlayerLatencyPolicy": {
-      "additionalProperties": false,
-      "description": "Sets a latency cap for individual players when placing a game session.",
-      "properties": {
-        "MaximumIndividualPlayerLatencyMilliseconds": {
-          "description": "The maximum latency value that is allowed for any player, in milliseconds. All policies must have a value set for this property.",
-          "minimum": 0,
-          "type": "integer"
+  "$schema" : "https://schema.cloudformation.us-east-1.amazonaws.com/provider.definition.schema.v1.json",
+  "typeName" : "AWS::GameLift::GameSessionQueue",
+  "description" : "The AWS::GameLift::GameSessionQueue resource creates an Amazon GameLift (GameLift) game session queue.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "gamelift:ListTagsForResource", "gamelift:TagResource", "gamelift:UntagResource" ]
+  },
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "PolicyDurationSeconds": {
-          "description": "The length of time, in seconds, that the policy is enforced while placing a new game session.",
-          "minimum": 0,
-          "type": "integer"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length.",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "PriorityConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "LocationOrder": {
-          "$ref": "#/definitions/LocationOrder"
+    "GameSessionQueueDestination" : {
+      "type" : "object",
+      "description" : "A fleet or alias designated in a game session queue.",
+      "properties" : {
+        "DestinationArn" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256,
+          "pattern" : "[a-zA-Z0-9:/-]+"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "PlayerLatencyPolicy" : {
+      "type" : "object",
+      "description" : "Sets a latency cap for individual players when placing a game session.",
+      "properties" : {
+        "MaximumIndividualPlayerLatencyMilliseconds" : {
+          "type" : "integer",
+          "description" : "The maximum latency value that is allowed for any player, in milliseconds. All policies must have a value set for this property.",
+          "minimum" : 0
         },
-        "PriorityOrder": {
-          "$ref": "#/definitions/PriorityOrder"
+        "PolicyDurationSeconds" : {
+          "type" : "integer",
+          "description" : "The length of time, in seconds, that the policy is enforced while placing a new game session.",
+          "minimum" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PriorityOrder": {
-      "description": "The recommended sequence to use when prioritizing where to place new game sessions.",
-      "insertionOrder": true,
-      "items": {
-        "enum": [
-          "LATENCY",
-          "COST",
-          "DESTINATION",
-          "LOCATION"
-        ],
-        "type": "string"
+    "AllowedLocations" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "description" : "A list of locations to allow game session placement in, in the form of AWS Region codes such as us-west-2.",
+      "minItems" : 1,
+      "maxItems" : 100,
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 64,
+        "pattern" : "^[a-z]+(-([a-z]+|\\d))*"
+      }
+    },
+    "FilterConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "AllowedLocations" : {
+          "$ref" : "#/definitions/AllowedLocations"
+        }
       },
-      "maxItems": 4,
-      "minItems": 1,
-      "type": "array"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "LocationOrder" : {
+      "description" : "The prioritization order to use for fleet locations, when the PriorityOrder property includes LOCATION.",
+      "type" : "array",
+      "insertionOrder" : true,
+      "minItems" : 1,
+      "maxItems" : 100,
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 64,
+        "pattern" : "^[A-Za-z0-9\\-]+"
+      }
+    },
+    "PriorityOrder" : {
+      "description" : "The recommended sequence to use when prioritizing where to place new game sessions.",
+      "type" : "array",
+      "insertionOrder" : true,
+      "minItems" : 1,
+      "maxItems" : 4,
+      "items" : {
+        "type" : "string",
+        "enum" : [ "LATENCY", "COST", "DESTINATION", "LOCATION" ]
+      }
+    },
+    "PriorityConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "LocationOrder" : {
+          "$ref" : "#/definitions/LocationOrder"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length.",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "PriorityOrder" : {
+          "$ref" : "#/definitions/PriorityOrder"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "The AWS::GameLift::GameSessionQueue resource creates an Amazon GameLift (GameLift) game session queue.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "gamelift:CreateGameSessionQueue",
-        "gamelift:DescribeGameSessionQueues",
-        "gamelift:ListTagsForResource",
-        "gamelift:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "A descriptive label that is associated with game session queue. Queue names must be unique within each Region.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "[a-zA-Z0-9-]+"
     },
-    "delete": {
-      "permissions": [
-        "gamelift:DescribeGameSessionQueues",
-        "gamelift:DeleteGameSessionQueue"
-      ]
+    "TimeoutInSeconds" : {
+      "description" : "The maximum time, in seconds, that a new game session placement request remains in the queue.",
+      "type" : "integer",
+      "minimum" : 0
     },
-    "list": {
-      "permissions": [
-        "gamelift:DescribeGameSessionQueues"
-      ]
+    "Destinations" : {
+      "description" : "A list of fleets and/or fleet aliases that can be used to fulfill game session placement requests in the queue.",
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/GameSessionQueueDestination"
+      }
     },
-    "read": {
-      "permissions": [
-        "gamelift:DescribeGameSessionQueues",
-        "gamelift:ListTagsForResource"
-      ]
+    "PlayerLatencyPolicies" : {
+      "description" : "A set of policies that act as a sliding cap on player latency.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/PlayerLatencyPolicy"
+      }
     },
-    "update": {
-      "permissions": [
-        "gamelift:UpdateGameSessionQueue",
-        "gamelift:ListTagsForResource",
-        "gamelift:TagResource",
-        "gamelift:UntagResource",
-        "gamelift:DescribeGameSessionQueues"
-      ]
+    "CustomEventData" : {
+      "description" : "Information that is added to all events that are related to this game session queue.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "[\\s\\S]*"
+    },
+    "NotificationTarget" : {
+      "description" : "An SNS topic ARN that is set up to receive game session placement notifications.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 300,
+      "pattern" : "[a-zA-Z0-9:_-]*(\\.fifo)?"
+    },
+    "FilterConfiguration" : {
+      "description" : "A list of locations where a queue is allowed to place new game sessions.",
+      "type" : "object",
+      "$ref" : "#/definitions/FilterConfiguration"
+    },
+    "PriorityConfiguration" : {
+      "description" : "Custom settings to use when prioritizing destinations and locations for game session placements.",
+      "type" : "object",
+      "$ref" : "#/definitions/PriorityConfiguration"
+    },
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) that is assigned to a Amazon GameLift game session queue resource and uniquely identifies it.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "^arn:.*:gamesessionqueue\\/[a-zA-Z0-9-]+"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) that is assigned to a Amazon GameLift game session queue resource and uniquely identifies it.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^arn:.*:gamesessionqueue\\/[a-zA-Z0-9-]+",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "gamelift:CreateGameSessionQueue", "gamelift:DescribeGameSessionQueues", "gamelift:ListTagsForResource", "gamelift:TagResource" ]
     },
-    "CustomEventData": {
-      "description": "Information that is added to all events that are related to this game session queue.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "[\\s\\S]*",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "gamelift:DescribeGameSessionQueues", "gamelift:ListTagsForResource" ]
     },
-    "Destinations": {
-      "description": "A list of fleets and/or fleet aliases that can be used to fulfill game session placement requests in the queue.",
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/GameSessionQueueDestination"
-      },
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "gamelift:DescribeGameSessionQueues", "gamelift:DeleteGameSessionQueue" ]
     },
-    "FilterConfiguration": {
-      "$ref": "#/definitions/FilterConfiguration",
-      "description": "A list of locations where a queue is allowed to place new game sessions.",
-      "type": "object"
+    "update" : {
+      "permissions" : [ "gamelift:UpdateGameSessionQueue", "gamelift:ListTagsForResource", "gamelift:TagResource", "gamelift:UntagResource", "gamelift:DescribeGameSessionQueues" ]
     },
-    "Name": {
-      "description": "A descriptive label that is associated with game session queue. Queue names must be unique within each Region.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[a-zA-Z0-9-]+",
-      "type": "string"
-    },
-    "NotificationTarget": {
-      "description": "An SNS topic ARN that is set up to receive game session placement notifications.",
-      "maxLength": 300,
-      "minLength": 1,
-      "pattern": "[a-zA-Z0-9:_-]*(\\.fifo)?",
-      "type": "string"
-    },
-    "PlayerLatencyPolicies": {
-      "description": "A set of policies that act as a sliding cap on player latency.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/PlayerLatencyPolicy"
-      },
-      "type": "array"
-    },
-    "PriorityConfiguration": {
-      "$ref": "#/definitions/PriorityConfiguration",
-      "description": "Custom settings to use when prioritizing destinations and locations for game session placements.",
-      "type": "object"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "TimeoutInSeconds": {
-      "description": "The maximum time, in seconds, that a new game session placement request remains in the queue.",
-      "minimum": 0,
-      "type": "integer"
+    "list" : {
+      "permissions" : [ "gamelift:DescribeGameSessionQueues" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "gamelift:ListTagsForResource",
-      "gamelift:TagResource",
-      "gamelift:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::GameLift::GameSessionQueue"
+  }
 }

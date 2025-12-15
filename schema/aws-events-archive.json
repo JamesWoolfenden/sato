@@ -1,92 +1,61 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ArchiveName",
-    "/properties/SourceArn"
-  ],
-  "description": "Resource Type definition for AWS::Events::Archive",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "events:DescribeArchive",
-        "events:CreateArchive",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+  "typeName" : "AWS::Events::Archive",
+  "description" : "Resource Type definition for AWS::Events::Archive",
+  "additionalProperties" : false,
+  "properties" : {
+    "ArchiveName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 48,
+      "pattern" : "[\\.\\-_A-Za-z0-9]+"
     },
-    "delete": {
-      "permissions": [
-        "events:DescribeArchive",
-        "events:DeleteArchive"
-      ]
+    "SourceArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "events:ListArchives"
-      ]
+    "Description" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "events:DescribeArchive",
-        "kms:Decrypt"
-      ]
+    "EventPattern" : {
+      "type" : "object"
     },
-    "update": {
-      "permissions": [
-        "events:DescribeArchive",
-        "events:UpdateArchive",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt",
-        "kms:ReEncryptTo",
-        "kms:ReEncryptFrom"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:.+\\/.+$"
+    },
+    "RetentionDays" : {
+      "type" : "integer"
+    },
+    "KmsKeyIdentifier" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 0
     }
   },
-  "primaryIdentifier": [
-    "/properties/ArchiveName"
-  ],
-  "properties": {
-    "ArchiveName": {
-      "maxLength": 48,
-      "minLength": 1,
-      "pattern": "[\\.\\-_A-Za-z0-9]+",
-      "type": "string"
+  "required" : [ "SourceArn" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/ArchiveName", "/properties/SourceArn" ],
+  "primaryIdentifier" : [ "/properties/ArchiveName" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "events:DescribeArchive", "events:CreateArchive", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
     },
-    "Arn": {
-      "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:.+\\/.+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "events:DescribeArchive", "events:DeleteArchive" ]
     },
-    "Description": {
-      "type": "string"
+    "list" : {
+      "permissions" : [ "events:ListArchives" ]
     },
-    "EventPattern": {
-      "type": "object"
+    "update" : {
+      "permissions" : [ "events:DescribeArchive", "events:UpdateArchive", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt", "kms:ReEncryptTo", "kms:ReEncryptFrom" ]
     },
-    "KmsKeyIdentifier": {
-      "maxLength": 2048,
-      "minLength": 0,
-      "type": "string"
-    },
-    "RetentionDays": {
-      "type": "integer"
-    },
-    "SourceArn": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "events:DescribeArchive", "kms:Decrypt" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "SourceArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Events::Archive"
+  }
 }

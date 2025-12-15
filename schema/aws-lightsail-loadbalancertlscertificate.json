@@ -1,103 +1,67 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/LoadBalancerName",
-    "/properties/CertificateName",
-    "/properties/CertificateDomainName",
-    "/properties/CertificateAlternativeNames"
-  ],
-  "description": "Resource Type definition for AWS::Lightsail::LoadBalancerTlsCertificate",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lightsail:CreateLoadBalancerTlsCertificate",
-        "lightsail:GetLoadBalancerTlsCertificates",
-        "lightsail:GetLoadBalancer",
-        "lightsail:AttachLoadBalancerTlsCertificate",
-        "lightsail:UpdateLoadBalancerAttribute"
-      ]
+  "typeName" : "AWS::Lightsail::LoadBalancerTlsCertificate",
+  "description" : "Resource Type definition for AWS::Lightsail::LoadBalancerTlsCertificate",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+  "properties" : {
+    "LoadBalancerName" : {
+      "description" : "The name of your load balancer.",
+      "type" : "string",
+      "pattern" : "\\w[\\w\\-]*\\w"
     },
-    "delete": {
-      "permissions": [
-        "lightsail:DeleteLoadBalancerTlsCertificate",
-        "lightsail:GetLoadBalancerTlsCertificates",
-        "lightsail:GetLoadBalancer"
-      ]
+    "CertificateName" : {
+      "description" : "The SSL/TLS certificate name.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "lightsail:GetLoadBalancerTlsCertificates",
-        "lightsail:GetLoadBalancer"
-      ]
+    "CertificateDomainName" : {
+      "description" : "The domain name (e.g., example.com ) for your SSL/TLS certificate.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "lightsail:GetLoadBalancerTlsCertificates",
-        "lightsail:GetLoadBalancer"
-      ]
+    "CertificateAlternativeNames" : {
+      "description" : "An array of strings listing alternative domains and subdomains for your SSL/TLS certificate.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "update": {
-      "permissions": [
-        "lightsail:AttachLoadBalancerTlsCertificate",
-        "lightsail:GetLoadBalancerTlsCertificates",
-        "lightsail:GetLoadBalancer",
-        "lightsail:UpdateLoadBalancerAttribute"
-      ]
+    "LoadBalancerTlsCertificateArn" : {
+      "type" : "string"
+    },
+    "IsAttached" : {
+      "description" : "When true, the SSL/TLS certificate is attached to the Lightsail load balancer.",
+      "type" : "boolean"
+    },
+    "HttpsRedirectionEnabled" : {
+      "description" : "A Boolean value that indicates whether HTTPS redirection is enabled for the load balancer.",
+      "type" : "boolean"
+    },
+    "Status" : {
+      "description" : "The validation status of the SSL/TLS certificate.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/CertificateName",
-    "/properties/LoadBalancerName"
-  ],
-  "properties": {
-    "CertificateAlternativeNames": {
-      "description": "An array of strings listing alternative domains and subdomains for your SSL/TLS certificate.",
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
+  "additionalProperties" : false,
+  "required" : [ "LoadBalancerName", "CertificateName", "CertificateDomainName" ],
+  "readOnlyProperties" : [ "/properties/LoadBalancerTlsCertificateArn", "/properties/Status" ],
+  "taggable" : true,
+  "primaryIdentifier" : [ "/properties/CertificateName", "/properties/LoadBalancerName" ],
+  "createOnlyProperties" : [ "/properties/LoadBalancerName", "/properties/CertificateName", "/properties/CertificateDomainName", "/properties/CertificateAlternativeNames" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lightsail:CreateLoadBalancerTlsCertificate", "lightsail:GetLoadBalancerTlsCertificates", "lightsail:GetLoadBalancer", "lightsail:AttachLoadBalancerTlsCertificate", "lightsail:UpdateLoadBalancerAttribute" ]
     },
-    "CertificateDomainName": {
-      "description": "The domain name (e.g., example.com ) for your SSL/TLS certificate.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "lightsail:GetLoadBalancerTlsCertificates", "lightsail:GetLoadBalancer" ]
     },
-    "CertificateName": {
-      "description": "The SSL/TLS certificate name.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "lightsail:AttachLoadBalancerTlsCertificate", "lightsail:GetLoadBalancerTlsCertificates", "lightsail:GetLoadBalancer", "lightsail:UpdateLoadBalancerAttribute" ]
     },
-    "HttpsRedirectionEnabled": {
-      "description": "A Boolean value that indicates whether HTTPS redirection is enabled for the load balancer.",
-      "type": "boolean"
+    "delete" : {
+      "permissions" : [ "lightsail:DeleteLoadBalancerTlsCertificate", "lightsail:GetLoadBalancerTlsCertificates", "lightsail:GetLoadBalancer" ]
     },
-    "IsAttached": {
-      "description": "When true, the SSL/TLS certificate is attached to the Lightsail load balancer.",
-      "type": "boolean"
-    },
-    "LoadBalancerName": {
-      "description": "The name of your load balancer.",
-      "pattern": "\\w[\\w\\-]*\\w",
-      "type": "string"
-    },
-    "LoadBalancerTlsCertificateArn": {
-      "type": "string"
-    },
-    "Status": {
-      "description": "The validation status of the SSL/TLS certificate.",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "lightsail:GetLoadBalancerTlsCertificates", "lightsail:GetLoadBalancer" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/LoadBalancerTlsCertificateArn",
-    "/properties/Status"
-  ],
-  "required": [
-    "LoadBalancerName",
-    "CertificateName",
-    "CertificateDomainName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
-  "taggable": true,
-  "typeName": "AWS::Lightsail::LoadBalancerTlsCertificate"
+  }
 }

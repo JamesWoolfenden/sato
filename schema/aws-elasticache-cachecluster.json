@@ -1,223 +1,191 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Port",
-    "/properties/SnapshotArns",
-    "/properties/SnapshotName",
-    "/properties/CacheSubnetGroupName",
-    "/properties/ClusterName",
-    "/properties/NetworkType",
-    "/properties/Engine"
-  ],
-  "definitions": {
-    "CloudWatchLogsDestinationDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "LogGroup": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "LogGroup"
-      ],
-      "type": "object"
+  "typeName" : "AWS::ElastiCache::CacheCluster",
+  "description" : "Resource Type definition for AWS::ElastiCache::CacheCluster",
+  "additionalProperties" : false,
+  "properties" : {
+    "CacheSecurityGroupNames" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "DestinationDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "CloudWatchLogsDetails": {
-          "$ref": "#/definitions/CloudWatchLogsDestinationDetails"
-        },
-        "KinesisFirehoseDetails": {
-          "$ref": "#/definitions/KinesisFirehoseDestinationDetails"
-        }
-      },
-      "type": "object"
+    "SnapshotArns" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "KinesisFirehoseDestinationDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "DeliveryStream": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "DeliveryStream"
-      ],
-      "type": "object"
+    "Port" : {
+      "type" : "integer"
     },
-    "LogDeliveryConfigurationRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationDetails": {
-          "$ref": "#/definitions/DestinationDetails"
-        },
-        "DestinationType": {
-          "type": "string"
-        },
-        "LogFormat": {
-          "type": "string"
-        },
-        "LogType": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "LogFormat",
-        "LogType",
-        "DestinationType",
-        "DestinationDetails"
-      ],
-      "type": "object"
+    "ConfigurationEndpointAddress" : {
+      "type" : "string"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "NotificationTopicArn" : {
+      "type" : "string"
+    },
+    "NumCacheNodes" : {
+      "type" : "integer"
+    },
+    "SnapshotName" : {
+      "type" : "string"
+    },
+    "TransitEncryptionEnabled" : {
+      "type" : "boolean"
+    },
+    "NetworkType" : {
+      "type" : "string"
+    },
+    "PreferredAvailabilityZones" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "VpcSecurityGroupIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "ClusterName" : {
+      "type" : "string"
+    },
+    "RedisEndpointAddress" : {
+      "type" : "string"
+    },
+    "Engine" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "EngineVersion" : {
+      "type" : "string"
+    },
+    "RedisEndpointPort" : {
+      "type" : "string"
+    },
+    "CacheSubnetGroupName" : {
+      "type" : "string"
+    },
+    "CacheParameterGroupName" : {
+      "type" : "string"
+    },
+    "PreferredMaintenanceWindow" : {
+      "type" : "string"
+    },
+    "AutoMinorVersionUpgrade" : {
+      "type" : "boolean"
+    },
+    "PreferredAvailabilityZone" : {
+      "type" : "string"
+    },
+    "SnapshotWindow" : {
+      "type" : "string"
+    },
+    "CacheNodeType" : {
+      "type" : "string"
+    },
+    "SnapshotRetentionLimit" : {
+      "type" : "integer"
+    },
+    "ConfigurationEndpointPort" : {
+      "type" : "string"
+    },
+    "IpDiscovery" : {
+      "type" : "string"
+    },
+    "LogDeliveryConfigurations" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/LogDeliveryConfigurationRequest"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "AZMode" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::ElastiCache::CacheCluster",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AZMode": {
-      "type": "string"
-    },
-    "AutoMinorVersionUpgrade": {
-      "type": "boolean"
-    },
-    "CacheNodeType": {
-      "type": "string"
-    },
-    "CacheParameterGroupName": {
-      "type": "string"
-    },
-    "CacheSecurityGroupNames": {
-      "items": {
-        "type": "string"
+  "definitions" : {
+    "LogDeliveryConfigurationRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LogType" : {
+          "type" : "string"
+        },
+        "LogFormat" : {
+          "type" : "string"
+        },
+        "DestinationType" : {
+          "type" : "string"
+        },
+        "DestinationDetails" : {
+          "$ref" : "#/definitions/DestinationDetails"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "LogFormat", "LogType", "DestinationType", "DestinationDetails" ]
     },
-    "CacheSubnetGroupName": {
-      "type": "string"
-    },
-    "ClusterName": {
-      "type": "string"
-    },
-    "ConfigurationEndpointAddress": {
-      "type": "string"
-    },
-    "ConfigurationEndpointPort": {
-      "type": "string"
-    },
-    "Engine": {
-      "type": "string"
-    },
-    "EngineVersion": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "IpDiscovery": {
-      "type": "string"
-    },
-    "LogDeliveryConfigurations": {
-      "items": {
-        "$ref": "#/definitions/LogDeliveryConfigurationRequest"
+    "KinesisFirehoseDestinationDetails" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeliveryStream" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "DeliveryStream" ]
     },
-    "NetworkType": {
-      "type": "string"
-    },
-    "NotificationTopicArn": {
-      "type": "string"
-    },
-    "NumCacheNodes": {
-      "type": "integer"
-    },
-    "Port": {
-      "type": "integer"
-    },
-    "PreferredAvailabilityZone": {
-      "type": "string"
-    },
-    "PreferredAvailabilityZones": {
-      "items": {
-        "type": "string"
+    "CloudWatchLogsDestinationDetails" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LogGroup" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "LogGroup" ]
     },
-    "PreferredMaintenanceWindow": {
-      "type": "string"
-    },
-    "RedisEndpointAddress": {
-      "type": "string"
-    },
-    "RedisEndpointPort": {
-      "type": "string"
-    },
-    "SnapshotArns": {
-      "items": {
-        "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "Value", "Key" ]
     },
-    "SnapshotName": {
-      "type": "string"
-    },
-    "SnapshotRetentionLimit": {
-      "type": "integer"
-    },
-    "SnapshotWindow": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "TransitEncryptionEnabled": {
-      "type": "boolean"
-    },
-    "VpcSecurityGroupIds": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "DestinationDetails" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CloudWatchLogsDetails" : {
+          "$ref" : "#/definitions/CloudWatchLogsDestinationDetails"
+        },
+        "KinesisFirehoseDetails" : {
+          "$ref" : "#/definitions/KinesisFirehoseDestinationDetails"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/ConfigurationEndpoint.Address",
-    "/properties/Id",
-    "/properties/ConfigurationEndpoint.Port",
-    "/properties/RedisEndpoint.Port",
-    "/properties/RedisEndpoint.Address"
-  ],
-  "required": [
-    "CacheNodeType",
-    "NumCacheNodes",
-    "Engine"
-  ],
-  "typeName": "AWS::ElastiCache::CacheCluster"
+  "required" : [ "CacheNodeType", "NumCacheNodes", "Engine" ],
+  "createOnlyProperties" : [ "/properties/Port", "/properties/SnapshotArns", "/properties/SnapshotName", "/properties/CacheSubnetGroupName", "/properties/ClusterName", "/properties/NetworkType", "/properties/Engine" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/ConfigurationEndpoint.Address", "/properties/Id", "/properties/ConfigurationEndpoint.Port", "/properties/RedisEndpoint.Port", "/properties/RedisEndpoint.Address" ]
 }

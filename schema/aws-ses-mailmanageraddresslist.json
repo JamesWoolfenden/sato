@@ -1,111 +1,80 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AddressListName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
-          "type": "string"
+  "typeName" : "AWS::SES::MailManagerAddressList",
+  "description" : "Definition of AWS::SES::MailManagerAddressList Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::SES::MailManagerAddressList Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:ListTagsForResource",
-        "ses:GetAddressList",
-        "ses:CreateAddressList"
-      ]
+  "properties" : {
+    "AddressListArn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ses:GetAddressList",
-        "ses:DeleteAddressList"
-      ]
+    "AddressListId" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9-]+$"
     },
-    "list": {
-      "permissions": [
-        "ses:ListAddressLists"
-      ]
+    "AddressListName" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_.-]+$"
     },
-    "read": {
-      "permissions": [
-        "ses:ListTagsForResource",
-        "ses:GetAddressList"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:UntagResource",
-        "ses:ListTagsForResource",
-        "ses:GetAddressList"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/AddressListId"
-  ],
-  "properties": {
-    "AddressListArn": {
-      "type": "string"
-    },
-    "AddressListId": {
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-]+$",
-      "type": "string"
-    },
-    "AddressListName": {
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_.-]+$",
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/AddressListId",
-    "/properties/AddressListArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ses:TagResource",
-      "ses:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ses:TagResource", "ses:UntagResource" ]
   },
-  "typeName": "AWS::SES::MailManagerAddressList"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/AddressListId" ],
+  "readOnlyProperties" : [ "/properties/AddressListId", "/properties/AddressListArn" ],
+  "createOnlyProperties" : [ "/properties/AddressListName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ses:TagResource", "ses:ListTagsForResource", "ses:GetAddressList", "ses:CreateAddressList" ]
+    },
+    "read" : {
+      "permissions" : [ "ses:ListTagsForResource", "ses:GetAddressList" ]
+    },
+    "delete" : {
+      "permissions" : [ "ses:GetAddressList", "ses:DeleteAddressList" ]
+    },
+    "update" : {
+      "permissions" : [ "ses:TagResource", "ses:UntagResource", "ses:ListTagsForResource", "ses:GetAddressList" ]
+    },
+    "list" : {
+      "permissions" : [ "ses:ListAddressLists" ]
+    }
+  }
 }

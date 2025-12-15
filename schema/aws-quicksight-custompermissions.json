@@ -1,204 +1,169 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AwsAccountId",
-    "/properties/CustomPermissionsName"
-  ],
-  "definitions": {
-    "Capabilities": {
-      "additionalProperties": false,
-      "properties": {
-        "AddOrRunAnomalyDetectionForAnalyses": {
-          "$ref": "#/definitions/CapabilityState"
+  "tagging" : {
+    "permissions" : [ "quicksight:TagResource", "quicksight:UntagResource", "quicksight:ListTagsForResource" ],
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "quicksight:DescribeCustomPermissions", "quicksight:ListTagsForResource" ]
+    },
+    "create" : {
+      "permissions" : [ "quicksight:CreateCustomPermissions", "quicksight:TagResource" ]
+    },
+    "update" : {
+      "permissions" : [ "quicksight:UpdateCustomPermissions", "quicksight:TagResource", "quicksight:UntagResource", "quicksight:ListTagsForResource" ]
+    },
+    "list" : {
+      "permissions" : [ "quicksight:ListCustomPermissions" ]
+    },
+    "delete" : {
+      "permissions" : [ "quicksight:DeleteCustomPermissions" ]
+    }
+  },
+  "typeName" : "AWS::QuickSight::CustomPermissions",
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "description" : "Definition of the AWS::QuickSight::CustomPermissions Resource Type.",
+  "createOnlyProperties" : [ "/properties/AwsAccountId", "/properties/CustomPermissionsName" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/AwsAccountId", "/properties/CustomPermissionsName" ],
+  "definitions" : {
+    "Capabilities" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "IncludeContentInScheduledReportsEmail" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "Analysis": {
-          "$ref": "#/definitions/CapabilityState"
+        "ExportToCsvInScheduledReports" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateAndUpdateDashboardEmailReports": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateAndUpdateDataSources" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateAndUpdateDataSources": {
-          "$ref": "#/definitions/CapabilityState"
+        "ViewAccountSPICECapacity" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateAndUpdateDatasets": {
-          "$ref": "#/definitions/CapabilityState"
+        "Dashboard" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateAndUpdateThemes": {
-          "$ref": "#/definitions/CapabilityState"
+        "ExportToPdfInScheduledReports" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateAndUpdateThresholdAlerts": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateSPICEDataset" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateSPICEDataset": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateAndUpdateDatasets" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "CreateSharedFolders": {
-          "$ref": "#/definitions/CapabilityState"
+        "PrintReports" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "Dashboard": {
-          "$ref": "#/definitions/CapabilityState"
+        "ShareDatasets" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ExportToCsv": {
-          "$ref": "#/definitions/CapabilityState"
+        "ExportToExcelInScheduledReports" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ExportToCsvInScheduledReports": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateAndUpdateDashboardEmailReports" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ExportToExcel": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateAndUpdateThresholdAlerts" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ExportToExcelInScheduledReports": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateSharedFolders" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ExportToPdf": {
-          "$ref": "#/definitions/CapabilityState"
+        "ShareDashboards" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ExportToPdfInScheduledReports": {
-          "$ref": "#/definitions/CapabilityState"
+        "RenameSharedFolders" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "IncludeContentInScheduledReportsEmail": {
-          "$ref": "#/definitions/CapabilityState"
+        "AddOrRunAnomalyDetectionForAnalyses" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "PrintReports": {
-          "$ref": "#/definitions/CapabilityState"
+        "ShareDataSources" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "RenameSharedFolders": {
-          "$ref": "#/definitions/CapabilityState"
+        "ExportToExcel" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ShareAnalyses": {
-          "$ref": "#/definitions/CapabilityState"
+        "ExportToPdf" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ShareDashboards": {
-          "$ref": "#/definitions/CapabilityState"
+        "ShareAnalyses" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ShareDataSources": {
-          "$ref": "#/definitions/CapabilityState"
+        "SubscribeDashboardEmailReports" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ShareDatasets": {
-          "$ref": "#/definitions/CapabilityState"
+        "Analysis" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "SubscribeDashboardEmailReports": {
-          "$ref": "#/definitions/CapabilityState"
+        "ExportToCsv" : {
+          "$ref" : "#/definitions/CapabilityState"
         },
-        "ViewAccountSPICECapacity": {
-          "$ref": "#/definitions/CapabilityState"
+        "CreateAndUpdateThemes" : {
+          "$ref" : "#/definitions/CapabilityState"
+        }
+      }
+    },
+    "CapabilityState" : {
+      "type" : "string",
+      "enum" : [ "DENY" ]
+    },
+    "Tag" : {
+      "description" : "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "minLength" : 1,
+          "description" : "<p>Tag value.</p>",
+          "type" : "string",
+          "maxLength" : 256
+        },
+        "Key" : {
+          "minLength" : 1,
+          "description" : "<p>Tag key.</p>",
+          "type" : "string",
+          "maxLength" : 128
         }
       },
-      "type": "object"
-    },
-    "CapabilityState": {
-      "enum": [
-        "DENY"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
-      "properties": {
-        "Key": {
-          "description": "<p>Tag key.</p>",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "<p>Tag value.</p>",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Definition of the AWS::QuickSight::CustomPermissions Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "quicksight:CreateCustomPermissions",
-        "quicksight:TagResource"
-      ]
+  "properties" : {
+    "CustomPermissionsName" : {
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9+=,.@_-]+$",
+      "type" : "string",
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "quicksight:DeleteCustomPermissions"
-      ]
+    "Capabilities" : {
+      "$ref" : "#/definitions/Capabilities"
     },
-    "list": {
-      "permissions": [
-        "quicksight:ListCustomPermissions"
-      ]
+    "AwsAccountId" : {
+      "minLength" : 12,
+      "pattern" : "^[0-9]{12}$",
+      "type" : "string",
+      "maxLength" : 12
     },
-    "read": {
-      "permissions": [
-        "quicksight:DescribeCustomPermissions",
-        "quicksight:ListTagsForResource"
-      ]
+    "Arn" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "quicksight:UpdateCustomPermissions",
-        "quicksight:TagResource",
-        "quicksight:UntagResource",
-        "quicksight:ListTagsForResource"
-      ]
+    "Tags" : {
+      "minItems" : 1,
+      "maxItems" : 200,
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/AwsAccountId",
-    "/properties/CustomPermissionsName"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "AwsAccountId": {
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
-    },
-    "Capabilities": {
-      "$ref": "#/definitions/Capabilities"
-    },
-    "CustomPermissionsName": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9+=,.@_-]+$",
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 1,
-      "type": "array"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "AwsAccountId",
-    "CustomPermissionsName"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "quicksight:TagResource",
-      "quicksight:UntagResource",
-      "quicksight:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::QuickSight::CustomPermissions"
+  "required" : [ "AwsAccountId", "CustomPermissionsName" ]
 }

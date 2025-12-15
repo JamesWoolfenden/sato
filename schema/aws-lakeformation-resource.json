@@ -1,38 +1,29 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResourceArn"
-  ],
-  "description": "Resource Type definition for AWS::LakeFormation::Resource",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "HybridAccessEnabled": {
-      "type": "boolean"
+  "typeName" : "AWS::LakeFormation::Resource",
+  "description" : "Resource Type definition for AWS::LakeFormation::Resource",
+  "additionalProperties" : false,
+  "properties" : {
+    "ResourceArn" : {
+      "type" : "string"
     },
-    "Id": {
-      "type": "string"
+    "WithFederation" : {
+      "type" : "boolean"
     },
-    "ResourceArn": {
-      "type": "string"
+    "Id" : {
+      "type" : "string"
     },
-    "RoleArn": {
-      "type": "string"
+    "HybridAccessEnabled" : {
+      "type" : "boolean"
     },
-    "UseServiceLinkedRole": {
-      "type": "boolean"
+    "UseServiceLinkedRole" : {
+      "type" : "boolean"
     },
-    "WithFederation": {
-      "type": "boolean"
+    "RoleArn" : {
+      "type" : "string"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "ResourceArn",
-    "UseServiceLinkedRole"
-  ],
-  "typeName": "AWS::LakeFormation::Resource"
+  "required" : [ "ResourceArn", "UseServiceLinkedRole" ],
+  "createOnlyProperties" : [ "/properties/ResourceArn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

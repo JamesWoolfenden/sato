@@ -1,175 +1,117 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/EngineType",
-    "/properties/Name",
-    "/properties/KmsKeyId",
-    "/properties/RoleArn"
-  ],
-  "definitions": {
-    "Definition": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "S3Location": {
-              "pattern": "^\\S{1,2000}$",
-              "type": "string"
-            }
-          },
-          "required": [
-            "S3Location"
-          ],
-          "title": "S3Location",
-          "type": "object"
+  "typeName" : "AWS::M2::Application",
+  "description" : "Represents an application that runs on an AWS Mainframe Modernization Environment",
+  "definitions" : {
+    "Definition" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "S3Location",
+        "properties" : {
+          "S3Location" : {
+            "type" : "string",
+            "pattern" : "^\\S{1,2000}$"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Content": {
-              "maxLength": 65000,
-              "minLength": 1,
-              "type": "string"
-            }
-          },
-          "required": [
-            "Content"
-          ],
-          "title": "Content",
-          "type": "object"
-        }
-      ]
+        "required" : [ "S3Location" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Content",
+        "properties" : {
+          "Content" : {
+            "type" : "string",
+            "maxLength" : 65000,
+            "minLength" : 1
+          }
+        },
+        "required" : [ "Content" ],
+        "additionalProperties" : false
+      } ]
     },
-    "EngineType": {
-      "enum": [
-        "microfocus",
-        "bluage"
-      ],
-      "type": "string"
+    "EngineType" : {
+      "type" : "string",
+      "enum" : [ "microfocus", "bluage" ]
     },
-    "TagMap": {
-      "additionalProperties": false,
-      "maxProperties": 200,
-      "minProperties": 0,
-      "patternProperties": {
-        "^(?!aws:).+$": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "maxProperties" : 200,
+      "minProperties" : 0,
+      "patternProperties" : {
+        "^(?!aws:).+$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Represents an application that runs on an AWS Mainframe Modernization Environment",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "m2:CreateApplication",
-        "m2:GetApplication",
-        "m2:ListTagsForResource",
-        "m2:TagResource",
-        "s3:GetObject",
-        "s3:ListBucket",
-        "kms:DescribeKey",
-        "kms:CreateGrant",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "ApplicationArn" : {
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$"
     },
-    "delete": {
-      "permissions": [
-        "elasticloadbalancing:DeleteListener",
-        "elasticloadbalancing:DeleteTargetGroup",
-        "logs:DeleteLogDelivery",
-        "m2:GetApplication",
-        "m2:DeleteApplication"
-      ]
+    "ApplicationId" : {
+      "type" : "string",
+      "pattern" : "^\\S{1,80}$"
     },
-    "list": {
-      "permissions": [
-        "m2:ListApplications"
-      ]
+    "Definition" : {
+      "$ref" : "#/definitions/Definition"
     },
-    "read": {
-      "permissions": [
-        "m2:GetApplication",
-        "m2:ListTagsForResource"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 500,
+      "minLength" : 0
     },
-    "update": {
-      "permissions": [
-        "m2:UpdateApplication",
-        "m2:GetApplication",
-        "m2:ListTagsForResource",
-        "m2:TagResource",
-        "m2:UntagResource",
-        "s3:GetObject",
-        "s3:ListBucket"
-      ]
+    "EngineType" : {
+      "$ref" : "#/definitions/EngineType"
+    },
+    "KmsKeyId" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "description" : "The ID or the Amazon Resource Name (ARN) of the customer managed KMS Key used for encrypting application-related resources."
+    },
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$"
+    },
+    "RoleArn" : {
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]|):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ApplicationArn"
-  ],
-  "properties": {
-    "ApplicationArn": {
-      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "m2:TagResource", "m2:UntagResource", "m2:ListTagsForResource" ]
+  },
+  "required" : [ "EngineType", "Name" ],
+  "readOnlyProperties" : [ "/properties/ApplicationArn", "/properties/ApplicationId" ],
+  "writeOnlyProperties" : [ "/properties/Definition" ],
+  "createOnlyProperties" : [ "/properties/EngineType", "/properties/Name", "/properties/KmsKeyId", "/properties/RoleArn" ],
+  "primaryIdentifier" : [ "/properties/ApplicationArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "m2:CreateApplication", "m2:GetApplication", "m2:ListTagsForResource", "m2:TagResource", "s3:GetObject", "s3:ListBucket", "kms:DescribeKey", "kms:CreateGrant", "iam:PassRole" ]
     },
-    "ApplicationId": {
-      "pattern": "^\\S{1,80}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "m2:GetApplication", "m2:ListTagsForResource" ]
     },
-    "Definition": {
-      "$ref": "#/definitions/Definition"
+    "update" : {
+      "permissions" : [ "m2:UpdateApplication", "m2:GetApplication", "m2:ListTagsForResource", "m2:TagResource", "m2:UntagResource", "s3:GetObject", "s3:ListBucket" ]
     },
-    "Description": {
-      "maxLength": 500,
-      "minLength": 0,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "elasticloadbalancing:DeleteListener", "elasticloadbalancing:DeleteTargetGroup", "logs:DeleteLogDelivery", "m2:GetApplication", "m2:DeleteApplication" ]
     },
-    "EngineType": {
-      "$ref": "#/definitions/EngineType"
-    },
-    "KmsKeyId": {
-      "description": "The ID or the Amazon Resource Name (ARN) of the customer managed KMS Key used for encrypting application-related resources.",
-      "maxLength": 2048,
-      "type": "string"
-    },
-    "Name": {
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
-      "type": "string"
-    },
-    "RoleArn": {
-      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]|):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$",
-      "type": "string"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "list" : {
+      "permissions" : [ "m2:ListApplications" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ApplicationArn",
-    "/properties/ApplicationId"
-  ],
-  "required": [
-    "EngineType",
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "m2:TagResource",
-      "m2:UntagResource",
-      "m2:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::M2::Application",
-  "writeOnlyProperties": [
-    "/properties/Definition"
-  ]
+  "additionalProperties" : false
 }

@@ -1,278 +1,205 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainConfigurationName",
-    "/properties/DomainName",
-    "/properties/ServiceType",
-    "/properties/ValidationCertificateArn",
-    "/properties/ServerCertificateArns"
-  ],
-  "definitions": {
-    "AuthorizerConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowAuthorizerOverride": {
-          "type": "boolean"
+  "typeName" : "AWS::IoT::DomainConfiguration",
+  "description" : "Create and manage a Domain Configuration",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "AuthorizerConfig" : {
+      "type" : "object",
+      "properties" : {
+        "AllowAuthorizerOverride" : {
+          "type" : "boolean"
         },
-        "DefaultAuthorizerName": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[\\w=,@-]+$",
-          "type": "string"
+        "DefaultAuthorizerName" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^[\\w=,@-]+$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ClientCertificateConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "ClientCertificateCallbackArn": {
-          "maxLength": 170,
-          "minLength": 1,
-          "type": "string"
+    "ServerCertificateConfig" : {
+      "type" : "object",
+      "properties" : {
+        "EnableOCSPCheck" : {
+          "type" : "boolean"
+        },
+        "OcspLambdaArn" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 170
+        },
+        "OcspAuthorizedResponderArn" : {
+          "type" : "string",
+          "pattern" : "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+          "minLength" : 1,
+          "maxLength" : 2048
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ServerCertificateConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "EnableOCSPCheck": {
-          "type": "boolean"
+    "ServerCertificateSummary" : {
+      "type" : "object",
+      "properties" : {
+        "ServerCertificateArn" : {
+          "type" : "string",
+          "pattern" : "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+          "minLength" : 1,
+          "maxLength" : 2048
         },
-        "OcspAuthorizedResponderArn": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
-          "type": "string"
+        "ServerCertificateStatus" : {
+          "type" : "string",
+          "enum" : [ "INVALID", "VALID" ]
         },
-        "OcspLambdaArn": {
-          "maxLength": 170,
-          "minLength": 1,
-          "type": "string"
+        "ServerCertificateStatusDetail" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ServerCertificateSummary": {
-      "additionalProperties": false,
-      "properties": {
-        "ServerCertificateArn": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
-          "type": "string"
-        },
-        "ServerCertificateStatus": {
-          "enum": [
-            "INVALID",
-            "VALID"
-          ],
-          "type": "string"
-        },
-        "ServerCertificateStatusDetail": {
-          "type": "string"
+    "TlsConfig" : {
+      "type" : "object",
+      "properties" : {
+        "SecurityPolicy" : {
+          "type" : "string",
+          "maxLength" : 128
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
+    "ClientCertificateConfig" : {
+      "type" : "object",
+      "properties" : {
+        "ClientCertificateCallbackArn" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 170
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TlsConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "SecurityPolicy": {
-          "maxLength": 128,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Create and manage a Domain Configuration",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreateDomainConfiguration",
-        "iot:UpdateDomainConfiguration",
-        "iot:DescribeDomainConfiguration",
-        "iot:TagResource",
-        "iot:ListTagsForResource",
-        "acm:GetCertificate",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "DomainConfigurationName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[\\w.-]+$"
     },
-    "delete": {
-      "permissions": [
-        "iot:DescribeDomainConfiguration",
-        "iot:DeleteDomainConfiguration",
-        "iot:UpdateDomainConfiguration",
-        "kms:Decrypt"
-      ]
+    "AuthorizerConfig" : {
+      "$ref" : "#/definitions/AuthorizerConfig"
     },
-    "list": {
-      "permissions": [
-        "iot:ListDomainConfigurations"
-      ]
+    "DomainName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 253
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeDomainConfiguration",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "ServerCertificateArns" : {
+      "type" : "array",
+      "minItems" : 0,
+      "maxItems" : 1,
+      "insertionOrder" : true,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
+        "minLength" : 1,
+        "maxLength" : 2048
+      }
     },
-    "update": {
-      "permissions": [
-        "iot:UpdateDomainConfiguration",
-        "iot:DescribeDomainConfiguration",
-        "iot:ListTagsForResource",
-        "iot:TagResource",
-        "iot:UntagResource",
-        "kms:Decrypt"
-      ]
+    "ServiceType" : {
+      "type" : "string",
+      "enum" : [ "DATA", "CREDENTIAL_PROVIDER", "JOBS" ]
+    },
+    "ValidationCertificateArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "DomainConfigurationStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "DomainType" : {
+      "type" : "string",
+      "enum" : [ "ENDPOINT", "AWS_MANAGED", "CUSTOMER_MANAGED" ]
+    },
+    "ServerCertificateConfig" : {
+      "$ref" : "#/definitions/ServerCertificateConfig"
+    },
+    "ServerCertificates" : {
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/ServerCertificateSummary"
+      }
+    },
+    "TlsConfig" : {
+      "$ref" : "#/definitions/TlsConfig"
+    },
+    "AuthenticationType" : {
+      "type" : "string",
+      "enum" : [ "AWS_X509", "CUSTOM_AUTH", "AWS_SIGV4", "CUSTOM_AUTH_X509", "DEFAULT" ]
+    },
+    "ApplicationProtocol" : {
+      "type" : "string",
+      "enum" : [ "SECURE_MQTT", "MQTT_WSS", "HTTPS", "DEFAULT" ]
+    },
+    "ClientCertificateConfig" : {
+      "$ref" : "#/definitions/ClientCertificateConfig"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/DomainConfigurationName"
-  ],
-  "properties": {
-    "ApplicationProtocol": {
-      "enum": [
-        "SECURE_MQTT",
-        "MQTT_WSS",
-        "HTTPS",
-        "DEFAULT"
-      ],
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ ],
+  "createOnlyProperties" : [ "/properties/DomainConfigurationName", "/properties/DomainName", "/properties/ServiceType", "/properties/ValidationCertificateArn", "/properties/ServerCertificateArns" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/DomainType", "/properties/ServerCertificates" ],
+  "writeOnlyProperties" : [ "/properties/ValidationCertificateArn", "/properties/ServerCertificateArns" ],
+  "primaryIdentifier" : [ "/properties/DomainConfigurationName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreateDomainConfiguration", "iot:UpdateDomainConfiguration", "iot:DescribeDomainConfiguration", "iot:TagResource", "iot:ListTagsForResource", "acm:GetCertificate", "kms:Decrypt" ]
     },
-    "Arn": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iot:DescribeDomainConfiguration", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "AuthenticationType": {
-      "enum": [
-        "AWS_X509",
-        "CUSTOM_AUTH",
-        "AWS_SIGV4",
-        "CUSTOM_AUTH_X509",
-        "DEFAULT"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iot:UpdateDomainConfiguration", "iot:DescribeDomainConfiguration", "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource", "kms:Decrypt" ]
     },
-    "AuthorizerConfig": {
-      "$ref": "#/definitions/AuthorizerConfig"
+    "delete" : {
+      "permissions" : [ "iot:DescribeDomainConfiguration", "iot:DeleteDomainConfiguration", "iot:UpdateDomainConfiguration", "kms:Decrypt" ]
     },
-    "ClientCertificateConfig": {
-      "$ref": "#/definitions/ClientCertificateConfig"
-    },
-    "DomainConfigurationName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[\\w.-]+$",
-      "type": "string"
-    },
-    "DomainConfigurationStatus": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "DomainName": {
-      "maxLength": 253,
-      "minLength": 1,
-      "type": "string"
-    },
-    "DomainType": {
-      "enum": [
-        "ENDPOINT",
-        "AWS_MANAGED",
-        "CUSTOMER_MANAGED"
-      ],
-      "type": "string"
-    },
-    "ServerCertificateArns": {
-      "insertionOrder": true,
-      "items": {
-        "maxLength": 2048,
-        "minLength": 1,
-        "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
-        "type": "string"
-      },
-      "maxItems": 1,
-      "minItems": 0,
-      "type": "array"
-    },
-    "ServerCertificateConfig": {
-      "$ref": "#/definitions/ServerCertificateConfig"
-    },
-    "ServerCertificates": {
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/ServerCertificateSummary"
-      },
-      "type": "array"
-    },
-    "ServiceType": {
-      "enum": [
-        "DATA",
-        "CREDENTIAL_PROVIDER",
-        "JOBS"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "TlsConfig": {
-      "$ref": "#/definitions/TlsConfig"
-    },
-    "ValidationCertificateArn": {
-      "pattern": "^arn:aws(-cn|-us-gov|-iso-b|-iso)?:acm:[a-z]{2}-(gov-|iso-|isob-)?[a-z]{4,9}-\\d{1}:\\d{12}:certificate/[a-zA-Z0-9/-]+$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "iot:ListDomainConfigurations" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/DomainType",
-    "/properties/ServerCertificates"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:ListTagsForResource",
-      "iot:TagResource",
-      "iot:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::DomainConfiguration",
-  "writeOnlyProperties": [
-    "/properties/ValidationCertificateArn",
-    "/properties/ServerCertificateArns"
-  ]
+  }
 }

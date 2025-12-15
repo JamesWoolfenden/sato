@@ -1,246 +1,191 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/CoreNetworkId",
-      "/properties/VpnConnectionArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CoreNetworkId",
-    "/properties/VpnConnectionArn",
-    "/properties/RoutingPolicyLabel"
-  ],
-  "definitions": {
-    "ProposedNetworkFunctionGroupChange": {
-      "additionalProperties": false,
-      "description": "The attachment to move from one network function group to another.",
-      "properties": {
-        "AttachmentPolicyRuleNumber": {
-          "description": "The rule number in the policy document that applies to this change.",
-          "type": "integer"
-        },
-        "NetworkFunctionGroupName": {
-          "description": "The name of the network function group to change.",
-          "type": "string"
-        },
-        "Tags": {
-          "description": "The key-value tags that changed for the network function group.",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::NetworkManager::SiteToSiteVpnAttachment",
+  "description" : "AWS::NetworkManager::SiteToSiteVpnAttachment Resource Type definition.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-sitetositevpnattachment",
+  "properties" : {
+    "CoreNetworkId" : {
+      "description" : "The ID of a core network where you're creating a site-to-site VPN attachment.",
+      "type" : "string"
     },
-    "ProposedSegmentChange": {
-      "additionalProperties": false,
-      "description": "The attachment to move from one segment to another.",
-      "properties": {
-        "AttachmentPolicyRuleNumber": {
-          "description": "The rule number in the policy document that applies to this change.",
-          "type": "integer"
-        },
-        "SegmentName": {
-          "description": "The name of the segment to change.",
-          "type": "string"
-        },
-        "Tags": {
-          "description": "The key-value tags that changed for the segment.",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "CoreNetworkArn" : {
+      "description" : "The ARN of a core network for the VPC attachment.",
+      "type" : "string"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+    "AttachmentId" : {
+      "description" : "The ID of the attachment.",
+      "type" : "string"
+    },
+    "OwnerAccountId" : {
+      "description" : "Owner account of the attachment.",
+      "type" : "string"
+    },
+    "AttachmentType" : {
+      "description" : "The type of attachment.",
+      "type" : "string"
+    },
+    "State" : {
+      "description" : "The state of the attachment.",
+      "type" : "string"
+    },
+    "EdgeLocation" : {
+      "description" : "The Region where the edge is located.",
+      "type" : "string"
+    },
+    "ResourceArn" : {
+      "description" : "The ARN of the Resource.",
+      "type" : "string"
+    },
+    "AttachmentPolicyRuleNumber" : {
+      "description" : "The policy rule number associated with the attachment.",
+      "type" : "integer"
+    },
+    "SegmentName" : {
+      "description" : "The name of the segment that attachment is in.",
+      "type" : "string"
+    },
+    "ProposedSegmentChange" : {
+      "description" : "The attachment to move from one segment to another.",
+      "$ref" : "#/definitions/ProposedSegmentChange"
+    },
+    "NetworkFunctionGroupName" : {
+      "description" : "The name of the network function group attachment.",
+      "type" : "string"
+    },
+    "ProposedNetworkFunctionGroupChange" : {
+      "description" : "The attachment to move from one network function group to another.",
+      "$ref" : "#/definitions/ProposedNetworkFunctionGroupChange"
+    },
+    "RoutingPolicyLabel" : {
+      "description" : "Routing policy label",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "Tags for the attachment.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "CreatedAt" : {
+      "description" : "Creation time of the attachment.",
+      "type" : "string"
+    },
+    "UpdatedAt" : {
+      "description" : "Last update time of the attachment.",
+      "type" : "string"
+    },
+    "VpnConnectionArn" : {
+      "description" : "The ARN of the site-to-site VPN attachment.",
+      "type" : "string"
+    },
+    "LastModificationErrors" : {
+      "description" : "Errors from the last modification of the attachment.",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     }
   },
-  "description": "AWS::NetworkManager::SiteToSiteVpnAttachment Resource Type definition.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "networkmanager:GetSiteToSiteVpnAttachment",
-        "networkmanager:CreateSiteToSiteVpnAttachment",
-        "ec2:DescribeRegions",
-        "networkmanager:TagResource"
-      ],
-      "timeoutInMinutes": 120
+  "definitions" : {
+    "ProposedSegmentChange" : {
+      "description" : "The attachment to move from one segment to another.",
+      "type" : "object",
+      "properties" : {
+        "Tags" : {
+          "description" : "The key-value tags that changed for the segment.",
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "AttachmentPolicyRuleNumber" : {
+          "description" : "The rule number in the policy document that applies to this change.",
+          "type" : "integer"
+        },
+        "SegmentName" : {
+          "description" : "The name of the segment to change.",
+          "type" : "string"
+        }
+      },
+      "additionalProperties" : false
     },
-    "delete": {
-      "permissions": [
-        "networkmanager:GetSiteToSiteVpnAttachment",
-        "networkmanager:DeleteAttachment",
-        "ec2:DescribeRegions"
-      ],
-      "timeoutInMinutes": 720
+    "ProposedNetworkFunctionGroupChange" : {
+      "description" : "The attachment to move from one network function group to another.",
+      "type" : "object",
+      "properties" : {
+        "Tags" : {
+          "description" : "The key-value tags that changed for the network function group.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "AttachmentPolicyRuleNumber" : {
+          "description" : "The rule number in the policy document that applies to this change.",
+          "type" : "integer"
+        },
+        "NetworkFunctionGroupName" : {
+          "description" : "The name of the network function group to change.",
+          "type" : "string"
+        }
+      },
+      "additionalProperties" : false
     },
-    "list": {
-      "permissions": [
-        "networkmanager:ListAttachments"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "networkmanager:GetSiteToSiteVpnAttachment"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "networkmanager:GetSiteToSiteVpnAttachment",
-        "networkmanager:ListTagsForResource",
-        "networkmanager:TagResource",
-        "networkmanager:UntagResource",
-        "ec2:DescribeRegions"
-      ]
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -."
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -."
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "primaryIdentifier": [
-    "/properties/AttachmentId"
-  ],
-  "properties": {
-    "AttachmentId": {
-      "description": "The ID of the attachment.",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "networkmanager:TagResource", "networkmanager:UntagResource", "networkmanager:ListTagsForResource" ]
+  },
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/CoreNetworkId", "/properties/VpnConnectionArn", "/properties/RoutingPolicyLabel" ],
+  "writeOnlyProperties" : [ "/properties/RoutingPolicyLabel" ],
+  "readOnlyProperties" : [ "/properties/CoreNetworkArn", "/properties/CreatedAt", "/properties/UpdatedAt", "/properties/AttachmentType", "/properties/State", "/properties/ResourceArn", "/properties/AttachmentId", "/properties/OwnerAccountId", "/properties/EdgeLocation", "/properties/AttachmentPolicyRuleNumber", "/properties/SegmentName", "/properties/LastModificationErrors" ],
+  "primaryIdentifier" : [ "/properties/AttachmentId" ],
+  "additionalIdentifiers" : [ [ "/properties/CoreNetworkId", "/properties/VpnConnectionArn" ] ],
+  "required" : [ "CoreNetworkId", "VpnConnectionArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "networkmanager:GetSiteToSiteVpnAttachment", "networkmanager:CreateSiteToSiteVpnAttachment", "ec2:DescribeRegions", "networkmanager:TagResource" ],
+      "timeoutInMinutes" : 120
     },
-    "AttachmentPolicyRuleNumber": {
-      "description": "The policy rule number associated with the attachment.",
-      "type": "integer"
+    "read" : {
+      "permissions" : [ "networkmanager:GetSiteToSiteVpnAttachment" ]
     },
-    "AttachmentType": {
-      "description": "The type of attachment.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "networkmanager:GetSiteToSiteVpnAttachment", "networkmanager:ListTagsForResource", "networkmanager:TagResource", "networkmanager:UntagResource", "ec2:DescribeRegions" ]
     },
-    "CoreNetworkArn": {
-      "description": "The ARN of a core network for the VPC attachment.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "networkmanager:GetSiteToSiteVpnAttachment", "networkmanager:DeleteAttachment", "ec2:DescribeRegions" ],
+      "timeoutInMinutes" : 720
     },
-    "CoreNetworkId": {
-      "description": "The ID of a core network where you're creating a site-to-site VPN attachment.",
-      "type": "string"
-    },
-    "CreatedAt": {
-      "description": "Creation time of the attachment.",
-      "type": "string"
-    },
-    "EdgeLocation": {
-      "description": "The Region where the edge is located.",
-      "type": "string"
-    },
-    "LastModificationErrors": {
-      "description": "Errors from the last modification of the attachment.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "NetworkFunctionGroupName": {
-      "description": "The name of the network function group attachment.",
-      "type": "string"
-    },
-    "OwnerAccountId": {
-      "description": "Owner account of the attachment.",
-      "type": "string"
-    },
-    "ProposedNetworkFunctionGroupChange": {
-      "$ref": "#/definitions/ProposedNetworkFunctionGroupChange",
-      "description": "The attachment to move from one network function group to another."
-    },
-    "ProposedSegmentChange": {
-      "$ref": "#/definitions/ProposedSegmentChange",
-      "description": "The attachment to move from one segment to another."
-    },
-    "ResourceArn": {
-      "description": "The ARN of the Resource.",
-      "type": "string"
-    },
-    "RoutingPolicyLabel": {
-      "description": "Routing policy label",
-      "type": "string"
-    },
-    "SegmentName": {
-      "description": "The name of the segment that attachment is in.",
-      "type": "string"
-    },
-    "State": {
-      "description": "The state of the attachment.",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "Tags for the attachment.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "UpdatedAt": {
-      "description": "Last update time of the attachment.",
-      "type": "string"
-    },
-    "VpnConnectionArn": {
-      "description": "The ARN of the site-to-site VPN attachment.",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "networkmanager:ListAttachments" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/CoreNetworkArn",
-    "/properties/CreatedAt",
-    "/properties/UpdatedAt",
-    "/properties/AttachmentType",
-    "/properties/State",
-    "/properties/ResourceArn",
-    "/properties/AttachmentId",
-    "/properties/OwnerAccountId",
-    "/properties/EdgeLocation",
-    "/properties/AttachmentPolicyRuleNumber",
-    "/properties/SegmentName",
-    "/properties/LastModificationErrors"
-  ],
-  "required": [
-    "CoreNetworkId",
-    "VpnConnectionArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkmanager/aws-networkmanager-sitetositevpnattachment",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "networkmanager:TagResource",
-      "networkmanager:UntagResource",
-      "networkmanager:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::NetworkManager::SiteToSiteVpnAttachment",
-  "writeOnlyProperties": [
-    "/properties/RoutingPolicyLabel"
-  ]
+  }
 }

@@ -1,169 +1,138 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DeploymentConfigName",
-    "/properties/MinimumHealthyHosts",
-    "/properties/ComputePlatform",
-    "/properties/ZonalConfig",
-    "/properties/TrafficRoutingConfig"
-  ],
-  "definitions": {
-    "MinimumHealthyHosts": {
-      "additionalProperties": false,
-      "properties": {
-        "Type": {
-          "type": "string"
+  "typeName" : "AWS::CodeDeploy::DeploymentConfig",
+  "description" : "Resource Type definition for AWS::CodeDeploy::DeploymentConfig",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codedeploy",
+  "definitions" : {
+    "TimeBasedLinear" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LinearInterval" : {
+          "type" : "integer"
         },
-        "Value": {
-          "type": "integer"
+        "LinearPercentage" : {
+          "type" : "integer"
         }
       },
-      "required": [
-        "Type",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "LinearInterval", "LinearPercentage" ]
     },
-    "MinimumHealthyHostsPerZone": {
-      "additionalProperties": false,
-      "properties": {
-        "Type": {
-          "type": "string"
+    "TimeBasedCanary" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CanaryPercentage" : {
+          "type" : "integer"
         },
-        "Value": {
-          "type": "integer"
+        "CanaryInterval" : {
+          "type" : "integer"
         }
       },
-      "required": [
-        "Type",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "CanaryPercentage", "CanaryInterval" ]
     },
-    "TimeBasedCanary": {
-      "additionalProperties": false,
-      "properties": {
-        "CanaryInterval": {
-          "type": "integer"
+    "TrafficRoutingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
         },
-        "CanaryPercentage": {
-          "type": "integer"
+        "TimeBasedLinear" : {
+          "$ref" : "#/definitions/TimeBasedLinear"
+        },
+        "TimeBasedCanary" : {
+          "$ref" : "#/definitions/TimeBasedCanary"
         }
       },
-      "required": [
-        "CanaryPercentage",
-        "CanaryInterval"
-      ],
-      "type": "object"
+      "required" : [ "Type" ]
     },
-    "TimeBasedLinear": {
-      "additionalProperties": false,
-      "properties": {
-        "LinearInterval": {
-          "type": "integer"
+    "MinimumHealthyHostsPerZone" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "integer"
         },
-        "LinearPercentage": {
-          "type": "integer"
+        "Type" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "LinearInterval",
-        "LinearPercentage"
-      ],
-      "type": "object"
+      "required" : [ "Type", "Value" ]
     },
-    "TrafficRoutingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "TimeBasedCanary": {
-          "$ref": "#/definitions/TimeBasedCanary"
+    "ZonalConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FirstZoneMonitorDurationInSeconds" : {
+          "type" : "integer",
+          "format" : "int64"
         },
-        "TimeBasedLinear": {
-          "$ref": "#/definitions/TimeBasedLinear"
+        "MonitorDurationInSeconds" : {
+          "type" : "integer",
+          "format" : "int64"
         },
-        "Type": {
-          "type": "string"
+        "MinimumHealthyHostsPerZone" : {
+          "$ref" : "#/definitions/MinimumHealthyHostsPerZone"
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ ]
     },
-    "ZonalConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "FirstZoneMonitorDurationInSeconds": {
-          "format": "int64",
-          "type": "integer"
+    "MinimumHealthyHosts" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "integer"
         },
-        "MinimumHealthyHostsPerZone": {
-          "$ref": "#/definitions/MinimumHealthyHostsPerZone"
-        },
-        "MonitorDurationInSeconds": {
-          "format": "int64",
-          "type": "integer"
+        "Type" : {
+          "type" : "string"
         }
       },
-      "required": [],
-      "type": "object"
+      "required" : [ "Type", "Value" ]
     }
   },
-  "description": "Resource Type definition for AWS::CodeDeploy::DeploymentConfig",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "codedeploy:CreateDeploymentConfig"
-      ]
+  "properties" : {
+    "ComputePlatform" : {
+      "description" : "The destination platform type for the deployment (Lambda, Server, or ECS).",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "codedeploy:GetDeploymentConfig",
-        "codedeploy:DeleteDeploymentConfig"
-      ]
+    "DeploymentConfigName" : {
+      "description" : "A name for the deployment configuration. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the deployment configuration name. For more information, see Name Type.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "codedeploy:ListDeploymentConfigs"
-      ]
+    "MinimumHealthyHosts" : {
+      "description" : "The minimum number of healthy instances that should be available at any time during the deployment. There are two parameters expected in the input: type and value.",
+      "$ref" : "#/definitions/MinimumHealthyHosts"
     },
-    "read": {
-      "permissions": [
-        "codedeploy:GetDeploymentConfig"
-      ]
+    "ZonalConfig" : {
+      "description" : "The zonal deployment config that specifies how the zonal deployment behaves",
+      "$ref" : "#/definitions/ZonalConfig"
+    },
+    "TrafficRoutingConfig" : {
+      "description" : "The configuration that specifies how the deployment traffic is routed.",
+      "$ref" : "#/definitions/TrafficRoutingConfig"
     }
   },
-  "primaryIdentifier": [
-    "/properties/DeploymentConfigName"
-  ],
-  "properties": {
-    "ComputePlatform": {
-      "description": "The destination platform type for the deployment (Lambda, Server, or ECS).",
-      "type": "string"
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/DeploymentConfigName", "/properties/MinimumHealthyHosts", "/properties/ComputePlatform", "/properties/ZonalConfig", "/properties/TrafficRoutingConfig" ],
+  "primaryIdentifier" : [ "/properties/DeploymentConfigName" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "codedeploy:CreateDeploymentConfig" ]
     },
-    "DeploymentConfigName": {
-      "description": "A name for the deployment configuration. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the deployment configuration name. For more information, see Name Type.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "codedeploy:GetDeploymentConfig" ]
     },
-    "MinimumHealthyHosts": {
-      "$ref": "#/definitions/MinimumHealthyHosts",
-      "description": "The minimum number of healthy instances that should be available at any time during the deployment. There are two parameters expected in the input: type and value."
+    "delete" : {
+      "permissions" : [ "codedeploy:GetDeploymentConfig", "codedeploy:DeleteDeploymentConfig" ]
     },
-    "TrafficRoutingConfig": {
-      "$ref": "#/definitions/TrafficRoutingConfig",
-      "description": "The configuration that specifies how the deployment traffic is routed."
-    },
-    "ZonalConfig": {
-      "$ref": "#/definitions/ZonalConfig",
-      "description": "The zonal deployment config that specifies how the zonal deployment behaves"
+    "list" : {
+      "permissions" : [ "codedeploy:ListDeploymentConfigs" ]
     }
-  },
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codedeploy",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::CodeDeploy::DeploymentConfig"
+  }
 }

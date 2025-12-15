@@ -1,144 +1,107 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Resource"
-  ],
-  "definitions": {
-    "Target": {
-      "additionalProperties": false,
-      "properties": {
-        "TargetAddress": {
-          "type": "string"
+  "typeName" : "AWS::CodeStarNotifications::NotificationRule",
+  "description" : "Resource Type definition for AWS::CodeStarNotifications::NotificationRule",
+  "additionalProperties" : false,
+  "properties" : {
+    "EventTypeId" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
+    },
+    "CreatedBy" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
+    },
+    "TargetAddress" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
+    },
+    "EventTypeIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 200
+      }
+    },
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "DetailType" : {
+      "type" : "string",
+      "enum" : [ "BASIC", "FULL" ]
+    },
+    "Resource" : {
+      "type" : "string",
+      "pattern" : "^arn:aws[^:\\s]*:[^:\\s]*:[^:\\s]*:[0-9]{12}:[^\\s]+$"
+    },
+    "Targets" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Target"
+      },
+      "maxItems" : 10
+    },
+    "Tags" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        ".*" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Name" : {
+      "type" : "string",
+      "pattern" : "[A-Za-z0-9\\-_ ]+$",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws[^:\\s]*:codestar-notifications:[^:\\s]+:\\d{12}:notificationrule\\/(.*\\S)?$"
+    }
+  },
+  "definitions" : {
+    "Target" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetType" : {
+          "type" : "string"
         },
-        "TargetType": {
-          "type": "string"
+        "TargetAddress" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "TargetType",
-        "TargetAddress"
-      ],
-      "type": "object"
+      "required" : [ "TargetType", "TargetAddress" ]
     }
   },
-  "description": "Resource Type definition for AWS::CodeStarNotifications::NotificationRule",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "codestar-notifications:createNotificationRule"
-      ]
+  "required" : [ "EventTypeIds", "Resource", "DetailType", "Targets", "Name" ],
+  "createOnlyProperties" : [ "/properties/Resource" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "writeOnlyProperties" : [ "/properties/EventTypeId", "/properties/TargetAddress" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "codestar-notifications:createNotificationRule" ]
     },
-    "delete": {
-      "permissions": [
-        "codestar-notifications:deleteNotificationRule",
-        "codestar-notifications:describeNotificationRule"
-      ]
+    "list" : {
+      "permissions" : [ "codestar-notifications:listNotificationRules" ]
     },
-    "list": {
-      "permissions": [
-        "codestar-notifications:listNotificationRules"
-      ]
+    "read" : {
+      "permissions" : [ "codestar-notifications:describeNotificationRule" ]
     },
-    "read": {
-      "permissions": [
-        "codestar-notifications:describeNotificationRule"
-      ]
+    "delete" : {
+      "permissions" : [ "codestar-notifications:deleteNotificationRule", "codestar-notifications:describeNotificationRule" ]
     },
-    "update": {
-      "permissions": [
-        "codestar-notifications:updateNotificationRule",
-        "codestar-notifications:TagResource",
-        "codestar-notifications:UntagResource"
-      ]
+    "update" : {
+      "permissions" : [ "codestar-notifications:updateNotificationRule", "codestar-notifications:TagResource", "codestar-notifications:UntagResource" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^arn:aws[^:\\s]*:codestar-notifications:[^:\\s]+:\\d{12}:notificationrule\\/(.*\\S)?$",
-      "type": "string"
-    },
-    "CreatedBy": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "DetailType": {
-      "enum": [
-        "BASIC",
-        "FULL"
-      ],
-      "type": "string"
-    },
-    "EventTypeId": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "EventTypeIds": {
-      "items": {
-        "maxLength": 200,
-        "minLength": 1,
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Name": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "[A-Za-z0-9\\-_ ]+$",
-      "type": "string"
-    },
-    "Resource": {
-      "pattern": "^arn:aws[^:\\s]*:[^:\\s]*:[^:\\s]*:[0-9]{12}:[^\\s]+$",
-      "type": "string"
-    },
-    "Status": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".*": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TargetAddress": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Targets": {
-      "items": {
-        "$ref": "#/definitions/Target"
-      },
-      "maxItems": 10,
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "EventTypeIds",
-    "Resource",
-    "DetailType",
-    "Targets",
-    "Name"
-  ],
-  "typeName": "AWS::CodeStarNotifications::NotificationRule",
-  "writeOnlyProperties": [
-    "/properties/EventTypeId",
-    "/properties/TargetAddress"
-  ]
+  }
 }

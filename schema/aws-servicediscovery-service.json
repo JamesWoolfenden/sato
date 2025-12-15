@@ -1,140 +1,120 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/HealthCheckCustomConfig",
-    "/properties/Name",
-    "/properties/Type",
-    "/properties/NamespaceId"
-  ],
-  "definitions": {
-    "DnsConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "DnsRecords": {
-          "items": {
-            "$ref": "#/definitions/DnsRecord"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "NamespaceId": {
-          "type": "string"
-        },
-        "RoutingPolicy": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "DnsRecords"
-      ],
-      "type": "object"
+  "typeName" : "AWS::ServiceDiscovery::Service",
+  "description" : "Resource Type definition for AWS::ServiceDiscovery::Service",
+  "additionalProperties" : false,
+  "properties" : {
+    "Type" : {
+      "type" : "string"
     },
-    "DnsRecord": {
-      "additionalProperties": false,
-      "properties": {
-        "TTL": {
-          "type": "number"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type",
-        "TTL"
-      ],
-      "type": "object"
+    "Description" : {
+      "type" : "string"
     },
-    "HealthCheckConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "FailureThreshold": {
-          "type": "number"
-        },
-        "ResourcePath": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+    "HealthCheckCustomConfig" : {
+      "$ref" : "#/definitions/HealthCheckCustomConfig"
     },
-    "HealthCheckCustomConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "FailureThreshold": {
-          "type": "number"
-        }
-      },
-      "type": "object"
+    "DnsConfig" : {
+      "$ref" : "#/definitions/DnsConfig"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "ServiceAttributes" : {
+      "type" : "object"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "NamespaceId" : {
+      "type" : "string"
+    },
+    "HealthCheckConfig" : {
+      "$ref" : "#/definitions/HealthCheckConfig"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::ServiceDiscovery::Service",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "definitions" : {
+    "HealthCheckCustomConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FailureThreshold" : {
+          "type" : "number"
+        }
+      }
     },
-    "Description": {
-      "type": "string"
-    },
-    "DnsConfig": {
-      "$ref": "#/definitions/DnsConfig"
-    },
-    "HealthCheckConfig": {
-      "$ref": "#/definitions/HealthCheckConfig"
-    },
-    "HealthCheckCustomConfig": {
-      "$ref": "#/definitions/HealthCheckCustomConfig"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "NamespaceId": {
-      "type": "string"
-    },
-    "ServiceAttributes": {
-      "type": "object"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "DnsConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DnsRecords" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/DnsRecord"
+          }
+        },
+        "RoutingPolicy" : {
+          "type" : "string"
+        },
+        "NamespaceId" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "DnsRecords" ]
     },
-    "Type": {
-      "type": "string"
+    "HealthCheckConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "ResourcePath" : {
+          "type" : "string"
+        },
+        "FailureThreshold" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "Type" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "DnsRecord" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TTL" : {
+          "type" : "number"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type", "TTL" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "typeName": "AWS::ServiceDiscovery::Service"
+  "createOnlyProperties" : [ "/properties/HealthCheckCustomConfig", "/properties/Name", "/properties/Type", "/properties/NamespaceId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
 }

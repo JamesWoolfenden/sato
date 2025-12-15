@@ -1,339 +1,253 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "ApiKeyAuthParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "ApiKeyName": {
-          "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
-          "type": "string"
+  "typeName" : "AWS::Events::Connection",
+  "description" : "Resource Type definition for AWS::Events::Connection.",
+  "definitions" : {
+    "AuthParameters" : {
+      "type" : "object",
+      "minProperties" : 1,
+      "maxProperties" : 2,
+      "properties" : {
+        "ApiKeyAuthParameters" : {
+          "$ref" : "#/definitions/ApiKeyAuthParameters"
         },
-        "ApiKeyValue": {
-          "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
-          "type": "string"
+        "BasicAuthParameters" : {
+          "$ref" : "#/definitions/BasicAuthParameters"
+        },
+        "OAuthParameters" : {
+          "$ref" : "#/definitions/OAuthParameters"
+        },
+        "InvocationHttpParameters" : {
+          "$ref" : "#/definitions/ConnectionHttpParameters"
+        },
+        "ConnectivityParameters" : {
+          "$ref" : "#/definitions/ConnectivityParameters"
         }
       },
-      "required": [
-        "ApiKeyName",
-        "ApiKeyValue"
-      ],
-      "type": "object"
+      "oneOf" : [ {
+        "required" : [ "BasicAuthParameters" ]
+      }, {
+        "required" : [ "OAuthParameters" ]
+      }, {
+        "required" : [ "ApiKeyAuthParameters" ]
+      } ],
+      "additionalProperties" : false
     },
-    "AuthParameters": {
-      "additionalProperties": false,
-      "maxProperties": 2,
-      "minProperties": 1,
-      "oneOf": [
-        {
-          "required": [
-            "BasicAuthParameters"
-          ]
+    "BasicAuthParameters" : {
+      "type" : "object",
+      "properties" : {
+        "Username" : {
+          "type" : "string",
+          "pattern" : "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$"
         },
-        {
-          "required": [
-            "OAuthParameters"
-          ]
-        },
-        {
-          "required": [
-            "ApiKeyAuthParameters"
-          ]
-        }
-      ],
-      "properties": {
-        "ApiKeyAuthParameters": {
-          "$ref": "#/definitions/ApiKeyAuthParameters"
-        },
-        "BasicAuthParameters": {
-          "$ref": "#/definitions/BasicAuthParameters"
-        },
-        "ConnectivityParameters": {
-          "$ref": "#/definitions/ConnectivityParameters"
-        },
-        "InvocationHttpParameters": {
-          "$ref": "#/definitions/ConnectionHttpParameters"
-        },
-        "OAuthParameters": {
-          "$ref": "#/definitions/OAuthParameters"
+        "Password" : {
+          "type" : "string",
+          "pattern" : "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$"
         }
       },
-      "type": "object"
+      "required" : [ "Username", "Password" ],
+      "additionalProperties" : false
     },
-    "BasicAuthParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "Password": {
-          "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
-          "type": "string"
+    "OAuthParameters" : {
+      "type" : "object",
+      "properties" : {
+        "ClientParameters" : {
+          "$ref" : "#/definitions/ClientParameters"
         },
-        "Username": {
-          "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
-          "type": "string"
+        "AuthorizationEndpoint" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2048,
+          "pattern" : "^((%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@\\x26=+$,A-Za-z0-9])+)([).!';/?:,])?$"
+        },
+        "HttpMethod" : {
+          "type" : "string",
+          "enum" : [ "GET", "POST", "PUT" ]
+        },
+        "OAuthHttpParameters" : {
+          "$ref" : "#/definitions/ConnectionHttpParameters"
         }
       },
-      "required": [
-        "Username",
-        "Password"
-      ],
-      "type": "object"
+      "required" : [ "ClientParameters", "AuthorizationEndpoint", "HttpMethod" ],
+      "additionalProperties" : false
     },
-    "ClientParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "ClientID": {
-          "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
-          "type": "string"
+    "ApiKeyAuthParameters" : {
+      "type" : "object",
+      "properties" : {
+        "ApiKeyName" : {
+          "type" : "string",
+          "pattern" : "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$"
         },
-        "ClientSecret": {
-          "pattern": "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$",
-          "type": "string"
+        "ApiKeyValue" : {
+          "type" : "string",
+          "pattern" : "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$"
         }
       },
-      "required": [
-        "ClientID",
-        "ClientSecret"
-      ],
-      "type": "object"
+      "required" : [ "ApiKeyName", "ApiKeyValue" ],
+      "additionalProperties" : false
     },
-    "ConnectionHttpParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "BodyParameters": {
-          "items": {
-            "$ref": "#/definitions/Parameter"
-          },
-          "type": "array"
+    "ClientParameters" : {
+      "type" : "object",
+      "properties" : {
+        "ClientID" : {
+          "type" : "string",
+          "pattern" : "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$"
         },
-        "HeaderParameters": {
-          "items": {
-            "$ref": "#/definitions/Parameter"
-          },
-          "type": "array"
-        },
-        "QueryStringParameters": {
-          "items": {
-            "$ref": "#/definitions/Parameter"
-          },
-          "type": "array"
+        "ClientSecret" : {
+          "type" : "string",
+          "pattern" : "^[ \\t]*[^\\x00-\\x1F\\x7F]+([ \\t]+[^\\x00-\\x1F\\x7F]+)*[ \\t]*$"
         }
       },
-      "type": "object"
+      "required" : [ "ClientID", "ClientSecret" ],
+      "additionalProperties" : false
     },
-    "ConnectivityParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceParameters": {
-          "$ref": "#/definitions/ResourceParameters"
+    "ConnectionHttpParameters" : {
+      "type" : "object",
+      "properties" : {
+        "HeaderParameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Parameter"
+          }
+        },
+        "QueryStringParameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Parameter"
+          }
+        },
+        "BodyParameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Parameter"
+          }
         }
       },
-      "required": [
-        "ResourceParameters"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "OAuthParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "AuthorizationEndpoint": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^((%[0-9A-Fa-f]{2}|[-()_.!~*';/?:@\\x26=+$,A-Za-z0-9])+)([).!';/?:,])?$",
-          "type": "string"
-        },
-        "ClientParameters": {
-          "$ref": "#/definitions/ClientParameters"
-        },
-        "HttpMethod": {
-          "enum": [
-            "GET",
-            "POST",
-            "PUT"
-          ],
-          "type": "string"
-        },
-        "OAuthHttpParameters": {
-          "$ref": "#/definitions/ConnectionHttpParameters"
+    "ConnectivityParameters" : {
+      "type" : "object",
+      "properties" : {
+        "ResourceParameters" : {
+          "$ref" : "#/definitions/ResourceParameters"
         }
       },
-      "required": [
-        "ClientParameters",
-        "AuthorizationEndpoint",
-        "HttpMethod"
-      ],
-      "type": "object"
+      "required" : [ "ResourceParameters" ],
+      "additionalProperties" : false
     },
-    "Parameter": {
-      "additionalProperties": false,
-      "properties": {
-        "IsValueSecret": {
-          "default": true,
-          "type": "boolean"
+    "ResourceParameters" : {
+      "type" : "object",
+      "properties" : {
+        "ResourceConfigurationArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "pattern" : "^arn:[a-z0-9f\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}$"
         },
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
+        "ResourceAssociationArn" : {
+          "type" : "string",
+          "minLength" : 20,
+          "maxLength" : 2048,
+          "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkresourceassociation/snra-[0-9a-z]{17}$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "ResourceConfigurationArn" ],
+      "additionalProperties" : false
     },
-    "ResourceParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceAssociationArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkresourceassociation/snra-[0-9a-z]{17}$",
-          "type": "string"
+    "Parameter" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "ResourceConfigurationArn": {
-          "maxLength": 2048,
-          "pattern": "^arn:[a-z0-9f\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:resourceconfiguration/rcfg-[0-9a-z]{17}$",
-          "type": "string"
+        "Value" : {
+          "type" : "string"
+        },
+        "IsValueSecret" : {
+          "type" : "boolean",
+          "default" : true
         }
       },
-      "required": [
-        "ResourceConfigurationArn"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Events::Connection.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "events:CreateConnection",
-        "events:DescribeConnection",
-        "secretsmanager:CreateSecret",
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:PutSecretValue",
-        "iam:CreateServiceLinkedRole",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of the connection.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64,
+      "pattern" : "[\\.\\-_A-Za-z0-9]+"
     },
-    "delete": {
-      "permissions": [
-        "events:DeleteConnection",
-        "events:DescribeConnection"
-      ]
+    "Arn" : {
+      "description" : "The arn of the connection resource.",
+      "type" : "string",
+      "pattern" : "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:connection\\/[\\.\\-_A-Za-z0-9]+\\/[\\-A-Za-z0-9]+$"
     },
-    "list": {
-      "permissions": [
-        "events:ListConnections"
-      ]
+    "ArnForPolicy" : {
+      "description" : "The arn of the connection resource to be used in IAM policies.",
+      "type" : "string",
+      "pattern" : "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:connection\\/[\\.\\-_A-Za-z0-9]+$"
     },
-    "read": {
-      "permissions": [
-        "events:DescribeConnection",
-        "kms:Decrypt"
-      ]
+    "SecretArn" : {
+      "description" : "The arn of the secrets manager secret created in the customer account.",
+      "type" : "string",
+      "pattern" : "^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]|\\d|\\-)*:([0-9]{12})?:secret:([a-z]|\\d|\\-)*(!)*[\\/_+=\\.@\\-A-Za-z0-9]+$"
     },
-    "update": {
-      "permissions": [
-        "events:UpdateConnection",
-        "events:DescribeConnection",
-        "secretsmanager:CreateSecret",
-        "secretsmanager:UpdateSecret",
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:PutSecretValue",
-        "kms:Decrypt",
-        "kms:DescribeKey",
-        "kms:Encrypt",
-        "kms:GenerateDataKey"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The arn of the connection resource.",
-      "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:connection\\/[\\.\\-_A-Za-z0-9]+\\/[\\-A-Za-z0-9]+$",
-      "type": "string"
+    "Description" : {
+      "description" : "Description of the connection.",
+      "type" : "string",
+      "maxLength" : 512
     },
-    "ArnForPolicy": {
-      "description": "The arn of the connection resource to be used in IAM policies.",
-      "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:connection\\/[\\.\\-_A-Za-z0-9]+$",
-      "type": "string"
+    "AuthorizationType" : {
+      "type" : "string",
+      "enum" : [ "API_KEY", "BASIC", "OAUTH_CLIENT_CREDENTIALS" ]
     },
-    "AuthParameters": {
-      "$ref": "#/definitions/AuthParameters"
+    "AuthParameters" : {
+      "$ref" : "#/definitions/AuthParameters"
     },
-    "AuthorizationType": {
-      "enum": [
-        "API_KEY",
-        "BASIC",
-        "OAUTH_CLIENT_CREDENTIALS"
-      ],
-      "type": "string"
-    },
-    "Description": {
-      "description": "Description of the connection.",
-      "maxLength": 512,
-      "type": "string"
-    },
-    "InvocationConnectivityParameters": {
-      "additionalProperties": false,
-      "description": "The private resource the HTTP request will be sent to.",
-      "properties": {
-        "ResourceParameters": {
-          "$ref": "#/definitions/ResourceParameters"
+    "InvocationConnectivityParameters" : {
+      "description" : "The private resource the HTTP request will be sent to.",
+      "type" : "object",
+      "properties" : {
+        "ResourceParameters" : {
+          "$ref" : "#/definitions/ResourceParameters"
         }
       },
-      "required": [
-        "ResourceParameters"
-      ],
-      "type": "object"
+      "required" : [ "ResourceParameters" ],
+      "additionalProperties" : false
     },
-    "KmsKeyIdentifier": {
-      "maxLength": 2048,
-      "pattern": "^[a-zA-Z0-9_\\-/:]*$",
-      "type": "string"
-    },
-    "Name": {
-      "description": "Name of the connection.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "[\\.\\-_A-Za-z0-9]+",
-      "type": "string"
-    },
-    "SecretArn": {
-      "description": "The arn of the secrets manager secret created in the customer account.",
-      "pattern": "^arn:aws([a-z]|\\-)*:secretsmanager:([a-z]|\\d|\\-)*:([0-9]{12})?:secret:([a-z]|\\d|\\-)*(!)*[\\/_+=\\.@\\-A-Za-z0-9]+$",
-      "type": "string"
+    "KmsKeyIdentifier" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "pattern" : "^[a-zA-Z0-9_\\-/:]*$"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/ArnForPolicy",
-    "/properties/SecretArn",
-    "/properties/AuthParameters/ConnectivityParameters/ResourceParameters/ResourceAssociationArn",
-    "/properties/InvocationConnectivityParameters/ResourceParameters/ResourceAssociationArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/ArnForPolicy", "/properties/SecretArn", "/properties/AuthParameters/ConnectivityParameters/ResourceParameters/ResourceAssociationArn", "/properties/InvocationConnectivityParameters/ResourceParameters/ResourceAssociationArn" ],
+  "writeOnlyProperties" : [ "/properties/AuthParameters/BasicAuthParameters/Password", "/properties/AuthParameters/ApiKeyAuthParameters/ApiKeyValue", "/properties/AuthParameters/OAuthParameters/ClientParameters/ClientSecret", "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/HeaderParameters", "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/QueryStringParameters", "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/BodyParameters", "/properties/AuthParameters/InvocationHttpParameters" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
   },
-  "typeName": "AWS::Events::Connection",
-  "writeOnlyProperties": [
-    "/properties/AuthParameters/BasicAuthParameters/Password",
-    "/properties/AuthParameters/ApiKeyAuthParameters/ApiKeyValue",
-    "/properties/AuthParameters/OAuthParameters/ClientParameters/ClientSecret",
-    "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/HeaderParameters",
-    "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/QueryStringParameters",
-    "/properties/AuthParameters/OAuthParameters/OAuthHttpParameters/BodyParameters",
-    "/properties/AuthParameters/InvocationHttpParameters"
-  ]
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "events:CreateConnection", "events:DescribeConnection", "secretsmanager:CreateSecret", "secretsmanager:GetSecretValue", "secretsmanager:PutSecretValue", "iam:CreateServiceLinkedRole", "kms:DescribeKey", "kms:GenerateDataKey" ]
+    },
+    "read" : {
+      "permissions" : [ "events:DescribeConnection", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "events:UpdateConnection", "events:DescribeConnection", "secretsmanager:CreateSecret", "secretsmanager:UpdateSecret", "secretsmanager:GetSecretValue", "secretsmanager:PutSecretValue", "kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:GenerateDataKey" ]
+    },
+    "delete" : {
+      "permissions" : [ "events:DeleteConnection", "events:DescribeConnection" ]
+    },
+    "list" : {
+      "permissions" : [ "events:ListConnections" ]
+    }
+  }
 }

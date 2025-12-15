@@ -1,6 +1,21 @@
 package arm
 
-import "fmt"
+import (
+	"fmt"
+	"sato/src/satoerrors"
+)
+
+// filepathError is an alias for the satoerrors error type.
+type filepathError = satoerrors.FilepathError
+
+// writeFileError is an alias for the satoerrors error type.
+type writeFileError = satoerrors.WriteFileError
+
+// templateNewError is an alias for the satoerrors error type.
+type templateNewError = satoerrors.TemplateNewError
+
+// templateExecuteError is an alias for the satoerrors error type.
+type templateExecuteError = satoerrors.TemplateExecuteError
 
 type splitResourceError struct {
 	match string
@@ -8,14 +23,6 @@ type splitResourceError struct {
 
 func (e splitResourceError) Error() string {
 	return fmt.Sprintf("failed to split resource %s", e.match)
-}
-
-type filepathError struct {
-	Path string
-}
-
-func (m *filepathError) Error() string {
-	return fmt.Sprintf("not implemented %s", m.Path)
 }
 
 type parseListError struct{}
@@ -62,29 +69,4 @@ type matchValueError struct {
 
 func (m *matchValueError) Error() string {
 	return fmt.Sprintf("failed to match value %s", m.Name)
-}
-
-type templateNewError struct {
-	err error
-}
-
-func (e templateNewError) Error() string {
-	return fmt.Sprintf("failed to build parser %v", e.err)
-}
-
-type templateExecuteError struct {
-	err error
-}
-
-func (e templateExecuteError) Error() string {
-	return fmt.Sprintf("failed to execute parser %v", e.err)
-}
-
-type writeFileError struct {
-	destination string
-	err         error
-}
-
-func (e writeFileError) Error() string {
-	return fmt.Sprintf("failed to write %s %v", e.destination, e.err)
 }

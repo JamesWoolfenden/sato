@@ -1,841 +1,673 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/MemoryId"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/EncryptionKeyArn"
-  ],
-  "definitions": {
-    "Arn": {
-      "description": "ARN format",
-      "pattern": "^arn:aws:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
-      "type": "string"
+  "typeName" : "AWS::BedrockAgentCore::Memory",
+  "description" : "Resource Type definition for AWS::BedrockAgentCore::Memory",
+  "definitions" : {
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
+      "description" : "Name of the Memory resource"
     },
-    "ConsolidationConfiguration": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/CustomConsolidationConfiguration"
-        }
-      ],
-      "type": "object"
+    "MemoryArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:memory/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+      "description" : "ARN of the Memory resource"
     },
-    "CustomConfigurationInput": {
-      "additionalProperties": false,
-      "maxProperties": 1,
-      "minProperties": 1,
-      "properties": {
-        "SelfManagedConfiguration": {
-          "$ref": "#/definitions/SelfManagedConfiguration"
-        },
-        "SemanticOverride": {
-          "$ref": "#/definitions/SemanticOverride"
-        },
-        "SummaryOverride": {
-          "$ref": "#/definitions/SummaryOverride"
-        },
-        "UserPreferenceOverride": {
-          "$ref": "#/definitions/UserPreferenceOverride"
-        }
-      },
-      "type": "object"
+    "MemoryId" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+      "minLength" : 12,
+      "description" : "Unique identifier for the Memory resource"
     },
-    "CustomConsolidationConfiguration": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/SemanticConsolidationOverride"
-        },
-        {
-          "$ref": "#/definitions/SummaryConsolidationOverride"
-        },
-        {
-          "$ref": "#/definitions/UserPreferenceConsolidationOverride"
-        }
-      ],
-      "type": "object"
+    "Description" : {
+      "type" : "string",
+      "description" : "Description of the Memory resource"
     },
-    "CustomExtractionConfiguration": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/SemanticExtractionOverride"
-        },
-        {
-          "$ref": "#/definitions/UserPreferenceExtractionOverride"
-        }
-      ],
-      "type": "object"
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}$",
+      "description" : "ARN format"
     },
-    "CustomMemoryStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "Configuration": {
-          "$ref": "#/definitions/CustomConfigurationInput"
+    "MemoryStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "ACTIVE", "FAILED", "DELETING" ],
+      "description" : "Status of the Memory resource"
+    },
+    "SemanticMemoryStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "$ref" : "#/definitions/Name"
         },
-        "CreatedAt": {
-          "description": "Creation timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+        "Description" : {
+          "$ref" : "#/definitions/Description"
         },
-        "Description": {
-          "$ref": "#/definitions/Description"
+        "Namespaces" : {
+          "$ref" : "#/definitions/NamespacesList"
         },
-        "Name": {
-          "$ref": "#/definitions/Name"
+        "StrategyId" : {
+          "type" : "string",
+          "minLength" : 12,
+          "pattern" : "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+          "description" : "Unique identifier for the memory strategy"
         },
-        "Namespaces": {
-          "$ref": "#/definitions/NamespacesList"
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "SEMANTIC", "SUMMARIZATION", "USER_PREFERENCE", "CUSTOM" ],
+          "description" : "Type of memory strategy"
         },
-        "Status": {
-          "description": "Status of the memory strategy",
-          "enum": [
-            "CREATING",
-            "ACTIVE",
-            "DELETING",
-            "FAILED"
-          ],
-          "type": "string"
+        "Status" : {
+          "type" : "string",
+          "enum" : [ "CREATING", "ACTIVE", "DELETING", "FAILED" ],
+          "description" : "Status of the memory strategy"
         },
-        "StrategyId": {
-          "description": "Unique identifier for the memory strategy",
-          "minLength": 12,
-          "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
-          "type": "string"
+        "CreatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Creation timestamp of the memory strategy"
         },
-        "Type": {
-          "description": "Type of memory strategy",
-          "enum": [
-            "SEMANTIC",
-            "SUMMARIZATION",
-            "USER_PREFERENCE",
-            "CUSTOM"
-          ],
-          "type": "string"
-        },
-        "UpdatedAt": {
-          "description": "Last update timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+        "UpdatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Last update timestamp of the memory strategy"
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "required" : [ "Name" ],
+      "additionalProperties" : false
     },
-    "Description": {
-      "description": "Description of the Memory resource",
-      "type": "string"
-    },
-    "ExtractionConfiguration": {
-      "oneOf": [
-        {
-          "$ref": "#/definitions/CustomExtractionConfiguration"
-        }
-      ],
-      "type": "object"
-    },
-    "InvocationConfigurationInput": {
-      "additionalProperties": false,
-      "properties": {
-        "PayloadDeliveryBucketName": {
-          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
-          "type": "string"
+    "SummaryMemoryStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "$ref" : "#/definitions/Name"
         },
-        "TopicArn": {
-          "$ref": "#/definitions/Arn"
-        }
-      },
-      "type": "object"
-    },
-    "MemoryArn": {
-      "description": "ARN of the Memory resource",
-      "pattern": "^arn:aws:bedrock-agentcore:[a-z0-9-]+:[0-9]{12}:memory/[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
-      "type": "string"
-    },
-    "MemoryId": {
-      "description": "Unique identifier for the Memory resource",
-      "minLength": 12,
-      "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
-      "type": "string"
-    },
-    "MemoryStatus": {
-      "description": "Status of the Memory resource",
-      "enum": [
-        "CREATING",
-        "ACTIVE",
-        "FAILED",
-        "DELETING"
-      ],
-      "type": "string"
-    },
-    "MemoryStrategies": {
-      "description": "List of memory strategies attached to this memory",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/MemoryStrategy"
-      },
-      "type": "array"
-    },
-    "MemoryStrategy": {
-      "additionalProperties": false,
-      "maxProperties": 1,
-      "minProperties": 1,
-      "properties": {
-        "CustomMemoryStrategy": {
-          "$ref": "#/definitions/CustomMemoryStrategy"
+        "Description" : {
+          "$ref" : "#/definitions/Description"
         },
-        "SemanticMemoryStrategy": {
-          "$ref": "#/definitions/SemanticMemoryStrategy"
+        "Namespaces" : {
+          "$ref" : "#/definitions/NamespacesList"
         },
-        "SummaryMemoryStrategy": {
-          "$ref": "#/definitions/SummaryMemoryStrategy"
+        "StrategyId" : {
+          "type" : "string",
+          "minLength" : 12,
+          "pattern" : "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+          "description" : "Unique identifier for the memory strategy"
         },
-        "UserPreferenceMemoryStrategy": {
-          "$ref": "#/definitions/UserPreferenceMemoryStrategy"
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "SEMANTIC", "SUMMARIZATION", "USER_PREFERENCE", "CUSTOM" ],
+          "description" : "Type of memory strategy"
+        },
+        "Status" : {
+          "type" : "string",
+          "enum" : [ "CREATING", "ACTIVE", "DELETING", "FAILED" ],
+          "description" : "Status of the memory strategy"
+        },
+        "CreatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Creation timestamp of the memory strategy"
+        },
+        "UpdatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Last update timestamp of the memory strategy"
         }
       },
-      "type": "object"
+      "required" : [ "Name" ],
+      "additionalProperties" : false
     },
-    "MessageBasedTriggerInput": {
-      "additionalProperties": false,
-      "properties": {
-        "MessageCount": {
-          "maximum": 50,
-          "minimum": 1,
-          "type": "integer"
+    "UserPreferenceMemoryStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "$ref" : "#/definitions/Name"
+        },
+        "Description" : {
+          "$ref" : "#/definitions/Description"
+        },
+        "Namespaces" : {
+          "$ref" : "#/definitions/NamespacesList"
+        },
+        "StrategyId" : {
+          "type" : "string",
+          "minLength" : 12,
+          "pattern" : "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+          "description" : "Unique identifier for the memory strategy"
+        },
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "SEMANTIC", "SUMMARIZATION", "USER_PREFERENCE", "CUSTOM" ],
+          "description" : "Type of memory strategy"
+        },
+        "Status" : {
+          "type" : "string",
+          "enum" : [ "CREATING", "ACTIVE", "DELETING", "FAILED" ],
+          "description" : "Status of the memory strategy"
+        },
+        "CreatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Creation timestamp of the memory strategy"
+        },
+        "UpdatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Last update timestamp of the memory strategy"
         }
       },
-      "type": "object"
+      "required" : [ "Name" ],
+      "additionalProperties" : false
     },
-    "Name": {
-      "description": "Name of the Memory resource",
-      "pattern": "^[a-zA-Z][a-zA-Z0-9_]{0,47}$",
-      "type": "string"
-    },
-    "Namespace": {
-      "description": "Namespace for the memory strategy",
-      "pattern": "^[a-zA-Z0-9\\-_/]*(\\{(actorId|sessionId|memoryStrategyId)\\}[a-zA-Z0-9\\-_/]*)*$",
-      "type": "string"
-    },
-    "NamespacesList": {
-      "description": "List of namespaces for memory strategy",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Namespace"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "Prompt": {
-      "description": "Text prompt for model instructions",
-      "maxLength": 30000,
-      "minLength": 1,
-      "type": "string"
-    },
-    "SelfManagedConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "HistoricalContextWindowSize": {
-          "maximum": 50,
-          "minimum": 0,
-          "type": "integer"
+    "CustomMemoryStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "$ref" : "#/definitions/Name"
         },
-        "InvocationConfiguration": {
-          "$ref": "#/definitions/InvocationConfigurationInput"
+        "Description" : {
+          "$ref" : "#/definitions/Description"
         },
-        "TriggerConditions": {
-          "$ref": "#/definitions/TriggerConditionList"
+        "Namespaces" : {
+          "$ref" : "#/definitions/NamespacesList"
+        },
+        "Configuration" : {
+          "$ref" : "#/definitions/CustomConfigurationInput"
+        },
+        "StrategyId" : {
+          "type" : "string",
+          "minLength" : 12,
+          "pattern" : "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
+          "description" : "Unique identifier for the memory strategy"
+        },
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "SEMANTIC", "SUMMARIZATION", "USER_PREFERENCE", "CUSTOM" ],
+          "description" : "Type of memory strategy"
+        },
+        "Status" : {
+          "type" : "string",
+          "enum" : [ "CREATING", "ACTIVE", "DELETING", "FAILED" ],
+          "description" : "Status of the memory strategy"
+        },
+        "CreatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Creation timestamp of the memory strategy"
+        },
+        "UpdatedAt" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Last update timestamp of the memory strategy"
         }
       },
-      "type": "object"
+      "required" : [ "Name" ],
+      "additionalProperties" : false
     },
-    "SemanticConsolidationOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "MemoryStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "SemanticMemoryStrategy" : {
+          "$ref" : "#/definitions/SemanticMemoryStrategy"
         },
-        "ModelId": {
-          "description": "ID of the model to use",
-          "type": "string"
+        "SummaryMemoryStrategy" : {
+          "$ref" : "#/definitions/SummaryMemoryStrategy"
+        },
+        "UserPreferenceMemoryStrategy" : {
+          "$ref" : "#/definitions/UserPreferenceMemoryStrategy"
+        },
+        "CustomMemoryStrategy" : {
+          "$ref" : "#/definitions/CustomMemoryStrategy"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "maxProperties" : 1,
+      "minProperties" : 1
     },
-    "SemanticExtractionOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "MemoryStrategies" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/MemoryStrategy"
+      },
+      "insertionOrder" : false,
+      "description" : "List of memory strategies attached to this memory"
+    },
+    "StrategyConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "SEMANTIC_OVERRIDE", "SUMMARY_OVERRIDE", "USER_PREFERENCE_OVERRIDE" ],
+          "description" : "Type of strategy configuration override"
         },
-        "ModelId": {
-          "description": "ID of the model to use",
-          "type": "string"
+        "Extraction" : {
+          "$ref" : "#/definitions/ExtractionConfiguration"
+        },
+        "Consolidation" : {
+          "$ref" : "#/definitions/ConsolidationConfiguration"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SemanticMemoryStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "CreatedAt": {
-          "description": "Creation timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+    "ExtractionConfiguration" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "$ref" : "#/definitions/CustomExtractionConfiguration"
+      } ]
+    },
+    "CustomExtractionConfiguration" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "$ref" : "#/definitions/SemanticExtractionOverride"
+      }, {
+        "$ref" : "#/definitions/UserPreferenceExtractionOverride"
+      } ]
+    },
+    "SemanticExtractionOverride" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "Description": {
-          "$ref": "#/definitions/Description"
-        },
-        "Name": {
-          "$ref": "#/definitions/Name"
-        },
-        "Namespaces": {
-          "$ref": "#/definitions/NamespacesList"
-        },
-        "Status": {
-          "description": "Status of the memory strategy",
-          "enum": [
-            "CREATING",
-            "ACTIVE",
-            "DELETING",
-            "FAILED"
-          ],
-          "type": "string"
-        },
-        "StrategyId": {
-          "description": "Unique identifier for the memory strategy",
-          "minLength": 12,
-          "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
-          "type": "string"
-        },
-        "Type": {
-          "description": "Type of memory strategy",
-          "enum": [
-            "SEMANTIC",
-            "SUMMARIZATION",
-            "USER_PREFERENCE",
-            "CUSTOM"
-          ],
-          "type": "string"
-        },
-        "UpdatedAt": {
-          "description": "Last update timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+        "ModelId" : {
+          "type" : "string",
+          "description" : "ID of the model to use"
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "SemanticOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "Consolidation": {
-          "$ref": "#/definitions/SemanticOverrideConsolidationConfigurationInput"
+    "UserPreferenceExtractionOverride" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "Extraction": {
-          "$ref": "#/definitions/SemanticOverrideExtractionConfigurationInput"
+        "ModelId" : {
+          "type" : "string",
+          "description" : "ID of the model to use"
         }
       },
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "SemanticOverrideConsolidationConfigurationInput": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "ConsolidationConfiguration" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "$ref" : "#/definitions/CustomConsolidationConfiguration"
+      } ]
+    },
+    "CustomConsolidationConfiguration" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "$ref" : "#/definitions/SemanticConsolidationOverride"
+      }, {
+        "$ref" : "#/definitions/SummaryConsolidationOverride"
+      }, {
+        "$ref" : "#/definitions/UserPreferenceConsolidationOverride"
+      } ]
+    },
+    "SemanticConsolidationOverride" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "ModelId": {
-          "type": "string"
+        "ModelId" : {
+          "type" : "string",
+          "description" : "ID of the model to use"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "SemanticOverrideExtractionConfigurationInput": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "SummaryConsolidationOverride" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "ModelId": {
-          "type": "string"
+        "ModelId" : {
+          "type" : "string",
+          "description" : "ID of the model to use"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "StrategyConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Consolidation": {
-          "$ref": "#/definitions/ConsolidationConfiguration"
+    "UserPreferenceConsolidationOverride" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "Extraction": {
-          "$ref": "#/definitions/ExtractionConfiguration"
-        },
-        "Type": {
-          "description": "Type of strategy configuration override",
-          "enum": [
-            "SEMANTIC_OVERRIDE",
-            "SUMMARY_OVERRIDE",
-            "USER_PREFERENCE_OVERRIDE"
-          ],
-          "type": "string"
+        "ModelId" : {
+          "type" : "string",
+          "description" : "ID of the model to use"
         }
       },
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "SummaryConsolidationOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "Namespace" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9\\-_/]*(\\{(actorId|sessionId|memoryStrategyId)\\}[a-zA-Z0-9\\-_/]*)*$",
+      "description" : "Namespace for the memory strategy"
+    },
+    "NamespacesList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Namespace"
+      },
+      "minItems" : 1,
+      "insertionOrder" : false,
+      "description" : "List of namespaces for memory strategy"
+    },
+    "Prompt" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 30000,
+      "description" : "Text prompt for model instructions"
+    },
+    "CustomConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "SemanticOverride" : {
+          "$ref" : "#/definitions/SemanticOverride"
         },
-        "ModelId": {
-          "description": "ID of the model to use",
-          "type": "string"
+        "SummaryOverride" : {
+          "$ref" : "#/definitions/SummaryOverride"
+        },
+        "UserPreferenceOverride" : {
+          "$ref" : "#/definitions/UserPreferenceOverride"
+        },
+        "SelfManagedConfiguration" : {
+          "$ref" : "#/definitions/SelfManagedConfiguration"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "maxProperties" : 1,
+      "minProperties" : 1
     },
-    "SummaryMemoryStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "CreatedAt": {
-          "description": "Creation timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+    "SelfManagedConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "TriggerConditions" : {
+          "$ref" : "#/definitions/TriggerConditionList"
         },
-        "Description": {
-          "$ref": "#/definitions/Description"
+        "InvocationConfiguration" : {
+          "$ref" : "#/definitions/InvocationConfigurationInput"
         },
-        "Name": {
-          "$ref": "#/definitions/Name"
-        },
-        "Namespaces": {
-          "$ref": "#/definitions/NamespacesList"
-        },
-        "Status": {
-          "description": "Status of the memory strategy",
-          "enum": [
-            "CREATING",
-            "ACTIVE",
-            "DELETING",
-            "FAILED"
-          ],
-          "type": "string"
-        },
-        "StrategyId": {
-          "description": "Unique identifier for the memory strategy",
-          "minLength": 12,
-          "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
-          "type": "string"
-        },
-        "Type": {
-          "description": "Type of memory strategy",
-          "enum": [
-            "SEMANTIC",
-            "SUMMARIZATION",
-            "USER_PREFERENCE",
-            "CUSTOM"
-          ],
-          "type": "string"
-        },
-        "UpdatedAt": {
-          "description": "Last update timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+        "HistoricalContextWindowSize" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 50
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SummaryOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "Consolidation": {
-          "$ref": "#/definitions/SummaryOverrideConsolidationConfigurationInput"
+    "TriggerConditionList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/TriggerConditionInput"
+      },
+      "additionalProperties" : false,
+      "insertionOrder" : false,
+      "minItems" : 1
+    },
+    "TriggerConditionInput" : {
+      "type" : "object",
+      "properties" : {
+        "MessageBasedTrigger" : {
+          "$ref" : "#/definitions/MessageBasedTriggerInput"
+        },
+        "TokenBasedTrigger" : {
+          "$ref" : "#/definitions/TokenBasedTriggerInput"
+        },
+        "TimeBasedTrigger" : {
+          "$ref" : "#/definitions/TimeBasedTriggerInput"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "maxProperties" : 1,
+      "minProperties" : 1
     },
-    "SummaryOverrideConsolidationConfigurationInput": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
-        },
-        "ModelId": {
-          "type": "string"
+    "MessageBasedTriggerInput" : {
+      "type" : "object",
+      "properties" : {
+        "MessageCount" : {
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 50
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TagsMap": {
-      "additionalProperties": false,
-      "description": "A map of tag keys and values",
-      "maxProperties": 50,
-      "minProperties": 0,
-      "patternProperties": {
-        "^[a-zA-Z0-9\\s._:/=+@-]{1,128}$": {
-          "description": "Value of a tag",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
+    "TokenBasedTriggerInput" : {
+      "type" : "object",
+      "properties" : {
+        "TokenCount" : {
+          "type" : "integer",
+          "minimum" : 100,
+          "maximum" : 500000
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TimeBasedTriggerInput": {
-      "additionalProperties": false,
-      "properties": {
-        "IdleSessionTimeout": {
-          "maximum": 3000,
-          "minimum": 10,
-          "type": "integer"
+    "TimeBasedTriggerInput" : {
+      "type" : "object",
+      "properties" : {
+        "IdleSessionTimeout" : {
+          "type" : "integer",
+          "minimum" : 10,
+          "maximum" : 3000
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TokenBasedTriggerInput": {
-      "additionalProperties": false,
-      "properties": {
-        "TokenCount": {
-          "maximum": 500000,
-          "minimum": 100,
-          "type": "integer"
+    "InvocationConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "TopicArn" : {
+          "$ref" : "#/definitions/Arn"
+        },
+        "PayloadDeliveryBucketName" : {
+          "type" : "string",
+          "pattern" : "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TriggerConditionInput": {
-      "additionalProperties": false,
-      "maxProperties": 1,
-      "minProperties": 1,
-      "properties": {
-        "MessageBasedTrigger": {
-          "$ref": "#/definitions/MessageBasedTriggerInput"
+    "SemanticOverride" : {
+      "type" : "object",
+      "properties" : {
+        "Extraction" : {
+          "$ref" : "#/definitions/SemanticOverrideExtractionConfigurationInput"
         },
-        "TimeBasedTrigger": {
-          "$ref": "#/definitions/TimeBasedTriggerInput"
-        },
-        "TokenBasedTrigger": {
-          "$ref": "#/definitions/TokenBasedTriggerInput"
+        "Consolidation" : {
+          "$ref" : "#/definitions/SemanticOverrideConsolidationConfigurationInput"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TriggerConditionList": {
-      "additionalProperties": false,
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/TriggerConditionInput"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "UserPreferenceConsolidationOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "SemanticOverrideExtractionConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "ModelId": {
-          "description": "ID of the model to use",
-          "type": "string"
+        "ModelId" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "UserPreferenceExtractionOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "SemanticOverrideConsolidationConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "ModelId": {
-          "description": "ID of the model to use",
-          "type": "string"
+        "ModelId" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "UserPreferenceMemoryStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "CreatedAt": {
-          "description": "Creation timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
-        },
-        "Description": {
-          "$ref": "#/definitions/Description"
-        },
-        "Name": {
-          "$ref": "#/definitions/Name"
-        },
-        "Namespaces": {
-          "$ref": "#/definitions/NamespacesList"
-        },
-        "Status": {
-          "description": "Status of the memory strategy",
-          "enum": [
-            "CREATING",
-            "ACTIVE",
-            "DELETING",
-            "FAILED"
-          ],
-          "type": "string"
-        },
-        "StrategyId": {
-          "description": "Unique identifier for the memory strategy",
-          "minLength": 12,
-          "pattern": "^[a-zA-Z][a-zA-Z0-9-_]{0,99}-[a-zA-Z0-9]{10}$",
-          "type": "string"
-        },
-        "Type": {
-          "description": "Type of memory strategy",
-          "enum": [
-            "SEMANTIC",
-            "SUMMARIZATION",
-            "USER_PREFERENCE",
-            "CUSTOM"
-          ],
-          "type": "string"
-        },
-        "UpdatedAt": {
-          "description": "Last update timestamp of the memory strategy",
-          "format": "date-time",
-          "type": "string"
+    "SummaryOverride" : {
+      "type" : "object",
+      "properties" : {
+        "Consolidation" : {
+          "$ref" : "#/definitions/SummaryOverrideConsolidationConfigurationInput"
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "UserPreferenceOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "Consolidation": {
-          "$ref": "#/definitions/UserPreferenceOverrideConsolidationConfigurationInput"
+    "SummaryOverrideConsolidationConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "Extraction": {
-          "$ref": "#/definitions/UserPreferenceOverrideExtractionConfigurationInput"
+        "ModelId" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
     },
-    "UserPreferenceOverrideConsolidationConfigurationInput": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "UserPreferenceOverride" : {
+      "type" : "object",
+      "properties" : {
+        "Extraction" : {
+          "$ref" : "#/definitions/UserPreferenceOverrideExtractionConfigurationInput"
         },
-        "ModelId": {
-          "type": "string"
+        "Consolidation" : {
+          "$ref" : "#/definitions/UserPreferenceOverrideConsolidationConfigurationInput"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "UserPreferenceOverrideExtractionConfigurationInput": {
-      "additionalProperties": false,
-      "properties": {
-        "AppendToPrompt": {
-          "$ref": "#/definitions/Prompt"
+    "UserPreferenceOverrideExtractionConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
         },
-        "ModelId": {
-          "type": "string"
+        "ModelId" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "AppendToPrompt",
-        "ModelId"
-      ],
-      "type": "object"
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
+    },
+    "UserPreferenceOverrideConsolidationConfigurationInput" : {
+      "type" : "object",
+      "properties" : {
+        "AppendToPrompt" : {
+          "$ref" : "#/definitions/Prompt"
+        },
+        "ModelId" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AppendToPrompt", "ModelId" ],
+      "additionalProperties" : false
+    },
+    "TagsMap" : {
+      "type" : "object",
+      "description" : "A map of tag keys and values",
+      "maxProperties" : 50,
+      "minProperties" : 0,
+      "patternProperties" : {
+        "^[a-zA-Z0-9\\s._:/=+@-]{1,128}$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$",
+          "description" : "Value of a tag"
+        }
+      },
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::BedrockAgentCore::Memory",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock-agentcore:CreateMemory",
-        "bedrock-agentcore:GetMemory",
-        "iam:PassRole",
-        "kms:DescribeKey",
-        "kms:CreateGrant",
-        "kms:Decrypt",
-        "kms:GenerateDataKeyWithoutPlaintext",
-        "kms:ReEncryptTo",
-        "kms:ReEncryptFrom",
-        "kms:GenerateDataKey",
-        "bedrock-agentcore:TagResource"
-      ],
-      "timeoutInMinutes": 45
+  "properties" : {
+    "Name" : {
+      "$ref" : "#/definitions/Name"
     },
-    "delete": {
-      "permissions": [
-        "bedrock-agentcore:DeleteMemory",
-        "bedrock-agentcore:GetMemory"
-      ]
+    "Description" : {
+      "$ref" : "#/definitions/Description"
     },
-    "list": {
-      "permissions": [
-        "bedrock-agentcore:ListMemories"
-      ]
+    "EncryptionKeyArn" : {
+      "$ref" : "#/definitions/Arn"
     },
-    "read": {
-      "permissions": [
-        "bedrock-agentcore:GetMemory",
-        "bedrock-agentcore:ListTagsForResource"
-      ]
+    "MemoryExecutionRoleArn" : {
+      "$ref" : "#/definitions/Arn"
     },
-    "update": {
-      "permissions": [
-        "bedrock-agentcore:UpdateMemory",
-        "bedrock-agentcore:GetMemory",
-        "iam:PassRole",
-        "bedrock-agentcore:TagResource",
-        "bedrock-agentcore:UntagResource",
-        "bedrock-agentcore:ListTagsForResource"
-      ]
+    "EventExpiryDuration" : {
+      "type" : "integer",
+      "minimum" : 7,
+      "maximum" : 365,
+      "description" : "Duration in days until memory events expire"
+    },
+    "MemoryArn" : {
+      "$ref" : "#/definitions/MemoryArn"
+    },
+    "MemoryId" : {
+      "$ref" : "#/definitions/MemoryId"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/MemoryStatus"
+    },
+    "FailureReason" : {
+      "type" : "string"
+    },
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "UpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "MemoryStrategies" : {
+      "$ref" : "#/definitions/MemoryStrategies"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagsMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/MemoryArn"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
+  "required" : [ "Name", "EventExpiryDuration" ],
+  "primaryIdentifier" : [ "/properties/MemoryArn" ],
+  "additionalIdentifiers" : [ [ "/properties/MemoryId" ] ],
+  "readOnlyProperties" : [ "/properties/MemoryArn", "/properties/MemoryId", "/properties/Status", "/properties/CreatedAt", "/properties/UpdatedAt", "/properties/FailureReason", "/properties/MemoryStrategies/*/SemanticMemoryStrategy/CreatedAt", "/properties/MemoryStrategies/*/SemanticMemoryStrategy/UpdatedAt", "/properties/MemoryStrategies/*/SemanticMemoryStrategy/StrategyId", "/properties/MemoryStrategies/*/SemanticMemoryStrategy/Status", "/properties/MemoryStrategies/*/SemanticMemoryStrategy/Type", "/properties/MemoryStrategies/*/SummaryMemoryStrategy/CreatedAt", "/properties/MemoryStrategies/*/SummaryMemoryStrategy/UpdatedAt", "/properties/MemoryStrategies/*/SummaryMemoryStrategy/StrategyId", "/properties/MemoryStrategies/*/SummaryMemoryStrategy/Status", "/properties/MemoryStrategies/*/SummaryMemoryStrategy/Type", "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/CreatedAt", "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/UpdatedAt", "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/StrategyId", "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/Status", "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/Type", "/properties/MemoryStrategies/*/CustomMemoryStrategy/CreatedAt", "/properties/MemoryStrategies/*/CustomMemoryStrategy/UpdatedAt", "/properties/MemoryStrategies/*/CustomMemoryStrategy/StrategyId", "/properties/MemoryStrategies/*/CustomMemoryStrategy/Status", "/properties/MemoryStrategies/*/CustomMemoryStrategy/Type" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/EncryptionKeyArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock-agentcore:CreateMemory", "bedrock-agentcore:GetMemory", "iam:PassRole", "kms:DescribeKey", "kms:CreateGrant", "kms:Decrypt", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptTo", "kms:ReEncryptFrom", "kms:GenerateDataKey", "bedrock-agentcore:TagResource" ],
+      "timeoutInMinutes" : 45
     },
-    "Description": {
-      "$ref": "#/definitions/Description"
+    "read" : {
+      "permissions" : [ "bedrock-agentcore:GetMemory", "bedrock-agentcore:ListTagsForResource" ]
     },
-    "EncryptionKeyArn": {
-      "$ref": "#/definitions/Arn"
+    "update" : {
+      "permissions" : [ "bedrock-agentcore:UpdateMemory", "bedrock-agentcore:GetMemory", "iam:PassRole", "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:ListTagsForResource" ]
     },
-    "EventExpiryDuration": {
-      "description": "Duration in days until memory events expire",
-      "maximum": 365,
-      "minimum": 7,
-      "type": "integer"
+    "delete" : {
+      "permissions" : [ "bedrock-agentcore:DeleteMemory", "bedrock-agentcore:GetMemory" ]
     },
-    "FailureReason": {
-      "type": "string"
-    },
-    "MemoryArn": {
-      "$ref": "#/definitions/MemoryArn"
-    },
-    "MemoryExecutionRoleArn": {
-      "$ref": "#/definitions/Arn"
-    },
-    "MemoryId": {
-      "$ref": "#/definitions/MemoryId"
-    },
-    "MemoryStrategies": {
-      "$ref": "#/definitions/MemoryStrategies"
-    },
-    "Name": {
-      "$ref": "#/definitions/Name"
-    },
-    "Status": {
-      "$ref": "#/definitions/MemoryStatus"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagsMap"
-    },
-    "UpdatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "bedrock-agentcore:ListMemories" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/MemoryArn",
-    "/properties/MemoryId",
-    "/properties/Status",
-    "/properties/CreatedAt",
-    "/properties/UpdatedAt",
-    "/properties/FailureReason",
-    "/properties/MemoryStrategies/*/SemanticMemoryStrategy/CreatedAt",
-    "/properties/MemoryStrategies/*/SemanticMemoryStrategy/UpdatedAt",
-    "/properties/MemoryStrategies/*/SemanticMemoryStrategy/StrategyId",
-    "/properties/MemoryStrategies/*/SemanticMemoryStrategy/Status",
-    "/properties/MemoryStrategies/*/SemanticMemoryStrategy/Type",
-    "/properties/MemoryStrategies/*/SummaryMemoryStrategy/CreatedAt",
-    "/properties/MemoryStrategies/*/SummaryMemoryStrategy/UpdatedAt",
-    "/properties/MemoryStrategies/*/SummaryMemoryStrategy/StrategyId",
-    "/properties/MemoryStrategies/*/SummaryMemoryStrategy/Status",
-    "/properties/MemoryStrategies/*/SummaryMemoryStrategy/Type",
-    "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/CreatedAt",
-    "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/UpdatedAt",
-    "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/StrategyId",
-    "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/Status",
-    "/properties/MemoryStrategies/*/UserPreferenceMemoryStrategy/Type",
-    "/properties/MemoryStrategies/*/CustomMemoryStrategy/CreatedAt",
-    "/properties/MemoryStrategies/*/CustomMemoryStrategy/UpdatedAt",
-    "/properties/MemoryStrategies/*/CustomMemoryStrategy/StrategyId",
-    "/properties/MemoryStrategies/*/CustomMemoryStrategy/Status",
-    "/properties/MemoryStrategies/*/CustomMemoryStrategy/Type"
-  ],
-  "required": [
-    "Name",
-    "EventExpiryDuration"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "bedrock-agentcore:TagResource",
-      "bedrock-agentcore:UntagResource",
-      "bedrock-agentcore:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:ListTagsForResource" ]
   },
-  "typeName": "AWS::BedrockAgentCore::Memory"
+  "additionalProperties" : false
 }

@@ -1,142 +1,100 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Scope"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::WAFv2::RegexPatternSet",
+  "description" : "Contains a list of Regular expressions based on the provided inputs. RegexPatternSet can be used with other WAF entities with RegexPatternSetReferenceStatement to perform other actions .",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wafv2.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Contains a list of Regular expressions based on the provided inputs. RegexPatternSet can be used with other WAF entities with RegexPatternSetReferenceStatement to perform other actions .",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "wafv2:CreateRegexPatternSet",
-        "wafv2:GetRegexPatternSet",
-        "wafv2:TagResource",
-        "wafv2:UntagResource",
-        "wafv2:ListTagsForResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "ARN of the WAF entity.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "wafv2:DeleteRegexPatternSet",
-        "wafv2:GetRegexPatternSet"
-      ]
+    "Description" : {
+      "description" : "Description of the entity.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9=:#@/\\-,.][a-zA-Z0-9+=:#@/\\-,.\\s]+[a-zA-Z0-9+=:#@/\\-,.]{1,256}$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "Scope": {
-            "$ref": "resource-schema.json#/properties/Scope"
+    "Name" : {
+      "description" : "Name of the RegexPatternSet.",
+      "type" : "string",
+      "pattern" : "^[0-9A-Za-z_-]{1,128}$"
+    },
+    "Id" : {
+      "description" : "Id of the RegexPatternSet",
+      "type" : "string",
+      "pattern" : "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$"
+    },
+    "RegularExpressionList" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Scope" : {
+      "description" : "Use CLOUDFRONT for CloudFront RegexPatternSet, use REGIONAL for Application Load Balancer and API Gateway.",
+      "type" : "string",
+      "enum" : [ "CLOUDFRONT", "REGIONAL" ]
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "minItems" : 1
+    }
+  },
+  "required" : [ "Scope", "RegularExpressionList" ],
+  "primaryIdentifier" : [ "/properties/Name", "/properties/Id", "/properties/Scope" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Scope" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id" ],
+  "additionalProperties" : false,
+  "tagging" : {
+    "cloudFormationSystemTags" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "wafv2:TagResource", "wafv2:UntagResource", "wafv2:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "wafv2:CreateRegexPatternSet", "wafv2:GetRegexPatternSet", "wafv2:TagResource", "wafv2:UntagResource", "wafv2:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "wafv2:DeleteRegexPatternSet", "wafv2:GetRegexPatternSet" ]
+    },
+    "read" : {
+      "permissions" : [ "wafv2:GetRegexPatternSet", "wafv2:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "wafv2:UpdateRegexPatternSet", "wafv2:GetRegexPatternSet", "wafv2:ListTagsForResource", "wafv2:TagResource", "wafv2:UntagResource" ]
+    },
+    "list" : {
+      "permissions" : [ "wafv2:listRegexPatternSets" ],
+      "handlerSchema" : {
+        "properties" : {
+          "Scope" : {
+            "$ref" : "resource-schema.json#/properties/Scope"
           }
         },
-        "required": [
-          "Scope"
-        ]
-      },
-      "permissions": [
-        "wafv2:listRegexPatternSets"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "wafv2:GetRegexPatternSet",
-        "wafv2:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "wafv2:UpdateRegexPatternSet",
-        "wafv2:GetRegexPatternSet",
-        "wafv2:ListTagsForResource",
-        "wafv2:TagResource",
-        "wafv2:UntagResource"
-      ]
+        "required" : [ "Scope" ]
+      }
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Name",
-    "/properties/Id",
-    "/properties/Scope"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "ARN of the WAF entity.",
-      "type": "string"
-    },
-    "Description": {
-      "description": "Description of the entity.",
-      "pattern": "^[a-zA-Z0-9=:#@/\\-,.][a-zA-Z0-9+=:#@/\\-,.\\s]+[a-zA-Z0-9+=:#@/\\-,.]{1,256}$",
-      "type": "string"
-    },
-    "Id": {
-      "description": "Id of the RegexPatternSet",
-      "pattern": "^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$",
-      "type": "string"
-    },
-    "Name": {
-      "description": "Name of the RegexPatternSet.",
-      "pattern": "^[0-9A-Za-z_-]{1,128}$",
-      "type": "string"
-    },
-    "RegularExpressionList": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Scope": {
-      "description": "Use CLOUDFRONT for CloudFront RegexPatternSet, use REGIONAL for Application Load Balancer and API Gateway.",
-      "enum": [
-        "CLOUDFRONT",
-        "REGIONAL"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "minItems": 1,
-      "type": "array"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [
-    "Scope",
-    "RegularExpressionList"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-wafv2.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "wafv2:TagResource",
-      "wafv2:UntagResource",
-      "wafv2:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::WAFv2::RegexPatternSet"
+  }
 }

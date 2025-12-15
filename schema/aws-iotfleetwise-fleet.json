@@ -1,130 +1,91 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Id",
-    "/properties/SignalCatalogArn"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::IoTFleetWise::Fleet",
+  "description" : "Definition of AWS::IoTFleetWise::Fleet Resource Type",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::IoTFleetWise::Fleet Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotfleetwise:GetFleet",
-        "iotfleetwise:CreateFleet",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:ListVehiclesInFleet",
-        "iotfleetwise:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iotfleetwise:GetFleet",
-        "iotfleetwise:DeleteFleet"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "list": {
-      "permissions": [
-        "iotfleetwise:ListFleets"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
     },
-    "read": {
-      "permissions": [
-        "iotfleetwise:GetFleet",
-        "iotfleetwise:ListTagsForResource"
-      ]
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9:_-]+$"
     },
-    "update": {
-      "permissions": [
-        "iotfleetwise:GetFleet",
-        "iotfleetwise:UpdateFleet",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource",
-        "iotfleetwise:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+    "LastModificationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+    "SignalCatalogArn" : {
+      "type" : "string"
     },
-    "Description": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-      "type": "string"
-    },
-    "Id": {
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9:_-]+$",
-      "type": "string"
-    },
-    "LastModificationTime": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "SignalCatalogArn": {
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "maxItems" : 50,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/LastModificationTime"
-  ],
-  "required": [
-    "Id",
-    "SignalCatalogArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotfleetwise:UntagResource",
-      "iotfleetwise:TagResource",
-      "iotfleetwise:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "Id", "SignalCatalogArn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotfleetwise:UntagResource", "iotfleetwise:TagResource", "iotfleetwise:ListTagsForResource" ]
   },
-  "typeName": "AWS::IoTFleetWise::Fleet"
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/LastModificationTime" ],
+  "createOnlyProperties" : [ "/properties/Id", "/properties/SignalCatalogArn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotfleetwise:GetFleet", "iotfleetwise:CreateFleet", "iotfleetwise:ListTagsForResource", "iotfleetwise:ListVehiclesInFleet", "iotfleetwise:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "iotfleetwise:GetFleet", "iotfleetwise:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "iotfleetwise:GetFleet", "iotfleetwise:UpdateFleet", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource", "iotfleetwise:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "iotfleetwise:GetFleet", "iotfleetwise:DeleteFleet" ]
+    },
+    "list" : {
+      "permissions" : [ "iotfleetwise:ListFleets" ]
+    }
+  },
+  "additionalProperties" : false
 }

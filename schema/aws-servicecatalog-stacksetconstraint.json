@@ -1,65 +1,49 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PortfolioId",
-    "/properties/ProductId"
-  ],
-  "description": "Resource Type definition for AWS::ServiceCatalog::StackSetConstraint",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AcceptLanguage": {
-      "type": "string"
+  "typeName" : "AWS::ServiceCatalog::StackSetConstraint",
+  "description" : "Resource Type definition for AWS::ServiceCatalog::StackSetConstraint",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "AccountList": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "Description" : {
+      "type" : "string"
     },
-    "AdminRole": {
-      "type": "string"
+    "StackInstanceControl" : {
+      "type" : "string"
     },
-    "Description": {
-      "type": "string"
+    "AcceptLanguage" : {
+      "type" : "string"
     },
-    "ExecutionRole": {
-      "type": "string"
+    "PortfolioId" : {
+      "type" : "string"
     },
-    "Id": {
-      "type": "string"
+    "ProductId" : {
+      "type" : "string"
     },
-    "PortfolioId": {
-      "type": "string"
+    "RegionList" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "ProductId": {
-      "type": "string"
+    "AdminRole" : {
+      "type" : "string"
     },
-    "RegionList": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "AccountList" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "StackInstanceControl": {
-      "type": "string"
+    "ExecutionRole" : {
+      "type" : "string"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Description",
-    "StackInstanceControl",
-    "PortfolioId",
-    "ProductId",
-    "RegionList",
-    "AdminRole",
-    "AccountList",
-    "ExecutionRole"
-  ],
-  "typeName": "AWS::ServiceCatalog::StackSetConstraint"
+  "required" : [ "Description", "StackInstanceControl", "PortfolioId", "ProductId", "RegionList", "AdminRole", "AccountList", "ExecutionRole" ],
+  "createOnlyProperties" : [ "/properties/PortfolioId", "/properties/ProductId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

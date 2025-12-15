@@ -1,206 +1,100 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SubscriberArn"
-  ],
-  "definitions": {
-    "HttpsNotificationConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration for HTTPS subscriber notification.",
-      "properties": {
-        "AuthorizationApiKeyName": {
-          "description": "The key name for the notification subscription.",
-          "type": "string"
+  "typeName" : "AWS::SecurityLake::SubscriberNotification",
+  "description" : "Resource Type definition for AWS::SecurityLake::SubscriberNotification",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securitylake.git",
+  "definitions" : {
+    "HttpsNotificationConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "AuthorizationApiKeyName" : {
+          "type" : "string",
+          "description" : "The key name for the notification subscription."
         },
-        "AuthorizationApiKeyValue": {
-          "description": "The key value for the notification subscription.",
-          "type": "string"
+        "AuthorizationApiKeyValue" : {
+          "type" : "string",
+          "description" : "The key value for the notification subscription."
         },
-        "Endpoint": {
-          "description": "The subscription endpoint in Security Lake.",
-          "pattern": "^https?://.+$",
-          "type": "string"
+        "Endpoint" : {
+          "type" : "string",
+          "pattern" : "^https?://.+$",
+          "description" : "The subscription endpoint in Security Lake."
         },
-        "HttpMethod": {
-          "description": "The HTTPS method used for the notification subscription.",
-          "enum": [
-            "POST",
-            "PUT"
-          ],
-          "type": "string"
+        "HttpMethod" : {
+          "type" : "string",
+          "enum" : [ "POST", "PUT" ],
+          "description" : "The HTTPS method used for the notification subscription."
         },
-        "TargetRoleArn": {
-          "description": "The Amazon Resource Name (ARN) of the EventBridge API destinations IAM role that you created.",
-          "pattern": "^arn:.*$",
-          "type": "string"
+        "TargetRoleArn" : {
+          "type" : "string",
+          "pattern" : "^arn:.*$",
+          "description" : "The Amazon Resource Name (ARN) of the EventBridge API destinations IAM role that you created."
         }
       },
-      "required": [
-        "Endpoint",
-        "TargetRoleArn"
-      ],
-      "type": "object"
+      "description" : "The configuration for HTTPS subscriber notification.",
+      "additionalProperties" : false,
+      "required" : [ "Endpoint", "TargetRoleArn" ]
     },
-    "NotificationConfiguration": {
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "HttpsNotificationConfiguration"
-          ]
+    "SqsNotificationConfiguration" : {
+      "type" : "object",
+      "description" : "The configurations for SQS subscriber notification. The members of this structure are context-dependent."
+    },
+    "NotificationConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "HttpsNotificationConfiguration" : {
+          "$ref" : "#/definitions/HttpsNotificationConfiguration"
         },
-        {
-          "required": [
-            "SqsNotificationConfiguration"
-          ]
-        }
-      ],
-      "properties": {
-        "HttpsNotificationConfiguration": {
-          "$ref": "#/definitions/HttpsNotificationConfiguration"
-        },
-        "SqsNotificationConfiguration": {
-          "$ref": "#/definitions/SqsNotificationConfiguration"
+        "SqsNotificationConfiguration" : {
+          "$ref" : "#/definitions/SqsNotificationConfiguration"
         }
       },
-      "type": "object"
-    },
-    "SqsNotificationConfiguration": {
-      "description": "The configurations for SQS subscriber notification. The members of this structure are context-dependent.",
-      "type": "object"
+      "additionalProperties" : false,
+      "oneOf" : [ {
+        "required" : [ "HttpsNotificationConfiguration" ]
+      }, {
+        "required" : [ "SqsNotificationConfiguration" ]
+      } ]
     }
   },
-  "description": "Resource Type definition for AWS::SecurityLake::SubscriberNotification",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "securitylake:CreateDataLake",
-        "securitylake:CreateSubscriber",
-        "securitylake:CreateSubscriberNotification",
-        "securitylake:GetSubscriber",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy",
-        "iam:DeleteRolePolicy",
-        "iam:PassRole",
-        "s3:PutBucketNotification",
-        "s3:GetBucketNotification",
-        "events:CreateApiDestination",
-        "events:CreateConnection",
-        "events:CreateRule",
-        "events:UpdateConnection",
-        "events:DeleteConnection",
-        "events:UpdateApiDestination",
-        "events:DeleteApiDestination",
-        "events:ListApiDestinations",
-        "events:ListConnections",
-        "events:PutRule",
-        "events:DescribeRule",
-        "events:DeleteRule",
-        "events:PutTargets",
-        "events:RemoveTargets",
-        "events:ListTargetsByRule",
-        "secretsmanager:CreateSecret",
-        "sqs:CreateQueue",
-        "sqs:GetQueueAttributes",
-        "sqs:GetQueueUrl",
-        "sqs:SetQueueAttributes"
-      ]
+  "properties" : {
+    "NotificationConfiguration" : {
+      "$ref" : "#/definitions/NotificationConfiguration"
     },
-    "delete": {
-      "permissions": [
-        "securitylake:DeleteSubscriberNotification",
-        "securitylake:GetSubscriber",
-        "iam:DeleteRole",
-        "iam:DeleteRolePolicy",
-        "events:DeleteApiDestination",
-        "events:DeleteConnection",
-        "events:DeleteRule",
-        "events:ListTargetsByRule",
-        "events:DescribeRule",
-        "events:RemoveTargets",
-        "sqs:DeleteQueue"
-      ]
+    "SubscriberArn" : {
+      "description" : "The ARN for the subscriber",
+      "type" : "string",
+      "pattern" : "^arn:.*$"
     },
-    "list": {
-      "permissions": [
-        "securitylake:ListSubscribers"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "securitylake:GetSubscriber"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "securitylake:UpdateSubscriberNotification",
-        "securitylake:GetSubscriber",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy",
-        "iam:DeleteRolePolicy",
-        "iam:PassRole",
-        "events:CreateApiDestination",
-        "events:CreateConnection",
-        "events:UpdateConnection",
-        "events:DeleteConnection",
-        "events:UpdateApiDestination",
-        "events:DeleteApiDestination",
-        "events:DeleteRule",
-        "events:ListApiDestinations",
-        "events:ListConnections",
-        "events:PutRule",
-        "events:DescribeRule",
-        "events:DeleteRule",
-        "events:PutTargets",
-        "events:RemoveTargets",
-        "events:ListTargetsByRule",
-        "secretsmanager:CreateSecret",
-        "s3:GetBucketNotificationConfiguration",
-        "s3:PutBucketNotificationConfiguration",
-        "s3:PutBucketNotification",
-        "s3:GetBucketNotification",
-        "sqs:CreateQueue",
-        "sqs:DeleteQueue",
-        "sqs:GetQueueAttributes",
-        "sqs:SetQueueAttributes"
-      ]
+    "SubscriberEndpoint" : {
+      "description" : "The endpoint the subscriber should listen to for notifications",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/SubscriberArn"
-  ],
-  "properties": {
-    "NotificationConfiguration": {
-      "$ref": "#/definitions/NotificationConfiguration"
+  "tagging" : {
+    "taggable" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "SubscriberArn", "NotificationConfiguration" ],
+  "primaryIdentifier" : [ "/properties/SubscriberArn" ],
+  "readOnlyProperties" : [ "/properties/SubscriberEndpoint" ],
+  "createOnlyProperties" : [ "/properties/SubscriberArn" ],
+  "writeOnlyProperties" : [ "/properties/NotificationConfiguration/HttpsNotificationConfiguration/AuthorizationApiKeyName", "/properties/NotificationConfiguration/HttpsNotificationConfiguration/AuthorizationApiKeyValue", "/properties/NotificationConfiguration/HttpsNotificationConfiguration/Endpoint", "/properties/NotificationConfiguration/HttpsNotificationConfiguration/HttpMethod", "/properties/NotificationConfiguration/HttpsNotificationConfiguration/TargetRoleArn" ],
+  "replacementStrategy" : "delete_then_create",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "securitylake:CreateDataLake", "securitylake:CreateSubscriber", "securitylake:CreateSubscriberNotification", "securitylake:GetSubscriber", "iam:CreateServiceLinkedRole", "iam:PutRolePolicy", "iam:DeleteRolePolicy", "iam:PassRole", "s3:PutBucketNotification", "s3:GetBucketNotification", "events:CreateApiDestination", "events:CreateConnection", "events:CreateRule", "events:UpdateConnection", "events:DeleteConnection", "events:UpdateApiDestination", "events:DeleteApiDestination", "events:ListApiDestinations", "events:ListConnections", "events:PutRule", "events:DescribeRule", "events:DeleteRule", "events:PutTargets", "events:RemoveTargets", "events:ListTargetsByRule", "secretsmanager:CreateSecret", "sqs:CreateQueue", "sqs:GetQueueAttributes", "sqs:GetQueueUrl", "sqs:SetQueueAttributes" ]
     },
-    "SubscriberArn": {
-      "description": "The ARN for the subscriber",
-      "pattern": "^arn:.*$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "securitylake:GetSubscriber" ]
     },
-    "SubscriberEndpoint": {
-      "description": "The endpoint the subscriber should listen to for notifications",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "securitylake:UpdateSubscriberNotification", "securitylake:GetSubscriber", "iam:CreateServiceLinkedRole", "iam:PutRolePolicy", "iam:DeleteRolePolicy", "iam:PassRole", "events:CreateApiDestination", "events:CreateConnection", "events:UpdateConnection", "events:DeleteConnection", "events:UpdateApiDestination", "events:DeleteApiDestination", "events:DeleteRule", "events:ListApiDestinations", "events:ListConnections", "events:PutRule", "events:DescribeRule", "events:DeleteRule", "events:PutTargets", "events:RemoveTargets", "events:ListTargetsByRule", "secretsmanager:CreateSecret", "s3:GetBucketNotificationConfiguration", "s3:PutBucketNotificationConfiguration", "s3:PutBucketNotification", "s3:GetBucketNotification", "sqs:CreateQueue", "sqs:DeleteQueue", "sqs:GetQueueAttributes", "sqs:SetQueueAttributes" ]
+    },
+    "delete" : {
+      "permissions" : [ "securitylake:DeleteSubscriberNotification", "securitylake:GetSubscriber", "iam:DeleteRole", "iam:DeleteRolePolicy", "events:DeleteApiDestination", "events:DeleteConnection", "events:DeleteRule", "events:ListTargetsByRule", "events:DescribeRule", "events:RemoveTargets", "sqs:DeleteQueue" ]
+    },
+    "list" : {
+      "permissions" : [ "securitylake:ListSubscribers" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/SubscriberEndpoint"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "SubscriberArn",
-    "NotificationConfiguration"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securitylake.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::SecurityLake::SubscriberNotification",
-  "writeOnlyProperties": [
-    "/properties/NotificationConfiguration/HttpsNotificationConfiguration/AuthorizationApiKeyName",
-    "/properties/NotificationConfiguration/HttpsNotificationConfiguration/AuthorizationApiKeyValue",
-    "/properties/NotificationConfiguration/HttpsNotificationConfiguration/Endpoint",
-    "/properties/NotificationConfiguration/HttpsNotificationConfiguration/HttpMethod",
-    "/properties/NotificationConfiguration/HttpsNotificationConfiguration/TargetRoleArn"
-  ]
+  }
 }

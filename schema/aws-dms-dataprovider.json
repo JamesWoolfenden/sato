@@ -1,551 +1,399 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/DataProviderName"
-    ]
-  ],
-  "additionalProperties": false,
-  "definitions": {
-    "Db2SslModeValue": {
-      "enum": [
-        "none",
-        "verify-ca"
-      ],
-      "type": "string"
-    },
-    "DmsSslModeValue": {
-      "enum": [
-        "none",
-        "require",
-        "verify-ca",
-        "verify-full"
-      ],
-      "type": "string"
-    },
-    "MongoDbAuthMechanism": {
-      "enum": [
-        "default",
-        "mongodb_cr",
-        "scram_sha_1"
-      ],
-      "type": "string"
-    },
-    "MongoDbAuthType": {
-      "enum": [
-        "no",
-        "password"
-      ],
-      "type": "string"
-    },
-    "MongoDbSslModeValue": {
-      "enum": [
-        "none",
-        "require",
-        "verify-full"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::DMS::DataProvider",
+  "description" : "Resource schema for AWS::DMS::DataProvider",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms.git",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "dms:AddTagsToResource", "dms:RemoveTagsFromResource", "dms:ListTagsForResource" ]
+  },
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
+    },
+    "DmsSslModeValue" : {
+      "type" : "string",
+      "enum" : [ "none", "require", "verify-ca", "verify-full" ]
+    },
+    "Db2SslModeValue" : {
+      "type" : "string",
+      "enum" : [ "none", "verify-ca" ]
+    },
+    "MongoDbSslModeValue" : {
+      "type" : "string",
+      "enum" : [ "none", "require", "verify-full" ]
+    },
+    "MongoDbAuthType" : {
+      "type" : "string",
+      "enum" : [ "no", "password" ]
+    },
+    "MongoDbAuthMechanism" : {
+      "type" : "string",
+      "enum" : [ "default", "mongodb_cr", "scram_sha_1" ]
     }
   },
-  "description": "Resource schema for AWS::DMS::DataProvider",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "dms:CreateDataProvider",
-        "dms:ListDataProviders",
-        "dms:DescribeDataProviders",
-        "dms:AddTagsToResource",
-        "dms:ListTagsForResource",
-        "iam:GetRole",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "DataProviderName" : {
+      "description" : "The property describes a name to identify the data provider.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "delete": {
-      "permissions": [
-        "dms:DeleteDataProvider"
-      ]
+    "DataProviderIdentifier" : {
+      "description" : "The property describes an identifier for the data provider. It is used for describing/deleting/modifying can be name/arn",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "list": {
-      "permissions": [
-        "dms:ListDataProviders",
-        "dms:DescribeDataProviders",
-        "dms:ListTagsForResource"
-      ]
+    "DataProviderArn" : {
+      "description" : "The data provider ARN.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "read": {
-      "permissions": [
-        "dms:ListDataProviders",
-        "dms:DescribeDataProviders",
-        "dms:ListTagsForResource"
-      ]
+    "DataProviderCreationTime" : {
+      "description" : "The data provider creation time.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 40
     },
-    "update": {
-      "permissions": [
-        "dms:UpdateDataProvider",
-        "dms:ModifyDataProvider",
-        "dms:AddTagsToResource",
-        "dms:RemoveTagsFromResource",
-        "dms:ListTagsForResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/DataProviderArn"
-  ],
-  "properties": {
-    "DataProviderArn": {
-      "description": "The data provider ARN.",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+    "Description" : {
+      "description" : "The optional description of the data provider.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "DataProviderCreationTime": {
-      "description": "The data provider creation time.",
-      "maxLength": 40,
-      "minLength": 1,
-      "type": "string"
+    "Engine" : {
+      "description" : "The property describes a data engine for the data provider.",
+      "type" : "string",
+      "enum" : [ "aurora", "aurora_postgresql", "mysql", "oracle", "postgres", "sqlserver", "redshift", "mariadb", "mongodb", "docdb", "db2", "db2_zos" ]
     },
-    "DataProviderIdentifier": {
-      "description": "The property describes an identifier for the data provider. It is used for describing/deleting/modifying can be name/arn",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+    "ExactSettings" : {
+      "description" : "The property describes the exact settings which can be modified",
+      "type" : "boolean",
+      "default" : false
     },
-    "DataProviderName": {
-      "description": "The property describes a name to identify the data provider.",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Description": {
-      "description": "The optional description of the data provider.",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Engine": {
-      "description": "The property describes a data engine for the data provider.",
-      "enum": [
-        "aurora",
-        "aurora_postgresql",
-        "mysql",
-        "oracle",
-        "postgres",
-        "sqlserver",
-        "redshift",
-        "mariadb",
-        "mongodb",
-        "docdb",
-        "db2",
-        "db2_zos"
-      ],
-      "type": "string"
-    },
-    "ExactSettings": {
-      "default": false,
-      "description": "The property describes the exact settings which can be modified",
-      "type": "boolean"
-    },
-    "Settings": {
-      "additionalProperties": false,
-      "anyOf": [
-        {
-          "required": [
-            "PostgreSqlSettings"
-          ]
-        },
-        {
-          "required": [
-            "MySqlSettings"
-          ]
-        },
-        {
-          "required": [
-            "OracleSettings"
-          ]
-        },
-        {
-          "required": [
-            "MicrosoftSqlServerSettings"
-          ]
-        },
-        {
-          "required": [
-            "RedshiftSettings"
-          ]
-        },
-        {
-          "required": [
-            "DocDbSettings"
-          ]
-        },
-        {
-          "required": [
-            "MariaDbSettings"
-          ]
-        },
-        {
-          "required": [
-            "MongoDbSettings"
-          ]
-        },
-        {
-          "required": [
-            "IbmDb2LuwSettings"
-          ]
-        },
-        {
-          "required": [
-            "IbmDb2zOsSettings"
-          ]
-        }
-      ],
-      "description": "The property identifies the exact type of settings for the data provider.",
-      "properties": {
-        "DocDbSettings": {
-          "additionalProperties": false,
-          "description": "DocDbSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+    "Settings" : {
+      "description" : "The property identifies the exact type of settings for the data provider.",
+      "type" : "object",
+      "properties" : {
+        "PostgreSqlSettings" : {
+          "description" : "PostgreSqlSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "DatabaseName": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "Port": {
-              "type": "integer"
+            "DatabaseName" : {
+              "type" : "string"
             },
-            "ServerName": {
-              "type": "string"
+            "SslMode" : {
+              "$ref" : "#/definitions/DmsSslModeValue"
             },
-            "SslMode": {
-              "$ref": "#/definitions/MongoDbSslModeValue"
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode", "DatabaseName" ],
+          "additionalProperties" : false
         },
-        "IbmDb2LuwSettings": {
-          "additionalProperties": false,
-          "description": "IbmDb2LuwSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+        "MySqlSettings" : {
+          "description" : "MySqlSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "DatabaseName": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "Port": {
-              "type": "integer"
+            "SslMode" : {
+              "$ref" : "#/definitions/DmsSslModeValue"
             },
-            "ServerName": {
-              "type": "string"
-            },
-            "SslMode": {
-              "$ref": "#/definitions/Db2SslModeValue"
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode" ],
+          "additionalProperties" : false
         },
-        "IbmDb2zOsSettings": {
-          "additionalProperties": false,
-          "description": "IbmDb2zOsSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+        "OracleSettings" : {
+          "description" : "OracleSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "DatabaseName": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "Port": {
-              "type": "integer"
+            "DatabaseName" : {
+              "type" : "string"
             },
-            "ServerName": {
-              "type": "string"
+            "SslMode" : {
+              "$ref" : "#/definitions/DmsSslModeValue"
             },
-            "SslMode": {
-              "$ref": "#/definitions/Db2SslModeValue"
+            "CertificateArn" : {
+              "type" : "string"
+            },
+            "AsmServer" : {
+              "type" : "string"
+            },
+            "SecretsManagerOracleAsmSecretId" : {
+              "type" : "string"
+            },
+            "SecretsManagerOracleAsmAccessRoleArn" : {
+              "type" : "string"
+            },
+            "SecretsManagerSecurityDbEncryptionSecretId" : {
+              "type" : "string"
+            },
+            "SecretsManagerSecurityDbEncryptionAccessRoleArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode", "DatabaseName" ],
+          "additionalProperties" : false
         },
-        "MariaDbSettings": {
-          "additionalProperties": false,
-          "description": "MariaDbSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+        "MicrosoftSqlServerSettings" : {
+          "description" : "MicrosoftSqlServerSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "Port": {
-              "type": "integer"
+            "Port" : {
+              "type" : "integer"
             },
-            "ServerName": {
-              "type": "string"
+            "DatabaseName" : {
+              "type" : "string"
             },
-            "SslMode": {
-              "$ref": "#/definitions/DmsSslModeValue"
+            "SslMode" : {
+              "$ref" : "#/definitions/DmsSslModeValue"
+            },
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode", "DatabaseName" ],
+          "additionalProperties" : false
         },
-        "MicrosoftSqlServerSettings": {
-          "additionalProperties": false,
-          "description": "MicrosoftSqlServerSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+        "RedshiftSettings" : {
+          "description" : "RedshiftSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "DatabaseName": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "Port": {
-              "type": "integer"
-            },
-            "ServerName": {
-              "type": "string"
-            },
-            "SslMode": {
-              "$ref": "#/definitions/DmsSslModeValue"
+            "DatabaseName" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "DatabaseName" ],
+          "additionalProperties" : false
         },
-        "MongoDbSettings": {
-          "additionalProperties": false,
-          "description": "MongoDbSettings property identifier.",
-          "properties": {
-            "AuthMechanism": {
-              "$ref": "#/definitions/MongoDbAuthMechanism"
+        "MariaDbSettings" : {
+          "description" : "MariaDbSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "AuthSource": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "AuthType": {
-              "$ref": "#/definitions/MongoDbAuthType"
+            "SslMode" : {
+              "$ref" : "#/definitions/DmsSslModeValue"
             },
-            "CertificateArn": {
-              "type": "string"
-            },
-            "DatabaseName": {
-              "type": "string"
-            },
-            "Port": {
-              "type": "integer"
-            },
-            "ServerName": {
-              "type": "string"
-            },
-            "SslMode": {
-              "$ref": "#/definitions/MongoDbSslModeValue"
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode" ],
+          "additionalProperties" : false
         },
-        "MySqlSettings": {
-          "additionalProperties": false,
-          "description": "MySqlSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+        "DocDbSettings" : {
+          "description" : "DocDbSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "Port": {
-              "type": "integer"
+            "Port" : {
+              "type" : "integer"
             },
-            "ServerName": {
-              "type": "string"
+            "DatabaseName" : {
+              "type" : "string"
             },
-            "SslMode": {
-              "$ref": "#/definitions/DmsSslModeValue"
+            "SslMode" : {
+              "$ref" : "#/definitions/MongoDbSslModeValue"
+            },
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "DatabaseName" ],
+          "additionalProperties" : false
         },
-        "OracleSettings": {
-          "additionalProperties": false,
-          "description": "OracleSettings property identifier.",
-          "properties": {
-            "AsmServer": {
-              "type": "string"
+        "MongoDbSettings" : {
+          "description" : "MongoDbSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "CertificateArn": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "DatabaseName": {
-              "type": "string"
+            "DatabaseName" : {
+              "type" : "string"
             },
-            "Port": {
-              "type": "integer"
+            "SslMode" : {
+              "$ref" : "#/definitions/MongoDbSslModeValue"
             },
-            "SecretsManagerOracleAsmAccessRoleArn": {
-              "type": "string"
+            "CertificateArn" : {
+              "type" : "string"
             },
-            "SecretsManagerOracleAsmSecretId": {
-              "type": "string"
+            "AuthType" : {
+              "$ref" : "#/definitions/MongoDbAuthType"
             },
-            "SecretsManagerSecurityDbEncryptionAccessRoleArn": {
-              "type": "string"
+            "AuthSource" : {
+              "type" : "string"
             },
-            "SecretsManagerSecurityDbEncryptionSecretId": {
-              "type": "string"
-            },
-            "ServerName": {
-              "type": "string"
-            },
-            "SslMode": {
-              "$ref": "#/definitions/DmsSslModeValue"
+            "AuthMechanism" : {
+              "$ref" : "#/definitions/MongoDbAuthMechanism"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port" ],
+          "additionalProperties" : false
         },
-        "PostgreSqlSettings": {
-          "additionalProperties": false,
-          "description": "PostgreSqlSettings property identifier.",
-          "properties": {
-            "CertificateArn": {
-              "type": "string"
+        "IbmDb2LuwSettings" : {
+          "description" : "IbmDb2LuwSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "DatabaseName": {
-              "type": "string"
+            "Port" : {
+              "type" : "integer"
             },
-            "Port": {
-              "type": "integer"
+            "DatabaseName" : {
+              "type" : "string"
             },
-            "ServerName": {
-              "type": "string"
+            "SslMode" : {
+              "$ref" : "#/definitions/Db2SslModeValue"
             },
-            "SslMode": {
-              "$ref": "#/definitions/DmsSslModeValue"
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "SslMode",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode", "DatabaseName" ],
+          "additionalProperties" : false
         },
-        "RedshiftSettings": {
-          "additionalProperties": false,
-          "description": "RedshiftSettings property identifier.",
-          "properties": {
-            "DatabaseName": {
-              "type": "string"
+        "IbmDb2zOsSettings" : {
+          "description" : "IbmDb2zOsSettings property identifier.",
+          "type" : "object",
+          "properties" : {
+            "ServerName" : {
+              "type" : "string"
             },
-            "Port": {
-              "type": "integer"
+            "Port" : {
+              "type" : "integer"
             },
-            "ServerName": {
-              "type": "string"
+            "DatabaseName" : {
+              "type" : "string"
+            },
+            "SslMode" : {
+              "$ref" : "#/definitions/Db2SslModeValue"
+            },
+            "CertificateArn" : {
+              "type" : "string"
             }
           },
-          "required": [
-            "ServerName",
-            "Port",
-            "DatabaseName"
-          ],
-          "type": "object"
+          "required" : [ "ServerName", "Port", "SslMode", "DatabaseName" ],
+          "additionalProperties" : false
         }
       },
-      "type": "object"
+      "anyOf" : [ {
+        "required" : [ "PostgreSqlSettings" ]
+      }, {
+        "required" : [ "MySqlSettings" ]
+      }, {
+        "required" : [ "OracleSettings" ]
+      }, {
+        "required" : [ "MicrosoftSqlServerSettings" ]
+      }, {
+        "required" : [ "RedshiftSettings" ]
+      }, {
+        "required" : [ "DocDbSettings" ]
+      }, {
+        "required" : [ "MariaDbSettings" ]
+      }, {
+        "required" : [ "MongoDbSettings" ]
+      }, {
+        "required" : [ "IbmDb2LuwSettings" ]
+      }, {
+        "required" : [ "IbmDb2zOsSettings" ]
+      } ],
+      "additionalProperties" : false
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/DataProviderArn",
-    "/properties/DataProviderCreationTime"
-  ],
-  "required": [
-    "Engine"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-dms.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "dms:AddTagsToResource",
-      "dms:RemoveTagsFromResource",
-      "dms:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::DMS::DataProvider",
-  "writeOnlyProperties": [
-    "/properties/DataProviderIdentifier",
-    "/properties/ExactSettings"
-  ]
+  "additionalProperties" : false,
+  "required" : [ "Engine" ],
+  "primaryIdentifier" : [ "/properties/DataProviderArn" ],
+  "additionalIdentifiers" : [ [ "/properties/DataProviderName" ] ],
+  "readOnlyProperties" : [ "/properties/DataProviderArn", "/properties/DataProviderCreationTime" ],
+  "writeOnlyProperties" : [ "/properties/DataProviderIdentifier", "/properties/ExactSettings" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "dms:CreateDataProvider", "dms:ListDataProviders", "dms:DescribeDataProviders", "dms:AddTagsToResource", "dms:ListTagsForResource", "iam:GetRole", "iam:PassRole" ]
+    },
+    "read" : {
+      "permissions" : [ "dms:ListDataProviders", "dms:DescribeDataProviders", "dms:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "dms:UpdateDataProvider", "dms:ModifyDataProvider", "dms:AddTagsToResource", "dms:RemoveTagsFromResource", "dms:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "dms:DeleteDataProvider" ]
+    },
+    "list" : {
+      "permissions" : [ "dms:ListDataProviders", "dms:DescribeDataProviders", "dms:ListTagsForResource" ]
+    }
+  }
 }

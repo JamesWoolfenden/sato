@@ -1,163 +1,120 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "RoutingStrategy": {
-      "additionalProperties": false,
-      "anyOf": [
-        {
-          "required": [
-            "FleetId"
-          ]
+  "typeName" : "AWS::GameLift::Alias",
+  "description" : "The AWS::GameLift::Alias resource creates an alias for an Amazon GameLift (GameLift) fleet destination.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "gamelift:ListTagsForResource", "gamelift:TagResource", "gamelift:UntagResource" ]
+  },
+  "definitions" : {
+    "RoutingStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "Message" : {
+          "description" : "The message text to be used with a terminal routing strategy. If you specify TERMINAL for the Type property, you must specify this property.",
+          "type" : "string"
         },
-        {
-          "required": [
-            "Message"
-          ]
-        }
-      ],
-      "properties": {
-        "FleetId": {
-          "description": "A unique identifier for a fleet that the alias points to. If you specify SIMPLE for the Type property, you must specify this property.",
-          "pattern": "^[a-z]*fleet-[a-zA-Z0-9\\-]+",
-          "type": "string"
+        "FleetId" : {
+          "description" : "A unique identifier for a fleet that the alias points to. If you specify SIMPLE for the Type property, you must specify this property.",
+          "type" : "string",
+          "pattern" : "^[a-z]*fleet-[a-zA-Z0-9\\-]+"
         },
-        "Message": {
-          "description": "The message text to be used with a terminal routing strategy. If you specify TERMINAL for the Type property, you must specify this property.",
-          "type": "string"
-        },
-        "Type": {
-          "description": "Simple routing strategy. The alias resolves to one specific fleet. Use this type when routing to active fleets.",
-          "enum": [
-            "SIMPLE",
-            "TERMINAL"
-          ],
-          "type": "string"
+        "Type" : {
+          "description" : "Simple routing strategy. The alias resolves to one specific fleet. Use this type when routing to active fleets.",
+          "type" : "string",
+          "enum" : [ "SIMPLE", "TERMINAL" ]
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Type" ],
+      "anyOf" : [ {
+        "required" : [ "FleetId" ]
+      }, {
+        "required" : [ "Message" ]
+      } ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "The AWS::GameLift::Alias resource creates an alias for an Amazon GameLift (GameLift) fleet destination.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "gamelift:CreateAlias",
-        "gamelift:TagResource"
-      ]
+  "properties" : {
+    "Description" : {
+      "description" : "A human-readable description of the alias.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024
     },
-    "delete": {
-      "permissions": [
-        "gamelift:DeleteAlias"
-      ]
+    "Name" : {
+      "description" : "A descriptive label that is associated with an alias. Alias names do not need to be unique.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024,
+      "pattern" : ".*\\S.*"
     },
-    "list": {
-      "permissions": [
-        "gamelift:ListAliases"
-      ]
+    "RoutingStrategy" : {
+      "description" : "A routing configuration that specifies where traffic is directed for this alias, such as to a fleet or to a message.",
+      "$ref" : "#/definitions/RoutingStrategy"
     },
-    "read": {
-      "permissions": [
-        "gamelift:DescribeAlias",
-        "gamelift:ListTagsForResource"
-      ]
+    "AliasId" : {
+      "description" : "Unique alias ID",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "gamelift:UpdateAlias",
-        "gamelift:DescribeAlias",
-        "gamelift:ListTagsForResource",
-        "gamelift:TagResource",
-        "gamelift:UntagResource"
-      ]
+    "AliasArn" : {
+      "description" : "The Amazon Resource Name (ARN) that is assigned to a Amazon GameLift Alias resource and uniquely identifies it. ARNs are unique across all Regions. In a GameLift Alias ARN, the resource ID matches the AliasId value.",
+      "pattern" : "^arn:.*:alias\\/alias-\\S+",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/AliasId"
-  ],
-  "properties": {
-    "AliasArn": {
-      "description": "The Amazon Resource Name (ARN) that is assigned to a Amazon GameLift Alias resource and uniquely identifies it. ARNs are unique across all Regions. In a GameLift Alias ARN, the resource ID matches the AliasId value.",
-      "pattern": "^arn:.*:alias\\/alias-\\S+",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name", "RoutingStrategy" ],
+  "readOnlyProperties" : [ "/properties/AliasId", "/properties/AliasArn" ],
+  "primaryIdentifier" : [ "/properties/AliasId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "gamelift:CreateAlias", "gamelift:TagResource" ]
     },
-    "AliasId": {
-      "description": "Unique alias ID",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "gamelift:DescribeAlias", "gamelift:ListTagsForResource" ]
     },
-    "Description": {
-      "description": "A human-readable description of the alias.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "gamelift:UpdateAlias", "gamelift:DescribeAlias", "gamelift:ListTagsForResource", "gamelift:TagResource", "gamelift:UntagResource" ]
     },
-    "Name": {
-      "description": "A descriptive label that is associated with an alias. Alias names do not need to be unique.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "pattern": ".*\\S.*",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "gamelift:DeleteAlias" ]
     },
-    "RoutingStrategy": {
-      "$ref": "#/definitions/RoutingStrategy",
-      "description": "A routing configuration that specifies where traffic is directed for this alias, such as to a fleet or to a message."
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "gamelift:ListAliases" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/AliasId",
-    "/properties/AliasArn"
-  ],
-  "required": [
-    "Name",
-    "RoutingStrategy"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-gamelift.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "gamelift:ListTagsForResource",
-      "gamelift:TagResource",
-      "gamelift:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::GameLift::Alias"
+  }
 }

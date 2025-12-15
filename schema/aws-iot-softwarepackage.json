@@ -1,123 +1,83 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PackageName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+  "typeName" : "AWS::IoT::SoftwarePackage",
+  "description" : "resource definition",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "resource definition",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreatePackage",
-        "iot:GetPackage",
-        "iot:TagResource",
-        "iot:GetIndexingConfiguration"
-      ]
+  "properties" : {
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 0,
+      "pattern" : "^[^\\p{C}]+$"
     },
-    "delete": {
-      "permissions": [
-        "iot:DeletePackage",
-        "iot:DeletePackageVersion",
-        "iot:GetPackage",
-        "iot:GetPackageVersion",
-        "iot:UpdatePackage",
-        "iot:UpdatePackageVersion",
-        "iot:GetIndexingConfiguration",
-        "iot:ListPackageVersions"
-      ]
+    "PackageArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iot:ListPackages"
-      ]
+    "PackageName" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9-_.]+$"
     },
-    "read": {
-      "permissions": [
-        "iot:GetPackage",
-        "iot:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "iot:CreatePackage",
-        "iot:UpdatePackage",
-        "iot:GetPackage",
-        "iot:ListTagsForResource",
-        "iot:TagResource",
-        "iot:UntagResource",
-        "iot:GetIndexingConfiguration"
-      ]
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/PackageName"
-  ],
-  "properties": {
-    "Description": {
-      "maxLength": 1024,
-      "minLength": 0,
-      "pattern": "^[^\\p{C}]+$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource" ]
+  },
+  "readOnlyProperties" : [ "/properties/PackageArn" ],
+  "createOnlyProperties" : [ "/properties/PackageName" ],
+  "primaryIdentifier" : [ "/properties/PackageName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreatePackage", "iot:GetPackage", "iot:TagResource", "iot:GetIndexingConfiguration" ]
     },
-    "PackageArn": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iot:GetPackage", "iot:ListTagsForResource" ]
     },
-    "PackageName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-_.]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iot:CreatePackage", "iot:UpdatePackage", "iot:GetPackage", "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource", "iot:GetIndexingConfiguration" ]
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
+    "delete" : {
+      "permissions" : [ "iot:DeletePackage", "iot:DeletePackageVersion", "iot:GetPackage", "iot:GetPackageVersion", "iot:UpdatePackage", "iot:UpdatePackageVersion", "iot:GetIndexingConfiguration", "iot:ListPackageVersions" ]
+    },
+    "list" : {
+      "permissions" : [ "iot:ListPackages" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/PackageArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "iot:TagResource",
-      "iot:UntagResource",
-      "iot:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::SoftwarePackage"
+  "additionalProperties" : false
 }

@@ -1,48 +1,44 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "DataQualityTargetTable": {
-      "additionalProperties": false,
-      "properties": {
-        "DatabaseName": {
-          "type": "string"
+  "typeName" : "AWS::Glue::DataQualityRuleset",
+  "description" : "Resource Type definition for AWS::Glue::DataQualityRuleset",
+  "additionalProperties" : false,
+  "properties" : {
+    "Ruleset" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "TargetTable" : {
+      "$ref" : "#/definitions/DataQualityTargetTable"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "ClientToken" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "DataQualityTargetTable" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DatabaseName" : {
+          "type" : "string"
         },
-        "TableName": {
-          "type": "string"
+        "TableName" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::Glue::DataQualityRuleset",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "ClientToken": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Ruleset": {
-      "type": "string"
-    },
-    "Tags": {
-      "type": "object"
-    },
-    "TargetTable": {
-      "$ref": "#/definitions/DataQualityTargetTable"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "typeName": "AWS::Glue::DataQualityRuleset"
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

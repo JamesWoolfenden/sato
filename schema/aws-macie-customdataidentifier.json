@@ -1,141 +1,102 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Arn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Description",
-    "/properties/Regex",
-    "/properties/MaximumMatchDistance",
-    "/properties/Keywords",
-    "/properties/IgnoreWords"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The tag's key.",
-          "type": "string"
+  "typeName" : "AWS::Macie::CustomDataIdentifier",
+  "description" : "Macie CustomDataIdentifier resource schema",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The tag's key."
         },
-        "Value": {
-          "description": "The tag's value.",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The tag's value."
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Macie CustomDataIdentifier resource schema",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "macie2:CreateCustomDataIdentifier",
-        "macie2:GetCustomDataIdentifier",
-        "macie2:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of custom data identifier.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "macie2:DeleteCustomDataIdentifier"
-      ]
+    "Description" : {
+      "description" : "Description of custom data identifier.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "macie2:ListCustomDataIdentifiers"
-      ]
+    "Regex" : {
+      "description" : "Regular expression for custom data identifier.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "macie2:GetCustomDataIdentifier"
-      ]
+    "MaximumMatchDistance" : {
+      "description" : "Maximum match distance.",
+      "type" : "integer"
     },
-    "update": {
-      "permissions": [
-        "macie2:TagResource",
-        "macie2:UntagResource",
-        "macie2:GetCustomDataIdentifier"
-      ]
+    "Keywords" : {
+      "description" : "Keywords to be matched against.",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "IgnoreWords" : {
+      "description" : "Words to be ignored.",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Id" : {
+      "description" : "Custom data identifier ID.",
+      "type" : "string"
+    },
+    "Arn" : {
+      "description" : "Custom data identifier ARN.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "A collection of tags associated with a resource",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Custom data identifier ARN.",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "macie2:TagResource", "macie2:UntagResource" ]
+  },
+  "required" : [ "Name", "Regex" ],
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Description", "/properties/Regex", "/properties/MaximumMatchDistance", "/properties/Keywords", "/properties/IgnoreWords" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalIdentifiers" : [ [ "/properties/Arn" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "macie2:CreateCustomDataIdentifier", "macie2:GetCustomDataIdentifier", "macie2:TagResource" ]
     },
-    "Description": {
-      "description": "Description of custom data identifier.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "macie2:GetCustomDataIdentifier" ]
     },
-    "Id": {
-      "description": "Custom data identifier ID.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "macie2:DeleteCustomDataIdentifier" ]
     },
-    "IgnoreWords": {
-      "description": "Words to be ignored.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
+    "list" : {
+      "permissions" : [ "macie2:ListCustomDataIdentifiers" ]
     },
-    "Keywords": {
-      "description": "Keywords to be matched against.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "MaximumMatchDistance": {
-      "description": "Maximum match distance.",
-      "type": "integer"
-    },
-    "Name": {
-      "description": "Name of custom data identifier.",
-      "type": "string"
-    },
-    "Regex": {
-      "description": "Regular expression for custom data identifier.",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A collection of tags associated with a resource",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "update" : {
+      "permissions" : [ "macie2:TagResource", "macie2:UntagResource", "macie2:GetCustomDataIdentifier" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name",
-    "Regex"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-macie.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "macie2:TagResource",
-      "macie2:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Macie::CustomDataIdentifier"
+  }
 }

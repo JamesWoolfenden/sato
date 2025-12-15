@@ -1,550 +1,416 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "AcceptAction": {
-      "enum": [
-        "ALLOW",
-        "DENY"
-      ],
-      "type": "string"
+  "typeName" : "AWS::SES::MailManagerTrafficPolicy",
+  "description" : "Definition of AWS::SES::MailManagerTrafficPolicy Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+  "definitions" : {
+    "AcceptAction" : {
+      "type" : "string",
+      "enum" : [ "ALLOW", "DENY" ]
     },
-    "IngressAddressListEmailAttribute": {
-      "enum": [
-        "RECIPIENT"
-      ],
-      "type": "string"
-    },
-    "IngressAnalysis": {
-      "additionalProperties": false,
-      "properties": {
-        "Analyzer": {
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+    "IngressAnalysis" : {
+      "type" : "object",
+      "properties" : {
+        "Analyzer" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         },
-        "ResultField": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^(addon\\.)?[\\sa-zA-Z0-9_]+$",
-          "type": "string"
+        "ResultField" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^(addon\\.)?[\\sa-zA-Z0-9_]+$"
         }
       },
-      "required": [
-        "Analyzer",
-        "ResultField"
-      ],
-      "type": "object"
+      "required" : [ "Analyzer", "ResultField" ],
+      "additionalProperties" : false
     },
-    "IngressBooleanExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/IngressBooleanToEvaluate"
+    "IngressAddressListEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "RECIPIENT" ]
+    },
+    "IngressIsInAddressList" : {
+      "type" : "object",
+      "properties" : {
+        "Attribute" : {
+          "$ref" : "#/definitions/IngressAddressListEmailAttribute"
         },
-        "Operator": {
-          "$ref": "#/definitions/IngressBooleanOperator"
+        "AddressLists" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "maxItems" : 1,
+          "minItems" : 1,
+          "uniqueItems" : true
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator"
-      ],
-      "type": "object"
+      "required" : [ "AddressLists", "Attribute" ],
+      "additionalProperties" : false
     },
-    "IngressBooleanOperator": {
-      "enum": [
-        "IS_TRUE",
-        "IS_FALSE"
-      ],
-      "type": "string"
-    },
-    "IngressBooleanToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Analysis": {
-              "$ref": "#/definitions/IngressAnalysis"
-            }
-          },
-          "required": [
-            "Analysis"
-          ],
-          "title": "Analysis",
-          "type": "object"
+    "IngressBooleanExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/IngressBooleanToEvaluate"
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "IsInAddressList": {
-              "$ref": "#/definitions/IngressIsInAddressList"
-            }
-          },
-          "required": [
-            "IsInAddressList"
-          ],
-          "title": "IsInAddressList",
-          "type": "object"
-        }
-      ]
-    },
-    "IngressIpOperator": {
-      "enum": [
-        "CIDR_MATCHES",
-        "NOT_CIDR_MATCHES"
-      ],
-      "type": "string"
-    },
-    "IngressIpToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/IngressIpv4Attribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
-        }
-      ]
-    },
-    "IngressIpv4Attribute": {
-      "enum": [
-        "SENDER_IP"
-      ],
-      "type": "string"
-    },
-    "IngressIpv4Expression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/IngressIpToEvaluate"
-        },
-        "Operator": {
-          "$ref": "#/definitions/IngressIpOperator"
-        },
-        "Values": {
-          "items": {
-            "pattern": "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/([0-9]|[12][0-9]|3[0-2])$",
-            "type": "string"
-          },
-          "type": "array"
+        "Operator" : {
+          "$ref" : "#/definitions/IngressBooleanOperator"
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator" ],
+      "additionalProperties" : false
     },
-    "IngressIpv6Attribute": {
-      "enum": [
-        "SENDER_IPV6"
-      ],
-      "type": "string"
+    "IngressBooleanOperator" : {
+      "type" : "string",
+      "enum" : [ "IS_TRUE", "IS_FALSE" ]
     },
-    "IngressIpv6Expression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/IngressIpv6ToEvaluate"
+    "IngressBooleanToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Analysis",
+        "properties" : {
+          "Analysis" : {
+            "$ref" : "#/definitions/IngressAnalysis"
+          }
         },
-        "Operator": {
-          "$ref": "#/definitions/IngressIpOperator"
+        "required" : [ "Analysis" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "IsInAddressList",
+        "properties" : {
+          "IsInAddressList" : {
+            "$ref" : "#/definitions/IngressIsInAddressList"
+          }
         },
-        "Values": {
-          "items": {
-            "maxLength": 49,
-            "pattern": "^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))\\/(12[0-8]|1[0-1][0-9]|[1-9][0-9]|[0-9])$",
-            "type": "string"
-          },
-          "type": "array"
+        "required" : [ "IsInAddressList" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "IngressIpOperator" : {
+      "type" : "string",
+      "enum" : [ "CIDR_MATCHES", "NOT_CIDR_MATCHES" ]
+    },
+    "IngressIpToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/IngressIpv4Attribute"
+          }
+        },
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "IngressIpv4Attribute" : {
+      "type" : "string",
+      "enum" : [ "SENDER_IP" ]
+    },
+    "IngressIpv4Expression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/IngressIpToEvaluate"
+        },
+        "Operator" : {
+          "$ref" : "#/definitions/IngressIpOperator"
+        },
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)/([0-9]|[12][0-9]|3[0-2])$"
+          }
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "IngressIpv6ToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/IngressIpv6Attribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
-        }
-      ]
+    "IngressIpv6Attribute" : {
+      "type" : "string",
+      "enum" : [ "SENDER_IPV6" ]
     },
-    "IngressIsInAddressList": {
-      "additionalProperties": false,
-      "properties": {
-        "AddressLists": {
-          "items": {
-            "type": "string"
-          },
-          "maxItems": 1,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+    "IngressIpv6Expression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/IngressIpv6ToEvaluate"
         },
-        "Attribute": {
-          "$ref": "#/definitions/IngressAddressListEmailAttribute"
+        "Operator" : {
+          "$ref" : "#/definitions/IngressIpOperator"
+        },
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 49,
+            "pattern" : "^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))\\/(12[0-8]|1[0-1][0-9]|[1-9][0-9]|[0-9])$"
+          }
         }
       },
-      "required": [
-        "AddressLists",
-        "Attribute"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "IngressStringEmailAttribute": {
-      "enum": [
-        "RECIPIENT"
-      ],
-      "type": "string"
+    "IngressIpv6ToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/IngressIpv6Attribute"
+          }
+        },
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      } ]
     },
-    "IngressStringExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/IngressStringToEvaluate"
+    "IngressStringEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "RECIPIENT" ]
+    },
+    "IngressStringExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/IngressStringToEvaluate"
         },
-        "Operator": {
-          "$ref": "#/definitions/IngressStringOperator"
+        "Operator" : {
+          "$ref" : "#/definitions/IngressStringOperator"
         },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "IngressStringOperator": {
-      "enum": [
-        "EQUALS",
-        "NOT_EQUALS",
-        "STARTS_WITH",
-        "ENDS_WITH",
-        "CONTAINS"
-      ],
-      "type": "string"
+    "IngressStringOperator" : {
+      "type" : "string",
+      "enum" : [ "EQUALS", "NOT_EQUALS", "STARTS_WITH", "ENDS_WITH", "CONTAINS" ]
     },
-    "IngressStringToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/IngressStringEmailAttribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
+    "IngressStringToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/IngressStringEmailAttribute"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Analysis": {
-              "$ref": "#/definitions/IngressAnalysis"
-            }
-          },
-          "required": [
-            "Analysis"
-          ],
-          "title": "Analysis",
-          "type": "object"
-        }
-      ]
-    },
-    "IngressTlsAttribute": {
-      "enum": [
-        "TLS_PROTOCOL"
-      ],
-      "type": "string"
-    },
-    "IngressTlsProtocolAttribute": {
-      "enum": [
-        "TLS1_2",
-        "TLS1_3"
-      ],
-      "type": "string"
-    },
-    "IngressTlsProtocolExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/IngressTlsProtocolToEvaluate"
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Analysis",
+        "properties" : {
+          "Analysis" : {
+            "$ref" : "#/definitions/IngressAnalysis"
+          }
         },
-        "Operator": {
-          "$ref": "#/definitions/IngressTlsProtocolOperator"
+        "required" : [ "Analysis" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "IngressTlsAttribute" : {
+      "type" : "string",
+      "enum" : [ "TLS_PROTOCOL" ]
+    },
+    "IngressTlsProtocolAttribute" : {
+      "type" : "string",
+      "enum" : [ "TLS1_2", "TLS1_3" ]
+    },
+    "IngressTlsProtocolExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/IngressTlsProtocolToEvaluate"
         },
-        "Value": {
-          "$ref": "#/definitions/IngressTlsProtocolAttribute"
+        "Operator" : {
+          "$ref" : "#/definitions/IngressTlsProtocolOperator"
+        },
+        "Value" : {
+          "$ref" : "#/definitions/IngressTlsProtocolAttribute"
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Value" ],
+      "additionalProperties" : false
     },
-    "IngressTlsProtocolOperator": {
-      "enum": [
-        "MINIMUM_TLS_VERSION",
-        "IS"
-      ],
-      "type": "string"
+    "IngressTlsProtocolOperator" : {
+      "type" : "string",
+      "enum" : [ "MINIMUM_TLS_VERSION", "IS" ]
     },
-    "IngressTlsProtocolToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/IngressTlsAttribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
-        }
-      ]
+    "IngressTlsProtocolToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/IngressTlsAttribute"
+          }
+        },
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      } ]
     },
-    "PolicyCondition": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "StringExpression": {
-              "$ref": "#/definitions/IngressStringExpression"
-            }
-          },
-          "required": [
-            "StringExpression"
-          ],
-          "title": "StringExpression",
-          "type": "object"
+    "PolicyCondition" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "StringExpression",
+        "properties" : {
+          "StringExpression" : {
+            "$ref" : "#/definitions/IngressStringExpression"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "IpExpression": {
-              "$ref": "#/definitions/IngressIpv4Expression"
-            }
-          },
-          "required": [
-            "IpExpression"
-          ],
-          "title": "IpExpression",
-          "type": "object"
+        "required" : [ "StringExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "IpExpression",
+        "properties" : {
+          "IpExpression" : {
+            "$ref" : "#/definitions/IngressIpv4Expression"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Ipv6Expression": {
-              "$ref": "#/definitions/IngressIpv6Expression"
-            }
-          },
-          "required": [
-            "Ipv6Expression"
-          ],
-          "title": "Ipv6Expression",
-          "type": "object"
+        "required" : [ "IpExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Ipv6Expression",
+        "properties" : {
+          "Ipv6Expression" : {
+            "$ref" : "#/definitions/IngressIpv6Expression"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "TlsExpression": {
-              "$ref": "#/definitions/IngressTlsProtocolExpression"
-            }
-          },
-          "required": [
-            "TlsExpression"
-          ],
-          "title": "TlsExpression",
-          "type": "object"
+        "required" : [ "Ipv6Expression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "TlsExpression",
+        "properties" : {
+          "TlsExpression" : {
+            "$ref" : "#/definitions/IngressTlsProtocolExpression"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "BooleanExpression": {
-              "$ref": "#/definitions/IngressBooleanExpression"
-            }
-          },
-          "required": [
-            "BooleanExpression"
-          ],
-          "title": "BooleanExpression",
-          "type": "object"
-        }
-      ]
+        "required" : [ "TlsExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "BooleanExpression",
+        "properties" : {
+          "BooleanExpression" : {
+            "$ref" : "#/definitions/IngressBooleanExpression"
+          }
+        },
+        "required" : [ "BooleanExpression" ],
+        "additionalProperties" : false
+      } ]
     },
-    "PolicyStatement": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "$ref": "#/definitions/AcceptAction"
-        },
-        "Conditions": {
-          "items": {
-            "$ref": "#/definitions/PolicyCondition"
+    "PolicyStatement" : {
+      "type" : "object",
+      "properties" : {
+        "Conditions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PolicyCondition"
           },
-          "minItems": 1,
-          "type": "array"
+          "minItems" : 1
+        },
+        "Action" : {
+          "$ref" : "#/definitions/AcceptAction"
         }
       },
-      "required": [
-        "Action",
-        "Conditions"
-      ],
-      "type": "object"
+      "required" : [ "Action", "Conditions" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::SES::MailManagerTrafficPolicy Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:ListTagsForResource",
-        "ses:GetTrafficPolicy",
-        "ses:CreateTrafficPolicy"
-      ]
+  "properties" : {
+    "DefaultAction" : {
+      "$ref" : "#/definitions/AcceptAction"
     },
-    "delete": {
-      "permissions": [
-        "ses:GetTrafficPolicy",
-        "ses:DeleteTrafficPolicy"
-      ]
+    "MaxMessageSizeBytes" : {
+      "type" : "number",
+      "minimum" : 1
     },
-    "list": {
-      "permissions": [
-        "ses:ListTrafficPolicies"
-      ]
+    "PolicyStatements" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/PolicyStatement"
+      }
     },
-    "read": {
-      "permissions": [
-        "ses:ListTagsForResource",
-        "ses:GetTrafficPolicy"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
     },
-    "update": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:UntagResource",
-        "ses:ListTagsForResource",
-        "ses:GetTrafficPolicy",
-        "ses:UpdateTrafficPolicy"
-      ]
+    "TrafficPolicyArn" : {
+      "type" : "string"
+    },
+    "TrafficPolicyId" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1
+    },
+    "TrafficPolicyName" : {
+      "type" : "string",
+      "maxLength" : 63,
+      "minLength" : 3,
+      "pattern" : "^[A-Za-z0-9_\\-]+$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/TrafficPolicyId"
-  ],
-  "properties": {
-    "DefaultAction": {
-      "$ref": "#/definitions/AcceptAction"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ses:TagResource", "ses:UntagResource" ]
+  },
+  "required" : [ "DefaultAction", "PolicyStatements" ],
+  "readOnlyProperties" : [ "/properties/TrafficPolicyArn", "/properties/TrafficPolicyId" ],
+  "primaryIdentifier" : [ "/properties/TrafficPolicyId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ses:TagResource", "ses:ListTagsForResource", "ses:GetTrafficPolicy", "ses:CreateTrafficPolicy" ]
     },
-    "MaxMessageSizeBytes": {
-      "minimum": 1,
-      "type": "number"
+    "read" : {
+      "permissions" : [ "ses:ListTagsForResource", "ses:GetTrafficPolicy" ]
     },
-    "PolicyStatements": {
-      "items": {
-        "$ref": "#/definitions/PolicyStatement"
-      },
-      "type": "array"
+    "update" : {
+      "permissions" : [ "ses:TagResource", "ses:UntagResource", "ses:ListTagsForResource", "ses:GetTrafficPolicy", "ses:UpdateTrafficPolicy" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "ses:GetTrafficPolicy", "ses:DeleteTrafficPolicy" ]
     },
-    "TrafficPolicyArn": {
-      "type": "string"
-    },
-    "TrafficPolicyId": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-    },
-    "TrafficPolicyName": {
-      "maxLength": 63,
-      "minLength": 3,
-      "pattern": "^[A-Za-z0-9_\\-]+$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "ses:ListTrafficPolicies" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/TrafficPolicyArn",
-    "/properties/TrafficPolicyId"
-  ],
-  "required": [
-    "DefaultAction",
-    "PolicyStatements"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ses:TagResource",
-      "ses:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SES::MailManagerTrafficPolicy"
+  "additionalProperties" : false
 }

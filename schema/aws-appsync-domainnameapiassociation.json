@@ -1,63 +1,43 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainName"
-  ],
-  "description": "Resource Type definition for AWS::AppSync::DomainNameApiAssociation",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "appsync:AssociateApi",
-        "appsync:GetApiAssociation"
-      ]
+  "typeName" : "AWS::AppSync::DomainNameApiAssociation",
+  "description" : "Resource Type definition for AWS::AppSync::DomainNameApiAssociation",
+  "additionalProperties" : false,
+  "properties" : {
+    "DomainName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 253,
+      "pattern" : "^(\\*[a-z\\d-]*\\.)?([a-z\\d-]+\\.)+[a-z\\d-]+$"
     },
-    "delete": {
-      "permissions": [
-        "appsync:DisassociateApi",
-        "appsync:GetApiAssociation"
-      ]
+    "ApiId" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "appsync:GetApiAssociation"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "appsync:AssociateApi",
-        "appsync:GetApiAssociation"
-      ]
+    "ApiAssociationIdentifier" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ApiAssociationIdentifier"
-  ],
-  "properties": {
-    "ApiAssociationIdentifier": {
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "required" : [ "DomainName", "ApiId" ],
+  "primaryIdentifier" : [ "/properties/ApiAssociationIdentifier" ],
+  "readOnlyProperties" : [ "/properties/ApiAssociationIdentifier" ],
+  "createOnlyProperties" : [ "/properties/DomainName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "appsync:AssociateApi", "appsync:GetApiAssociation" ]
     },
-    "ApiId": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "appsync:DisassociateApi", "appsync:GetApiAssociation" ]
     },
-    "DomainName": {
-      "maxLength": 253,
-      "minLength": 1,
-      "pattern": "^(\\*[a-z\\d-]*\\.)?([a-z\\d-]+\\.)+[a-z\\d-]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "appsync:AssociateApi", "appsync:GetApiAssociation" ]
+    },
+    "read" : {
+      "permissions" : [ "appsync:GetApiAssociation" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ApiAssociationIdentifier"
-  ],
-  "required": [
-    "DomainName",
-    "ApiId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::AppSync::DomainNameApiAssociation"
+  }
 }

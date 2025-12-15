@@ -1,343 +1,333 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Vpc",
-    "/properties/Type",
-    "/properties/RouterSettings",
-    "/properties/InputNetworkLocation"
-  ],
-  "definitions": {
-    "InputDestinationRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "Network": {
-          "type": "string"
-        },
-        "NetworkRoutes": {
-          "items": {
-            "$ref": "#/definitions/InputRequestDestinationRoute"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "StaticIpAddress": {
-          "type": "string"
-        },
-        "StreamName": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::MediaLive::Input",
+  "description" : "Resource Type definition for AWS::MediaLive::Input",
+  "additionalProperties" : false,
+  "properties" : {
+    "SrtSettings" : {
+      "$ref" : "#/definitions/SrtSettingsRequest"
     },
-    "InputDeviceSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "Id": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "InputNetworkLocation" : {
+      "type" : "string"
     },
-    "InputRequestDestinationRoute": {
-      "additionalProperties": false,
-      "properties": {
-        "Cidr": {
-          "type": "string"
-        },
-        "Gateway": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Destinations" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/InputDestinationRequest"
+      }
     },
-    "InputSdpLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "MediaIndex": {
-          "type": "integer"
-        },
-        "SdpUrl": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Vpc" : {
+      "$ref" : "#/definitions/InputVpcRequest"
     },
-    "InputSourceRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "PasswordParam": {
-          "type": "string"
-        },
-        "Url": {
-          "type": "string"
-        },
-        "Username": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "MediaConnectFlows" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/MediaConnectFlowRequest"
+      }
     },
-    "InputVpcRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "SecurityGroupIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "SubnetIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "Sources" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/InputSourceRequest"
+      }
     },
-    "MediaConnectFlowRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "FlowArn": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "RoleArn" : {
+      "type" : "string"
     },
-    "MulticastSettingsCreateRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "Sources": {
-          "items": {
-            "$ref": "#/definitions/MulticastSourceCreateRequest"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "Name" : {
+      "type" : "string"
     },
-    "MulticastSourceCreateRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "SourceIp": {
-          "type": "string"
-        },
-        "Url": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "RouterSettings" : {
+      "$ref" : "#/definitions/RouterSettings"
     },
-    "RouterDestinationSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "AvailabilityZoneName": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Type" : {
+      "type" : "string"
     },
-    "RouterSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "Destinations": {
-          "items": {
-            "$ref": "#/definitions/RouterDestinationSettings"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "EncryptionType": {
-          "type": "string"
-        },
-        "SecretArn": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Smpte2110ReceiverGroupSettings" : {
+      "$ref" : "#/definitions/Smpte2110ReceiverGroupSettings"
     },
-    "Smpte2110ReceiverGroup": {
-      "additionalProperties": false,
-      "properties": {
-        "SdpSettings": {
-          "$ref": "#/definitions/Smpte2110ReceiverGroupSdpSettings"
-        }
-      },
-      "type": "object"
+    "SdiSources" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "Smpte2110ReceiverGroupSdpSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "AncillarySdps": {
-          "items": {
-            "$ref": "#/definitions/InputSdpLocation"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "AudioSdps": {
-          "items": {
-            "$ref": "#/definitions/InputSdpLocation"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "VideoSdp": {
-          "$ref": "#/definitions/InputSdpLocation"
-        }
-      },
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "Smpte2110ReceiverGroupSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "Smpte2110ReceiverGroups": {
-          "items": {
-            "$ref": "#/definitions/Smpte2110ReceiverGroup"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "Arn" : {
+      "type" : "string"
     },
-    "SrtCallerDecryptionRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "Algorithm": {
-          "type": "string"
-        },
-        "PassphraseSecretArn": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "InputSecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "SrtCallerSourceRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "Decryption": {
-          "$ref": "#/definitions/SrtCallerDecryptionRequest"
-        },
-        "MinimumLatency": {
-          "type": "integer"
-        },
-        "SrtListenerAddress": {
-          "type": "string"
-        },
-        "SrtListenerPort": {
-          "type": "string"
-        },
-        "StreamId": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "MulticastSettings" : {
+      "$ref" : "#/definitions/MulticastSettingsCreateRequest"
     },
-    "SrtSettingsRequest": {
-      "additionalProperties": false,
-      "properties": {
-        "SrtCallerSources": {
-          "items": {
-            "$ref": "#/definitions/SrtCallerSourceRequest"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "InputDevices" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/InputDeviceSettings"
+      }
+    },
+    "Tags" : {
+      "type" : "object"
     }
   },
-  "description": "Resource Type definition for AWS::MediaLive::Input",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "definitions" : {
+    "Smpte2110ReceiverGroup" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SdpSettings" : {
+          "$ref" : "#/definitions/Smpte2110ReceiverGroupSdpSettings"
+        }
+      }
     },
-    "Destinations": {
-      "items": {
-        "$ref": "#/definitions/InputDestinationRequest"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "SrtCallerDecryptionRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Algorithm" : {
+          "type" : "string"
+        },
+        "PassphraseSecretArn" : {
+          "type" : "string"
+        }
+      }
     },
-    "Id": {
-      "type": "string"
+    "MulticastSettingsCreateRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Sources" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/MulticastSourceCreateRequest"
+          }
+        }
+      }
     },
-    "InputDevices": {
-      "items": {
-        "$ref": "#/definitions/InputDeviceSettings"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "SrtSettingsRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SrtCallerSources" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/SrtCallerSourceRequest"
+          }
+        }
+      }
     },
-    "InputNetworkLocation": {
-      "type": "string"
+    "InputVpcRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
     },
-    "InputSecurityGroups": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "InputRequestDestinationRoute" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Cidr" : {
+          "type" : "string"
+        },
+        "Gateway" : {
+          "type" : "string"
+        }
+      }
     },
-    "MediaConnectFlows": {
-      "items": {
-        "$ref": "#/definitions/MediaConnectFlowRequest"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "MediaConnectFlowRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FlowArn" : {
+          "type" : "string"
+        }
+      }
     },
-    "MulticastSettings": {
-      "$ref": "#/definitions/MulticastSettingsCreateRequest"
+    "MulticastSourceCreateRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Url" : {
+          "type" : "string"
+        },
+        "SourceIp" : {
+          "type" : "string"
+        }
+      }
     },
-    "Name": {
-      "type": "string"
+    "RouterDestinationSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AvailabilityZoneName" : {
+          "type" : "string"
+        }
+      }
     },
-    "RoleArn": {
-      "type": "string"
+    "RouterSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SecretArn" : {
+          "type" : "string"
+        },
+        "Destinations" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/RouterDestinationSettings"
+          }
+        },
+        "EncryptionType" : {
+          "type" : "string"
+        }
+      }
     },
-    "RouterSettings": {
-      "$ref": "#/definitions/RouterSettings"
+    "Smpte2110ReceiverGroupSdpSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AudioSdps" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/InputSdpLocation"
+          }
+        },
+        "AncillarySdps" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/InputSdpLocation"
+          }
+        },
+        "VideoSdp" : {
+          "$ref" : "#/definitions/InputSdpLocation"
+        }
+      }
     },
-    "SdiSources": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "SrtCallerSourceRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SrtListenerPort" : {
+          "type" : "string"
+        },
+        "StreamId" : {
+          "type" : "string"
+        },
+        "MinimumLatency" : {
+          "type" : "integer"
+        },
+        "Decryption" : {
+          "$ref" : "#/definitions/SrtCallerDecryptionRequest"
+        },
+        "SrtListenerAddress" : {
+          "type" : "string"
+        }
+      }
     },
-    "Smpte2110ReceiverGroupSettings": {
-      "$ref": "#/definitions/Smpte2110ReceiverGroupSettings"
+    "InputSdpLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MediaIndex" : {
+          "type" : "integer"
+        },
+        "SdpUrl" : {
+          "type" : "string"
+        }
+      }
     },
-    "Sources": {
-      "items": {
-        "$ref": "#/definitions/InputSourceRequest"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "Smpte2110ReceiverGroupSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Smpte2110ReceiverGroups" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Smpte2110ReceiverGroup"
+          }
+        }
+      }
     },
-    "SrtSettings": {
-      "$ref": "#/definitions/SrtSettingsRequest"
+    "InputSourceRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PasswordParam" : {
+          "type" : "string"
+        },
+        "Username" : {
+          "type" : "string"
+        },
+        "Url" : {
+          "type" : "string"
+        }
+      }
     },
-    "Tags": {
-      "type": "object"
+    "InputDeviceSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Id" : {
+          "type" : "string"
+        }
+      }
     },
-    "Type": {
-      "type": "string"
-    },
-    "Vpc": {
-      "$ref": "#/definitions/InputVpcRequest"
+    "InputDestinationRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StreamName" : {
+          "type" : "string"
+        },
+        "NetworkRoutes" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/InputRequestDestinationRoute"
+          }
+        },
+        "StaticIpAddress" : {
+          "type" : "string"
+        },
+        "Network" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "typeName": "AWS::MediaLive::Input"
+  "createOnlyProperties" : [ "/properties/Vpc", "/properties/Type", "/properties/RouterSettings", "/properties/InputNetworkLocation" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
 }

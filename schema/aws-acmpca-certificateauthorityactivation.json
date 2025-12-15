@@ -1,76 +1,53 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CertificateAuthorityArn"
-  ],
-  "description": "Used to install the certificate authority certificate and update the certificate authority status.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "acm-pca:ImportCertificateAuthorityCertificate",
-        "acm-pca:UpdateCertificateAuthority"
-      ]
+  "typeName" : "AWS::ACMPCA::CertificateAuthorityActivation",
+  "description" : "Used to install the certificate authority certificate and update the certificate authority status.",
+  "sourceUrl" : "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
+  "properties" : {
+    "CertificateAuthorityArn" : {
+      "description" : "Arn of the Certificate Authority.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "acm-pca:UpdateCertificateAuthority"
-      ]
+    "Certificate" : {
+      "description" : "Certificate Authority certificate that will be installed in the Certificate Authority.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "acm-pca:GetCertificateAuthorityCertificate",
-        "acm-pca:DescribeCertificateAuthority"
-      ]
+    "CertificateChain" : {
+      "description" : "Certificate chain for the Certificate Authority certificate.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "acm-pca:ImportCertificateAuthorityCertificate",
-        "acm-pca:UpdateCertificateAuthority"
-      ]
+    "Status" : {
+      "description" : "The status of the Certificate Authority.",
+      "type" : "string"
+    },
+    "CompleteCertificateChain" : {
+      "description" : "The complete certificate chain, including the Certificate Authority certificate.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/CertificateAuthorityArn"
-  ],
-  "properties": {
-    "Certificate": {
-      "description": "Certificate Authority certificate that will be installed in the Certificate Authority.",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "CertificateAuthorityArn", "Certificate" ],
+  "createOnlyProperties" : [ "/properties/CertificateAuthorityArn" ],
+  "writeOnlyProperties" : [ "/properties/Certificate", "/properties/CertificateChain" ],
+  "readOnlyProperties" : [ "/properties/CompleteCertificateChain" ],
+  "primaryIdentifier" : [ "/properties/CertificateAuthorityArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "acm-pca:ImportCertificateAuthorityCertificate", "acm-pca:UpdateCertificateAuthority" ]
     },
-    "CertificateAuthorityArn": {
-      "description": "Arn of the Certificate Authority.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "acm-pca:GetCertificateAuthorityCertificate", "acm-pca:DescribeCertificateAuthority" ]
     },
-    "CertificateChain": {
-      "description": "Certificate chain for the Certificate Authority certificate.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "acm-pca:UpdateCertificateAuthority" ]
     },
-    "CompleteCertificateChain": {
-      "description": "The complete certificate chain, including the Certificate Authority certificate.",
-      "type": "string"
-    },
-    "Status": {
-      "description": "The status of the Certificate Authority.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "acm-pca:ImportCertificateAuthorityCertificate", "acm-pca:UpdateCertificateAuthority" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/CompleteCertificateChain"
-  ],
-  "required": [
-    "CertificateAuthorityArn",
-    "Certificate"
-  ],
-  "sourceUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/AWS_ACMPCA.html",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::ACMPCA::CertificateAuthorityActivation",
-  "writeOnlyProperties": [
-    "/properties/Certificate",
-    "/properties/CertificateChain"
-  ]
+  }
 }

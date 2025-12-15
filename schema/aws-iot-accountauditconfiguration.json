@@ -1,228 +1,205 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AccountId"
-  ],
-  "definitions": {
-    "AuditCheckConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration for a specific audit check.",
-      "properties": {
-        "Enabled": {
-          "description": "True if the check is enabled.",
-          "type": "boolean"
+  "typeName" : "AWS::IoT::AccountAuditConfiguration",
+  "description" : "Configures the Device Defender audit settings for this account. Settings include how audit notifications are sent and which audit checks are enabled or disabled.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+  "definitions" : {
+    "AuditCheckConfigurations" : {
+      "description" : "Specifies which audit checks are enabled and disabled for this account.",
+      "type" : "object",
+      "properties" : {
+        "AuthenticatedCognitoRoleOverlyPermissiveCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "CaCertificateExpiringCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "CaCertificateKeyQualityCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "ConflictingClientIdsCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "DeviceCertificateExpiringCheck" : {
+          "$ref" : "#/definitions/DeviceCertExpirationAuditCheckConfiguration"
+        },
+        "DeviceCertificateKeyQualityCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "DeviceCertificateSharedCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "IotPolicyOverlyPermissiveCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "IotRoleAliasAllowsAccessToUnusedServicesCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "IotRoleAliasOverlyPermissiveCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "LoggingDisabledCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "RevokedCaCertificateStillActiveCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "RevokedDeviceCertificateStillActiveCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "UnauthenticatedCognitoRoleOverlyPermissiveCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "IntermediateCaRevokedForActiveDeviceCertificatesCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "IoTPolicyPotentialMisConfigurationCheck" : {
+          "$ref" : "#/definitions/AuditCheckConfiguration"
+        },
+        "DeviceCertificateAgeCheck" : {
+          "$ref" : "#/definitions/DeviceCertAgeAuditCheckConfiguration"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AuditCheckConfigurations": {
-      "additionalProperties": false,
-      "description": "Specifies which audit checks are enabled and disabled for this account.",
-      "properties": {
-        "AuthenticatedCognitoRoleOverlyPermissiveCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "CaCertificateExpiringCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "CaCertificateKeyQualityCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "ConflictingClientIdsCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "DeviceCertificateAgeCheck": {
-          "$ref": "#/definitions/DeviceCertAgeAuditCheckConfiguration"
-        },
-        "DeviceCertificateExpiringCheck": {
-          "$ref": "#/definitions/DeviceCertExpirationAuditCheckConfiguration"
-        },
-        "DeviceCertificateKeyQualityCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "DeviceCertificateSharedCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "IntermediateCaRevokedForActiveDeviceCertificatesCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "IoTPolicyPotentialMisConfigurationCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "IotPolicyOverlyPermissiveCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "IotRoleAliasAllowsAccessToUnusedServicesCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "IotRoleAliasOverlyPermissiveCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "LoggingDisabledCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "RevokedCaCertificateStillActiveCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "RevokedDeviceCertificateStillActiveCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
-        },
-        "UnauthenticatedCognitoRoleOverlyPermissiveCheck": {
-          "$ref": "#/definitions/AuditCheckConfiguration"
+    "AuditNotificationTargetConfigurations" : {
+      "description" : "Information about the targets to which audit notifications are sent.",
+      "type" : "object",
+      "properties" : {
+        "Sns" : {
+          "$ref" : "#/definitions/AuditNotificationTarget"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AuditNotificationTarget": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "description": "True if notifications to the target are enabled.",
-          "type": "boolean"
+    "AuditCheckConfiguration" : {
+      "description" : "The configuration for a specific audit check.",
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "description" : "True if the check is enabled.",
+          "type" : "boolean"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "DeviceCertAgeAuditCheckConfiguration" : {
+      "description" : "A structure containing the configName and corresponding configValue for configuring DeviceCertAgeCheck.",
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "description" : "True if the check is enabled.",
+          "type" : "boolean"
         },
-        "RoleArn": {
-          "description": "The ARN of the role that grants permission to send notifications to the target.",
-          "maxLength": 2048,
-          "minLength": 20,
-          "type": "string"
+        "Configuration" : {
+          "$ref" : "#/definitions/CertAgeCheckCustomConfiguration"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "DeviceCertExpirationAuditCheckConfiguration" : {
+      "description" : "A structure containing the configName and corresponding configValue for configuring DeviceCertExpirationCheck.",
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "description" : "True if the check is enabled.",
+          "type" : "boolean"
         },
-        "TargetArn": {
-          "description": "The ARN of the target (SNS topic) to which audit notifications are sent.",
-          "maxLength": 2048,
-          "type": "string"
+        "Configuration" : {
+          "$ref" : "#/definitions/CertExpirationCheckCustomConfiguration"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AuditNotificationTargetConfigurations": {
-      "additionalProperties": false,
-      "description": "Information about the targets to which audit notifications are sent.",
-      "properties": {
-        "Sns": {
-          "$ref": "#/definitions/AuditNotificationTarget"
-        }
-      },
-      "type": "object"
-    },
-    "CertAgeCheckCustomConfiguration": {
-      "additionalProperties": false,
-      "description": "A structure containing the configName and corresponding configValue for configuring audit checks.",
-      "properties": {
-        "CertAgeThresholdInDays": {
-          "$ref": "#/definitions/ConfigValue"
-        }
-      },
-      "type": "object"
-    },
-    "CertExpirationCheckCustomConfiguration": {
-      "additionalProperties": false,
-      "description": "A structure containing the configName and corresponding configValue for configuring audit checks.",
-      "properties": {
-        "CertExpirationThresholdInDays": {
-          "$ref": "#/definitions/ConfigValue"
-        }
-      },
-      "type": "object"
-    },
-    "ConfigValue": {
-      "description": "The configValue for configuring audit checks.",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "DeviceCertAgeAuditCheckConfiguration": {
-      "additionalProperties": false,
-      "description": "A structure containing the configName and corresponding configValue for configuring DeviceCertAgeCheck.",
-      "properties": {
-        "Configuration": {
-          "$ref": "#/definitions/CertAgeCheckCustomConfiguration"
+    "AuditNotificationTarget" : {
+      "type" : "object",
+      "properties" : {
+        "TargetArn" : {
+          "description" : "The ARN of the target (SNS topic) to which audit notifications are sent.",
+          "type" : "string",
+          "maxLength" : 2048
         },
-        "Enabled": {
-          "description": "True if the check is enabled.",
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "DeviceCertExpirationAuditCheckConfiguration": {
-      "additionalProperties": false,
-      "description": "A structure containing the configName and corresponding configValue for configuring DeviceCertExpirationCheck.",
-      "properties": {
-        "Configuration": {
-          "$ref": "#/definitions/CertExpirationCheckCustomConfiguration"
+        "RoleArn" : {
+          "description" : "The ARN of the role that grants permission to send notifications to the target.",
+          "type" : "string",
+          "minLength" : 20,
+          "maxLength" : 2048
         },
-        "Enabled": {
-          "description": "True if the check is enabled.",
-          "type": "boolean"
+        "Enabled" : {
+          "description" : "True if notifications to the target are enabled.",
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
+    },
+    "ConfigValue" : {
+      "type" : "string",
+      "description" : "The configValue for configuring audit checks.",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "CertAgeCheckCustomConfiguration" : {
+      "type" : "object",
+      "description" : "A structure containing the configName and corresponding configValue for configuring audit checks.",
+      "properties" : {
+        "CertAgeThresholdInDays" : {
+          "$ref" : "#/definitions/ConfigValue"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "CertExpirationCheckCustomConfiguration" : {
+      "type" : "object",
+      "description" : "A structure containing the configName and corresponding configValue for configuring audit checks.",
+      "properties" : {
+        "CertExpirationThresholdInDays" : {
+          "$ref" : "#/definitions/ConfigValue"
+        }
+      },
+      "additionalProperties" : false
     }
   },
-  "description": "Configures the Device Defender audit settings for this account. Settings include how audit notifications are sent and which audit checks are enabled or disabled.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:UpdateAccountAuditConfiguration",
-        "iot:DescribeAccountAuditConfiguration",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "AccountId" : {
+      "description" : "Your 12-digit account ID (used as the primary identifier for the CloudFormation resource).",
+      "type" : "string",
+      "minLength" : 12,
+      "maxLength" : 12
     },
-    "delete": {
-      "permissions": [
-        "iot:DescribeAccountAuditConfiguration",
-        "iot:DeleteAccountAuditConfiguration"
-      ]
+    "AuditCheckConfigurations" : {
+      "$ref" : "#/definitions/AuditCheckConfigurations"
     },
-    "list": {
-      "permissions": [
-        "iot:DescribeAccountAuditConfiguration"
-      ]
+    "AuditNotificationTargetConfigurations" : {
+      "$ref" : "#/definitions/AuditNotificationTargetConfigurations"
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeAccountAuditConfiguration"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "iot:UpdateAccountAuditConfiguration",
-        "iot:DescribeAccountAuditConfiguration",
-        "iam:PassRole"
-      ]
+    "RoleArn" : {
+      "description" : "The ARN of the role that grants permission to AWS IoT to access information about your devices, policies, certificates and other items as required when performing an audit.",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 2048
     }
   },
-  "primaryIdentifier": [
-    "/properties/AccountId"
-  ],
-  "properties": {
-    "AccountId": {
-      "description": "Your 12-digit account ID (used as the primary identifier for the CloudFormation resource).",
-      "maxLength": 12,
-      "minLength": 12,
-      "type": "string"
+  "tagging" : {
+    "taggable" : false
+  },
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/AccountId" ],
+  "required" : [ "AccountId", "AuditCheckConfigurations", "RoleArn" ],
+  "createOnlyProperties" : [ "/properties/AccountId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:UpdateAccountAuditConfiguration", "iot:DescribeAccountAuditConfiguration", "iam:PassRole" ]
     },
-    "AuditCheckConfigurations": {
-      "$ref": "#/definitions/AuditCheckConfigurations"
+    "read" : {
+      "permissions" : [ "iot:DescribeAccountAuditConfiguration" ]
     },
-    "AuditNotificationTargetConfigurations": {
-      "$ref": "#/definitions/AuditNotificationTargetConfigurations"
+    "update" : {
+      "permissions" : [ "iot:UpdateAccountAuditConfiguration", "iot:DescribeAccountAuditConfiguration", "iam:PassRole" ]
     },
-    "RoleArn": {
-      "description": "The ARN of the role that grants permission to AWS IoT to access information about your devices, policies, certificates and other items as required when performing an audit.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:DescribeAccountAuditConfiguration", "iot:DeleteAccountAuditConfiguration" ]
+    },
+    "list" : {
+      "permissions" : [ "iot:DescribeAccountAuditConfiguration" ]
     }
-  },
-  "required": [
-    "AccountId",
-    "AuditCheckConfigurations",
-    "RoleArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::IoT::AccountAuditConfiguration"
+  }
 }

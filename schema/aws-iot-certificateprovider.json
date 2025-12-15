@@ -1,139 +1,98 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CertificateProviderName"
-  ],
-  "definitions": {
-    "CertificateProviderOperation": {
-      "enum": [
-        "CreateCertificateFromCsr"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 127,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::IoT::CertificateProvider",
+  "description" : "Use the AWS::IoT::CertificateProvider resource to declare an AWS IoT Certificate Provider.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 127
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 255
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
+    },
+    "CertificateProviderOperation" : {
+      "type" : "string",
+      "enum" : [ "CreateCertificateFromCsr" ]
     }
   },
-  "description": "Use the AWS::IoT::CertificateProvider resource to declare an AWS IoT Certificate Provider.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreateCertificateProvider",
-        "iot:DescribeCertificateProvider",
-        "iot:TagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "CertificateProviderName" : {
+      "type" : "string",
+      "pattern" : "[\\w=,@-]+",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "delete": {
-      "permissions": [
-        "iot:DeleteCertificateProvider",
-        "iot:DescribeCertificateProvider",
-        "kms:Decrypt"
-      ]
+    "LambdaFunctionArn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 170
     },
-    "list": {
-      "permissions": [
-        "iot:ListCertificateProviders"
-      ]
+    "AccountDefaultForOperations" : {
+      "type" : "array",
+      "minItems" : 1,
+      "maxItems" : 1,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/CertificateProviderOperation"
+      }
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeCertificateProvider",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "update": {
-      "permissions": [
-        "iot:UpdateCertificateProvider",
-        "iot:DescribeCertificateProvider",
-        "iot:TagResource",
-        "iot:UntagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "Arn" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/CertificateProviderName"
-  ],
-  "properties": {
-    "AccountDefaultForOperations": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/CertificateProviderOperation"
-      },
-      "maxItems": 1,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource" ]
+  },
+  "replacementStrategy" : "delete_then_create",
+  "additionalProperties" : false,
+  "required" : [ "LambdaFunctionArn", "AccountDefaultForOperations" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/CertificateProviderName" ],
+  "primaryIdentifier" : [ "/properties/CertificateProviderName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreateCertificateProvider", "iot:DescribeCertificateProvider", "iot:TagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "Arn": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iot:DescribeCertificateProvider", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "CertificateProviderName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[\\w=,@-]+",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iot:UpdateCertificateProvider", "iot:DescribeCertificateProvider", "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "LambdaFunctionArn": {
-      "maxLength": 170,
-      "minLength": 1,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:DeleteCertificateProvider", "iot:DescribeCertificateProvider", "kms:Decrypt" ]
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iot:ListCertificateProviders" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "LambdaFunctionArn",
-    "AccountDefaultForOperations"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:ListTagsForResource",
-      "iot:TagResource",
-      "iot:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::CertificateProvider"
+  }
 }

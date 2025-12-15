@@ -1,577 +1,544 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Action": {
-      "additionalProperties": false,
-      "properties": {
-        "CrossRegionCopy": {
-          "items": {
-            "$ref": "#/definitions/CrossRegionCopyAction"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "CrossRegionCopy",
-        "Name"
-      ],
-      "type": "object"
+  "typeName" : "AWS::DLM::LifecyclePolicy",
+  "description" : "Resource Type definition for AWS::DLM::LifecyclePolicy",
+  "additionalProperties" : false,
+  "properties" : {
+    "CreateInterval" : {
+      "type" : "integer"
     },
-    "ArchiveRetainRule": {
-      "additionalProperties": false,
-      "properties": {
-        "RetentionArchiveTier": {
-          "$ref": "#/definitions/RetentionArchiveTier"
-        }
-      },
-      "required": [
-        "RetentionArchiveTier"
-      ],
-      "type": "object"
+    "Description" : {
+      "type" : "string"
     },
-    "ArchiveRule": {
-      "additionalProperties": false,
-      "properties": {
-        "RetainRule": {
-          "$ref": "#/definitions/ArchiveRetainRule"
-        }
-      },
-      "required": [
-        "RetainRule"
-      ],
-      "type": "object"
+    "ExtendDeletion" : {
+      "type" : "boolean"
     },
-    "CreateRule": {
-      "additionalProperties": false,
-      "properties": {
-        "CronExpression": {
-          "type": "string"
-        },
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        },
-        "Location": {
-          "type": "string"
-        },
-        "Scripts": {
-          "items": {
-            "$ref": "#/definitions/Script"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Times": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "Exclusions" : {
+      "$ref" : "#/definitions/Exclusions"
     },
-    "CrossRegionCopyAction": {
-      "additionalProperties": false,
-      "properties": {
-        "EncryptionConfiguration": {
-          "$ref": "#/definitions/EncryptionConfiguration"
-        },
-        "RetainRule": {
-          "$ref": "#/definitions/CrossRegionCopyRetainRule"
-        },
-        "Target": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Target",
-        "EncryptionConfiguration"
-      ],
-      "type": "object"
+    "RetainInterval" : {
+      "type" : "integer"
     },
-    "CrossRegionCopyDeprecateRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "IntervalUnit",
-        "Interval"
-      ],
-      "type": "object"
+    "ExecutionRoleArn" : {
+      "type" : "string"
     },
-    "CrossRegionCopyRetainRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "IntervalUnit",
-        "Interval"
-      ],
-      "type": "object"
+    "DefaultPolicy" : {
+      "type" : "string"
     },
-    "CrossRegionCopyRule": {
-      "additionalProperties": false,
-      "properties": {
-        "CmkArn": {
-          "type": "string"
-        },
-        "CopyTags": {
-          "type": "boolean"
-        },
-        "DeprecateRule": {
-          "$ref": "#/definitions/CrossRegionCopyDeprecateRule"
-        },
-        "Encrypted": {
-          "type": "boolean"
-        },
-        "RetainRule": {
-          "$ref": "#/definitions/CrossRegionCopyRetainRule"
-        },
-        "Target": {
-          "type": "string"
-        },
-        "TargetRegion": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Encrypted"
-      ],
-      "type": "object"
+    "State" : {
+      "type" : "string"
     },
-    "CrossRegionCopyTargets": {
-      "additionalProperties": false,
-      "type": "object"
+    "CrossRegionCopyTargets" : {
+      "$ref" : "#/definitions/CrossRegionCopyTargets"
     },
-    "DeprecateRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Count": {
-          "type": "integer"
-        },
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "PolicyDetails" : {
+      "$ref" : "#/definitions/PolicyDetails"
     },
-    "EncryptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "CmkArn": {
-          "type": "string"
-        },
-        "Encrypted": {
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "Encrypted"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "EventParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "DescriptionRegex": {
-          "type": "string"
-        },
-        "EventType": {
-          "type": "string"
-        },
-        "SnapshotOwner": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "EventType",
-        "SnapshotOwner"
-      ],
-      "type": "object"
+    "Arn" : {
+      "type" : "string"
     },
-    "EventSource": {
-      "additionalProperties": false,
-      "properties": {
-        "Parameters": {
-          "$ref": "#/definitions/EventParameters"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "ExcludeTags": {
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "ExcludeVolumeTypesList": {
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "Exclusions": {
-      "additionalProperties": false,
-      "properties": {
-        "ExcludeBootVolumes": {
-          "type": "boolean"
-        },
-        "ExcludeTags": {
-          "$ref": "#/definitions/ExcludeTags"
-        },
-        "ExcludeVolumeTypes": {
-          "$ref": "#/definitions/ExcludeVolumeTypesList"
-        }
-      },
-      "type": "object"
-    },
-    "FastRestoreRule": {
-      "additionalProperties": false,
-      "properties": {
-        "AvailabilityZones": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Count": {
-          "type": "integer"
-        },
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "Parameters": {
-      "additionalProperties": false,
-      "properties": {
-        "ExcludeBootVolume": {
-          "type": "boolean"
-        },
-        "ExcludeDataVolumeTags": {
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "NoReboot": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "PolicyDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "Actions": {
-          "items": {
-            "$ref": "#/definitions/Action"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "CopyTags": {
-          "type": "boolean"
-        },
-        "CreateInterval": {
-          "type": "integer"
-        },
-        "CrossRegionCopyTargets": {
-          "$ref": "#/definitions/CrossRegionCopyTargets"
-        },
-        "EventSource": {
-          "$ref": "#/definitions/EventSource"
-        },
-        "Exclusions": {
-          "$ref": "#/definitions/Exclusions"
-        },
-        "ExtendDeletion": {
-          "type": "boolean"
-        },
-        "Parameters": {
-          "$ref": "#/definitions/Parameters"
-        },
-        "PolicyLanguage": {
-          "type": "string"
-        },
-        "PolicyType": {
-          "type": "string"
-        },
-        "ResourceLocations": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "ResourceType": {
-          "type": "string"
-        },
-        "ResourceTypes": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "RetainInterval": {
-          "type": "integer"
-        },
-        "Schedules": {
-          "items": {
-            "$ref": "#/definitions/Schedule"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "TargetTags": {
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "RetainRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Count": {
-          "type": "integer"
-        },
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "RetentionArchiveTier": {
-      "additionalProperties": false,
-      "properties": {
-        "Count": {
-          "type": "integer"
-        },
-        "Interval": {
-          "type": "integer"
-        },
-        "IntervalUnit": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "Schedule": {
-      "additionalProperties": false,
-      "properties": {
-        "ArchiveRule": {
-          "$ref": "#/definitions/ArchiveRule"
-        },
-        "CopyTags": {
-          "type": "boolean"
-        },
-        "CreateRule": {
-          "$ref": "#/definitions/CreateRule"
-        },
-        "CrossRegionCopyRules": {
-          "items": {
-            "$ref": "#/definitions/CrossRegionCopyRule"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "DeprecateRule": {
-          "$ref": "#/definitions/DeprecateRule"
-        },
-        "FastRestoreRule": {
-          "$ref": "#/definitions/FastRestoreRule"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "RetainRule": {
-          "$ref": "#/definitions/RetainRule"
-        },
-        "ShareRules": {
-          "items": {
-            "$ref": "#/definitions/ShareRule"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "TagsToAdd": {
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "VariableTags": {
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "Script": {
-      "additionalProperties": false,
-      "properties": {
-        "ExecuteOperationOnScriptFailure": {
-          "type": "boolean"
-        },
-        "ExecutionHandler": {
-          "type": "string"
-        },
-        "ExecutionHandlerService": {
-          "type": "string"
-        },
-        "ExecutionTimeout": {
-          "type": "integer"
-        },
-        "MaximumRetryCount": {
-          "type": "integer"
-        },
-        "Stages": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "ShareRule": {
-      "additionalProperties": false,
-      "properties": {
-        "TargetAccounts": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "UnshareInterval": {
-          "type": "integer"
-        },
-        "UnshareIntervalUnit": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "CopyTags" : {
+      "type" : "boolean"
     }
   },
-  "description": "Resource Type definition for AWS::DLM::LifecyclePolicy",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "CopyTags": {
-      "type": "boolean"
-    },
-    "CreateInterval": {
-      "type": "integer"
-    },
-    "CrossRegionCopyTargets": {
-      "$ref": "#/definitions/CrossRegionCopyTargets"
-    },
-    "DefaultPolicy": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "Exclusions": {
-      "$ref": "#/definitions/Exclusions"
-    },
-    "ExecutionRoleArn": {
-      "type": "string"
-    },
-    "ExtendDeletion": {
-      "type": "boolean"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "PolicyDetails": {
-      "$ref": "#/definitions/PolicyDetails"
-    },
-    "RetainInterval": {
-      "type": "integer"
-    },
-    "State": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+  "definitions" : {
+    "Action" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CrossRegionCopy" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/CrossRegionCopyAction"
+          }
+        },
+        "Name" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "CrossRegionCopy", "Name" ]
+    },
+    "Exclusions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ExcludeTags" : {
+          "$ref" : "#/definitions/ExcludeTags"
+        },
+        "ExcludeVolumeTypes" : {
+          "$ref" : "#/definitions/ExcludeVolumeTypesList"
+        },
+        "ExcludeBootVolumes" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "ArchiveRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RetainRule" : {
+          "$ref" : "#/definitions/ArchiveRetainRule"
+        }
+      },
+      "required" : [ "RetainRule" ]
+    },
+    "ExcludeVolumeTypesList" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "DeprecateRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Count" : {
+          "type" : "integer"
+        },
+        "Interval" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "CrossRegionCopyDeprecateRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Interval" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "IntervalUnit", "Interval" ]
+    },
+    "CreateRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Scripts" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Script"
+          }
+        },
+        "Times" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "CronExpression" : {
+          "type" : "string"
+        },
+        "Interval" : {
+          "type" : "integer"
+        },
+        "Location" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PolicyDetails" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PolicyLanguage" : {
+          "type" : "string"
+        },
+        "ResourceTypes" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Schedules" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Schedule"
+          }
+        },
+        "PolicyType" : {
+          "type" : "string"
+        },
+        "CreateInterval" : {
+          "type" : "integer"
+        },
+        "Parameters" : {
+          "$ref" : "#/definitions/Parameters"
+        },
+        "ExtendDeletion" : {
+          "type" : "boolean"
+        },
+        "Exclusions" : {
+          "$ref" : "#/definitions/Exclusions"
+        },
+        "Actions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Action"
+          }
+        },
+        "ResourceType" : {
+          "type" : "string"
+        },
+        "RetainInterval" : {
+          "type" : "integer"
+        },
+        "EventSource" : {
+          "$ref" : "#/definitions/EventSource"
+        },
+        "CrossRegionCopyTargets" : {
+          "$ref" : "#/definitions/CrossRegionCopyTargets"
+        },
+        "TargetTags" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "ResourceLocations" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "CopyTags" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Script" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ExecutionHandlerService" : {
+          "type" : "string"
+        },
+        "ExecutionTimeout" : {
+          "type" : "integer"
+        },
+        "Stages" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "ExecutionHandler" : {
+          "type" : "string"
+        },
+        "MaximumRetryCount" : {
+          "type" : "integer"
+        },
+        "ExecuteOperationOnScriptFailure" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Parameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ExcludeBootVolume" : {
+          "type" : "boolean"
+        },
+        "NoReboot" : {
+          "type" : "boolean"
+        },
+        "ExcludeDataVolumeTags" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        }
+      }
+    },
+    "CrossRegionCopyRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetRegion" : {
+          "type" : "string"
+        },
+        "Target" : {
+          "type" : "string"
+        },
+        "DeprecateRule" : {
+          "$ref" : "#/definitions/CrossRegionCopyDeprecateRule"
+        },
+        "Encrypted" : {
+          "type" : "boolean"
+        },
+        "CmkArn" : {
+          "type" : "string"
+        },
+        "RetainRule" : {
+          "$ref" : "#/definitions/CrossRegionCopyRetainRule"
+        },
+        "CopyTags" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Encrypted" ]
+    },
+    "EncryptionConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Encrypted" : {
+          "type" : "boolean"
+        },
+        "CmkArn" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Encrypted" ]
+    },
+    "CrossRegionCopyRetainRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Interval" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "IntervalUnit", "Interval" ]
+    },
+    "ExcludeTags" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "EventParameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DescriptionRegex" : {
+          "type" : "string"
+        },
+        "EventType" : {
+          "type" : "string"
+        },
+        "SnapshotOwner" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "EventType", "SnapshotOwner" ]
+    },
+    "RetainRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Count" : {
+          "type" : "integer"
+        },
+        "Interval" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "CrossRegionCopyAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Target" : {
+          "type" : "string"
+        },
+        "EncryptionConfiguration" : {
+          "$ref" : "#/definitions/EncryptionConfiguration"
+        },
+        "RetainRule" : {
+          "$ref" : "#/definitions/CrossRegionCopyRetainRule"
+        }
+      },
+      "required" : [ "Target", "EncryptionConfiguration" ]
+    },
+    "EventSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "Parameters" : {
+          "$ref" : "#/definitions/EventParameters"
+        }
+      },
+      "required" : [ "Type" ]
+    },
+    "ArchiveRetainRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RetentionArchiveTier" : {
+          "$ref" : "#/definitions/RetentionArchiveTier"
+        }
+      },
+      "required" : [ "RetentionArchiveTier" ]
+    },
+    "CrossRegionCopyTargets" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "Schedule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ShareRules" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ShareRule"
+          }
+        },
+        "DeprecateRule" : {
+          "$ref" : "#/definitions/DeprecateRule"
+        },
+        "TagsToAdd" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "CreateRule" : {
+          "$ref" : "#/definitions/CreateRule"
+        },
+        "VariableTags" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "FastRestoreRule" : {
+          "$ref" : "#/definitions/FastRestoreRule"
+        },
+        "ArchiveRule" : {
+          "$ref" : "#/definitions/ArchiveRule"
+        },
+        "RetainRule" : {
+          "$ref" : "#/definitions/RetainRule"
+        },
+        "CrossRegionCopyRules" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/CrossRegionCopyRule"
+          }
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "CopyTags" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "FastRestoreRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Count" : {
+          "type" : "integer"
+        },
+        "AvailabilityZones" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Interval" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "RetentionArchiveTier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IntervalUnit" : {
+          "type" : "string"
+        },
+        "Count" : {
+          "type" : "integer"
+        },
+        "Interval" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "ShareRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetAccounts" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "UnshareIntervalUnit" : {
+          "type" : "string"
+        },
+        "UnshareInterval" : {
+          "type" : "integer"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "typeName": "AWS::DLM::LifecyclePolicy"
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
 }

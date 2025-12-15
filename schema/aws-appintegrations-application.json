@@ -1,254 +1,214 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "ApplicationConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "ContactHandling": {
-          "$ref": "#/definitions/ContactHandling"
-        }
-      },
-      "type": "object"
-    },
-    "ApprovedOrigins": {
-      "maxLength": 1000,
-      "minLength": 1,
-      "pattern": "^\\w+\\:\\/\\/.*$",
-      "type": "string"
-    },
-    "ContactHandling": {
-      "additionalProperties": false,
-      "properties": {
-        "Scope": {
-          "enum": [
-            "CROSS_CONTACTS",
-            "PER_CONTACT"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "Scope"
-      ],
-      "type": "object"
-    },
-    "ExternalUrlConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "AccessUrl": {
-          "maxLength": 1000,
-          "minLength": 1,
-          "pattern": "^\\w+\\:\\/\\/.*$",
-          "type": "string"
+  "typeName" : "AWS::AppIntegrations::Application",
+  "description" : "Resource Type definition for AWS:AppIntegrations::Application",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A label for tagging Application resources",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "description" : "A key to identify the tag.",
+          "type" : "string",
+          "pattern" : "^(?!aws:)[a-zA-Z+-=._:/]+$",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "ApprovedOrigins": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/ApprovedOrigins"
-          },
-          "maxItems": 50,
-          "minItems": 0,
-          "type": "array"
+        "Value" : {
+          "description" : "Corresponding tag value for the key.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "AccessUrl"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     },
-    "IframeConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Allow": {
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+    "ExternalUrlConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "required" : [ "AccessUrl" ],
+      "properties" : {
+        "AccessUrl" : {
+          "type" : "string",
+          "pattern" : "^\\w+\\:\\/\\/.*$",
+          "minLength" : 1,
+          "maxLength" : 1000
         },
-        "Sandbox": {
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
+        "ApprovedOrigins" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/ApprovedOrigins"
           },
-          "type": "array"
+          "minItems" : 0,
+          "maxItems" : 50
+        }
+      }
+    },
+    "ApprovedOrigins" : {
+      "type" : "string",
+      "pattern" : "^\\w+\\:\\/\\/.*$",
+      "minLength" : 1,
+      "maxLength" : 1000
+    },
+    "Permissions" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9\\/\\._\\-\\*]+$",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "ContactHandling" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Scope" : {
+          "type" : "string",
+          "enum" : [ "CROSS_CONTACTS", "PER_CONTACT" ]
         }
       },
-      "type": "object"
+      "required" : [ "Scope" ]
     },
-    "Permissions": {
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9\\/\\._\\-\\*]+$",
-      "type": "string"
+    "ApplicationConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContactHandling" : {
+          "$ref" : "#/definitions/ContactHandling"
+        }
+      }
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A label for tagging Application resources",
-      "properties": {
-        "Key": {
-          "description": "A key to identify the tag.",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
-          "type": "string"
+    "IframeConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Allow" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "Value": {
-          "description": "Corresponding tag value for the key.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Sandbox" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS:AppIntegrations::Application",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "app-integrations:CreateApplication",
-        "app-integrations:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the application.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9\\/\\._ \\-]+$",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "delete": {
-      "permissions": [
-        "app-integrations:DeleteApplication"
-      ]
+    "Id" : {
+      "description" : "The id of the application.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9/\\._\\-]+$",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "list": {
-      "permissions": [
-        "app-integrations:ListApplications",
-        "app-integrations:ListTagsForResource"
-      ]
+    "Namespace" : {
+      "description" : "The namespace of the application.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9/\\._\\-]+$",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "read": {
-      "permissions": [
-        "app-integrations:GetApplication"
-      ]
+    "Description" : {
+      "description" : "The application description.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1000
     },
-    "update": {
-      "permissions": [
-        "app-integrations:GetApplication",
-        "app-integrations:UpdateApplication",
-        "app-integrations:TagResource",
-        "app-integrations:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ApplicationArn"
-  ],
-  "properties": {
-    "ApplicationArn": {
-      "description": "The Amazon Resource Name (ARN) of the application.",
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^arn:aws[-a-z0-9]*:app-integrations:[-a-z0-9]*:[0-9]{12}:application/[-a-zA-Z0-9]*",
-      "type": "string"
+    "ApplicationArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the application.",
+      "pattern" : "^arn:aws[-a-z0-9]*:app-integrations:[-a-z0-9]*:[0-9]{12}:application/[-a-zA-Z0-9]*",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
     },
-    "ApplicationConfig": {
-      "$ref": "#/definitions/ApplicationConfig",
-      "description": "The application configuration. Cannot be used when IsService is true."
-    },
-    "ApplicationSourceConfig": {
-      "additionalProperties": false,
-      "description": "Application source config",
-      "properties": {
-        "ExternalUrlConfig": {
-          "$ref": "#/definitions/ExternalUrlConfig"
+    "ApplicationSourceConfig" : {
+      "description" : "Application source config",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ExternalUrlConfig" : {
+          "$ref" : "#/definitions/ExternalUrlConfig"
         }
       },
-      "required": [
-        "ExternalUrlConfig"
-      ],
-      "type": "object"
+      "required" : [ "ExternalUrlConfig" ]
     },
-    "Description": {
-      "description": "The application description.",
-      "maxLength": 1000,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Id": {
-      "description": "The id of the application.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
-      "type": "string"
-    },
-    "IframeConfig": {
-      "$ref": "#/definitions/IframeConfig",
-      "description": "The iframe configuration"
-    },
-    "InitializationTimeout": {
-      "description": "The initialization timeout in milliseconds. Required when IsService is true.",
-      "type": "integer"
-    },
-    "IsService": {
-      "default": false,
-      "description": "Indicates if the application is a service",
-      "type": "boolean"
-    },
-    "Name": {
-      "description": "The name of the application.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9\\/\\._ \\-]+$",
-      "type": "string"
-    },
-    "Namespace": {
-      "description": "The namespace of the application.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9/\\._\\-]+$",
-      "type": "string"
-    },
-    "Permissions": {
-      "description": "The configuration of events or requests that the application has access to.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Permissions"
+    "Permissions" : {
+      "description" : "The configuration of events or requests that the application has access to.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Permissions"
       },
-      "maxItems": 150,
-      "minItems": 0,
-      "type": "array"
+      "minItems" : 0,
+      "maxItems" : 150
     },
-    "Tags": {
-      "description": "The tags (keys and values) associated with the application.",
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "description" : "The tags (keys and values) associated with the application.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "minItems" : 0,
+      "maxItems" : 200
+    },
+    "IsService" : {
+      "description" : "Indicates if the application is a service",
+      "type" : "boolean",
+      "default" : false
+    },
+    "InitializationTimeout" : {
+      "description" : "The initialization timeout in milliseconds. Required when IsService is true.",
+      "type" : "integer"
+    },
+    "ApplicationConfig" : {
+      "description" : "The application configuration. Cannot be used when IsService is true.",
+      "$ref" : "#/definitions/ApplicationConfig"
+    },
+    "IframeConfig" : {
+      "description" : "The iframe configuration",
+      "$ref" : "#/definitions/IframeConfig"
     }
   },
-  "readOnlyProperties": [
-    "/properties/ApplicationArn",
-    "/properties/Id"
-  ],
-  "required": [
-    "Name",
-    "Namespace",
-    "Description",
-    "ApplicationSourceConfig"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "app-integrations:TagResource",
-      "app-integrations:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "additionalProperties" : false,
+  "required" : [ "Name", "Namespace", "Description", "ApplicationSourceConfig" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "app-integrations:TagResource", "app-integrations:UntagResource" ]
   },
-  "typeName": "AWS::AppIntegrations::Application"
+  "readOnlyProperties" : [ "/properties/ApplicationArn", "/properties/Id" ],
+  "primaryIdentifier" : [ "/properties/ApplicationArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "app-integrations:CreateApplication", "app-integrations:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "app-integrations:GetApplication" ]
+    },
+    "list" : {
+      "permissions" : [ "app-integrations:ListApplications", "app-integrations:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "app-integrations:GetApplication", "app-integrations:UpdateApplication", "app-integrations:TagResource", "app-integrations:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "app-integrations:DeleteApplication" ]
+    }
+  }
 }

@@ -1,64 +1,44 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SubnetId",
-    "/properties/NetworkAclId"
-  ],
-  "description": "Resource Type definition for AWS::EC2::SubnetNetworkAclAssociation",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:DescribeNetworkAcls",
-        "ec2:ReplaceNetworkAclAssociation"
-      ]
+  "typeName" : "AWS::EC2::SubnetNetworkAclAssociation",
+  "description" : "Resource Type definition for AWS::EC2::SubnetNetworkAclAssociation",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
+  "additionalProperties" : false,
+  "properties" : {
+    "SubnetId" : {
+      "type" : "string",
+      "description" : "The ID of the subnet"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DescribeNetworkAcls",
-        "ec2:ReplaceNetworkAclAssociation"
-      ]
+    "NetworkAclId" : {
+      "type" : "string",
+      "description" : "The ID of the network ACL"
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeNetworkAcls"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "ec2:DescribeNetworkAcls"
-      ]
+    "AssociationId" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AssociationId"
-  ],
-  "properties": {
-    "AssociationId": {
-      "type": "string"
+  "required" : [ "NetworkAclId", "SubnetId" ],
+  "replacementStrategy" : "delete_then_create",
+  "createOnlyProperties" : [ "/properties/SubnetId", "/properties/NetworkAclId" ],
+  "primaryIdentifier" : [ "/properties/AssociationId" ],
+  "readOnlyProperties" : [ "/properties/AssociationId" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:DescribeNetworkAcls", "ec2:ReplaceNetworkAclAssociation" ]
     },
-    "NetworkAclId": {
-      "description": "The ID of the network ACL",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ec2:DescribeNetworkAcls" ]
     },
-    "SubnetId": {
-      "description": "The ID of the subnet",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ec2:DescribeNetworkAcls", "ec2:ReplaceNetworkAclAssociation" ]
+    },
+    "list" : {
+      "permissions" : [ "ec2:DescribeNetworkAcls" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/AssociationId"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "NetworkAclId",
-    "SubnetId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::EC2::SubnetNetworkAclAssociation"
+  }
 }

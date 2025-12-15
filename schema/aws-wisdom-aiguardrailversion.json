@@ -1,110 +1,74 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/AIGuardrailArn",
-      "/properties/AssistantArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AssistantId",
-    "/properties/AIGuardrailId",
-    "/properties/ModifiedTimeSeconds"
-  ],
-  "definitions": {},
-  "description": "Definition of AWS::Wisdom::AIGuardrailVersion Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "wisdom:CreateAIGuardrailVersion"
-      ]
+  "typeName" : "AWS::Wisdom::AIGuardrailVersion",
+  "description" : "Definition of AWS::Wisdom::AIGuardrailVersion Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : { },
+  "properties" : {
+    "AIGuardrailArn" : {
+      "type" : "string",
+      "pattern" : "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$"
     },
-    "delete": {
-      "permissions": [
-        "wisdom:DeleteAIGuardrailVersion"
-      ]
+    "AssistantArn" : {
+      "type" : "string",
+      "pattern" : "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "AIGuardrailId": {
-            "$ref": "resource-schema.json#/properties/AIGuardrailId"
+    "AIGuardrailId" : {
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+    },
+    "AssistantId" : {
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+    },
+    "AIGuardrailVersionId" : {
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$"
+    },
+    "VersionNumber" : {
+      "type" : "number"
+    },
+    "ModifiedTimeSeconds" : {
+      "type" : "number"
+    }
+  },
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "required" : [ "AssistantId", "AIGuardrailId" ],
+  "createOnlyProperties" : [ "/properties/AssistantId", "/properties/AIGuardrailId", "/properties/ModifiedTimeSeconds" ],
+  "readOnlyProperties" : [ "/properties/AIGuardrailVersionId", "/properties/AIGuardrailArn", "/properties/AssistantArn", "/properties/VersionNumber" ],
+  "primaryIdentifier" : [ "/properties/AssistantId", "/properties/AIGuardrailId", "/properties/VersionNumber" ],
+  "additionalIdentifiers" : [ [ "/properties/AIGuardrailArn", "/properties/AssistantArn" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "wisdom:CreateAIGuardrailVersion" ]
+    },
+    "read" : {
+      "permissions" : [ "wisdom:GetAIGuardrail", "wisdom:GetAIGuardrailVersion" ]
+    },
+    "update" : {
+      "permissions" : [ "wisdom:GetAIGuardrail", "wisdom:GetAIGuardrailVersion" ]
+    },
+    "delete" : {
+      "permissions" : [ "wisdom:DeleteAIGuardrailVersion" ]
+    },
+    "list" : {
+      "permissions" : [ "wisdom:ListAIGuardrailVersions" ],
+      "handlerSchema" : {
+        "properties" : {
+          "AssistantId" : {
+            "$ref" : "resource-schema.json#/properties/AssistantId"
           },
-          "AssistantId": {
-            "$ref": "resource-schema.json#/properties/AssistantId"
+          "AIGuardrailId" : {
+            "$ref" : "resource-schema.json#/properties/AIGuardrailId"
           }
         },
-        "required": [
-          "AssistantId",
-          "AIGuardrailId"
-        ]
-      },
-      "permissions": [
-        "wisdom:ListAIGuardrailVersions"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "wisdom:GetAIGuardrail",
-        "wisdom:GetAIGuardrailVersion"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "wisdom:GetAIGuardrail",
-        "wisdom:GetAIGuardrailVersion"
-      ]
+        "required" : [ "AssistantId", "AIGuardrailId" ]
+      }
     }
-  },
-  "primaryIdentifier": [
-    "/properties/AssistantId",
-    "/properties/AIGuardrailId",
-    "/properties/VersionNumber"
-  ],
-  "properties": {
-    "AIGuardrailArn": {
-      "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
-      "type": "string"
-    },
-    "AIGuardrailId": {
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
-      "type": "string"
-    },
-    "AIGuardrailVersionId": {
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(:[A-Z0-9_$]+){0,1}$",
-      "type": "string"
-    },
-    "AssistantArn": {
-      "pattern": "^arn:[a-z-]*?:wisdom:[a-z0-9-]*?:[0-9]{12}:[a-z-]*?/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}(?:/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})?$",
-      "type": "string"
-    },
-    "AssistantId": {
-      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
-      "type": "string"
-    },
-    "ModifiedTimeSeconds": {
-      "type": "number"
-    },
-    "VersionNumber": {
-      "type": "number"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/AIGuardrailVersionId",
-    "/properties/AIGuardrailArn",
-    "/properties/AssistantArn",
-    "/properties/VersionNumber"
-  ],
-  "required": [
-    "AssistantId",
-    "AIGuardrailId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Wisdom::AIGuardrailVersion"
+  }
 }

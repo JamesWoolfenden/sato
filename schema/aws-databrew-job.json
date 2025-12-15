@@ -1,644 +1,542 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Type"
-  ],
-  "definitions": {
-    "AllowedStatistics": {
-      "additionalProperties": false,
-      "properties": {
-        "Statistics": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/Statistic"
-          },
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "required": [
-        "Statistics"
-      ],
-      "type": "object"
+  "typeName" : "AWS::DataBrew::Job",
+  "description" : "Resource schema for AWS::DataBrew::Job.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+  "properties" : {
+    "DatasetName" : {
+      "description" : "Dataset name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "ColumnSelector": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Regex": {
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "EncryptionKeyArn" : {
+      "description" : "Encryption Key Arn",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 2048
     },
-    "ColumnStatisticsConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Selectors": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/ColumnSelector"
-          },
-          "minItems": 1,
-          "type": "array"
-        },
-        "Statistics": {
-          "$ref": "#/definitions/StatisticsConfiguration"
-        }
-      },
-      "required": [
-        "Statistics"
-      ],
-      "type": "object"
+    "EncryptionMode" : {
+      "description" : "Encryption mode",
+      "enum" : [ "SSE-KMS", "SSE-S3" ],
+      "type" : "string"
     },
-    "CsvOutputOptions": {
-      "additionalProperties": false,
-      "description": "Output Csv options",
-      "properties": {
-        "Delimiter": {
-          "maxLength": 1,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Name" : {
+      "description" : "Job name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "DataCatalogOutput": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        },
-        "DatabaseName": {
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        },
-        "DatabaseOptions": {
-          "$ref": "#/definitions/DatabaseTableOutputOptions"
-        },
-        "Overwrite": {
-          "type": "boolean"
-        },
-        "S3Options": {
-          "$ref": "#/definitions/S3TableOutputOptions"
-        },
-        "TableName": {
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "DatabaseName",
-        "TableName"
-      ],
-      "type": "object"
+    "Type" : {
+      "description" : "Job type",
+      "enum" : [ "PROFILE", "RECIPE" ],
+      "type" : "string"
     },
-    "DatabaseOutput": {
-      "additionalProperties": false,
-      "properties": {
-        "DatabaseOptions": {
-          "$ref": "#/definitions/DatabaseTableOutputOptions"
-        },
-        "DatabaseOutputMode": {
-          "description": "Database table name",
-          "enum": [
-            "NEW_TABLE"
-          ],
-          "type": "string"
-        },
-        "GlueConnectionName": {
-          "description": "Glue connection name",
-          "type": "string"
-        }
-      },
-      "required": [
-        "GlueConnectionName",
-        "DatabaseOptions"
-      ],
-      "type": "object"
+    "LogSubscription" : {
+      "description" : "Log subscription",
+      "enum" : [ "ENABLE", "DISABLE" ],
+      "type" : "string"
     },
-    "DatabaseTableOutputOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "TableName": {
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        },
-        "TempDirectory": {
-          "$ref": "#/definitions/S3Location"
-        }
-      },
-      "required": [
-        "TableName"
-      ],
-      "type": "object"
+    "MaxCapacity" : {
+      "description" : "Max capacity",
+      "type" : "integer"
     },
-    "EntityDetectorConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedStatistics": {
-          "$ref": "#/definitions/AllowedStatistics"
-        },
-        "EntityTypes": {
-          "insertionOrder": true,
-          "items": {
-            "maxLength": 128,
-            "minLength": 1,
-            "pattern": "^[A-Z_][A-Z\\\\d_]*$",
-            "type": "string"
-          },
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "required": [
-        "EntityTypes"
-      ],
-      "type": "object"
+    "MaxRetries" : {
+      "description" : "Max retries",
+      "type" : "integer"
     },
-    "JobSample": {
-      "additionalProperties": false,
-      "description": "Job Sample",
-      "properties": {
-        "Mode": {
-          "$ref": "#/definitions/SampleMode"
-        },
-        "Size": {
-          "$ref": "#/definitions/JobSize"
-        }
-      },
-      "type": "object"
+    "Outputs" : {
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/Output"
+      }
     },
-    "JobSize": {
-      "description": "Sample configuration size for profile jobs.",
-      "format": "int64",
-      "type": "integer"
+    "DataCatalogOutputs" : {
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/DataCatalogOutput"
+      }
     },
-    "Output": {
-      "additionalProperties": false,
-      "properties": {
-        "CompressionFormat": {
-          "enum": [
-            "GZIP",
-            "LZ4",
-            "SNAPPY",
-            "BZIP2",
-            "DEFLATE",
-            "LZO",
-            "BROTLI",
-            "ZSTD",
-            "ZLIB"
-          ],
-          "type": "string"
-        },
-        "Format": {
-          "enum": [
-            "CSV",
-            "JSON",
-            "PARQUET",
-            "GLUEPARQUET",
-            "AVRO",
-            "ORC",
-            "XML",
-            "TABLEAUHYPER"
-          ],
-          "type": "string"
-        },
-        "FormatOptions": {
-          "$ref": "#/definitions/OutputFormatOptions"
-        },
-        "Location": {
-          "$ref": "#/definitions/S3Location"
-        },
-        "MaxOutputFiles": {
-          "maximum": 999,
-          "minimum": 1,
-          "type": "integer"
-        },
-        "Overwrite": {
-          "type": "boolean"
-        },
-        "PartitionColumns": {
-          "insertionOrder": true,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "required": [
-        "Location"
-      ],
-      "type": "object"
+    "DatabaseOutputs" : {
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/DatabaseOutput"
+      }
     },
-    "OutputFormatOptions": {
-      "additionalProperties": false,
-      "description": "Format options for job Output",
-      "properties": {
-        "Csv": {
-          "$ref": "#/definitions/CsvOutputOptions"
-        }
-      },
-      "type": "object"
+    "OutputLocation" : {
+      "description" : "Output location",
+      "$ref" : "#/definitions/OutputLocation"
     },
-    "OutputLocation": {
-      "additionalProperties": false,
-      "description": "Output location",
-      "properties": {
-        "Bucket": {
-          "type": "string"
-        },
-        "BucketOwner": {
-          "maxLength": 12,
-          "minLength": 12,
-          "type": "string"
-        },
-        "Key": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Bucket"
-      ],
-      "type": "object"
+    "ProjectName" : {
+      "description" : "Project name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "ParameterMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^[A-Za-z0-9]{1,128}$": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Recipe" : {
+      "$ref" : "#/definitions/Recipe"
     },
-    "ProfileConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ColumnStatisticsConfigurations": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/ColumnStatisticsConfiguration"
-          },
-          "minItems": 1,
-          "type": "array"
-        },
-        "DatasetStatisticsConfiguration": {
-          "$ref": "#/definitions/StatisticsConfiguration"
-        },
-        "EntityDetectorConfiguration": {
-          "$ref": "#/definitions/EntityDetectorConfiguration"
-        },
-        "ProfileColumns": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/ColumnSelector"
-          },
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "type": "object"
+    "RoleArn" : {
+      "description" : "Role arn",
+      "type" : "string"
     },
-    "Recipe": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "description": "Recipe name",
-          "type": "string"
-        },
-        "Version": {
-          "description": "Recipe version",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "S3Location": {
-      "additionalProperties": false,
-      "description": "S3 Output location",
-      "properties": {
-        "Bucket": {
-          "type": "string"
-        },
-        "BucketOwner": {
-          "maxLength": 12,
-          "minLength": 12,
-          "type": "string"
-        },
-        "Key": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Bucket"
-      ],
-      "type": "object"
+    "Timeout" : {
+      "description" : "Timeout",
+      "type" : "integer"
     },
-    "S3TableOutputOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Location": {
-          "$ref": "#/definitions/S3Location"
-        }
-      },
-      "required": [
-        "Location"
-      ],
-      "type": "object"
+    "JobSample" : {
+      "description" : "Job Sample",
+      "$ref" : "#/definitions/JobSample"
     },
-    "SampleMode": {
-      "description": "Sample configuration mode for profile jobs.",
-      "enum": [
-        "FULL_DATASET",
-        "CUSTOM_ROWS"
-      ],
-      "type": "string"
+    "ProfileConfiguration" : {
+      "description" : "Profile Job configuration",
+      "$ref" : "#/definitions/ProfileConfiguration"
     },
-    "Statistic": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[A-Z\\_]+$",
-      "type": "string"
-    },
-    "StatisticOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "Parameters": {
-          "$ref": "#/definitions/ParameterMap"
-        },
-        "Statistic": {
-          "$ref": "#/definitions/Statistic"
-        }
-      },
-      "required": [
-        "Statistic",
-        "Parameters"
-      ],
-      "type": "object"
-    },
-    "StatisticsConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludedStatistics": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/Statistic"
-          },
-          "minItems": 1,
-          "type": "array"
-        },
-        "Overrides": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/StatisticOverride"
-          },
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
-    },
-    "ValidationConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration to attach Rulesets to the job",
-      "properties": {
-        "RulesetArn": {
-          "description": "Arn of the Ruleset",
-          "maxLength": 2048,
-          "minLength": 20,
-          "type": "string"
-        },
-        "ValidationMode": {
-          "$ref": "#/definitions/ValidationMode"
-        }
-      },
-      "required": [
-        "RulesetArn"
-      ],
-      "type": "object"
-    },
-    "ValidationMode": {
-      "enum": [
-        "CHECK_ALL"
-      ],
-      "type": "string"
+    "ValidationConfigurations" : {
+      "description" : "Data quality rules configuration",
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/ValidationConfiguration"
+      }
     }
   },
-  "description": "Resource schema for AWS::DataBrew::Job.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "databrew:CreateProfileJob",
-        "databrew:CreateRecipeJob",
-        "databrew:DescribeJob",
-        "databrew:TagResource",
-        "databrew:UntagResource",
-        "iam:PassRole"
-      ]
+  "definitions" : {
+    "S3Location" : {
+      "description" : "S3 Output location",
+      "type" : "object",
+      "properties" : {
+        "Bucket" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        },
+        "BucketOwner" : {
+          "type" : "string",
+          "minLength" : 12,
+          "maxLength" : 12
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Bucket" ]
     },
-    "delete": {
-      "permissions": [
-        "databrew:DeleteJob"
-      ]
+    "CsvOutputOptions" : {
+      "description" : "Output Csv options",
+      "type" : "object",
+      "properties" : {
+        "Delimiter" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1
+        }
+      },
+      "additionalProperties" : false
     },
-    "list": {
-      "permissions": [
-        "databrew:ListJobs",
-        "databrew:ListTagsForResource",
-        "iam:ListRoles"
-      ]
+    "OutputFormatOptions" : {
+      "description" : "Format options for job Output",
+      "type" : "object",
+      "properties" : {
+        "Csv" : {
+          "$ref" : "#/definitions/CsvOutputOptions"
+        }
+      },
+      "additionalProperties" : false
     },
-    "read": {
-      "permissions": [
-        "databrew:DescribeJob",
-        "iam:ListRoles"
-      ]
+    "OutputLocation" : {
+      "description" : "Output location",
+      "type" : "object",
+      "properties" : {
+        "Bucket" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        },
+        "BucketOwner" : {
+          "type" : "string",
+          "minLength" : 12,
+          "maxLength" : 12
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Bucket" ]
     },
-    "update": {
-      "permissions": [
-        "databrew:UpdateProfileJob",
-        "databrew:UpdateRecipeJob",
-        "databrew:TagResource",
-        "databrew:UntagResource",
-        "iam:PassRole"
-      ]
+    "Output" : {
+      "type" : "object",
+      "properties" : {
+        "CompressionFormat" : {
+          "enum" : [ "GZIP", "LZ4", "SNAPPY", "BZIP2", "DEFLATE", "LZO", "BROTLI", "ZSTD", "ZLIB" ],
+          "type" : "string"
+        },
+        "Format" : {
+          "enum" : [ "CSV", "JSON", "PARQUET", "GLUEPARQUET", "AVRO", "ORC", "XML", "TABLEAUHYPER" ],
+          "type" : "string"
+        },
+        "FormatOptions" : {
+          "$ref" : "#/definitions/OutputFormatOptions"
+        },
+        "PartitionColumns" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Location" : {
+          "$ref" : "#/definitions/S3Location"
+        },
+        "Overwrite" : {
+          "type" : "boolean"
+        },
+        "MaxOutputFiles" : {
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 999
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Location" ]
+    },
+    "DataCatalogOutput" : {
+      "type" : "object",
+      "properties" : {
+        "CatalogId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        },
+        "DatabaseName" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        },
+        "TableName" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        },
+        "S3Options" : {
+          "$ref" : "#/definitions/S3TableOutputOptions"
+        },
+        "DatabaseOptions" : {
+          "$ref" : "#/definitions/DatabaseTableOutputOptions"
+        },
+        "Overwrite" : {
+          "type" : "boolean"
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "DatabaseName", "TableName" ]
+    },
+    "S3TableOutputOptions" : {
+      "type" : "object",
+      "properties" : {
+        "Location" : {
+          "$ref" : "#/definitions/S3Location"
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Location" ]
+    },
+    "DatabaseTableOutputOptions" : {
+      "type" : "object",
+      "properties" : {
+        "TempDirectory" : {
+          "$ref" : "#/definitions/S3Location"
+        },
+        "TableName" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "TableName" ]
+    },
+    "DatabaseOutput" : {
+      "type" : "object",
+      "properties" : {
+        "GlueConnectionName" : {
+          "description" : "Glue connection name",
+          "type" : "string"
+        },
+        "DatabaseOutputMode" : {
+          "description" : "Database table name",
+          "enum" : [ "NEW_TABLE" ],
+          "type" : "string"
+        },
+        "DatabaseOptions" : {
+          "$ref" : "#/definitions/DatabaseTableOutputOptions"
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "GlueConnectionName", "DatabaseOptions" ]
+    },
+    "Recipe" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "description" : "Recipe name",
+          "type" : "string"
+        },
+        "Version" : {
+          "description" : "Recipe version",
+          "type" : "string"
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Name" ]
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
+        }
+      },
+      "additionalProperties" : false,
+      "required" : [ "Value", "Key" ]
+    },
+    "SampleMode" : {
+      "description" : "Sample configuration mode for profile jobs.",
+      "enum" : [ "FULL_DATASET", "CUSTOM_ROWS" ],
+      "type" : "string"
+    },
+    "JobSize" : {
+      "description" : "Sample configuration size for profile jobs.",
+      "format" : "int64",
+      "type" : "integer"
+    },
+    "JobSample" : {
+      "description" : "Job Sample",
+      "type" : "object",
+      "properties" : {
+        "Mode" : {
+          "$ref" : "#/definitions/SampleMode"
+        },
+        "Size" : {
+          "$ref" : "#/definitions/JobSize"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ProfileConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "DatasetStatisticsConfiguration" : {
+          "$ref" : "#/definitions/StatisticsConfiguration"
+        },
+        "ProfileColumns" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "items" : {
+            "$ref" : "#/definitions/ColumnSelector"
+          },
+          "minItems" : 1
+        },
+        "ColumnStatisticsConfigurations" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "items" : {
+            "$ref" : "#/definitions/ColumnStatisticsConfiguration"
+          },
+          "minItems" : 1
+        },
+        "EntityDetectorConfiguration" : {
+          "$ref" : "#/definitions/EntityDetectorConfiguration"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "EntityDetectorConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "required" : [ "EntityTypes" ],
+      "properties" : {
+        "EntityTypes" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "minItems" : 1,
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 128,
+            "pattern" : "^[A-Z_][A-Z\\\\d_]*$"
+          }
+        },
+        "AllowedStatistics" : {
+          "$ref" : "#/definitions/AllowedStatistics"
+        }
+      }
+    },
+    "AllowedStatistics" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "required" : [ "Statistics" ],
+      "properties" : {
+        "Statistics" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "minItems" : 1,
+          "items" : {
+            "$ref" : "#/definitions/Statistic"
+          }
+        }
+      }
+    },
+    "ColumnStatisticsConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Selectors" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "items" : {
+            "$ref" : "#/definitions/ColumnSelector"
+          },
+          "minItems" : 1
+        },
+        "Statistics" : {
+          "$ref" : "#/definitions/StatisticsConfiguration"
+        }
+      },
+      "required" : [ "Statistics" ],
+      "additionalProperties" : false
+    },
+    "StatisticsConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "IncludedStatistics" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "items" : {
+            "$ref" : "#/definitions/Statistic"
+          },
+          "minItems" : 1
+        },
+        "Overrides" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "items" : {
+            "$ref" : "#/definitions/StatisticOverride"
+          },
+          "minItems" : 1
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ColumnSelector" : {
+      "type" : "object",
+      "properties" : {
+        "Regex" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        },
+        "Name" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
+        }
+      },
+      "additionalProperties" : false
+    },
+    "Statistic" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[A-Z\\_]+$"
+    },
+    "StatisticOverride" : {
+      "type" : "object",
+      "properties" : {
+        "Statistic" : {
+          "$ref" : "#/definitions/Statistic"
+        },
+        "Parameters" : {
+          "$ref" : "#/definitions/ParameterMap"
+        }
+      },
+      "required" : [ "Statistic", "Parameters" ],
+      "additionalProperties" : false
+    },
+    "ParameterMap" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        "^[A-Za-z0-9]{1,128}$" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ValidationMode" : {
+      "type" : "string",
+      "enum" : [ "CHECK_ALL" ]
+    },
+    "ValidationConfiguration" : {
+      "description" : "Configuration to attach Rulesets to the job",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RulesetArn" : {
+          "description" : "Arn of the Ruleset",
+          "type" : "string",
+          "minLength" : 20,
+          "maxLength" : 2048
+        },
+        "ValidationMode" : {
+          "$ref" : "#/definitions/ValidationMode"
+        }
+      },
+      "required" : [ "RulesetArn" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "DataCatalogOutputs": {
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/DataCatalogOutput"
-      },
-      "type": "array"
+  "additionalProperties" : false,
+  "required" : [ "Name", "RoleArn", "Type" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Type" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "databrew:TagResource", "databrew:UntagResource", "databrew:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "databrew:CreateProfileJob", "databrew:CreateRecipeJob", "databrew:DescribeJob", "databrew:TagResource", "databrew:UntagResource", "iam:PassRole" ]
     },
-    "DatabaseOutputs": {
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/DatabaseOutput"
-      },
-      "type": "array"
+    "read" : {
+      "permissions" : [ "databrew:DescribeJob", "iam:ListRoles" ]
     },
-    "DatasetName": {
-      "description": "Dataset name",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "databrew:UpdateProfileJob", "databrew:UpdateRecipeJob", "databrew:TagResource", "databrew:UntagResource", "iam:PassRole" ]
     },
-    "EncryptionKeyArn": {
-      "description": "Encryption Key Arn",
-      "maxLength": 2048,
-      "minLength": 20,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "databrew:DeleteJob" ]
     },
-    "EncryptionMode": {
-      "description": "Encryption mode",
-      "enum": [
-        "SSE-KMS",
-        "SSE-S3"
-      ],
-      "type": "string"
-    },
-    "JobSample": {
-      "$ref": "#/definitions/JobSample",
-      "description": "Job Sample"
-    },
-    "LogSubscription": {
-      "description": "Log subscription",
-      "enum": [
-        "ENABLE",
-        "DISABLE"
-      ],
-      "type": "string"
-    },
-    "MaxCapacity": {
-      "description": "Max capacity",
-      "type": "integer"
-    },
-    "MaxRetries": {
-      "description": "Max retries",
-      "type": "integer"
-    },
-    "Name": {
-      "description": "Job name",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "OutputLocation": {
-      "$ref": "#/definitions/OutputLocation",
-      "description": "Output location"
-    },
-    "Outputs": {
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/Output"
-      },
-      "type": "array"
-    },
-    "ProfileConfiguration": {
-      "$ref": "#/definitions/ProfileConfiguration",
-      "description": "Profile Job configuration"
-    },
-    "ProjectName": {
-      "description": "Project name",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Recipe": {
-      "$ref": "#/definitions/Recipe"
-    },
-    "RoleArn": {
-      "description": "Role arn",
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Timeout": {
-      "description": "Timeout",
-      "type": "integer"
-    },
-    "Type": {
-      "description": "Job type",
-      "enum": [
-        "PROFILE",
-        "RECIPE"
-      ],
-      "type": "string"
-    },
-    "ValidationConfigurations": {
-      "description": "Data quality rules configuration",
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/ValidationConfiguration"
-      },
-      "type": "array"
+    "list" : {
+      "permissions" : [ "databrew:ListJobs", "databrew:ListTagsForResource", "iam:ListRoles" ]
     }
-  },
-  "required": [
-    "Name",
-    "RoleArn",
-    "Type"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "databrew:TagResource",
-      "databrew:UntagResource",
-      "databrew:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::DataBrew::Job"
+  }
 }

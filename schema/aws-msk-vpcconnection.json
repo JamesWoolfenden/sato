@@ -1,166 +1,100 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ClientSubnets",
-    "/properties/Authentication",
-    "/properties/SecurityGroups",
-    "/properties/TargetClusterArn",
-    "/properties/VpcId"
-  ],
-  "definitions": {
-    "Authentication": {
-      "description": "The type of private link authentication",
-      "enum": [
-        "SASL_IAM",
-        "SASL_SCRAM",
-        "TLS"
-      ],
-      "maxLength": 10,
-      "minLength": 3,
-      "type": "string"
+  "typeName" : "AWS::MSK::VpcConnection",
+  "description" : "Resource Type definition for AWS::MSK::VpcConnection",
+  "definitions" : {
+    "Authentication" : {
+      "type" : "string",
+      "description" : "The type of private link authentication",
+      "minLength" : 3,
+      "maxLength" : 10,
+      "enum" : [ "SASL_IAM", "SASL_SCRAM", "TLS" ]
     },
-    "ClientSubnets": {
-      "insertionOrder": false,
-      "items": {
-        "pattern": "^(subnet-)([a-z0-9]+)\\Z",
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "ClientSubnets" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^(subnet-)([a-z0-9]+)\\Z"
+      }
     },
-    "SecurityGroups": {
-      "insertionOrder": false,
-      "items": {
-        "pattern": "^(sg-)([a-z0-9]+)\\Z",
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "SecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^(sg-)([a-z0-9]+)\\Z"
+      }
     },
-    "Tags": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "patternProperties": {
-        "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
-          "type": "string"
+    "Tags" : {
+      "type" : "object",
+      "description" : "A key-value pair to associate with a resource.",
+      "patternProperties" : {
+        "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "VpcId": {
-      "pattern": "^(vpc-)([a-z0-9]+)\\Z",
-      "type": "string"
+    "VpcId" : {
+      "type" : "string",
+      "pattern" : "^(vpc-)([a-z0-9]+)\\Z"
     }
   },
-  "description": "Resource Type definition for AWS::MSK::VpcConnection",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateVpcEndpoint",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeVpcEndpoints",
-        "ec2:AcceptVpcEndpointConnections",
-        "ec2:RejectVpcEndpointConnections",
-        "ec2:DescribeVpcEndpointConnections",
-        "ec2:CreateTags",
-        "iam:AttachRolePolicy",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy",
-        "kafka:CreateVpcConnection",
-        "kafka:DescribeVpcConnection",
-        "kafka:TagResource",
-        "kms:CreateGrant",
-        "kms:DescribeKey"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteVpcEndpoint",
-        "ec2:DeleteVpcEndpoints",
-        "ec2:DescribeVpcEndpoints",
-        "ec2:DescribeVpcEndpointConnections",
-        "kafka:DeleteVpcConnection",
-        "kafka:DescribeVpcConnection",
-        "kms:CreateGrant",
-        "kms:DescribeKey"
-      ]
+    "Authentication" : {
+      "$ref" : "#/definitions/Authentication"
     },
-    "list": {
-      "permissions": [
-        "kafka:ListVpcConnections",
-        "kms:CreateGrant",
-        "kms:DescribeKey"
-      ]
+    "ClientSubnets" : {
+      "$ref" : "#/definitions/ClientSubnets"
     },
-    "read": {
-      "permissions": [
-        "kafka:DescribeVpcConnection",
-        "kms:CreateGrant",
-        "kms:DescribeKey"
-      ]
+    "TargetClusterArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the target cluster",
+      "type" : "string",
+      "pattern" : "^arn:[\\w-]+:kafka:[\\w-]+:\\d+:cluster.*\\Z"
     },
-    "update": {
-      "permissions": [
-        "kafka:DescribeVpcConnection",
-        "kms:CreateGrant",
-        "kms:DescribeKey",
-        "kafka:TagResource",
-        "kafka:UntagResource"
-      ]
+    "SecurityGroups" : {
+      "$ref" : "#/definitions/SecurityGroups"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
+    },
+    "VpcId" : {
+      "$ref" : "#/definitions/VpcId"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Authentication", "ClientSubnets", "SecurityGroups", "TargetClusterArn", "VpcId" ],
+  "createOnlyProperties" : [ "/properties/ClientSubnets", "/properties/Authentication", "/properties/SecurityGroups", "/properties/TargetClusterArn", "/properties/VpcId" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "kafka:TagResource", "kafka:UntagResource", "kafka:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateVpcEndpoint", "ec2:DescribeSecurityGroups", "ec2:DescribeSubnets", "ec2:DescribeVpcAttribute", "ec2:DescribeVpcs", "ec2:DescribeVpcEndpoints", "ec2:AcceptVpcEndpointConnections", "ec2:RejectVpcEndpointConnections", "ec2:DescribeVpcEndpointConnections", "ec2:CreateTags", "iam:AttachRolePolicy", "iam:CreateServiceLinkedRole", "iam:PutRolePolicy", "kafka:CreateVpcConnection", "kafka:DescribeVpcConnection", "kafka:TagResource", "kms:CreateGrant", "kms:DescribeKey" ]
     },
-    "Authentication": {
-      "$ref": "#/definitions/Authentication"
+    "read" : {
+      "permissions" : [ "kafka:DescribeVpcConnection", "kms:CreateGrant", "kms:DescribeKey" ]
     },
-    "ClientSubnets": {
-      "$ref": "#/definitions/ClientSubnets"
+    "update" : {
+      "permissions" : [ "kafka:DescribeVpcConnection", "kms:CreateGrant", "kms:DescribeKey", "kafka:TagResource", "kafka:UntagResource" ]
     },
-    "SecurityGroups": {
-      "$ref": "#/definitions/SecurityGroups"
+    "delete" : {
+      "permissions" : [ "ec2:DeleteVpcEndpoint", "ec2:DeleteVpcEndpoints", "ec2:DescribeVpcEndpoints", "ec2:DescribeVpcEndpointConnections", "kafka:DeleteVpcConnection", "kafka:DescribeVpcConnection", "kms:CreateGrant", "kms:DescribeKey" ]
     },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
-    },
-    "TargetClusterArn": {
-      "description": "The Amazon Resource Name (ARN) of the target cluster",
-      "pattern": "^arn:[\\w-]+:kafka:[\\w-]+:\\d+:cluster.*\\Z",
-      "type": "string"
-    },
-    "VpcId": {
-      "$ref": "#/definitions/VpcId"
+    "list" : {
+      "permissions" : [ "kafka:ListVpcConnections", "kms:CreateGrant", "kms:DescribeKey" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Authentication",
-    "ClientSubnets",
-    "SecurityGroups",
-    "TargetClusterArn",
-    "VpcId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "kafka:TagResource",
-      "kafka:UntagResource",
-      "kafka:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MSK::VpcConnection"
+  }
 }

@@ -1,710 +1,564 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/FarmId"
-  ],
-  "definitions": {
-    "AcceleratorCapabilities": {
-      "additionalProperties": false,
-      "properties": {
-        "Count": {
-          "$ref": "#/definitions/AcceleratorCountRange"
+  "typeName" : "AWS::Deadline::Fleet",
+  "description" : "Definition of AWS::Deadline::Fleet Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+  "definitions" : {
+    "AcceleratorCountRange" : {
+      "type" : "object",
+      "properties" : {
+        "Min" : {
+          "type" : "integer",
+          "maximum" : 2147483647,
+          "minimum" : 0
         },
-        "Selections": {
-          "items": {
-            "$ref": "#/definitions/AcceleratorSelection"
-          },
-          "minItems": 1,
-          "type": "array"
+        "Max" : {
+          "type" : "integer",
+          "maximum" : 2147483647,
+          "minimum" : 0
         }
       },
-      "required": [
-        "Selections"
-      ],
-      "type": "object"
+      "required" : [ "Min" ],
+      "additionalProperties" : false
     },
-    "AcceleratorCountRange": {
-      "additionalProperties": false,
-      "properties": {
-        "Max": {
-          "maximum": 2147483647,
-          "minimum": 0,
-          "type": "integer"
+    "AcceleratorTotalMemoryMiBRange" : {
+      "type" : "object",
+      "properties" : {
+        "Min" : {
+          "type" : "integer",
+          "maximum" : 2147483647,
+          "minimum" : 0
         },
-        "Min": {
-          "maximum": 2147483647,
-          "minimum": 0,
-          "type": "integer"
+        "Max" : {
+          "type" : "integer",
+          "maximum" : 2147483647,
+          "minimum" : 0
         }
       },
-      "required": [
-        "Min"
-      ],
-      "type": "object"
+      "required" : [ "Min" ],
+      "additionalProperties" : false
     },
-    "AcceleratorSelection": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "enum": [
-            "t4",
-            "a10g",
-            "l4",
-            "l40s"
-          ],
-          "type": "string"
+    "AcceleratorType" : {
+      "type" : "string",
+      "enum" : [ "gpu" ]
+    },
+    "AutoScalingMode" : {
+      "type" : "string",
+      "enum" : [ "NO_SCALING", "EVENT_BASED_AUTO_SCALING" ]
+    },
+    "CpuArchitectureType" : {
+      "type" : "string",
+      "enum" : [ "x86_64", "arm64" ]
+    },
+    "CustomerManagedFleetConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Mode" : {
+          "$ref" : "#/definitions/AutoScalingMode"
         },
-        "Runtime": {
-          "maxLength": 100,
-          "minLength": 1,
-          "type": "string"
+        "WorkerCapabilities" : {
+          "$ref" : "#/definitions/CustomerManagedWorkerCapabilities"
+        },
+        "StorageProfileId" : {
+          "type" : "string",
+          "pattern" : "^sp-[0-9a-f]{32}$"
+        },
+        "TagPropagationMode" : {
+          "$ref" : "#/definitions/TagPropagationMode"
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "required" : [ "Mode", "WorkerCapabilities" ],
+      "additionalProperties" : false
     },
-    "AcceleratorTotalMemoryMiBRange": {
-      "additionalProperties": false,
-      "properties": {
-        "Max": {
-          "maximum": 2147483647,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "Min": {
-          "maximum": 2147483647,
-          "minimum": 0,
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Min"
-      ],
-      "type": "object"
+    "CustomerManagedFleetOperatingSystemFamily" : {
+      "type" : "string",
+      "enum" : [ "WINDOWS", "LINUX", "MACOS" ]
     },
-    "AcceleratorType": {
-      "enum": [
-        "gpu"
-      ],
-      "type": "string"
-    },
-    "AutoScalingMode": {
-      "enum": [
-        "NO_SCALING",
-        "EVENT_BASED_AUTO_SCALING"
-      ],
-      "type": "string"
-    },
-    "CpuArchitectureType": {
-      "enum": [
-        "x86_64",
-        "arm64"
-      ],
-      "type": "string"
-    },
-    "CustomerManagedFleetConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Mode": {
-          "$ref": "#/definitions/AutoScalingMode"
+    "CustomerManagedWorkerCapabilities" : {
+      "type" : "object",
+      "properties" : {
+        "VCpuCount" : {
+          "$ref" : "#/definitions/VCpuCountRange"
         },
-        "StorageProfileId": {
-          "pattern": "^sp-[0-9a-f]{32}$",
-          "type": "string"
+        "MemoryMiB" : {
+          "$ref" : "#/definitions/MemoryMiBRange"
         },
-        "TagPropagationMode": {
-          "$ref": "#/definitions/TagPropagationMode"
-        },
-        "WorkerCapabilities": {
-          "$ref": "#/definitions/CustomerManagedWorkerCapabilities"
-        }
-      },
-      "required": [
-        "Mode",
-        "WorkerCapabilities"
-      ],
-      "type": "object"
-    },
-    "CustomerManagedFleetOperatingSystemFamily": {
-      "enum": [
-        "WINDOWS",
-        "LINUX",
-        "MACOS"
-      ],
-      "type": "string"
-    },
-    "CustomerManagedWorkerCapabilities": {
-      "additionalProperties": false,
-      "properties": {
-        "AcceleratorCount": {
-          "$ref": "#/definitions/AcceleratorCountRange"
-        },
-        "AcceleratorTotalMemoryMiB": {
-          "$ref": "#/definitions/AcceleratorTotalMemoryMiBRange"
-        },
-        "AcceleratorTypes": {
-          "items": {
-            "$ref": "#/definitions/AcceleratorType"
-          },
-          "type": "array"
-        },
-        "CpuArchitectureType": {
-          "$ref": "#/definitions/CpuArchitectureType"
-        },
-        "CustomAmounts": {
-          "items": {
-            "$ref": "#/definitions/FleetAmountCapability"
-          },
-          "maxItems": 15,
-          "minItems": 1,
-          "type": "array"
-        },
-        "CustomAttributes": {
-          "items": {
-            "$ref": "#/definitions/FleetAttributeCapability"
-          },
-          "maxItems": 15,
-          "minItems": 1,
-          "type": "array"
-        },
-        "MemoryMiB": {
-          "$ref": "#/definitions/MemoryMiBRange"
-        },
-        "OsFamily": {
-          "$ref": "#/definitions/CustomerManagedFleetOperatingSystemFamily"
-        },
-        "VCpuCount": {
-          "$ref": "#/definitions/VCpuCountRange"
-        }
-      },
-      "required": [
-        "CpuArchitectureType",
-        "MemoryMiB",
-        "OsFamily",
-        "VCpuCount"
-      ],
-      "type": "object"
-    },
-    "Ec2EbsVolume": {
-      "additionalProperties": false,
-      "properties": {
-        "Iops": {
-          "default": 3000,
-          "maximum": 16000,
-          "minimum": 3000,
-          "type": "integer"
-        },
-        "SizeGiB": {
-          "default": 250,
-          "type": "integer"
-        },
-        "ThroughputMiB": {
-          "default": 125,
-          "maximum": 1000,
-          "minimum": 125,
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "Ec2MarketType": {
-      "enum": [
-        "on-demand",
-        "spot",
-        "wait-and-save"
-      ],
-      "type": "string"
-    },
-    "FleetAmountCapability": {
-      "additionalProperties": false,
-      "properties": {
-        "Max": {
-          "type": "number"
-        },
-        "Min": {
-          "type": "number"
-        },
-        "Name": {
-          "maxLength": 100,
-          "minLength": 1,
-          "pattern": "^([a-zA-Z][a-zA-Z0-9]{0,63}:)?amount(\\.[a-zA-Z][a-zA-Z0-9]{0,63})+$",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Min",
-        "Name"
-      ],
-      "type": "object"
-    },
-    "FleetAttributeCapability": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "maxLength": 100,
-          "minLength": 1,
-          "pattern": "^([a-zA-Z][a-zA-Z0-9]{0,63}:)?attr(\\.[a-zA-Z][a-zA-Z0-9]{0,63})+$",
-          "type": "string"
-        },
-        "Values": {
-          "items": {
-            "maxLength": 100,
-            "minLength": 1,
-            "pattern": "^[a-zA-Z_]([a-zA-Z0-9_\\-]{0,99})$",
-            "type": "string"
-          },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "required": [
-        "Name",
-        "Values"
-      ],
-      "type": "object"
-    },
-    "FleetCapabilities": {
-      "additionalProperties": false,
-      "properties": {
-        "Amounts": {
-          "items": {
-            "$ref": "#/definitions/FleetAmountCapability"
-          },
-          "maxItems": 15,
-          "minItems": 1,
-          "type": "array"
-        },
-        "Attributes": {
-          "items": {
-            "$ref": "#/definitions/FleetAttributeCapability"
-          },
-          "maxItems": 15,
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "type": "object"
-    },
-    "FleetConfiguration": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CustomerManaged": {
-              "$ref": "#/definitions/CustomerManagedFleetConfiguration"
-            }
-          },
-          "required": [
-            "CustomerManaged"
-          ],
-          "title": "CustomerManaged",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "ServiceManagedEc2": {
-              "$ref": "#/definitions/ServiceManagedEc2FleetConfiguration"
-            }
-          },
-          "required": [
-            "ServiceManagedEc2"
-          ],
-          "title": "ServiceManagedEc2",
-          "type": "object"
-        }
-      ]
-    },
-    "FleetStatus": {
-      "enum": [
-        "ACTIVE",
-        "CREATE_IN_PROGRESS",
-        "UPDATE_IN_PROGRESS",
-        "CREATE_FAILED",
-        "UPDATE_FAILED",
-        "SUSPENDED"
-      ],
-      "type": "string"
-    },
-    "HostConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ScriptBody": {
-          "maxLength": 15000,
-          "minLength": 0,
-          "type": "string"
-        },
-        "ScriptTimeoutSeconds": {
-          "default": 300,
-          "maximum": 3600,
-          "minimum": 300,
-          "type": "integer"
-        }
-      },
-      "required": [
-        "ScriptBody"
-      ],
-      "type": "object"
-    },
-    "MemoryMiBRange": {
-      "additionalProperties": false,
-      "properties": {
-        "Max": {
-          "maximum": 2147483647,
-          "minimum": 512,
-          "type": "integer"
-        },
-        "Min": {
-          "maximum": 2147483647,
-          "minimum": 512,
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Min"
-      ],
-      "type": "object"
-    },
-    "ServiceManagedEc2FleetConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "InstanceCapabilities": {
-          "$ref": "#/definitions/ServiceManagedEc2InstanceCapabilities"
-        },
-        "InstanceMarketOptions": {
-          "$ref": "#/definitions/ServiceManagedEc2InstanceMarketOptions"
-        },
-        "StorageProfileId": {
-          "pattern": "^sp-[0-9a-f]{32}$",
-          "type": "string"
-        },
-        "VpcConfiguration": {
-          "$ref": "#/definitions/VpcConfiguration"
-        }
-      },
-      "required": [
-        "InstanceCapabilities",
-        "InstanceMarketOptions"
-      ],
-      "type": "object"
-    },
-    "ServiceManagedEc2InstanceCapabilities": {
-      "additionalProperties": false,
-      "properties": {
-        "AcceleratorCapabilities": {
-          "$ref": "#/definitions/AcceleratorCapabilities"
-        },
-        "AllowedInstanceTypes": {
-          "items": {
-            "pattern": "^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$",
-            "type": "string"
-          },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
-        },
-        "CpuArchitectureType": {
-          "$ref": "#/definitions/CpuArchitectureType"
-        },
-        "CustomAmounts": {
-          "items": {
-            "$ref": "#/definitions/FleetAmountCapability"
-          },
-          "maxItems": 15,
-          "minItems": 1,
-          "type": "array"
-        },
-        "CustomAttributes": {
-          "items": {
-            "$ref": "#/definitions/FleetAttributeCapability"
-          },
-          "maxItems": 15,
-          "minItems": 1,
-          "type": "array"
-        },
-        "ExcludedInstanceTypes": {
-          "items": {
-            "pattern": "^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$",
-            "type": "string"
-          },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
-        },
-        "MemoryMiB": {
-          "$ref": "#/definitions/MemoryMiBRange"
-        },
-        "OsFamily": {
-          "$ref": "#/definitions/ServiceManagedFleetOperatingSystemFamily"
-        },
-        "RootEbsVolume": {
-          "$ref": "#/definitions/Ec2EbsVolume"
-        },
-        "VCpuCount": {
-          "$ref": "#/definitions/VCpuCountRange"
-        }
-      },
-      "required": [
-        "CpuArchitectureType",
-        "MemoryMiB",
-        "OsFamily",
-        "VCpuCount"
-      ],
-      "type": "object"
-    },
-    "ServiceManagedEc2InstanceMarketOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Type": {
-          "$ref": "#/definitions/Ec2MarketType"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
-    },
-    "ServiceManagedFleetOperatingSystemFamily": {
-      "enum": [
-        "LINUX",
-        "WINDOWS"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 127,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "TagPropagationMode": {
-      "enum": [
-        "NO_PROPAGATION",
-        "PROPAGATE_TAGS_TO_WORKERS_AT_LAUNCH"
-      ],
-      "type": "string"
-    },
-    "VCpuCountRange": {
-      "additionalProperties": false,
-      "properties": {
-        "Max": {
-          "maximum": 10000,
-          "minimum": 1,
-          "type": "integer"
-        },
-        "Min": {
-          "maximum": 10000,
-          "minimum": 1,
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Min"
-      ],
-      "type": "object"
-    },
-    "VpcConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceConfigurationArns": {
-          "items": {
-            "maxLength": 2048,
-            "minLength": 1,
-            "type": "string"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
-    }
-  },
-  "description": "Definition of AWS::Deadline::Fleet Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "deadline:CreateFleet",
-        "deadline:GetFleet",
-        "iam:PassRole",
-        "identitystore:ListGroupMembershipsForMember",
-        "logs:CreateLogGroup",
-        "deadline:TagResource",
-        "deadline:ListTagsForResource",
-        "vpc-lattice:GetResourceGateway",
-        "vpc-lattice:GetResourceConfiguration",
-        "ec2:CreateVpcEndpoint",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeVpcs"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "deadline:DeleteFleet",
-        "deadline:GetFleet",
-        "identitystore:ListGroupMembershipsForMember"
-      ]
-    },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "FarmId": {
-            "$ref": "resource-schema.json#/properties/FarmId"
+        "AcceleratorTypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AcceleratorType"
           }
         },
-        "required": [
-          "FarmId"
-        ]
+        "AcceleratorCount" : {
+          "$ref" : "#/definitions/AcceleratorCountRange"
+        },
+        "AcceleratorTotalMemoryMiB" : {
+          "$ref" : "#/definitions/AcceleratorTotalMemoryMiBRange"
+        },
+        "OsFamily" : {
+          "$ref" : "#/definitions/CustomerManagedFleetOperatingSystemFamily"
+        },
+        "CpuArchitectureType" : {
+          "$ref" : "#/definitions/CpuArchitectureType"
+        },
+        "CustomAmounts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FleetAmountCapability"
+          },
+          "maxItems" : 15,
+          "minItems" : 1
+        },
+        "CustomAttributes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FleetAttributeCapability"
+          },
+          "maxItems" : 15,
+          "minItems" : 1
+        }
       },
-      "permissions": [
-        "deadline:ListFleets",
-        "identitystore:DescribeGroup",
-        "identitystore:DescribeUser",
-        "identitystore:ListGroupMembershipsForMember"
-      ]
+      "required" : [ "CpuArchitectureType", "MemoryMiB", "OsFamily", "VCpuCount" ],
+      "additionalProperties" : false
     },
-    "read": {
-      "permissions": [
-        "deadline:GetFleet",
-        "identitystore:ListGroupMembershipsForMember",
-        "deadline:ListTagsForResource"
-      ]
+    "Ec2EbsVolume" : {
+      "type" : "object",
+      "properties" : {
+        "SizeGiB" : {
+          "type" : "integer",
+          "default" : 250
+        },
+        "Iops" : {
+          "type" : "integer",
+          "default" : 3000,
+          "maximum" : 16000,
+          "minimum" : 3000
+        },
+        "ThroughputMiB" : {
+          "type" : "integer",
+          "default" : 125,
+          "maximum" : 1000,
+          "minimum" : 125
+        }
+      },
+      "additionalProperties" : false
     },
-    "update": {
-      "permissions": [
-        "deadline:UpdateFleet",
-        "deadline:GetFleet",
-        "iam:PassRole",
-        "identitystore:ListGroupMembershipsForMember",
-        "deadline:TagResource",
-        "deadline:UntagResource",
-        "deadline:ListTagsForResource",
-        "vpc-lattice:GetResourceGateway",
-        "vpc-lattice:GetResourceConfiguration",
-        "ec2:CreateVpcEndpoint",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeVpcs"
-      ]
+    "AcceleratorSelection" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "enum" : [ "t4", "a10g", "l4", "l40s" ]
+        },
+        "Runtime" : {
+          "type" : "string",
+          "maxLength" : 100,
+          "minLength" : 1
+        }
+      },
+      "required" : [ "Name" ],
+      "additionalProperties" : false
+    },
+    "AcceleratorCapabilities" : {
+      "type" : "object",
+      "properties" : {
+        "Selections" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AcceleratorSelection"
+          },
+          "minItems" : 1
+        },
+        "Count" : {
+          "$ref" : "#/definitions/AcceleratorCountRange"
+        }
+      },
+      "required" : [ "Selections" ],
+      "additionalProperties" : false
+    },
+    "Ec2MarketType" : {
+      "type" : "string",
+      "enum" : [ "on-demand", "spot", "wait-and-save" ]
+    },
+    "FleetAmountCapability" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 100,
+          "minLength" : 1,
+          "pattern" : "^([a-zA-Z][a-zA-Z0-9]{0,63}:)?amount(\\.[a-zA-Z][a-zA-Z0-9]{0,63})+$"
+        },
+        "Min" : {
+          "type" : "number"
+        },
+        "Max" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "Min", "Name" ],
+      "additionalProperties" : false
+    },
+    "FleetAttributeCapability" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 100,
+          "minLength" : 1,
+          "pattern" : "^([a-zA-Z][a-zA-Z0-9]{0,63}:)?attr(\\.[a-zA-Z][a-zA-Z0-9]{0,63})+$"
+        },
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 100,
+            "minLength" : 1,
+            "pattern" : "^[a-zA-Z_]([a-zA-Z0-9_\\-]{0,99})$"
+          },
+          "maxItems" : 10,
+          "minItems" : 1
+        }
+      },
+      "required" : [ "Name", "Values" ],
+      "additionalProperties" : false
+    },
+    "FleetCapabilities" : {
+      "type" : "object",
+      "properties" : {
+        "Amounts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FleetAmountCapability"
+          },
+          "maxItems" : 15,
+          "minItems" : 1
+        },
+        "Attributes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FleetAttributeCapability"
+          },
+          "maxItems" : 15,
+          "minItems" : 1
+        }
+      },
+      "additionalProperties" : false
+    },
+    "FleetConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "CustomerManaged",
+        "properties" : {
+          "CustomerManaged" : {
+            "$ref" : "#/definitions/CustomerManagedFleetConfiguration"
+          }
+        },
+        "required" : [ "CustomerManaged" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "ServiceManagedEc2",
+        "properties" : {
+          "ServiceManagedEc2" : {
+            "$ref" : "#/definitions/ServiceManagedEc2FleetConfiguration"
+          }
+        },
+        "required" : [ "ServiceManagedEc2" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "FleetStatus" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "CREATE_IN_PROGRESS", "UPDATE_IN_PROGRESS", "CREATE_FAILED", "UPDATE_FAILED", "SUSPENDED" ]
+    },
+    "HostConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ScriptBody" : {
+          "type" : "string",
+          "maxLength" : 15000,
+          "minLength" : 0
+        },
+        "ScriptTimeoutSeconds" : {
+          "type" : "integer",
+          "default" : 300,
+          "maximum" : 3600,
+          "minimum" : 300
+        }
+      },
+      "required" : [ "ScriptBody" ],
+      "additionalProperties" : false
+    },
+    "MemoryMiBRange" : {
+      "type" : "object",
+      "properties" : {
+        "Min" : {
+          "type" : "integer",
+          "maximum" : 2147483647,
+          "minimum" : 512
+        },
+        "Max" : {
+          "type" : "integer",
+          "maximum" : 2147483647,
+          "minimum" : 512
+        }
+      },
+      "required" : [ "Min" ],
+      "additionalProperties" : false
+    },
+    "ServiceManagedEc2FleetConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "InstanceCapabilities" : {
+          "$ref" : "#/definitions/ServiceManagedEc2InstanceCapabilities"
+        },
+        "InstanceMarketOptions" : {
+          "$ref" : "#/definitions/ServiceManagedEc2InstanceMarketOptions"
+        },
+        "VpcConfiguration" : {
+          "$ref" : "#/definitions/VpcConfiguration"
+        },
+        "StorageProfileId" : {
+          "type" : "string",
+          "pattern" : "^sp-[0-9a-f]{32}$"
+        }
+      },
+      "required" : [ "InstanceCapabilities", "InstanceMarketOptions" ],
+      "additionalProperties" : false
+    },
+    "ServiceManagedEc2InstanceMarketOptions" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/Ec2MarketType"
+        }
+      },
+      "required" : [ "Type" ],
+      "additionalProperties" : false
+    },
+    "ServiceManagedEc2InstanceCapabilities" : {
+      "type" : "object",
+      "properties" : {
+        "VCpuCount" : {
+          "$ref" : "#/definitions/VCpuCountRange"
+        },
+        "MemoryMiB" : {
+          "$ref" : "#/definitions/MemoryMiBRange"
+        },
+        "OsFamily" : {
+          "$ref" : "#/definitions/ServiceManagedFleetOperatingSystemFamily"
+        },
+        "CpuArchitectureType" : {
+          "$ref" : "#/definitions/CpuArchitectureType"
+        },
+        "RootEbsVolume" : {
+          "$ref" : "#/definitions/Ec2EbsVolume"
+        },
+        "AcceleratorCapabilities" : {
+          "$ref" : "#/definitions/AcceleratorCapabilities"
+        },
+        "AllowedInstanceTypes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$"
+          },
+          "maxItems" : 100,
+          "minItems" : 1
+        },
+        "ExcludedInstanceTypes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^[a-zA-Z0-9]+\\.[a-zA-Z0-9]+$"
+          },
+          "maxItems" : 100,
+          "minItems" : 1
+        },
+        "CustomAmounts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FleetAmountCapability"
+          },
+          "maxItems" : 15,
+          "minItems" : 1
+        },
+        "CustomAttributes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FleetAttributeCapability"
+          },
+          "maxItems" : 15,
+          "minItems" : 1
+        }
+      },
+      "required" : [ "CpuArchitectureType", "MemoryMiB", "OsFamily", "VCpuCount" ],
+      "additionalProperties" : false
+    },
+    "ServiceManagedFleetOperatingSystemFamily" : {
+      "type" : "string",
+      "enum" : [ "LINUX", "WINDOWS" ]
+    },
+    "TagPropagationMode" : {
+      "type" : "string",
+      "enum" : [ "NO_PROPAGATION", "PROPAGATE_TAGS_TO_WORKERS_AT_LAUNCH" ]
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 127
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 255
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
+    },
+    "VCpuCountRange" : {
+      "type" : "object",
+      "properties" : {
+        "Min" : {
+          "type" : "integer",
+          "maximum" : 10000,
+          "minimum" : 1
+        },
+        "Max" : {
+          "type" : "integer",
+          "maximum" : 10000,
+          "minimum" : 1
+        }
+      },
+      "required" : [ "Min" ],
+      "additionalProperties" : false
+    },
+    "VpcConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ResourceConfigurationArns" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 2048,
+            "minLength" : 1
+          }
+        }
+      },
+      "additionalProperties" : false
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:farm/farm-[0-9a-z]{32}/fleet/fleet-[0-9a-z]{32}",
-      "type": "string"
+  "properties" : {
+    "Capabilities" : {
+      "$ref" : "#/definitions/FleetCapabilities"
     },
-    "Capabilities": {
-      "$ref": "#/definitions/FleetCapabilities"
+    "Configuration" : {
+      "$ref" : "#/definitions/FleetConfiguration"
     },
-    "Configuration": {
-      "$ref": "#/definitions/FleetConfiguration"
+    "Description" : {
+      "type" : "string",
+      "default" : "",
+      "maxLength" : 100,
+      "minLength" : 0
     },
-    "Description": {
-      "default": "",
-      "maxLength": 100,
-      "minLength": 0,
-      "type": "string"
+    "DisplayName" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1
     },
-    "DisplayName": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
+    "FarmId" : {
+      "type" : "string",
+      "pattern" : "^farm-[0-9a-f]{32}$"
     },
-    "FarmId": {
-      "pattern": "^farm-[0-9a-f]{32}$",
-      "type": "string"
+    "FleetId" : {
+      "type" : "string",
+      "pattern" : "^fleet-[0-9a-f]{32}$"
     },
-    "FleetId": {
-      "pattern": "^fleet-[0-9a-f]{32}$",
-      "type": "string"
+    "HostConfiguration" : {
+      "$ref" : "#/definitions/HostConfiguration"
     },
-    "HostConfiguration": {
-      "$ref": "#/definitions/HostConfiguration"
+    "MaxWorkerCount" : {
+      "type" : "integer",
+      "maximum" : 2147483647,
+      "minimum" : 0
     },
-    "MaxWorkerCount": {
-      "maximum": 2147483647,
-      "minimum": 0,
-      "type": "integer"
+    "MinWorkerCount" : {
+      "type" : "integer",
+      "default" : 0,
+      "maximum" : 2147483647,
+      "minimum" : 0
     },
-    "MinWorkerCount": {
-      "default": 0,
-      "maximum": 2147483647,
-      "minimum": 0,
-      "type": "integer"
+    "RoleArn" : {
+      "type" : "string",
+      "pattern" : "^arn:(aws[a-zA-Z-]*):iam::\\d{12}:role(/[!-.0-~]+)*/[\\w+=,.@-]+$"
     },
-    "RoleArn": {
-      "pattern": "^arn:(aws[a-zA-Z-]*):iam::\\d{12}:role(/[!-.0-~]+)*/[\\w+=,.@-]+$",
-      "type": "string"
+    "Status" : {
+      "$ref" : "#/definitions/FleetStatus"
     },
-    "Status": {
-      "$ref": "#/definitions/FleetStatus"
+    "StatusMessage" : {
+      "type" : "string"
     },
-    "StatusMessage": {
-      "type": "string"
+    "WorkerCount" : {
+      "type" : "integer"
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]+:farm/farm-[0-9a-z]{32}/fleet/fleet-[0-9a-z]{32}"
+    },
+    "Tags" : {
+      "type" : "array",
+      "maxItems" : 50,
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "WorkerCount": {
-      "type": "integer"
+      "insertionOrder" : false,
+      "uniqueItems" : true
     }
   },
-  "readOnlyProperties": [
-    "/properties/Capabilities",
-    "/properties/FleetId",
-    "/properties/Status",
-    "/properties/StatusMessage",
-    "/properties/WorkerCount",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Configuration",
-    "DisplayName",
-    "FarmId",
-    "MaxWorkerCount",
-    "RoleArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "deadline:TagResource",
-      "deadline:UntagResource",
-      "deadline:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "Configuration", "DisplayName", "FarmId", "MaxWorkerCount", "RoleArn" ],
+  "readOnlyProperties" : [ "/properties/Capabilities", "/properties/FleetId", "/properties/Status", "/properties/StatusMessage", "/properties/WorkerCount", "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/FarmId" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "deadline:TagResource", "deadline:UntagResource", "deadline:ListTagsForResource" ]
   },
-  "typeName": "AWS::Deadline::Fleet"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "deadline:CreateFleet", "deadline:GetFleet", "iam:PassRole", "identitystore:ListGroupMembershipsForMember", "logs:CreateLogGroup", "deadline:TagResource", "deadline:ListTagsForResource", "vpc-lattice:GetResourceGateway", "vpc-lattice:GetResourceConfiguration", "ec2:CreateVpcEndpoint", "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups", "ec2:DescribeVpcs" ]
+    },
+    "read" : {
+      "permissions" : [ "deadline:GetFleet", "identitystore:ListGroupMembershipsForMember", "deadline:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "deadline:UpdateFleet", "deadline:GetFleet", "iam:PassRole", "identitystore:ListGroupMembershipsForMember", "deadline:TagResource", "deadline:UntagResource", "deadline:ListTagsForResource", "vpc-lattice:GetResourceGateway", "vpc-lattice:GetResourceConfiguration", "ec2:CreateVpcEndpoint", "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups", "ec2:DescribeVpcs" ]
+    },
+    "delete" : {
+      "permissions" : [ "deadline:DeleteFleet", "deadline:GetFleet", "identitystore:ListGroupMembershipsForMember" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "FarmId" : {
+            "$ref" : "resource-schema.json#/properties/FarmId"
+          }
+        },
+        "required" : [ "FarmId" ]
+      },
+      "permissions" : [ "deadline:ListFleets", "identitystore:DescribeGroup", "identitystore:DescribeUser", "identitystore:ListGroupMembershipsForMember" ]
+    }
+  },
+  "additionalProperties" : false
 }

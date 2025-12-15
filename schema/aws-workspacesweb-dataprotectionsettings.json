@@ -1,317 +1,250 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AdditionalEncryptionContext",
-    "/properties/CustomerManagedKey"
-  ],
-  "definitions": {
-    "CustomPattern": {
-      "additionalProperties": false,
-      "properties": {
-        "KeywordRegex": {
-          "maxLength": 300,
-          "minLength": 0,
-          "pattern": "^\\/((?:[^\\n])+)\\/([gimsuyvd]{0,8})$",
-          "type": "string"
+  "typeName" : "AWS::WorkSpacesWeb::DataProtectionSettings",
+  "description" : "Definition of AWS::WorkSpacesWeb::DataProtectionSettings Resource Type",
+  "definitions" : {
+    "CustomPattern" : {
+      "type" : "object",
+      "properties" : {
+        "PatternName" : {
+          "type" : "string",
+          "maxLength" : 20,
+          "minLength" : 1,
+          "pattern" : "^[_\\-\\d\\w]+$"
         },
-        "PatternDescription": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[ _\\-\\d\\w]+$",
-          "type": "string"
+        "PatternRegex" : {
+          "type" : "string",
+          "maxLength" : 300,
+          "minLength" : 0,
+          "pattern" : "^\\/((?:[^\\n])+)\\/([gimsuyvd]{0,8})$"
         },
-        "PatternName": {
-          "maxLength": 20,
-          "minLength": 1,
-          "pattern": "^[_\\-\\d\\w]+$",
-          "type": "string"
+        "PatternDescription" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[ _\\-\\d\\w]+$"
         },
-        "PatternRegex": {
-          "maxLength": 300,
-          "minLength": 0,
-          "pattern": "^\\/((?:[^\\n])+)\\/([gimsuyvd]{0,8})$",
-          "type": "string"
+        "KeywordRegex" : {
+          "type" : "string",
+          "maxLength" : 300,
+          "minLength" : 0,
+          "pattern" : "^\\/((?:[^\\n])+)\\/([gimsuyvd]{0,8})$"
         }
       },
-      "required": [
-        "PatternName",
-        "PatternRegex"
-      ],
-      "type": "object"
+      "required" : [ "PatternName", "PatternRegex" ],
+      "additionalProperties" : false
     },
-    "EncryptionContextMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^[\\s\\S]*$": {
-          "maxLength": 131072,
-          "minLength": 0,
-          "pattern": "^[\\s\\S]*$",
-          "type": "string"
+    "EncryptionContextMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^[\\s\\S]*$" : {
+          "type" : "string",
+          "maxLength" : 131072,
+          "minLength" : 0,
+          "pattern" : "^[\\s\\S]*$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "InlineRedactionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "GlobalConfidenceLevel": {
-          "maximum": 3,
-          "minimum": 1,
-          "type": "number"
-        },
-        "GlobalEnforcedUrls": {
-          "items": {
-            "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
-            "type": "string"
+    "InlineRedactionConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "InlineRedactionPatterns" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InlineRedactionPattern"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 150,
+          "minItems" : 0
         },
-        "GlobalExemptUrls": {
-          "items": {
-            "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
-            "type": "string"
+        "GlobalEnforcedUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 100,
+          "minItems" : 1
         },
-        "InlineRedactionPatterns": {
-          "items": {
-            "$ref": "#/definitions/InlineRedactionPattern"
+        "GlobalExemptUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$"
           },
-          "maxItems": 150,
-          "minItems": 0,
-          "type": "array"
+          "maxItems" : 100,
+          "minItems" : 1
+        },
+        "GlobalConfidenceLevel" : {
+          "type" : "number",
+          "maximum" : 3,
+          "minimum" : 1
         }
       },
-      "required": [
-        "InlineRedactionPatterns"
-      ],
-      "type": "object"
+      "required" : [ "InlineRedactionPatterns" ],
+      "additionalProperties" : false
     },
-    "InlineRedactionPattern": {
-      "additionalProperties": false,
-      "properties": {
-        "BuiltInPatternId": {
-          "maxLength": 50,
-          "minLength": 1,
-          "pattern": "^[_\\-\\d\\w]+$",
-          "type": "string"
+    "InlineRedactionPattern" : {
+      "type" : "object",
+      "properties" : {
+        "BuiltInPatternId" : {
+          "type" : "string",
+          "maxLength" : 50,
+          "minLength" : 1,
+          "pattern" : "^[_\\-\\d\\w]+$"
         },
-        "ConfidenceLevel": {
-          "maximum": 3,
-          "minimum": 1,
-          "type": "number"
+        "CustomPattern" : {
+          "$ref" : "#/definitions/CustomPattern"
         },
-        "CustomPattern": {
-          "$ref": "#/definitions/CustomPattern"
+        "RedactionPlaceHolder" : {
+          "$ref" : "#/definitions/RedactionPlaceHolder"
         },
-        "EnforcedUrls": {
-          "items": {
-            "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
-            "type": "string"
+        "EnforcedUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$"
           },
-          "maxItems": 20,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 20,
+          "minItems" : 1
         },
-        "ExemptUrls": {
-          "items": {
-            "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
-            "type": "string"
+        "ExemptUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$"
           },
-          "maxItems": 20,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 20,
+          "minItems" : 1
         },
-        "RedactionPlaceHolder": {
-          "$ref": "#/definitions/RedactionPlaceHolder"
+        "ConfidenceLevel" : {
+          "type" : "number",
+          "maximum" : 3,
+          "minimum" : 1
         }
       },
-      "required": [
-        "RedactionPlaceHolder"
-      ],
-      "type": "object"
+      "required" : [ "RedactionPlaceHolder" ],
+      "additionalProperties" : false
     },
-    "RedactionPlaceHolder": {
-      "additionalProperties": false,
-      "properties": {
-        "RedactionPlaceHolderText": {
-          "maxLength": 20,
-          "minLength": 1,
-          "pattern": "^[*_\\-\\d\\w]+$",
-          "type": "string"
+    "RedactionPlaceHolder" : {
+      "type" : "object",
+      "properties" : {
+        "RedactionPlaceHolderType" : {
+          "$ref" : "#/definitions/RedactionPlaceHolderType"
         },
-        "RedactionPlaceHolderType": {
-          "$ref": "#/definitions/RedactionPlaceHolderType"
+        "RedactionPlaceHolderText" : {
+          "type" : "string",
+          "maxLength" : 20,
+          "minLength" : 1,
+          "pattern" : "^[*_\\-\\d\\w]+$"
         }
       },
-      "required": [
-        "RedactionPlaceHolderType"
-      ],
-      "type": "object"
+      "required" : [ "RedactionPlaceHolderType" ],
+      "additionalProperties" : false
     },
-    "RedactionPlaceHolderType": {
-      "enum": [
-        "CustomText"
-      ],
-      "type": "string"
+    "RedactionPlaceHolderType" : {
+      "type" : "string",
+      "enum" : [ "CustomText" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::WorkSpacesWeb::DataProtectionSettings Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "workspaces-web:CreateDataProtectionSettings",
-        "workspaces-web:GetDataProtectionSettings",
-        "workspaces-web:ListDataProtectionSettings",
-        "workspaces-web:ListTagsForResource",
-        "workspaces-web:TagResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt",
-        "kms:GenerateDataKeyWithoutPlaintext",
-        "kms:ReEncryptTo",
-        "kms:ReEncryptFrom"
-      ]
+  "properties" : {
+    "AdditionalEncryptionContext" : {
+      "$ref" : "#/definitions/EncryptionContextMap"
     },
-    "delete": {
-      "permissions": [
-        "workspaces-web:GetDataProtectionSettings",
-        "workspaces-web:ListDataProtectionSettings",
-        "workspaces-web:DeleteDataProtectionSettings",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+    "AssociatedPortalArns" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048,
+        "minLength" : 20,
+        "pattern" : "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$"
+      }
     },
-    "list": {
-      "permissions": [
-        "workspaces-web:ListDataProtectionSettings",
-        "kms:Decrypt",
-        "kms:DescribeKey"
-      ]
+    "CreationDate" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "read": {
-      "permissions": [
-        "workspaces-web:GetDataProtectionSettings",
-        "workspaces-web:ListDataProtectionSettings",
-        "workspaces-web:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+    "CustomerManagedKey" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$"
     },
-    "update": {
-      "permissions": [
-        "workspaces-web:UpdateDataProtectionSettings",
-        "workspaces-web:GetDataProtectionSettings",
-        "workspaces-web:ListDataProtectionSettings",
-        "workspaces-web:TagResource",
-        "workspaces-web:UntagResource",
-        "workspaces-web:ListTagsForResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+    "DataProtectionSettingsArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$"
+    },
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[ _\\-\\d\\w]+$"
+    },
+    "DisplayName" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[ _\\-\\d\\w]+$"
+    },
+    "InlineRedactionConfiguration" : {
+      "$ref" : "#/definitions/InlineRedactionConfiguration"
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "primaryIdentifier": [
-    "/properties/DataProtectionSettingsArn"
-  ],
-  "properties": {
-    "AdditionalEncryptionContext": {
-      "$ref": "#/definitions/EncryptionContextMap"
+  "readOnlyProperties" : [ "/properties/AssociatedPortalArns", "/properties/CreationDate", "/properties/DataProtectionSettingsArn" ],
+  "createOnlyProperties" : [ "/properties/AdditionalEncryptionContext", "/properties/CustomerManagedKey" ],
+  "primaryIdentifier" : [ "/properties/DataProtectionSettingsArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "workspaces-web:CreateDataProtectionSettings", "workspaces-web:GetDataProtectionSettings", "workspaces-web:ListDataProtectionSettings", "workspaces-web:ListTagsForResource", "workspaces-web:TagResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptTo", "kms:ReEncryptFrom" ]
     },
-    "AssociatedPortalArns": {
-      "items": {
-        "maxLength": 2048,
-        "minLength": 20,
-        "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
-        "type": "string"
-      },
-      "type": "array"
+    "read" : {
+      "permissions" : [ "workspaces-web:GetDataProtectionSettings", "workspaces-web:ListDataProtectionSettings", "workspaces-web:ListTagsForResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
     },
-    "CreationDate": {
-      "format": "date-time",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "workspaces-web:UpdateDataProtectionSettings", "workspaces-web:GetDataProtectionSettings", "workspaces-web:ListDataProtectionSettings", "workspaces-web:TagResource", "workspaces-web:UntagResource", "workspaces-web:ListTagsForResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
     },
-    "CustomerManagedKey": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "workspaces-web:GetDataProtectionSettings", "workspaces-web:ListDataProtectionSettings", "workspaces-web:DeleteDataProtectionSettings", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
     },
-    "DataProtectionSettingsArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
-      "type": "string"
-    },
-    "Description": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[ _\\-\\d\\w]+$",
-      "type": "string"
-    },
-    "DisplayName": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[ _\\-\\d\\w]+$",
-      "type": "string"
-    },
-    "InlineRedactionConfiguration": {
-      "$ref": "#/definitions/InlineRedactionConfiguration"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+    "list" : {
+      "permissions" : [ "workspaces-web:ListDataProtectionSettings", "kms:Decrypt", "kms:DescribeKey" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/AssociatedPortalArns",
-    "/properties/CreationDate",
-    "/properties/DataProtectionSettingsArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "workspaces-web:UntagResource",
-      "workspaces-web:ListTagsForResource",
-      "workspaces-web:TagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "workspaces-web:UntagResource", "workspaces-web:ListTagsForResource", "workspaces-web:TagResource" ]
   },
-  "typeName": "AWS::WorkSpacesWeb::DataProtectionSettings"
+  "additionalProperties" : false
 }

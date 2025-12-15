@@ -1,92 +1,64 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Region"
-  ],
-  "definitions": {
-    "NotificationHubStatus": {
-      "enum": [
-        "ACTIVE",
-        "REGISTERING",
-        "DEREGISTERING",
-        "INACTIVE"
-      ],
-      "type": "string"
+  "typeName" : "AWS::Notifications::NotificationHub",
+  "description" : "Resource Type definition for AWS::Notifications::NotificationHub",
+  "definitions" : {
+    "NotificationHubStatus" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "REGISTERING", "DEREGISTERING", "INACTIVE" ]
     },
-    "NotificationHubStatusSummary": {
-      "additionalProperties": false,
-      "properties": {
-        "NotificationHubStatus": {
-          "$ref": "#/definitions/NotificationHubStatus"
+    "NotificationHubStatusSummary" : {
+      "type" : "object",
+      "properties" : {
+        "NotificationHubStatus" : {
+          "$ref" : "#/definitions/NotificationHubStatus"
         },
-        "NotificationHubStatusReason": {
-          "type": "string"
+        "NotificationHubStatusReason" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "NotificationHubStatus",
-        "NotificationHubStatusReason"
-      ],
-      "type": "object"
+      "required" : [ "NotificationHubStatus", "NotificationHubStatusReason" ],
+      "additionalProperties" : false
     },
-    "Region": {
-      "description": "Region that NotificationHub is present in.",
-      "maxLength": 25,
-      "minLength": 2,
-      "pattern": "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$",
-      "type": "string"
+    "Region" : {
+      "type" : "string",
+      "maxLength" : 25,
+      "minLength" : 2,
+      "pattern" : "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$",
+      "description" : "Region that NotificationHub is present in."
     }
   },
-  "description": "Resource Type definition for AWS::Notifications::NotificationHub",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "notifications:RegisterNotificationHub",
-        "notifications:ListNotificationHubs",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Region" : {
+      "$ref" : "#/definitions/Region"
     },
-    "delete": {
-      "permissions": [
-        "notifications:DeregisterNotificationHub",
-        "notifications:ListNotificationHubs"
-      ]
+    "NotificationHubStatusSummary" : {
+      "$ref" : "#/definitions/NotificationHubStatusSummary"
     },
-    "list": {
-      "permissions": [
-        "notifications:ListNotificationHubs"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "notifications:ListNotificationHubs"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Region"
-  ],
-  "properties": {
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+  "required" : [ "Region" ],
+  "primaryIdentifier" : [ "/properties/Region" ],
+  "readOnlyProperties" : [ "/properties/CreationTime", "/properties/NotificationHubStatusSummary" ],
+  "createOnlyProperties" : [ "/properties/Region" ],
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "notifications:ListNotificationHubs" ]
     },
-    "NotificationHubStatusSummary": {
-      "$ref": "#/definitions/NotificationHubStatusSummary"
+    "create" : {
+      "permissions" : [ "notifications:RegisterNotificationHub", "notifications:ListNotificationHubs", "iam:CreateServiceLinkedRole" ]
     },
-    "Region": {
-      "$ref": "#/definitions/Region"
+    "delete" : {
+      "permissions" : [ "notifications:DeregisterNotificationHub", "notifications:ListNotificationHubs" ]
+    },
+    "list" : {
+      "permissions" : [ "notifications:ListNotificationHubs" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreationTime",
-    "/properties/NotificationHubStatusSummary"
-  ],
-  "required": [
-    "Region"
-  ],
-  "tagging": {
-    "taggable": false
+  "tagging" : {
+    "taggable" : false
   },
-  "typeName": "AWS::Notifications::NotificationHub"
+  "additionalProperties" : false
 }

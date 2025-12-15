@@ -1,191 +1,154 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/TargetFunctionArn",
-    "/properties/Qualifier"
-  ],
-  "definitions": {
-    "AllowHeaders": {
-      "insertionOrder": true,
-      "items": {
-        "maxLength": 1024,
-        "minLength": 1,
-        "type": "string"
-      },
-      "maxItems": 100,
-      "minItems": 1,
-      "type": "array"
+  "typeName" : "AWS::Lambda::Url",
+  "description" : "Resource Type definition for AWS::Lambda::Url",
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  },
+  "properties" : {
+    "TargetFunctionArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the function associated with the Function URL.",
+      "type" : "string",
+      "pattern" : "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$"
     },
-    "AllowMethods": {
-      "insertionOrder": true,
-      "items": {
-        "enum": [
-          "GET",
-          "PUT",
-          "HEAD",
-          "POST",
-          "PATCH",
-          "DELETE",
-          "*"
-        ],
-        "type": "string"
-      },
-      "maxItems": 6,
-      "minItems": 1,
-      "type": "array"
+    "Qualifier" : {
+      "description" : "The alias qualifier for the target function. If TargetFunctionArn is unqualified then Qualifier must be passed.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "((?!^[0-9]+$)([a-zA-Z0-9-_]+))"
     },
-    "AllowOrigins": {
-      "insertionOrder": true,
-      "items": {
-        "maxLength": 253,
-        "minLength": 1,
-        "type": "string"
-      },
-      "maxItems": 100,
-      "minItems": 1,
-      "type": "array"
+    "AuthType" : {
+      "description" : "Can be either AWS_IAM if the requests are authorized via IAM, or NONE if no authorization is configured on the Function URL.",
+      "type" : "string",
+      "enum" : [ "AWS_IAM", "NONE" ]
     },
-    "Cors": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowCredentials": {
-          "description": "Specifies whether credentials are included in the CORS request.",
-          "type": "boolean"
+    "InvokeMode" : {
+      "description" : "The invocation mode for the function's URL. Set to BUFFERED if you want to buffer responses before returning them to the client. Set to RESPONSE_STREAM if you want to stream responses, allowing faster time to first byte and larger response payload sizes. If not set, defaults to BUFFERED.",
+      "type" : "string",
+      "enum" : [ "BUFFERED", "RESPONSE_STREAM" ]
+    },
+    "FunctionArn" : {
+      "description" : "The full Amazon Resource Name (ARN) of the function associated with the Function URL.",
+      "type" : "string",
+      "pattern" : "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$"
+    },
+    "FunctionUrl" : {
+      "description" : "The generated url for this resource.",
+      "type" : "string"
+    },
+    "Cors" : {
+      "$ref" : "#/definitions/Cors"
+    }
+  },
+  "definitions" : {
+    "AllowHeaders" : {
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 1024
+      },
+      "type" : "array",
+      "minItems" : 1,
+      "maxItems" : 100,
+      "insertionOrder" : true
+    },
+    "AllowMethods" : {
+      "items" : {
+        "type" : "string",
+        "enum" : [ "GET", "PUT", "HEAD", "POST", "PATCH", "DELETE", "*" ]
+      },
+      "type" : "array",
+      "minItems" : 1,
+      "maxItems" : 6,
+      "insertionOrder" : true
+    },
+    "AllowOrigins" : {
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 253
+      },
+      "type" : "array",
+      "minItems" : 1,
+      "maxItems" : 100,
+      "insertionOrder" : true
+    },
+    "ExposeHeaders" : {
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 1024
+      },
+      "type" : "array",
+      "minItems" : 1,
+      "maxItems" : 100,
+      "insertionOrder" : true
+    },
+    "Cors" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "AllowCredentials" : {
+          "description" : "Specifies whether credentials are included in the CORS request.",
+          "type" : "boolean"
         },
-        "AllowHeaders": {
-          "$ref": "#/definitions/AllowHeaders",
-          "description": "Represents a collection of allowed headers."
+        "AllowHeaders" : {
+          "description" : "Represents a collection of allowed headers.",
+          "$ref" : "#/definitions/AllowHeaders"
         },
-        "AllowMethods": {
-          "$ref": "#/definitions/AllowMethods",
-          "description": "Represents a collection of allowed HTTP methods."
+        "AllowMethods" : {
+          "description" : "Represents a collection of allowed HTTP methods.",
+          "$ref" : "#/definitions/AllowMethods"
         },
-        "AllowOrigins": {
-          "$ref": "#/definitions/AllowOrigins",
-          "description": "Represents a collection of allowed origins."
+        "AllowOrigins" : {
+          "description" : "Represents a collection of allowed origins.",
+          "$ref" : "#/definitions/AllowOrigins"
         },
-        "ExposeHeaders": {
-          "$ref": "#/definitions/ExposeHeaders",
-          "description": "Represents a collection of exposed headers."
+        "ExposeHeaders" : {
+          "description" : "Represents a collection of exposed headers.",
+          "$ref" : "#/definitions/ExposeHeaders"
         },
-        "MaxAge": {
-          "maximum": 86400,
-          "minimum": 0,
-          "type": "integer"
+        "MaxAge" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 86400
         }
       },
-      "type": "object"
-    },
-    "ExposeHeaders": {
-      "insertionOrder": true,
-      "items": {
-        "maxLength": 1024,
-        "minLength": 1,
-        "type": "string"
-      },
-      "maxItems": 100,
-      "minItems": 1,
-      "type": "array"
+      "type" : "object"
     }
   },
-  "description": "Resource Type definition for AWS::Lambda::Url",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lambda:CreateFunctionUrlConfig"
-      ]
+  "required" : [ "TargetFunctionArn", "AuthType" ],
+  "createOnlyProperties" : [ "/properties/TargetFunctionArn", "/properties/Qualifier" ],
+  "readOnlyProperties" : [ "/properties/FunctionUrl", "/properties/FunctionArn" ],
+  "primaryIdentifier" : [ "/properties/FunctionArn" ],
+  "propertyTransform" : {
+    "/properties/TargetFunctionArn" : "$lookup($match(TargetFunctionArn,/(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-[0-9]{1}:)?([0-9]{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?![0-9]+)[0-9a-zA-Z-_]+))?/)['groups'], 'groups')[6]"
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lambda:CreateFunctionUrlConfig" ]
     },
-    "delete": {
-      "permissions": [
-        "lambda:DeleteFunctionUrlConfig"
-      ]
+    "read" : {
+      "permissions" : [ "lambda:GetFunctionUrlConfig" ]
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "TargetFunctionArn": {
-            "description": "The Amazon Resource Name (ARN) of the function associated with the Function URL.",
-            "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$",
-            "type": "string"
+    "update" : {
+      "permissions" : [ "lambda:UpdateFunctionUrlConfig" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "TargetFunctionArn" : {
+            "description" : "The Amazon Resource Name (ARN) of the function associated with the Function URL.",
+            "type" : "string",
+            "pattern" : "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$"
           }
         },
-        "required": [
-          "TargetFunctionArn"
-        ]
+        "required" : [ "TargetFunctionArn" ]
       },
-      "permissions": [
-        "lambda:ListFunctionUrlConfigs"
-      ]
+      "permissions" : [ "lambda:ListFunctionUrlConfigs" ]
     },
-    "read": {
-      "permissions": [
-        "lambda:GetFunctionUrlConfig"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "lambda:UpdateFunctionUrlConfig"
-      ]
+    "delete" : {
+      "permissions" : [ "lambda:DeleteFunctionUrlConfig" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/FunctionArn"
-  ],
-  "properties": {
-    "AuthType": {
-      "description": "Can be either AWS_IAM if the requests are authorized via IAM, or NONE if no authorization is configured on the Function URL.",
-      "enum": [
-        "AWS_IAM",
-        "NONE"
-      ],
-      "type": "string"
-    },
-    "Cors": {
-      "$ref": "#/definitions/Cors"
-    },
-    "FunctionArn": {
-      "description": "The full Amazon Resource Name (ARN) of the function associated with the Function URL.",
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$",
-      "type": "string"
-    },
-    "FunctionUrl": {
-      "description": "The generated url for this resource.",
-      "type": "string"
-    },
-    "InvokeMode": {
-      "description": "The invocation mode for the function's URL. Set to BUFFERED if you want to buffer responses before returning them to the client. Set to RESPONSE_STREAM if you want to stream responses, allowing faster time to first byte and larger response payload sizes. If not set, defaults to BUFFERED.",
-      "enum": [
-        "BUFFERED",
-        "RESPONSE_STREAM"
-      ],
-      "type": "string"
-    },
-    "Qualifier": {
-      "description": "The alias qualifier for the target function. If TargetFunctionArn is unqualified then Qualifier must be passed.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "((?!^[0-9]+$)([a-zA-Z0-9-_]+))",
-      "type": "string"
-    },
-    "TargetFunctionArn": {
-      "description": "The Amazon Resource Name (ARN) of the function associated with the Function URL.",
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?!\\d+)[0-9a-zA-Z-_]+))?$",
-      "type": "string"
-    }
-  },
-  "propertyTransform": {
-    "/properties/TargetFunctionArn": "$lookup($match(TargetFunctionArn,/(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?-[a-z]+-[0-9]{1}:)?([0-9]{12}:)?(function:)?([a-zA-Z0-9-_]+)(:((?![0-9]+)[0-9a-zA-Z-_]+))?/)['groups'], 'groups')[6]"
-  },
-  "readOnlyProperties": [
-    "/properties/FunctionUrl",
-    "/properties/FunctionArn"
-  ],
-  "required": [
-    "TargetFunctionArn",
-    "AuthType"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Lambda::Url"
+  }
 }

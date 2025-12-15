@@ -1,171 +1,110 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/KmsKeyArn"
-  ],
-  "definitions": {
-    "ArchiveRetention": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "RetentionPeriod": {
-              "$ref": "#/definitions/RetentionPeriod"
-            }
-          },
-          "required": [
-            "RetentionPeriod"
-          ],
-          "title": "RetentionPeriod",
-          "type": "object"
-        }
-      ]
-    },
-    "ArchiveState": {
-      "enum": [
-        "ACTIVE",
-        "PENDING_DELETION"
-      ],
-      "type": "string"
-    },
-    "RetentionPeriod": {
-      "enum": [
-        "THREE_MONTHS",
-        "SIX_MONTHS",
-        "NINE_MONTHS",
-        "ONE_YEAR",
-        "EIGHTEEN_MONTHS",
-        "TWO_YEARS",
-        "THIRTY_MONTHS",
-        "THREE_YEARS",
-        "FOUR_YEARS",
-        "FIVE_YEARS",
-        "SIX_YEARS",
-        "SEVEN_YEARS",
-        "EIGHT_YEARS",
-        "NINE_YEARS",
-        "TEN_YEARS",
-        "PERMANENT"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
-          "type": "string"
+  "typeName" : "AWS::SES::MailManagerArchive",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+  "description" : "Definition of AWS::SES::MailManagerArchive Resource Type",
+  "definitions" : {
+    "ArchiveRetention" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "RetentionPeriod",
+        "properties" : {
+          "RetentionPeriod" : {
+            "$ref" : "#/definitions/RetentionPeriod"
+          }
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
-          "type": "string"
+        "required" : [ "RetentionPeriod" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "ArchiveState" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "PENDING_DELETION" ]
+    },
+    "RetentionPeriod" : {
+      "type" : "string",
+      "enum" : [ "THREE_MONTHS", "SIX_MONTHS", "NINE_MONTHS", "ONE_YEAR", "EIGHTEEN_MONTHS", "TWO_YEARS", "THIRTY_MONTHS", "THREE_YEARS", "FOUR_YEARS", "FIVE_YEARS", "SIX_YEARS", "SEVEN_YEARS", "EIGHT_YEARS", "NINE_YEARS", "TEN_YEARS", "PERMANENT" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$"
+        },
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::SES::MailManagerArchive Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:ListTagsForResource",
-        "ses:GetArchive",
-        "ses:CreateArchive",
-        "iam:CreateServiceLinkedRole",
-        "kms:DescribeKey",
-        "kms:Decrypt",
-        "kms:GenerateDataKey"
-      ]
+  "properties" : {
+    "ArchiveArn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ses:GetArchive",
-        "ses:DeleteArchive"
-      ]
+    "ArchiveId" : {
+      "type" : "string",
+      "maxLength" : 66,
+      "minLength" : 1
     },
-    "list": {
-      "permissions": [
-        "ses:ListArchives"
-      ]
+    "ArchiveName" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$"
     },
-    "read": {
-      "permissions": [
-        "ses:ListTagsForResource",
-        "ses:GetArchive"
-      ]
+    "ArchiveState" : {
+      "$ref" : "#/definitions/ArchiveState"
     },
-    "update": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:UntagResource",
-        "ses:ListTagsForResource",
-        "ses:GetArchive",
-        "ses:UpdateArchive"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ArchiveId"
-  ],
-  "properties": {
-    "ArchiveArn": {
-      "type": "string"
+    "KmsKeyArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(|-cn|-us-gov):kms:[a-z0-9-]{1,20}:[0-9]{12}:(key|alias)/.+$"
     },
-    "ArchiveId": {
-      "maxLength": 66,
-      "minLength": 1,
-      "type": "string"
+    "Retention" : {
+      "$ref" : "#/definitions/ArchiveRetention"
     },
-    "ArchiveName": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*[a-zA-Z0-9]$",
-      "type": "string"
-    },
-    "ArchiveState": {
-      "$ref": "#/definitions/ArchiveState"
-    },
-    "KmsKeyArn": {
-      "pattern": "^arn:aws(|-cn|-us-gov):kms:[a-z0-9-]{1,20}:[0-9]{12}:(key|alias)/.+$",
-      "type": "string"
-    },
-    "Retention": {
-      "$ref": "#/definitions/ArchiveRetention"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/ArchiveArn",
-    "/properties/ArchiveId",
-    "/properties/ArchiveState"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ses:TagResource",
-      "ses:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ses:TagResource", "ses:UntagResource" ]
   },
-  "typeName": "AWS::SES::MailManagerArchive"
+  "readOnlyProperties" : [ "/properties/ArchiveArn", "/properties/ArchiveId", "/properties/ArchiveState" ],
+  "createOnlyProperties" : [ "/properties/KmsKeyArn" ],
+  "primaryIdentifier" : [ "/properties/ArchiveId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ses:TagResource", "ses:ListTagsForResource", "ses:GetArchive", "ses:CreateArchive", "iam:CreateServiceLinkedRole", "kms:DescribeKey", "kms:Decrypt", "kms:GenerateDataKey" ]
+    },
+    "read" : {
+      "permissions" : [ "ses:ListTagsForResource", "ses:GetArchive" ]
+    },
+    "update" : {
+      "permissions" : [ "ses:TagResource", "ses:UntagResource", "ses:ListTagsForResource", "ses:GetArchive", "ses:UpdateArchive" ]
+    },
+    "delete" : {
+      "permissions" : [ "ses:GetArchive", "ses:DeleteArchive" ]
+    },
+    "list" : {
+      "permissions" : [ "ses:ListArchives" ]
+    }
+  },
+  "additionalProperties" : false
 }

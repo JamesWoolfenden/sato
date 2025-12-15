@@ -1,528 +1,400 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/GatewayIdentifier"
-  ],
-  "definitions": {
-    "ApiKeyCredentialLocation": {
-      "enum": [
-        "HEADER",
-        "QUERY_PARAMETER"
-      ],
-      "type": "string"
+  "typeName" : "AWS::BedrockAgentCore::GatewayTarget",
+  "description" : "Definition of AWS::BedrockAgentCore::GatewayTarget Resource Type",
+  "definitions" : {
+    "ApiKeyCredentialLocation" : {
+      "type" : "string",
+      "enum" : [ "HEADER", "QUERY_PARAMETER" ]
     },
-    "ApiKeyCredentialProvider": {
-      "additionalProperties": false,
-      "properties": {
-        "CredentialLocation": {
-          "$ref": "#/definitions/ApiKeyCredentialLocation"
+    "ApiKeyCredentialProvider" : {
+      "type" : "object",
+      "properties" : {
+        "ProviderArn" : {
+          "type" : "string",
+          "pattern" : "^arn:([^:]*):([^:]*):([^:]*):([0-9]{12})?:(.+)$"
         },
-        "CredentialParameterName": {
-          "maxLength": 64,
-          "minLength": 1,
-          "type": "string"
+        "CredentialParameterName" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1
         },
-        "CredentialPrefix": {
-          "maxLength": 64,
-          "minLength": 1,
-          "type": "string"
+        "CredentialPrefix" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1
         },
-        "ProviderArn": {
-          "pattern": "^arn:([^:]*):([^:]*):([^:]*):([0-9]{12})?:(.+)$",
-          "type": "string"
+        "CredentialLocation" : {
+          "$ref" : "#/definitions/ApiKeyCredentialLocation"
         }
       },
-      "required": [
-        "ProviderArn"
-      ],
-      "type": "object"
+      "required" : [ "ProviderArn" ],
+      "additionalProperties" : false
     },
-    "ApiSchemaConfiguration": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "S3": {
-              "$ref": "#/definitions/S3Configuration"
-            }
-          },
-          "required": [
-            "S3"
-          ],
-          "title": "S3",
-          "type": "object"
+    "ApiSchemaConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "S3",
+        "properties" : {
+          "S3" : {
+            "$ref" : "#/definitions/S3Configuration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "InlinePayload": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "InlinePayload"
-          ],
-          "title": "InlinePayload",
-          "type": "object"
-        }
-      ]
+        "required" : [ "S3" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "InlinePayload",
+        "properties" : {
+          "InlinePayload" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "InlinePayload" ],
+        "additionalProperties" : false
+      } ]
     },
-    "CredentialProvider": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "OauthCredentialProvider": {
-              "$ref": "#/definitions/OAuthCredentialProvider"
-            }
-          },
-          "required": [
-            "OauthCredentialProvider"
-          ],
-          "title": "OauthCredentialProvider",
-          "type": "object"
+    "CredentialProvider" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "OauthCredentialProvider",
+        "properties" : {
+          "OauthCredentialProvider" : {
+            "$ref" : "#/definitions/OAuthCredentialProvider"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "ApiKeyCredentialProvider": {
-              "$ref": "#/definitions/ApiKeyCredentialProvider"
-            }
-          },
-          "required": [
-            "ApiKeyCredentialProvider"
-          ],
-          "title": "ApiKeyCredentialProvider",
-          "type": "object"
-        }
-      ]
+        "required" : [ "OauthCredentialProvider" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "ApiKeyCredentialProvider",
+        "properties" : {
+          "ApiKeyCredentialProvider" : {
+            "$ref" : "#/definitions/ApiKeyCredentialProvider"
+          }
+        },
+        "required" : [ "ApiKeyCredentialProvider" ],
+        "additionalProperties" : false
+      } ]
     },
-    "CredentialProviderConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "CredentialProvider": {
-          "$ref": "#/definitions/CredentialProvider"
+    "CredentialProviderConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "CredentialProviderType" : {
+          "$ref" : "#/definitions/CredentialProviderType"
         },
-        "CredentialProviderType": {
-          "$ref": "#/definitions/CredentialProviderType"
+        "CredentialProvider" : {
+          "$ref" : "#/definitions/CredentialProvider"
         }
       },
-      "required": [
-        "CredentialProviderType"
-      ],
-      "type": "object"
+      "required" : [ "CredentialProviderType" ],
+      "additionalProperties" : false
     },
-    "CredentialProviderType": {
-      "enum": [
-        "GATEWAY_IAM_ROLE",
-        "OAUTH",
-        "API_KEY"
-      ],
-      "type": "string"
+    "CredentialProviderType" : {
+      "type" : "string",
+      "enum" : [ "GATEWAY_IAM_ROLE", "OAUTH", "API_KEY" ]
     },
-    "McpLambdaTargetConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "LambdaArn": {
-          "maxLength": 170,
-          "minLength": 1,
-          "pattern": "^arn:(aws[a-zA-Z-]*)?:lambda:([a-z]{2}(-gov)?-[a-z]+-\\d{1}):(\\d{12}):function:([a-zA-Z0-9-_.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$",
-          "type": "string"
+    "McpLambdaTargetConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "LambdaArn" : {
+          "type" : "string",
+          "maxLength" : 170,
+          "minLength" : 1,
+          "pattern" : "^arn:(aws[a-zA-Z-]*)?:lambda:([a-z]{2}(-gov)?-[a-z]+-\\d{1}):(\\d{12}):function:([a-zA-Z0-9-_.]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?$"
         },
-        "ToolSchema": {
-          "$ref": "#/definitions/ToolSchema"
+        "ToolSchema" : {
+          "$ref" : "#/definitions/ToolSchema"
         }
       },
-      "required": [
-        "LambdaArn",
-        "ToolSchema"
-      ],
-      "type": "object"
+      "required" : [ "LambdaArn", "ToolSchema" ],
+      "additionalProperties" : false
     },
-    "McpServerTargetConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Endpoint": {
-          "pattern": "^https://.*",
-          "type": "string"
+    "McpServerTargetConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Endpoint" : {
+          "type" : "string",
+          "pattern" : "^https://.*"
         }
       },
-      "required": [
-        "Endpoint"
-      ],
-      "type": "object"
+      "required" : [ "Endpoint" ],
+      "additionalProperties" : false
     },
-    "McpTargetConfiguration": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "OpenApiSchema": {
-              "$ref": "#/definitions/ApiSchemaConfiguration"
+    "McpTargetConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "OpenApiSchema",
+        "properties" : {
+          "OpenApiSchema" : {
+            "$ref" : "#/definitions/ApiSchemaConfiguration"
+          }
+        },
+        "required" : [ "OpenApiSchema" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "SmithyModel",
+        "properties" : {
+          "SmithyModel" : {
+            "$ref" : "#/definitions/ApiSchemaConfiguration"
+          }
+        },
+        "required" : [ "SmithyModel" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Lambda",
+        "properties" : {
+          "Lambda" : {
+            "$ref" : "#/definitions/McpLambdaTargetConfiguration"
+          }
+        },
+        "required" : [ "Lambda" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "McpServer",
+        "properties" : {
+          "McpServer" : {
+            "$ref" : "#/definitions/McpServerTargetConfiguration"
+          }
+        },
+        "required" : [ "McpServer" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "OAuthCredentialProvider" : {
+      "type" : "object",
+      "properties" : {
+        "ProviderArn" : {
+          "type" : "string",
+          "pattern" : "^arn:([^:]*):([^:]*):([^:]*):([0-9]{12})?:(.+)$"
+        },
+        "Scopes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 64,
+            "minLength" : 1
+          },
+          "maxItems" : 100
+        },
+        "CustomParameters" : {
+          "$ref" : "#/definitions/OAuthCustomParameters"
+        }
+      },
+      "required" : [ "ProviderArn", "Scopes" ],
+      "additionalProperties" : false
+    },
+    "OAuthCustomParameters" : {
+      "type" : "object",
+      "maxProperties" : 10,
+      "minProperties" : 1,
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1
+        }
+      },
+      "additionalProperties" : false
+    },
+    "S3Configuration" : {
+      "type" : "object",
+      "properties" : {
+        "Uri" : {
+          "type" : "string",
+          "pattern" : "^s3://.{1,2043}$"
+        },
+        "BucketOwnerAccountId" : {
+          "type" : "string",
+          "pattern" : "^[0-9]{12}$"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "SchemaDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/SchemaType"
+        },
+        "Properties" : {
+          "$ref" : "#/definitions/SchemaProperties"
+        },
+        "Required" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Items" : {
+          "$ref" : "#/definitions/SchemaDefinition"
+        },
+        "Description" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ],
+      "additionalProperties" : false
+    },
+    "SchemaProperties" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "$ref" : "#/definitions/SchemaDefinition"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "SchemaType" : {
+      "type" : "string",
+      "enum" : [ "string", "number", "object", "array", "boolean", "integer" ]
+    },
+    "TargetConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Mcp",
+        "properties" : {
+          "Mcp" : {
+            "$ref" : "#/definitions/McpTargetConfiguration"
+          }
+        },
+        "required" : [ "Mcp" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "TargetStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "UPDATING", "UPDATE_UNSUCCESSFUL", "DELETING", "READY", "FAILED", "SYNCHRONIZING", "SYNCHRONIZE_UNSUCCESSFUL" ]
+    },
+    "ToolDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "InputSchema" : {
+          "$ref" : "#/definitions/SchemaDefinition"
+        },
+        "OutputSchema" : {
+          "$ref" : "#/definitions/SchemaDefinition"
+        }
+      },
+      "required" : [ "Description", "InputSchema", "Name" ],
+      "additionalProperties" : false
+    },
+    "ToolSchema" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "S3",
+        "properties" : {
+          "S3" : {
+            "$ref" : "#/definitions/S3Configuration"
+          }
+        },
+        "required" : [ "S3" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "InlinePayload",
+        "properties" : {
+          "InlinePayload" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/ToolDefinition"
             }
-          },
-          "required": [
-            "OpenApiSchema"
-          ],
-          "title": "OpenApiSchema",
-          "type": "object"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "SmithyModel": {
-              "$ref": "#/definitions/ApiSchemaConfiguration"
-            }
-          },
-          "required": [
-            "SmithyModel"
-          ],
-          "title": "SmithyModel",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Lambda": {
-              "$ref": "#/definitions/McpLambdaTargetConfiguration"
-            }
-          },
-          "required": [
-            "Lambda"
-          ],
-          "title": "Lambda",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "McpServer": {
-              "$ref": "#/definitions/McpServerTargetConfiguration"
-            }
-          },
-          "required": [
-            "McpServer"
-          ],
-          "title": "McpServer",
-          "type": "object"
-        }
-      ]
-    },
-    "OAuthCredentialProvider": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomParameters": {
-          "$ref": "#/definitions/OAuthCustomParameters"
-        },
-        "ProviderArn": {
-          "pattern": "^arn:([^:]*):([^:]*):([^:]*):([0-9]{12})?:(.+)$",
-          "type": "string"
-        },
-        "Scopes": {
-          "items": {
-            "maxLength": 64,
-            "minLength": 1,
-            "type": "string"
-          },
-          "maxItems": 100,
-          "type": "array"
-        }
-      },
-      "required": [
-        "ProviderArn",
-        "Scopes"
-      ],
-      "type": "object"
-    },
-    "OAuthCustomParameters": {
-      "additionalProperties": false,
-      "maxProperties": 10,
-      "minProperties": 1,
-      "patternProperties": {
-        ".+": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "S3Configuration": {
-      "additionalProperties": false,
-      "properties": {
-        "BucketOwnerAccountId": {
-          "pattern": "^[0-9]{12}$",
-          "type": "string"
-        },
-        "Uri": {
-          "pattern": "^s3://.{1,2043}$",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "SchemaDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "Description": {
-          "type": "string"
-        },
-        "Items": {
-          "$ref": "#/definitions/SchemaDefinition"
-        },
-        "Properties": {
-          "$ref": "#/definitions/SchemaProperties"
-        },
-        "Required": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "Type": {
-          "$ref": "#/definitions/SchemaType"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
-    },
-    "SchemaProperties": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "$ref": "#/definitions/SchemaDefinition"
-        }
-      },
-      "type": "object"
-    },
-    "SchemaType": {
-      "enum": [
-        "string",
-        "number",
-        "object",
-        "array",
-        "boolean",
-        "integer"
-      ],
-      "type": "string"
-    },
-    "TargetConfiguration": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Mcp": {
-              "$ref": "#/definitions/McpTargetConfiguration"
-            }
-          },
-          "required": [
-            "Mcp"
-          ],
-          "title": "Mcp",
-          "type": "object"
-        }
-      ]
-    },
-    "TargetStatus": {
-      "enum": [
-        "CREATING",
-        "UPDATING",
-        "UPDATE_UNSUCCESSFUL",
-        "DELETING",
-        "READY",
-        "FAILED",
-        "SYNCHRONIZING",
-        "SYNCHRONIZE_UNSUCCESSFUL"
-      ],
-      "type": "string"
-    },
-    "ToolDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "Description": {
-          "type": "string"
-        },
-        "InputSchema": {
-          "$ref": "#/definitions/SchemaDefinition"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "OutputSchema": {
-          "$ref": "#/definitions/SchemaDefinition"
-        }
-      },
-      "required": [
-        "Description",
-        "InputSchema",
-        "Name"
-      ],
-      "type": "object"
-    },
-    "ToolSchema": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "S3": {
-              "$ref": "#/definitions/S3Configuration"
-            }
-          },
-          "required": [
-            "S3"
-          ],
-          "title": "S3",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "InlinePayload": {
-              "items": {
-                "$ref": "#/definitions/ToolDefinition"
-              },
-              "type": "array"
-            }
-          },
-          "required": [
-            "InlinePayload"
-          ],
-          "title": "InlinePayload",
-          "type": "object"
-        }
-      ]
+        "required" : [ "InlinePayload" ],
+        "additionalProperties" : false
+      } ]
     }
   },
-  "description": "Definition of AWS::BedrockAgentCore::GatewayTarget Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock-agentcore:CreateGatewayTarget",
-        "bedrock-agentcore:GetGatewayTarget",
-        "bedrock-agentcore:GetResourceOauth2Token",
-        "bedrock-agentcore:GetWorkloadAccessToken",
-        "bedrock-agentcore:SynchronizeGatewayTargets",
-        "kms:Decrypt",
-        "kms:GenerateDataKey",
-        "kms:ListGrants",
-        "s3:GetObject",
-        "secretsmanager:GetSecretValue"
-      ]
+  "properties" : {
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "delete": {
-      "permissions": [
-        "bedrock-agentcore:DeleteGatewayTarget",
-        "bedrock-agentcore:GetGatewayTarget",
-        "kms:Decrypt",
-        "kms:GenerateDataKey",
-        "kms:ListGrants"
-      ]
+    "CredentialProviderConfigurations" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/CredentialProviderConfiguration"
+      },
+      "maxItems" : 1,
+      "minItems" : 1
     },
-    "list": {
-      "permissions": [
-        "bedrock-agentcore:ListGatewayTargets"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 1
     },
-    "read": {
-      "permissions": [
-        "bedrock-agentcore:GetGatewayTarget"
-      ]
+    "GatewayArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(|-cn|-us-gov):bedrock-agentcore:[a-z0-9-]{1,20}:[0-9]{12}:gateway/([0-9a-z][-]?){1,100}-[a-z0-9]{10}$"
     },
-    "update": {
-      "permissions": [
-        "bedrock-agentcore:GetGatewayTarget",
-        "bedrock-agentcore:GetResourceOauth2Token",
-        "bedrock-agentcore:GetWorkloadAccessToken",
-        "bedrock-agentcore:SynchronizeGatewayTargets",
-        "bedrock-agentcore:UpdateGatewayTarget",
-        "kms:Decrypt",
-        "kms:GenerateDataKey",
-        "kms:ListGrants",
-        "s3:GetObject",
-        "secretsmanager:GetSecretValue"
-      ]
+    "GatewayIdentifier" : {
+      "type" : "string",
+      "pattern" : "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$"
+    },
+    "LastSynchronizedAt" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^([0-9a-zA-Z][-]?){1,100}$"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/TargetStatus"
+    },
+    "StatusReasons" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048
+      },
+      "maxItems" : 100
+    },
+    "TargetConfiguration" : {
+      "$ref" : "#/definitions/TargetConfiguration"
+    },
+    "TargetId" : {
+      "type" : "string",
+      "pattern" : "^[0-9a-zA-Z]{10}$"
+    },
+    "UpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     }
   },
-  "primaryIdentifier": [
-    "/properties/GatewayIdentifier",
-    "/properties/TargetId"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
+  "required" : [ "CredentialProviderConfigurations", "Name", "TargetConfiguration" ],
+  "createOnlyProperties" : [ "/properties/GatewayIdentifier" ],
+  "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/GatewayArn", "/properties/LastSynchronizedAt", "/properties/Status", "/properties/StatusReasons", "/properties/TargetId", "/properties/UpdatedAt" ],
+  "primaryIdentifier" : [ "/properties/GatewayIdentifier", "/properties/TargetId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock-agentcore:CreateGatewayTarget", "bedrock-agentcore:GetGatewayTarget", "bedrock-agentcore:GetResourceOauth2Token", "bedrock-agentcore:GetWorkloadAccessToken", "bedrock-agentcore:SynchronizeGatewayTargets", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants", "s3:GetObject", "secretsmanager:GetSecretValue" ]
     },
-    "CredentialProviderConfigurations": {
-      "items": {
-        "$ref": "#/definitions/CredentialProviderConfiguration"
-      },
-      "maxItems": 1,
-      "minItems": 1,
-      "type": "array"
+    "read" : {
+      "permissions" : [ "bedrock-agentcore:GetGatewayTarget" ]
     },
-    "Description": {
-      "maxLength": 200,
-      "minLength": 1,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "bedrock-agentcore:GetGatewayTarget", "bedrock-agentcore:GetResourceOauth2Token", "bedrock-agentcore:GetWorkloadAccessToken", "bedrock-agentcore:SynchronizeGatewayTargets", "bedrock-agentcore:UpdateGatewayTarget", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants", "s3:GetObject", "secretsmanager:GetSecretValue" ]
     },
-    "GatewayArn": {
-      "pattern": "^arn:aws(|-cn|-us-gov):bedrock-agentcore:[a-z0-9-]{1,20}:[0-9]{12}:gateway/([0-9a-z][-]?){1,100}-[a-z0-9]{10}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "bedrock-agentcore:DeleteGatewayTarget", "bedrock-agentcore:GetGatewayTarget", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants" ]
     },
-    "GatewayIdentifier": {
-      "pattern": "^([0-9a-z][-]?){1,100}-[0-9a-z]{10}$",
-      "type": "string"
-    },
-    "LastSynchronizedAt": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "pattern": "^([0-9a-zA-Z][-]?){1,100}$",
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/TargetStatus"
-    },
-    "StatusReasons": {
-      "items": {
-        "maxLength": 2048,
-        "type": "string"
-      },
-      "maxItems": 100,
-      "type": "array"
-    },
-    "TargetConfiguration": {
-      "$ref": "#/definitions/TargetConfiguration"
-    },
-    "TargetId": {
-      "pattern": "^[0-9a-zA-Z]{10}$",
-      "type": "string"
-    },
-    "UpdatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "bedrock-agentcore:ListGatewayTargets" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreatedAt",
-    "/properties/GatewayArn",
-    "/properties/LastSynchronizedAt",
-    "/properties/Status",
-    "/properties/StatusReasons",
-    "/properties/TargetId",
-    "/properties/UpdatedAt"
-  ],
-  "required": [
-    "CredentialProviderConfigurations",
-    "Name",
-    "TargetConfiguration"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "taggable": false
-  },
-  "typeName": "AWS::BedrockAgentCore::GatewayTarget"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false,
+    "cloudFormationSystemTags" : false
+  }
 }

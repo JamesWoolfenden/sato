@@ -1,133 +1,107 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/StatementId",
-    "/properties/Arn"
-  ],
-  "definitions": {
-    "StatementAction": {
-      "maxLength": 64,
-      "minLength": 3,
-      "pattern": "^(entityresolution:[a-zA-Z0-9]+)$",
-      "type": "string"
+  "typeName" : "AWS::EntityResolution::PolicyStatement",
+  "description" : "Policy Statement defined in AWS Entity Resolution Service",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+  "definitions" : {
+    "VeniceGlobalArn" : {
+      "description" : "Arn of the resource to which the policy statement is being attached.",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn):entityresolution:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:((schemamapping|matchingworkflow|idmappingworkflow|idnamespace)/[a-zA-Z_0-9-]{1,255})$"
     },
-    "StatementActionList": {
-      "items": {
-        "$ref": "#/definitions/StatementAction"
-      },
-      "type": "array"
+    "StatementId" : {
+      "description" : "The Statement Id of the policy statement that is being attached.",
+      "type" : "string",
+      "pattern" : "^[0-9A-Za-z]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "StatementCondition": {
-      "maxLength": 40960,
-      "minLength": 1,
-      "type": "string"
+    "StatementEffect" : {
+      "type" : "string",
+      "enum" : [ "Allow", "Deny" ]
     },
-    "StatementEffect": {
-      "enum": [
-        "Allow",
-        "Deny"
-      ],
-      "type": "string"
+    "StatementAction" : {
+      "type" : "string",
+      "pattern" : "^(entityresolution:[a-zA-Z0-9]+)$",
+      "minLength" : 3,
+      "maxLength" : 64
     },
-    "StatementId": {
-      "description": "The Statement Id of the policy statement that is being attached.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[0-9A-Za-z]+$",
-      "type": "string"
+    "StatementActionList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/StatementAction"
+      }
     },
-    "StatementPrincipal": {
-      "maxLength": 64,
-      "minLength": 12,
-      "pattern": "^(\\\\d{12})|([a-z0-9\\\\.]+)$",
-      "type": "string"
+    "StatementPrincipal" : {
+      "type" : "string",
+      "pattern" : "^(\\\\d{12})|([a-z0-9\\\\.]+)$",
+      "minLength" : 12,
+      "maxLength" : 64
     },
-    "StatementPrincipalList": {
-      "items": {
-        "$ref": "#/definitions/StatementPrincipal"
-      },
-      "type": "array"
+    "StatementPrincipalList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/StatementPrincipal"
+      }
     },
-    "VeniceGlobalArn": {
-      "description": "Arn of the resource to which the policy statement is being attached.",
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:[a-z]{2}-[a-z]{1,10}-[0-9]:[0-9]{12}:((schemamapping|matchingworkflow|idmappingworkflow|idnamespace)/[a-zA-Z_0-9-]{1,255})$",
-      "type": "string"
+    "StatementCondition" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 40960
     }
   },
-  "description": "Policy Statement defined in AWS Entity Resolution Service",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "entityresolution:AddPolicyStatement"
-      ]
+  "properties" : {
+    "Arn" : {
+      "$ref" : "#/definitions/VeniceGlobalArn"
     },
-    "delete": {
-      "permissions": [
-        "entityresolution:DeletePolicyStatement",
-        "entityresolution:GetPolicy"
-      ]
+    "StatementId" : {
+      "$ref" : "#/definitions/StatementId"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "Arn": {
-            "$ref": "resource-schema.json#/properties/Arn"
+    "Effect" : {
+      "$ref" : "#/definitions/StatementEffect"
+    },
+    "Action" : {
+      "$ref" : "#/definitions/StatementActionList"
+    },
+    "Principal" : {
+      "$ref" : "#/definitions/StatementPrincipalList"
+    },
+    "Condition" : {
+      "$ref" : "#/definitions/StatementCondition"
+    }
+  },
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "required" : [ "Arn", "StatementId" ],
+  "createOnlyProperties" : [ "/properties/StatementId", "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn", "/properties/StatementId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "entityresolution:AddPolicyStatement" ]
+    },
+    "read" : {
+      "permissions" : [ "entityresolution:GetPolicy" ]
+    },
+    "update" : {
+      "permissions" : [ "entityresolution:AddPolicyStatement", "entityresolution:DeletePolicyStatement" ]
+    },
+    "delete" : {
+      "permissions" : [ "entityresolution:DeletePolicyStatement", "entityresolution:GetPolicy" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "Arn" : {
+            "$ref" : "resource-schema.json#/properties/Arn"
           }
         },
-        "required": [
-          "Arn"
-        ]
+        "required" : [ "Arn" ]
       },
-      "permissions": [
-        "entityresolution:GetPolicy"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "entityresolution:GetPolicy"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "entityresolution:AddPolicyStatement",
-        "entityresolution:DeletePolicyStatement"
-      ]
+      "permissions" : [ "entityresolution:GetPolicy" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Arn",
-    "/properties/StatementId"
-  ],
-  "properties": {
-    "Action": {
-      "$ref": "#/definitions/StatementActionList"
-    },
-    "Arn": {
-      "$ref": "#/definitions/VeniceGlobalArn"
-    },
-    "Condition": {
-      "$ref": "#/definitions/StatementCondition"
-    },
-    "Effect": {
-      "$ref": "#/definitions/StatementEffect"
-    },
-    "Principal": {
-      "$ref": "#/definitions/StatementPrincipalList"
-    },
-    "StatementId": {
-      "$ref": "#/definitions/StatementId"
-    }
-  },
-  "required": [
-    "Arn",
-    "StatementId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::EntityResolution::PolicyStatement"
+  }
 }

@@ -1,139 +1,87 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/DashboardArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ProjectId"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "To add or update tag, provide both key and value. To delete tag, provide only tag key to be deleted",
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::IoTSiteWise::Dashboard",
+  "description" : "Resource schema for AWS::IoTSiteWise::Dashboard",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotsitewise.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "To add or update tag, provide both key and value. To delete tag, provide only tag key to be deleted",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Resource schema for AWS::IoTSiteWise::Dashboard",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotsitewise:CreateDashboard",
-        "iotsitewise:DescribeDashboard",
-        "iotsitewise:ListTagsForResource",
-        "iotsitewise:TagResource",
-        "iotsitewise:DescribeAsset",
-        "iotsitewise:DescribeAssetModel",
-        "iotsitewise:ListAssetModelProperties",
-        "iotsitewise:ListAssetModelCompositeModels"
-      ]
+  "properties" : {
+    "ProjectId" : {
+      "description" : "The ID of the project in which to create the dashboard.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iotsitewise:DescribeDashboard",
-        "iotsitewise:DeleteDashboard"
-      ]
+    "DashboardId" : {
+      "description" : "The ID of the dashboard.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iotsitewise:ListDashboards",
-        "iotsitewise:ListPortals",
-        "iotsitewise:ListProjects",
-        "iotsitewise:ListTagsForResource"
-      ]
+    "DashboardName" : {
+      "description" : "A friendly name for the dashboard.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "iotsitewise:DescribeDashboard",
-        "iotsitewise:ListTagsForResource"
-      ]
+    "DashboardDescription" : {
+      "description" : "A description for the dashboard.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iotsitewise:DescribeDashboard",
-        "iotsitewise:UpdateDashboard",
-        "iotsitewise:TagResource",
-        "iotsitewise:UntagResource",
-        "iotsitewise:ListTagsForResource",
-        "iotsitewise:DescribeAsset",
-        "iotsitewise:DescribeAssetModel",
-        "iotsitewise:ListAssetModelProperties",
-        "iotsitewise:ListAssetModelCompositeModels"
-      ]
+    "DashboardDefinition" : {
+      "description" : "The dashboard definition specified in a JSON literal.",
+      "type" : "string"
+    },
+    "DashboardArn" : {
+      "description" : "The ARN of the dashboard.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the dashboard.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/DashboardId"
-  ],
-  "properties": {
-    "DashboardArn": {
-      "description": "The ARN of the dashboard.",
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotsitewise:TagResource", "iotsitewise:UntagResource", "iotsitewise:ListTagsForResource" ]
+  },
+  "required" : [ "DashboardDefinition", "DashboardDescription", "DashboardName" ],
+  "readOnlyProperties" : [ "/properties/DashboardArn", "/properties/DashboardId" ],
+  "createOnlyProperties" : [ "/properties/ProjectId" ],
+  "primaryIdentifier" : [ "/properties/DashboardId" ],
+  "additionalIdentifiers" : [ [ "/properties/DashboardArn" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotsitewise:CreateDashboard", "iotsitewise:DescribeDashboard", "iotsitewise:ListTagsForResource", "iotsitewise:TagResource", "iotsitewise:DescribeAsset", "iotsitewise:DescribeAssetModel", "iotsitewise:ListAssetModelProperties", "iotsitewise:ListAssetModelCompositeModels" ]
     },
-    "DashboardDefinition": {
-      "description": "The dashboard definition specified in a JSON literal.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iotsitewise:DescribeDashboard", "iotsitewise:ListTagsForResource" ]
     },
-    "DashboardDescription": {
-      "description": "A description for the dashboard.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iotsitewise:DescribeDashboard", "iotsitewise:UpdateDashboard", "iotsitewise:TagResource", "iotsitewise:UntagResource", "iotsitewise:ListTagsForResource", "iotsitewise:DescribeAsset", "iotsitewise:DescribeAssetModel", "iotsitewise:ListAssetModelProperties", "iotsitewise:ListAssetModelCompositeModels" ]
     },
-    "DashboardId": {
-      "description": "The ID of the dashboard.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotsitewise:DescribeDashboard", "iotsitewise:DeleteDashboard" ]
     },
-    "DashboardName": {
-      "description": "A friendly name for the dashboard.",
-      "type": "string"
-    },
-    "ProjectId": {
-      "description": "The ID of the project in which to create the dashboard.",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the dashboard.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "list" : {
+      "permissions" : [ "iotsitewise:ListDashboards", "iotsitewise:ListPortals", "iotsitewise:ListProjects", "iotsitewise:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/DashboardArn",
-    "/properties/DashboardId"
-  ],
-  "required": [
-    "DashboardDefinition",
-    "DashboardDescription",
-    "DashboardName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iotsitewise.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotsitewise:TagResource",
-      "iotsitewise:UntagResource",
-      "iotsitewise:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTSiteWise::Dashboard"
+  }
 }

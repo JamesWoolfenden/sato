@@ -1,184 +1,134 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "EventBridgeRuleTemplateEventType": {
-      "description": "The type of event to match with the rule.",
-      "enum": [
-        "MEDIALIVE_MULTIPLEX_ALERT",
-        "MEDIALIVE_MULTIPLEX_STATE_CHANGE",
-        "MEDIALIVE_CHANNEL_ALERT",
-        "MEDIALIVE_CHANNEL_INPUT_CHANGE",
-        "MEDIALIVE_CHANNEL_STATE_CHANGE",
-        "MEDIAPACKAGE_INPUT_NOTIFICATION",
-        "MEDIAPACKAGE_KEY_PROVIDER_NOTIFICATION",
-        "MEDIAPACKAGE_HARVEST_JOB_NOTIFICATION",
-        "SIGNAL_MAP_ACTIVE_ALARM",
-        "MEDIACONNECT_ALERT",
-        "MEDIACONNECT_SOURCE_HEALTH",
-        "MEDIACONNECT_OUTPUT_HEALTH",
-        "MEDIACONNECT_FLOW_STATUS_CHANGE"
-      ],
-      "type": "string"
+  "typeName" : "AWS::MediaLive::EventBridgeRuleTemplate",
+  "description" : "Definition of AWS::MediaLive::EventBridgeRuleTemplate Resource Type",
+  "definitions" : {
+    "EventBridgeRuleTemplateEventType" : {
+      "type" : "string",
+      "description" : "The type of event to match with the rule.",
+      "enum" : [ "MEDIALIVE_MULTIPLEX_ALERT", "MEDIALIVE_MULTIPLEX_STATE_CHANGE", "MEDIALIVE_CHANNEL_ALERT", "MEDIALIVE_CHANNEL_INPUT_CHANGE", "MEDIALIVE_CHANNEL_STATE_CHANGE", "MEDIAPACKAGE_INPUT_NOTIFICATION", "MEDIAPACKAGE_KEY_PROVIDER_NOTIFICATION", "MEDIAPACKAGE_HARVEST_JOB_NOTIFICATION", "SIGNAL_MAP_ACTIVE_ALARM", "MEDIACONNECT_ALERT", "MEDIACONNECT_SOURCE_HEALTH", "MEDIACONNECT_OUTPUT_HEALTH", "MEDIACONNECT_FLOW_STATUS_CHANGE" ]
     },
-    "EventBridgeRuleTemplateTarget": {
-      "additionalProperties": false,
-      "description": "The target to which to send matching events.",
-      "properties": {
-        "Arn": {
-          "description": "Target ARNs must be either an SNS topic or CloudWatch log group.",
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^arn.+$",
-          "type": "string"
+    "EventBridgeRuleTemplateTarget" : {
+      "type" : "object",
+      "description" : "The target to which to send matching events.",
+      "properties" : {
+        "Arn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^arn.+$",
+          "description" : "Target ARNs must be either an SNS topic or CloudWatch log group."
         }
       },
-      "required": [
-        "Arn"
-      ],
-      "type": "object"
+      "required" : [ "Arn" ],
+      "additionalProperties" : false
     },
-    "TagMap": {
-      "additionalProperties": false,
-      "description": "Represents the tags associated with a resource.",
-      "patternProperties": {
-        ".+": {
-          "description": "Placeholder documentation for __string",
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "description" : "Represents the tags associated with a resource.",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "description" : "Placeholder documentation for __string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::MediaLive::EventBridgeRuleTemplate Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "medialive:CreateEventBridgeRuleTemplate",
-        "medialive:GetEventBridgeRuleTemplate",
-        "medialive:CreateTags"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:.+:medialive:.+:eventbridge-rule-template:.+$",
+      "description" : "An eventbridge rule template's ARN (Amazon Resource Name)"
     },
-    "delete": {
-      "permissions": [
-        "medialive:DeleteEventBridgeRuleTemplate"
-      ]
+    "CreatedAt" : {
+      "type" : "string",
+      "description" : "Placeholder documentation for __timestampIso8601",
+      "format" : "date-time"
     },
-    "list": {
-      "permissions": [
-        "medialive:ListEventBridgeRuleTemplates"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 0,
+      "description" : "A resource's optional description."
     },
-    "read": {
-      "permissions": [
-        "medialive:GetEventBridgeRuleTemplate"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "medialive:UpdateEventBridgeRuleTemplate",
-        "medialive:GetEventBridgeRuleTemplate",
-        "medialive:CreateTags",
-        "medialive:DeleteTags"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Identifier"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "An eventbridge rule template's ARN (Amazon Resource Name)",
-      "pattern": "^arn:.+:medialive:.+:eventbridge-rule-template:.+$",
-      "type": "string"
-    },
-    "CreatedAt": {
-      "description": "Placeholder documentation for __timestampIso8601",
-      "format": "date-time",
-      "type": "string"
-    },
-    "Description": {
-      "description": "A resource's optional description.",
-      "maxLength": 1024,
-      "minLength": 0,
-      "type": "string"
-    },
-    "EventTargets": {
-      "description": "Placeholder documentation for __listOfEventBridgeRuleTemplateTarget",
-      "items": {
-        "$ref": "#/definitions/EventBridgeRuleTemplateTarget"
+    "EventTargets" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/EventBridgeRuleTemplateTarget"
       },
-      "type": "array"
+      "description" : "Placeholder documentation for __listOfEventBridgeRuleTemplateTarget"
     },
-    "EventType": {
-      "$ref": "#/definitions/EventBridgeRuleTemplateEventType"
+    "EventType" : {
+      "$ref" : "#/definitions/EventBridgeRuleTemplateEventType"
     },
-    "GroupId": {
-      "description": "An eventbridge rule template group's id. AWS provided template groups have ids that start with `aws-`",
-      "maxLength": 11,
-      "minLength": 7,
-      "pattern": "^(aws-)?[0-9]{7}$",
-      "type": "string"
+    "GroupId" : {
+      "type" : "string",
+      "maxLength" : 11,
+      "minLength" : 7,
+      "pattern" : "^(aws-)?[0-9]{7}$",
+      "description" : "An eventbridge rule template group's id. AWS provided template groups have ids that start with `aws-`"
     },
-    "GroupIdentifier": {
-      "description": "An eventbridge rule template group's identifier. Can be either be its id or current name.",
-      "pattern": "^[^\\s]+$",
-      "type": "string"
+    "GroupIdentifier" : {
+      "type" : "string",
+      "pattern" : "^[^\\s]+$",
+      "description" : "An eventbridge rule template group's identifier. Can be either be its id or current name."
     },
-    "Id": {
-      "description": "An eventbridge rule template's id. AWS provided templates have ids that start with `aws-`",
-      "maxLength": 11,
-      "minLength": 7,
-      "pattern": "^(aws-)?[0-9]{7}$",
-      "type": "string"
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 11,
+      "minLength" : 7,
+      "pattern" : "^(aws-)?[0-9]{7}$",
+      "description" : "An eventbridge rule template's id. AWS provided templates have ids that start with `aws-`"
     },
-    "Identifier": {
-      "description": "Placeholder documentation for __string",
-      "type": "string"
+    "Identifier" : {
+      "type" : "string",
+      "description" : "Placeholder documentation for __string"
     },
-    "ModifiedAt": {
-      "description": "Placeholder documentation for __timestampIso8601",
-      "format": "date-time",
-      "type": "string"
+    "ModifiedAt" : {
+      "type" : "string",
+      "description" : "Placeholder documentation for __timestampIso8601",
+      "format" : "date-time"
     },
-    "Name": {
-      "description": "A resource's name. Names must be unique within the scope of a resource type in a specific region.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[^\\s]+$",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^[^\\s]+$",
+      "description" : "A resource's name. Names must be unique within the scope of a resource type in a specific region."
     },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedAt",
-    "/properties/GroupId",
-    "/properties/Id",
-    "/properties/Identifier",
-    "/properties/ModifiedAt"
-  ],
-  "required": [
-    "EventType",
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "medialive:CreateTags",
-      "medialive:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "medialive:CreateTags", "medialive:DeleteTags" ]
   },
-  "typeName": "AWS::MediaLive::EventBridgeRuleTemplate",
-  "writeOnlyProperties": [
-    "/properties/GroupIdentifier"
-  ]
+  "required" : [ "EventType", "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedAt", "/properties/GroupId", "/properties/Id", "/properties/Identifier", "/properties/ModifiedAt" ],
+  "writeOnlyProperties" : [ "/properties/GroupIdentifier" ],
+  "createOnlyProperties" : [ "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/Identifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "medialive:CreateEventBridgeRuleTemplate", "medialive:GetEventBridgeRuleTemplate", "medialive:CreateTags" ]
+    },
+    "read" : {
+      "permissions" : [ "medialive:GetEventBridgeRuleTemplate" ]
+    },
+    "update" : {
+      "permissions" : [ "medialive:UpdateEventBridgeRuleTemplate", "medialive:GetEventBridgeRuleTemplate", "medialive:CreateTags", "medialive:DeleteTags" ]
+    },
+    "delete" : {
+      "permissions" : [ "medialive:DeleteEventBridgeRuleTemplate" ]
+    },
+    "list" : {
+      "permissions" : [ "medialive:ListEventBridgeRuleTemplates" ]
+    }
+  },
+  "additionalProperties" : false
 }

@@ -1,192 +1,146 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/NetworkInsightsPathArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SourceIp",
-    "/properties/DestinationIp",
-    "/properties/Source",
-    "/properties/Destination",
-    "/properties/Protocol",
-    "/properties/DestinationPort",
-    "/properties/FilterAtSource",
-    "/properties/FilterAtDestination"
-  ],
-  "definitions": {
-    "FilterPortRange": {
-      "additionalProperties": false,
-      "properties": {
-        "FromPort": {
-          "type": "integer"
+  "typeName" : "AWS::EC2::NetworkInsightsPath",
+  "description" : "Resource schema for AWS::EC2::NetworkInsightsPath",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
+  "definitions" : {
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "ToPort": {
-          "type": "integer"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "Key" ]
     },
-    "IpAddress": {
-      "type": "string"
+    "IpAddress" : {
+      "type" : "string"
     },
-    "PathFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationAddress": {
-          "$ref": "#/definitions/IpAddress"
+    "Protocol" : {
+      "type" : "string",
+      "enum" : [ "tcp", "udp" ]
+    },
+    "Port" : {
+      "type" : "integer"
+    },
+    "FilterPortRange" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FromPort" : {
+          "type" : "integer"
         },
-        "DestinationPortRange": {
-          "$ref": "#/definitions/FilterPortRange"
-        },
-        "SourceAddress": {
-          "$ref": "#/definitions/IpAddress"
-        },
-        "SourcePortRange": {
-          "$ref": "#/definitions/FilterPortRange"
+        "ToPort" : {
+          "type" : "integer"
         }
-      },
-      "type": "object"
+      }
     },
-    "Port": {
-      "type": "integer"
-    },
-    "Protocol": {
-      "enum": [
-        "tcp",
-        "udp"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "PathFilter" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SourceAddress" : {
+          "$ref" : "#/definitions/IpAddress"
         },
-        "Value": {
-          "type": "string"
+        "SourcePortRange" : {
+          "$ref" : "#/definitions/FilterPortRange"
+        },
+        "DestinationAddress" : {
+          "$ref" : "#/definitions/IpAddress"
+        },
+        "DestinationPortRange" : {
+          "$ref" : "#/definitions/FilterPortRange"
         }
-      },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+      }
     }
   },
-  "description": "Resource schema for AWS::EC2::NetworkInsightsPath",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateNetworkInsightsPath",
-        "ec2:CreateTags"
-      ]
+  "properties" : {
+    "NetworkInsightsPathId" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteNetworkInsightsPath",
-        "ec2:DeleteTags"
-      ]
+    "NetworkInsightsPathArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeNetworkInsightsPaths"
-      ]
+    "CreatedDate" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribeNetworkInsightsPaths"
-      ]
+    "SourceIp" : {
+      "$ref" : "#/definitions/IpAddress"
     },
-    "update": {
-      "permissions": [
-        "ec2:DescribeNetworkInsightsPaths",
-        "ec2:CreateTags",
-        "ec2:DeleteTags"
-      ]
+    "FilterAtSource" : {
+      "$ref" : "#/definitions/PathFilter"
+    },
+    "FilterAtDestination" : {
+      "$ref" : "#/definitions/PathFilter"
+    },
+    "DestinationIp" : {
+      "$ref" : "#/definitions/IpAddress"
+    },
+    "Source" : {
+      "type" : "string"
+    },
+    "Destination" : {
+      "type" : "string"
+    },
+    "SourceArn" : {
+      "type" : "string"
+    },
+    "DestinationArn" : {
+      "type" : "string"
+    },
+    "Protocol" : {
+      "$ref" : "#/definitions/Protocol"
+    },
+    "DestinationPort" : {
+      "$ref" : "#/definitions/Port"
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/NetworkInsightsPathId"
-  ],
-  "properties": {
-    "CreatedDate": {
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ]
+  },
+  "required" : [ "Protocol", "Source" ],
+  "readOnlyProperties" : [ "/properties/NetworkInsightsPathId", "/properties/NetworkInsightsPathArn", "/properties/CreatedDate", "/properties/SourceArn", "/properties/DestinationArn" ],
+  "primaryIdentifier" : [ "/properties/NetworkInsightsPathId" ],
+  "createOnlyProperties" : [ "/properties/SourceIp", "/properties/DestinationIp", "/properties/Source", "/properties/Destination", "/properties/Protocol", "/properties/DestinationPort", "/properties/FilterAtSource", "/properties/FilterAtDestination" ],
+  "additionalIdentifiers" : [ [ "/properties/NetworkInsightsPathArn" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateNetworkInsightsPath", "ec2:CreateTags" ]
     },
-    "Destination": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ec2:DeleteNetworkInsightsPath", "ec2:DeleteTags" ]
     },
-    "DestinationArn": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ec2:DescribeNetworkInsightsPaths" ]
     },
-    "DestinationIp": {
-      "$ref": "#/definitions/IpAddress"
+    "list" : {
+      "permissions" : [ "ec2:DescribeNetworkInsightsPaths" ]
     },
-    "DestinationPort": {
-      "$ref": "#/definitions/Port"
-    },
-    "FilterAtDestination": {
-      "$ref": "#/definitions/PathFilter"
-    },
-    "FilterAtSource": {
-      "$ref": "#/definitions/PathFilter"
-    },
-    "NetworkInsightsPathArn": {
-      "type": "string"
-    },
-    "NetworkInsightsPathId": {
-      "type": "string"
-    },
-    "Protocol": {
-      "$ref": "#/definitions/Protocol"
-    },
-    "Source": {
-      "type": "string"
-    },
-    "SourceArn": {
-      "type": "string"
-    },
-    "SourceIp": {
-      "$ref": "#/definitions/IpAddress"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "update" : {
+      "permissions" : [ "ec2:DescribeNetworkInsightsPaths", "ec2:CreateTags", "ec2:DeleteTags" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/NetworkInsightsPathId",
-    "/properties/NetworkInsightsPathArn",
-    "/properties/CreatedDate",
-    "/properties/SourceArn",
-    "/properties/DestinationArn"
-  ],
-  "required": [
-    "Protocol",
-    "Source"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::NetworkInsightsPath"
+  }
 }

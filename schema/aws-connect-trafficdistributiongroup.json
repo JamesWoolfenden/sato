@@ -1,144 +1,104 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Description",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::Connect::TrafficDistributionGroup",
+  "description" : "Resource Type definition for AWS::Connect::TrafficDistributionGroup",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Connect::TrafficDistributionGroup",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "connect:CreateTrafficDistributionGroup",
-        "connect:DescribeTrafficDistributionGroup",
-        "connect:TagResource"
-      ]
+  "properties" : {
+    "InstanceArn" : {
+      "description" : "The identifier of the Amazon Connect instance that has been replicated.",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "minLength" : 1,
+      "maxLength" : 250
     },
-    "delete": {
-      "permissions": [
-        "connect:DeleteTrafficDistributionGroup",
-        "connect:DescribeTrafficDistributionGroup",
-        "connect:UntagResource"
-      ]
+    "TrafficDistributionGroupArn" : {
+      "description" : "The identifier of the traffic distribution group.",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:traffic-distribution-group/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
     },
-    "list": {
-      "permissions": [
-        "connect:ListTrafficDistributionGroups"
-      ]
+    "Description" : {
+      "description" : "A description for the traffic distribution group.",
+      "type" : "string",
+      "pattern" : "(^[\\S].*[\\S]$)|(^[\\S]$)",
+      "minLength" : 1,
+      "maxLength" : 250
     },
-    "read": {
-      "permissions": [
-        "connect:DescribeTrafficDistributionGroup"
-      ]
+    "Name" : {
+      "description" : "The name for the traffic distribution group.",
+      "type" : "string",
+      "pattern" : "(^[\\S].*[\\S]$)|(^[\\S]$)",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "update": {
-      "permissions": [
-        "connect:TagResource",
-        "connect:UntagResource"
-      ]
+    "Status" : {
+      "description" : "The status of the traffic distribution group.",
+      "type" : "string",
+      "enum" : [ "CREATION_IN_PROGRESS", "ACTIVE", "CREATION_FAILED", "PENDING_DELETION", "DELETION_FAILED", "UPDATE_IN_PROGRESS" ]
+    },
+    "Tags" : {
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "description" : "One or more tags.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "IsDefault" : {
+      "description" : "If this is the default traffic distribution group.",
+      "type" : "boolean"
     }
   },
-  "primaryIdentifier": [
-    "/properties/TrafficDistributionGroupArn"
-  ],
-  "properties": {
-    "Description": {
-      "description": "A description for the traffic distribution group.",
-      "maxLength": 250,
-      "minLength": 1,
-      "pattern": "(^[\\S].*[\\S]$)|(^[\\S]$)",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "connect:TagResource", "connect:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "InstanceArn", "Name" ],
+  "readOnlyProperties" : [ "/properties/TrafficDistributionGroupArn", "/properties/Status", "/properties/IsDefault" ],
+  "createOnlyProperties" : [ "/properties/Description", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/TrafficDistributionGroupArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "connect:CreateTrafficDistributionGroup", "connect:DescribeTrafficDistributionGroup", "connect:TagResource" ]
     },
-    "InstanceArn": {
-      "description": "The identifier of the Amazon Connect instance that has been replicated.",
-      "maxLength": 250,
-      "minLength": 1,
-      "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:instance/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "connect:DescribeTrafficDistributionGroup" ]
     },
-    "IsDefault": {
-      "description": "If this is the default traffic distribution group.",
-      "type": "boolean"
+    "update" : {
+      "permissions" : [ "connect:TagResource", "connect:UntagResource" ]
     },
-    "Name": {
-      "description": "The name for the traffic distribution group.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "(^[\\S].*[\\S]$)|(^[\\S]$)",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "connect:DeleteTrafficDistributionGroup", "connect:DescribeTrafficDistributionGroup", "connect:UntagResource" ]
     },
-    "Status": {
-      "description": "The status of the traffic distribution group.",
-      "enum": [
-        "CREATION_IN_PROGRESS",
-        "ACTIVE",
-        "CREATION_FAILED",
-        "PENDING_DELETION",
-        "DELETION_FAILED",
-        "UPDATE_IN_PROGRESS"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "One or more tags.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "TrafficDistributionGroupArn": {
-      "description": "The identifier of the traffic distribution group.",
-      "pattern": "^arn:(aws|aws-us-gov):connect:[a-z]{2}-[a-z]+-[0-9]{1}:[0-9]{1,20}:traffic-distribution-group/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "connect:ListTrafficDistributionGroups" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/TrafficDistributionGroupArn",
-    "/properties/Status",
-    "/properties/IsDefault"
-  ],
-  "required": [
-    "InstanceArn",
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "connect:TagResource",
-      "connect:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Connect::TrafficDistributionGroup"
+  }
 }

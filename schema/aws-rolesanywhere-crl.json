@@ -1,111 +1,79 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::RolesAnywhere::CRL",
+  "description" : "Definition of AWS::RolesAnywhere::CRL Resource Type",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::RolesAnywhere::CRL Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "rolesanywhere:ImportCrl",
-        "rolesanywhere:TagResource"
-      ]
+  "properties" : {
+    "CrlData" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "rolesanywhere:DeleteCrl"
-      ]
+    "CrlId" : {
+      "type" : "string",
+      "pattern" : "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}"
     },
-    "list": {
-      "permissions": [
-        "rolesanywhere:ListCrls",
-        "rolesanywhere:ListTagsForResource"
-      ]
+    "Enabled" : {
+      "type" : "boolean"
     },
-    "read": {
-      "permissions": [
-        "rolesanywhere:GetCrl",
-        "rolesanywhere:ListTagsForResource"
-      ]
+    "Name" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "rolesanywhere:EnableCrl",
-        "rolesanywhere:DisableCrl",
-        "rolesanywhere:UpdateCrl",
-        "rolesanywhere:TagResource",
-        "rolesanywhere:UntagResource",
-        "rolesanywhere:ListTagsForResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/CrlId"
-  ],
-  "properties": {
-    "CrlData": {
-      "type": "string"
+    "TrustAnchorArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(-[^:]+)?:rolesanywhere(:.*){2}(:trust-anchor.*)$"
     },
-    "CrlId": {
-      "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
-      "type": "string"
-    },
-    "Enabled": {
-      "type": "boolean"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
-    },
-    "TrustAnchorArn": {
-      "pattern": "^arn:aws(-[^:]+)?:rolesanywhere(:.*){2}(:trust-anchor.*)$",
-      "type": "string"
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/CrlId"
-  ],
-  "required": [
-    "Name",
-    "CrlData"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "rolesanywhere:UntagResource",
-      "rolesanywhere:TagResource",
-      "rolesanywhere:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "rolesanywhere:UntagResource", "rolesanywhere:TagResource", "rolesanywhere:ListTagsForResource" ]
   },
-  "typeName": "AWS::RolesAnywhere::CRL"
+  "required" : [ "Name", "CrlData" ],
+  "readOnlyProperties" : [ "/properties/CrlId" ],
+  "primaryIdentifier" : [ "/properties/CrlId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "rolesanywhere:ImportCrl", "rolesanywhere:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "rolesanywhere:GetCrl", "rolesanywhere:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "rolesanywhere:EnableCrl", "rolesanywhere:DisableCrl", "rolesanywhere:UpdateCrl", "rolesanywhere:TagResource", "rolesanywhere:UntagResource", "rolesanywhere:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "rolesanywhere:DeleteCrl" ]
+    },
+    "list" : {
+      "permissions" : [ "rolesanywhere:ListCrls", "rolesanywhere:ListTagsForResource" ]
+    }
+  },
+  "additionalProperties" : false
 }

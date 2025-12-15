@@ -1,753 +1,562 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Configuration/Standard/NetworkInterfaceArn",
-    "/properties/AvailabilityZone",
-    "/properties/RegionName"
-  ],
-  "definitions": {
-    "AutomaticEncryptionKeyConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.",
-      "type": "object"
+  "typeName" : "AWS::MediaConnect::RouterOutput",
+  "description" : "Represents a router input in AWS Elemental MediaConnect that can be used to egress content transmitted from router inputs",
+  "definitions" : {
+    "AutomaticEncryptionKeyConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.",
+      "additionalProperties" : false
     },
-    "Day": {
-      "enum": [
-        "MONDAY",
-        "TUESDAY",
-        "WEDNESDAY",
-        "THURSDAY",
-        "FRIDAY",
-        "SATURDAY",
-        "SUNDAY"
-      ],
-      "type": "string"
+    "Day" : {
+      "type" : "string",
+      "enum" : [ "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" ]
     },
-    "DefaultMaintenanceConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration settings for default maintenance scheduling.",
-      "type": "object"
+    "DefaultMaintenanceConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration settings for default maintenance scheduling.",
+      "additionalProperties" : false
     },
-    "FlowTransitEncryption": {
-      "additionalProperties": false,
-      "description": "The configuration that defines how content is encrypted during transit between the MediaConnect router and a MediaConnect flow.",
-      "properties": {
-        "EncryptionKeyConfiguration": {
-          "$ref": "#/definitions/FlowTransitEncryptionKeyConfiguration"
+    "FlowTransitEncryption" : {
+      "type" : "object",
+      "description" : "The configuration that defines how content is encrypted during transit between the MediaConnect router and a MediaConnect flow.",
+      "properties" : {
+        "EncryptionKeyType" : {
+          "$ref" : "#/definitions/FlowTransitEncryptionKeyType"
         },
-        "EncryptionKeyType": {
-          "$ref": "#/definitions/FlowTransitEncryptionKeyType"
+        "EncryptionKeyConfiguration" : {
+          "$ref" : "#/definitions/FlowTransitEncryptionKeyConfiguration"
         }
       },
-      "required": [
-        "EncryptionKeyConfiguration"
-      ],
-      "type": "object"
+      "required" : [ "EncryptionKeyConfiguration" ],
+      "additionalProperties" : false
     },
-    "FlowTransitEncryptionKeyConfiguration": {
-      "description": "Configuration settings for flow transit encryption keys.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "SecretsManager": {
-              "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
-            }
-          },
-          "required": [
-            "SecretsManager"
-          ],
-          "title": "SecretsManager",
-          "type": "object"
+    "FlowTransitEncryptionKeyConfiguration" : {
+      "description" : "Configuration settings for flow transit encryption keys.",
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "SecretsManager",
+        "properties" : {
+          "SecretsManager" : {
+            "$ref" : "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Automatic": {
-              "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
-            }
-          },
-          "required": [
-            "Automatic"
-          ],
-          "title": "Automatic",
-          "type": "object"
-        }
-      ]
-    },
-    "FlowTransitEncryptionKeyType": {
-      "enum": [
-        "SECRETS_MANAGER",
-        "AUTOMATIC"
-      ],
-      "type": "string"
-    },
-    "ForwardErrorCorrectionState": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "MaintenanceConfiguration": {
-      "description": "The configuration settings for maintenance operations, including preferred maintenance windows and schedules.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "PreferredDayTime": {
-              "$ref": "#/definitions/PreferredDayTimeMaintenanceConfiguration"
-            }
-          },
-          "required": [
-            "PreferredDayTime"
-          ],
-          "title": "PreferredDayTime",
-          "type": "object"
+        "required" : [ "SecretsManager" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Automatic",
+        "properties" : {
+          "Automatic" : {
+            "$ref" : "#/definitions/AutomaticEncryptionKeyConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Default": {
-              "$ref": "#/definitions/DefaultMaintenanceConfiguration"
-            }
-          },
-          "required": [
-            "Default"
-          ],
-          "title": "Default",
-          "type": "object"
-        }
-      ]
+        "required" : [ "Automatic" ],
+        "additionalProperties" : false
+      } ]
     },
-    "MaintenanceType": {
-      "enum": [
-        "PREFERRED_DAY_TIME",
-        "DEFAULT"
-      ],
-      "type": "string"
+    "FlowTransitEncryptionKeyType" : {
+      "type" : "string",
+      "enum" : [ "SECRETS_MANAGER", "AUTOMATIC" ]
     },
-    "MediaConnectFlowRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration settings for connecting a router output to a MediaConnect flow source.",
-      "properties": {
-        "DestinationTransitEncryption": {
-          "$ref": "#/definitions/FlowTransitEncryption"
+    "ForwardErrorCorrectionState" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "MaintenanceConfiguration" : {
+      "description" : "The configuration settings for maintenance operations, including preferred maintenance windows and schedules.",
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "PreferredDayTime",
+        "properties" : {
+          "PreferredDayTime" : {
+            "$ref" : "#/definitions/PreferredDayTimeMaintenanceConfiguration"
+          }
         },
-        "FlowArn": {
-          "description": "The ARN of the flow to connect to this router output.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:flow:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
-          "type": "string"
+        "required" : [ "PreferredDayTime" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Default",
+        "properties" : {
+          "Default" : {
+            "$ref" : "#/definitions/DefaultMaintenanceConfiguration"
+          }
         },
-        "FlowSourceArn": {
-          "description": "The ARN of the flow source to connect to this router output.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:source:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
-          "type": "string"
+        "required" : [ "Default" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "MaintenanceType" : {
+      "type" : "string",
+      "enum" : [ "PREFERRED_DAY_TIME", "DEFAULT" ]
+    },
+    "MediaConnectFlowRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration settings for connecting a router output to a MediaConnect flow source.",
+      "properties" : {
+        "FlowArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:flow:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+          "description" : "The ARN of the flow to connect to this router output."
+        },
+        "FlowSourceArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:source:[a-zA-Z0-9-]+:[a-zA-Z0-9_-]+$",
+          "description" : "The ARN of the flow source to connect to this router output."
+        },
+        "DestinationTransitEncryption" : {
+          "$ref" : "#/definitions/FlowTransitEncryption"
         }
       },
-      "required": [
-        "DestinationTransitEncryption"
-      ],
-      "type": "object"
+      "required" : [ "DestinationTransitEncryption" ],
+      "additionalProperties" : false
     },
-    "MediaLiveInputPipelineId": {
-      "enum": [
-        "PIPELINE_0",
-        "PIPELINE_1"
-      ],
-      "type": "string"
+    "MediaLiveInputPipelineId" : {
+      "type" : "string",
+      "enum" : [ "PIPELINE_0", "PIPELINE_1" ]
     },
-    "MediaLiveInputRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration settings for connecting a router output to a MediaLive input.",
-      "properties": {
-        "DestinationTransitEncryption": {
-          "$ref": "#/definitions/MediaLiveTransitEncryption"
+    "MediaLiveInputRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration settings for connecting a router output to a MediaLive input.",
+      "properties" : {
+        "MediaLiveInputArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):medialive:[a-z0-9-]+:[0-9]{12}:input:[a-zA-Z0-9]+$",
+          "description" : "The ARN of the MediaLive input to connect to this router output."
         },
-        "MediaLiveInputArn": {
-          "description": "The ARN of the MediaLive input to connect to this router output.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):medialive:[a-z0-9-]+:[0-9]{12}:input:[a-zA-Z0-9]+$",
-          "type": "string"
+        "MediaLivePipelineId" : {
+          "$ref" : "#/definitions/MediaLiveInputPipelineId"
         },
-        "MediaLivePipelineId": {
-          "$ref": "#/definitions/MediaLiveInputPipelineId"
+        "DestinationTransitEncryption" : {
+          "$ref" : "#/definitions/MediaLiveTransitEncryption"
         }
       },
-      "required": [
-        "DestinationTransitEncryption"
-      ],
-      "type": "object"
+      "required" : [ "DestinationTransitEncryption" ],
+      "additionalProperties" : false
     },
-    "MediaLiveTransitEncryption": {
-      "additionalProperties": false,
-      "description": "The encryption configuration that defines how content is encrypted during transit between MediaConnect Router and MediaLive. This configuration determines whether encryption keys are automatically managed by the service or manually managed through AWS Secrets Manager.",
-      "properties": {
-        "EncryptionKeyConfiguration": {
-          "$ref": "#/definitions/MediaLiveTransitEncryptionKeyConfiguration"
+    "MediaLiveTransitEncryption" : {
+      "type" : "object",
+      "description" : "The encryption configuration that defines how content is encrypted during transit between MediaConnect Router and MediaLive. This configuration determines whether encryption keys are automatically managed by the service or manually managed through AWS Secrets Manager.",
+      "properties" : {
+        "EncryptionKeyType" : {
+          "$ref" : "#/definitions/MediaLiveTransitEncryptionKeyType"
         },
-        "EncryptionKeyType": {
-          "$ref": "#/definitions/MediaLiveTransitEncryptionKeyType"
+        "EncryptionKeyConfiguration" : {
+          "$ref" : "#/definitions/MediaLiveTransitEncryptionKeyConfiguration"
         }
       },
-      "required": [
-        "EncryptionKeyConfiguration"
-      ],
-      "type": "object"
+      "required" : [ "EncryptionKeyConfiguration" ],
+      "additionalProperties" : false
     },
-    "MediaLiveTransitEncryptionKeyConfiguration": {
-      "description": "Configuration settings for the MediaLive transit encryption key.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "SecretsManager": {
-              "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
-            }
-          },
-          "required": [
-            "SecretsManager"
-          ],
-          "title": "SecretsManager",
-          "type": "object"
+    "MediaLiveTransitEncryptionKeyConfiguration" : {
+      "description" : "Configuration settings for the MediaLive transit encryption key.",
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "SecretsManager",
+        "properties" : {
+          "SecretsManager" : {
+            "$ref" : "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Automatic": {
-              "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
-            }
-          },
-          "required": [
-            "Automatic"
-          ],
-          "title": "Automatic",
-          "type": "object"
-        }
-      ]
-    },
-    "MediaLiveTransitEncryptionKeyType": {
-      "enum": [
-        "SECRETS_MANAGER",
-        "AUTOMATIC"
-      ],
-      "type": "string"
-    },
-    "PreferredDayTimeMaintenanceConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration for preferred day and time maintenance settings.",
-      "properties": {
-        "Day": {
-          "$ref": "#/definitions/Day"
+        "required" : [ "SecretsManager" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Automatic",
+        "properties" : {
+          "Automatic" : {
+            "$ref" : "#/definitions/AutomaticEncryptionKeyConfiguration"
+          }
         },
-        "Time": {
-          "description": "The preferred time for maintenance operations.",
-          "type": "string"
+        "required" : [ "Automatic" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "MediaLiveTransitEncryptionKeyType" : {
+      "type" : "string",
+      "enum" : [ "SECRETS_MANAGER", "AUTOMATIC" ]
+    },
+    "PreferredDayTimeMaintenanceConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for preferred day and time maintenance settings.",
+      "properties" : {
+        "Day" : {
+          "$ref" : "#/definitions/Day"
+        },
+        "Time" : {
+          "type" : "string",
+          "description" : "The preferred time for maintenance operations."
         }
       },
-      "required": [
-        "Day",
-        "Time"
-      ],
-      "type": "object"
+      "required" : [ "Day", "Time" ],
+      "additionalProperties" : false
     },
-    "RistRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for a router output using the RIST (Reliable Internet Stream Transport) protocol, including the destination address and port.",
-      "properties": {
-        "DestinationAddress": {
-          "description": "The destination IP address for the RIST protocol in the router output configuration.",
-          "type": "string"
+    "RistRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for a router output using the RIST (Reliable Internet Stream Transport) protocol, including the destination address and port.",
+      "properties" : {
+        "DestinationAddress" : {
+          "type" : "string",
+          "description" : "The destination IP address for the RIST protocol in the router output configuration."
         },
-        "DestinationPort": {
-          "description": "The destination port number for the RIST protocol in the router output configuration.",
-          "maximum": 65535,
-          "minimum": 0,
-          "type": "integer"
+        "DestinationPort" : {
+          "type" : "integer",
+          "maximum" : 65535,
+          "minimum" : 0,
+          "description" : "The destination port number for the RIST protocol in the router output configuration."
         }
       },
-      "required": [
-        "DestinationAddress",
-        "DestinationPort"
-      ],
-      "type": "object"
+      "required" : [ "DestinationAddress", "DestinationPort" ],
+      "additionalProperties" : false
     },
-    "RouterOutputConfiguration": {
-      "description": "The configuration settings for a router output.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Standard": {
-              "$ref": "#/definitions/StandardRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "Standard"
-          ],
-          "title": "Standard",
-          "type": "object"
+    "RouterOutputConfiguration" : {
+      "description" : "The configuration settings for a router output.",
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Standard",
+        "properties" : {
+          "Standard" : {
+            "$ref" : "#/definitions/StandardRouterOutputConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "MediaConnectFlow": {
-              "$ref": "#/definitions/MediaConnectFlowRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "MediaConnectFlow"
-          ],
-          "title": "MediaConnectFlow",
-          "type": "object"
+        "required" : [ "Standard" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "MediaConnectFlow",
+        "properties" : {
+          "MediaConnectFlow" : {
+            "$ref" : "#/definitions/MediaConnectFlowRouterOutputConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "MediaLiveInput": {
-              "$ref": "#/definitions/MediaLiveInputRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "MediaLiveInput"
-          ],
-          "title": "MediaLiveInput",
-          "type": "object"
-        }
-      ]
-    },
-    "RouterOutputProtocol": {
-      "enum": [
-        "RTP",
-        "RIST",
-        "SRT_CALLER",
-        "SRT_LISTENER"
-      ],
-      "type": "string"
-    },
-    "RouterOutputProtocolConfiguration": {
-      "description": "The protocol configuration settings for a router output.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Rtp": {
-              "$ref": "#/definitions/RtpRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "Rtp"
-          ],
-          "title": "Rtp",
-          "type": "object"
+        "required" : [ "MediaConnectFlow" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "MediaLiveInput",
+        "properties" : {
+          "MediaLiveInput" : {
+            "$ref" : "#/definitions/MediaLiveInputRouterOutputConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Rist": {
-              "$ref": "#/definitions/RistRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "Rist"
-          ],
-          "title": "Rist",
-          "type": "object"
+        "required" : [ "MediaLiveInput" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RouterOutputProtocol" : {
+      "type" : "string",
+      "enum" : [ "RTP", "RIST", "SRT_CALLER", "SRT_LISTENER" ]
+    },
+    "RouterOutputProtocolConfiguration" : {
+      "description" : "The protocol configuration settings for a router output.",
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Rtp",
+        "properties" : {
+          "Rtp" : {
+            "$ref" : "#/definitions/RtpRouterOutputConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "SrtListener": {
-              "$ref": "#/definitions/SrtListenerRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "SrtListener"
-          ],
-          "title": "SrtListener",
-          "type": "object"
+        "required" : [ "Rtp" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Rist",
+        "properties" : {
+          "Rist" : {
+            "$ref" : "#/definitions/RistRouterOutputConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "SrtCaller": {
-              "$ref": "#/definitions/SrtCallerRouterOutputConfiguration"
-            }
-          },
-          "required": [
-            "SrtCaller"
-          ],
-          "title": "SrtCaller",
-          "type": "object"
-        }
-      ]
-    },
-    "RouterOutputRoutedState": {
-      "enum": [
-        "ROUTED",
-        "ROUTING",
-        "UNROUTED"
-      ],
-      "type": "string"
-    },
-    "RouterOutputState": {
-      "enum": [
-        "CREATING",
-        "STANDBY",
-        "STARTING",
-        "ACTIVE",
-        "STOPPING",
-        "DELETING",
-        "UPDATING",
-        "ERROR",
-        "RECOVERING",
-        "MIGRATING"
-      ],
-      "type": "string"
-    },
-    "RouterOutputTier": {
-      "enum": [
-        "OUTPUT_100",
-        "OUTPUT_50",
-        "OUTPUT_20"
-      ],
-      "type": "string"
-    },
-    "RouterOutputType": {
-      "enum": [
-        "STANDARD",
-        "MEDIACONNECT_FLOW",
-        "MEDIALIVE_INPUT"
-      ],
-      "type": "string"
-    },
-    "RoutingScope": {
-      "enum": [
-        "REGIONAL",
-        "GLOBAL"
-      ],
-      "type": "string"
-    },
-    "RtpRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for a router output using the RTP (Real-Time Transport Protocol) protocol, including the destination address and port, and forward error correction state.",
-      "properties": {
-        "DestinationAddress": {
-          "description": "The destination IP address for the RTP protocol in the router output configuration.",
-          "type": "string"
+        "required" : [ "Rist" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "SrtListener",
+        "properties" : {
+          "SrtListener" : {
+            "$ref" : "#/definitions/SrtListenerRouterOutputConfiguration"
+          }
         },
-        "DestinationPort": {
-          "description": "The destination port number for the RTP protocol in the router output configuration.",
-          "maximum": 65531,
-          "minimum": 0,
-          "type": "integer"
+        "required" : [ "SrtListener" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "SrtCaller",
+        "properties" : {
+          "SrtCaller" : {
+            "$ref" : "#/definitions/SrtCallerRouterOutputConfiguration"
+          }
         },
-        "ForwardErrorCorrection": {
-          "$ref": "#/definitions/ForwardErrorCorrectionState"
+        "required" : [ "SrtCaller" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RouterOutputRoutedState" : {
+      "type" : "string",
+      "enum" : [ "ROUTED", "ROUTING", "UNROUTED" ]
+    },
+    "RouterOutputState" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "STANDBY", "STARTING", "ACTIVE", "STOPPING", "DELETING", "UPDATING", "ERROR", "RECOVERING", "MIGRATING" ]
+    },
+    "RouterOutputTier" : {
+      "type" : "string",
+      "enum" : [ "OUTPUT_100", "OUTPUT_50", "OUTPUT_20" ]
+    },
+    "RouterOutputType" : {
+      "type" : "string",
+      "enum" : [ "STANDARD", "MEDIACONNECT_FLOW", "MEDIALIVE_INPUT" ]
+    },
+    "RoutingScope" : {
+      "type" : "string",
+      "enum" : [ "REGIONAL", "GLOBAL" ]
+    },
+    "RtpRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for a router output using the RTP (Real-Time Transport Protocol) protocol, including the destination address and port, and forward error correction state.",
+      "properties" : {
+        "DestinationAddress" : {
+          "type" : "string",
+          "description" : "The destination IP address for the RTP protocol in the router output configuration."
+        },
+        "DestinationPort" : {
+          "type" : "integer",
+          "maximum" : 65531,
+          "minimum" : 0,
+          "description" : "The destination port number for the RTP protocol in the router output configuration."
+        },
+        "ForwardErrorCorrection" : {
+          "$ref" : "#/definitions/ForwardErrorCorrectionState"
         }
       },
-      "required": [
-        "DestinationAddress",
-        "DestinationPort"
-      ],
-      "type": "object"
+      "required" : [ "DestinationAddress", "DestinationPort" ],
+      "additionalProperties" : false
     },
-    "SecretsManagerEncryptionKeyConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for transit encryption using AWS Secrets Manager, including the secret ARN and role ARN.",
-      "properties": {
-        "RoleArn": {
-          "description": "The ARN of the IAM role assumed by MediaConnect to access the AWS Secrets Manager secret.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
-          "type": "string"
+    "SecretsManagerEncryptionKeyConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for transit encryption using AWS Secrets Manager, including the secret ARN and role ARN.",
+      "properties" : {
+        "SecretArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+          "description" : "The ARN of the AWS Secrets Manager secret used for transit encryption."
         },
-        "SecretArn": {
-          "description": "The ARN of the AWS Secrets Manager secret used for transit encryption.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+          "description" : "The ARN of the IAM role assumed by MediaConnect to access the AWS Secrets Manager secret."
         }
       },
-      "required": [
-        "RoleArn",
-        "SecretArn"
-      ],
-      "type": "object"
+      "required" : [ "RoleArn", "SecretArn" ],
+      "additionalProperties" : false
     },
-    "SrtCallerRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for a router output using the SRT (Secure Reliable Transport) protocol in caller mode, including the destination address and port, minimum latency, stream ID, and encryption key configuration.",
-      "properties": {
-        "DestinationAddress": {
-          "description": "The destination IP address for the SRT protocol in caller mode.",
-          "type": "string"
+    "SrtCallerRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for a router output using the SRT (Secure Reliable Transport) protocol in caller mode, including the destination address and port, minimum latency, stream ID, and encryption key configuration.",
+      "properties" : {
+        "DestinationAddress" : {
+          "type" : "string",
+          "description" : "The destination IP address for the SRT protocol in caller mode."
         },
-        "DestinationPort": {
-          "description": "The destination port number for the SRT protocol in caller mode.",
-          "maximum": 65535,
-          "minimum": 0,
-          "type": "integer"
+        "DestinationPort" : {
+          "type" : "integer",
+          "maximum" : 65535,
+          "minimum" : 0,
+          "description" : "The destination port number for the SRT protocol in caller mode."
         },
-        "EncryptionConfiguration": {
-          "$ref": "#/definitions/SrtEncryptionConfiguration"
+        "MinimumLatencyMilliseconds" : {
+          "type" : "integer",
+          "maximum" : 10000,
+          "minimum" : 10,
+          "description" : "The minimum latency in milliseconds for the SRT protocol in caller mode."
         },
-        "MinimumLatencyMilliseconds": {
-          "description": "The minimum latency in milliseconds for the SRT protocol in caller mode.",
-          "maximum": 10000,
-          "minimum": 10,
-          "type": "integer"
+        "StreamId" : {
+          "type" : "string",
+          "description" : "The stream ID for the SRT protocol in caller mode."
         },
-        "StreamId": {
-          "description": "The stream ID for the SRT protocol in caller mode.",
-          "type": "string"
+        "EncryptionConfiguration" : {
+          "$ref" : "#/definitions/SrtEncryptionConfiguration"
         }
       },
-      "required": [
-        "DestinationAddress",
-        "DestinationPort",
-        "MinimumLatencyMilliseconds"
-      ],
-      "type": "object"
+      "required" : [ "DestinationAddress", "DestinationPort", "MinimumLatencyMilliseconds" ],
+      "additionalProperties" : false
     },
-    "SrtEncryptionConfiguration": {
-      "additionalProperties": false,
-      "description": "Contains the configuration settings for encrypting SRT streams, including the encryption key details and encryption parameters.",
-      "properties": {
-        "EncryptionKey": {
-          "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+    "SrtEncryptionConfiguration" : {
+      "type" : "object",
+      "description" : "Contains the configuration settings for encrypting SRT streams, including the encryption key details and encryption parameters.",
+      "properties" : {
+        "EncryptionKey" : {
+          "$ref" : "#/definitions/SecretsManagerEncryptionKeyConfiguration"
         }
       },
-      "required": [
-        "EncryptionKey"
-      ],
-      "type": "object"
+      "required" : [ "EncryptionKey" ],
+      "additionalProperties" : false
     },
-    "SrtListenerRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for a router output using the SRT (Secure Reliable Transport) protocol in listener mode, including the port, minimum latency, and encryption key configuration.",
-      "properties": {
-        "EncryptionConfiguration": {
-          "$ref": "#/definitions/SrtEncryptionConfiguration"
+    "SrtListenerRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for a router output using the SRT (Secure Reliable Transport) protocol in listener mode, including the port, minimum latency, and encryption key configuration.",
+      "properties" : {
+        "Port" : {
+          "type" : "integer",
+          "maximum" : 30000,
+          "minimum" : 3000,
+          "description" : "The port number for the SRT protocol in listener mode."
         },
-        "MinimumLatencyMilliseconds": {
-          "description": "The minimum latency in milliseconds for the SRT protocol in listener mode.",
-          "maximum": 10000,
-          "minimum": 10,
-          "type": "integer"
+        "MinimumLatencyMilliseconds" : {
+          "type" : "integer",
+          "maximum" : 10000,
+          "minimum" : 10,
+          "description" : "The minimum latency in milliseconds for the SRT protocol in listener mode."
         },
-        "Port": {
-          "description": "The port number for the SRT protocol in listener mode.",
-          "maximum": 30000,
-          "minimum": 3000,
-          "type": "integer"
+        "EncryptionConfiguration" : {
+          "$ref" : "#/definitions/SrtEncryptionConfiguration"
         }
       },
-      "required": [
-        "MinimumLatencyMilliseconds",
-        "Port"
-      ],
-      "type": "object"
+      "required" : [ "MinimumLatencyMilliseconds", "Port" ],
+      "additionalProperties" : false
     },
-    "StandardRouterOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for a standard router output, including the protocol, protocol-specific configuration, network interface, and availability zone.",
-      "properties": {
-        "NetworkInterfaceArn": {
-          "description": "The Amazon Resource Name (ARN) of the network interface associated with the standard router output.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:routerNetworkInterface:[a-z0-9]{12}$",
-          "type": "string"
+    "StandardRouterOutputConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for a standard router output, including the protocol, protocol-specific configuration, network interface, and availability zone.",
+      "properties" : {
+        "NetworkInterfaceArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:routerNetworkInterface:[a-z0-9]{12}$",
+          "description" : "The Amazon Resource Name (ARN) of the network interface associated with the standard router output."
         },
-        "Protocol": {
-          "$ref": "#/definitions/RouterOutputProtocol"
+        "ProtocolConfiguration" : {
+          "$ref" : "#/definitions/RouterOutputProtocolConfiguration"
         },
-        "ProtocolConfiguration": {
-          "$ref": "#/definitions/RouterOutputProtocolConfiguration"
+        "Protocol" : {
+          "$ref" : "#/definitions/RouterOutputProtocol"
         }
       },
-      "required": [
-        "NetworkInterfaceArn",
-        "ProtocolConfiguration"
-      ],
-      "type": "object"
+      "required" : [ "NetworkInterfaceArn", "ProtocolConfiguration" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     }
   },
-  "description": "Represents a router input in AWS Elemental MediaConnect that can be used to egress content transmitted from router inputs",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mediaconnect:GetRouterOutput",
-        "mediaconnect:ListRouterOutputs",
-        "ec2:CreateNetworkInterface",
-        "iam:PassRole",
-        "mediaconnect:AssociateRouterNetworkInterface",
-        "mediaconnect:CreateRouterOutput",
-        "mediaconnect:TagResource",
-        "mediaconnect:UpdateFlowSource",
-        "medialive:UpdateInput"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:routerOutput:[a-z0-9]{12}$"
     },
-    "delete": {
-      "permissions": [
-        "mediaconnect:GetRouterOutput",
-        "mediaconnect:UpdateRouterOutput",
-        "mediaconnect:UpdateFlowSource",
-        "medialive:UpdateInput",
-        "mediaconnect:ListRouterOutputs",
-        "mediaconnect:DeleteRouterOutput"
-      ]
+    "AvailabilityZone" : {
+      "type" : "string",
+      "description" : "The Availability Zone where you want to create the router output. This must be a valid Availability Zone for the region specified by regionName, or the current region if no regionName is provided."
     },
-    "list": {
-      "permissions": [
-        "mediaconnect:ListRouterOutputs"
-      ]
+    "Configuration" : {
+      "$ref" : "#/definitions/RouterOutputConfiguration"
     },
-    "read": {
-      "permissions": [
-        "mediaconnect:GetRouterOutput"
-      ]
+    "CreatedAt" : {
+      "type" : "string",
+      "description" : "The timestamp when the router output was created.",
+      "format" : "date-time"
     },
-    "update": {
-      "permissions": [
-        "mediaconnect:ListTagsForResource",
-        "mediaconnect:TagResource",
-        "mediaconnect:UntagResource",
-        "mediaconnect:GetRouterOutput",
-        "ec2:CreateNetworkInterface",
-        "iam:PassRole",
-        "mediaconnect:AssociateRouterNetworkInterface",
-        "mediaconnect:UpdateFlowSource",
-        "mediaconnect:UpdateRouterOutput",
-        "medialive:UpdateInput"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^arn:(aws[a-zA-Z-]*):mediaconnect:[a-z0-9-]+:[0-9]{12}:routerOutput:[a-z0-9]{12}$",
-      "type": "string"
+    "Id" : {
+      "type" : "string",
+      "description" : "The unique identifier of the router output."
     },
-    "AvailabilityZone": {
-      "description": "The Availability Zone where you want to create the router output. This must be a valid Availability Zone for the region specified by regionName, or the current region if no regionName is provided.",
-      "type": "string"
+    "IpAddress" : {
+      "type" : "string",
+      "description" : "The IP address of the router output."
     },
-    "Configuration": {
-      "$ref": "#/definitions/RouterOutputConfiguration"
+    "MaintenanceConfiguration" : {
+      "$ref" : "#/definitions/MaintenanceConfiguration"
     },
-    "CreatedAt": {
-      "description": "The timestamp when the router output was created.",
-      "format": "date-time",
-      "type": "string"
+    "MaintenanceType" : {
+      "$ref" : "#/definitions/MaintenanceType"
     },
-    "Id": {
-      "description": "The unique identifier of the router output.",
-      "type": "string"
+    "MaximumBitrate" : {
+      "type" : "integer",
+      "description" : "The maximum bitrate for the router output."
     },
-    "IpAddress": {
-      "description": "The IP address of the router output.",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "description" : "The name of the router output."
     },
-    "MaintenanceConfiguration": {
-      "$ref": "#/definitions/MaintenanceConfiguration"
+    "OutputType" : {
+      "$ref" : "#/definitions/RouterOutputType"
     },
-    "MaintenanceType": {
-      "$ref": "#/definitions/MaintenanceType"
+    "RegionName" : {
+      "type" : "string",
+      "description" : "The AWS Region for the router output. Defaults to the current region if not specified."
     },
-    "MaximumBitrate": {
-      "description": "The maximum bitrate for the router output.",
-      "type": "integer"
+    "RoutedState" : {
+      "$ref" : "#/definitions/RouterOutputRoutedState"
     },
-    "Name": {
-      "description": "The name of the router output.",
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
+    "RoutingScope" : {
+      "$ref" : "#/definitions/RoutingScope"
     },
-    "OutputType": {
-      "$ref": "#/definitions/RouterOutputType"
+    "State" : {
+      "$ref" : "#/definitions/RouterOutputState"
     },
-    "RegionName": {
-      "description": "The AWS Region for the router output. Defaults to the current region if not specified.",
-      "type": "string"
-    },
-    "RoutedState": {
-      "$ref": "#/definitions/RouterOutputRoutedState"
-    },
-    "RoutingScope": {
-      "$ref": "#/definitions/RoutingScope"
-    },
-    "State": {
-      "$ref": "#/definitions/RouterOutputState"
-    },
-    "Tags": {
-      "description": "Key-value pairs that can be used to tag this router output.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "type": "array"
+      "description" : "Key-value pairs that can be used to tag this router output.",
+      "insertionOrder" : false
     },
-    "Tier": {
-      "$ref": "#/definitions/RouterOutputTier"
+    "Tier" : {
+      "$ref" : "#/definitions/RouterOutputTier"
     },
-    "UpdatedAt": {
-      "description": "The timestamp when the router output was last updated.",
-      "format": "date-time",
-      "type": "string"
+    "UpdatedAt" : {
+      "type" : "string",
+      "description" : "The timestamp when the router output was last updated.",
+      "format" : "date-time"
     }
   },
-  "propertyTransform": {
-    "/properties/MaintenanceConfiguration/PreferredDayTime/Time": "($groups := $match(Time, /^([0-9]{2}):([0-9]{2})(?::([0-9]{2})(?:\\.[0-9]+)?)?(?:Z|([+\\-][0-9]{2}:[0-9]{2}))?$/).groups;$seconds := $groups[2] ? $groups[2] : \"00\";$timezone := $groups[3] ? $groups[3] : \"+00:00\";$join([$groups[0], \":\", $groups[1], \":\", $seconds, \"Z\"]);)"
+  "required" : [ "Configuration", "MaximumBitrate", "Name", "RoutingScope", "Tier" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedAt", "/properties/Id", "/properties/IpAddress", "/properties/MaintenanceType", "/properties/OutputType", "/properties/RoutedState", "/properties/State", "/properties/UpdatedAt" ],
+  "createOnlyProperties" : [ "/properties/Configuration/Standard/NetworkInterfaceArn", "/properties/AvailabilityZone", "/properties/RegionName" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mediaconnect:GetRouterOutput", "mediaconnect:ListRouterOutputs", "ec2:CreateNetworkInterface", "iam:PassRole", "mediaconnect:AssociateRouterNetworkInterface", "mediaconnect:CreateRouterOutput", "mediaconnect:TagResource", "mediaconnect:UpdateFlowSource", "medialive:UpdateInput" ]
+    },
+    "delete" : {
+      "permissions" : [ "mediaconnect:GetRouterOutput", "mediaconnect:UpdateRouterOutput", "mediaconnect:UpdateFlowSource", "medialive:UpdateInput", "mediaconnect:ListRouterOutputs", "mediaconnect:DeleteRouterOutput" ]
+    },
+    "list" : {
+      "permissions" : [ "mediaconnect:ListRouterOutputs" ]
+    },
+    "read" : {
+      "permissions" : [ "mediaconnect:GetRouterOutput" ]
+    },
+    "update" : {
+      "permissions" : [ "mediaconnect:ListTagsForResource", "mediaconnect:TagResource", "mediaconnect:UntagResource", "mediaconnect:GetRouterOutput", "ec2:CreateNetworkInterface", "iam:PassRole", "mediaconnect:AssociateRouterNetworkInterface", "mediaconnect:UpdateFlowSource", "mediaconnect:UpdateRouterOutput", "medialive:UpdateInput" ]
+    }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedAt",
-    "/properties/Id",
-    "/properties/IpAddress",
-    "/properties/MaintenanceType",
-    "/properties/OutputType",
-    "/properties/RoutedState",
-    "/properties/State",
-    "/properties/UpdatedAt"
-  ],
-  "required": [
-    "Configuration",
-    "MaximumBitrate",
-    "Name",
-    "RoutingScope",
-    "Tier"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "mediaconnect:ListTagsForResource",
-      "mediaconnect:TagResource",
-      "mediaconnect:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "cloudFormationSystemTags" : true,
+    "permissions" : [ "mediaconnect:ListTagsForResource", "mediaconnect:TagResource", "mediaconnect:UntagResource" ],
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true
   },
-  "typeName": "AWS::MediaConnect::RouterOutput"
+  "propertyTransform" : {
+    "/properties/MaintenanceConfiguration/PreferredDayTime/Time" : "($groups := $match(Time, /^([0-9]{2}):([0-9]{2})(?::([0-9]{2})(?:\\.[0-9]+)?)?(?:Z|([+\\-][0-9]{2}:[0-9]{2}))?$/).groups;$seconds := $groups[2] ? $groups[2] : \"00\";$timezone := $groups[3] ? $groups[3] : \"+00:00\";$join([$groups[0], \":\", $groups[1], \":\", $seconds, \"Z\"]);)"
+  },
+  "additionalProperties" : false
 }

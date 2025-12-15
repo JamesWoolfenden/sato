@@ -1,241 +1,199 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Resource",
-    "/properties/LFTags"
-  ],
-  "definitions": {
-    "CatalogIdString": {
-      "maxLength": 12,
-      "minLength": 12,
-      "type": "string"
+  "typeName" : "AWS::LakeFormation::TagAssociation",
+  "description" : "A resource schema representing a Lake Formation Tag Association. While tag associations are not explicit Lake Formation resources, this CloudFormation resource can be used to associate tags with Lake Formation entities.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "CatalogIdString" : {
+      "type" : "string",
+      "minLength" : 12,
+      "maxLength" : 12
     },
-    "CatalogResource": {
-      "additionalProperties": false,
-      "type": "object"
+    "NameString" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "ColumnNames": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/NameString"
-      },
-      "type": "array"
-    },
-    "DataLakePrincipal": {
-      "additionalProperties": false,
-      "properties": {
-        "DataLakePrincipalIdentifier": {
-          "$ref": "#/definitions/DataLakePrincipalString"
+    "LFTagPair" : {
+      "type" : "object",
+      "properties" : {
+        "CatalogId" : {
+          "$ref" : "#/definitions/CatalogIdString"
+        },
+        "TagKey" : {
+          "$ref" : "#/definitions/LFTagKey"
+        },
+        "TagValues" : {
+          "$ref" : "#/definitions/TagValueList"
         }
       },
-      "type": "object"
+      "required" : [ "CatalogId", "TagKey", "TagValues" ],
+      "additionalProperties" : false
     },
-    "DataLakePrincipalString": {
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+    "LFTagsList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/LFTagPair"
+      },
+      "insertionOrder" : false
     },
-    "DatabaseResource": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "$ref": "#/definitions/CatalogIdString"
-        },
-        "Name": {
-          "$ref": "#/definitions/NameString"
+    "DataLakePrincipalString" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "DataLakePrincipal" : {
+      "type" : "object",
+      "properties" : {
+        "DataLakePrincipalIdentifier" : {
+          "$ref" : "#/definitions/DataLakePrincipalString"
         }
       },
-      "required": [
-        "CatalogId",
-        "Name"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "LFTagKey": {
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
+    "ResourceType" : {
+      "type" : "string",
+      "enum" : [ "DATABASE", "TABLE" ]
     },
-    "LFTagPair": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "$ref": "#/definitions/CatalogIdString"
+    "CatalogResource" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "DatabaseResource" : {
+      "type" : "object",
+      "properties" : {
+        "CatalogId" : {
+          "$ref" : "#/definitions/CatalogIdString"
         },
-        "TagKey": {
-          "$ref": "#/definitions/LFTagKey"
-        },
-        "TagValues": {
-          "$ref": "#/definitions/TagValueList"
+        "Name" : {
+          "$ref" : "#/definitions/NameString"
         }
       },
-      "required": [
-        "CatalogId",
-        "TagKey",
-        "TagValues"
-      ],
-      "type": "object"
+      "required" : [ "CatalogId", "Name" ],
+      "additionalProperties" : false
     },
-    "LFTagValue": {
-      "maxLength": 256,
-      "minLength": 0,
-      "type": "string"
+    "TableWildcard" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "LFTagsList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/LFTagPair"
-      },
-      "type": "array"
-    },
-    "NameString": {
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Resource": {
-      "additionalProperties": false,
-      "properties": {
-        "Catalog": {
-          "$ref": "#/definitions/CatalogResource"
+    "TableResource" : {
+      "type" : "object",
+      "properties" : {
+        "CatalogId" : {
+          "$ref" : "#/definitions/CatalogIdString"
         },
-        "Database": {
-          "$ref": "#/definitions/DatabaseResource"
+        "DatabaseName" : {
+          "$ref" : "#/definitions/NameString"
         },
-        "Table": {
-          "$ref": "#/definitions/TableResource"
+        "Name" : {
+          "$ref" : "#/definitions/NameString"
         },
-        "TableWithColumns": {
-          "$ref": "#/definitions/TableWithColumnsResource"
+        "TableWildcard" : {
+          "$ref" : "#/definitions/TableWildcard"
         }
       },
-      "type": "object"
+      "required" : [ "CatalogId", "DatabaseName" ],
+      "additionalProperties" : false
     },
-    "ResourceType": {
-      "enum": [
-        "DATABASE",
-        "TABLE"
-      ],
-      "type": "string"
+    "ColumnNames" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/NameString"
+      },
+      "insertionOrder" : false
     },
-    "TableResource": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "$ref": "#/definitions/CatalogIdString"
+    "TableWithColumnsResource" : {
+      "type" : "object",
+      "properties" : {
+        "CatalogId" : {
+          "$ref" : "#/definitions/CatalogIdString"
         },
-        "DatabaseName": {
-          "$ref": "#/definitions/NameString"
+        "DatabaseName" : {
+          "$ref" : "#/definitions/NameString"
         },
-        "Name": {
-          "$ref": "#/definitions/NameString"
+        "Name" : {
+          "$ref" : "#/definitions/NameString"
         },
-        "TableWildcard": {
-          "$ref": "#/definitions/TableWildcard"
+        "ColumnNames" : {
+          "$ref" : "#/definitions/ColumnNames"
         }
       },
-      "required": [
-        "CatalogId",
-        "DatabaseName"
-      ],
-      "type": "object"
+      "required" : [ "CatalogId", "DatabaseName", "Name", "ColumnNames" ],
+      "additionalProperties" : false
     },
-    "TableWildcard": {
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "TableWithColumnsResource": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "$ref": "#/definitions/CatalogIdString"
+    "Resource" : {
+      "type" : "object",
+      "properties" : {
+        "Catalog" : {
+          "$ref" : "#/definitions/CatalogResource"
         },
-        "ColumnNames": {
-          "$ref": "#/definitions/ColumnNames"
+        "Database" : {
+          "$ref" : "#/definitions/DatabaseResource"
         },
-        "DatabaseName": {
-          "$ref": "#/definitions/NameString"
+        "Table" : {
+          "$ref" : "#/definitions/TableResource"
         },
-        "Name": {
-          "$ref": "#/definitions/NameString"
+        "TableWithColumns" : {
+          "$ref" : "#/definitions/TableWithColumnsResource"
         }
       },
-      "required": [
-        "CatalogId",
-        "DatabaseName",
-        "Name",
-        "ColumnNames"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TagValueList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/LFTagValue"
+    "LFTagKey" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
+    },
+    "LFTagValue" : {
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 256
+    },
+    "TagValueList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/LFTagValue"
       },
-      "maxItems": 50,
-      "minItems": 1,
-      "type": "array"
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "maxItems" : 50
     }
   },
-  "description": "A resource schema representing a Lake Formation Tag Association. While tag associations are not explicit Lake Formation resources, this CloudFormation resource can be used to associate tags with Lake Formation entities.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lakeformation:AddLFTagsToResource",
-        "glue:GetDatabase",
-        "glue:GetTable"
-      ]
+  "properties" : {
+    "Resource" : {
+      "description" : "Resource to tag with the Lake Formation Tags",
+      "$ref" : "#/definitions/Resource"
     },
-    "delete": {
-      "permissions": [
-        "lakeformation:RemoveLFTagsFromResource",
-        "glue:GetDatabase",
-        "glue:GetTable"
-      ]
+    "LFTags" : {
+      "description" : "List of Lake Formation Tags to associate with the Lake Formation Resource",
+      "$ref" : "#/definitions/LFTagsList"
     },
-    "read": {
-      "permissions": [
-        "lakeformation:GetResourceLFTags",
-        "glue:GetDatabase",
-        "glue:GetTable"
-      ]
+    "ResourceIdentifier" : {
+      "description" : "Unique string identifying the resource. Used as primary identifier, which ideally should be a string",
+      "type" : "string"
+    },
+    "TagsIdentifier" : {
+      "description" : "Unique string identifying the resource's tags. Used as primary identifier, which ideally should be a string",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ResourceIdentifier",
-    "/properties/TagsIdentifier"
-  ],
-  "properties": {
-    "LFTags": {
-      "$ref": "#/definitions/LFTagsList",
-      "description": "List of Lake Formation Tags to associate with the Lake Formation Resource"
+  "additionalProperties" : false,
+  "required" : [ "Resource", "LFTags" ],
+  "createOnlyProperties" : [ "/properties/Resource", "/properties/LFTags" ],
+  "readOnlyProperties" : [ "/properties/ResourceIdentifier", "/properties/TagsIdentifier" ],
+  "replacementStrategy" : "delete_then_create",
+  "tagging" : {
+    "taggable" : false
+  },
+  "primaryIdentifier" : [ "/properties/ResourceIdentifier", "/properties/TagsIdentifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lakeformation:AddLFTagsToResource", "glue:GetDatabase", "glue:GetTable" ]
     },
-    "Resource": {
-      "$ref": "#/definitions/Resource",
-      "description": "Resource to tag with the Lake Formation Tags"
+    "read" : {
+      "permissions" : [ "lakeformation:GetResourceLFTags", "glue:GetDatabase", "glue:GetTable" ]
     },
-    "ResourceIdentifier": {
-      "description": "Unique string identifying the resource. Used as primary identifier, which ideally should be a string",
-      "type": "string"
-    },
-    "TagsIdentifier": {
-      "description": "Unique string identifying the resource's tags. Used as primary identifier, which ideally should be a string",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "lakeformation:RemoveLFTagsFromResource", "glue:GetDatabase", "glue:GetTable" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ResourceIdentifier",
-    "/properties/TagsIdentifier"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "Resource",
-    "LFTags"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::LakeFormation::TagAssociation"
+  }
 }

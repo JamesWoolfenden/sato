@@ -1,66 +1,52 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "FieldToMatch": {
-      "additionalProperties": false,
-      "properties": {
-        "Data": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+  "typeName" : "AWS::WAF::XssMatchSet",
+  "description" : "Resource Type definition for AWS::WAF::XssMatchSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "XssMatchTuple": {
-      "additionalProperties": false,
-      "properties": {
-        "FieldToMatch": {
-          "$ref": "#/definitions/FieldToMatch"
-        },
-        "TextTransformation": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "TextTransformation",
-        "FieldToMatch"
-      ],
-      "type": "object"
+    "Name" : {
+      "type" : "string"
+    },
+    "XssMatchTuples" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/XssMatchTuple"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::WAF::XssMatchSet",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "XssMatchTuples": {
-      "items": {
-        "$ref": "#/definitions/XssMatchTuple"
+  "definitions" : {
+    "XssMatchTuple" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FieldToMatch" : {
+          "$ref" : "#/definitions/FieldToMatch"
+        },
+        "TextTransformation" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "TextTransformation", "FieldToMatch" ]
+    },
+    "FieldToMatch" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Data" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Name",
-    "XssMatchTuples"
-  ],
-  "typeName": "AWS::WAF::XssMatchSet"
+  "required" : [ "Name", "XssMatchTuples" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

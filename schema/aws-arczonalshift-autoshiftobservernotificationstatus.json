@@ -1,76 +1,55 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Status"
-  ],
-  "definitions": {
-    "AccountId": {
-      "description": "User account id, used as part of the primary identifier for the resource",
-      "pattern": "^\\d{12}$",
-      "type": "string"
+  "typeName" : "AWS::ARCZonalShift::AutoshiftObserverNotificationStatus",
+  "description" : "Definition of AWS::ARCZonalShift::AutoshiftObserverNotificationStatus Resource Type",
+  "definitions" : {
+    "AccountId" : {
+      "description" : "User account id, used as part of the primary identifier for the resource",
+      "type" : "string",
+      "pattern" : "^\\d{12}$"
     },
-    "AutoshiftObserverNotificationStatus": {
-      "enum": [
-        "ENABLED"
-      ],
-      "type": "string"
+    "Region" : {
+      "description" : "Region, used as part of the primary identifier for the resource",
+      "type" : "string",
+      "pattern" : "^[a-z0-9-]*$",
+      "maxLength" : 30,
+      "minLength" : 5
     },
-    "Region": {
-      "description": "Region, used as part of the primary identifier for the resource",
-      "maxLength": 30,
-      "minLength": 5,
-      "pattern": "^[a-z0-9-]*$",
-      "type": "string"
+    "AutoshiftObserverNotificationStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLED" ]
     }
   },
-  "description": "Definition of AWS::ARCZonalShift::AutoshiftObserverNotificationStatus Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "arc-zonal-shift:UpdateAutoshiftObserverNotificationStatus"
-      ]
+  "properties" : {
+    "Status" : {
+      "$ref" : "#/definitions/AutoshiftObserverNotificationStatus"
     },
-    "delete": {
-      "permissions": [
-        "arc-zonal-shift:UpdateAutoshiftObserverNotificationStatus",
-        "arc-zonal-shift:GetAutoshiftObserverNotificationStatus"
-      ]
+    "AccountId" : {
+      "$ref" : "#/definitions/AccountId"
     },
-    "list": {
-      "permissions": [
-        "arc-zonal-shift:GetAutoshiftObserverNotificationStatus"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "arc-zonal-shift:GetAutoshiftObserverNotificationStatus"
-      ]
+    "Region" : {
+      "$ref" : "#/definitions/Region"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AccountId",
-    "/properties/Region"
-  ],
-  "properties": {
-    "AccountId": {
-      "$ref": "#/definitions/AccountId"
+  "readOnlyProperties" : [ "/properties/AccountId", "/properties/Region" ],
+  "primaryIdentifier" : [ "/properties/AccountId", "/properties/Region" ],
+  "createOnlyProperties" : [ "/properties/Status" ],
+  "required" : [ "Status" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "arc-zonal-shift:UpdateAutoshiftObserverNotificationStatus" ]
     },
-    "Region": {
-      "$ref": "#/definitions/Region"
+    "read" : {
+      "permissions" : [ "arc-zonal-shift:GetAutoshiftObserverNotificationStatus" ]
     },
-    "Status": {
-      "$ref": "#/definitions/AutoshiftObserverNotificationStatus"
+    "delete" : {
+      "permissions" : [ "arc-zonal-shift:UpdateAutoshiftObserverNotificationStatus", "arc-zonal-shift:GetAutoshiftObserverNotificationStatus" ]
+    },
+    "list" : {
+      "permissions" : [ "arc-zonal-shift:GetAutoshiftObserverNotificationStatus" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/AccountId",
-    "/properties/Region"
-  ],
-  "required": [
-    "Status"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ARCZonalShift::AutoshiftObserverNotificationStatus"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  }
 }

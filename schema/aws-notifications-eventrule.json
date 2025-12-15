@@ -1,163 +1,121 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/EventType",
-    "/properties/NotificationConfigurationArn",
-    "/properties/Source"
-  ],
-  "definitions": {
-    "EventRuleStatus": {
-      "enum": [
-        "ACTIVE",
-        "INACTIVE",
-        "CREATING",
-        "UPDATING",
-        "DELETING"
-      ],
-      "type": "string"
+  "typeName" : "AWS::Notifications::EventRule",
+  "description" : "Resource Type definition for AWS::Notifications::EventRule",
+  "definitions" : {
+    "EventRuleStatus" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE", "CREATING", "UPDATING", "DELETING" ]
     },
-    "EventRuleStatusSummary": {
-      "additionalProperties": false,
-      "properties": {
-        "Reason": {
-          "type": "string"
+    "EventRuleStatusSummary" : {
+      "type" : "object",
+      "properties" : {
+        "Status" : {
+          "$ref" : "#/definitions/EventRuleStatus"
         },
-        "Status": {
-          "$ref": "#/definitions/EventRuleStatus"
+        "Reason" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Reason",
-        "Status"
-      ],
-      "type": "object"
+      "required" : [ "Reason", "Status" ],
+      "additionalProperties" : false
     },
-    "StatusSummaryByRegion": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$": {
-          "$ref": "#/definitions/EventRuleStatusSummary"
+    "StatusSummaryByRegion" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$" : {
+          "$ref" : "#/definitions/EventRuleStatusSummary"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Notifications::EventRule",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "notifications:CreateEventRule",
-        "notifications:UpdateEventRule",
-        "notifications:GetEventRule"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}/rule/[a-z0-9]{27}$"
     },
-    "delete": {
-      "permissions": [
-        "notifications:DeleteEventRule",
-        "notifications:GetEventRule"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "NotificationConfigurationArn": {
-            "pattern": "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$",
-            "type": "string"
+    "EventPattern" : {
+      "type" : "string",
+      "maxLength" : 4096,
+      "minLength" : 0
+    },
+    "EventType" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "pattern" : "^([a-zA-Z0-9 \\-\\(\\)])+$"
+    },
+    "ManagedRules" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "pattern" : "^arn:aws:events:[a-z-\\d]{2,25}:\\d{12}:rule\\/[a-zA-Z-\\d]{1,1024}$"
+      }
+    },
+    "NotificationConfigurationArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$"
+    },
+    "Regions" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 25,
+        "minLength" : 2,
+        "pattern" : "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$"
+      },
+      "minItems" : 1
+    },
+    "Source" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 1,
+      "pattern" : "^aws.([a-z0-9\\-])+$"
+    },
+    "StatusSummaryByRegion" : {
+      "$ref" : "#/definitions/StatusSummaryByRegion"
+    }
+  },
+  "required" : [ "EventType", "NotificationConfigurationArn", "Regions", "Source" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/ManagedRules", "/properties/StatusSummaryByRegion" ],
+  "createOnlyProperties" : [ "/properties/EventType", "/properties/NotificationConfigurationArn", "/properties/Source" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "notifications:CreateEventRule", "notifications:UpdateEventRule", "notifications:GetEventRule" ]
+    },
+    "read" : {
+      "permissions" : [ "notifications:GetEventRule" ]
+    },
+    "update" : {
+      "permissions" : [ "notifications:UpdateEventRule", "notifications:GetEventRule" ]
+    },
+    "delete" : {
+      "permissions" : [ "notifications:DeleteEventRule", "notifications:GetEventRule" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "NotificationConfigurationArn" : {
+            "type" : "string",
+            "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$"
           }
         },
-        "required": [
-          "NotificationConfigurationArn"
-        ]
+        "required" : [ "NotificationConfigurationArn" ]
       },
-      "permissions": [
-        "notifications:ListEventRules",
-        "notifications:GetEventRule"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "notifications:GetEventRule"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "notifications:UpdateEventRule",
-        "notifications:GetEventRule"
-      ]
+      "permissions" : [ "notifications:ListEventRules", "notifications:GetEventRule" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}/rule/[a-z0-9]{27}$",
-      "type": "string"
-    },
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "EventPattern": {
-      "maxLength": 4096,
-      "minLength": 0,
-      "type": "string"
-    },
-    "EventType": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^([a-zA-Z0-9 \\-\\(\\)])+$",
-      "type": "string"
-    },
-    "ManagedRules": {
-      "items": {
-        "pattern": "^arn:aws:events:[a-z-\\d]{2,25}:\\d{12}:rule\\/[a-zA-Z-\\d]{1,1024}$",
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "NotificationConfigurationArn": {
-      "pattern": "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$",
-      "type": "string"
-    },
-    "Regions": {
-      "items": {
-        "maxLength": 25,
-        "minLength": 2,
-        "pattern": "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$",
-        "type": "string"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "Source": {
-      "maxLength": 36,
-      "minLength": 1,
-      "pattern": "^aws.([a-z0-9\\-])+$",
-      "type": "string"
-    },
-    "StatusSummaryByRegion": {
-      "$ref": "#/definitions/StatusSummaryByRegion"
-    }
+  "tagging" : {
+    "taggable" : false
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/ManagedRules",
-    "/properties/StatusSummaryByRegion"
-  ],
-  "required": [
-    "EventType",
-    "NotificationConfigurationArn",
-    "Regions",
-    "Source"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Notifications::EventRule"
+  "additionalProperties" : false
 }

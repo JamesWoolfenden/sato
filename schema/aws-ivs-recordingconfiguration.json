@@ -1,278 +1,192 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/DestinationConfiguration",
-    "/properties/DestinationConfiguration/S3",
-    "/properties/DestinationConfiguration/S3/BucketName",
-    "/properties/RecordingReconnectWindowSeconds",
-    "/properties/ThumbnailConfiguration",
-    "/properties/ThumbnailConfiguration/RecordingMode",
-    "/properties/ThumbnailConfiguration/TargetIntervalSeconds",
-    "/properties/ThumbnailConfiguration/Storage",
-    "/properties/ThumbnailConfiguration/Resolution",
-    "/properties/RenditionConfiguration",
-    "/properties/RenditionConfiguration/RenditionSelection",
-    "/properties/RenditionConfiguration/Renditions"
-  ],
-  "definitions": {
-    "DestinationConfiguration": {
-      "additionalProperties": false,
-      "description": "Recording Destination Configuration.",
-      "properties": {
-        "S3": {
-          "$ref": "#/definitions/S3DestinationConfiguration"
+  "typeName" : "AWS::IVS::RecordingConfiguration",
+  "description" : "Resource Type definition for AWS::IVS::RecordingConfiguration",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     },
-    "RenditionConfiguration": {
-      "additionalProperties": false,
-      "description": "Rendition Configuration describes which renditions should be recorded for a stream.",
-      "properties": {
-        "RenditionSelection": {
-          "default": "ALL",
-          "description": "Resolution Selection indicates which set of renditions are recorded for a stream.",
-          "enum": [
-            "ALL",
-            "NONE",
-            "CUSTOM"
-          ],
-          "type": "string"
-        },
-        "Renditions": {
-          "description": "Renditions indicates which renditions are recorded for a stream.",
-          "insertionOrder": false,
-          "items": {
-            "enum": [
-              "FULL_HD",
-              "HD",
-              "SD",
-              "LOWEST_RESOLUTION"
-            ],
-            "type": "string"
-          },
-          "maxItems": 4,
-          "minItems": 0,
-          "type": "array",
-          "uniqueItems": true
+    "DestinationConfiguration" : {
+      "description" : "Recording Destination Configuration.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3" : {
+          "$ref" : "#/definitions/S3DestinationConfiguration"
         }
       },
-      "required": [],
-      "type": "object"
+      "required" : [ ]
     },
-    "S3DestinationConfiguration": {
-      "additionalProperties": false,
-      "description": "Recording S3 Destination Configuration.",
-      "properties": {
-        "BucketName": {
-          "maxLength": 63,
-          "minLength": 3,
-          "pattern": "^[a-z0-9-.]+$",
-          "type": "string"
+    "S3DestinationConfiguration" : {
+      "description" : "Recording S3 Destination Configuration.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BucketName" : {
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 63,
+          "pattern" : "^[a-z0-9-.]+$"
         }
       },
-      "required": [
-        "BucketName"
-      ],
-      "type": "object"
+      "required" : [ "BucketName" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "ThumbnailConfiguration" : {
+      "description" : "Recording Thumbnail Configuration.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RecordingMode" : {
+          "description" : "Thumbnail Recording Mode, which determines whether thumbnails are recorded at an interval or are disabled.",
+          "type" : "string",
+          "enum" : [ "INTERVAL", "DISABLED" ],
+          "default" : "INTERVAL"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "TargetIntervalSeconds" : {
+          "description" : "Target Interval Seconds defines the interval at which thumbnails are recorded. This field is required if RecordingMode is INTERVAL.",
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 60,
+          "default" : 60
+        },
+        "Resolution" : {
+          "description" : "Resolution indicates the desired resolution of recorded thumbnails.",
+          "type" : "string",
+          "enum" : [ "FULL_HD", "HD", "SD", "LOWEST_RESOLUTION" ]
+        },
+        "Storage" : {
+          "description" : "Storage indicates the format in which thumbnails are recorded.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "minItems" : 0,
+          "maxItems" : 2,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "SEQUENTIAL", "LATEST" ]
+          }
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ ]
     },
-    "ThumbnailConfiguration": {
-      "additionalProperties": false,
-      "description": "Recording Thumbnail Configuration.",
-      "properties": {
-        "RecordingMode": {
-          "default": "INTERVAL",
-          "description": "Thumbnail Recording Mode, which determines whether thumbnails are recorded at an interval or are disabled.",
-          "enum": [
-            "INTERVAL",
-            "DISABLED"
-          ],
-          "type": "string"
+    "RenditionConfiguration" : {
+      "description" : "Rendition Configuration describes which renditions should be recorded for a stream.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RenditionSelection" : {
+          "description" : "Resolution Selection indicates which set of renditions are recorded for a stream.",
+          "type" : "string",
+          "enum" : [ "ALL", "NONE", "CUSTOM" ],
+          "default" : "ALL"
         },
-        "Resolution": {
-          "description": "Resolution indicates the desired resolution of recorded thumbnails.",
-          "enum": [
-            "FULL_HD",
-            "HD",
-            "SD",
-            "LOWEST_RESOLUTION"
-          ],
-          "type": "string"
-        },
-        "Storage": {
-          "description": "Storage indicates the format in which thumbnails are recorded.",
-          "insertionOrder": false,
-          "items": {
-            "enum": [
-              "SEQUENTIAL",
-              "LATEST"
-            ],
-            "type": "string"
-          },
-          "maxItems": 2,
-          "minItems": 0,
-          "type": "array",
-          "uniqueItems": true
-        },
-        "TargetIntervalSeconds": {
-          "default": 60,
-          "description": "Target Interval Seconds defines the interval at which thumbnails are recorded. This field is required if RecordingMode is INTERVAL.",
-          "maximum": 60,
-          "minimum": 1,
-          "type": "integer"
+        "Renditions" : {
+          "description" : "Renditions indicates which renditions are recorded for a stream.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "minItems" : 0,
+          "maxItems" : 4,
+          "items" : {
+            "type" : "string",
+            "enum" : [ "FULL_HD", "HD", "SD", "LOWEST_RESOLUTION" ]
+          }
         }
       },
-      "required": [],
-      "type": "object"
+      "required" : [ ]
     }
   },
-  "description": "Resource Type definition for AWS::IVS::RecordingConfiguration",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ivs:CreateRecordingConfiguration",
-        "ivs:GetRecordingConfiguration",
-        "ivs:TagResource",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy",
-        "iam:AttachRolePolicy",
-        "s3:ListBucket",
-        "s3:GetBucketLocation",
-        "cloudformation:ListExports"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "Recording Configuration ARN is automatically generated on creation and assigned as the unique identifier.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$",
+      "minLength" : 0,
+      "maxLength" : 128
     },
-    "delete": {
-      "permissions": [
-        "ivs:DeleteRecordingConfiguration",
-        "ivs:UntagResource",
-        "iam:CreateServiceLinkedRole"
-      ]
+    "Name" : {
+      "description" : "Recording Configuration Name.",
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z0-9-_]*$"
     },
-    "list": {
-      "permissions": [
-        "ivs:ListRecordingConfigurations",
-        "s3:GetBucketLocation",
-        "ivs:ListTagsForResource"
-      ]
+    "State" : {
+      "description" : "Recording Configuration State.",
+      "type" : "string",
+      "enum" : [ "CREATING", "CREATE_FAILED", "ACTIVE" ]
     },
-    "read": {
-      "permissions": [
-        "ivs:GetRecordingConfiguration",
-        "s3:GetBucketLocation",
-        "ivs:ListTagsForResource"
-      ]
+    "RecordingReconnectWindowSeconds" : {
+      "description" : "Recording Reconnect Window Seconds. (0 means disabled)",
+      "type" : "integer",
+      "default" : 0,
+      "minimum" : 0,
+      "maximum" : 300
     },
-    "update": {
-      "permissions": [
-        "ivs:GetRecordingConfiguration",
-        "sts:AssumeRole",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy",
-        "iam:AttachRolePolicy",
-        "s3:ListBucket",
-        "ivs:TagResource",
-        "ivs:UntagResource",
-        "ivs:ListTagsForResource"
-      ]
+    "DestinationConfiguration" : {
+      "$ref" : "#/definitions/DestinationConfiguration"
+    },
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the asset model.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "ThumbnailConfiguration" : {
+      "$ref" : "#/definitions/ThumbnailConfiguration"
+    },
+    "RenditionConfiguration" : {
+      "$ref" : "#/definitions/RenditionConfiguration"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Recording Configuration ARN is automatically generated on creation and assigned as the unique identifier.",
-      "maxLength": 128,
-      "minLength": 0,
-      "pattern": "^arn:aws[-a-z]*:ivs:[a-z0-9-]+:[0-9]+:recording-configuration/[a-zA-Z0-9-]+$",
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ivs:TagResource", "ivs:UntagResource", "ivs:ListTagsForResource" ]
+  },
+  "required" : [ "DestinationConfiguration" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/State" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/DestinationConfiguration", "/properties/DestinationConfiguration/S3", "/properties/DestinationConfiguration/S3/BucketName", "/properties/RecordingReconnectWindowSeconds", "/properties/ThumbnailConfiguration", "/properties/ThumbnailConfiguration/RecordingMode", "/properties/ThumbnailConfiguration/TargetIntervalSeconds", "/properties/ThumbnailConfiguration/Storage", "/properties/ThumbnailConfiguration/Resolution", "/properties/RenditionConfiguration", "/properties/RenditionConfiguration/RenditionSelection", "/properties/RenditionConfiguration/Renditions" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ivs:CreateRecordingConfiguration", "ivs:GetRecordingConfiguration", "ivs:TagResource", "iam:CreateServiceLinkedRole", "iam:PutRolePolicy", "iam:AttachRolePolicy", "s3:ListBucket", "s3:GetBucketLocation", "cloudformation:ListExports" ]
     },
-    "DestinationConfiguration": {
-      "$ref": "#/definitions/DestinationConfiguration"
+    "read" : {
+      "permissions" : [ "ivs:GetRecordingConfiguration", "s3:GetBucketLocation", "ivs:ListTagsForResource" ]
     },
-    "Name": {
-      "description": "Recording Configuration Name.",
-      "maxLength": 128,
-      "minLength": 0,
-      "pattern": "^[a-zA-Z0-9-_]*$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "ivs:GetRecordingConfiguration", "sts:AssumeRole", "iam:CreateServiceLinkedRole", "iam:PutRolePolicy", "iam:AttachRolePolicy", "s3:ListBucket", "ivs:TagResource", "ivs:UntagResource", "ivs:ListTagsForResource" ]
     },
-    "RecordingReconnectWindowSeconds": {
-      "default": 0,
-      "description": "Recording Reconnect Window Seconds. (0 means disabled)",
-      "maximum": 300,
-      "minimum": 0,
-      "type": "integer"
+    "delete" : {
+      "permissions" : [ "ivs:DeleteRecordingConfiguration", "ivs:UntagResource", "iam:CreateServiceLinkedRole" ]
     },
-    "RenditionConfiguration": {
-      "$ref": "#/definitions/RenditionConfiguration"
-    },
-    "State": {
-      "description": "Recording Configuration State.",
-      "enum": [
-        "CREATING",
-        "CREATE_FAILED",
-        "ACTIVE"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the asset model.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "ThumbnailConfiguration": {
-      "$ref": "#/definitions/ThumbnailConfiguration"
+    "list" : {
+      "permissions" : [ "ivs:ListRecordingConfigurations", "s3:GetBucketLocation", "ivs:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/State"
-  ],
-  "required": [
-    "DestinationConfiguration"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ivs:TagResource",
-      "ivs:UntagResource",
-      "ivs:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IVS::RecordingConfiguration"
+  }
 }

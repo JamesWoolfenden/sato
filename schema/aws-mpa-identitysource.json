@@ -1,177 +1,117 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/IdentitySourceParameters",
-    "/properties/IdentitySourceParameters/IamIdentityCenter",
-    "/properties/IdentitySourceParameters/IamIdentityCenter/InstanceArn",
-    "/properties/IdentitySourceParameters/IamIdentityCenter/Region"
-  ],
-  "definitions": {
-    "IamIdentityCenter": {
-      "additionalProperties": false,
-      "properties": {
-        "ApprovalPortalUrl": {
-          "type": "string"
+  "typeName" : "AWS::MPA::IdentitySource",
+  "description" : "Resource Type definition for AWS::MPA::IdentitySource.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "IdentitySourceArn" : {
+      "type" : "string"
+    },
+    "IamIdentityCenter" : {
+      "type" : "object",
+      "properties" : {
+        "InstanceArn" : {
+          "type" : "string",
+          "pattern" : "^arn:.+:sso:::instance/(?:sso)?ins-[a-zA-Z0-9-.]{16}$"
         },
-        "InstanceArn": {
-          "pattern": "^arn:.+:sso:::instance/(?:sso)?ins-[a-zA-Z0-9-.]{16}$",
-          "type": "string"
+        "Region" : {
+          "type" : "string"
         },
-        "Region": {
-          "type": "string"
+        "ApprovalPortalUrl" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "InstanceArn",
-        "Region"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "InstanceArn", "Region" ]
     },
-    "IdentitySourceArn": {
-      "type": "string"
-    },
-    "IdentitySourceParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "IamIdentityCenter": {
-          "$ref": "#/definitions/IamIdentityCenter"
+    "IdentitySourceParameters" : {
+      "type" : "object",
+      "properties" : {
+        "IamIdentityCenter" : {
+          "$ref" : "#/definitions/IamIdentityCenter"
         }
       },
-      "required": [
-        "IamIdentityCenter"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "IamIdentityCenter" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "type": "string"
+        "Value" : {
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::MPA::IdentitySource.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mpa:CreateIdentitySource",
-        "mpa:TagResource",
-        "mpa:ListTagsForResource",
-        "mpa:GetIdentitySource",
-        "sso:DescribeApplication",
-        "sso:DescribeInstance",
-        "sso:CreateApplication",
-        "sso:PutApplicationAssignmentConfiguration",
-        "sso:PutApplicationGrant",
-        "sso:PutApplicationAuthenticationMethod",
-        "sso:PutApplicationAccessScope",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "IdentitySourceArn" : {
+      "$ref" : "#/definitions/IdentitySourceArn"
     },
-    "delete": {
-      "permissions": [
-        "mpa:DeleteIdentitySource",
-        "mpa:GetIdentitySource",
-        "mpa:UntagResource",
-        "sso:DeleteApplication",
-        "sso:ListInstances",
-        "kms:Decrypt"
-      ]
+    "IdentitySourceParameters" : {
+      "$ref" : "#/definitions/IdentitySourceParameters"
     },
-    "list": {
-      "permissions": [
-        "mpa:ListIdentitySources",
-        "mpa:ListTagsForResource"
-      ]
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
     },
-    "read": {
-      "permissions": [
-        "mpa:GetIdentitySource",
-        "mpa:ListTagsForResource"
-      ]
+    "IdentitySourceType" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "mpa:GetIdentitySource",
-        "mpa:TagResource",
-        "mpa:ListTagsForResource",
-        "mpa:UntagResource"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "Status" : {
+      "type" : "string"
+    },
+    "StatusCode" : {
+      "type" : "string"
+    },
+    "StatusMessage" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/IdentitySourceArn"
-  ],
-  "properties": {
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "mpa:TagResource", "mpa:ListTagsForResource", "mpa:UntagResource" ]
+  },
+  "required" : [ "IdentitySourceParameters" ],
+  "primaryIdentifier" : [ "/properties/IdentitySourceArn" ],
+  "readOnlyProperties" : [ "/properties/IdentitySourceArn", "/properties/IdentitySourceType", "/properties/IdentitySourceParameters/IamIdentityCenter/ApprovalPortalUrl", "/properties/CreationTime", "/properties/Status", "/properties/StatusCode", "/properties/StatusMessage" ],
+  "createOnlyProperties" : [ "/properties/IdentitySourceParameters", "/properties/IdentitySourceParameters/IamIdentityCenter", "/properties/IdentitySourceParameters/IamIdentityCenter/InstanceArn", "/properties/IdentitySourceParameters/IamIdentityCenter/Region" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mpa:CreateIdentitySource", "mpa:TagResource", "mpa:ListTagsForResource", "mpa:GetIdentitySource", "sso:DescribeApplication", "sso:DescribeInstance", "sso:CreateApplication", "sso:PutApplicationAssignmentConfiguration", "sso:PutApplicationGrant", "sso:PutApplicationAuthenticationMethod", "sso:PutApplicationAccessScope", "kms:Decrypt" ]
     },
-    "IdentitySourceArn": {
-      "$ref": "#/definitions/IdentitySourceArn"
+    "read" : {
+      "permissions" : [ "mpa:GetIdentitySource", "mpa:ListTagsForResource" ]
     },
-    "IdentitySourceParameters": {
-      "$ref": "#/definitions/IdentitySourceParameters"
+    "update" : {
+      "permissions" : [ "mpa:GetIdentitySource", "mpa:TagResource", "mpa:ListTagsForResource", "mpa:UntagResource" ]
     },
-    "IdentitySourceType": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "mpa:DeleteIdentitySource", "mpa:GetIdentitySource", "mpa:UntagResource", "sso:DeleteApplication", "sso:ListInstances", "kms:Decrypt" ]
     },
-    "Status": {
-      "type": "string"
-    },
-    "StatusCode": {
-      "type": "string"
-    },
-    "StatusMessage": {
-      "type": "string"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
+    "list" : {
+      "permissions" : [ "mpa:ListIdentitySources", "mpa:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/IdentitySourceArn",
-    "/properties/IdentitySourceType",
-    "/properties/IdentitySourceParameters/IamIdentityCenter/ApprovalPortalUrl",
-    "/properties/CreationTime",
-    "/properties/Status",
-    "/properties/StatusCode",
-    "/properties/StatusMessage"
-  ],
-  "required": [
-    "IdentitySourceParameters"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "mpa:TagResource",
-      "mpa:ListTagsForResource",
-      "mpa:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MPA::IdentitySource"
+  }
 }

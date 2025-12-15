@@ -1,129 +1,84 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SyncType",
-    "/properties/ResourceName"
-  ],
-  "definitions": {},
-  "description": "Schema for AWS::CodeStarConnections::SyncConfiguration resource which is used to enables an AWS resource to be synchronized from a source-provider.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "codestar-connections:CreateSyncConfiguration",
-        "codestar-connections:PassRepository",
-        "iam:PassRole"
-      ]
+  "typeName" : "AWS::CodeStarConnections::SyncConfiguration",
+  "description" : "Schema for AWS::CodeStarConnections::SyncConfiguration resource which is used to enables an AWS resource to be synchronized from a source-provider.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
+  "definitions" : { },
+  "properties" : {
+    "OwnerId" : {
+      "description" : "the ID of the entity that owns the repository.",
+      "type" : "string",
+      "pattern" : "[a-za-z0-9_\\.-]+"
     },
-    "delete": {
-      "permissions": [
-        "codestar-connections:DeleteSyncConfiguration",
-        "codestar-connections:GetSyncConfiguration"
-      ]
+    "ResourceName" : {
+      "description" : "The name of the resource that is being synchronized to the repository.",
+      "type" : "string",
+      "pattern" : "[a-za-z0-9_\\.-]+"
     },
-    "list": {
-      "permissions": [
-        "codestar-connections:ListSyncConfigurations",
-        "codestar-connections:ListRepositoryLinks"
-      ]
+    "RepositoryName" : {
+      "description" : "The name of the repository that is being synced to.",
+      "type" : "string",
+      "pattern" : "[a-za-z0-9_\\.-]+"
     },
-    "read": {
-      "permissions": [
-        "codestar-connections:GetSyncConfiguration"
-      ]
+    "ProviderType" : {
+      "description" : "The name of the external provider where your third-party code repository is configured.",
+      "type" : "string",
+      "enum" : [ "GitHub", "Bitbucket", "GitHubEnterprise", "GitLab", "GitLabSelfManaged" ]
     },
-    "update": {
-      "permissions": [
-        "codestar-connections:UpdateSyncConfiguration",
-        "codestar-connections:PassRepository",
-        "iam:PassRole"
-      ]
+    "Branch" : {
+      "description" : "The name of the branch of the repository from which resources are to be synchronized,",
+      "type" : "string"
+    },
+    "ConfigFile" : {
+      "description" : "The source provider repository path of the sync configuration file of the respective SyncType.",
+      "type" : "string"
+    },
+    "SyncType" : {
+      "description" : "The type of resource synchronization service that is to be configured, for example, CFN_STACK_SYNC.",
+      "type" : "string"
+    },
+    "RoleArn" : {
+      "description" : "The IAM Role that allows AWS to update CloudFormation stacks based on content in the specified repository.",
+      "type" : "string"
+    },
+    "PublishDeploymentStatus" : {
+      "description" : "Whether to enable or disable publishing of deployment status to source providers.",
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "TriggerResourceUpdateOn" : {
+      "description" : "When to trigger Git sync to begin the stack update.",
+      "type" : "string",
+      "enum" : [ "ANY_CHANGE", "FILE_CHANGE" ]
+    },
+    "RepositoryLinkId" : {
+      "description" : "A UUID that uniquely identifies the RepositoryLink that the SyncConfig is associated with.",
+      "type" : "string",
+      "pattern" : "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ResourceName",
-    "/properties/SyncType"
-  ],
-  "properties": {
-    "Branch": {
-      "description": "The name of the branch of the repository from which resources are to be synchronized,",
-      "type": "string"
+  "required" : [ "Branch", "ConfigFile", "RepositoryLinkId", "ResourceName", "SyncType", "RoleArn" ],
+  "createOnlyProperties" : [ "/properties/SyncType", "/properties/ResourceName" ],
+  "readOnlyProperties" : [ "/properties/ProviderType", "/properties/OwnerId", "/properties/RepositoryName" ],
+  "primaryIdentifier" : [ "/properties/ResourceName", "/properties/SyncType" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "codestar-connections:CreateSyncConfiguration", "codestar-connections:PassRepository", "iam:PassRole" ]
     },
-    "ConfigFile": {
-      "description": "The source provider repository path of the sync configuration file of the respective SyncType.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "codestar-connections:GetSyncConfiguration" ]
     },
-    "OwnerId": {
-      "description": "the ID of the entity that owns the repository.",
-      "pattern": "[a-za-z0-9_\\.-]+",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "codestar-connections:UpdateSyncConfiguration", "codestar-connections:PassRepository", "iam:PassRole" ]
     },
-    "ProviderType": {
-      "description": "The name of the external provider where your third-party code repository is configured.",
-      "enum": [
-        "GitHub",
-        "Bitbucket",
-        "GitHubEnterprise",
-        "GitLab",
-        "GitLabSelfManaged"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "codestar-connections:DeleteSyncConfiguration", "codestar-connections:GetSyncConfiguration" ]
     },
-    "PublishDeploymentStatus": {
-      "description": "Whether to enable or disable publishing of deployment status to source providers.",
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "RepositoryLinkId": {
-      "description": "A UUID that uniquely identifies the RepositoryLink that the SyncConfig is associated with.",
-      "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
-      "type": "string"
-    },
-    "RepositoryName": {
-      "description": "The name of the repository that is being synced to.",
-      "pattern": "[a-za-z0-9_\\.-]+",
-      "type": "string"
-    },
-    "ResourceName": {
-      "description": "The name of the resource that is being synchronized to the repository.",
-      "pattern": "[a-za-z0-9_\\.-]+",
-      "type": "string"
-    },
-    "RoleArn": {
-      "description": "The IAM Role that allows AWS to update CloudFormation stacks based on content in the specified repository.",
-      "type": "string"
-    },
-    "SyncType": {
-      "description": "The type of resource synchronization service that is to be configured, for example, CFN_STACK_SYNC.",
-      "type": "string"
-    },
-    "TriggerResourceUpdateOn": {
-      "description": "When to trigger Git sync to begin the stack update.",
-      "enum": [
-        "ANY_CHANGE",
-        "FILE_CHANGE"
-      ],
-      "type": "string"
+    "list" : {
+      "permissions" : [ "codestar-connections:ListSyncConfigurations", "codestar-connections:ListRepositoryLinks" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ProviderType",
-    "/properties/OwnerId",
-    "/properties/RepositoryName"
-  ],
-  "required": [
-    "Branch",
-    "ConfigFile",
-    "RepositoryLinkId",
-    "ResourceName",
-    "SyncType",
-    "RoleArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codestarconnections.git",
-  "tagging": {
-    "taggable": false
+  "tagging" : {
+    "taggable" : false
   },
-  "typeName": "AWS::CodeStarConnections::SyncConfiguration"
+  "additionalProperties" : false
 }

@@ -1,149 +1,107 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Sample": {
-      "additionalProperties": false,
-      "properties": {
-        "Size": {
-          "description": "Sample size",
-          "minimum": 1,
-          "type": "integer"
+  "typeName" : "AWS::DataBrew::Project",
+  "description" : "Resource schema for AWS::DataBrew::Project.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
+  "properties" : {
+    "DatasetName" : {
+      "description" : "Dataset name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "Name" : {
+      "description" : "Project name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "RecipeName" : {
+      "description" : "Recipe name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "RoleArn" : {
+      "description" : "Role arn",
+      "type" : "string"
+    },
+    "Sample" : {
+      "description" : "Sample",
+      "$ref" : "#/definitions/Sample"
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Sample" : {
+      "type" : "object",
+      "properties" : {
+        "Size" : {
+          "description" : "Sample size",
+          "minimum" : 1,
+          "type" : "integer"
         },
-        "Type": {
-          "description": "Sample type",
-          "enum": [
-            "FIRST_N",
-            "LAST_N",
-            "RANDOM"
-          ],
-          "type": "string"
+        "Type" : {
+          "description" : "Sample type",
+          "enum" : [ "FIRST_N", "LAST_N", "RANDOM" ],
+          "type" : "string"
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Type" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource schema for AWS::DataBrew::Project.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "databrew:CreateProject",
-        "databrew:DescribeProject",
-        "databrew:TagResource",
-        "databrew:UntagResource",
-        "iam:PassRole"
-      ]
+  "additionalProperties" : false,
+  "required" : [ "DatasetName", "Name", "RecipeName", "RoleArn" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "databrew:TagResource", "databrew:UntagResource", "databrew:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "databrew:CreateProject", "databrew:DescribeProject", "databrew:TagResource", "databrew:UntagResource", "iam:PassRole" ]
     },
-    "delete": {
-      "permissions": [
-        "databrew:DeleteProject"
-      ]
+    "read" : {
+      "permissions" : [ "databrew:DescribeProject", "iam:ListRoles" ]
     },
-    "list": {
-      "permissions": [
-        "databrew:ListProjects",
-        "databrew:ListTagsForResource",
-        "iam:ListRoles"
-      ]
+    "update" : {
+      "permissions" : [ "databrew:UpdateProject", "databrew:TagResource", "databrew:UntagResource", "iam:PassRole" ]
     },
-    "read": {
-      "permissions": [
-        "databrew:DescribeProject",
-        "iam:ListRoles"
-      ]
+    "delete" : {
+      "permissions" : [ "databrew:DeleteProject" ]
     },
-    "update": {
-      "permissions": [
-        "databrew:UpdateProject",
-        "databrew:TagResource",
-        "databrew:UntagResource",
-        "iam:PassRole"
-      ]
+    "list" : {
+      "permissions" : [ "databrew:ListProjects", "databrew:ListTagsForResource", "iam:ListRoles" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "DatasetName": {
-      "description": "Dataset name",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Name": {
-      "description": "Project name",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "RecipeName": {
-      "description": "Recipe name",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "RoleArn": {
-      "description": "Role arn",
-      "type": "string"
-    },
-    "Sample": {
-      "$ref": "#/definitions/Sample",
-      "description": "Sample"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "required": [
-    "DatasetName",
-    "Name",
-    "RecipeName",
-    "RoleArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-databrew.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "databrew:TagResource",
-      "databrew:UntagResource",
-      "databrew:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::DataBrew::Project"
+  }
 }

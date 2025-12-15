@@ -1,132 +1,105 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Resource": {
-      "additionalProperties": false,
-      "description": "ARN of resource to share.",
-      "properties": {
-        "Cidr": {
-          "type": "string"
+  "typeName" : "AWS::GlobalAccelerator::CrossAccountAttachment",
+  "description" : "Resource Type definition for AWS::GlobalAccelerator::CrossAccountAttachment",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
+  "definitions" : {
+    "Tag" : {
+      "description" : "Tag is a key-value pair associated with Cross Account Attachment.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "description" : "Key of the tag. Value can be 1 to 127 characters.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 127
         },
-        "EndpointId": {
-          "type": "string"
-        },
-        "Region": {
-          "type": "string"
+        "Value" : {
+          "description" : "Value for the tag. Value can be 1 to 255 characters.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255
         }
       },
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "Tag is a key-value pair associated with Cross Account Attachment.",
-      "properties": {
-        "Key": {
-          "description": "Key of the tag. Value can be 1 to 127 characters.",
-          "maxLength": 127,
-          "minLength": 1,
-          "type": "string"
+    "Resource" : {
+      "description" : "ARN of resource to share.",
+      "type" : "object",
+      "properties" : {
+        "EndpointId" : {
+          "type" : "string"
         },
-        "Value": {
-          "description": "Value for the tag. Value can be 1 to 255 characters.",
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
+        "Cidr" : {
+          "type" : "string"
+        },
+        "Region" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::GlobalAccelerator::CrossAccountAttachment",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "globalaccelerator:DescribeCrossAccountAttachment",
-        "globalaccelerator:CreateCrossAccountAttachment",
-        "globalaccelerator:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The Friendly identifier of the attachment.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]{0,64}$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "globalaccelerator:DescribeCrossAccountAttachment",
-        "globalaccelerator:DeleteCrossAccountAttachment"
-      ]
+    "AttachmentArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the attachment.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "globalaccelerator:ListCrossAccountAttachments"
-      ]
+    "Principals" : {
+      "description" : "Principals to share the resources with.",
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     },
-    "read": {
-      "permissions": [
-        "globalaccelerator:DescribeCrossAccountAttachment"
-      ]
+    "Resources" : {
+      "description" : "Resources shared using the attachment.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Resource"
+      }
     },
-    "update": {
-      "permissions": [
-        "globalaccelerator:UpdateCrossAccountAttachment",
-        "globalaccelerator:DescribeCrossAccountAttachment",
-        "globalaccelerator:TagResource",
-        "globalaccelerator:UntagResource"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/AttachmentArn"
-  ],
-  "properties": {
-    "AttachmentArn": {
-      "description": "The Amazon Resource Name (ARN) of the attachment.",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags"
+  },
+  "required" : [ "Name" ],
+  "writeOnlyProperties" : [ "/properties/Resources/*/Region" ],
+  "readOnlyProperties" : [ "/properties/AttachmentArn" ],
+  "primaryIdentifier" : [ "/properties/AttachmentArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "globalaccelerator:DescribeCrossAccountAttachment", "globalaccelerator:CreateCrossAccountAttachment", "globalaccelerator:TagResource" ]
     },
-    "Name": {
-      "description": "The Friendly identifier of the attachment.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]{0,64}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "globalaccelerator:DescribeCrossAccountAttachment" ]
     },
-    "Principals": {
-      "description": "Principals to share the resources with.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
+    "update" : {
+      "permissions" : [ "globalaccelerator:UpdateCrossAccountAttachment", "globalaccelerator:DescribeCrossAccountAttachment", "globalaccelerator:TagResource", "globalaccelerator:UntagResource" ]
     },
-    "Resources": {
-      "description": "Resources shared using the attachment.",
-      "items": {
-        "$ref": "#/definitions/Resource"
-      },
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "globalaccelerator:DescribeCrossAccountAttachment", "globalaccelerator:DeleteCrossAccountAttachment" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "list" : {
+      "permissions" : [ "globalaccelerator:ListCrossAccountAttachments" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/AttachmentArn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-globalaccelerator",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::GlobalAccelerator::CrossAccountAttachment",
-  "writeOnlyProperties": [
-    "/properties/Resources/*/Region"
-  ]
+  "additionalProperties" : false
 }

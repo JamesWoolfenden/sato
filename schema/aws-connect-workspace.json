@@ -1,420 +1,350 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/InstanceArn"
-  ],
-  "definitions": {
-    "FontFamily": {
-      "additionalProperties": false,
-      "properties": {
-        "Default": {
-          "$ref": "#/definitions/WorkspaceFontFamily"
+  "typeName" : "AWS::Connect::Workspace",
+  "description" : "Resource Type definition for AWS::Connect::Workspace",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "MediaItem": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "maxLength": 533333,
-          "minLength": 1,
-          "pattern": ".*\\S.*",
-          "type": "string"
+    "Visibility" : {
+      "description" : "The visibility of the Connect workspace",
+      "type" : "string",
+      "enum" : [ "ALL", "ASSIGNED", "NONE" ]
+    },
+    "WorkspaceFontFamily" : {
+      "type" : "string",
+      "enum" : [ "ARIAL", "COURIER_NEW", "GEORGIA", "TIMES_NEW_ROMAN", "TREBUCHET", "VERDANA" ]
+    },
+    "ThemeString" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 127,
+      "pattern" : ".*\\S.*"
+    },
+    "ThemeImageLink" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 254,
+      "pattern" : ".*\\S.*"
+    },
+    "PaletteHeader" : {
+      "type" : "object",
+      "properties" : {
+        "Background" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "Type": {
-          "$ref": "#/definitions/MediaType"
+        "Text" : {
+          "$ref" : "#/definitions/ThemeString"
+        },
+        "TextHover" : {
+          "$ref" : "#/definitions/ThemeString"
+        },
+        "InvertActionsColors" : {
+          "type" : "boolean"
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "MediaType": {
-      "description": "The type of media",
-      "enum": [
-        "IMAGE_LOGO_LIGHT_FAVICON",
-        "IMAGE_LOGO_DARK_FAVICON",
-        "IMAGE_LOGO_LIGHT_HORIZONTAL",
-        "IMAGE_LOGO_DARK_HORIZONTAL"
-      ],
-      "type": "string"
-    },
-    "PaletteCanvas": {
-      "additionalProperties": false,
-      "properties": {
-        "ActiveBackground": {
-          "$ref": "#/definitions/ThemeString"
+    "PaletteNavigation" : {
+      "type" : "object",
+      "properties" : {
+        "Background" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "ContainerBackground": {
-          "$ref": "#/definitions/ThemeString"
+        "TextBackgroundHover" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "PageBackground": {
-          "$ref": "#/definitions/ThemeString"
+        "TextBackgroundActive" : {
+          "$ref" : "#/definitions/ThemeString"
+        },
+        "Text" : {
+          "$ref" : "#/definitions/ThemeString"
+        },
+        "TextHover" : {
+          "$ref" : "#/definitions/ThemeString"
+        },
+        "TextActive" : {
+          "$ref" : "#/definitions/ThemeString"
+        },
+        "InvertActionsColors" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PaletteHeader": {
-      "additionalProperties": false,
-      "properties": {
-        "Background": {
-          "$ref": "#/definitions/ThemeString"
+    "PaletteCanvas" : {
+      "type" : "object",
+      "properties" : {
+        "ContainerBackground" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "InvertActionsColors": {
-          "type": "boolean"
+        "PageBackground" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "Text": {
-          "$ref": "#/definitions/ThemeString"
-        },
-        "TextHover": {
-          "$ref": "#/definitions/ThemeString"
+        "ActiveBackground" : {
+          "$ref" : "#/definitions/ThemeString"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PaletteNavigation": {
-      "additionalProperties": false,
-      "properties": {
-        "Background": {
-          "$ref": "#/definitions/ThemeString"
+    "PalettePrimary" : {
+      "type" : "object",
+      "properties" : {
+        "Default" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "InvertActionsColors": {
-          "type": "boolean"
+        "Active" : {
+          "$ref" : "#/definitions/ThemeString"
         },
-        "Text": {
-          "$ref": "#/definitions/ThemeString"
-        },
-        "TextActive": {
-          "$ref": "#/definitions/ThemeString"
-        },
-        "TextBackgroundActive": {
-          "$ref": "#/definitions/ThemeString"
-        },
-        "TextBackgroundHover": {
-          "$ref": "#/definitions/ThemeString"
-        },
-        "TextHover": {
-          "$ref": "#/definitions/ThemeString"
+        "ContrastText" : {
+          "$ref" : "#/definitions/ThemeString"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PalettePrimary": {
-      "additionalProperties": false,
-      "properties": {
-        "Active": {
-          "$ref": "#/definitions/ThemeString"
+    "WorkspaceThemePalette" : {
+      "type" : "object",
+      "properties" : {
+        "Header" : {
+          "$ref" : "#/definitions/PaletteHeader"
         },
-        "ContrastText": {
-          "$ref": "#/definitions/ThemeString"
+        "Navigation" : {
+          "$ref" : "#/definitions/PaletteNavigation"
         },
-        "Default": {
-          "$ref": "#/definitions/ThemeString"
+        "Canvas" : {
+          "$ref" : "#/definitions/PaletteCanvas"
+        },
+        "Primary" : {
+          "$ref" : "#/definitions/PalettePrimary"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "FontFamily" : {
+      "type" : "object",
+      "properties" : {
+        "Default" : {
+          "$ref" : "#/definitions/WorkspaceFontFamily"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ThemeImageLink": {
-      "maxLength": 254,
-      "minLength": 1,
-      "pattern": ".*\\S.*",
-      "type": "string"
-    },
-    "ThemeString": {
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": ".*\\S.*",
-      "type": "string"
-    },
-    "Visibility": {
-      "description": "The visibility of the Connect workspace",
-      "enum": [
-        "ALL",
-        "ASSIGNED",
-        "NONE"
-      ],
-      "type": "string"
-    },
-    "WorkspaceFontFamily": {
-      "enum": [
-        "ARIAL",
-        "COURIER_NEW",
-        "GEORGIA",
-        "TIMES_NEW_ROMAN",
-        "TREBUCHET",
-        "VERDANA"
-      ],
-      "type": "string"
-    },
-    "WorkspacePage": {
-      "additionalProperties": false,
-      "properties": {
-        "InputData": {
-          "description": "The input data for the page.",
-          "maxLength": 4096,
-          "minLength": 0,
-          "type": "string"
-        },
-        "Page": {
-          "description": "The page identifier.",
-          "maxLength": 25,
-          "minLength": 1,
-          "pattern": "^(?!\\.$)(?!\\.\\.$)[\\p{L}\\p{Z}\\p{N}\\-_.:=@'|]+$",
-          "type": "string"
-        },
-        "ResourceArn": {
-          "description": "The Amazon Resource Name (ARN) of the resource associated with the page.",
-          "maxLength": 2048,
-          "type": "string"
-        },
-        "Slug": {
-          "description": "The slug for the page.",
-          "maxLength": 63,
-          "minLength": 0,
-          "pattern": "^$|^[\\p{L}\\p{Z}\\p{N}\\-_.:=@'|]{3,}$",
-          "type": "string"
+    "WorkspaceThemeTypography" : {
+      "type" : "object",
+      "properties" : {
+        "FontFamily" : {
+          "$ref" : "#/definitions/FontFamily"
         }
       },
-      "required": [
-        "ResourceArn",
-        "Page"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "WorkspaceTheme": {
-      "additionalProperties": false,
-      "description": "The theme configuration for the Connect workspace",
-      "properties": {
-        "Dark": {
-          "$ref": "#/definitions/WorkspaceThemeConfig"
+    "WorkspaceThemeConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Palette" : {
+          "$ref" : "#/definitions/WorkspaceThemePalette"
         },
-        "Light": {
-          "$ref": "#/definitions/WorkspaceThemeConfig"
+        "Typography" : {
+          "$ref" : "#/definitions/WorkspaceThemeTypography"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "WorkspaceThemeConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Palette": {
-          "$ref": "#/definitions/WorkspaceThemePalette"
+    "WorkspaceTheme" : {
+      "type" : "object",
+      "description" : "The theme configuration for the Connect workspace",
+      "properties" : {
+        "Light" : {
+          "$ref" : "#/definitions/WorkspaceThemeConfig"
         },
-        "Typography": {
-          "$ref": "#/definitions/WorkspaceThemeTypography"
+        "Dark" : {
+          "$ref" : "#/definitions/WorkspaceThemeConfig"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "WorkspaceThemePalette": {
-      "additionalProperties": false,
-      "properties": {
-        "Canvas": {
-          "$ref": "#/definitions/PaletteCanvas"
+    "MediaType" : {
+      "description" : "The type of media",
+      "type" : "string",
+      "enum" : [ "IMAGE_LOGO_LIGHT_FAVICON", "IMAGE_LOGO_DARK_FAVICON", "IMAGE_LOGO_LIGHT_HORIZONTAL", "IMAGE_LOGO_DARK_HORIZONTAL" ]
+    },
+    "MediaItem" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/MediaType"
         },
-        "Header": {
-          "$ref": "#/definitions/PaletteHeader"
-        },
-        "Navigation": {
-          "$ref": "#/definitions/PaletteNavigation"
-        },
-        "Primary": {
-          "$ref": "#/definitions/PalettePrimary"
+        "Source" : {
+          "type" : "string",
+          "pattern" : ".*\\S.*",
+          "minLength" : 1,
+          "maxLength" : 533333
         }
       },
-      "type": "object"
+      "required" : [ "Type" ],
+      "additionalProperties" : false
     },
-    "WorkspaceThemeTypography": {
-      "additionalProperties": false,
-      "properties": {
-        "FontFamily": {
-          "$ref": "#/definitions/FontFamily"
+    "WorkspacePage" : {
+      "type" : "object",
+      "properties" : {
+        "ResourceArn" : {
+          "description" : "The Amazon Resource Name (ARN) of the resource associated with the page.",
+          "type" : "string",
+          "maxLength" : 2048
+        },
+        "Page" : {
+          "description" : "The page identifier.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 25,
+          "pattern" : "^(?!\\.$)(?!\\.\\.$)[\\p{L}\\p{Z}\\p{N}\\-_.:=@'|]+$"
+        },
+        "Slug" : {
+          "description" : "The slug for the page.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 63,
+          "pattern" : "^$|^[\\p{L}\\p{Z}\\p{N}\\-_.:=@'|]{3,}$"
+        },
+        "InputData" : {
+          "description" : "The input data for the page.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 4096
         }
       },
-      "type": "object"
+      "required" : [ "ResourceArn", "Page" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Connect::Workspace",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "connect:CreateWorkspace",
-        "connect:UpdateWorkspaceVisibility",
-        "connect:ImportWorkspaceMedia",
-        "connect:CreateWorkspacePage",
-        "connect:AssociateWorkspace",
-        "connect:TagResource",
-        "connect:ListTagsForResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) for the workspace.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/workspace/[-a-zA-Z0-9]*$"
     },
-    "delete": {
-      "permissions": [
-        "connect:DeleteWorkspace"
-      ]
+    "Name" : {
+      "description" : "The name of the workspace.",
+      "type" : "string",
+      "pattern" : ".*\\S.*",
+      "minLength" : 1,
+      "maxLength" : 127
     },
-    "list": {
-      "permissions": [
-        "connect:ListWorkspaces"
-      ]
+    "Id" : {
+      "description" : "The identifier of the workspace.",
+      "type" : "string",
+      "pattern" : "^.{0,256}$"
     },
-    "read": {
-      "permissions": [
-        "connect:DescribeWorkspace",
-        "connect:ListTagsForResource",
-        "connect:ListWorkspaceMedia",
-        "connect:ListWorkspacePages",
-        "connect:SearchWorkspaceAssociations"
-      ]
+    "InstanceArn" : {
+      "description" : "The identifier of the Amazon Connect instance.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"
     },
-    "update": {
-      "permissions": [
-        "connect:UpdateWorkspaceTheme",
-        "connect:UpdateWorkspaceVisibility",
-        "connect:UpdateWorkspaceMetadata",
-        "connect:ImportWorkspaceMedia",
-        "connect:DeleteWorkspaceMedia",
-        "connect:CreateWorkspacePage",
-        "connect:UpdateWorkspacePage",
-        "connect:DeleteWorkspacePage",
-        "connect:AssociateWorkspace",
-        "connect:DisassociateWorkspace",
-        "connect:TagResource",
-        "connect:UntagResource"
-      ]
+    "Visibility" : {
+      "description" : "The visibility of the workspace. Will always be set to ASSIGNED oninitial creation.",
+      "$ref" : "#/definitions/Visibility"
+    },
+    "Description" : {
+      "description" : "The description of the workspace",
+      "type" : "string",
+      "pattern" : "^[\\P{C}\r\n\t]*$",
+      "minLength" : 0,
+      "maxLength" : 500
+    },
+    "Title" : {
+      "description" : "The title of the workspace",
+      "type" : "string",
+      "pattern" : "^[\\P{C}]*$",
+      "minLength" : 0,
+      "maxLength" : 127
+    },
+    "Theme" : {
+      "description" : "The theme configuration for the workspace",
+      "$ref" : "#/definitions/WorkspaceTheme"
+    },
+    "Media" : {
+      "description" : "The media items for the workspace",
+      "type" : "array",
+      "maxItems" : 4,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/MediaItem"
+      }
+    },
+    "Pages" : {
+      "description" : "The pages associated with the workspace",
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/WorkspacePage"
+      }
+    },
+    "Associations" : {
+      "description" : "The resource ARNs associated with the workspace",
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048
+      }
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) for the workspace.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/workspace/[-a-zA-Z0-9]*$",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name", "InstanceArn" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id" ],
+  "writeOnlyProperties" : [ "/properties/Media/*/Source" ],
+  "createOnlyProperties" : [ "/properties/InstanceArn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "connect:TagResource", "connect:UntagResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "connect:CreateWorkspace", "connect:UpdateWorkspaceVisibility", "connect:ImportWorkspaceMedia", "connect:CreateWorkspacePage", "connect:AssociateWorkspace", "connect:TagResource", "connect:ListTagsForResource" ]
     },
-    "Associations": {
-      "description": "The resource ARNs associated with the workspace",
-      "items": {
-        "maxLength": 2048,
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "read" : {
+      "permissions" : [ "connect:DescribeWorkspace", "connect:ListTagsForResource", "connect:ListWorkspaceMedia", "connect:ListWorkspacePages", "connect:SearchWorkspaceAssociations" ]
     },
-    "Description": {
-      "description": "The description of the workspace",
-      "maxLength": 500,
-      "minLength": 0,
-      "pattern": "^[\\P{C}\r\n\t]*$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "connect:UpdateWorkspaceTheme", "connect:UpdateWorkspaceVisibility", "connect:UpdateWorkspaceMetadata", "connect:ImportWorkspaceMedia", "connect:DeleteWorkspaceMedia", "connect:CreateWorkspacePage", "connect:UpdateWorkspacePage", "connect:DeleteWorkspacePage", "connect:AssociateWorkspace", "connect:DisassociateWorkspace", "connect:TagResource", "connect:UntagResource" ]
     },
-    "Id": {
-      "description": "The identifier of the workspace.",
-      "pattern": "^.{0,256}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "connect:DeleteWorkspace" ]
     },
-    "InstanceArn": {
-      "description": "The identifier of the Amazon Connect instance.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
-      "type": "string"
-    },
-    "Media": {
-      "description": "The media items for the workspace",
-      "items": {
-        "$ref": "#/definitions/MediaItem"
-      },
-      "maxItems": 4,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Name": {
-      "description": "The name of the workspace.",
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": ".*\\S.*",
-      "type": "string"
-    },
-    "Pages": {
-      "description": "The pages associated with the workspace",
-      "items": {
-        "$ref": "#/definitions/WorkspacePage"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Theme": {
-      "$ref": "#/definitions/WorkspaceTheme",
-      "description": "The theme configuration for the workspace"
-    },
-    "Title": {
-      "description": "The title of the workspace",
-      "maxLength": 127,
-      "minLength": 0,
-      "pattern": "^[\\P{C}]*$",
-      "type": "string"
-    },
-    "Visibility": {
-      "$ref": "#/definitions/Visibility",
-      "description": "The visibility of the workspace. Will always be set to ASSIGNED oninitial creation."
+    "list" : {
+      "permissions" : [ "connect:ListWorkspaces" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [
-    "Name",
-    "InstanceArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "connect:TagResource",
-      "connect:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Connect::Workspace",
-  "writeOnlyProperties": [
-    "/properties/Media/*/Source"
-  ]
+  }
 }

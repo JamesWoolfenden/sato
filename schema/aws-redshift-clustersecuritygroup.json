@@ -1,50 +1,39 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Description"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::Redshift::ClusterSecurityGroup",
+  "description" : "Resource Type definition for AWS::Redshift::ClusterSecurityGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::Redshift::ClusterSecurityGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Description": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Description"
-  ],
-  "typeName": "AWS::Redshift::ClusterSecurityGroup"
+  "required" : [ "Description" ],
+  "createOnlyProperties" : [ "/properties/Description" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

@@ -1,196 +1,140 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Encryption",
-    "/properties/RoleArn"
-  ],
-  "definitions": {
-    "EncryptionConfig": {
-      "additionalProperties": false,
-      "description": "Encryption configuration for the S3 Table Integration",
-      "properties": {
-        "KmsKeyArn": {
-          "description": "The ARN of the KMS key used to encrypt the S3 Table Integration",
-          "maxLength": 1011,
-          "minLength": 1,
-          "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
-          "type": "string"
+  "typeName" : "AWS::ObservabilityAdmin::S3TableIntegration",
+  "description" : "Resource Type definition for a CloudWatch Observability Admin S3 Table Integration.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "observabilityadmin:TagResource", "observabilityadmin:UntagResource", "observabilityadmin:ListTagsForResource" ]
+  },
+  "definitions" : {
+    "EncryptionConfig" : {
+      "description" : "Encryption configuration for the S3 Table Integration",
+      "type" : "object",
+      "properties" : {
+        "SseAlgorithm" : {
+          "description" : "The server-side encryption algorithm used to encrypt the S3 Table(s) data",
+          "type" : "string",
+          "enum" : [ "AES256", "aws:kms" ]
         },
-        "SseAlgorithm": {
-          "description": "The server-side encryption algorithm used to encrypt the S3 Table(s) data",
-          "enum": [
-            "AES256",
-            "aws:kms"
-          ],
-          "type": "string"
+        "KmsKeyArn" : {
+          "description" : "The ARN of the KMS key used to encrypt the S3 Table Integration",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1011,
+          "pattern" : "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$"
         }
       },
-      "required": [
-        "SseAlgorithm"
-      ],
-      "type": "object"
+      "required" : [ "SseAlgorithm" ],
+      "additionalProperties" : false
     },
-    "LogSource": {
-      "additionalProperties": false,
-      "description": "CloudWatch Logs data source to associate with the S3 Table Integration",
-      "properties": {
-        "Identifier": {
-          "description": "The ID of the CloudWatch Logs data source association",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+    "LogSource" : {
+      "description" : "CloudWatch Logs data source to associate with the S3 Table Integration",
+      "type" : "object",
+      "properties" : {
+        "Identifier" : {
+          "description" : "The ID of the CloudWatch Logs data source association",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         },
-        "Name": {
-          "description": "The name of the CloudWatch Logs data source",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Name" : {
+          "description" : "The name of the CloudWatch Logs data source",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         },
-        "Type": {
-          "description": "The type of the CloudWatch Logs data source",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Type" : {
+          "description" : "The type of the CloudWatch Logs data source",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Name",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Name", "Type" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for a CloudWatch Observability Admin S3 Table Integration.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "observabilityadmin:CreateS3TableIntegration",
-        "observabilityadmin:GetS3TableIntegration",
-        "observabilityadmin:ListTagsForResource",
-        "observabilityadmin:TagResource",
-        "s3tables:CreateTableBucket",
-        "s3tables:PutTableBucketEncryption",
-        "s3tables:PutTableBucketPolicy",
-        "kms:DescribeKey",
-        "iam:PassRole",
-        "logs:AssociateSourceToS3TableIntegration",
-        "logs:ListSourcesForS3TableIntegration"
-      ]
+  "properties" : {
+    "Encryption" : {
+      "$ref" : "#/definitions/EncryptionConfig"
     },
-    "delete": {
-      "permissions": [
-        "observabilityadmin:DeleteS3TableIntegration",
-        "observabilityadmin:GetS3TableIntegration"
-      ]
+    "RoleArn" : {
+      "description" : "The ARN of the role used to access the S3 Table Integration",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1011,
+      "pattern" : "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$"
     },
-    "list": {
-      "permissions": [
-        "observabilityadmin:ListS3TableIntegrations",
-        "logs:ListSourcesForS3TableIntegration"
-      ]
+    "Arn" : {
+      "description" : "The ARN of the S3 Table Integration",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1011,
+      "pattern" : "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$"
     },
-    "read": {
-      "permissions": [
-        "observabilityadmin:GetS3TableIntegration",
-        "observabilityadmin:ListTagsForResource",
-        "logs:ListSourcesForS3TableIntegration"
-      ]
+    "LogSources" : {
+      "description" : "The CloudWatch Logs data sources to associate with the S3 Table Integration",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/LogSource"
+      }
     },
-    "update": {
-      "permissions": [
-        "observabilityadmin:GetS3TableIntegration",
-        "observabilityadmin:ListTagsForResource",
-        "observabilityadmin:TagResource",
-        "observabilityadmin:UntagResource",
-        "logs:AssociateSourceToS3TableIntegration",
-        "logs:DisassociateSourceFromS3TableIntegration",
-        "logs:ListSourcesForS3TableIntegration"
-      ]
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The ARN of the S3 Table Integration",
-      "maxLength": 1011,
-      "minLength": 1,
-      "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Encryption", "RoleArn" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/LogSources/*/Identifier" ],
+  "createOnlyProperties" : [ "/properties/Encryption", "/properties/RoleArn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "observabilityadmin:CreateS3TableIntegration", "observabilityadmin:GetS3TableIntegration", "observabilityadmin:ListTagsForResource", "observabilityadmin:TagResource", "s3tables:CreateTableBucket", "s3tables:PutTableBucketEncryption", "s3tables:PutTableBucketPolicy", "kms:DescribeKey", "iam:PassRole", "logs:AssociateSourceToS3TableIntegration", "logs:ListSourcesForS3TableIntegration" ]
     },
-    "Encryption": {
-      "$ref": "#/definitions/EncryptionConfig"
+    "read" : {
+      "permissions" : [ "observabilityadmin:GetS3TableIntegration", "observabilityadmin:ListTagsForResource", "logs:ListSourcesForS3TableIntegration" ]
     },
-    "LogSources": {
-      "description": "The CloudWatch Logs data sources to associate with the S3 Table Integration",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/LogSource"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "update" : {
+      "permissions" : [ "observabilityadmin:GetS3TableIntegration", "observabilityadmin:ListTagsForResource", "observabilityadmin:TagResource", "observabilityadmin:UntagResource", "logs:AssociateSourceToS3TableIntegration", "logs:DisassociateSourceFromS3TableIntegration", "logs:ListSourcesForS3TableIntegration" ]
     },
-    "RoleArn": {
-      "description": "The ARN of the role used to access the S3 Table Integration",
-      "maxLength": 1011,
-      "minLength": 1,
-      "pattern": "^arn:aws([a-z0-9\\-]+)?:([a-zA-Z0-9\\-]+):([a-z0-9\\-]+)?:([0-9]{12})?:(.+)$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "observabilityadmin:DeleteS3TableIntegration", "observabilityadmin:GetS3TableIntegration" ]
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "observabilityadmin:ListS3TableIntegrations", "logs:ListSourcesForS3TableIntegration" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/LogSources/*/Identifier"
-  ],
-  "required": [
-    "Encryption",
-    "RoleArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "observabilityadmin:TagResource",
-      "observabilityadmin:UntagResource",
-      "observabilityadmin:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::ObservabilityAdmin::S3TableIntegration"
+  }
 }

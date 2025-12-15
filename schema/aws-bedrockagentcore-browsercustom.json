@@ -1,341 +1,270 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/BrowserArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Description",
-    "/properties/NetworkConfiguration",
-    "/properties/RecordingConfig",
-    "/properties/BrowserSigning",
-    "/properties/ExecutionRoleArn"
-  ],
-  "definitions": {
-    "BrowserArn": {
-      "description": "The ARN of a Browser resource.",
-      "pattern": "^arn:aws(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:(aws|[0-9]{12}):browser(-custom)?\\/(aws\\.browser\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
-      "type": "string"
+  "typeName" : "AWS::BedrockAgentCore::BrowserCustom",
+  "description" : "Resource definition for AWS::BedrockAgentCore::BrowserCustom",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "BrowserId" : {
+      "type" : "string",
+      "pattern" : "^(aws\\.browser\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
+      "description" : "The id of the browser."
     },
-    "BrowserId": {
-      "description": "The id of the browser.",
-      "pattern": "^(aws\\.browser\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
-      "type": "string"
+    "BrowserArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(-[^:]+)?:bedrock-agentcore:[a-z0-9-]+:(aws|[0-9]{12}):browser(-custom)?\\/(aws\\.browser\\.v1|[a-zA-Z][a-zA-Z0-9_]{0,47}-[a-zA-Z0-9]{10})$",
+      "description" : "The ARN of a Browser resource."
     },
-    "BrowserNetworkConfiguration": {
-      "additionalProperties": false,
-      "description": "Network configuration for browser",
-      "properties": {
-        "NetworkMode": {
-          "$ref": "#/definitions/BrowserNetworkMode",
-          "default": "PUBLIC"
+    "BrowserNetworkMode" : {
+      "type" : "string",
+      "enum" : [ "PUBLIC", "VPC" ],
+      "description" : "Network modes supported by browser"
+    },
+    "BrowserNetworkConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "NetworkMode" : {
+          "$ref" : "#/definitions/BrowserNetworkMode",
+          "default" : "PUBLIC"
         },
-        "VpcConfig": {
-          "$ref": "#/definitions/VpcConfig"
+        "VpcConfig" : {
+          "$ref" : "#/definitions/VpcConfig"
         }
       },
-      "required": [
-        "NetworkMode"
-      ],
-      "type": "object"
+      "required" : [ "NetworkMode" ],
+      "additionalProperties" : false,
+      "description" : "Network configuration for browser"
     },
-    "BrowserNetworkMode": {
-      "description": "Network modes supported by browser",
-      "enum": [
-        "PUBLIC",
-        "VPC"
-      ],
-      "type": "string"
-    },
-    "BrowserSigning": {
-      "additionalProperties": false,
-      "description": "Browser signing configuration",
-      "properties": {
-        "Enabled": {
-          "default": false,
-          "type": "boolean"
+    "RecordingConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "S3Location" : {
+          "$ref" : "#/definitions/S3Location"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "description" : "Recording configuration for browser"
     },
-    "BrowserStatus": {
-      "description": "Status of browser",
-      "enum": [
-        "CREATING",
-        "CREATE_FAILED",
-        "READY",
-        "DELETING",
-        "DELETE_FAILED",
-        "DELETED"
-      ],
-      "type": "string"
-    },
-    "BrowserSummaries": {
-      "description": "List of browsers",
-      "items": {
-        "$ref": "#/definitions/BrowserSummary"
-      },
-      "type": "array"
-    },
-    "BrowserSummary": {
-      "additionalProperties": false,
-      "description": "Browser",
-      "properties": {
-        "BrowserArn": {
-          "$ref": "#/definitions/BrowserArn"
-        },
-        "BrowserId": {
-          "$ref": "#/definitions/BrowserId"
-        },
-        "CreatedAt": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "Description": {
-          "type": "string"
-        },
-        "LastUpdatedAt": {
-          "format": "date-time",
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Status": {
-          "$ref": "#/definitions/BrowserStatus"
+    "BrowserSigning" : {
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean",
+          "default" : false
         }
       },
-      "required": [
-        "BrowserId",
-        "BrowserArn",
-        "Status",
-        "CreatedAt"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "description" : "Browser signing configuration"
     },
-    "RecordingConfig": {
-      "additionalProperties": false,
-      "description": "Recording configuration for browser",
-      "properties": {
-        "Enabled": {
-          "default": false,
-          "type": "boolean"
+    "S3Location" : {
+      "type" : "object",
+      "properties" : {
+        "Bucket" : {
+          "type" : "string",
+          "pattern" : "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$"
         },
-        "S3Location": {
-          "$ref": "#/definitions/S3Location"
+        "Prefix" : {
+          "type" : "string",
+          "minLength" : 1
         }
       },
-      "type": "object"
+      "required" : [ "Bucket", "Prefix" ],
+      "additionalProperties" : false,
+      "description" : "S3 Location Configuration"
     },
-    "RoleArn": {
-      "description": "The Amazon Resource Name (ARN) of the IAM role.",
-      "pattern": "^arn:aws(-[a-z]+)*:iam::[0-9]{12}:role/.+$",
-      "type": "string"
-    },
-    "S3Location": {
-      "additionalProperties": false,
-      "description": "S3 Location Configuration",
-      "properties": {
-        "Bucket": {
-          "pattern": "^[a-z0-9][a-z0-9.-]{1,61}[a-z0-9]$",
-          "type": "string"
+    "VpcConfig" : {
+      "type" : "object",
+      "description" : "Network mode configuration for VPC",
+      "properties" : {
+        "SecurityGroups" : {
+          "$ref" : "#/definitions/SecurityGroups"
         },
-        "Prefix": {
-          "minLength": 1,
-          "type": "string"
+        "Subnets" : {
+          "$ref" : "#/definitions/Subnets"
         }
       },
-      "required": [
-        "Bucket",
-        "Prefix"
-      ],
-      "type": "object"
+      "required" : [ "SecurityGroups", "Subnets" ],
+      "additionalProperties" : false
     },
-    "SecurityGroupId": {
-      "description": "Security group id",
-      "pattern": "^sg-[0-9a-zA-Z]{8,17}$",
-      "type": "string"
+    "SecurityGroups" : {
+      "type" : "array",
+      "description" : "Security groups for VPC",
+      "minItems" : 1,
+      "maxItems" : 16,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/SecurityGroupId"
+      }
     },
-    "SecurityGroups": {
-      "description": "Security groups for VPC",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/SecurityGroupId"
-      },
-      "maxItems": 16,
-      "minItems": 1,
-      "type": "array"
+    "SecurityGroupId" : {
+      "type" : "string",
+      "description" : "Security group id",
+      "pattern" : "^sg-[0-9a-zA-Z]{8,17}$"
     },
-    "SubnetId": {
-      "description": "Subnet id",
-      "pattern": "^subnet-[0-9a-zA-Z]{8,17}$",
-      "type": "string"
+    "Subnets" : {
+      "type" : "array",
+      "description" : "Subnets for VPC",
+      "minItems" : 1,
+      "maxItems" : 16,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/SubnetId"
+      }
     },
-    "Subnets": {
-      "description": "Subnets for VPC",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/SubnetId"
-      },
-      "maxItems": 16,
-      "minItems": 1,
-      "type": "array"
+    "SubnetId" : {
+      "type" : "string",
+      "description" : "Subnet id",
+      "pattern" : "^subnet-[0-9a-zA-Z]{8,17}$"
     },
-    "TagsMap": {
-      "additionalProperties": false,
-      "description": "A map of tag keys and values",
-      "patternProperties": {
-        "^[a-zA-Z0-9\\s._:/=+@-]*$": {
-          "description": "Value of a tag",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9\\s._:/=+@-]*$",
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "BrowserStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "CREATE_FAILED", "READY", "DELETING", "DELETE_FAILED", "DELETED" ],
+      "description" : "Status of browser"
     },
-    "VpcConfig": {
-      "additionalProperties": false,
-      "description": "Network mode configuration for VPC",
-      "properties": {
-        "SecurityGroups": {
-          "$ref": "#/definitions/SecurityGroups"
+    "BrowserSummary" : {
+      "type" : "object",
+      "properties" : {
+        "BrowserId" : {
+          "$ref" : "#/definitions/BrowserId"
         },
-        "Subnets": {
-          "$ref": "#/definitions/Subnets"
+        "BrowserArn" : {
+          "$ref" : "#/definitions/BrowserArn"
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "Status" : {
+          "$ref" : "#/definitions/BrowserStatus"
+        },
+        "CreatedAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "LastUpdatedAt" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       },
-      "required": [
-        "SecurityGroups",
-        "Subnets"
-      ],
-      "type": "object"
+      "required" : [ "BrowserId", "BrowserArn", "Status", "CreatedAt" ],
+      "additionalProperties" : false,
+      "description" : "Browser"
+    },
+    "BrowserSummaries" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/BrowserSummary"
+      },
+      "description" : "List of browsers"
+    },
+    "RoleArn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws(-[a-z]+)*:iam::[0-9]{12}:role/.+$",
+      "description" : "The Amazon Resource Name (ARN) of the IAM role."
+    },
+    "TagsMap" : {
+      "type" : "object",
+      "description" : "A map of tag keys and values",
+      "patternProperties" : {
+        "^[a-zA-Z0-9\\s._:/=+@-]*$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9\\s._:/=+@-]*$",
+          "description" : "Value of a tag"
+        }
+      },
+      "additionalProperties" : false
     }
   },
-  "description": "Resource definition for AWS::BedrockAgentCore::BrowserCustom",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "bedrock-agentcore:CreateBrowser",
-        "bedrock-agentcore:GetBrowser",
-        "bedrock-agentcore:TagResource",
-        "bedrock-agentcore:ListTagsForResource",
-        "iam:CreateServiceLinkedRole",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "BrowserId" : {
+      "$ref" : "#/definitions/BrowserId",
+      "description" : "The id of the browser."
     },
-    "delete": {
-      "permissions": [
-        "bedrock-agentcore:GetBrowser",
-        "bedrock-agentcore:DeleteBrowser"
-      ]
+    "BrowserArn" : {
+      "$ref" : "#/definitions/BrowserArn",
+      "description" : "The ARN of a Browser resource."
     },
-    "list": {
-      "permissions": [
-        "bedrock-agentcore:ListBrowsers"
-      ]
+    "Name" : {
+      "type" : "string",
+      "description" : "The name of the browser."
     },
-    "read": {
-      "permissions": [
-        "bedrock-agentcore:GetBrowser",
-        "bedrock-agentcore:ListTagsForResource"
-      ]
+    "Description" : {
+      "type" : "string",
+      "description" : "The description of the browser."
     },
-    "update": {
-      "permissions": [
-        "bedrock-agentcore:GetBrowser",
-        "bedrock-agentcore:TagResource",
-        "bedrock-agentcore:UntagResource",
-        "bedrock-agentcore:ListTagsForResource",
-        "iam:PassRole"
-      ]
+    "NetworkConfiguration" : {
+      "$ref" : "#/definitions/BrowserNetworkConfiguration",
+      "description" : "Network configuration for browser."
+    },
+    "RecordingConfig" : {
+      "$ref" : "#/definitions/RecordingConfig",
+      "description" : "Recording configuration for browser."
+    },
+    "BrowserSigning" : {
+      "$ref" : "#/definitions/BrowserSigning",
+      "description" : "Browser signing configuration."
+    },
+    "ExecutionRoleArn" : {
+      "$ref" : "#/definitions/RoleArn",
+      "description" : "The Amazon Resource Name (ARN) of the IAM role that the browser uses to access resources."
+    },
+    "Status" : {
+      "$ref" : "#/definitions/BrowserStatus",
+      "description" : "Status of browser."
+    },
+    "FailureReason" : {
+      "type" : "string",
+      "description" : "The reason for failure if the browser creation or operation failed."
+    },
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time",
+      "description" : "Timestamp when the browser was created."
+    },
+    "LastUpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time",
+      "description" : "Timestamp when the browser was last updated."
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagsMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/BrowserId"
-  ],
-  "properties": {
-    "BrowserArn": {
-      "$ref": "#/definitions/BrowserArn",
-      "description": "The ARN of a Browser resource."
+  "additionalProperties" : false,
+  "required" : [ "Name", "NetworkConfiguration" ],
+  "readOnlyProperties" : [ "/properties/BrowserId", "/properties/BrowserArn", "/properties/Status", "/properties/FailureReason", "/properties/CreatedAt", "/properties/LastUpdatedAt" ],
+  "primaryIdentifier" : [ "/properties/BrowserId" ],
+  "additionalIdentifiers" : [ [ "/properties/BrowserArn" ] ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Description", "/properties/NetworkConfiguration", "/properties/RecordingConfig", "/properties/BrowserSigning", "/properties/ExecutionRoleArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "bedrock-agentcore:CreateBrowser", "bedrock-agentcore:GetBrowser", "bedrock-agentcore:TagResource", "bedrock-agentcore:ListTagsForResource", "iam:CreateServiceLinkedRole", "iam:PassRole" ]
     },
-    "BrowserId": {
-      "$ref": "#/definitions/BrowserId",
-      "description": "The id of the browser."
+    "read" : {
+      "permissions" : [ "bedrock-agentcore:GetBrowser", "bedrock-agentcore:ListTagsForResource" ]
     },
-    "BrowserSigning": {
-      "$ref": "#/definitions/BrowserSigning",
-      "description": "Browser signing configuration."
+    "update" : {
+      "permissions" : [ "bedrock-agentcore:GetBrowser", "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:ListTagsForResource", "iam:PassRole" ]
     },
-    "CreatedAt": {
-      "description": "Timestamp when the browser was created.",
-      "format": "date-time",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "bedrock-agentcore:GetBrowser", "bedrock-agentcore:DeleteBrowser" ]
     },
-    "Description": {
-      "description": "The description of the browser.",
-      "type": "string"
-    },
-    "ExecutionRoleArn": {
-      "$ref": "#/definitions/RoleArn",
-      "description": "The Amazon Resource Name (ARN) of the IAM role that the browser uses to access resources."
-    },
-    "FailureReason": {
-      "description": "The reason for failure if the browser creation or operation failed.",
-      "type": "string"
-    },
-    "LastUpdatedAt": {
-      "description": "Timestamp when the browser was last updated.",
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the browser.",
-      "type": "string"
-    },
-    "NetworkConfiguration": {
-      "$ref": "#/definitions/BrowserNetworkConfiguration",
-      "description": "Network configuration for browser."
-    },
-    "RecordingConfig": {
-      "$ref": "#/definitions/RecordingConfig",
-      "description": "Recording configuration for browser."
-    },
-    "Status": {
-      "$ref": "#/definitions/BrowserStatus",
-      "description": "Status of browser."
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagsMap"
+    "list" : {
+      "permissions" : [ "bedrock-agentcore:ListBrowsers" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/BrowserId",
-    "/properties/BrowserArn",
-    "/properties/Status",
-    "/properties/FailureReason",
-    "/properties/CreatedAt",
-    "/properties/LastUpdatedAt"
-  ],
-  "required": [
-    "Name",
-    "NetworkConfiguration"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "bedrock-agentcore:TagResource",
-      "bedrock-agentcore:UntagResource",
-      "bedrock-agentcore:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::BedrockAgentCore::BrowserCustom"
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "bedrock-agentcore:TagResource", "bedrock-agentcore:UntagResource", "bedrock-agentcore:ListTagsForResource" ]
+  }
 }

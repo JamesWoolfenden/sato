@@ -1,144 +1,113 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/InstanceArn"
-  ],
-  "definitions": {
-    "AccessControlAttribute": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]+",
-          "type": "string"
+  "typeName" : "AWS::SSO::InstanceAccessControlAttributeConfiguration",
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false
+  },
+  "description" : "Resource Type definition for SSO InstanceAccessControlAttributeConfiguration",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-instanceaccesscontrolattributeconfiguration",
+  "definitions" : {
+    "AccessControlAttributeValueSource" : {
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 256,
+      "pattern" : "[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@\\[\\]\\{\\}\\$\\\\\"]*"
+    },
+    "AccessControlAttributeValueSourceList" : {
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/AccessControlAttributeValueSource"
+      },
+      "maxItems" : 1
+    },
+    "AccessControlAttributeValue" : {
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "$ref" : "#/definitions/AccessControlAttributeValueSourceList"
+        }
+      },
+      "required" : [ "Source" ],
+      "additionalProperties" : false
+    },
+    "AccessControlAttribute" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@]+",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "$ref": "#/definitions/AccessControlAttributeValue"
+        "Value" : {
+          "$ref" : "#/definitions/AccessControlAttributeValue"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "AccessControlAttributeList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AccessControlAttribute"
+    "AccessControlAttributeList" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/AccessControlAttribute"
       },
-      "maxItems": 50,
-      "type": "array"
-    },
-    "AccessControlAttributeValue": {
-      "additionalProperties": false,
-      "properties": {
-        "Source": {
-          "$ref": "#/definitions/AccessControlAttributeValueSourceList"
-        }
-      },
-      "required": [
-        "Source"
-      ],
-      "type": "object"
-    },
-    "AccessControlAttributeValueSource": {
-      "maxLength": 256,
-      "minLength": 0,
-      "pattern": "[\\p{L}\\p{Z}\\p{N}_.:\\/=+\\-@\\[\\]\\{\\}\\$\\\\\"]*",
-      "type": "string"
-    },
-    "AccessControlAttributeValueSourceList": {
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/AccessControlAttributeValueSource"
-      },
-      "maxItems": 1,
-      "type": "array"
+      "maxItems" : 50
     }
   },
-  "deprecatedProperties": [
-    "/properties/InstanceAccessControlAttributeConfiguration"
-  ],
-  "description": "Resource Type definition for SSO InstanceAccessControlAttributeConfiguration",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "sso:CreateInstanceAccessControlAttributeConfiguration",
-        "sso:UpdateApplicationProfileForAWSAccountInstance",
-        "sso:DescribeInstanceAccessControlAttributeConfiguration"
-      ]
+  "properties" : {
+    "InstanceArn" : {
+      "description" : "The ARN of the AWS SSO instance under which the operation will be executed.",
+      "type" : "string",
+      "pattern" : "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
+      "minLength" : 10,
+      "maxLength" : 1224
     },
-    "delete": {
-      "permissions": [
-        "sso:DeleteInstanceAccessControlAttributeConfiguration",
-        "sso:DescribeInstanceAccessControlAttributeConfiguration"
-      ]
+    "InstanceAccessControlAttributeConfiguration" : {
+      "description" : "The InstanceAccessControlAttributeConfiguration property has been deprecated but is still supported for backwards compatibility purposes. We recomend that you use  AccessControlAttributes property instead.",
+      "type" : "object",
+      "properties" : {
+        "AccessControlAttributes" : {
+          "$ref" : "#/definitions/AccessControlAttributeList"
+        }
+      },
+      "required" : [ "AccessControlAttributes" ],
+      "additionalProperties" : false
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "InstanceArn": {
-            "$ref": "resource-schema.json#/properties/InstanceArn"
+    "AccessControlAttributes" : {
+      "$ref" : "#/definitions/AccessControlAttributeList"
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "InstanceArn" ],
+  "createOnlyProperties" : [ "/properties/InstanceArn" ],
+  "primaryIdentifier" : [ "/properties/InstanceArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "sso:CreateInstanceAccessControlAttributeConfiguration", "sso:UpdateApplicationProfileForAWSAccountInstance", "sso:DescribeInstanceAccessControlAttributeConfiguration" ]
+    },
+    "read" : {
+      "permissions" : [ "sso:DescribeInstanceAccessControlAttributeConfiguration" ]
+    },
+    "update" : {
+      "permissions" : [ "sso:UpdateInstanceAccessControlAttributeConfiguration", "sso:DescribeInstanceAccessControlAttributeConfiguration" ]
+    },
+    "delete" : {
+      "permissions" : [ "sso:DeleteInstanceAccessControlAttributeConfiguration", "sso:DescribeInstanceAccessControlAttributeConfiguration" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "InstanceArn" : {
+            "$ref" : "resource-schema.json#/properties/InstanceArn"
           }
         },
-        "required": [
-          "InstanceArn"
-        ]
+        "required" : [ "InstanceArn" ]
       },
-      "permissions": [
-        "sso:DescribeInstanceAccessControlAttributeConfiguration"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "sso:DescribeInstanceAccessControlAttributeConfiguration"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "sso:UpdateInstanceAccessControlAttributeConfiguration",
-        "sso:DescribeInstanceAccessControlAttributeConfiguration"
-      ]
+      "permissions" : [ "sso:DescribeInstanceAccessControlAttributeConfiguration" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/InstanceArn"
-  ],
-  "properties": {
-    "AccessControlAttributes": {
-      "$ref": "#/definitions/AccessControlAttributeList"
-    },
-    "InstanceAccessControlAttributeConfiguration": {
-      "additionalProperties": false,
-      "description": "The InstanceAccessControlAttributeConfiguration property has been deprecated but is still supported for backwards compatibility purposes. We recomend that you use  AccessControlAttributes property instead.",
-      "properties": {
-        "AccessControlAttributes": {
-          "$ref": "#/definitions/AccessControlAttributeList"
-        }
-      },
-      "required": [
-        "AccessControlAttributes"
-      ],
-      "type": "object"
-    },
-    "InstanceArn": {
-      "description": "The ARN of the AWS SSO instance under which the operation will be executed.",
-      "maxLength": 1224,
-      "minLength": 10,
-      "pattern": "arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}",
-      "type": "string"
-    }
-  },
-  "required": [
-    "InstanceArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-instanceaccesscontrolattributeconfiguration",
-  "tagging": {
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::SSO::InstanceAccessControlAttributeConfiguration"
+  "deprecatedProperties" : [ "/properties/InstanceAccessControlAttributeConfiguration" ]
 }

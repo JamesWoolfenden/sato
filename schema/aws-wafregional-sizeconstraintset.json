@@ -1,73 +1,58 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "FieldToMatch": {
-      "additionalProperties": false,
-      "properties": {
-        "Data": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+  "typeName" : "AWS::WAFRegional::SizeConstraintSet",
+  "description" : "Resource Type definition for AWS::WAFRegional::SizeConstraintSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "SizeConstraint": {
-      "additionalProperties": false,
-      "properties": {
-        "ComparisonOperator": {
-          "type": "string"
-        },
-        "FieldToMatch": {
-          "$ref": "#/definitions/FieldToMatch"
-        },
-        "Size": {
-          "type": "integer"
-        },
-        "TextTransformation": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ComparisonOperator",
-        "TextTransformation",
-        "Size",
-        "FieldToMatch"
-      ],
-      "type": "object"
+    "SizeConstraints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/SizeConstraint"
+      }
+    },
+    "Name" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::WAFRegional::SizeConstraintSet",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "SizeConstraints": {
-      "items": {
-        "$ref": "#/definitions/SizeConstraint"
+  "definitions" : {
+    "SizeConstraint" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ComparisonOperator" : {
+          "type" : "string"
+        },
+        "Size" : {
+          "type" : "integer"
+        },
+        "TextTransformation" : {
+          "type" : "string"
+        },
+        "FieldToMatch" : {
+          "$ref" : "#/definitions/FieldToMatch"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "ComparisonOperator", "TextTransformation", "Size", "FieldToMatch" ]
+    },
+    "FieldToMatch" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "type" : "string"
+        },
+        "Data" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Type" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Name"
-  ],
-  "typeName": "AWS::WAFRegional::SizeConstraintSet"
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

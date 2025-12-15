@@ -1,128 +1,91 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::FraudDetector::Outcome",
+  "description" : "An outcome for rule evaluation.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "An outcome for rule evaluation.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "frauddetector:GetOutcomes",
-        "frauddetector:PutOutcome",
-        "frauddetector:ListTagsForResource",
-        "frauddetector:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the outcome.",
+      "type" : "string",
+      "pattern" : "^[0-9a-z_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "frauddetector:GetOutcomes",
-        "frauddetector:DeleteOutcome"
-      ]
+    "Tags" : {
+      "description" : "Tags associated with this outcome.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "list": {
-      "permissions": [
-        "frauddetector:GetOutcomes",
-        "frauddetector:ListTagsForResource"
-      ]
+    "Description" : {
+      "description" : "The outcome description.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "read": {
-      "permissions": [
-        "frauddetector:GetOutcomes",
-        "frauddetector:ListTagsForResource"
-      ]
+    "Arn" : {
+      "description" : "The outcome ARN.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "frauddetector:GetOutcomes",
-        "frauddetector:PutOutcome",
-        "frauddetector:ListTagsForResource",
-        "frauddetector:TagResource",
-        "frauddetector:UntagResource"
-      ]
+    "CreatedTime" : {
+      "description" : "The timestamp when the outcome was created.",
+      "type" : "string"
+    },
+    "LastUpdatedTime" : {
+      "description" : "The timestamp when the outcome was last updated.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The outcome ARN.",
-      "type": "string"
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedTime", "/properties/LastUpdatedTime" ],
+  "additionalProperties" : false,
+  "required" : [ "Name" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "frauddetector:GetOutcomes", "frauddetector:PutOutcome", "frauddetector:ListTagsForResource", "frauddetector:TagResource" ]
     },
-    "CreatedTime": {
-      "description": "The timestamp when the outcome was created.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "frauddetector:GetOutcomes", "frauddetector:ListTagsForResource" ]
     },
-    "Description": {
-      "description": "The outcome description.",
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "frauddetector:GetOutcomes", "frauddetector:PutOutcome", "frauddetector:ListTagsForResource", "frauddetector:TagResource", "frauddetector:UntagResource" ]
     },
-    "LastUpdatedTime": {
-      "description": "The timestamp when the outcome was last updated.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "frauddetector:GetOutcomes", "frauddetector:DeleteOutcome" ]
     },
-    "Name": {
-      "description": "The name of the outcome.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[0-9a-z_-]+$",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "Tags associated with this outcome.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": false
+    "list" : {
+      "permissions" : [ "frauddetector:GetOutcomes", "frauddetector:ListTagsForResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedTime",
-    "/properties/LastUpdatedTime"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "frauddetector:ListTagsForResource",
-      "frauddetector:TagResource",
-      "frauddetector:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::FraudDetector::Outcome"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "frauddetector:ListTagsForResource", "frauddetector:TagResource", "frauddetector:UntagResource" ]
+  }
 }

@@ -1,259 +1,201 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Description",
-    "/properties/Name",
-    "/properties/RoleArn",
-    "/properties/TrainingData"
-  ],
-  "definitions": {
-    "ColumnSchema": {
-      "additionalProperties": false,
-      "properties": {
-        "ColumnName": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
-          "type": "string"
+  "typeName" : "AWS::CleanRoomsML::TrainingDataset",
+  "description" : "Definition of AWS::CleanRoomsML::TrainingDataset Resource Type",
+  "definitions" : {
+    "ColumnSchema" : {
+      "type" : "object",
+      "properties" : {
+        "ColumnName" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$"
         },
-        "ColumnTypes": {
-          "items": {
-            "$ref": "#/definitions/ColumnType"
+        "ColumnTypes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ColumnType"
           },
-          "maxItems": 1,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 1,
+          "minItems" : 1
         }
       },
-      "required": [
-        "ColumnName",
-        "ColumnTypes"
-      ],
-      "type": "object"
+      "required" : [ "ColumnName", "ColumnTypes" ],
+      "additionalProperties" : false
     },
-    "ColumnType": {
-      "enum": [
-        "USER_ID",
-        "ITEM_ID",
-        "TIMESTAMP",
-        "CATEGORICAL_FEATURE",
-        "NUMERICAL_FEATURE"
-      ],
-      "type": "string"
+    "ColumnType" : {
+      "type" : "string",
+      "enum" : [ "USER_ID", "ITEM_ID", "TIMESTAMP", "CATEGORICAL_FEATURE", "NUMERICAL_FEATURE" ]
     },
-    "DataSource": {
-      "additionalProperties": false,
-      "properties": {
-        "GlueDataSource": {
-          "$ref": "#/definitions/GlueDataSource"
+    "DataSource" : {
+      "type" : "object",
+      "properties" : {
+        "GlueDataSource" : {
+          "$ref" : "#/definitions/GlueDataSource"
         }
       },
-      "required": [
-        "GlueDataSource"
-      ],
-      "type": "object"
+      "required" : [ "GlueDataSource" ],
+      "additionalProperties" : false
     },
-    "Dataset": {
-      "additionalProperties": false,
-      "properties": {
-        "InputConfig": {
-          "$ref": "#/definitions/DatasetInputConfig"
+    "Dataset" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/DatasetType"
         },
-        "Type": {
-          "$ref": "#/definitions/DatasetType"
+        "InputConfig" : {
+          "$ref" : "#/definitions/DatasetInputConfig"
         }
       },
-      "required": [
-        "InputConfig",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "InputConfig", "Type" ],
+      "additionalProperties" : false
     },
-    "DatasetInputConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "DataSource": {
-          "$ref": "#/definitions/DataSource"
-        },
-        "Schema": {
-          "items": {
-            "$ref": "#/definitions/ColumnSchema"
+    "DatasetInputConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Schema" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ColumnSchema"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 100,
+          "minItems" : 1
+        },
+        "DataSource" : {
+          "$ref" : "#/definitions/DataSource"
         }
       },
-      "required": [
-        "DataSource",
-        "Schema"
-      ],
-      "type": "object"
+      "required" : [ "DataSource", "Schema" ],
+      "additionalProperties" : false
     },
-    "DatasetType": {
-      "enum": [
-        "INTERACTIONS"
-      ],
-      "type": "string"
+    "DatasetType" : {
+      "type" : "string",
+      "enum" : [ "INTERACTIONS" ]
     },
-    "GlueDataSource": {
-      "additionalProperties": false,
-      "properties": {
-        "CatalogId": {
-          "maxLength": 12,
-          "minLength": 12,
-          "pattern": "^[0-9]{12}$",
-          "type": "string"
+    "GlueDataSource" : {
+      "type" : "object",
+      "properties" : {
+        "TableName" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$"
         },
-        "DatabaseName": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_]+-)*([a-zA-Z0-9_]+))?$",
-          "type": "string"
+        "DatabaseName" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9_](([a-zA-Z0-9_]+-)*([a-zA-Z0-9_]+))?$"
         },
-        "TableName": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
-          "type": "string"
+        "CatalogId" : {
+          "type" : "string",
+          "maxLength" : 12,
+          "minLength" : 12,
+          "pattern" : "^[0-9]{12}$"
         }
       },
-      "required": [
-        "DatabaseName",
-        "TableName"
-      ],
-      "type": "object"
+      "required" : [ "DatabaseName", "TableName" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     },
-    "TrainingDatasetStatus": {
-      "enum": [
-        "ACTIVE"
-      ],
-      "type": "string"
+    "TrainingDatasetStatus" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE" ]
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::CleanRoomsML::TrainingDataset Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cleanrooms-ml:CreateTrainingDataset",
-        "cleanrooms-ml:GetTrainingDataset",
-        "cleanrooms-ml:TagResource",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "pattern" : "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$"
     },
-    "delete": {
-      "permissions": [
-        "cleanrooms-ml:DeleteTrainingDataset"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 63,
+      "minLength" : 1,
+      "pattern" : "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$"
     },
-    "list": {
-      "permissions": [
-        "cleanrooms-ml:ListTrainingDatasets"
-      ]
+    "RoleArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:aws[-a-z]*:iam::[0-9]{12}:role/.+$"
     },
-    "read": {
-      "permissions": [
-        "cleanrooms-ml:GetTrainingDataset"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "cleanrooms-ml:TagResource",
-        "cleanrooms-ml:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/TrainingDatasetArn"
-  ],
-  "properties": {
-    "Description": {
-      "maxLength": 255,
-      "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 63,
-      "minLength": 1,
-      "pattern": "^(?!\\s*$)[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t]*$",
-      "type": "string"
-    },
-    "RoleArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:aws[-a-z]*:iam::[0-9]{12}:role/.+$",
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/TrainingDatasetStatus"
-    },
-    "Tags": {
-      "description": "An arbitrary set of tags (key-value pairs) for this cleanrooms-ml training dataset.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "description" : "An arbitrary set of tags (key-value pairs) for this cleanrooms-ml training dataset.",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "type": "array",
-      "uniqueItems": true
+      "uniqueItems" : true,
+      "type" : "array"
     },
-    "TrainingData": {
-      "items": {
-        "$ref": "#/definitions/Dataset"
+    "TrainingData" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Dataset"
       },
-      "maxItems": 1,
-      "minItems": 1,
-      "type": "array"
+      "maxItems" : 1,
+      "minItems" : 1
     },
-    "TrainingDatasetArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:aws[-a-z]*:cleanrooms-ml:[-a-z0-9]+:[0-9]{12}:training-dataset/[-a-zA-Z0-9_/.]+$",
-      "type": "string"
+    "TrainingDatasetArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:aws[-a-z]*:cleanrooms-ml:[-a-z0-9]+:[0-9]{12}:training-dataset/[-a-zA-Z0-9_/.]+$"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/TrainingDatasetStatus"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Status",
-    "/properties/TrainingDatasetArn"
-  ],
-  "required": [
-    "Name",
-    "RoleArn",
-    "TrainingData"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "cleanrooms-ml:TagResource",
-      "cleanrooms-ml:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "Name", "RoleArn", "TrainingData" ],
+  "readOnlyProperties" : [ "/properties/Status", "/properties/TrainingDatasetArn" ],
+  "createOnlyProperties" : [ "/properties/Description", "/properties/Name", "/properties/RoleArn", "/properties/TrainingData" ],
+  "primaryIdentifier" : [ "/properties/TrainingDatasetArn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "cleanrooms-ml:TagResource", "cleanrooms-ml:UntagResource" ]
   },
-  "typeName": "AWS::CleanRoomsML::TrainingDataset"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cleanrooms-ml:CreateTrainingDataset", "cleanrooms-ml:GetTrainingDataset", "cleanrooms-ml:TagResource", "iam:PassRole" ]
+    },
+    "read" : {
+      "permissions" : [ "cleanrooms-ml:GetTrainingDataset" ]
+    },
+    "delete" : {
+      "permissions" : [ "cleanrooms-ml:DeleteTrainingDataset" ]
+    },
+    "list" : {
+      "permissions" : [ "cleanrooms-ml:ListTrainingDatasets" ]
+    },
+    "update" : {
+      "permissions" : [ "cleanrooms-ml:TagResource", "cleanrooms-ml:UntagResource" ]
+    }
+  },
+  "additionalProperties" : false
 }

@@ -1,201 +1,141 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/InstanceTypeSpecifications",
-    "/properties/AllocationStrategy",
-    "/properties/TagSpecifications",
-    "/properties/EndDate",
-    "/properties/Tenancy",
-    "/properties/InstanceMatchCriteria"
-  ],
-  "definitions": {
-    "InstanceTypeSpecification": {
-      "additionalProperties": false,
-      "properties": {
-        "AvailabilityZone": {
-          "type": "string"
-        },
-        "AvailabilityZoneId": {
-          "type": "string"
-        },
-        "EbsOptimized": {
-          "type": "boolean"
-        },
-        "InstancePlatform": {
-          "type": "string"
-        },
-        "InstanceType": {
-          "type": "string"
-        },
-        "Priority": {
-          "maximum": 999,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "Weight": {
-          "type": "number"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::EC2::CapacityReservationFleet",
+  "description" : "Resource Type definition for AWS::EC2::CapacityReservationFleet",
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/TagSpecifications",
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ]
+  },
+  "properties" : {
+    "AllocationStrategy" : {
+      "type" : "string"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "TagSpecifications" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/TagSpecification"
+      }
     },
-    "TagSpecification": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceType": {
-          "type": "string"
-        },
-        "Tags": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/Tag"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "InstanceTypeSpecifications" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/InstanceTypeSpecification"
+      }
+    },
+    "TotalTargetCapacity" : {
+      "type" : "integer",
+      "minimum" : 1,
+      "maximum" : 25000
+    },
+    "EndDate" : {
+      "type" : "string"
+    },
+    "InstanceMatchCriteria" : {
+      "type" : "string",
+      "enum" : [ "open" ]
+    },
+    "CapacityReservationFleetId" : {
+      "type" : "string"
+    },
+    "Tenancy" : {
+      "type" : "string",
+      "enum" : [ "default" ]
+    },
+    "RemoveEndDate" : {
+      "type" : "boolean"
+    },
+    "NoRemoveEndDate" : {
+      "type" : "boolean"
     }
   },
-  "description": "Resource Type definition for AWS::EC2::CapacityReservationFleet",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateCapacityReservationFleet",
-        "ec2:ModifyCapacityReservationFleet",
-        "ec2:DescribeCapacityReservationFleets",
-        "ec2:CancelCapacityReservationFleets",
-        "ec2:CreateCapacityReservation",
-        "ec2:DescribeCapacityReservations",
-        "ec2:CancelCapacityReservation",
-        "ec2:DescribeInstances",
-        "ec2:CreateTags",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "definitions" : {
+    "InstanceTypeSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "InstanceType" : {
+          "type" : "string"
+        },
+        "InstancePlatform" : {
+          "type" : "string"
+        },
+        "Weight" : {
+          "type" : "number"
+        },
+        "AvailabilityZone" : {
+          "type" : "string"
+        },
+        "AvailabilityZoneId" : {
+          "type" : "string"
+        },
+        "EbsOptimized" : {
+          "type" : "boolean"
+        },
+        "Priority" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 999
+        }
+      }
     },
-    "delete": {
-      "permissions": [
-        "ec2:CreateCapacityReservationFleet",
-        "ec2:ModifyCapacityReservationFleet",
-        "ec2:DescribeCapacityReservationFleets",
-        "ec2:CancelCapacityReservationFleets",
-        "ec2:CreateCapacityReservation",
-        "ec2:DescribeCapacityReservations",
-        "ec2:CancelCapacityReservation",
-        "ec2:DeleteTags"
-      ]
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeCapacityReservationFleets",
-        "ec2:DescribeCapacityReservations",
-        "ec2:DescribeInstances"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "ec2:DescribeCapacityReservationFleets",
-        "ec2:DescribeInstances",
-        "ec2:DescribeCapacityReservations"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "ec2:CreateCapacityReservationFleet",
-        "ec2:ModifyCapacityReservationFleet",
-        "ec2:DescribeCapacityReservationFleets",
-        "ec2:CancelCapacityReservationFleets",
-        "ec2:CreateCapacityReservation",
-        "ec2:ModifyCapacityReservation",
-        "ec2:DescribeCapacityReservations",
-        "ec2:CancelCapacityReservation",
-        "ec2:DescribeInstances",
-        "ec2:DeleteTags"
-      ]
+    "TagSpecification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResourceType" : {
+          "type" : "string"
+        },
+        "Tags" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        }
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/CapacityReservationFleetId"
-  ],
-  "properties": {
-    "AllocationStrategy": {
-      "type": "string"
+  "createOnlyProperties" : [ "/properties/InstanceTypeSpecifications", "/properties/AllocationStrategy", "/properties/TagSpecifications", "/properties/EndDate", "/properties/Tenancy", "/properties/InstanceMatchCriteria" ],
+  "primaryIdentifier" : [ "/properties/CapacityReservationFleetId" ],
+  "readOnlyProperties" : [ "/properties/CapacityReservationFleetId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateCapacityReservationFleet", "ec2:ModifyCapacityReservationFleet", "ec2:DescribeCapacityReservationFleets", "ec2:CancelCapacityReservationFleets", "ec2:CreateCapacityReservation", "ec2:DescribeCapacityReservations", "ec2:CancelCapacityReservation", "ec2:DescribeInstances", "ec2:CreateTags", "iam:CreateServiceLinkedRole" ]
     },
-    "CapacityReservationFleetId": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ec2:CreateCapacityReservationFleet", "ec2:ModifyCapacityReservationFleet", "ec2:DescribeCapacityReservationFleets", "ec2:CancelCapacityReservationFleets", "ec2:CreateCapacityReservation", "ec2:DescribeCapacityReservations", "ec2:CancelCapacityReservation", "ec2:DeleteTags" ]
     },
-    "EndDate": {
-      "type": "string"
+    "list" : {
+      "permissions" : [ "ec2:DescribeCapacityReservationFleets", "ec2:DescribeCapacityReservations", "ec2:DescribeInstances" ]
     },
-    "InstanceMatchCriteria": {
-      "enum": [
-        "open"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ec2:DescribeCapacityReservationFleets", "ec2:DescribeInstances", "ec2:DescribeCapacityReservations" ]
     },
-    "InstanceTypeSpecifications": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/InstanceTypeSpecification"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "NoRemoveEndDate": {
-      "type": "boolean"
-    },
-    "RemoveEndDate": {
-      "type": "boolean"
-    },
-    "TagSpecifications": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/TagSpecification"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Tenancy": {
-      "enum": [
-        "default"
-      ],
-      "type": "string"
-    },
-    "TotalTargetCapacity": {
-      "maximum": 25000,
-      "minimum": 1,
-      "type": "integer"
+    "update" : {
+      "permissions" : [ "ec2:CreateCapacityReservationFleet", "ec2:ModifyCapacityReservationFleet", "ec2:DescribeCapacityReservationFleets", "ec2:CancelCapacityReservationFleets", "ec2:CreateCapacityReservation", "ec2:ModifyCapacityReservation", "ec2:DescribeCapacityReservations", "ec2:CancelCapacityReservation", "ec2:DescribeInstances", "ec2:DeleteTags" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/CapacityReservationFleetId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/TagSpecifications",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::CapacityReservationFleet"
+  }
 }

@@ -1,139 +1,102 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SubnetGroupName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key for the tag. May not be null.",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
-          "type": "string"
+  "typeName" : "AWS::MemoryDB::SubnetGroup",
+  "description" : "The AWS::MemoryDB::SubnetGroup resource creates an Amazon MemoryDB Subnet Group.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "description" : "The key for the tag. May not be null.",
+          "pattern" : "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,128}$",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The tag's value. May be null.",
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
-          "type": "string"
+        "Value" : {
+          "description" : "The tag's value. May be null.",
+          "type" : "string",
+          "pattern" : "^(?!aws:)(?!memorydb:)[a-zA-Z0-9 _\\.\\/=+:\\-@]{1,256}$",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "The AWS::MemoryDB::SubnetGroup resource creates an Amazon MemoryDB Subnet Group.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "memorydb:CreateSubnetGroup",
-        "memorydb:DescribeSubnetGroups",
-        "memorydb:TagResource",
-        "memorydb:ListTags",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "SubnetGroupName" : {
+      "description" : "The name of the subnet group. This value must be unique as it also serves as the subnet group identifier.",
+      "pattern" : "[a-z][a-z0-9\\-]*",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "memorydb:DeleteSubnetGroup",
-        "memorydb:DescribeSubnetGroups"
-      ]
+    "Description" : {
+      "description" : "An optional description of the subnet group.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "memorydb:DescribeSubnetGroups"
-      ]
+    "SubnetIds" : {
+      "description" : "A list of VPC subnet IDs for the subnet group.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "read": {
-      "permissions": [
-        "memorydb:DescribeSubnetGroups",
-        "memorydb:ListTags"
-      ]
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this subnet group.",
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "update": {
-      "permissions": [
-        "memorydb:UpdateSubnetGroup",
-        "memorydb:DescribeSubnetGroups",
-        "memorydb:ListTags",
-        "memorydb:TagResource",
-        "memorydb:UntagResource"
-      ]
+    "ARN" : {
+      "description" : "The Amazon Resource Name (ARN) of the subnet group.",
+      "type" : "string"
+    },
+    "SupportedNetworkTypes" : {
+      "description" : "Supported network types would be a list of network types supported by subnet group and can be either [ipv4] or [ipv4, dual_stack] or [ipv6].",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/SubnetGroupName"
-  ],
-  "properties": {
-    "ARN": {
-      "description": "The Amazon Resource Name (ARN) of the subnet group.",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "memorydb:TagResource", "memorydb:ListTags", "memorydb:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "SubnetGroupName", "SubnetIds" ],
+  "primaryIdentifier" : [ "/properties/SubnetGroupName" ],
+  "createOnlyProperties" : [ "/properties/SubnetGroupName" ],
+  "readOnlyProperties" : [ "/properties/ARN", "/properties/SupportedNetworkTypes" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "memorydb:CreateSubnetGroup", "memorydb:DescribeSubnetGroups", "memorydb:TagResource", "memorydb:ListTags", "iam:CreateServiceLinkedRole" ]
     },
-    "Description": {
-      "description": "An optional description of the subnet group.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "memorydb:DescribeSubnetGroups", "memorydb:ListTags" ]
     },
-    "SubnetGroupName": {
-      "description": "The name of the subnet group. This value must be unique as it also serves as the subnet group identifier.",
-      "pattern": "[a-z][a-z0-9\\-]*",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "memorydb:UpdateSubnetGroup", "memorydb:DescribeSubnetGroups", "memorydb:ListTags", "memorydb:TagResource", "memorydb:UntagResource" ]
     },
-    "SubnetIds": {
-      "description": "A list of VPC subnet IDs for the subnet group.",
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "delete" : {
+      "permissions" : [ "memorydb:DeleteSubnetGroup", "memorydb:DescribeSubnetGroups" ]
     },
-    "SupportedNetworkTypes": {
-      "description": "Supported network types would be a list of network types supported by subnet group and can be either [ipv4] or [ipv4, dual_stack] or [ipv6].",
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this subnet group.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "memorydb:DescribeSubnetGroups" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ARN",
-    "/properties/SupportedNetworkTypes"
-  ],
-  "required": [
-    "SubnetGroupName",
-    "SubnetIds"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "memorydb:TagResource",
-      "memorydb:ListTags",
-      "memorydb:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MemoryDB::SubnetGroup"
+  }
 }

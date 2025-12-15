@@ -1,141 +1,98 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "ServerSideEncryptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "KmsKeyId": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::VoiceID::Domain",
+  "description" : "The AWS::VoiceID::Domain resource specifies an Amazon VoiceID Domain.",
+  "definitions" : {
+    "ServerSideEncryptionConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "KmsKeyId" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1
         }
       },
-      "required": [
-        "KmsKeyId"
-      ],
-      "type": "object"
+      "required" : [ "KmsKeyId" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "The AWS::VoiceID::Domain resource specifies an Amazon VoiceID Domain.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "voiceid:CreateDomain",
-        "voiceid:DescribeDomain",
-        "voiceid:TagResource",
-        "voiceid:ListTagsForResource",
-        "kms:CreateGrant",
-        "kms:DescribeKey",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 1,
+      "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-%@]*)$"
     },
-    "delete": {
-      "permissions": [
-        "voiceid:DeleteDomain",
-        "voiceid:DescribeDomain",
-        "kms:Decrypt"
-      ]
+    "DomainId" : {
+      "type" : "string",
+      "maxLength" : 22,
+      "minLength" : 22,
+      "pattern" : "^[a-zA-Z0-9]{22}$"
     },
-    "list": {
-      "permissions": [
-        "voiceid:ListDomains",
-        "kms:Decrypt"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9][a-zA-Z0-9_-]*$"
     },
-    "read": {
-      "permissions": [
-        "voiceid:DescribeDomain",
-        "voiceid:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "ServerSideEncryptionConfiguration" : {
+      "$ref" : "#/definitions/ServerSideEncryptionConfiguration"
     },
-    "update": {
-      "permissions": [
-        "voiceid:DescribeDomain",
-        "voiceid:UpdateDomain",
-        "voiceid:TagResource",
-        "voiceid:UntagResource",
-        "voiceid:ListTagsForResource",
-        "kms:CreateGrant",
-        "kms:Decrypt",
-        "kms:DescribeKey"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/DomainId"
-  ],
-  "properties": {
-    "Description": {
-      "maxLength": 1024,
-      "minLength": 1,
-      "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-%@]*)$",
-      "type": "string"
-    },
-    "DomainId": {
-      "maxLength": 22,
-      "minLength": 22,
-      "pattern": "^[a-zA-Z0-9]{22}$",
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]*$",
-      "type": "string"
-    },
-    "ServerSideEncryptionConfiguration": {
-      "$ref": "#/definitions/ServerSideEncryptionConfiguration"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/DomainId"
-  ],
-  "required": [
-    "Name",
-    "ServerSideEncryptionConfiguration"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "voiceid:TagResource",
-      "voiceid:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "Name", "ServerSideEncryptionConfiguration" ],
+  "readOnlyProperties" : [ "/properties/DomainId" ],
+  "primaryIdentifier" : [ "/properties/DomainId" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "voiceid:TagResource", "voiceid:UntagResource" ]
   },
-  "typeName": "AWS::VoiceID::Domain"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "voiceid:CreateDomain", "voiceid:DescribeDomain", "voiceid:TagResource", "voiceid:ListTagsForResource", "kms:CreateGrant", "kms:DescribeKey", "kms:Decrypt" ]
+    },
+    "read" : {
+      "permissions" : [ "voiceid:DescribeDomain", "voiceid:ListTagsForResource", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "voiceid:DescribeDomain", "voiceid:UpdateDomain", "voiceid:TagResource", "voiceid:UntagResource", "voiceid:ListTagsForResource", "kms:CreateGrant", "kms:Decrypt", "kms:DescribeKey" ]
+    },
+    "delete" : {
+      "permissions" : [ "voiceid:DeleteDomain", "voiceid:DescribeDomain", "kms:Decrypt" ]
+    },
+    "list" : {
+      "permissions" : [ "voiceid:ListDomains", "kms:Decrypt" ]
+    }
+  },
+  "additionalProperties" : false
 }

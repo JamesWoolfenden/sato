@@ -1,1108 +1,933 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AwsAccountId",
-    "/properties/FolderArns",
-    "/properties/TopicId",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "AggregationFunctionParameters": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+  "typeName" : "AWS::QuickSight::Topic",
+  "description" : "Definition of the AWS::QuickSight::Topic Resource Type.",
+  "definitions" : {
+    "AggregationFunctionParameters" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AuthorSpecifiedAggregation": {
-      "enum": [
-        "COUNT",
-        "DISTINCT_COUNT",
-        "MIN",
-        "MAX",
-        "MEDIAN",
-        "SUM",
-        "AVERAGE",
-        "STDEV",
-        "STDEVP",
-        "VAR",
-        "VARP",
-        "PERCENTILE"
-      ],
-      "type": "string"
+    "AuthorSpecifiedAggregation" : {
+      "type" : "string",
+      "enum" : [ "COUNT", "DISTINCT_COUNT", "MIN", "MAX", "MEDIAN", "SUM", "AVERAGE", "STDEV", "STDEVP", "VAR", "VARP", "PERCENTILE" ]
     },
-    "CategoryFilterFunction": {
-      "enum": [
-        "EXACT",
-        "CONTAINS"
-      ],
-      "type": "string"
+    "CategoryFilterFunction" : {
+      "type" : "string",
+      "enum" : [ "EXACT", "CONTAINS" ]
     },
-    "CategoryFilterType": {
-      "enum": [
-        "CUSTOM_FILTER",
-        "CUSTOM_FILTER_LIST",
-        "FILTER_LIST"
-      ],
-      "type": "string"
+    "CategoryFilterType" : {
+      "type" : "string",
+      "enum" : [ "CUSTOM_FILTER", "CUSTOM_FILTER_LIST", "FILTER_LIST" ]
     },
-    "CellValueSynonym": {
-      "additionalProperties": false,
-      "properties": {
-        "CellValue": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "CellValueSynonym" : {
+      "type" : "object",
+      "properties" : {
+        "CellValue" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "Synonyms": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "Synonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CollectiveConstant": {
-      "additionalProperties": false,
-      "properties": {
-        "ValueList": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+    "CollectiveConstant" : {
+      "type" : "object",
+      "properties" : {
+        "ValueList" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ColumnDataRole": {
-      "enum": [
-        "DIMENSION",
-        "MEASURE"
-      ],
-      "type": "string"
+    "ColumnDataRole" : {
+      "type" : "string",
+      "enum" : [ "DIMENSION", "MEASURE" ]
     },
-    "ColumnOrderingType": {
-      "enum": [
-        "GREATER_IS_BETTER",
-        "LESSER_IS_BETTER",
-        "SPECIFIED"
-      ],
-      "type": "string"
+    "ColumnOrderingType" : {
+      "type" : "string",
+      "enum" : [ "GREATER_IS_BETTER", "LESSER_IS_BETTER", "SPECIFIED" ]
     },
-    "ComparativeOrder": {
-      "additionalProperties": false,
-      "properties": {
-        "SpecifedOrder": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+    "ComparativeOrder" : {
+      "type" : "object",
+      "properties" : {
+        "UseOrdering" : {
+          "$ref" : "#/definitions/ColumnOrderingType"
         },
-        "TreatUndefinedSpecifiedValues": {
-          "$ref": "#/definitions/UndefinedSpecifiedValueType"
+        "SpecifedOrder" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         },
-        "UseOrdering": {
-          "$ref": "#/definitions/ColumnOrderingType"
+        "TreatUndefinedSpecifiedValues" : {
+          "$ref" : "#/definitions/UndefinedSpecifiedValueType"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ConstantType": {
-      "enum": [
-        "SINGULAR",
-        "RANGE",
-        "COLLECTIVE"
-      ],
-      "type": "string"
+    "ConstantType" : {
+      "type" : "string",
+      "enum" : [ "SINGULAR", "RANGE", "COLLECTIVE" ]
     },
-    "CustomInstructions": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomInstructionsString": {
-          "maxLength": 5000,
-          "minLength": 0,
-          "type": "string"
+    "CustomInstructions" : {
+      "type" : "object",
+      "properties" : {
+        "CustomInstructionsString" : {
+          "type" : "string",
+          "maxLength" : 5000,
+          "minLength" : 0
         }
       },
-      "required": [
-        "CustomInstructionsString"
-      ],
-      "type": "object"
+      "required" : [ "CustomInstructionsString" ],
+      "additionalProperties" : false
     },
-    "DataAggregation": {
-      "additionalProperties": false,
-      "properties": {
-        "DatasetRowDateGranularity": {
-          "$ref": "#/definitions/TopicTimeGranularity"
+    "DataAggregation" : {
+      "type" : "object",
+      "properties" : {
+        "DatasetRowDateGranularity" : {
+          "$ref" : "#/definitions/TopicTimeGranularity"
         },
-        "DefaultDateColumnName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "DefaultDateColumnName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DatasetMetadata": {
-      "additionalProperties": false,
-      "properties": {
-        "CalculatedFields": {
-          "items": {
-            "$ref": "#/definitions/TopicCalculatedField"
-          },
-          "type": "array"
+    "DatasetMetadata" : {
+      "type" : "object",
+      "properties" : {
+        "DatasetArn" : {
+          "type" : "string"
         },
-        "Columns": {
-          "items": {
-            "$ref": "#/definitions/TopicColumn"
-          },
-          "type": "array"
+        "DatasetName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "DataAggregation": {
-          "$ref": "#/definitions/DataAggregation"
+        "DatasetDescription" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "DatasetArn": {
-          "type": "string"
+        "DataAggregation" : {
+          "$ref" : "#/definitions/DataAggregation"
         },
-        "DatasetDescription": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Filters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TopicFilter"
+          }
         },
-        "DatasetName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Columns" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TopicColumn"
+          }
         },
-        "Filters": {
-          "items": {
-            "$ref": "#/definitions/TopicFilter"
-          },
-          "type": "array"
+        "CalculatedFields" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TopicCalculatedField"
+          }
         },
-        "NamedEntities": {
-          "items": {
-            "$ref": "#/definitions/TopicNamedEntity"
-          },
-          "type": "array"
+        "NamedEntities" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TopicNamedEntity"
+          }
         }
       },
-      "required": [
-        "DatasetArn"
-      ],
-      "type": "object"
+      "required" : [ "DatasetArn" ],
+      "additionalProperties" : false
     },
-    "DefaultAggregation": {
-      "enum": [
-        "SUM",
-        "MAX",
-        "MIN",
-        "COUNT",
-        "DISTINCT_COUNT",
-        "AVERAGE",
-        "MEDIAN",
-        "STDEV",
-        "STDEVP",
-        "VAR",
-        "VARP"
-      ],
-      "type": "string"
+    "DefaultAggregation" : {
+      "type" : "string",
+      "enum" : [ "SUM", "MAX", "MIN", "COUNT", "DISTINCT_COUNT", "AVERAGE", "MEDIAN", "STDEV", "STDEVP", "VAR", "VARP" ]
     },
-    "DefaultFormatting": {
-      "additionalProperties": false,
-      "properties": {
-        "DisplayFormat": {
-          "$ref": "#/definitions/DisplayFormat"
+    "DefaultFormatting" : {
+      "type" : "object",
+      "properties" : {
+        "DisplayFormat" : {
+          "$ref" : "#/definitions/DisplayFormat"
         },
-        "DisplayFormatOptions": {
-          "$ref": "#/definitions/DisplayFormatOptions"
+        "DisplayFormatOptions" : {
+          "$ref" : "#/definitions/DisplayFormatOptions"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DisplayFormat": {
-      "enum": [
-        "AUTO",
-        "PERCENT",
-        "CURRENCY",
-        "NUMBER",
-        "DATE",
-        "STRING"
-      ],
-      "type": "string"
+    "DisplayFormat" : {
+      "type" : "string",
+      "enum" : [ "AUTO", "PERCENT", "CURRENCY", "NUMBER", "DATE", "STRING" ]
     },
-    "DisplayFormatOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "BlankCellFormat": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "DisplayFormatOptions" : {
+      "type" : "object",
+      "properties" : {
+        "UseBlankCellFormat" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "CurrencySymbol": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "BlankCellFormat" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "DateFormat": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "DateFormat" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "DecimalSeparator": {
-          "$ref": "#/definitions/TopicNumericSeparatorSymbol"
+        "DecimalSeparator" : {
+          "$ref" : "#/definitions/TopicNumericSeparatorSymbol"
         },
-        "FractionDigits": {
-          "default": 0,
-          "type": "number"
+        "GroupingSeparator" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "GroupingSeparator": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "UseGrouping" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "NegativeFormat": {
-          "$ref": "#/definitions/NegativeFormat"
+        "FractionDigits" : {
+          "type" : "number",
+          "default" : 0
         },
-        "Prefix": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Prefix" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "Suffix": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Suffix" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "UnitScaler": {
-          "$ref": "#/definitions/NumberScale"
+        "UnitScaler" : {
+          "$ref" : "#/definitions/NumberScale"
         },
-        "UseBlankCellFormat": {
-          "default": false,
-          "type": "boolean"
+        "NegativeFormat" : {
+          "$ref" : "#/definitions/NegativeFormat"
         },
-        "UseGrouping": {
-          "default": false,
-          "type": "boolean"
+        "CurrencySymbol" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "FilterClass": {
-      "enum": [
-        "ENFORCED_VALUE_FILTER",
-        "CONDITIONAL_VALUE_FILTER",
-        "NAMED_VALUE_FILTER"
-      ],
-      "type": "string"
+    "FilterClass" : {
+      "type" : "string",
+      "enum" : [ "ENFORCED_VALUE_FILTER", "CONDITIONAL_VALUE_FILTER", "NAMED_VALUE_FILTER" ]
     },
-    "NamedEntityAggType": {
-      "enum": [
-        "SUM",
-        "MIN",
-        "MAX",
-        "COUNT",
-        "AVERAGE",
-        "DISTINCT_COUNT",
-        "STDEV",
-        "STDEVP",
-        "VAR",
-        "VARP",
-        "PERCENTILE",
-        "MEDIAN",
-        "CUSTOM"
-      ],
-      "type": "string"
+    "NamedEntityAggType" : {
+      "type" : "string",
+      "enum" : [ "SUM", "MIN", "MAX", "COUNT", "AVERAGE", "DISTINCT_COUNT", "STDEV", "STDEVP", "VAR", "VARP", "PERCENTILE", "MEDIAN", "CUSTOM" ]
     },
-    "NamedEntityDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "FieldName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "NamedEntityDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "FieldName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "Metric": {
-          "$ref": "#/definitions/NamedEntityDefinitionMetric"
+        "PropertyName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "PropertyName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "PropertyRole" : {
+          "$ref" : "#/definitions/PropertyRole"
         },
-        "PropertyRole": {
-          "$ref": "#/definitions/PropertyRole"
+        "PropertyUsage" : {
+          "$ref" : "#/definitions/PropertyUsage"
         },
-        "PropertyUsage": {
-          "$ref": "#/definitions/PropertyUsage"
+        "Metric" : {
+          "$ref" : "#/definitions/NamedEntityDefinitionMetric"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NamedEntityDefinitionMetric": {
-      "additionalProperties": false,
-      "properties": {
-        "Aggregation": {
-          "$ref": "#/definitions/NamedEntityAggType"
+    "NamedEntityDefinitionMetric" : {
+      "type" : "object",
+      "properties" : {
+        "Aggregation" : {
+          "$ref" : "#/definitions/NamedEntityAggType"
         },
-        "AggregationFunctionParameters": {
-          "$ref": "#/definitions/AggregationFunctionParameters"
+        "AggregationFunctionParameters" : {
+          "$ref" : "#/definitions/AggregationFunctionParameters"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NamedFilterAggType": {
-      "enum": [
-        "NO_AGGREGATION",
-        "SUM",
-        "AVERAGE",
-        "COUNT",
-        "DISTINCT_COUNT",
-        "MAX",
-        "MEDIAN",
-        "MIN",
-        "STDEV",
-        "STDEVP",
-        "VAR",
-        "VARP"
-      ],
-      "type": "string"
+    "NamedFilterAggType" : {
+      "type" : "string",
+      "enum" : [ "NO_AGGREGATION", "SUM", "AVERAGE", "COUNT", "DISTINCT_COUNT", "MAX", "MEDIAN", "MIN", "STDEV", "STDEVP", "VAR", "VARP" ]
     },
-    "NamedFilterType": {
-      "enum": [
-        "CATEGORY_FILTER",
-        "NUMERIC_EQUALITY_FILTER",
-        "NUMERIC_RANGE_FILTER",
-        "DATE_RANGE_FILTER",
-        "RELATIVE_DATE_FILTER"
-      ],
-      "type": "string"
+    "NamedFilterType" : {
+      "type" : "string",
+      "enum" : [ "CATEGORY_FILTER", "NUMERIC_EQUALITY_FILTER", "NUMERIC_RANGE_FILTER", "DATE_RANGE_FILTER", "RELATIVE_DATE_FILTER" ]
     },
-    "NegativeFormat": {
-      "additionalProperties": false,
-      "properties": {
-        "Prefix": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "NegativeFormat" : {
+      "type" : "object",
+      "properties" : {
+        "Prefix" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "Suffix": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Suffix" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NumberScale": {
-      "enum": [
-        "NONE",
-        "AUTO",
-        "THOUSANDS",
-        "MILLIONS",
-        "BILLIONS",
-        "TRILLIONS",
-        "LAKHS",
-        "CRORES"
-      ],
-      "type": "string"
+    "NumberScale" : {
+      "type" : "string",
+      "enum" : [ "NONE", "AUTO", "THOUSANDS", "MILLIONS", "BILLIONS", "TRILLIONS", "LAKHS", "CRORES" ]
     },
-    "PropertyRole": {
-      "enum": [
-        "PRIMARY",
-        "ID"
-      ],
-      "type": "string"
+    "PropertyRole" : {
+      "type" : "string",
+      "enum" : [ "PRIMARY", "ID" ]
     },
-    "PropertyUsage": {
-      "enum": [
-        "INHERIT",
-        "DIMENSION",
-        "MEASURE"
-      ],
-      "type": "string"
+    "PropertyUsage" : {
+      "type" : "string",
+      "enum" : [ "INHERIT", "DIMENSION", "MEASURE" ]
     },
-    "RangeConstant": {
-      "additionalProperties": false,
-      "properties": {
-        "Maximum": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "RangeConstant" : {
+      "type" : "object",
+      "properties" : {
+        "Minimum" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "Minimum": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Maximum" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SemanticEntityType": {
-      "additionalProperties": false,
-      "properties": {
-        "SubTypeName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "SemanticEntityType" : {
+      "type" : "object",
+      "properties" : {
+        "TypeName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "TypeName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "SubTypeName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "TypeParameters": {
-          "$ref": "#/definitions/TypeParameters"
+        "TypeParameters" : {
+          "$ref" : "#/definitions/TypeParameters"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "SemanticType": {
-      "additionalProperties": false,
-      "properties": {
-        "FalseyCellValue": {
-          "type": "string"
+    "SemanticType" : {
+      "type" : "object",
+      "properties" : {
+        "TypeName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "FalseyCellValueSynonyms": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "SubTypeName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "SubTypeName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "TypeParameters" : {
+          "$ref" : "#/definitions/TypeParameters"
         },
-        "TruthyCellValue": {
-          "type": "string"
+        "TruthyCellValue" : {
+          "type" : "string"
         },
-        "TruthyCellValueSynonyms": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "TruthyCellValueSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         },
-        "TypeName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "FalseyCellValue" : {
+          "type" : "string"
         },
-        "TypeParameters": {
-          "$ref": "#/definitions/TypeParameters"
+        "FalseyCellValueSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
-      "properties": {
-        "Key": {
-          "description": "<p>Tag key.</p>",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "description" : "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "description" : "<p>Tag key.</p>"
         },
-        "Value": {
-          "description": "<p>Tag value.</p>",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "description" : "<p>Tag value.</p>"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "TopicCalculatedField": {
-      "additionalProperties": false,
-      "properties": {
-        "Aggregation": {
-          "$ref": "#/definitions/DefaultAggregation"
+    "TopicCalculatedField" : {
+      "type" : "object",
+      "properties" : {
+        "CalculatedFieldName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "AllowedAggregations": {
-          "items": {
-            "$ref": "#/definitions/AuthorSpecifiedAggregation"
-          },
-          "type": "array"
+        "CalculatedFieldDescription" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "CalculatedFieldDescription": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Expression" : {
+          "type" : "string",
+          "maxLength" : 4096,
+          "minLength" : 1
         },
-        "CalculatedFieldName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "CalculatedFieldSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 256,
+            "minLength" : 0
+          }
         },
-        "CalculatedFieldSynonyms": {
-          "items": {
-            "maxLength": 256,
-            "minLength": 0,
-            "type": "string"
-          },
-          "type": "array"
+        "IsIncludedInTopic" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "CellValueSynonyms": {
-          "items": {
-            "$ref": "#/definitions/CellValueSynonym"
-          },
-          "type": "array"
+        "DisableIndexing" : {
+          "type" : "boolean"
         },
-        "ColumnDataRole": {
-          "$ref": "#/definitions/ColumnDataRole"
+        "ColumnDataRole" : {
+          "$ref" : "#/definitions/ColumnDataRole"
         },
-        "ComparativeOrder": {
-          "$ref": "#/definitions/ComparativeOrder"
+        "TimeGranularity" : {
+          "$ref" : "#/definitions/TopicTimeGranularity"
         },
-        "DefaultFormatting": {
-          "$ref": "#/definitions/DefaultFormatting"
+        "DefaultFormatting" : {
+          "$ref" : "#/definitions/DefaultFormatting"
         },
-        "DisableIndexing": {
-          "type": "boolean"
+        "Aggregation" : {
+          "$ref" : "#/definitions/DefaultAggregation"
         },
-        "Expression": {
-          "maxLength": 4096,
-          "minLength": 1,
-          "type": "string"
+        "ComparativeOrder" : {
+          "$ref" : "#/definitions/ComparativeOrder"
         },
-        "IsIncludedInTopic": {
-          "default": false,
-          "type": "boolean"
+        "SemanticType" : {
+          "$ref" : "#/definitions/SemanticType"
         },
-        "NeverAggregateInFilter": {
-          "default": false,
-          "type": "boolean"
+        "AllowedAggregations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AuthorSpecifiedAggregation"
+          }
         },
-        "NonAdditive": {
-          "default": false,
-          "type": "boolean"
+        "NotAllowedAggregations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AuthorSpecifiedAggregation"
+          }
         },
-        "NotAllowedAggregations": {
-          "items": {
-            "$ref": "#/definitions/AuthorSpecifiedAggregation"
-          },
-          "type": "array"
+        "NeverAggregateInFilter" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "SemanticType": {
-          "$ref": "#/definitions/SemanticType"
+        "CellValueSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CellValueSynonym"
+          }
         },
-        "TimeGranularity": {
-          "$ref": "#/definitions/TopicTimeGranularity"
+        "NonAdditive" : {
+          "type" : "boolean",
+          "default" : false
         }
       },
-      "required": [
-        "CalculatedFieldName",
-        "Expression"
-      ],
-      "type": "object"
+      "required" : [ "CalculatedFieldName", "Expression" ],
+      "additionalProperties" : false
     },
-    "TopicCategoryFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "CategoryFilterFunction": {
-          "$ref": "#/definitions/CategoryFilterFunction"
+    "TopicCategoryFilter" : {
+      "type" : "object",
+      "properties" : {
+        "CategoryFilterFunction" : {
+          "$ref" : "#/definitions/CategoryFilterFunction"
         },
-        "CategoryFilterType": {
-          "$ref": "#/definitions/CategoryFilterType"
+        "CategoryFilterType" : {
+          "$ref" : "#/definitions/CategoryFilterType"
         },
-        "Constant": {
-          "$ref": "#/definitions/TopicCategoryFilterConstant"
+        "Constant" : {
+          "$ref" : "#/definitions/TopicCategoryFilterConstant"
         },
-        "Inverse": {
-          "default": false,
-          "type": "boolean"
+        "Inverse" : {
+          "type" : "boolean",
+          "default" : false
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicCategoryFilterConstant": {
-      "additionalProperties": false,
-      "properties": {
-        "CollectiveConstant": {
-          "$ref": "#/definitions/CollectiveConstant"
+    "TopicCategoryFilterConstant" : {
+      "type" : "object",
+      "properties" : {
+        "ConstantType" : {
+          "$ref" : "#/definitions/ConstantType"
         },
-        "ConstantType": {
-          "$ref": "#/definitions/ConstantType"
+        "SingularConstant" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "SingularConstant": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "CollectiveConstant" : {
+          "$ref" : "#/definitions/CollectiveConstant"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicColumn": {
-      "additionalProperties": false,
-      "properties": {
-        "Aggregation": {
-          "$ref": "#/definitions/DefaultAggregation"
+    "TopicColumn" : {
+      "type" : "object",
+      "properties" : {
+        "ColumnName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "AllowedAggregations": {
-          "items": {
-            "$ref": "#/definitions/AuthorSpecifiedAggregation"
-          },
-          "type": "array"
+        "ColumnFriendlyName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "CellValueSynonyms": {
-          "items": {
-            "$ref": "#/definitions/CellValueSynonym"
-          },
-          "type": "array"
+        "ColumnDescription" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "ColumnDataRole": {
-          "$ref": "#/definitions/ColumnDataRole"
+        "ColumnSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 256,
+            "minLength" : 0
+          }
         },
-        "ColumnDescription": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "ColumnDataRole" : {
+          "$ref" : "#/definitions/ColumnDataRole"
         },
-        "ColumnFriendlyName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Aggregation" : {
+          "$ref" : "#/definitions/DefaultAggregation"
         },
-        "ColumnName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "IsIncludedInTopic" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "ColumnSynonyms": {
-          "items": {
-            "maxLength": 256,
-            "minLength": 0,
-            "type": "string"
-          },
-          "type": "array"
+        "DisableIndexing" : {
+          "type" : "boolean"
         },
-        "ComparativeOrder": {
-          "$ref": "#/definitions/ComparativeOrder"
+        "ComparativeOrder" : {
+          "$ref" : "#/definitions/ComparativeOrder"
         },
-        "DefaultFormatting": {
-          "$ref": "#/definitions/DefaultFormatting"
+        "SemanticType" : {
+          "$ref" : "#/definitions/SemanticType"
         },
-        "DisableIndexing": {
-          "type": "boolean"
+        "TimeGranularity" : {
+          "$ref" : "#/definitions/TopicTimeGranularity"
         },
-        "IsIncludedInTopic": {
-          "default": false,
-          "type": "boolean"
+        "AllowedAggregations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AuthorSpecifiedAggregation"
+          }
         },
-        "NeverAggregateInFilter": {
-          "default": false,
-          "type": "boolean"
+        "NotAllowedAggregations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AuthorSpecifiedAggregation"
+          }
         },
-        "NonAdditive": {
-          "default": false,
-          "type": "boolean"
+        "DefaultFormatting" : {
+          "$ref" : "#/definitions/DefaultFormatting"
         },
-        "NotAllowedAggregations": {
-          "items": {
-            "$ref": "#/definitions/AuthorSpecifiedAggregation"
-          },
-          "type": "array"
+        "NeverAggregateInFilter" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "SemanticType": {
-          "$ref": "#/definitions/SemanticType"
+        "CellValueSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/CellValueSynonym"
+          }
         },
-        "TimeGranularity": {
-          "$ref": "#/definitions/TopicTimeGranularity"
+        "NonAdditive" : {
+          "type" : "boolean",
+          "default" : false
         }
       },
-      "required": [
-        "ColumnName"
-      ],
-      "type": "object"
+      "required" : [ "ColumnName" ],
+      "additionalProperties" : false
     },
-    "TopicConfigOptions": {
-      "additionalProperties": false,
-      "description": "Model for configuration of a Topic",
-      "properties": {
-        "QBusinessInsightsEnabled": {
-          "type": "boolean"
+    "TopicConfigOptions" : {
+      "type" : "object",
+      "description" : "Model for configuration of a Topic",
+      "properties" : {
+        "QBusinessInsightsEnabled" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicDateRangeFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Constant": {
-          "$ref": "#/definitions/TopicRangeFilterConstant"
+    "TopicDateRangeFilter" : {
+      "type" : "object",
+      "properties" : {
+        "Inclusive" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "Inclusive": {
-          "default": false,
-          "type": "boolean"
+        "Constant" : {
+          "$ref" : "#/definitions/TopicRangeFilterConstant"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "ConfigOptions": {
-          "$ref": "#/definitions/TopicConfigOptions"
+    "TopicDetails" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "DataSets": {
-          "items": {
-            "$ref": "#/definitions/DatasetMetadata"
-          },
-          "type": "array"
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "Description": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "UserExperienceVersion" : {
+          "$ref" : "#/definitions/TopicUserExperienceVersion"
         },
-        "Name": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+        "DataSets" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DatasetMetadata"
+          }
         },
-        "UserExperienceVersion": {
-          "$ref": "#/definitions/TopicUserExperienceVersion"
+        "ConfigOptions" : {
+          "$ref" : "#/definitions/TopicConfigOptions"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "CategoryFilter": {
-          "$ref": "#/definitions/TopicCategoryFilter"
+    "TopicFilter" : {
+      "type" : "object",
+      "properties" : {
+        "FilterDescription" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "DateRangeFilter": {
-          "$ref": "#/definitions/TopicDateRangeFilter"
+        "FilterClass" : {
+          "$ref" : "#/definitions/FilterClass"
         },
-        "FilterClass": {
-          "$ref": "#/definitions/FilterClass"
+        "FilterName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "FilterDescription": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "FilterSynonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 256,
+            "minLength" : 0
+          }
         },
-        "FilterName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "OperandFieldName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "FilterSynonyms": {
-          "items": {
-            "maxLength": 256,
-            "minLength": 0,
-            "type": "string"
-          },
-          "type": "array"
+        "FilterType" : {
+          "$ref" : "#/definitions/NamedFilterType"
         },
-        "FilterType": {
-          "$ref": "#/definitions/NamedFilterType"
+        "CategoryFilter" : {
+          "$ref" : "#/definitions/TopicCategoryFilter"
         },
-        "NumericEqualityFilter": {
-          "$ref": "#/definitions/TopicNumericEqualityFilter"
+        "NumericEqualityFilter" : {
+          "$ref" : "#/definitions/TopicNumericEqualityFilter"
         },
-        "NumericRangeFilter": {
-          "$ref": "#/definitions/TopicNumericRangeFilter"
+        "NumericRangeFilter" : {
+          "$ref" : "#/definitions/TopicNumericRangeFilter"
         },
-        "OperandFieldName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "DateRangeFilter" : {
+          "$ref" : "#/definitions/TopicDateRangeFilter"
         },
-        "RelativeDateFilter": {
-          "$ref": "#/definitions/TopicRelativeDateFilter"
+        "RelativeDateFilter" : {
+          "$ref" : "#/definitions/TopicRelativeDateFilter"
         }
       },
-      "required": [
-        "FilterName",
-        "OperandFieldName"
-      ],
-      "type": "object"
+      "required" : [ "FilterName", "OperandFieldName" ],
+      "additionalProperties" : false
     },
-    "TopicNamedEntity": {
-      "additionalProperties": false,
-      "properties": {
-        "Definition": {
-          "items": {
-            "$ref": "#/definitions/NamedEntityDefinition"
-          },
-          "type": "array"
+    "TopicNamedEntity" : {
+      "type" : "object",
+      "properties" : {
+        "EntityName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "EntityDescription": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "EntityDescription" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         },
-        "EntityName": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "EntitySynonyms" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 256,
+            "minLength" : 0
+          }
         },
-        "EntitySynonyms": {
-          "items": {
-            "maxLength": 256,
-            "minLength": 0,
-            "type": "string"
-          },
-          "type": "array"
+        "SemanticEntityType" : {
+          "$ref" : "#/definitions/SemanticEntityType"
         },
-        "SemanticEntityType": {
-          "$ref": "#/definitions/SemanticEntityType"
+        "Definition" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/NamedEntityDefinition"
+          }
         }
       },
-      "required": [
-        "EntityName"
-      ],
-      "type": "object"
+      "required" : [ "EntityName" ],
+      "additionalProperties" : false
     },
-    "TopicNumericEqualityFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Aggregation": {
-          "$ref": "#/definitions/NamedFilterAggType"
+    "TopicNumericEqualityFilter" : {
+      "type" : "object",
+      "properties" : {
+        "Constant" : {
+          "$ref" : "#/definitions/TopicSingularFilterConstant"
         },
-        "Constant": {
-          "$ref": "#/definitions/TopicSingularFilterConstant"
+        "Aggregation" : {
+          "$ref" : "#/definitions/NamedFilterAggType"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicNumericRangeFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Aggregation": {
-          "$ref": "#/definitions/NamedFilterAggType"
+    "TopicNumericRangeFilter" : {
+      "type" : "object",
+      "properties" : {
+        "Inclusive" : {
+          "type" : "boolean",
+          "default" : false
         },
-        "Constant": {
-          "$ref": "#/definitions/TopicRangeFilterConstant"
+        "Constant" : {
+          "$ref" : "#/definitions/TopicRangeFilterConstant"
         },
-        "Inclusive": {
-          "default": false,
-          "type": "boolean"
+        "Aggregation" : {
+          "$ref" : "#/definitions/NamedFilterAggType"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicNumericSeparatorSymbol": {
-      "enum": [
-        "COMMA",
-        "DOT"
-      ],
-      "type": "string"
+    "TopicNumericSeparatorSymbol" : {
+      "type" : "string",
+      "enum" : [ "COMMA", "DOT" ]
     },
-    "TopicRangeFilterConstant": {
-      "additionalProperties": false,
-      "properties": {
-        "ConstantType": {
-          "$ref": "#/definitions/ConstantType"
+    "TopicRangeFilterConstant" : {
+      "type" : "object",
+      "properties" : {
+        "ConstantType" : {
+          "$ref" : "#/definitions/ConstantType"
         },
-        "RangeConstant": {
-          "$ref": "#/definitions/RangeConstant"
+        "RangeConstant" : {
+          "$ref" : "#/definitions/RangeConstant"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicRelativeDateFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Constant": {
-          "$ref": "#/definitions/TopicSingularFilterConstant"
+    "TopicRelativeDateFilter" : {
+      "type" : "object",
+      "properties" : {
+        "TimeGranularity" : {
+          "$ref" : "#/definitions/TopicTimeGranularity"
         },
-        "RelativeDateFilterFunction": {
-          "$ref": "#/definitions/TopicRelativeDateFilterFunction"
+        "RelativeDateFilterFunction" : {
+          "$ref" : "#/definitions/TopicRelativeDateFilterFunction"
         },
-        "TimeGranularity": {
-          "$ref": "#/definitions/TopicTimeGranularity"
+        "Constant" : {
+          "$ref" : "#/definitions/TopicSingularFilterConstant"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicRelativeDateFilterFunction": {
-      "enum": [
-        "PREVIOUS",
-        "THIS",
-        "LAST",
-        "NEXT",
-        "NOW"
-      ],
-      "type": "string"
+    "TopicRelativeDateFilterFunction" : {
+      "type" : "string",
+      "enum" : [ "PREVIOUS", "THIS", "LAST", "NEXT", "NOW" ]
     },
-    "TopicSingularFilterConstant": {
-      "additionalProperties": false,
-      "properties": {
-        "ConstantType": {
-          "$ref": "#/definitions/ConstantType"
+    "TopicSingularFilterConstant" : {
+      "type" : "object",
+      "properties" : {
+        "ConstantType" : {
+          "$ref" : "#/definitions/ConstantType"
         },
-        "SingularConstant": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "SingularConstant" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TopicTimeGranularity": {
-      "enum": [
-        "SECOND",
-        "MINUTE",
-        "HOUR",
-        "DAY",
-        "WEEK",
-        "MONTH",
-        "QUARTER",
-        "YEAR"
-      ],
-      "type": "string"
+    "TopicTimeGranularity" : {
+      "type" : "string",
+      "enum" : [ "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR" ]
     },
-    "TopicUserExperienceVersion": {
-      "enum": [
-        "LEGACY",
-        "NEW_READER_EXPERIENCE"
-      ],
-      "type": "string"
+    "TopicUserExperienceVersion" : {
+      "type" : "string",
+      "enum" : [ "LEGACY", "NEW_READER_EXPERIENCE" ]
     },
-    "TypeParameters": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "TypeParameters" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "UndefinedSpecifiedValueType": {
-      "enum": [
-        "LEAST",
-        "MOST"
-      ],
-      "type": "string"
+    "UndefinedSpecifiedValueType" : {
+      "type" : "string",
+      "enum" : [ "LEAST", "MOST" ]
     }
   },
-  "description": "Definition of the AWS::QuickSight::Topic Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "quicksight:CreateTopic",
-        "quicksight:PassDataSet",
-        "quicksight:DescribeTopicRefresh",
-        "quicksight:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "quicksight:DeleteTopic"
-      ]
+    "AwsAccountId" : {
+      "type" : "string",
+      "maxLength" : 12,
+      "minLength" : 12,
+      "pattern" : "^[0-9]{12}$"
     },
-    "list": {
-      "permissions": [
-        "quicksight:ListTopics"
-      ]
+    "ConfigOptions" : {
+      "$ref" : "#/definitions/TopicConfigOptions"
     },
-    "read": {
-      "permissions": [
-        "quicksight:DescribeTopic",
-        "quicksight:ListTagsForResource"
-      ]
+    "CustomInstructions" : {
+      "$ref" : "#/definitions/CustomInstructions"
     },
-    "update": {
-      "permissions": [
-        "quicksight:UpdateTopic",
-        "quicksight:PassDataSet",
-        "quicksight:DescribeTopicRefresh"
-      ]
+    "DataSets" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/DatasetMetadata"
+      }
+    },
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 0
+    },
+    "FolderArns" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      },
+      "maxItems" : 20,
+      "minItems" : 0
+    },
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 1
+    },
+    "TopicId" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 0,
+      "pattern" : "^[A-Za-z0-9-_.\\\\+]*$"
+    },
+    "UserExperienceVersion" : {
+      "$ref" : "#/definitions/TopicUserExperienceVersion"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AwsAccountId",
-    "/properties/TopicId"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "writeOnlyProperties" : [ "/properties/FolderArns" ],
+  "createOnlyProperties" : [ "/properties/AwsAccountId", "/properties/FolderArns", "/properties/TopicId", "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/AwsAccountId", "/properties/TopicId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "quicksight:CreateTopic", "quicksight:PassDataSet", "quicksight:DescribeTopicRefresh", "quicksight:TagResource" ]
     },
-    "AwsAccountId": {
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "quicksight:DescribeTopic", "quicksight:ListTagsForResource" ]
     },
-    "ConfigOptions": {
-      "$ref": "#/definitions/TopicConfigOptions"
+    "update" : {
+      "permissions" : [ "quicksight:UpdateTopic", "quicksight:PassDataSet", "quicksight:DescribeTopicRefresh" ]
     },
-    "CustomInstructions": {
-      "$ref": "#/definitions/CustomInstructions"
+    "delete" : {
+      "permissions" : [ "quicksight:DeleteTopic" ]
     },
-    "DataSets": {
-      "items": {
-        "$ref": "#/definitions/DatasetMetadata"
-      },
-      "type": "array"
-    },
-    "Description": {
-      "maxLength": 256,
-      "minLength": 0,
-      "type": "string"
-    },
-    "FolderArns": {
-      "items": {
-        "type": "string"
-      },
-      "maxItems": 20,
-      "minItems": 0,
-      "type": "array"
-    },
-    "Name": {
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 1,
-      "type": "array"
-    },
-    "TopicId": {
-      "maxLength": 256,
-      "minLength": 0,
-      "pattern": "^[A-Za-z0-9-_.\\\\+]*$",
-      "type": "string"
-    },
-    "UserExperienceVersion": {
-      "$ref": "#/definitions/TopicUserExperienceVersion"
+    "list" : {
+      "permissions" : [ "quicksight:ListTopics" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "quicksight:TagResource",
-      "quicksight:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
-  },
-  "typeName": "AWS::QuickSight::Topic",
-  "writeOnlyProperties": [
-    "/properties/FolderArns"
-  ]
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "quicksight:TagResource", "quicksight:ListTagsForResource" ]
+  }
 }

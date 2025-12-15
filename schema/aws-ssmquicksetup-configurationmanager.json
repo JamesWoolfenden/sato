@@ -1,328 +1,165 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ConfigurationDefinitions/*/Type",
-    "/properties/ConfigurationDefinitions/*/TypeVersion"
-  ],
-  "definitions": {
-    "ConfigurationDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "LocalDeploymentAdministrationRoleArn": {
-          "type": "string"
+  "typeName" : "AWS::SSMQuickSetup::ConfigurationManager",
+  "description" : "Definition of AWS::SSMQuickSetup::ConfigurationManager Resource Type",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : false,
+    "permissions" : [ "ssm-quicksetup:TagResource", "ssm-quicksetup:UntagResource" ]
+  },
+  "definitions" : {
+    "ConfigurationDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_\\-.:/]{3,200}$"
         },
-        "LocalDeploymentExecutionRoleName": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Parameters" : {
+          "$ref" : "#/definitions/ConfigurationParametersMap"
         },
-        "Parameters": {
-          "$ref": "#/definitions/ConfigurationParametersMap"
+        "TypeVersion" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Type": {
-          "pattern": "^[a-zA-Z0-9_\\-.:/]{3,200}$",
-          "type": "string"
+        "LocalDeploymentExecutionRoleName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1
         },
-        "TypeVersion": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+        "LocalDeploymentAdministrationRoleArn" : {
+          "type" : "string"
         },
-        "id": {
-          "type": "string"
+        "id" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Parameters",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Parameters", "Type" ],
+      "additionalProperties" : false
     },
-    "ConfigurationParametersMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^[A-Za-z0-9+=@_\\/\\s-]+$": {
-          "maxLength": 40960,
-          "type": "string"
+    "ConfigurationParametersMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^[A-Za-z0-9+=@_\\/\\s-]+$" : {
+          "type" : "string",
+          "maxLength" : 40960
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Status": {
-      "enum": [
-        "INITIALIZING",
-        "DEPLOYING",
-        "SUCCEEDED",
-        "DELETING",
-        "STOPPING",
-        "FAILED",
-        "STOPPED",
-        "DELETE_FAILED",
-        "STOP_FAILED",
-        "NONE"
-      ],
-      "type": "string"
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "INITIALIZING", "DEPLOYING", "SUCCEEDED", "DELETING", "STOPPING", "FAILED", "STOPPED", "DELETE_FAILED", "STOP_FAILED", "NONE" ]
     },
-    "StatusDetails": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "type": "string"
+    "StatusDetails" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "StatusSummary": {
-      "additionalProperties": false,
-      "properties": {
-        "LastUpdatedAt": {
-          "type": "string"
+    "StatusSummary" : {
+      "type" : "object",
+      "properties" : {
+        "StatusType" : {
+          "$ref" : "#/definitions/StatusType"
         },
-        "Status": {
-          "$ref": "#/definitions/Status"
+        "Status" : {
+          "$ref" : "#/definitions/Status"
         },
-        "StatusDetails": {
-          "$ref": "#/definitions/StatusDetails"
+        "StatusMessage" : {
+          "type" : "string"
         },
-        "StatusMessage": {
-          "type": "string"
+        "LastUpdatedAt" : {
+          "type" : "string"
         },
-        "StatusType": {
-          "$ref": "#/definitions/StatusType"
+        "StatusDetails" : {
+          "$ref" : "#/definitions/StatusDetails"
         }
       },
-      "required": [
-        "LastUpdatedAt",
-        "StatusType"
-      ],
-      "type": "object"
+      "required" : [ "LastUpdatedAt", "StatusType" ],
+      "additionalProperties" : false
     },
-    "StatusType": {
-      "enum": [
-        "Deployment",
-        "AsyncExecutions"
-      ],
-      "type": "string"
+    "StatusType" : {
+      "type" : "string",
+      "enum" : [ "Deployment", "AsyncExecutions" ]
     },
-    "TagsMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^[A-Za-z0-9 +=@_\\/:.-]+$": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[A-Za-z0-9 +=@_\\/:.-]+$",
-          "type": "string"
+    "TagsMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^[A-Za-z0-9 +=@_\\/:.-]+$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[A-Za-z0-9 +=@_\\/:.-]+$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::SSMQuickSetup::ConfigurationManager Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:CreateServiceLinkedRole",
-        "iam:ListRoles",
-        "iam:PassRole",
-        "ssm-quicksetup:CreateConfigurationManager",
-        "ssm-quicksetup:GetConfigurationManager",
-        "ssm-quicksetup:TagResource",
-        "ssm-quicksetup:UntagResource",
-        "ssm-quicksetup:UpdateConfigurationManager",
-        "ssm:Describe*",
-        "ssm:Get*",
-        "ssm:List*",
-        "ssm:DeleteAssociation",
-        "ssm:CreateResourceDataSync",
-        "ssm:UpdateResourceDataSync",
-        "ssm:StartAutomationExecution",
-        "ssm:CreateAssociation",
-        "ssm:StartAssociationsOnce",
-        "cloudformation:List*",
-        "cloudformation:Describe*",
-        "cloudformation:CreateStack",
-        "cloudformation:CreateStackInstances",
-        "cloudformation:CreateStackSet",
-        "cloudformation:DeleteStack",
-        "cloudformation:DeleteStackInstances",
-        "cloudformation:DeleteStackSet",
-        "cloudformation:UpdateStack",
-        "cloudformation:UpdateStackSet",
-        "cloudformation:StopStackSetOperation",
-        "cloudformation:GetTemplate",
-        "cloudformation:RollbackStack",
-        "cloudformation:TagResource",
-        "cloudformation:UntagResource",
-        "organizations:Describe*",
-        "organizations:List*",
-        "organizations:RegisterDelegatedAdministrator",
-        "organizations:DeregisterDelegatedAdministrator",
-        "organizations:EnableAWSServiceAccess"
-      ],
-      "timeoutInMinutes": 2160
+  "properties" : {
+    "ConfigurationDefinitions" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ConfigurationDefinition"
+      }
     },
-    "delete": {
-      "permissions": [
-        "ssm-quicksetup:DeleteConfigurationManager",
-        "iam:GetRole",
-        "iam:CreateServiceLinkedRole",
-        "iam:ListRoles",
-        "iam:PassRole",
-        "ssm-quicksetup:GetConfigurationManager",
-        "ssm-quicksetup:ListConfigurationManagers",
-        "ssm-quicksetup:TagResource",
-        "ssm-quicksetup:UntagResource",
-        "ssm-quicksetup:UpdateConfigurationManager",
-        "ssm:Describe*",
-        "ssm:Get*",
-        "ssm:List*",
-        "ssm:DeleteAssociation",
-        "ssm:CreateResourceDataSync",
-        "ssm:UpdateResourceDataSync",
-        "ssm:StartAutomationExecution",
-        "ssm:CreateAssociation",
-        "ssm:StartAssociationsOnce",
-        "cloudformation:List*",
-        "cloudformation:Describe*",
-        "cloudformation:CreateStack",
-        "cloudformation:CreateStackInstances",
-        "cloudformation:CreateStackSet",
-        "cloudformation:DeleteStack",
-        "cloudformation:DeleteStackInstances",
-        "cloudformation:DeleteStackSet",
-        "cloudformation:UpdateStack",
-        "cloudformation:UpdateStackSet",
-        "cloudformation:StopStackSetOperation",
-        "cloudformation:GetTemplate",
-        "cloudformation:RollbackStack",
-        "cloudformation:TagResource",
-        "cloudformation:UntagResource",
-        "organizations:Describe*",
-        "organizations:List*",
-        "organizations:RegisterDelegatedAdministrator",
-        "organizations:DeregisterDelegatedAdministrator",
-        "organizations:EnableAWSServiceAccess"
-      ],
-      "timeoutInMinutes": 2160
+    "CreatedAt" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "ssm-quicksetup:ListConfigurationManagers"
-      ]
+    "Description" : {
+      "type" : "string",
+      "pattern" : "^.{0,512}$"
     },
-    "read": {
-      "permissions": [
-        "ssm-quicksetup:GetConfigurationManager",
-        "iam:GetRole",
-        "iam:PassRole",
-        "iam:ListRoles",
-        "ssm:DescribeDocument",
-        "ssm:GetDocument"
-      ]
+    "LastModifiedAt" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:CreateServiceLinkedRole",
-        "iam:ListRoles",
-        "iam:PassRole",
-        "ssm-quicksetup:GetConfigurationManager",
-        "ssm-quicksetup:TagResource",
-        "ssm-quicksetup:UntagResource",
-        "ssm-quicksetup:UpdateConfigurationManager",
-        "ssm-quicksetup:UpdateConfigurationDefinition",
-        "ssm:Describe*",
-        "ssm:Get*",
-        "ssm:List*",
-        "ssm:DeleteAssociation",
-        "ssm:CreateResourceDataSync",
-        "ssm:UpdateResourceDataSync",
-        "ssm:StartAutomationExecution",
-        "ssm:CreateAssociation",
-        "ssm:StartAssociationsOnce",
-        "cloudformation:List*",
-        "cloudformation:Describe*",
-        "cloudformation:CreateStack",
-        "cloudformation:CreateStackInstances",
-        "cloudformation:CreateStackSet",
-        "cloudformation:DeleteStack",
-        "cloudformation:DeleteStackInstances",
-        "cloudformation:DeleteStackSet",
-        "cloudformation:UpdateStack",
-        "cloudformation:UpdateStackSet",
-        "cloudformation:StopStackSetOperation",
-        "cloudformation:GetTemplate",
-        "cloudformation:RollbackStack",
-        "cloudformation:TagResource",
-        "cloudformation:UntagResource",
-        "organizations:Describe*",
-        "organizations:List*",
-        "organizations:RegisterDelegatedAdministrator",
-        "organizations:DeregisterDelegatedAdministrator",
-        "organizations:EnableAWSServiceAccess"
-      ],
-      "timeoutInMinutes": 2160
+    "ManagerArn" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^[ A-Za-z0-9_-]{1,50}$"
+    },
+    "StatusSummaries" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/StatusSummary"
+      }
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagsMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ManagerArn"
-  ],
-  "properties": {
-    "ConfigurationDefinitions": {
-      "items": {
-        "$ref": "#/definitions/ConfigurationDefinition"
-      },
-      "type": "array"
+  "required" : [ "ConfigurationDefinitions" ],
+  "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/LastModifiedAt", "/properties/ManagerArn", "/properties/StatusSummaries", "/properties/ConfigurationDefinitions/*/id" ],
+  "createOnlyProperties" : [ "/properties/ConfigurationDefinitions/*/Type", "/properties/ConfigurationDefinitions/*/TypeVersion" ],
+  "primaryIdentifier" : [ "/properties/ManagerArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:GetRole", "iam:CreateServiceLinkedRole", "iam:ListRoles", "iam:PassRole", "ssm-quicksetup:CreateConfigurationManager", "ssm-quicksetup:GetConfigurationManager", "ssm-quicksetup:TagResource", "ssm-quicksetup:UntagResource", "ssm-quicksetup:UpdateConfigurationManager", "ssm:Describe*", "ssm:Get*", "ssm:List*", "ssm:DeleteAssociation", "ssm:CreateResourceDataSync", "ssm:UpdateResourceDataSync", "ssm:StartAutomationExecution", "ssm:CreateAssociation", "ssm:StartAssociationsOnce", "cloudformation:List*", "cloudformation:Describe*", "cloudformation:CreateStack", "cloudformation:CreateStackInstances", "cloudformation:CreateStackSet", "cloudformation:DeleteStack", "cloudformation:DeleteStackInstances", "cloudformation:DeleteStackSet", "cloudformation:UpdateStack", "cloudformation:UpdateStackSet", "cloudformation:StopStackSetOperation", "cloudformation:GetTemplate", "cloudformation:RollbackStack", "cloudformation:TagResource", "cloudformation:UntagResource", "organizations:Describe*", "organizations:List*", "organizations:RegisterDelegatedAdministrator", "organizations:DeregisterDelegatedAdministrator", "organizations:EnableAWSServiceAccess" ],
+      "timeoutInMinutes" : 2160
     },
-    "CreatedAt": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ssm-quicksetup:GetConfigurationManager", "iam:GetRole", "iam:PassRole", "iam:ListRoles", "ssm:DescribeDocument", "ssm:GetDocument" ]
     },
-    "Description": {
-      "pattern": "^.{0,512}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iam:GetRole", "iam:CreateServiceLinkedRole", "iam:ListRoles", "iam:PassRole", "ssm-quicksetup:GetConfigurationManager", "ssm-quicksetup:TagResource", "ssm-quicksetup:UntagResource", "ssm-quicksetup:UpdateConfigurationManager", "ssm-quicksetup:UpdateConfigurationDefinition", "ssm:Describe*", "ssm:Get*", "ssm:List*", "ssm:DeleteAssociation", "ssm:CreateResourceDataSync", "ssm:UpdateResourceDataSync", "ssm:StartAutomationExecution", "ssm:CreateAssociation", "ssm:StartAssociationsOnce", "cloudformation:List*", "cloudformation:Describe*", "cloudformation:CreateStack", "cloudformation:CreateStackInstances", "cloudformation:CreateStackSet", "cloudformation:DeleteStack", "cloudformation:DeleteStackInstances", "cloudformation:DeleteStackSet", "cloudformation:UpdateStack", "cloudformation:UpdateStackSet", "cloudformation:StopStackSetOperation", "cloudformation:GetTemplate", "cloudformation:RollbackStack", "cloudformation:TagResource", "cloudformation:UntagResource", "organizations:Describe*", "organizations:List*", "organizations:RegisterDelegatedAdministrator", "organizations:DeregisterDelegatedAdministrator", "organizations:EnableAWSServiceAccess" ],
+      "timeoutInMinutes" : 2160
     },
-    "LastModifiedAt": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ssm-quicksetup:DeleteConfigurationManager", "iam:GetRole", "iam:CreateServiceLinkedRole", "iam:ListRoles", "iam:PassRole", "ssm-quicksetup:GetConfigurationManager", "ssm-quicksetup:ListConfigurationManagers", "ssm-quicksetup:TagResource", "ssm-quicksetup:UntagResource", "ssm-quicksetup:UpdateConfigurationManager", "ssm:Describe*", "ssm:Get*", "ssm:List*", "ssm:DeleteAssociation", "ssm:CreateResourceDataSync", "ssm:UpdateResourceDataSync", "ssm:StartAutomationExecution", "ssm:CreateAssociation", "ssm:StartAssociationsOnce", "cloudformation:List*", "cloudformation:Describe*", "cloudformation:CreateStack", "cloudformation:CreateStackInstances", "cloudformation:CreateStackSet", "cloudformation:DeleteStack", "cloudformation:DeleteStackInstances", "cloudformation:DeleteStackSet", "cloudformation:UpdateStack", "cloudformation:UpdateStackSet", "cloudformation:StopStackSetOperation", "cloudformation:GetTemplate", "cloudformation:RollbackStack", "cloudformation:TagResource", "cloudformation:UntagResource", "organizations:Describe*", "organizations:List*", "organizations:RegisterDelegatedAdministrator", "organizations:DeregisterDelegatedAdministrator", "organizations:EnableAWSServiceAccess" ],
+      "timeoutInMinutes" : 2160
     },
-    "ManagerArn": {
-      "type": "string"
-    },
-    "Name": {
-      "pattern": "^[ A-Za-z0-9_-]{1,50}$",
-      "type": "string"
-    },
-    "StatusSummaries": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/StatusSummary"
-      },
-      "type": "array"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagsMap"
+    "list" : {
+      "permissions" : [ "ssm-quicksetup:ListConfigurationManagers" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreatedAt",
-    "/properties/LastModifiedAt",
-    "/properties/ManagerArn",
-    "/properties/StatusSummaries",
-    "/properties/ConfigurationDefinitions/*/id"
-  ],
-  "required": [
-    "ConfigurationDefinitions"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ssm-quicksetup:TagResource",
-      "ssm-quicksetup:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SSMQuickSetup::ConfigurationManager"
+  "additionalProperties" : false
 }

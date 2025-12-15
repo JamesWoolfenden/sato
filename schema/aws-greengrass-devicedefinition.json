@@ -1,80 +1,64 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/InitialVersion"
-  ],
-  "definitions": {
-    "Device": {
-      "additionalProperties": false,
-      "properties": {
-        "CertificateArn": {
-          "type": "string"
-        },
-        "Id": {
-          "type": "string"
-        },
-        "SyncShadow": {
-          "type": "boolean"
-        },
-        "ThingArn": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ThingArn",
-        "Id",
-        "CertificateArn"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Greengrass::DeviceDefinition",
+  "description" : "Resource Type definition for AWS::Greengrass::DeviceDefinition",
+  "additionalProperties" : false,
+  "properties" : {
+    "LatestVersionArn" : {
+      "type" : "string"
     },
-    "DeviceDefinitionVersion": {
-      "additionalProperties": false,
-      "properties": {
-        "Devices": {
-          "items": {
-            "$ref": "#/definitions/Device"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Devices"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "InitialVersion" : {
+      "$ref" : "#/definitions/DeviceDefinitionVersion"
+    },
+    "Tags" : {
+      "type" : "object"
     }
   },
-  "description": "Resource Type definition for AWS::Greengrass::DeviceDefinition",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "definitions" : {
+    "DeviceDefinitionVersion" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Devices" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Device"
+          }
+        }
+      },
+      "required" : [ "Devices" ]
     },
-    "Id": {
-      "type": "string"
-    },
-    "InitialVersion": {
-      "$ref": "#/definitions/DeviceDefinitionVersion"
-    },
-    "LatestVersionArn": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Tags": {
-      "type": "object"
+    "Device" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SyncShadow" : {
+          "type" : "boolean"
+        },
+        "ThingArn" : {
+          "type" : "string"
+        },
+        "Id" : {
+          "type" : "string"
+        },
+        "CertificateArn" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ThingArn", "Id", "CertificateArn" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/LatestVersionArn",
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [
-    "Name"
-  ],
-  "typeName": "AWS::Greengrass::DeviceDefinition"
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/LatestVersionArn", "/properties/Arn", "/properties/Id" ],
+  "createOnlyProperties" : [ "/properties/InitialVersion" ],
+  "primaryIdentifier" : [ "/properties/Id" ]
 }

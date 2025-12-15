@@ -1,125 +1,97 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "InsightsConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "InsightsEnabled": {
-          "description": "Set the InsightsEnabled value to true to enable insights or false to disable insights.",
-          "type": "boolean"
+  "typeName" : "AWS::XRay::Group",
+  "description" : "This schema provides construct and validation rules for AWS-XRay Group resource parameters.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "properties" : {
+    "FilterExpression" : {
+      "description" : "The filter expression defining criteria by which to group traces.",
+      "type" : "string"
+    },
+    "GroupName" : {
+      "description" : "The case-sensitive name of the new group. Names must be unique.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 32
+    },
+    "GroupARN" : {
+      "description" : "The ARN of the group that was generated on creation.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 400
+    },
+    "InsightsConfiguration" : {
+      "$ref" : "#/definitions/InsightsConfiguration"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
+    }
+  },
+  "definitions" : {
+    "InsightsConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "InsightsEnabled" : {
+          "description" : "Set the InsightsEnabled value to true to enable insights or false to disable insights.",
+          "type" : "boolean"
         },
-        "NotificationsEnabled": {
-          "description": "Set the NotificationsEnabled value to true to enable insights notifications. Notifications can only be enabled on a group with InsightsEnabled set to true.",
-          "type": "boolean"
+        "NotificationsEnabled" : {
+          "description" : "Set the NotificationsEnabled value to true to enable insights notifications. Notifications can only be enabled on a group with InsightsEnabled set to true.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag."
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag."
         }
       },
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag.",
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag.",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "This schema provides construct and validation rules for AWS-XRay Group resource parameters.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "xray:CreateGroup",
-        "xray:TagResource"
-      ]
+  "required" : [ "GroupName" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "xray:TagResource", "xray:UntagResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "xray:CreateGroup", "xray:TagResource" ]
     },
-    "delete": {
-      "permissions": [
-        "xray:DeleteGroup"
-      ]
+    "read" : {
+      "permissions" : [ "xray:GetGroup", "xray:ListTagsForResource" ]
     },
-    "list": {
-      "permissions": [
-        "xray:GetGroups",
-        "xray:ListTagsForResource"
-      ]
+    "update" : {
+      "permissions" : [ "xray:UpdateGroup", "xray:TagResource", "xray:UntagResource", "xray:ListTagsForResource" ]
     },
-    "read": {
-      "permissions": [
-        "xray:GetGroup",
-        "xray:ListTagsForResource"
-      ]
+    "delete" : {
+      "permissions" : [ "xray:DeleteGroup" ]
     },
-    "update": {
-      "permissions": [
-        "xray:UpdateGroup",
-        "xray:TagResource",
-        "xray:UntagResource",
-        "xray:ListTagsForResource"
-      ]
+    "list" : {
+      "permissions" : [ "xray:GetGroups", "xray:ListTagsForResource" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/GroupARN"
-  ],
-  "properties": {
-    "FilterExpression": {
-      "description": "The filter expression defining criteria by which to group traces.",
-      "type": "string"
-    },
-    "GroupARN": {
-      "description": "The ARN of the group that was generated on creation.",
-      "maxLength": 400,
-      "minLength": 1,
-      "type": "string"
-    },
-    "GroupName": {
-      "description": "The case-sensitive name of the new group. Names must be unique.",
-      "maxLength": 32,
-      "minLength": 1,
-      "type": "string"
-    },
-    "InsightsConfiguration": {
-      "$ref": "#/definitions/InsightsConfiguration"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/GroupARN"
-  ],
-  "required": [
-    "GroupName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "xray:TagResource",
-      "xray:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::XRay::Group"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/GroupARN" ],
+  "readOnlyProperties" : [ "/properties/GroupARN" ]
 }

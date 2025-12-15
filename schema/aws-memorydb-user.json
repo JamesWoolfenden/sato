@@ -1,154 +1,112 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/UserName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with 'aws:'. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
-          "type": "string"
+  "typeName" : "AWS::MemoryDB::User",
+  "description" : "Resource Type definition for AWS::MemoryDB::User",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with 'aws:'. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string",
+          "pattern" : "^(?!aws:)[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
-          "type": "string"
+        "Value" : {
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9 _\\.\\/=+:\\-@]*$",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::MemoryDB::User",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "memorydb:CreateUser",
-        "memorydb:DescribeUsers",
-        "memorydb:TagResource",
-        "memorydb:ListTags",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Status" : {
+      "description" : "Indicates the user status. Can be \"active\", \"modifying\" or \"deleting\".",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "memorydb:DeleteUser",
-        "memorydb:DescribeUsers"
-      ]
+    "UserName" : {
+      "description" : "The name of the user.",
+      "pattern" : "[a-z][a-z0-9\\\\-]*",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "memorydb:DescribeUsers",
-        "memorydb:ListTags"
-      ]
+    "AccessString" : {
+      "description" : "Access permissions string used for this user account.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "memorydb:DescribeUsers",
-        "memorydb:ListTags"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "memorydb:UpdateUser",
-        "memorydb:DescribeUsers",
-        "memorydb:ListTags",
-        "memorydb:TagResource",
-        "memorydb:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/UserName"
-  ],
-  "properties": {
-    "AccessString": {
-      "description": "Access permissions string used for this user account.",
-      "type": "string"
-    },
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the user account.",
-      "type": "string"
-    },
-    "AuthenticationMode": {
-      "additionalProperties": false,
-      "properties": {
-        "Passwords": {
-          "$comment": "List of passwords.",
-          "description": "Passwords used for this user account. You can create up to two passwords for each user.",
-          "insertionOrder": true,
-          "items": {
-            "type": "string"
+    "AuthenticationMode" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "type" : "string",
+          "description" : "Type of authentication strategy for this user.",
+          "enum" : [ "password", "iam" ]
+        },
+        "Passwords" : {
+          "type" : "array",
+          "$comment" : "List of passwords.",
+          "uniqueItems" : true,
+          "insertionOrder" : true,
+          "maxItems" : 2,
+          "minItems" : 1,
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 2,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
-        },
-        "Type": {
-          "description": "Type of authentication strategy for this user.",
-          "enum": [
-            "password",
-            "iam"
-          ],
-          "type": "string"
+          "description" : "Passwords used for this user account. You can create up to two passwords for each user."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Status": {
-      "description": "Indicates the user status. Can be \"active\", \"modifying\" or \"deleting\".",
-      "type": "string"
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of the user account.",
+      "type" : "string"
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this user.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "UserName": {
-      "description": "The name of the user.",
-      "pattern": "[a-z][a-z0-9\\\\-]*",
-      "type": "string"
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this user.",
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Status",
-    "/properties/Arn"
-  ],
-  "required": [
-    "UserName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-memorydb",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "memorydb:TagResource",
-      "memorydb:ListTags",
-      "memorydb:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "memorydb:TagResource", "memorydb:ListTags", "memorydb:UntagResource" ]
   },
-  "typeName": "AWS::MemoryDB::User",
-  "writeOnlyProperties": [
-    "/properties/AuthenticationMode",
-    "/properties/AccessString"
-  ]
+  "additionalProperties" : false,
+  "required" : [ "UserName" ],
+  "readOnlyProperties" : [ "/properties/Status", "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/UserName" ],
+  "writeOnlyProperties" : [ "/properties/AuthenticationMode", "/properties/AccessString" ],
+  "primaryIdentifier" : [ "/properties/UserName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "memorydb:CreateUser", "memorydb:DescribeUsers", "memorydb:TagResource", "memorydb:ListTags", "iam:CreateServiceLinkedRole" ]
+    },
+    "read" : {
+      "permissions" : [ "memorydb:DescribeUsers", "memorydb:ListTags" ]
+    },
+    "update" : {
+      "permissions" : [ "memorydb:UpdateUser", "memorydb:DescribeUsers", "memorydb:ListTags", "memorydb:TagResource", "memorydb:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "memorydb:DeleteUser", "memorydb:DescribeUsers" ]
+    },
+    "list" : {
+      "permissions" : [ "memorydb:DescribeUsers", "memorydb:ListTags" ]
+    }
+  }
 }

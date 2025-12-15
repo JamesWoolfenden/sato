@@ -1,121 +1,82 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CacheParameterGroupFamily"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::ElastiCache::ParameterGroup",
+  "description" : "Resource Type definition for AWS::ElastiCache::ParameterGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string",
+      "description" : "The description for this cache parameter group."
+    },
+    "Properties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "type" : "string"
+        }
+      },
+      "description" : "A comma-delimited list of parameter name/value pairs. For more information see ModifyCacheParameterGroup in the Amazon ElastiCache API Reference Guide."
+    },
+    "Tags" : {
+      "type" : "array",
+      "description" : "Tags are composed of a Key/Value pair. You can use tags to categorize and track each parameter group. The tag value null is permitted.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "insertionOrder" : false,
+      "uniqueItems" : false
+    },
+    "CacheParameterGroupName" : {
+      "type" : "string",
+      "description" : "The name of the Cache Parameter Group."
+    },
+    "CacheParameterGroupFamily" : {
+      "type" : "string",
+      "description" : "The name of the cache parameter group family that this cache parameter group is compatible with."
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::ElastiCache::ParameterGroup",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "elasticache:CreateCacheParameterGroup",
-        "elasticache:DescribeCacheParameterGroups",
-        "elasticache:AddTagsToResource",
-        "elasticache:ModifyCacheParameterGroup",
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy"
-      ]
+  "required" : [ "Description", "CacheParameterGroupFamily" ],
+  "readOnlyProperties" : [ "/properties/CacheParameterGroupName" ],
+  "createOnlyProperties" : [ "/properties/CacheParameterGroupFamily" ],
+  "primaryIdentifier" : [ "/properties/CacheParameterGroupName" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "elasticache:AddTagsToResource", "elasticache:RemoveTagsFromResource", "elasticache:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "elasticache:CreateCacheParameterGroup", "elasticache:DescribeCacheParameterGroups", "elasticache:AddTagsToResource", "elasticache:ModifyCacheParameterGroup", "iam:CreateServiceLinkedRole", "iam:PutRolePolicy" ]
     },
-    "delete": {
-      "permissions": [
-        "elasticache:DescribeCacheParameterGroups",
-        "elasticache:DeleteCacheParameterGroup"
-      ]
+    "read" : {
+      "permissions" : [ "elasticache:DescribeCacheParameterGroups", "elasticache:DescribeCacheParameters", "elasticache:ListTagsForResource" ]
     },
-    "list": {
-      "permissions": [
-        "elasticache:DescribeCacheParameterGroups"
-      ]
+    "update" : {
+      "permissions" : [ "elasticache:ModifyCacheParameterGroup", "elasticache:DescribeCacheParameterGroups", "elasticache:DescribeCacheParameters", "elasticache:DescribeEngineDefaultParameters", "elasticache:AddTagsToResource", "elasticache:RemoveTagsFromResource" ]
     },
-    "read": {
-      "permissions": [
-        "elasticache:DescribeCacheParameterGroups",
-        "elasticache:DescribeCacheParameters",
-        "elasticache:ListTagsForResource"
-      ]
+    "delete" : {
+      "permissions" : [ "elasticache:DescribeCacheParameterGroups", "elasticache:DeleteCacheParameterGroup" ]
     },
-    "update": {
-      "permissions": [
-        "elasticache:ModifyCacheParameterGroup",
-        "elasticache:DescribeCacheParameterGroups",
-        "elasticache:DescribeCacheParameters",
-        "elasticache:DescribeEngineDefaultParameters",
-        "elasticache:AddTagsToResource",
-        "elasticache:RemoveTagsFromResource"
-      ]
+    "list" : {
+      "permissions" : [ "elasticache:DescribeCacheParameterGroups" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/CacheParameterGroupName"
-  ],
-  "properties": {
-    "CacheParameterGroupFamily": {
-      "description": "The name of the cache parameter group family that this cache parameter group is compatible with.",
-      "type": "string"
-    },
-    "CacheParameterGroupName": {
-      "description": "The name of the Cache Parameter Group.",
-      "type": "string"
-    },
-    "Description": {
-      "description": "The description for this cache parameter group.",
-      "type": "string"
-    },
-    "Properties": {
-      "additionalProperties": false,
-      "description": "A comma-delimited list of parameter name/value pairs. For more information see ModifyCacheParameterGroup in the Amazon ElastiCache API Reference Guide.",
-      "patternProperties": {
-        "[a-zA-Z0-9]+": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "Tags": {
-      "description": "Tags are composed of a Key/Value pair. You can use tags to categorize and track each parameter group. The tag value null is permitted.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/CacheParameterGroupName"
-  ],
-  "required": [
-    "Description",
-    "CacheParameterGroupFamily"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "elasticache:AddTagsToResource",
-      "elasticache:RemoveTagsFromResource",
-      "elasticache:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::ElastiCache::ParameterGroup"
+  }
 }

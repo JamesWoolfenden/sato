@@ -1,80 +1,57 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/TransitGatewayRouteTableId",
-    "/properties/TransitGatewayAttachmentId",
-    "/properties/DestinationCidrBlock",
-    "/properties/Blackhole"
-  ],
-  "definitions": {},
-  "description": "Resource Type definition for AWS::EC2::TransitGatewayRoute",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateTransitGatewayRoute",
-        "ec2:SearchTransitGatewayRoutes"
-      ]
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "typeName" : "AWS::EC2::TransitGatewayRoute",
+  "description" : "Resource Type definition for AWS::EC2::TransitGatewayRoute",
+  "createOnlyProperties" : [ "/properties/TransitGatewayRouteTableId", "/properties/TransitGatewayAttachmentId", "/properties/DestinationCidrBlock", "/properties/Blackhole" ],
+  "primaryIdentifier" : [ "/properties/TransitGatewayRouteTableId", "/properties/DestinationCidrBlock" ],
+  "required" : [ "TransitGatewayRouteTableId", "DestinationCidrBlock" ],
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "ec2:SearchTransitGatewayRoutes" ]
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteTransitGatewayRoute",
-        "ec2:SearchTransitGatewayRoutes"
-      ]
+    "create" : {
+      "permissions" : [ "ec2:CreateTransitGatewayRoute", "ec2:SearchTransitGatewayRoutes" ]
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "TransitGatewayRouteTableId": {
-            "$ref": "resource-schema.json#/properties/TransitGatewayRouteTableId"
+    "list" : {
+      "permissions" : [ "ec2:SearchTransitGatewayRoutes" ],
+      "handlerSchema" : {
+        "properties" : {
+          "TransitGatewayRouteTableId" : {
+            "$ref" : "resource-schema.json#/properties/TransitGatewayRouteTableId"
           }
         },
-        "required": [
-          "TransitGatewayRouteTableId"
-        ]
-      },
-      "permissions": [
-        "ec2:SearchTransitGatewayRoutes"
-      ]
+        "required" : [ "TransitGatewayRouteTableId" ]
+      }
     },
-    "read": {
-      "permissions": [
-        "ec2:SearchTransitGatewayRoutes"
-      ]
+    "delete" : {
+      "permissions" : [ "ec2:DeleteTransitGatewayRoute", "ec2:SearchTransitGatewayRoutes" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/TransitGatewayRouteTableId",
-    "/properties/DestinationCidrBlock"
-  ],
-  "properties": {
-    "Blackhole": {
-      "description": "Indicates whether to drop traffic that matches this route.",
-      "type": "boolean"
+  "additionalProperties" : false,
+  "definitions" : { },
+  "properties" : {
+    "TransitGatewayRouteTableId" : {
+      "description" : "The ID of transit gateway route table.",
+      "type" : "string"
     },
-    "DestinationCidrBlock": {
-      "description": "The CIDR range used for destination matches. Routing decisions are based on the most specific match.",
-      "type": "string"
+    "DestinationCidrBlock" : {
+      "description" : "The CIDR range used for destination matches. Routing decisions are based on the most specific match.",
+      "type" : "string"
     },
-    "TransitGatewayAttachmentId": {
-      "description": "The ID of transit gateway attachment.",
-      "type": "string"
+    "Blackhole" : {
+      "description" : "Indicates whether to drop traffic that matches this route.",
+      "type" : "boolean"
     },
-    "TransitGatewayRouteTableId": {
-      "description": "The ID of transit gateway route table.",
-      "type": "string"
+    "TransitGatewayAttachmentId" : {
+      "description" : "The ID of transit gateway attachment.",
+      "type" : "string"
     }
   },
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "TransitGatewayRouteTableId",
-    "DestinationCidrBlock"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transitgateway.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::EC2::TransitGatewayRoute"
+  "replacementStrategy" : "delete_then_create"
 }

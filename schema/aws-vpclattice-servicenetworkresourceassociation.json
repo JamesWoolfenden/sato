@@ -1,133 +1,94 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Id"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResourceConfigurationId",
-    "/properties/ServiceNetworkId",
-    "/properties/PrivateDnsEnabled"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::VpcLattice::ServiceNetworkResourceAssociation",
+  "description" : "VpcLattice ServiceNetworkResourceAssociation CFN resource",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "VpcLattice ServiceNetworkResourceAssociation CFN resource",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "vpc-lattice:CreateServiceNetworkResourceAssociation",
-        "vpc-lattice:GetServiceNetworkResourceAssociation",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:ListTagsForResource"
-      ]
+  "properties" : {
+    "Id" : {
+      "type" : "string",
+      "minLength" : 22,
+      "maxLength" : 22,
+      "pattern" : "^snra-[0-9a-f]{17}$"
     },
-    "delete": {
-      "permissions": [
-        "vpc-lattice:DeleteServiceNetworkResourceAssociation",
-        "vpc-lattice:GetServiceNetworkResourceAssociation",
-        "vpc-lattice:UntagResource"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "minLength" : 22,
+      "maxLength" : 2048,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkresourceassociation/snra-[0-9a-f]{17}$"
     },
-    "list": {
-      "permissions": [
-        "vpc-lattice:ListServiceNetworkResourceAssociations"
-      ]
+    "ResourceConfigurationId" : {
+      "type" : "string",
+      "minLength" : 17,
+      "maxLength" : 2048,
+      "pattern" : "^rcfg-[0-9a-z]{17}$"
     },
-    "read": {
-      "permissions": [
-        "vpc-lattice:GetServiceNetworkResourceAssociation",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "ServiceNetworkId" : {
+      "type" : "string",
+      "minLength" : 3,
+      "maxLength" : 2048,
+      "pattern" : "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$"
     },
-    "update": {
-      "permissions": [
-        "vpc-lattice:TagResource",
-        "vpc-lattice:UntagResource",
-        "vpc-lattice:GetServiceNetworkResourceAssociation",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 0,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "PrivateDnsEnabled" : {
+      "type" : "boolean"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 22,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkresourceassociation/snra-[0-9a-f]{17}$",
-      "type": "string"
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/ResourceConfigurationId", "/properties/ServiceNetworkId", "/properties/PrivateDnsEnabled" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/Id" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "vpc-lattice:CreateServiceNetworkResourceAssociation", "vpc-lattice:GetServiceNetworkResourceAssociation", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
     },
-    "Id": {
-      "maxLength": 22,
-      "minLength": 22,
-      "pattern": "^snra-[0-9a-f]{17}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "vpc-lattice:GetServiceNetworkResourceAssociation", "vpc-lattice:ListTagsForResource" ]
     },
-    "PrivateDnsEnabled": {
-      "type": "boolean"
+    "update" : {
+      "permissions" : [ "vpc-lattice:TagResource", "vpc-lattice:UntagResource", "vpc-lattice:GetServiceNetworkResourceAssociation", "vpc-lattice:ListTagsForResource" ]
     },
-    "ResourceConfigurationId": {
-      "maxLength": 2048,
-      "minLength": 17,
-      "pattern": "^rcfg-[0-9a-z]{17}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "vpc-lattice:DeleteServiceNetworkResourceAssociation", "vpc-lattice:GetServiceNetworkResourceAssociation", "vpc-lattice:UntagResource" ]
     },
-    "ServiceNetworkId": {
-      "maxLength": 2048,
-      "minLength": 3,
-      "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "vpc-lattice:ListServiceNetworkResourceAssociations" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "vpc-lattice:UntagResource",
-      "vpc-lattice:TagResource",
-      "vpc-lattice:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::VpcLattice::ServiceNetworkResourceAssociation"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "vpc-lattice:UntagResource", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+  }
 }

@@ -1,91 +1,72 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Arn": {
-      "maxLength": 2048,
-      "type": "string"
+  "typeName" : "AWS::LicenseManager::Grant",
+  "description" : "An example resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048
     }
   },
-  "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "license-manager:CreateGrant"
-      ]
+  "properties" : {
+    "GrantArn" : {
+      "description" : "Arn of the grant.",
+      "$ref" : "#/definitions/Arn"
     },
-    "delete": {
-      "permissions": [
-        "license-manager:DeleteGrant"
-      ]
+    "GrantName" : {
+      "description" : "Name for the created Grant.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "license-manager:ListDistributedGrants"
-      ]
+    "LicenseArn" : {
+      "description" : "License Arn for the grant.",
+      "$ref" : "#/definitions/Arn"
     },
-    "read": {
-      "permissions": [
-        "license-manager:GetGrant"
-      ]
+    "HomeRegion" : {
+      "description" : "Home region for the created grant.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "license-manager:CreateGrantVersion"
-      ]
+    "Version" : {
+      "description" : "The version of the grant.",
+      "type" : "string"
+    },
+    "AllowedOperations" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Principals" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Arn"
+      }
+    },
+    "Status" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/GrantArn"
-  ],
-  "properties": {
-    "AllowedOperations": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
+  "additionalProperties" : false,
+  "required" : [ ],
+  "readOnlyProperties" : [ "/properties/GrantArn", "/properties/Version" ],
+  "writeOnlyProperties" : [ "/properties/Principals", "/properties/AllowedOperations", "/properties/Status" ],
+  "primaryIdentifier" : [ "/properties/GrantArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "license-manager:CreateGrant" ]
     },
-    "GrantArn": {
-      "$ref": "#/definitions/Arn",
-      "description": "Arn of the grant."
+    "read" : {
+      "permissions" : [ "license-manager:GetGrant" ]
     },
-    "GrantName": {
-      "description": "Name for the created Grant.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "license-manager:CreateGrantVersion" ]
     },
-    "HomeRegion": {
-      "description": "Home region for the created grant.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "license-manager:DeleteGrant" ]
     },
-    "LicenseArn": {
-      "$ref": "#/definitions/Arn",
-      "description": "License Arn for the grant."
-    },
-    "Principals": {
-      "items": {
-        "$ref": "#/definitions/Arn"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Status": {
-      "type": "string"
-    },
-    "Version": {
-      "description": "The version of the grant.",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "license-manager:ListDistributedGrants" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/GrantArn",
-    "/properties/Version"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "typeName": "AWS::LicenseManager::Grant",
-  "writeOnlyProperties": [
-    "/properties/Principals",
-    "/properties/AllowedOperations",
-    "/properties/Status"
-  ]
+  }
 }

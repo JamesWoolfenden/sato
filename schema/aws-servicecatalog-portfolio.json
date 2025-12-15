@@ -1,61 +1,50 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::ServiceCatalog::Portfolio",
+  "description" : "Resource Type definition for AWS::ServiceCatalog::Portfolio",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "PortfolioName" : {
+      "type" : "string"
+    },
+    "ProviderName" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "DisplayName" : {
+      "type" : "string"
+    },
+    "AcceptLanguage" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::ServiceCatalog::Portfolio",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AcceptLanguage": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "DisplayName": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "PortfolioName": {
-      "type": "string"
-    },
-    "ProviderName": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/PortfolioName",
-    "/properties/Id"
-  ],
-  "required": [
-    "DisplayName",
-    "ProviderName"
-  ],
-  "typeName": "AWS::ServiceCatalog::Portfolio"
+  "required" : [ "DisplayName", "ProviderName" ],
+  "readOnlyProperties" : [ "/properties/PortfolioName", "/properties/Id" ],
+  "primaryIdentifier" : [ "/properties/Id" ]
 }

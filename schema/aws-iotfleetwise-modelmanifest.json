@@ -1,152 +1,108 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "ManifestStatus": {
-      "default": "DRAFT",
-      "enum": [
-        "ACTIVE",
-        "DRAFT"
-      ],
-      "type": "string"
+  "typeName" : "AWS::IoTFleetWise::ModelManifest",
+  "description" : "Definition of AWS::IoTFleetWise::ModelManifest Resource Type",
+  "definitions" : {
+    "ManifestStatus" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "DRAFT" ],
+      "default" : "DRAFT"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::IoTFleetWise::ModelManifest Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotfleetwise:CreateModelManifest",
-        "iotfleetwise:GetModelManifest",
-        "iotfleetwise:UpdateModelManifest",
-        "iotfleetwise:ListModelManifestNodes",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iotfleetwise:DeleteModelManifest",
-        "iotfleetwise:GetModelManifest"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "list": {
-      "permissions": [
-        "iotfleetwise:ListModelManifests"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
     },
-    "read": {
-      "permissions": [
-        "iotfleetwise:GetModelManifest",
-        "iotfleetwise:ListModelManifestNodes",
-        "iotfleetwise:ListTagsForResource"
-      ]
+    "LastModificationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "update": {
-      "permissions": [
-        "iotfleetwise:UpdateModelManifest",
-        "iotfleetwise:GetModelManifest",
-        "iotfleetwise:ListModelManifestNodes",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource",
-        "iotfleetwise:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z\\d\\-_:]+$"
     },
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+    "Nodes" : {
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 1,
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     },
-    "Description": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-      "type": "string"
+    "SignalCatalogArn" : {
+      "type" : "string"
     },
-    "LastModificationTime": {
-      "format": "date-time",
-      "type": "string"
+    "Status" : {
+      "$ref" : "#/definitions/ManifestStatus"
     },
-    "Name": {
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z\\d\\-_:]+$",
-      "type": "string"
-    },
-    "Nodes": {
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "SignalCatalogArn": {
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/ManifestStatus"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "maxItems" : 50,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/LastModificationTime"
-  ],
-  "required": [
-    "SignalCatalogArn",
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotfleetwise:UntagResource",
-      "iotfleetwise:TagResource",
-      "iotfleetwise:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "SignalCatalogArn", "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/LastModificationTime" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotfleetwise:CreateModelManifest", "iotfleetwise:GetModelManifest", "iotfleetwise:UpdateModelManifest", "iotfleetwise:ListModelManifestNodes", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "iotfleetwise:GetModelManifest", "iotfleetwise:ListModelManifestNodes", "iotfleetwise:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "iotfleetwise:UpdateModelManifest", "iotfleetwise:GetModelManifest", "iotfleetwise:ListModelManifestNodes", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource", "iotfleetwise:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "iotfleetwise:DeleteModelManifest", "iotfleetwise:GetModelManifest" ]
+    },
+    "list" : {
+      "permissions" : [ "iotfleetwise:ListModelManifests" ]
+    }
   },
-  "typeName": "AWS::IoTFleetWise::ModelManifest"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotfleetwise:UntagResource", "iotfleetwise:TagResource", "iotfleetwise:ListTagsForResource" ]
+  }
 }

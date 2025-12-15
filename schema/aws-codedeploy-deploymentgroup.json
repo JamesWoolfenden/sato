@@ -1,498 +1,474 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DeploymentGroupName",
-    "/properties/ApplicationName"
-  ],
-  "definitions": {
-    "Alarm": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::CodeDeploy::DeploymentGroup",
+  "description" : "Resource Type definition for AWS::CodeDeploy::DeploymentGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "OnPremisesTagSet" : {
+      "$ref" : "#/definitions/OnPremisesTagSet"
     },
-    "AlarmConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Alarms": {
-          "items": {
-            "$ref": "#/definitions/Alarm"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "Enabled": {
-          "type": "boolean"
-        },
-        "IgnorePollAlarmFailure": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
+    "ApplicationName" : {
+      "type" : "string"
     },
-    "AutoRollbackConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "Events": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "DeploymentStyle" : {
+      "$ref" : "#/definitions/DeploymentStyle"
     },
-    "BlueGreenDeploymentConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "DeploymentReadyOption": {
-          "$ref": "#/definitions/DeploymentReadyOption"
-        },
-        "GreenFleetProvisioningOption": {
-          "$ref": "#/definitions/GreenFleetProvisioningOption"
-        },
-        "TerminateBlueInstancesOnDeploymentSuccess": {
-          "$ref": "#/definitions/BlueInstanceTerminationOption"
-        }
-      },
-      "type": "object"
+    "ServiceRoleArn" : {
+      "type" : "string"
     },
-    "BlueInstanceTerminationOption": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "type": "string"
-        },
-        "TerminationWaitTimeInMinutes": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "BlueGreenDeploymentConfiguration" : {
+      "$ref" : "#/definitions/BlueGreenDeploymentConfiguration"
     },
-    "Deployment": {
-      "additionalProperties": false,
-      "properties": {
-        "Description": {
-          "type": "string"
-        },
-        "IgnoreApplicationStopFailures": {
-          "type": "boolean"
-        },
-        "Revision": {
-          "$ref": "#/definitions/RevisionLocation"
-        }
-      },
-      "required": [
-        "Revision"
-      ],
-      "type": "object"
+    "AutoScalingGroups" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "DeploymentReadyOption": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionOnTimeout": {
-          "type": "string"
-        },
-        "WaitTimeInMinutes": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "Ec2TagSet" : {
+      "$ref" : "#/definitions/EC2TagSet"
     },
-    "DeploymentStyle": {
-      "additionalProperties": false,
-      "properties": {
-        "DeploymentOption": {
-          "type": "string"
-        },
-        "DeploymentType": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "OutdatedInstancesStrategy" : {
+      "type" : "string"
     },
-    "EC2TagFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "TriggerConfigurations" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/TriggerConfig"
+      }
     },
-    "EC2TagSet": {
-      "additionalProperties": false,
-      "properties": {
-        "Ec2TagSetList": {
-          "items": {
-            "$ref": "#/definitions/EC2TagSetListObject"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "Deployment" : {
+      "$ref" : "#/definitions/Deployment"
     },
-    "EC2TagSetListObject": {
-      "additionalProperties": false,
-      "properties": {
-        "Ec2TagGroup": {
-          "items": {
-            "$ref": "#/definitions/EC2TagFilter"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "DeploymentConfigName" : {
+      "type" : "string"
     },
-    "ECSService": {
-      "additionalProperties": false,
-      "properties": {
-        "ClusterName": {
-          "type": "string"
-        },
-        "ServiceName": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ServiceName",
-        "ClusterName"
-      ],
-      "type": "object"
+    "AlarmConfiguration" : {
+      "$ref" : "#/definitions/AlarmConfiguration"
     },
-    "ELBInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Ec2TagFilters" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/EC2TagFilter"
+      }
     },
-    "GitHubLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "CommitId": {
-          "type": "string"
-        },
-        "Repository": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Repository",
-        "CommitId"
-      ],
-      "type": "object"
+    "TerminationHookEnabled" : {
+      "type" : "boolean"
     },
-    "GreenFleetProvisioningOption": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "ECSServices" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/ECSService"
+      }
     },
-    "LoadBalancerInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "ElbInfoList": {
-          "items": {
-            "$ref": "#/definitions/ELBInfo"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "TargetGroupInfoList": {
-          "items": {
-            "$ref": "#/definitions/TargetGroupInfo"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "TargetGroupPairInfoList": {
-          "items": {
-            "$ref": "#/definitions/TargetGroupPairInfo"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "AutoRollbackConfiguration" : {
+      "$ref" : "#/definitions/AutoRollbackConfiguration"
     },
-    "OnPremisesTagSet": {
-      "additionalProperties": false,
-      "properties": {
-        "OnPremisesTagSetList": {
-          "items": {
-            "$ref": "#/definitions/OnPremisesTagSetListObject"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "LoadBalancerInfo" : {
+      "$ref" : "#/definitions/LoadBalancerInfo"
     },
-    "OnPremisesTagSetListObject": {
-      "additionalProperties": false,
-      "properties": {
-        "OnPremisesTagGroup": {
-          "items": {
-            "$ref": "#/definitions/TagFilter"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "RevisionLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "GitHubLocation": {
-          "$ref": "#/definitions/GitHubLocation"
-        },
-        "RevisionType": {
-          "type": "string"
-        },
-        "S3Location": {
-          "$ref": "#/definitions/S3Location"
-        }
-      },
-      "type": "object"
+    "DeploymentGroupName" : {
+      "type" : "string"
     },
-    "S3Location": {
-      "additionalProperties": false,
-      "properties": {
-        "Bucket": {
-          "type": "string"
-        },
-        "BundleType": {
-          "type": "string"
-        },
-        "ETag": {
-          "type": "string"
-        },
-        "Key": {
-          "type": "string"
-        },
-        "Version": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Bucket",
-        "Key"
-      ],
-      "type": "object"
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
-    },
-    "TagFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TargetGroupInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TargetGroupPairInfo": {
-      "additionalProperties": false,
-      "properties": {
-        "ProdTrafficRoute": {
-          "$ref": "#/definitions/TrafficRoute"
-        },
-        "TargetGroups": {
-          "items": {
-            "$ref": "#/definitions/TargetGroupInfo"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "TestTrafficRoute": {
-          "$ref": "#/definitions/TrafficRoute"
-        }
-      },
-      "type": "object"
-    },
-    "TrafficRoute": {
-      "additionalProperties": false,
-      "properties": {
-        "ListenerArns": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
-    },
-    "TriggerConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "TriggerEvents": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "TriggerName": {
-          "type": "string"
-        },
-        "TriggerTargetArn": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "OnPremisesInstanceTagFilters" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/TagFilter"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::CodeDeploy::DeploymentGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AlarmConfiguration": {
-      "$ref": "#/definitions/AlarmConfiguration"
+  "definitions" : {
+    "OnPremisesTagSet" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OnPremisesTagSetList" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/OnPremisesTagSetListObject"
+          }
+        }
+      }
     },
-    "ApplicationName": {
-      "type": "string"
+    "DeploymentStyle" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeploymentOption" : {
+          "type" : "string"
+        },
+        "DeploymentType" : {
+          "type" : "string"
+        }
+      }
     },
-    "AutoRollbackConfiguration": {
-      "$ref": "#/definitions/AutoRollbackConfiguration"
+    "BlueGreenDeploymentConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "GreenFleetProvisioningOption" : {
+          "$ref" : "#/definitions/GreenFleetProvisioningOption"
+        },
+        "DeploymentReadyOption" : {
+          "$ref" : "#/definitions/DeploymentReadyOption"
+        },
+        "TerminateBlueInstancesOnDeploymentSuccess" : {
+          "$ref" : "#/definitions/BlueInstanceTerminationOption"
+        }
+      }
     },
-    "AutoScalingGroups": {
-      "items": {
-        "type": "string"
+    "TagFilter" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TriggerConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TriggerTargetArn" : {
+          "type" : "string"
+        },
+        "TriggerName" : {
+          "type" : "string"
+        },
+        "TriggerEvents" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "GitHubLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Repository" : {
+          "type" : "string"
+        },
+        "CommitId" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "Repository", "CommitId" ]
     },
-    "BlueGreenDeploymentConfiguration": {
-      "$ref": "#/definitions/BlueGreenDeploymentConfiguration"
-    },
-    "Deployment": {
-      "$ref": "#/definitions/Deployment"
-    },
-    "DeploymentConfigName": {
-      "type": "string"
-    },
-    "DeploymentGroupName": {
-      "type": "string"
-    },
-    "DeploymentStyle": {
-      "$ref": "#/definitions/DeploymentStyle"
-    },
-    "ECSServices": {
-      "items": {
-        "$ref": "#/definitions/ECSService"
+    "Deployment" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Description" : {
+          "type" : "string"
+        },
+        "Revision" : {
+          "$ref" : "#/definitions/RevisionLocation"
+        },
+        "IgnoreApplicationStopFailures" : {
+          "type" : "boolean"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "Revision" ]
     },
-    "Ec2TagFilters": {
-      "items": {
-        "$ref": "#/definitions/EC2TagFilter"
+    "ELBInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EC2TagSetListObject" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Ec2TagGroup" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/EC2TagFilter"
+          }
+        }
+      }
+    },
+    "S3Location" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BundleType" : {
+          "type" : "string"
+        },
+        "Bucket" : {
+          "type" : "string"
+        },
+        "ETag" : {
+          "type" : "string"
+        },
+        "Version" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "Bucket", "Key" ]
     },
-    "Ec2TagSet": {
-      "$ref": "#/definitions/EC2TagSet"
+    "AutoRollbackConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Events" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Enabled" : {
+          "type" : "boolean"
+        }
+      }
     },
-    "Id": {
-      "type": "string"
+    "DeploymentReadyOption" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "WaitTimeInMinutes" : {
+          "type" : "integer"
+        },
+        "ActionOnTimeout" : {
+          "type" : "string"
+        }
+      }
     },
-    "LoadBalancerInfo": {
-      "$ref": "#/definitions/LoadBalancerInfo"
+    "EC2TagFilter" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      }
     },
-    "OnPremisesInstanceTagFilters": {
-      "items": {
-        "$ref": "#/definitions/TagFilter"
+    "RevisionLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3Location" : {
+          "$ref" : "#/definitions/S3Location"
+        },
+        "GitHubLocation" : {
+          "$ref" : "#/definitions/GitHubLocation"
+        },
+        "RevisionType" : {
+          "type" : "string"
+        }
+      }
+    },
+    "GreenFleetProvisioningOption" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Action" : {
+          "type" : "string"
+        }
+      }
+    },
+    "LoadBalancerInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetGroupInfoList" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/TargetGroupInfo"
+          }
+        },
+        "ElbInfoList" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ELBInfo"
+          }
+        },
+        "TargetGroupPairInfoList" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/TargetGroupPairInfo"
+          }
+        }
+      }
+    },
+    "AlarmConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Alarms" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/Alarm"
+          }
+        },
+        "IgnorePollAlarmFailure" : {
+          "type" : "boolean"
+        },
+        "Enabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "EC2TagSet" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Ec2TagSetList" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/EC2TagSetListObject"
+          }
+        }
+      }
+    },
+    "TrafficRoute" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ListenerArns" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ECSService" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ServiceName" : {
+          "type" : "string"
+        },
+        "ClusterName" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "ServiceName", "ClusterName" ]
     },
-    "OnPremisesTagSet": {
-      "$ref": "#/definitions/OnPremisesTagSet"
+    "TargetGroupPairInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ProdTrafficRoute" : {
+          "$ref" : "#/definitions/TrafficRoute"
+        },
+        "TestTrafficRoute" : {
+          "$ref" : "#/definitions/TrafficRoute"
+        },
+        "TargetGroups" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/TargetGroupInfo"
+          }
+        }
+      }
     },
-    "OutdatedInstancesStrategy": {
-      "type": "string"
+    "Alarm" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Name" : {
+          "type" : "string"
+        }
+      }
     },
-    "ServiceRoleArn": {
-      "type": "string"
+    "TargetGroupInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Name" : {
+          "type" : "string"
+        }
+      }
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "OnPremisesTagSetListObject" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OnPremisesTagGroup" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/TagFilter"
+          }
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Value", "Key" ]
     },
-    "TerminationHookEnabled": {
-      "type": "boolean"
-    },
-    "TriggerConfigurations": {
-      "items": {
-        "$ref": "#/definitions/TriggerConfig"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "BlueInstanceTerminationOption" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TerminationWaitTimeInMinutes" : {
+          "type" : "integer"
+        },
+        "Action" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "ApplicationName",
-    "ServiceRoleArn"
-  ],
-  "typeName": "AWS::CodeDeploy::DeploymentGroup"
+  "required" : [ "ApplicationName", "ServiceRoleArn" ],
+  "createOnlyProperties" : [ "/properties/DeploymentGroupName", "/properties/ApplicationName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

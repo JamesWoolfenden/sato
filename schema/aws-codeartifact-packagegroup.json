@@ -1,216 +1,163 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainName",
-    "/properties/Pattern"
-  ],
-  "definitions": {
-    "OriginConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Restrictions": {
-          "$ref": "#/definitions/Restrictions",
-          "description": "The origin configuration that is applied to the package group.",
-          "type": "object"
+  "typeName" : "AWS::CodeArtifact::PackageGroup",
+  "description" : "The resource schema to create a CodeArtifact package group.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeartifact",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Restrictions"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     },
-    "RestrictionType": {
-      "additionalProperties": false,
-      "properties": {
-        "Repositories": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "RestrictionMode": {
-          "enum": [
-            "ALLOW",
-            "BLOCK",
-            "ALLOW_SPECIFIC_REPOSITORIES",
-            "INHERIT"
-          ],
-          "type": "string"
+    "OriginConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Restrictions" : {
+          "description" : "The origin configuration that is applied to the package group.",
+          "type" : "object",
+          "$ref" : "#/definitions/Restrictions"
         }
       },
-      "required": [
-        "RestrictionMode"
-      ],
-      "type": "object"
+      "required" : [ "Restrictions" ],
+      "additionalProperties" : false
     },
-    "Restrictions": {
-      "additionalProperties": false,
-      "properties": {
-        "ExternalUpstream": {
-          "$ref": "#/definitions/RestrictionType",
-          "description": "The external upstream restriction determines if new package versions can be ingested or retained from external connections.",
-          "type": "object"
+    "Restrictions" : {
+      "type" : "object",
+      "properties" : {
+        "Publish" : {
+          "type" : "object",
+          "description" : "The publish restriction determines if new package versions can be published.",
+          "$ref" : "#/definitions/RestrictionType"
         },
-        "InternalUpstream": {
-          "$ref": "#/definitions/RestrictionType",
-          "description": "The internal upstream restriction determines if new package versions can be ingested or retained from upstream repositories.",
-          "type": "object"
+        "ExternalUpstream" : {
+          "type" : "object",
+          "description" : "The external upstream restriction determines if new package versions can be ingested or retained from external connections.",
+          "$ref" : "#/definitions/RestrictionType"
         },
-        "Publish": {
-          "$ref": "#/definitions/RestrictionType",
-          "description": "The publish restriction determines if new package versions can be published.",
-          "type": "object"
+        "InternalUpstream" : {
+          "type" : "object",
+          "description" : "The internal upstream restriction determines if new package versions can be ingested or retained from upstream repositories.",
+          "$ref" : "#/definitions/RestrictionType"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "RestrictionType" : {
+      "type" : "object",
+      "properties" : {
+        "RestrictionMode" : {
+          "type" : "string",
+          "enum" : [ "ALLOW", "BLOCK", "ALLOW_SPECIFIC_REPOSITORIES", "INHERIT" ]
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Repositories" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "RestrictionMode" ],
+      "additionalProperties" : false
     }
   },
-  "description": "The resource schema to create a CodeArtifact package group.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "codeartifact:CreatePackageGroup",
-        "codeartifact:DescribePackageGroup",
-        "codeartifact:UpdatePackageGroup",
-        "codeartifact:UpdatePackageGroupOriginConfiguration",
-        "codeartifact:ListAllowedRepositoriesForGroup",
-        "codeartifact:ListTagsForResource",
-        "codeartifact:TagResource"
-      ]
+  "properties" : {
+    "DomainName" : {
+      "description" : "The name of the domain that contains the package group.",
+      "type" : "string",
+      "pattern" : "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
+      "minLength" : 2,
+      "maxLength" : 50
     },
-    "delete": {
-      "permissions": [
-        "codeartifact:DeletePackageGroup",
-        "codeartifact:DescribePackageGroup"
-      ]
+    "DomainOwner" : {
+      "description" : "The 12-digit account ID of the AWS account that owns the domain.",
+      "pattern" : "[0-9]{12}",
+      "type" : "string"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "DomainName": {
-            "$ref": "resource-schema.json#/properties/DomainName"
+    "Pattern" : {
+      "description" : "The package group pattern that is used to gather packages.",
+      "type" : "string",
+      "minLength" : 2,
+      "maxLength" : 520
+    },
+    "ContactInfo" : {
+      "description" : "The contact info of the package group.",
+      "type" : "string",
+      "maxLength" : 1000
+    },
+    "Description" : {
+      "description" : "The text description of the package group.",
+      "type" : "string",
+      "maxLength" : 1000
+    },
+    "OriginConfiguration" : {
+      "description" : "The package origin configuration of the package group.",
+      "type" : "object",
+      "$ref" : "#/definitions/OriginConfiguration"
+    },
+    "Tags" : {
+      "type" : "array",
+      "description" : "An array of key-value pairs to apply to the package group.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Arn" : {
+      "description" : "The ARN of the package group.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "Pattern", "DomainName" ],
+  "createOnlyProperties" : [ "/properties/DomainName", "/properties/Pattern" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "codeartifact:CreatePackageGroup", "codeartifact:DescribePackageGroup", "codeartifact:UpdatePackageGroup", "codeartifact:UpdatePackageGroupOriginConfiguration", "codeartifact:ListAllowedRepositoriesForGroup", "codeartifact:ListTagsForResource", "codeartifact:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "codeartifact:DescribePackageGroup", "codeartifact:ListAllowedRepositoriesForGroup", "codeartifact:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "codeartifact:UpdatePackageGroup", "codeartifact:UpdatePackageGroupOriginConfiguration", "codeartifact:DescribePackageGroup", "codeartifact:ListAllowedRepositoriesForGroup", "codeartifact:ListTagsForResource", "codeartifact:TagResource", "codeartifact:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "codeartifact:DeletePackageGroup", "codeartifact:DescribePackageGroup" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "DomainName" : {
+            "$ref" : "resource-schema.json#/properties/DomainName"
           }
         },
-        "required": [
-          "DomainName"
-        ]
+        "required" : [ "DomainName" ]
       },
-      "permissions": [
-        "codeartifact:ListPackageGroups"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "codeartifact:DescribePackageGroup",
-        "codeartifact:ListAllowedRepositoriesForGroup",
-        "codeartifact:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "codeartifact:UpdatePackageGroup",
-        "codeartifact:UpdatePackageGroupOriginConfiguration",
-        "codeartifact:DescribePackageGroup",
-        "codeartifact:ListAllowedRepositoriesForGroup",
-        "codeartifact:ListTagsForResource",
-        "codeartifact:TagResource",
-        "codeartifact:UntagResource"
-      ]
+      "permissions" : [ "codeartifact:ListPackageGroups" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The ARN of the package group.",
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "ContactInfo": {
-      "description": "The contact info of the package group.",
-      "maxLength": 1000,
-      "type": "string"
-    },
-    "Description": {
-      "description": "The text description of the package group.",
-      "maxLength": 1000,
-      "type": "string"
-    },
-    "DomainName": {
-      "description": "The name of the domain that contains the package group.",
-      "maxLength": 50,
-      "minLength": 2,
-      "pattern": "^([a-z][a-z0-9\\-]{0,48}[a-z0-9])$",
-      "type": "string"
-    },
-    "DomainOwner": {
-      "description": "The 12-digit account ID of the AWS account that owns the domain.",
-      "pattern": "[0-9]{12}",
-      "type": "string"
-    },
-    "OriginConfiguration": {
-      "$ref": "#/definitions/OriginConfiguration",
-      "description": "The package origin configuration of the package group.",
-      "type": "object"
-    },
-    "Pattern": {
-      "description": "The package group pattern that is used to gather packages.",
-      "maxLength": 520,
-      "minLength": 2,
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to the package group.",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Pattern",
-    "DomainName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codeartifact",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "codeartifact:ListTagsForResource",
-      "codeartifact:UntagResource",
-      "codeartifact:TagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::CodeArtifact::PackageGroup"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "codeartifact:ListTagsForResource", "codeartifact:UntagResource", "codeartifact:TagResource" ]
+  }
 }

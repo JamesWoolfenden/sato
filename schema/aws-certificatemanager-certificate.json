@@ -1,102 +1,84 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SubjectAlternativeNames",
-    "/properties/DomainValidationOptions",
-    "/properties/ValidationMethod",
-    "/properties/KeyAlgorithm",
-    "/properties/DomainName",
-    "/properties/CertificateAuthorityArn"
-  ],
-  "definitions": {
-    "DomainValidationOption": {
-      "additionalProperties": false,
-      "properties": {
-        "DomainName": {
-          "type": "string"
-        },
-        "HostedZoneId": {
-          "type": "string"
-        },
-        "ValidationDomain": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "DomainName"
-      ],
-      "type": "object"
+  "typeName" : "AWS::CertificateManager::Certificate",
+  "description" : "Resource Type definition for AWS::CertificateManager::Certificate",
+  "additionalProperties" : false,
+  "properties" : {
+    "CertificateAuthorityArn" : {
+      "type" : "string"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "CertificateExport" : {
+      "type" : "string"
+    },
+    "DomainValidationOptions" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/DomainValidationOption"
+      }
+    },
+    "CertificateTransparencyLoggingPreference" : {
+      "type" : "string"
+    },
+    "DomainName" : {
+      "type" : "string"
+    },
+    "ValidationMethod" : {
+      "type" : "string"
+    },
+    "SubjectAlternativeNames" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "KeyAlgorithm" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::CertificateManager::Certificate",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CertificateAuthorityArn": {
-      "type": "string"
-    },
-    "CertificateExport": {
-      "type": "string"
-    },
-    "CertificateTransparencyLoggingPreference": {
-      "type": "string"
-    },
-    "DomainName": {
-      "type": "string"
-    },
-    "DomainValidationOptions": {
-      "items": {
-        "$ref": "#/definitions/DomainValidationOption"
+  "definitions" : {
+    "DomainValidationOption" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DomainName" : {
+          "type" : "string"
+        },
+        "ValidationDomain" : {
+          "type" : "string"
+        },
+        "HostedZoneId" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "DomainName" ]
     },
-    "Id": {
-      "type": "string"
-    },
-    "KeyAlgorithm": {
-      "type": "string"
-    },
-    "SubjectAlternativeNames": {
-      "items": {
-        "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "ValidationMethod": {
-      "type": "string"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "DomainName"
-  ],
-  "typeName": "AWS::CertificateManager::Certificate"
+  "required" : [ "DomainName" ],
+  "createOnlyProperties" : [ "/properties/SubjectAlternativeNames", "/properties/DomainValidationOptions", "/properties/ValidationMethod", "/properties/KeyAlgorithm", "/properties/DomainName", "/properties/CertificateAuthorityArn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

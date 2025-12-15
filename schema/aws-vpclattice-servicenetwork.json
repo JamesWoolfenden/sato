@@ -1,155 +1,107 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Id"
-    ],
-    [
-      "/properties/Name"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "SharingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "enabled": {
-          "type": "boolean"
+  "typeName" : "AWS::VpcLattice::ServiceNetwork",
+  "description" : "A service network is a logical boundary for a collection of services. You can associate services and VPCs with a service network.",
+  "additionalProperties" : false,
+  "definitions" : {
+    "SharingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "enabled" : {
+          "type" : "boolean"
         }
       },
-      "required": [
-        "enabled"
-      ],
-      "type": "object"
+      "required" : [ "enabled" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "A service network is a logical boundary for a collection of services. You can associate services and VPCs with a service network.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "vpc-lattice:GetServiceNetwork",
-        "vpc-lattice:ListTagsForResource",
-        "vpc-lattice:CreateServiceNetwork",
-        "vpc-lattice:TagResource",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}$"
     },
-    "delete": {
-      "permissions": [
-        "vpc-lattice:DeleteServiceNetwork",
-        "vpc-lattice:UntagResource"
-      ]
+    "CreatedAt" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "vpc-lattice:ListServiceNetworks"
-      ]
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 20,
+      "minLength" : 20,
+      "pattern" : "^sn-[0-9a-z]{17}$"
     },
-    "read": {
-      "permissions": [
-        "vpc-lattice:GetServiceNetwork",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "LastUpdatedAt" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "vpc-lattice:GetServiceNetwork",
-        "vpc-lattice:UpdateServiceNetwork",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:UntagResource",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 63,
+      "minLength" : 3,
+      "pattern" : "^(?!servicenetwork-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$"
+    },
+    "AuthType" : {
+      "type" : "string",
+      "default" : "NONE",
+      "enum" : [ "NONE", "AWS_IAM" ]
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 0,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "SharingConfig" : {
+      "$ref" : "#/definitions/SharingConfig"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}$",
-      "type": "string"
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedAt", "/properties/Id", "/properties/LastUpdatedAt" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/Id" ], [ "/properties/Name" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "vpc-lattice:GetServiceNetwork", "vpc-lattice:ListTagsForResource", "vpc-lattice:CreateServiceNetwork", "vpc-lattice:TagResource", "iam:CreateServiceLinkedRole" ]
     },
-    "AuthType": {
-      "default": "NONE",
-      "enum": [
-        "NONE",
-        "AWS_IAM"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "vpc-lattice:GetServiceNetwork", "vpc-lattice:ListTagsForResource" ]
     },
-    "CreatedAt": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "vpc-lattice:GetServiceNetwork", "vpc-lattice:UpdateServiceNetwork", "vpc-lattice:TagResource", "vpc-lattice:UntagResource", "vpc-lattice:ListTagsForResource" ]
     },
-    "Id": {
-      "maxLength": 20,
-      "minLength": 20,
-      "pattern": "^sn-[0-9a-z]{17}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "vpc-lattice:DeleteServiceNetwork", "vpc-lattice:UntagResource" ]
     },
-    "LastUpdatedAt": {
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 63,
-      "minLength": 3,
-      "pattern": "^(?!servicenetwork-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
-      "type": "string"
-    },
-    "SharingConfig": {
-      "$ref": "#/definitions/SharingConfig"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "vpc-lattice:ListServiceNetworks" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedAt",
-    "/properties/Id",
-    "/properties/LastUpdatedAt"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "vpc-lattice:UntagResource",
-      "vpc-lattice:TagResource",
-      "vpc-lattice:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::VpcLattice::ServiceNetwork"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "vpc-lattice:UntagResource", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+  }
 }

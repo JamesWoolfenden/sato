@@ -1,206 +1,169 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DetectorId",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Condition": {
-      "additionalProperties": false,
-      "properties": {
-        "Eq": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Equals": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "GreaterThan": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "GreaterThanOrEqual": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "Gt": {
-          "type": "integer"
-        },
-        "Gte": {
-          "type": "integer"
-        },
-        "LessThan": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "LessThanOrEqual": {
-          "format": "int64",
-          "type": "integer"
-        },
-        "Lt": {
-          "type": "integer"
-        },
-        "Lte": {
-          "type": "integer"
-        },
-        "Neq": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "NotEquals": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::GuardDuty::Filter",
+  "description" : "Resource Type definition for AWS::GuardDuty::Filter",
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "guardduty:TagResource", "guardduty:UntagResource", "guardduty:ListTagsForResource" ]
+  },
+  "properties" : {
+    "Action" : {
+      "type" : "string"
     },
-    "FindingCriteria": {
-      "additionalProperties": false,
-      "properties": {
-        "Criterion": {
-          "additionalProperties": false,
-          "patternProperties": {
-            "^.+$": {
-              "$ref": "#/definitions/Condition"
-            }
-          },
-          "type": "object"
-        }
-      },
-      "type": "object"
+    "Description" : {
+      "type" : "string"
     },
-    "TagItem": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+    "DetectorId" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 300
+    },
+    "FindingCriteria" : {
+      "$ref" : "#/definitions/FindingCriteria"
+    },
+    "Rank" : {
+      "type" : "integer",
+      "minimum" : 1,
+      "maximum" : 100
+    },
+    "Name" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/TagItem"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::GuardDuty::Filter",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "guardduty:CreateFilter",
-        "guardduty:GetFilter",
-        "guardduty:TagResource"
-      ]
+  "definitions" : {
+    "TagItem" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Key", "Value" ]
     },
-    "delete": {
-      "permissions": [
-        "guardduty:ListDetectors",
-        "guardduty:ListFilters",
-        "guardduty:GetFilter",
-        "guardduty:DeleteFilter"
-      ]
+    "Condition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Lt" : {
+          "type" : "integer"
+        },
+        "Gt" : {
+          "type" : "integer"
+        },
+        "Gte" : {
+          "type" : "integer"
+        },
+        "Neq" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Eq" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Lte" : {
+          "type" : "integer"
+        },
+        "Equals" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "GreaterThan" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "GreaterThanOrEqual" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "LessThan" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "LessThanOrEqual" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "NotEquals" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "DetectorId": {
-            "type": "string"
+    "FindingCriteria" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Criterion" : {
+          "type" : "object",
+          "patternProperties" : {
+            "^.+$" : {
+              "$ref" : "#/definitions/Condition"
+            }
+          },
+          "additionalProperties" : false
+        }
+      }
+    }
+  },
+  "required" : [ "DetectorId", "Name", "FindingCriteria" ],
+  "primaryIdentifier" : [ "/properties/DetectorId", "/properties/Name" ],
+  "createOnlyProperties" : [ "/properties/DetectorId", "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "guardduty:CreateFilter", "guardduty:GetFilter", "guardduty:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "guardduty:GetFilter", "guardduty:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "guardduty:ListDetectors", "guardduty:ListFilters", "guardduty:GetFilter", "guardduty:DeleteFilter" ]
+    },
+    "update" : {
+      "permissions" : [ "guardduty:UpdateFilter", "guardduty:GetFilter", "guardduty:ListFilters", "guardduty:TagResource", "guardduty:UntagResource" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "DetectorId" : {
+            "type" : "string"
           }
         }
       },
-      "permissions": [
-        "guardduty:ListFilters"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "guardduty:GetFilter",
-        "guardduty:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "guardduty:UpdateFilter",
-        "guardduty:GetFilter",
-        "guardduty:ListFilters",
-        "guardduty:TagResource",
-        "guardduty:UntagResource"
-      ]
+      "permissions" : [ "guardduty:ListFilters" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/DetectorId",
-    "/properties/Name"
-  ],
-  "properties": {
-    "Action": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "DetectorId": {
-      "maxLength": 300,
-      "minLength": 1,
-      "type": "string"
-    },
-    "FindingCriteria": {
-      "$ref": "#/definitions/FindingCriteria"
-    },
-    "Name": {
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Rank": {
-      "maximum": 100,
-      "minimum": 1,
-      "type": "integer"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/TagItem"
-      },
-      "type": "array"
-    }
-  },
-  "required": [
-    "DetectorId",
-    "Name",
-    "FindingCriteria"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "guardduty:TagResource",
-      "guardduty:UntagResource",
-      "guardduty:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::GuardDuty::Filter"
+  }
 }

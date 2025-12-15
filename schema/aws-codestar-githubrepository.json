@@ -1,77 +1,65 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Code": {
-      "additionalProperties": false,
-      "properties": {
-        "S3": {
-          "$ref": "#/definitions/S3"
-        }
-      },
-      "required": [
-        "S3"
-      ],
-      "type": "object"
+  "typeName" : "AWS::CodeStar::GitHubRepository",
+  "description" : "Resource Type definition for AWS::CodeStar::GitHubRepository",
+  "additionalProperties" : false,
+  "properties" : {
+    "EnableIssues" : {
+      "type" : "boolean"
     },
-    "S3": {
-      "additionalProperties": false,
-      "properties": {
-        "Bucket": {
-          "type": "string"
-        },
-        "Key": {
-          "type": "string"
-        },
-        "ObjectVersion": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Bucket",
-        "Key"
-      ],
-      "type": "object"
+    "ConnectionArn" : {
+      "type" : "string"
+    },
+    "RepositoryName" : {
+      "type" : "string"
+    },
+    "RepositoryAccessToken" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "RepositoryOwner" : {
+      "type" : "string"
+    },
+    "IsPrivate" : {
+      "type" : "boolean"
+    },
+    "Code" : {
+      "$ref" : "#/definitions/Code"
+    },
+    "RepositoryDescription" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::CodeStar::GitHubRepository",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Code": {
-      "$ref": "#/definitions/Code"
+  "definitions" : {
+    "S3" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ObjectVersion" : {
+          "type" : "string"
+        },
+        "Bucket" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Bucket", "Key" ]
     },
-    "ConnectionArn": {
-      "type": "string"
-    },
-    "EnableIssues": {
-      "type": "boolean"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "IsPrivate": {
-      "type": "boolean"
-    },
-    "RepositoryAccessToken": {
-      "type": "string"
-    },
-    "RepositoryDescription": {
-      "type": "string"
-    },
-    "RepositoryName": {
-      "type": "string"
-    },
-    "RepositoryOwner": {
-      "type": "string"
+    "Code" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3" : {
+          "$ref" : "#/definitions/S3"
+        }
+      },
+      "required" : [ "S3" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "RepositoryName",
-    "RepositoryOwner"
-  ],
-  "typeName": "AWS::CodeStar::GitHubRepository"
+  "required" : [ "RepositoryName", "RepositoryOwner" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

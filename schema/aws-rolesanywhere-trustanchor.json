@@ -1,215 +1,156 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "NotificationChannel": {
-      "enum": [
-        "ALL"
-      ],
-      "type": "string"
+  "typeName" : "AWS::RolesAnywhere::TrustAnchor",
+  "description" : "Definition of AWS::RolesAnywhere::TrustAnchor Resource Type.",
+  "definitions" : {
+    "NotificationChannel" : {
+      "type" : "string",
+      "enum" : [ "ALL" ]
     },
-    "NotificationEvent": {
-      "enum": [
-        "CA_CERTIFICATE_EXPIRY",
-        "END_ENTITY_CERTIFICATE_EXPIRY"
-      ],
-      "type": "string"
+    "NotificationEvent" : {
+      "type" : "string",
+      "enum" : [ "CA_CERTIFICATE_EXPIRY", "END_ENTITY_CERTIFICATE_EXPIRY" ]
     },
-    "NotificationSetting": {
-      "additionalProperties": false,
-      "properties": {
-        "Channel": {
-          "$ref": "#/definitions/NotificationChannel"
+    "NotificationSetting" : {
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
         },
-        "Enabled": {
-          "type": "boolean"
+        "Event" : {
+          "$ref" : "#/definitions/NotificationEvent"
         },
-        "Event": {
-          "$ref": "#/definitions/NotificationEvent"
+        "Threshold" : {
+          "type" : "number",
+          "maximum" : 360,
+          "minimum" : 1
         },
-        "Threshold": {
-          "maximum": 360,
-          "minimum": 1,
-          "type": "number"
+        "Channel" : {
+          "$ref" : "#/definitions/NotificationChannel"
         }
       },
-      "required": [
-        "Enabled",
-        "Event"
-      ],
-      "type": "object"
+      "required" : [ "Enabled", "Event" ],
+      "additionalProperties" : false
     },
-    "Source": {
-      "additionalProperties": false,
-      "properties": {
-        "SourceData": {
-          "$ref": "#/definitions/SourceData"
+    "Source" : {
+      "type" : "object",
+      "properties" : {
+        "SourceType" : {
+          "$ref" : "#/definitions/TrustAnchorType"
         },
-        "SourceType": {
-          "$ref": "#/definitions/TrustAnchorType"
+        "SourceData" : {
+          "$ref" : "#/definitions/SourceData"
         }
       },
-      "required": [
-        "SourceType",
-        "SourceData"
-      ],
-      "type": "object"
+      "required" : [ "SourceType", "SourceData" ],
+      "additionalProperties" : false
     },
-    "SourceData": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "X509CertificateData": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "X509CertificateData"
-          ],
-          "title": "X509CertificateData",
-          "type": "object"
+    "SourceData" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "X509CertificateData",
+        "properties" : {
+          "X509CertificateData" : {
+            "type" : "string"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "AcmPcaArn": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "AcmPcaArn"
-          ],
-          "title": "AcmPcaArn",
-          "type": "object"
-        }
-      ]
+        "required" : [ "X509CertificateData" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "AcmPcaArn",
+        "properties" : {
+          "AcmPcaArn" : {
+            "type" : "string"
+          }
+        },
+        "required" : [ "AcmPcaArn" ],
+        "additionalProperties" : false
+      } ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "TrustAnchorType": {
-      "enum": [
-        "AWS_ACM_PCA",
-        "CERTIFICATE_BUNDLE"
-      ],
-      "type": "string"
+    "TrustAnchorType" : {
+      "type" : "string",
+      "enum" : [ "AWS_ACM_PCA", "CERTIFICATE_BUNDLE" ]
     }
   },
-  "description": "Definition of AWS::RolesAnywhere::TrustAnchor Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:CreateServiceLinkedRole",
-        "rolesanywhere:CreateTrustAnchor",
-        "rolesanywhere:TagResource"
-      ]
+  "properties" : {
+    "Enabled" : {
+      "type" : "boolean"
     },
-    "delete": {
-      "permissions": [
-        "rolesanywhere:DeleteTrustAnchor"
-      ]
+    "Name" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "rolesanywhere:ListTrustAnchors",
-        "rolesanywhere:ListTagsForResource"
-      ]
+    "NotificationSettings" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/NotificationSetting"
+      },
+      "maxItems" : 50,
+      "minItems" : 0
     },
-    "read": {
-      "permissions": [
-        "rolesanywhere:GetTrustAnchor",
-        "rolesanywhere:ListTagsForResource"
-      ]
+    "Source" : {
+      "$ref" : "#/definitions/Source"
     },
-    "update": {
-      "permissions": [
-        "acm-pca:GetCertificateAuthorityCertificate",
-        "rolesanywhere:ListTagsForResource",
-        "rolesanywhere:TagResource",
-        "rolesanywhere:UntagResource",
-        "rolesanywhere:EnableTrustAnchor",
-        "rolesanywhere:DisableTrustAnchor",
-        "rolesanywhere:UpdateTrustAnchor",
-        "rolesanywhere:GetTrustAnchor",
-        "rolesanywhere:PutNotificationSettings",
-        "rolesanywhere:ResetNotificationSettings"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
+    },
+    "TrustAnchorId" : {
+      "type" : "string",
+      "pattern" : "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}"
+    },
+    "TrustAnchorArn" : {
+      "type" : "string",
+      "pattern" : "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}"
     }
   },
-  "primaryIdentifier": [
-    "/properties/TrustAnchorId"
-  ],
-  "properties": {
-    "Enabled": {
-      "type": "boolean"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "rolesanywhere:UntagResource", "rolesanywhere:TagResource", "rolesanywhere:ListTagsForResource" ]
+  },
+  "required" : [ "Name", "Source" ],
+  "readOnlyProperties" : [ "/properties/TrustAnchorId", "/properties/TrustAnchorArn" ],
+  "primaryIdentifier" : [ "/properties/TrustAnchorId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:CreateServiceLinkedRole", "rolesanywhere:CreateTrustAnchor", "rolesanywhere:TagResource" ]
     },
-    "Name": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "rolesanywhere:GetTrustAnchor", "rolesanywhere:ListTagsForResource" ]
     },
-    "NotificationSettings": {
-      "items": {
-        "$ref": "#/definitions/NotificationSetting"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array"
+    "update" : {
+      "permissions" : [ "acm-pca:GetCertificateAuthorityCertificate", "rolesanywhere:ListTagsForResource", "rolesanywhere:TagResource", "rolesanywhere:UntagResource", "rolesanywhere:EnableTrustAnchor", "rolesanywhere:DisableTrustAnchor", "rolesanywhere:UpdateTrustAnchor", "rolesanywhere:GetTrustAnchor", "rolesanywhere:PutNotificationSettings", "rolesanywhere:ResetNotificationSettings" ]
     },
-    "Source": {
-      "$ref": "#/definitions/Source"
+    "delete" : {
+      "permissions" : [ "rolesanywhere:DeleteTrustAnchor" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
-    },
-    "TrustAnchorArn": {
-      "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
-      "type": "string"
-    },
-    "TrustAnchorId": {
-      "pattern": "[a-f0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "rolesanywhere:ListTrustAnchors", "rolesanywhere:ListTagsForResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/TrustAnchorId",
-    "/properties/TrustAnchorArn"
-  ],
-  "required": [
-    "Name",
-    "Source"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "rolesanywhere:UntagResource",
-      "rolesanywhere:TagResource",
-      "rolesanywhere:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::RolesAnywhere::TrustAnchor"
+  "additionalProperties" : false
 }

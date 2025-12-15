@@ -1,176 +1,122 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/EmailAddress",
-    "/properties/Name",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "EmailContact": {
-      "additionalProperties": false,
-      "properties": {
-        "Address": {
-          "maxLength": 254,
-          "minLength": 6,
-          "pattern": "^(.+)@(.+)$",
-          "type": "string"
+  "typeName" : "AWS::NotificationsContacts::EmailContact",
+  "description" : "Definition of AWS::NotificationsContacts::EmailContact Resource Type",
+  "definitions" : {
+    "EmailContact" : {
+      "type" : "object",
+      "properties" : {
+        "Arn" : {
+          "type" : "string",
+          "pattern" : "^arn:aws:notifications-contacts::[0-9]{12}:emailcontact/[a-z0-9]{27}$"
         },
-        "Arn": {
-          "pattern": "^arn:aws:notifications-contacts::[0-9]{12}:emailcontact/[a-z0-9]{27}$",
-          "type": "string"
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1,
+          "pattern" : "[\\w-.~]+"
         },
-        "CreationTime": {
-          "format": "date-time",
-          "type": "string"
+        "Address" : {
+          "type" : "string",
+          "maxLength" : 254,
+          "minLength" : 6,
+          "pattern" : "^(.+)@(.+)$"
         },
-        "Name": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "[\\w-.~]+",
-          "type": "string"
+        "Status" : {
+          "$ref" : "#/definitions/EmailContactStatus"
         },
-        "Status": {
-          "$ref": "#/definitions/EmailContactStatus"
+        "CreationTime" : {
+          "type" : "string",
+          "format" : "date-time"
         },
-        "UpdateTime": {
-          "format": "date-time",
-          "type": "string"
+        "UpdateTime" : {
+          "type" : "string",
+          "format" : "date-time"
         }
       },
-      "required": [
-        "Address",
-        "Arn",
-        "CreationTime",
-        "Name",
-        "Status",
-        "UpdateTime"
-      ],
-      "type": "object"
+      "required" : [ "Address", "Arn", "CreationTime", "Name", "Status", "UpdateTime" ],
+      "additionalProperties" : false
     },
-    "EmailContactStatus": {
-      "enum": [
-        "inactive",
-        "active"
-      ],
-      "type": "string"
+    "EmailContactStatus" : {
+      "type" : "string",
+      "enum" : [ "inactive", "active" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "TagMap" : {
+      "description" : "A list of tags that are attached to the role.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "TagMap": {
-      "description": "A list of tags that are attached to the role.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Definition of AWS::NotificationsContacts::EmailContact Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "notifications-contacts:CreateEmailContact",
-        "notifications-contacts:GetEmailContact",
-        "notifications-contacts:SendActivationCode",
-        "notifications-contacts:ListEmailContacts",
-        "notifications-contacts:TagResource",
-        "notifications-contacts:UntagResource",
-        "notifications-contacts:ListTagsForResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:aws:notifications-contacts::[0-9]{12}:emailcontact/[a-z0-9]{27}$"
     },
-    "delete": {
-      "permissions": [
-        "notifications-contacts:DeleteEmailContact",
-        "notifications-contacts:GetEmailContact"
-      ]
+    "EmailAddress" : {
+      "type" : "string",
+      "maxLength" : 254,
+      "minLength" : 6,
+      "pattern" : "^(.+)@(.+)$"
     },
-    "list": {
-      "permissions": [
-        "notifications-contacts:ListEmailContacts"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "[\\w-.~]+"
     },
-    "read": {
-      "permissions": [
-        "notifications-contacts:GetEmailContact",
-        "notifications-contacts:ListTagsForResource"
-      ]
+    "EmailContact" : {
+      "$ref" : "#/definitions/EmailContact"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^arn:aws:notifications-contacts::[0-9]{12}:emailcontact/[a-z0-9]{27}$",
-      "type": "string"
+  "required" : [ "EmailAddress", "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/EmailContact", "/properties/EmailContact/Arn", "/properties/EmailContact/Address", "/properties/EmailContact/Name", "/properties/EmailContact/Status", "/properties/EmailContact/CreationTime", "/properties/EmailContact/UpdateTime" ],
+  "writeOnlyProperties" : [ "/properties/EmailAddress", "/properties/Name" ],
+  "createOnlyProperties" : [ "/properties/EmailAddress", "/properties/Name", "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "notifications-contacts:CreateEmailContact", "notifications-contacts:GetEmailContact", "notifications-contacts:SendActivationCode", "notifications-contacts:ListEmailContacts", "notifications-contacts:TagResource", "notifications-contacts:UntagResource", "notifications-contacts:ListTagsForResource" ]
     },
-    "EmailAddress": {
-      "maxLength": 254,
-      "minLength": 6,
-      "pattern": "^(.+)@(.+)$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "notifications-contacts:GetEmailContact", "notifications-contacts:ListTagsForResource" ]
     },
-    "EmailContact": {
-      "$ref": "#/definitions/EmailContact"
+    "delete" : {
+      "permissions" : [ "notifications-contacts:DeleteEmailContact", "notifications-contacts:GetEmailContact" ]
     },
-    "Name": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "[\\w-.~]+",
-      "type": "string"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "list" : {
+      "permissions" : [ "notifications-contacts:ListEmailContacts" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/EmailContact",
-    "/properties/EmailContact/Arn",
-    "/properties/EmailContact/Address",
-    "/properties/EmailContact/Name",
-    "/properties/EmailContact/Status",
-    "/properties/EmailContact/CreationTime",
-    "/properties/EmailContact/UpdateTime"
-  ],
-  "required": [
-    "EmailAddress",
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "notifications-contacts:TagResource",
-      "notifications-contacts:UntagResource",
-      "notifications-contacts:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "notifications-contacts:TagResource", "notifications-contacts:UntagResource", "notifications-contacts:ListTagsForResource" ]
   },
-  "typeName": "AWS::NotificationsContacts::EmailContact",
-  "writeOnlyProperties": [
-    "/properties/EmailAddress",
-    "/properties/Name"
-  ]
+  "additionalProperties" : false
 }

@@ -1,441 +1,311 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Source"
-  ],
-  "definitions": {
-    "CloudWatchLogDestination": {
-      "additionalProperties": false,
-      "description": "Represents a cloudwatch logs destination for scraper logging",
-      "properties": {
-        "LogGroupArn": {
-          "description": "ARN of the CloudWatch log group",
-          "maxLength": 512,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "ComponentConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Options": {
-          "additionalProperties": false,
-          "patternProperties": {
-            "^[A-Za-z0-9]+$": {
-              "type": "string"
-            }
-          },
-          "type": "object"
-        }
-      },
-      "type": "object"
-    },
-    "Destination": {
-      "additionalProperties": false,
-      "description": "Scraper metrics destination",
-      "oneOf": [
-        {
-          "required": [
-            "AmpConfiguration"
-          ]
-        }
-      ],
-      "properties": {
-        "AmpConfiguration": {
-          "additionalProperties": false,
-          "description": "Configuration for Amazon Managed Prometheus metrics destination",
-          "properties": {
-            "WorkspaceArn": {
-              "description": "ARN of an Amazon Managed Prometheus workspace",
-              "pattern": "^arn:aws[-a-z]*:aps:[-a-z0-9]+:[0-9]{12}:workspace/.+$",
-              "type": "string"
-            }
-          },
-          "required": [
-            "WorkspaceArn"
-          ],
-          "type": "object"
-        }
-      },
-      "type": "object"
-    },
-    "RoleConfiguration": {
-      "additionalProperties": false,
-      "description": "Role configuration",
-      "properties": {
-        "SourceRoleArn": {
-          "description": "IAM Role in source account",
-          "type": "string"
+  "typeName" : "AWS::APS::Scraper",
+  "description" : "Resource Type definition for AWS::APS::Scraper",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "TargetRoleArn": {
-          "description": "IAM Role in the target account",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "ScrapeConfiguration": {
-      "additionalProperties": false,
-      "description": "Scraper configuration",
-      "oneOf": [
-        {
-          "required": [
-            "ConfigurationBlob"
-          ]
-        }
-      ],
-      "properties": {
-        "ConfigurationBlob": {
-          "description": "Prometheus compatible scrape configuration in base64 encoded blob format",
-          "type": "string"
+    "ScrapeConfiguration" : {
+      "description" : "Scraper configuration",
+      "type" : "object",
+      "properties" : {
+        "ConfigurationBlob" : {
+          "description" : "Prometheus compatible scrape configuration in base64 encoded blob format",
+          "type" : "string"
         }
       },
-      "type": "object"
+      "oneOf" : [ {
+        "required" : [ "ConfigurationBlob" ]
+      } ],
+      "additionalProperties" : false
     },
-    "ScraperComponent": {
-      "additionalProperties": false,
-      "properties": {
-        "Config": {
-          "$ref": "#/definitions/ComponentConfig"
+    "RoleConfiguration" : {
+      "description" : "Role configuration",
+      "type" : "object",
+      "properties" : {
+        "SourceRoleArn" : {
+          "description" : "IAM Role in source account",
+          "type" : "string"
         },
-        "Type": {
-          "$ref": "#/definitions/ScraperComponentType"
+        "TargetRoleArn" : {
+          "description" : "IAM Role in the target account",
+          "type" : "string"
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ScraperComponentType": {
-      "description": "Type of scraper component",
-      "enum": [
-        "SERVICE_DISCOVERY",
-        "COLLECTOR",
-        "EXPORTER"
-      ],
-      "type": "string"
-    },
-    "ScraperLoggingConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration for scraper logging",
-      "properties": {
-        "LoggingDestination": {
-          "$ref": "#/definitions/ScraperLoggingDestination"
-        },
-        "ScraperComponents": {
-          "items": {
-            "$ref": "#/definitions/ScraperComponent"
-          },
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "required": [
-        "ScraperComponents",
-        "LoggingDestination"
-      ],
-      "type": "object"
-    },
-    "ScraperLoggingDestination": {
-      "additionalProperties": false,
-      "description": "Destination for scraper logging",
-      "properties": {
-        "CloudWatchLogs": {
-          "$ref": "#/definitions/CloudWatchLogDestination"
-        }
-      },
-      "type": "object"
-    },
-    "SecurityGroupId": {
-      "description": "ID of a security group",
-      "pattern": "^sg-[0-9a-z]+$",
-      "type": "string"
-    },
-    "Source": {
-      "additionalProperties": false,
-      "description": "Scraper metrics source",
-      "oneOf": [
-        {
-          "required": [
-            "EksConfiguration"
-          ]
-        },
-        {
-          "required": [
-            "VpcConfiguration"
-          ]
-        }
-      ],
-      "properties": {
-        "EksConfiguration": {
-          "additionalProperties": false,
-          "description": "Configuration for EKS metrics source",
-          "properties": {
-            "ClusterArn": {
-              "description": "ARN of an EKS cluster",
-              "pattern": "^arn:aws[-a-z]*:eks:[-a-z0-9]+:[0-9]{12}:cluster/.+$",
-              "type": "string"
+    "Source" : {
+      "description" : "Scraper metrics source",
+      "type" : "object",
+      "properties" : {
+        "EksConfiguration" : {
+          "description" : "Configuration for EKS metrics source",
+          "type" : "object",
+          "properties" : {
+            "ClusterArn" : {
+              "description" : "ARN of an EKS cluster",
+              "type" : "string",
+              "pattern" : "^arn:aws[-a-z]*:eks:[-a-z0-9]+:[0-9]{12}:cluster/.+$"
             },
-            "SecurityGroupIds": {
-              "description": "List of security group IDs",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/SecurityGroupId"
-              },
-              "type": "array"
+            "SecurityGroupIds" : {
+              "description" : "List of security group IDs",
+              "type" : "array",
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/SecurityGroupId"
+              }
             },
-            "SubnetIds": {
-              "description": "List of subnet IDs",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/SubnetId"
-              },
-              "type": "array"
+            "SubnetIds" : {
+              "description" : "List of subnet IDs",
+              "type" : "array",
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/SubnetId"
+              }
             }
           },
-          "required": [
-            "ClusterArn",
-            "SubnetIds"
-          ],
-          "type": "object"
+          "required" : [ "ClusterArn", "SubnetIds" ],
+          "additionalProperties" : false
         },
-        "VpcConfiguration": {
-          "additionalProperties": false,
-          "description": "Configuration for VPC metrics source",
-          "properties": {
-            "SecurityGroupIds": {
-              "description": "List of security group IDs",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/SecurityGroupId"
-              },
-              "type": "array"
+        "VpcConfiguration" : {
+          "description" : "Configuration for VPC metrics source",
+          "type" : "object",
+          "properties" : {
+            "SecurityGroupIds" : {
+              "description" : "List of security group IDs",
+              "type" : "array",
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/SecurityGroupId"
+              }
             },
-            "SubnetIds": {
-              "description": "List of subnet IDs",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/SubnetId"
-              },
-              "type": "array"
+            "SubnetIds" : {
+              "description" : "List of subnet IDs",
+              "type" : "array",
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/SubnetId"
+              }
             }
           },
-          "required": [
-            "SecurityGroupIds",
-            "SubnetIds"
-          ],
-          "type": "object"
+          "required" : [ "SecurityGroupIds", "SubnetIds" ],
+          "additionalProperties" : false
         }
       },
-      "type": "object"
+      "oneOf" : [ {
+        "required" : [ "EksConfiguration" ]
+      }, {
+        "required" : [ "VpcConfiguration" ]
+      } ],
+      "additionalProperties" : false
     },
-    "SubnetId": {
-      "description": "ID of a subnet",
-      "pattern": "^subnet-[0-9a-z]+$",
-      "type": "string"
+    "Destination" : {
+      "description" : "Scraper metrics destination",
+      "type" : "object",
+      "properties" : {
+        "AmpConfiguration" : {
+          "description" : "Configuration for Amazon Managed Prometheus metrics destination",
+          "type" : "object",
+          "properties" : {
+            "WorkspaceArn" : {
+              "description" : "ARN of an Amazon Managed Prometheus workspace",
+              "type" : "string",
+              "pattern" : "^arn:aws[-a-z]*:aps:[-a-z0-9]+:[0-9]{12}:workspace/.+$"
+            }
+          },
+          "required" : [ "WorkspaceArn" ],
+          "additionalProperties" : false
+        }
+      },
+      "oneOf" : [ {
+        "required" : [ "AmpConfiguration" ]
+      } ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "SecurityGroupId" : {
+      "description" : "ID of a security group",
+      "type" : "string",
+      "pattern" : "^sg-[0-9a-z]+$"
+    },
+    "SubnetId" : {
+      "description" : "ID of a subnet",
+      "type" : "string",
+      "pattern" : "^subnet-[0-9a-z]+$"
+    },
+    "CloudWatchLogDestination" : {
+      "description" : "Represents a cloudwatch logs destination for scraper logging",
+      "type" : "object",
+      "properties" : {
+        "LogGroupArn" : {
+          "description" : "ARN of the CloudWatch log group",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 512
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ScraperComponentType" : {
+      "type" : "string",
+      "enum" : [ "SERVICE_DISCOVERY", "COLLECTOR", "EXPORTER" ],
+      "description" : "Type of scraper component"
+    },
+    "ComponentConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Options" : {
+          "type" : "object",
+          "patternProperties" : {
+            "^[A-Za-z0-9]+$" : {
+              "type" : "string"
+            }
+          },
+          "additionalProperties" : false
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ScraperComponent" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/ScraperComponentType"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Config" : {
+          "$ref" : "#/definitions/ComponentConfig"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Type" ],
+      "additionalProperties" : false
+    },
+    "ScraperLoggingDestination" : {
+      "description" : "Destination for scraper logging",
+      "type" : "object",
+      "properties" : {
+        "CloudWatchLogs" : {
+          "$ref" : "#/definitions/CloudWatchLogDestination"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ScraperLoggingConfiguration" : {
+      "description" : "Configuration for scraper logging",
+      "type" : "object",
+      "properties" : {
+        "ScraperComponents" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ScraperComponent"
+          },
+          "minItems" : 1,
+          "uniqueItems" : true
+        },
+        "LoggingDestination" : {
+          "$ref" : "#/definitions/ScraperLoggingDestination"
+        }
+      },
+      "required" : [ "ScraperComponents", "LoggingDestination" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::APS::Scraper",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "aps:CreateScraper",
-        "aps:UpdateScraperLoggingConfiguration",
-        "aps:DescribeScraper",
-        "aps:DescribeWorkspace",
-        "aps:TagResource",
-        "eks:CreateAccessEntry",
-        "eks:AssociateAccessPolicy",
-        "eks:DescribeCluster",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:CreateNetworkInterface",
-        "ec2:DeleteNetworkInterface",
-        "ec2:AttachNetworkInterface",
-        "ec2:DetachNetworkInterface",
-        "ec2:ModifyNetworkInterfaceAttribute",
-        "ec2:DescribeVpcs",
-        "kafka:DescribeCluster",
-        "kafka:DescribeClusterV2",
-        "kafka:GetBootstrapBrokers",
-        "kafka:ListClusters",
-        "kafka:ListNodes",
-        "iam:CreateServiceLinkedRole",
-        "iam:PassRole",
-        "logs:CreateLogDelivery",
-        "logs:GetLogDelivery",
-        "logs:ListLogDeliveries",
-        "logs:PutResourcePolicy",
-        "logs:DescribeLogGroups"
-      ]
+  "properties" : {
+    "ScraperId" : {
+      "description" : "Required to identify a specific scraper.",
+      "type" : "string",
+      "pattern" : "^s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "aps:DeleteScraper",
-        "aps:DescribeScraper",
-        "aps:DescribeWorkspace",
-        "aps:DeleteScraperLoggingConfiguration",
-        "eks:AssociateAccessPolicy",
-        "eks:DescribeCluster",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:DeleteNetworkInterface",
-        "ec2:DetachNetworkInterface",
-        "ec2:DescribeVpcs",
-        "kafka:DescribeCluster",
-        "iam:DeleteServiceLinkedRole",
-        "logs:DeleteLogDelivery"
-      ]
+    "Alias" : {
+      "description" : "Scraper alias.",
+      "type" : "string",
+      "pattern" : "^[0-9A-Za-z][-.0-9A-Z_a-z]*$",
+      "minLength" : 1,
+      "maxLength" : 100
     },
-    "list": {
-      "permissions": [
-        "aps:ListScrapers",
-        "aps:ListTagsForResource"
-      ]
+    "Arn" : {
+      "description" : "Scraper ARN.",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:scraper/s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"
     },
-    "read": {
-      "permissions": [
-        "aps:DescribeScraper",
-        "aps:DescribeScraperLoggingConfiguration",
-        "aps:ListTagsForResource",
-        "ec2:DescribeNetworkInterfaces"
-      ]
+    "RoleArn" : {
+      "description" : "IAM role ARN for the scraper.",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn):iam::[0-9]{12}:role/[a-zA-Z0-9-]+$",
+      "minLength" : 20,
+      "maxLength" : 2048
     },
-    "update": {
-      "permissions": [
-        "aps:CreateScraper",
-        "aps:DescribeScraper",
-        "aps:UpdateScraper",
-        "aps:DescribeWorkspace",
-        "aps:DescribeScraperLoggingConfiguration",
-        "aps:DeleteScraperLoggingConfiguration",
-        "aps:UpdateScraperLoggingConfiguration",
-        "aps:TagResource",
-        "aps:UntagResource",
-        "aps:ListTagsForResource",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:ModifyNetworkInterfaceAttribute",
-        "ec2:DescribeVpcs",
-        "kafka:DescribeCluster",
-        "kafka:DescribeClusterV2",
-        "kafka:GetBootstrapBrokers",
-        "iam:PassRole",
-        "logs:CreateLogDelivery",
-        "logs:GetLogDelivery",
-        "logs:UpdateLogDelivery",
-        "logs:ListLogDeliveries",
-        "logs:PutResourcePolicy",
-        "logs:DescribeLogGroups"
-      ]
+    "ScraperLoggingConfiguration" : {
+      "$ref" : "#/definitions/ScraperLoggingConfiguration"
+    },
+    "ScrapeConfiguration" : {
+      "$ref" : "#/definitions/ScrapeConfiguration"
+    },
+    "RoleConfiguration" : {
+      "$ref" : "#/definitions/RoleConfiguration"
+    },
+    "Source" : {
+      "$ref" : "#/definitions/Source"
+    },
+    "Destination" : {
+      "$ref" : "#/definitions/Destination"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Alias": {
-      "description": "Scraper alias.",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[0-9A-Za-z][-.0-9A-Z_a-z]*$",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "ScrapeConfiguration", "Source", "Destination" ],
+  "readOnlyProperties" : [ "/properties/ScraperId", "/properties/Arn", "/properties/RoleArn" ],
+  "createOnlyProperties" : [ "/properties/Source" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "aps:TagResource", "aps:UntagResource" ]
+  },
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "aps:CreateScraper", "aps:UpdateScraperLoggingConfiguration", "aps:DescribeScraper", "aps:DescribeWorkspace", "aps:TagResource", "eks:CreateAccessEntry", "eks:AssociateAccessPolicy", "eks:DescribeCluster", "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups", "ec2:DescribeNetworkInterfaces", "ec2:CreateNetworkInterface", "ec2:DeleteNetworkInterface", "ec2:AttachNetworkInterface", "ec2:DetachNetworkInterface", "ec2:ModifyNetworkInterfaceAttribute", "ec2:DescribeVpcs", "kafka:DescribeCluster", "kafka:DescribeClusterV2", "kafka:GetBootstrapBrokers", "kafka:ListClusters", "kafka:ListNodes", "iam:CreateServiceLinkedRole", "iam:PassRole", "logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:ListLogDeliveries", "logs:PutResourcePolicy", "logs:DescribeLogGroups" ]
     },
-    "Arn": {
-      "description": "Scraper ARN.",
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:scraper/s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "aps:DescribeScraper", "aps:DescribeScraperLoggingConfiguration", "aps:ListTagsForResource", "ec2:DescribeNetworkInterfaces" ]
     },
-    "Destination": {
-      "$ref": "#/definitions/Destination"
+    "update" : {
+      "permissions" : [ "aps:CreateScraper", "aps:DescribeScraper", "aps:UpdateScraper", "aps:DescribeWorkspace", "aps:DescribeScraperLoggingConfiguration", "aps:DeleteScraperLoggingConfiguration", "aps:UpdateScraperLoggingConfiguration", "aps:TagResource", "aps:UntagResource", "aps:ListTagsForResource", "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups", "ec2:DescribeNetworkInterfaces", "ec2:ModifyNetworkInterfaceAttribute", "ec2:DescribeVpcs", "kafka:DescribeCluster", "kafka:DescribeClusterV2", "kafka:GetBootstrapBrokers", "iam:PassRole", "logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:UpdateLogDelivery", "logs:ListLogDeliveries", "logs:PutResourcePolicy", "logs:DescribeLogGroups" ]
     },
-    "RoleArn": {
-      "description": "IAM role ARN for the scraper.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn):iam::[0-9]{12}:role/[a-zA-Z0-9-]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "aps:DeleteScraper", "aps:DescribeScraper", "aps:DescribeWorkspace", "aps:DeleteScraperLoggingConfiguration", "eks:AssociateAccessPolicy", "eks:DescribeCluster", "ec2:DescribeSubnets", "ec2:DescribeSecurityGroups", "ec2:DescribeNetworkInterfaces", "ec2:DeleteNetworkInterface", "ec2:DetachNetworkInterface", "ec2:DescribeVpcs", "kafka:DescribeCluster", "iam:DeleteServiceLinkedRole", "logs:DeleteLogDelivery" ]
     },
-    "RoleConfiguration": {
-      "$ref": "#/definitions/RoleConfiguration"
-    },
-    "ScrapeConfiguration": {
-      "$ref": "#/definitions/ScrapeConfiguration"
-    },
-    "ScraperId": {
-      "description": "Required to identify a specific scraper.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^s-[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$",
-      "type": "string"
-    },
-    "ScraperLoggingConfiguration": {
-      "$ref": "#/definitions/ScraperLoggingConfiguration"
-    },
-    "Source": {
-      "$ref": "#/definitions/Source"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "aps:ListScrapers", "aps:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ScraperId",
-    "/properties/Arn",
-    "/properties/RoleArn"
-  ],
-  "required": [
-    "ScrapeConfiguration",
-    "Source",
-    "Destination"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-aps",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "aps:TagResource",
-      "aps:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::APS::Scraper"
+  }
 }

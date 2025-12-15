@@ -1,210 +1,170 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "CognitoIdentityProvider": {
-      "additionalProperties": false,
-      "properties": {
-        "ClientId": {
-          "type": "string"
+  "typeName" : "AWS::Cognito::IdentityPool",
+  "description" : "Resource Type definition for AWS::Cognito::IdentityPool",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/IdentityPoolTags",
+    "permissions" : [ "cognito-identity:TagResource", "cognito-identity:UntagResource" ]
+  },
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "ProviderName": {
-          "type": "string"
-        },
-        "ServerSideTokenCheck": {
-          "type": "boolean"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "ProviderName",
-        "ClientId"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "CognitoStreams": {
-      "additionalProperties": false,
-      "properties": {
-        "RoleArn": {
-          "type": "string"
+    "PushSync" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ApplicationArns" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "StreamName": {
-          "type": "string"
-        },
-        "StreamingStatus": {
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
     },
-    "PushSync": {
-      "additionalProperties": false,
-      "properties": {
-        "ApplicationArns": {
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
+    "CognitoIdentityProvider" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ServerSideTokenCheck" : {
+          "type" : "boolean"
         },
-        "RoleArn": {
-          "type": "string"
+        "ProviderName" : {
+          "type" : "string"
+        },
+        "ClientId" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "ProviderName", "ClientId" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "CognitoStreams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StreamingStatus" : {
+          "type" : "string"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "StreamName" : {
+          "type" : "string"
+        },
+        "RoleArn" : {
+          "type" : "string"
         }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::Cognito::IdentityPool",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cognito-identity:CreateIdentityPool",
-        "cognito-sync:SetIdentityPoolConfiguration",
-        "cognito-sync:SetCognitoEvents",
-        "cognito-identity:TagResource",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "PushSync" : {
+      "$ref" : "#/definitions/PushSync"
     },
-    "delete": {
-      "permissions": [
-        "cognito-identity:DeleteIdentityPool"
-      ]
+    "CognitoIdentityProviders" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/CognitoIdentityProvider"
+      }
     },
-    "list": {
-      "permissions": [
-        "cognito-identity:ListIdentityPools"
-      ]
+    "DeveloperProviderName" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "cognito-identity:DescribeIdentityPool"
-      ]
+    "CognitoStreams" : {
+      "$ref" : "#/definitions/CognitoStreams"
     },
-    "update": {
-      "permissions": [
-        "cognito-identity:UpdateIdentityPool",
-        "cognito-identity:DescribeIdentityPool",
-        "cognito-sync:SetIdentityPoolConfiguration",
-        "cognito-sync:SetCognitoEvents",
-        "cognito-identity:TagResource",
-        "cognito-identity:UntagResource",
-        "iam:PassRole"
-      ]
+    "SupportedLoginProviders" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "CognitoEvents" : {
+      "type" : "object"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "IdentityPoolName" : {
+      "type" : "string"
+    },
+    "AllowUnauthenticatedIdentities" : {
+      "type" : "boolean"
+    },
+    "SamlProviderARNs" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "OpenIdConnectProviderARNs" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "AllowClassicFlow" : {
+      "type" : "boolean"
+    },
+    "IdentityPoolTags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AllowClassicFlow": {
-      "type": "boolean"
+  "required" : [ "AllowUnauthenticatedIdentities" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Name" ],
+  "writeOnlyProperties" : [ "/properties/PushSync", "/properties/CognitoStreams", "/properties/CognitoEvents" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cognito-identity:CreateIdentityPool", "cognito-sync:SetIdentityPoolConfiguration", "cognito-sync:SetCognitoEvents", "cognito-identity:TagResource", "iam:PassRole" ]
     },
-    "AllowUnauthenticatedIdentities": {
-      "type": "boolean"
+    "read" : {
+      "permissions" : [ "cognito-identity:DescribeIdentityPool" ]
     },
-    "CognitoEvents": {
-      "type": "object"
+    "update" : {
+      "permissions" : [ "cognito-identity:UpdateIdentityPool", "cognito-identity:DescribeIdentityPool", "cognito-sync:SetIdentityPoolConfiguration", "cognito-sync:SetCognitoEvents", "cognito-identity:TagResource", "cognito-identity:UntagResource", "iam:PassRole" ]
     },
-    "CognitoIdentityProviders": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/CognitoIdentityProvider"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "delete" : {
+      "permissions" : [ "cognito-identity:DeleteIdentityPool" ]
     },
-    "CognitoStreams": {
-      "$ref": "#/definitions/CognitoStreams"
-    },
-    "DeveloperProviderName": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "IdentityPoolName": {
-      "type": "string"
-    },
-    "IdentityPoolTags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Name": {
-      "type": "string"
-    },
-    "OpenIdConnectProviderARNs": {
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "PushSync": {
-      "$ref": "#/definitions/PushSync"
-    },
-    "SamlProviderARNs": {
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "SupportedLoginProviders": {
-      "type": "object"
+    "list" : {
+      "permissions" : [ "cognito-identity:ListIdentityPools" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Name"
-  ],
-  "required": [
-    "AllowUnauthenticatedIdentities"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "cognito-identity:TagResource",
-      "cognito-identity:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/IdentityPoolTags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Cognito::IdentityPool",
-  "writeOnlyProperties": [
-    "/properties/PushSync",
-    "/properties/CognitoStreams",
-    "/properties/CognitoEvents"
-  ]
+  }
 }

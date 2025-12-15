@@ -1,184 +1,165 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/HostedZoneName",
-    "/properties/HostedZoneId"
-  ],
-  "definitions": {
-    "AliasTarget": {
-      "additionalProperties": false,
-      "properties": {
-        "DNSName": {
-          "type": "string"
-        },
-        "EvaluateTargetHealth": {
-          "type": "boolean"
-        },
-        "HostedZoneId": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "HostedZoneId",
-        "DNSName"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Route53::RecordSetGroup",
+  "description" : "Resource Type definition for AWS::Route53::RecordSetGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Comment" : {
+      "type" : "string"
     },
-    "CidrRoutingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "CollectionId": {
-          "type": "string"
-        },
-        "LocationName": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "CollectionId",
-        "LocationName"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "Coordinates": {
-      "additionalProperties": false,
-      "properties": {
-        "Latitude": {
-          "type": "string"
-        },
-        "Longitude": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Latitude",
-        "Longitude"
-      ],
-      "type": "object"
+    "HostedZoneName" : {
+      "type" : "string"
     },
-    "GeoLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "ContinentCode": {
-          "type": "string"
-        },
-        "CountryCode": {
-          "type": "string"
-        },
-        "SubdivisionCode": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "RecordSets" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/RecordSet"
+      }
     },
-    "GeoProximityLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "AWSRegion": {
-          "type": "string"
-        },
-        "Bias": {
-          "type": "integer"
-        },
-        "Coordinates": {
-          "$ref": "#/definitions/Coordinates"
-        },
-        "LocalZoneGroup": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "RecordSet": {
-      "additionalProperties": false,
-      "properties": {
-        "AliasTarget": {
-          "$ref": "#/definitions/AliasTarget"
-        },
-        "CidrRoutingConfig": {
-          "$ref": "#/definitions/CidrRoutingConfig"
-        },
-        "Failover": {
-          "type": "string"
-        },
-        "GeoLocation": {
-          "$ref": "#/definitions/GeoLocation"
-        },
-        "GeoProximityLocation": {
-          "$ref": "#/definitions/GeoProximityLocation"
-        },
-        "HealthCheckId": {
-          "type": "string"
-        },
-        "HostedZoneId": {
-          "type": "string"
-        },
-        "HostedZoneName": {
-          "type": "string"
-        },
-        "MultiValueAnswer": {
-          "type": "boolean"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "Region": {
-          "type": "string"
-        },
-        "ResourceRecords": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "SetIdentifier": {
-          "type": "string"
-        },
-        "TTL": {
-          "type": "string"
-        },
-        "Type": {
-          "type": "string"
-        },
-        "Weight": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Type",
-        "Name"
-      ],
-      "type": "object"
+    "HostedZoneId" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::Route53::RecordSetGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Comment": {
-      "type": "string"
-    },
-    "HostedZoneId": {
-      "type": "string"
-    },
-    "HostedZoneName": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "RecordSets": {
-      "items": {
-        "$ref": "#/definitions/RecordSet"
+  "definitions" : {
+    "AliasTarget" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DNSName" : {
+          "type" : "string"
+        },
+        "HostedZoneId" : {
+          "type" : "string"
+        },
+        "EvaluateTargetHealth" : {
+          "type" : "boolean"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "HostedZoneId", "DNSName" ]
+    },
+    "CidrRoutingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CollectionId" : {
+          "type" : "string"
+        },
+        "LocationName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "CollectionId", "LocationName" ]
+    },
+    "GeoProximityLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AWSRegion" : {
+          "type" : "string"
+        },
+        "LocalZoneGroup" : {
+          "type" : "string"
+        },
+        "Bias" : {
+          "type" : "integer"
+        },
+        "Coordinates" : {
+          "$ref" : "#/definitions/Coordinates"
+        }
+      }
+    },
+    "Coordinates" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Longitude" : {
+          "type" : "string"
+        },
+        "Latitude" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Latitude", "Longitude" ]
+    },
+    "RecordSet" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HealthCheckId" : {
+          "type" : "string"
+        },
+        "AliasTarget" : {
+          "$ref" : "#/definitions/AliasTarget"
+        },
+        "HostedZoneName" : {
+          "type" : "string"
+        },
+        "ResourceRecords" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "HostedZoneId" : {
+          "type" : "string"
+        },
+        "SetIdentifier" : {
+          "type" : "string"
+        },
+        "TTL" : {
+          "type" : "string"
+        },
+        "Weight" : {
+          "type" : "integer"
+        },
+        "Name" : {
+          "type" : "string"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "CidrRoutingConfig" : {
+          "$ref" : "#/definitions/CidrRoutingConfig"
+        },
+        "Failover" : {
+          "type" : "string"
+        },
+        "GeoProximityLocation" : {
+          "$ref" : "#/definitions/GeoProximityLocation"
+        },
+        "Region" : {
+          "type" : "string"
+        },
+        "GeoLocation" : {
+          "$ref" : "#/definitions/GeoLocation"
+        },
+        "MultiValueAnswer" : {
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "Type", "Name" ]
+    },
+    "GeoLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContinentCode" : {
+          "type" : "string"
+        },
+        "CountryCode" : {
+          "type" : "string"
+        },
+        "SubdivisionCode" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "typeName": "AWS::Route53::RecordSetGroup"
+  "createOnlyProperties" : [ "/properties/HostedZoneName", "/properties/HostedZoneId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

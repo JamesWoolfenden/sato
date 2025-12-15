@@ -1,101 +1,73 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/TeamId",
-    "/properties/ChannelId"
-  ],
-  "description": "An AWS Support App resource that creates, updates, lists and deletes Slack channel configurations.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "supportapp:CreateSlackChannelConfiguration",
-        "supportapp:ListSlackChannelConfigurations"
-      ]
+  "typeName" : "AWS::SupportApp::SlackChannelConfiguration",
+  "description" : "An AWS Support App resource that creates, updates, lists and deletes Slack channel configurations.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
+  "properties" : {
+    "TeamId" : {
+      "description" : "The team ID in Slack, which uniquely identifies a workspace.",
+      "type" : "string",
+      "pattern" : "^\\S+$",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "supportapp:DeleteSlackChannelConfiguration",
-        "supportapp:ListSlackChannelConfigurations"
-      ]
+    "ChannelId" : {
+      "description" : "The channel ID in Slack, which identifies a channel within a workspace.",
+      "type" : "string",
+      "pattern" : "^\\S+$",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "list": {
-      "permissions": [
-        "supportapp:ListSlackChannelConfigurations"
-      ]
+    "ChannelName" : {
+      "description" : "The channel name in Slack.",
+      "type" : "string",
+      "pattern" : "^.+$",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "read": {
-      "permissions": [
-        "supportapp:ListSlackChannelConfigurations"
-      ]
+    "NotifyOnCreateOrReopenCase" : {
+      "description" : "Whether to notify when a case is created or reopened.",
+      "type" : "boolean"
     },
-    "update": {
-      "permissions": [
-        "supportapp:UpdateSlackChannelConfiguration",
-        "supportapp:ListSlackChannelConfigurations"
-      ]
+    "NotifyOnAddCorrespondenceToCase" : {
+      "description" : "Whether to notify when a correspondence is added to a case.",
+      "type" : "boolean"
+    },
+    "NotifyOnResolveCase" : {
+      "description" : "Whether to notify when a case is resolved.",
+      "type" : "boolean"
+    },
+    "NotifyOnCaseSeverity" : {
+      "description" : "The severity level of a support case that a customer wants to get notified for.",
+      "type" : "string",
+      "enum" : [ "none", "all", "high" ]
+    },
+    "ChannelRoleArn" : {
+      "description" : "The Amazon Resource Name (ARN) of an IAM role that grants the AWS Support App access to perform operations for AWS services.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:iam::[0-9]{12}:role\\/(.+)$",
+      "minLength" : 31,
+      "maxLength" : 2048
     }
   },
-  "primaryIdentifier": [
-    "/properties/TeamId",
-    "/properties/ChannelId"
-  ],
-  "properties": {
-    "ChannelId": {
-      "description": "The channel ID in Slack, which identifies a channel within a workspace.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^\\S+$",
-      "type": "string"
+  "required" : [ "TeamId", "ChannelId", "NotifyOnCaseSeverity", "ChannelRoleArn" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/TeamId", "/properties/ChannelId" ],
+  "createOnlyProperties" : [ "/properties/TeamId", "/properties/ChannelId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "supportapp:CreateSlackChannelConfiguration", "supportapp:ListSlackChannelConfigurations" ]
     },
-    "ChannelName": {
-      "description": "The channel name in Slack.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^.+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "supportapp:ListSlackChannelConfigurations" ]
     },
-    "ChannelRoleArn": {
-      "description": "The Amazon Resource Name (ARN) of an IAM role that grants the AWS Support App access to perform operations for AWS services.",
-      "maxLength": 2048,
-      "minLength": 31,
-      "pattern": "^arn:aws[-a-z0-9]*:iam::[0-9]{12}:role\\/(.+)$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "supportapp:UpdateSlackChannelConfiguration", "supportapp:ListSlackChannelConfigurations" ]
     },
-    "NotifyOnAddCorrespondenceToCase": {
-      "description": "Whether to notify when a correspondence is added to a case.",
-      "type": "boolean"
+    "delete" : {
+      "permissions" : [ "supportapp:DeleteSlackChannelConfiguration", "supportapp:ListSlackChannelConfigurations" ]
     },
-    "NotifyOnCaseSeverity": {
-      "description": "The severity level of a support case that a customer wants to get notified for.",
-      "enum": [
-        "none",
-        "all",
-        "high"
-      ],
-      "type": "string"
-    },
-    "NotifyOnCreateOrReopenCase": {
-      "description": "Whether to notify when a case is created or reopened.",
-      "type": "boolean"
-    },
-    "NotifyOnResolveCase": {
-      "description": "Whether to notify when a case is resolved.",
-      "type": "boolean"
-    },
-    "TeamId": {
-      "description": "The team ID in Slack, which uniquely identifies a workspace.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^\\S+$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "supportapp:ListSlackChannelConfigurations" ]
     }
-  },
-  "required": [
-    "TeamId",
-    "ChannelId",
-    "NotifyOnCaseSeverity",
-    "ChannelRoleArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
-  "typeName": "AWS::SupportApp::SlackChannelConfiguration"
+  }
 }

@@ -1,138 +1,95 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SigningDisabled",
-    "/properties/AuthorizerName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::IoT::Authorizer",
+  "description" : "Creates an authorizer.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Creates an authorizer.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreateAuthorizer",
-        "iot:DescribeAuthorizer",
-        "iot:TagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "AuthorizerFunctionArn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iot:UpdateAuthorizer",
-        "iot:DeleteAuthorizer",
-        "iot:DescribeAuthorizer",
-        "kms:Decrypt"
-      ]
+    "Arn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iot:ListAuthorizers"
-      ]
+    "AuthorizerName" : {
+      "type" : "string",
+      "pattern" : "[\\w=,@-]+",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeAuthorizer",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "SigningDisabled" : {
+      "type" : "boolean"
     },
-    "update": {
-      "permissions": [
-        "iot:UpdateAuthorizer",
-        "iot:DescribeAuthorizer",
-        "iot:TagResource",
-        "iot:UntagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/AuthorizerName"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE" ]
     },
-    "AuthorizerFunctionArn": {
-      "type": "string"
+    "TokenKeyName" : {
+      "type" : "string"
     },
-    "AuthorizerName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[\\w=,@-]+",
-      "type": "string"
-    },
-    "EnableCachingForHttp": {
-      "type": "boolean"
-    },
-    "SigningDisabled": {
-      "type": "boolean"
-    },
-    "Status": {
-      "enum": [
-        "ACTIVE",
-        "INACTIVE"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "TokenKeyName": {
-      "type": "string"
-    },
-    "TokenSigningPublicKeys": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "[a-zA-Z0-9:_-]+": {
-          "maxLength": 5120,
-          "type": "string"
+    "TokenSigningPublicKeys" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        "[a-zA-Z0-9:_-]+" : {
+          "type" : "string",
+          "maxLength" : 5120
         }
-      },
-      "type": "object"
+      }
+    },
+    "EnableCachingForHttp" : {
+      "type" : "boolean"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "AuthorizerFunctionArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:ListTagsForResource",
-      "iot:TagResource",
-      "iot:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource" ]
   },
-  "typeName": "AWS::IoT::Authorizer"
+  "additionalProperties" : false,
+  "required" : [ "AuthorizerFunctionArn" ],
+  "createOnlyProperties" : [ "/properties/SigningDisabled", "/properties/AuthorizerName" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/AuthorizerName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreateAuthorizer", "iot:DescribeAuthorizer", "iot:TagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
+    },
+    "read" : {
+      "permissions" : [ "iot:DescribeAuthorizer", "iot:ListTagsForResource", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "iot:UpdateAuthorizer", "iot:DescribeAuthorizer", "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
+    },
+    "delete" : {
+      "permissions" : [ "iot:UpdateAuthorizer", "iot:DeleteAuthorizer", "iot:DescribeAuthorizer", "kms:Decrypt" ]
+    },
+    "list" : {
+      "permissions" : [ "iot:ListAuthorizers" ]
+    }
+  }
 }

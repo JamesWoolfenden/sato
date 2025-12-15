@@ -1,190 +1,108 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::FraudDetector::Variable",
+  "description" : "A resource schema for a Variable in Amazon Fraud Detector.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "A resource schema for a Variable in Amazon Fraud Detector.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "frauddetector:GetVariables",
-        "frauddetector:CreateVariable",
-        "frauddetector:ListTagsForResource",
-        "frauddetector:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the variable.",
+      "type" : "string",
+      "pattern" : "^[a-z_][a-z0-9_]{0,99}?$"
     },
-    "delete": {
-      "permissions": [
-        "frauddetector:GetVariables",
-        "frauddetector:DeleteVariable"
-      ]
+    "DataSource" : {
+      "description" : "The source of the data.",
+      "type" : "string",
+      "enum" : [ "EVENT", "EXTERNAL_MODEL_SCORE" ]
     },
-    "list": {
-      "permissions": [
-        "frauddetector:GetVariables",
-        "frauddetector:ListTagsForResource"
-      ]
+    "DataType" : {
+      "description" : "The data type.",
+      "type" : "string",
+      "enum" : [ "STRING", "INTEGER", "FLOAT", "BOOLEAN" ]
     },
-    "read": {
-      "permissions": [
-        "frauddetector:GetVariables",
-        "frauddetector:ListTagsForResource"
-      ]
+    "DefaultValue" : {
+      "description" : "The default value for the variable when no value is received.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "frauddetector:GetVariables",
-        "frauddetector:UpdateVariable",
-        "frauddetector:ListTagsForResource",
-        "frauddetector:TagResource",
-        "frauddetector:UntagResource"
-      ]
+    "Description" : {
+      "description" : "The description.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "Tags" : {
+      "description" : "Tags associated with this variable.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "VariableType" : {
+      "description" : "The variable type. For more information see https://docs.aws.amazon.com/frauddetector/latest/ug/create-a-variable.html#variable-types",
+      "type" : "string",
+      "enum" : [ "AUTH_CODE", "AVS", "BILLING_ADDRESS_L1", "BILLING_ADDRESS_L2", "BILLING_CITY", "BILLING_COUNTRY", "BILLING_NAME", "BILLING_PHONE", "BILLING_STATE", "BILLING_ZIP", "CARD_BIN", "CATEGORICAL", "CURRENCY_CODE", "EMAIL_ADDRESS", "FINGERPRINT", "FRAUD_LABEL", "FREE_FORM_TEXT", "IP_ADDRESS", "NUMERIC", "ORDER_ID", "PAYMENT_TYPE", "PHONE_NUMBER", "PRICE", "PRODUCT_CATEGORY", "SHIPPING_ADDRESS_L1", "SHIPPING_ADDRESS_L2", "SHIPPING_CITY", "SHIPPING_COUNTRY", "SHIPPING_NAME", "SHIPPING_PHONE", "SHIPPING_STATE", "SHIPPING_ZIP", "USERAGENT" ]
+    },
+    "Arn" : {
+      "description" : "The ARN of the variable.",
+      "type" : "string"
+    },
+    "CreatedTime" : {
+      "description" : "The time when the variable was created.",
+      "type" : "string"
+    },
+    "LastUpdatedTime" : {
+      "description" : "The time when the variable was last updated.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The ARN of the variable.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "DataType", "DataSource", "DefaultValue", "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedTime", "/properties/LastUpdatedTime" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "frauddetector:GetVariables", "frauddetector:CreateVariable", "frauddetector:ListTagsForResource", "frauddetector:TagResource" ]
     },
-    "CreatedTime": {
-      "description": "The time when the variable was created.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "frauddetector:GetVariables", "frauddetector:ListTagsForResource" ]
     },
-    "DataSource": {
-      "description": "The source of the data.",
-      "enum": [
-        "EVENT",
-        "EXTERNAL_MODEL_SCORE"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "frauddetector:GetVariables", "frauddetector:UpdateVariable", "frauddetector:ListTagsForResource", "frauddetector:TagResource", "frauddetector:UntagResource" ]
     },
-    "DataType": {
-      "description": "The data type.",
-      "enum": [
-        "STRING",
-        "INTEGER",
-        "FLOAT",
-        "BOOLEAN"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "frauddetector:GetVariables", "frauddetector:DeleteVariable" ]
     },
-    "DefaultValue": {
-      "description": "The default value for the variable when no value is received.",
-      "type": "string"
-    },
-    "Description": {
-      "description": "The description.",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
-    },
-    "LastUpdatedTime": {
-      "description": "The time when the variable was last updated.",
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the variable.",
-      "pattern": "^[a-z_][a-z0-9_]{0,99}?$",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "Tags associated with this variable.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": false
-    },
-    "VariableType": {
-      "description": "The variable type. For more information see https://docs.aws.amazon.com/frauddetector/latest/ug/create-a-variable.html#variable-types",
-      "enum": [
-        "AUTH_CODE",
-        "AVS",
-        "BILLING_ADDRESS_L1",
-        "BILLING_ADDRESS_L2",
-        "BILLING_CITY",
-        "BILLING_COUNTRY",
-        "BILLING_NAME",
-        "BILLING_PHONE",
-        "BILLING_STATE",
-        "BILLING_ZIP",
-        "CARD_BIN",
-        "CATEGORICAL",
-        "CURRENCY_CODE",
-        "EMAIL_ADDRESS",
-        "FINGERPRINT",
-        "FRAUD_LABEL",
-        "FREE_FORM_TEXT",
-        "IP_ADDRESS",
-        "NUMERIC",
-        "ORDER_ID",
-        "PAYMENT_TYPE",
-        "PHONE_NUMBER",
-        "PRICE",
-        "PRODUCT_CATEGORY",
-        "SHIPPING_ADDRESS_L1",
-        "SHIPPING_ADDRESS_L2",
-        "SHIPPING_CITY",
-        "SHIPPING_COUNTRY",
-        "SHIPPING_NAME",
-        "SHIPPING_PHONE",
-        "SHIPPING_STATE",
-        "SHIPPING_ZIP",
-        "USERAGENT"
-      ],
-      "type": "string"
+    "list" : {
+      "permissions" : [ "frauddetector:GetVariables", "frauddetector:ListTagsForResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedTime",
-    "/properties/LastUpdatedTime"
-  ],
-  "required": [
-    "DataType",
-    "DataSource",
-    "DefaultValue",
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "frauddetector:ListTagsForResource",
-      "frauddetector:TagResource",
-      "frauddetector:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::FraudDetector::Variable"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "frauddetector:ListTagsForResource", "frauddetector:TagResource", "frauddetector:UntagResource" ]
+  }
 }

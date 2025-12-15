@@ -1,167 +1,119 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Name"
-    ],
-    [
-      "/properties/Arn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Tags",
-    "/properties/Type",
-    "/properties/StandbyReplicas"
-  ],
-  "definitions": {
-    "CollectionType": {
-      "description": "The possible types for the collection",
-      "enum": [
-        "SEARCH",
-        "TIMESERIES",
-        "VECTORSEARCH"
-      ],
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : true
+  },
+  "typeName" : "AWS::OpenSearchServerless::Collection",
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/CollectionEndpoint", "/properties/DashboardEndpoint", "/properties/KmsKeyArn" ],
+  "description" : "Amazon OpenSearchServerless collection resource",
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Tags", "/properties/Type", "/properties/StandbyReplicas" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "required" : [ "Name" ],
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "aoss:BatchGetCollection" ]
     },
-    "StandbyReplicas": {
-      "description": "The possible standby replicas for the collection",
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "create" : {
+      "permissions" : [ "aoss:CreateCollection", "aoss:BatchGetCollection", "iam:CreateServiceLinkedRole" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair metadata associated with resource",
-      "properties": {
-        "Key": {
-          "description": "The key in the key-value pair",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "update" : {
+      "permissions" : [ "aoss:UpdateCollection", "aoss:BatchGetCollection" ]
+    },
+    "list" : {
+      "permissions" : [ "aoss:ListCollections" ]
+    },
+    "delete" : {
+      "permissions" : [ "aoss:DeleteCollection", "aoss:BatchGetCollection" ]
+    }
+  },
+  "writeOnlyProperties" : [ "/properties/Tags" ],
+  "additionalIdentifiers" : [ [ "/properties/Name" ], [ "/properties/Arn" ] ],
+  "additionalProperties" : false,
+  "definitions" : {
+    "CollectionType" : {
+      "description" : "The possible types for the collection",
+      "type" : "string",
+      "enum" : [ "SEARCH", "TIMESERIES", "VECTORSEARCH" ]
+    },
+    "StandbyReplicas" : {
+      "description" : "The possible standby replicas for the collection",
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "Tag" : {
+      "description" : "A key-value pair metadata associated with resource",
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "minLength" : 0,
+          "description" : "The value in the key-value pair",
+          "type" : "string",
+          "maxLength" : 256
         },
-        "Value": {
-          "description": "The value in the key-value pair",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Key" : {
+          "minLength" : 1,
+          "description" : "The key in the key-value pair",
+          "type" : "string",
+          "maxLength" : 128
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Amazon OpenSearchServerless collection resource",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "aoss:CreateCollection",
-        "aoss:BatchGetCollection",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Type" : {
+      "$ref" : "#/definitions/CollectionType"
     },
-    "delete": {
-      "permissions": [
-        "aoss:DeleteCollection",
-        "aoss:BatchGetCollection"
-      ]
+    "Description" : {
+      "description" : "The description of the collection",
+      "type" : "string",
+      "maxLength" : 1000
     },
-    "list": {
-      "permissions": [
-        "aoss:ListCollections"
-      ]
+    "KmsKeyArn" : {
+      "description" : "The ARN of the AWS KMS key used to encrypt the collection.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "aoss:BatchGetCollection"
-      ]
+    "StandbyReplicas" : {
+      "$ref" : "#/definitions/StandbyReplicas"
     },
-    "update": {
-      "permissions": [
-        "aoss:UpdateCollection",
-        "aoss:BatchGetCollection"
-      ]
+    "CollectionEndpoint" : {
+      "description" : "The endpoint for the collection.",
+      "type" : "string"
+    },
+    "Id" : {
+      "minLength" : 3,
+      "description" : "The identifier of the collection",
+      "type" : "string",
+      "maxLength" : 40
+    },
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of the collection.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "minItems" : 0,
+      "maxItems" : 50,
+      "description" : "List of tags to be added to the resource",
+      "insertionOrder" : false,
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "minLength" : 3,
+      "pattern" : "^[a-z][a-z0-9-]{2,31}$",
+      "description" : "The name of the collection.\n\nThe name must meet the following criteria:\nUnique to your account and AWS Region\nStarts with a lowercase letter\nContains only lowercase letters a-z, the numbers 0-9 and the hyphen (-)\nContains between 3 and 32 characters\n",
+      "type" : "string",
+      "maxLength" : 32
+    },
+    "DashboardEndpoint" : {
+      "description" : "The OpenSearch Dashboards endpoint for the collection.",
+      "type" : "string"
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the collection.",
-      "type": "string"
-    },
-    "CollectionEndpoint": {
-      "description": "The endpoint for the collection.",
-      "type": "string"
-    },
-    "DashboardEndpoint": {
-      "description": "The OpenSearch Dashboards endpoint for the collection.",
-      "type": "string"
-    },
-    "Description": {
-      "description": "The description of the collection",
-      "maxLength": 1000,
-      "type": "string"
-    },
-    "Id": {
-      "description": "The identifier of the collection",
-      "maxLength": 40,
-      "minLength": 3,
-      "type": "string"
-    },
-    "KmsKeyArn": {
-      "description": "The ARN of the AWS KMS key used to encrypt the collection.",
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the collection.\n\nThe name must meet the following criteria:\nUnique to your account and AWS Region\nStarts with a lowercase letter\nContains only lowercase letters a-z, the numbers 0-9 and the hyphen (-)\nContains between 3 and 32 characters\n",
-      "maxLength": 32,
-      "minLength": 3,
-      "pattern": "^[a-z][a-z0-9-]{2,31}$",
-      "type": "string"
-    },
-    "StandbyReplicas": {
-      "$ref": "#/definitions/StandbyReplicas"
-    },
-    "Tags": {
-      "description": "List of tags to be added to the resource",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array"
-    },
-    "Type": {
-      "$ref": "#/definitions/CollectionType"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/CollectionEndpoint",
-    "/properties/DashboardEndpoint",
-    "/properties/KmsKeyArn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
-  },
-  "typeName": "AWS::OpenSearchServerless::Collection",
-  "writeOnlyProperties": [
-    "/properties/Tags"
-  ]
+  }
 }

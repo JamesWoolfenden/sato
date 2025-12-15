@@ -1,111 +1,79 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ChannelGroupName",
-    "/properties/ChannelName",
-    "/properties/OriginEndpointName"
-  ],
-  "definitions": {
-    "CdnAuthConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "CdnIdentifierSecretArns": {
-          "items": {
-            "maxLength": 2048,
-            "minLength": 20,
-            "type": "string"
+  "typeName" : "AWS::MediaPackageV2::OriginEndpointPolicy",
+  "description" : "<p>Represents a resource policy that allows or denies access to an origin endpoint.</p>",
+  "definitions" : {
+    "CdnAuthConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "CdnIdentifierSecretArns" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 2048,
+            "minLength" : 20
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 100,
+          "minItems" : 1
         },
-        "SecretsRoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "type": "string"
+        "SecretsRoleArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20
         }
       },
-      "required": [
-        "CdnIdentifierSecretArns",
-        "SecretsRoleArn"
-      ],
-      "type": "object"
+      "required" : [ "CdnIdentifierSecretArns", "SecretsRoleArn" ],
+      "additionalProperties" : false
     }
   },
-  "description": "<p>Represents a resource policy that allows or denies access to an origin endpoint.</p>",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mediapackagev2:GetOriginEndpointPolicy",
-        "mediapackagev2:PutOriginEndpointPolicy",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "CdnAuthConfiguration" : {
+      "$ref" : "#/definitions/CdnAuthConfiguration"
     },
-    "delete": {
-      "permissions": [
-        "mediapackagev2:GetOriginEndpointPolicy",
-        "mediapackagev2:DeleteOriginEndpointPolicy"
-      ]
+    "ChannelGroupName" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
     },
-    "read": {
-      "permissions": [
-        "mediapackagev2:GetOriginEndpointPolicy"
-      ]
+    "ChannelName" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
     },
-    "update": {
-      "permissions": [
-        "mediapackagev2:GetOriginEndpointPolicy",
-        "mediapackagev2:PutOriginEndpointPolicy",
-        "iam:PassRole"
-      ]
+    "OriginEndpointName" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
+    },
+    "Policy" : {
+      "type" : [ "object", "string" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/ChannelGroupName",
-    "/properties/ChannelName",
-    "/properties/OriginEndpointName"
-  ],
-  "properties": {
-    "CdnAuthConfiguration": {
-      "$ref": "#/definitions/CdnAuthConfiguration"
+  "required" : [ "ChannelGroupName", "ChannelName", "OriginEndpointName", "Policy" ],
+  "createOnlyProperties" : [ "/properties/ChannelGroupName", "/properties/ChannelName", "/properties/OriginEndpointName" ],
+  "primaryIdentifier" : [ "/properties/ChannelGroupName", "/properties/ChannelName", "/properties/OriginEndpointName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mediapackagev2:GetOriginEndpointPolicy", "mediapackagev2:PutOriginEndpointPolicy", "iam:PassRole" ]
     },
-    "ChannelGroupName": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "mediapackagev2:GetOriginEndpointPolicy" ]
     },
-    "ChannelName": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "mediapackagev2:GetOriginEndpointPolicy", "mediapackagev2:PutOriginEndpointPolicy", "iam:PassRole" ]
     },
-    "OriginEndpointName": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
-    },
-    "Policy": {
-      "type": [
-        "object",
-        "string"
-      ]
+    "delete" : {
+      "permissions" : [ "mediapackagev2:GetOriginEndpointPolicy", "mediapackagev2:DeleteOriginEndpointPolicy" ]
     }
   },
-  "required": [
-    "ChannelGroupName",
-    "ChannelName",
-    "OriginEndpointName",
-    "Policy"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
   },
-  "typeName": "AWS::MediaPackageV2::OriginEndpointPolicy"
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+  "additionalProperties" : false
 }

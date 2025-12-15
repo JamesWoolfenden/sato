@@ -1,43 +1,34 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "DefinitionDocument": {
-      "additionalProperties": false,
-      "properties": {
-        "Language": {
-          "type": "string"
+  "typeName" : "AWS::IoTThingsGraph::FlowTemplate",
+  "description" : "Resource Type definition for AWS::IoTThingsGraph::FlowTemplate",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "CompatibleNamespaceVersion" : {
+      "type" : "number"
+    },
+    "Definition" : {
+      "$ref" : "#/definitions/DefinitionDocument"
+    }
+  },
+  "definitions" : {
+    "DefinitionDocument" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Language" : {
+          "type" : "string"
         },
-        "Text": {
-          "type": "string"
+        "Text" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Language",
-        "Text"
-      ],
-      "type": "object"
+      "required" : [ "Language", "Text" ]
     }
   },
-  "description": "Resource Type definition for AWS::IoTThingsGraph::FlowTemplate",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CompatibleNamespaceVersion": {
-      "type": "number"
-    },
-    "Definition": {
-      "$ref": "#/definitions/DefinitionDocument"
-    },
-    "Id": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Definition"
-  ],
-  "typeName": "AWS::IoTThingsGraph::FlowTemplate"
+  "required" : [ "Definition" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

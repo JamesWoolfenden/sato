@@ -1,203 +1,134 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/ConnectionFunctionArn"
-    ],
-    [
-      "/properties/Name"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/ConnectionFunctionConfig/Runtime"
-  ],
-  "definitions": {
-    "ConnectionFunctionConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Comment": {
-          "type": "string"
+  "typeName" : "AWS::CloudFront::ConnectionFunction",
+  "additionalProperties" : false,
+  "definitions" : {
+    "ConnectionFunctionConfig" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "Comment" : {
+          "type" : "string"
         },
-        "KeyValueStoreAssociations": {
-          "items": {
-            "$ref": "#/definitions/KeyValueStoreAssociation"
+        "Runtime" : {
+          "type" : "string",
+          "enum" : [ "cloudfront-js-2.0" ]
+        },
+        "KeyValueStoreAssociations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/KeyValueStoreAssociation"
           },
-          "type": "array",
-          "uniqueItems": true
+          "uniqueItems" : true
+        }
+      },
+      "required" : [ "Comment", "Runtime" ],
+      "type" : "object"
+    },
+    "KeyValueStoreAssociation" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "KeyValueStoreARN" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "KeyValueStoreARN" ],
+      "type" : "object"
+    },
+    "Tag" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9 _.:/=+\\-@]{1,128}\\Z"
         },
-        "Runtime": {
-          "enum": [
-            "cloudfront-js-2.0"
-          ],
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9 _.:/=+\\-@]{0,256}\\Z"
         }
       },
-      "required": [
-        "Comment",
-        "Runtime"
-      ],
-      "type": "object"
-    },
-    "KeyValueStoreAssociation": {
-      "additionalProperties": false,
-      "properties": {
-        "KeyValueStoreARN": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "KeyValueStoreARN"
-      ],
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9 _.:/=+\\-@]{1,128}\\Z",
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9 _.:/=+\\-@]{0,256}\\Z",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "type" : "object"
     }
   },
-  "description": "Resource Type definition for AWS::CloudFront::ConnectionFunction",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cloudfront:CreateConnectionFunction",
-        "cloudfront:DescribeConnectionFunction",
-        "cloudfront:PublishConnectionFunction",
-        "cloudfront:TagResource"
-      ]
+  "description" : "Resource Type definition for AWS::CloudFront::ConnectionFunction",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cloudfront:CreateConnectionFunction", "cloudfront:DescribeConnectionFunction", "cloudfront:PublishConnectionFunction", "cloudfront:TagResource" ]
     },
-    "delete": {
-      "permissions": [
-        "cloudfront:DeleteConnectionFunction",
-        "cloudfront:DescribeConnectionFunction"
-      ]
+    "read" : {
+      "permissions" : [ "cloudfront:DescribeConnectionFunction", "cloudfront:GetConnectionFunction", "cloudfront:ListTagsForResource" ]
     },
-    "list": {
-      "permissions": [
-        "cloudfront:ListConnectionFunctions"
-      ]
+    "update" : {
+      "permissions" : [ "cloudfront:UpdateConnectionFunction", "cloudfront:DescribeConnectionFunction", "cloudfront:PublishConnectionFunction", "cloudfront:TagResource", "cloudfront:UntagResource" ]
     },
-    "read": {
-      "permissions": [
-        "cloudfront:DescribeConnectionFunction",
-        "cloudfront:GetConnectionFunction",
-        "cloudfront:ListTagsForResource"
-      ]
+    "delete" : {
+      "permissions" : [ "cloudfront:DeleteConnectionFunction", "cloudfront:DescribeConnectionFunction" ]
     },
-    "update": {
-      "permissions": [
-        "cloudfront:UpdateConnectionFunction",
-        "cloudfront:DescribeConnectionFunction",
-        "cloudfront:PublishConnectionFunction",
-        "cloudfront:TagResource",
-        "cloudfront:UntagResource"
-      ]
+    "list" : {
+      "permissions" : [ "cloudfront:ListConnectionFunctions" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AutoPublish": {
-      "default": false,
-      "type": "boolean"
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalIdentifiers" : [ [ "/properties/ConnectionFunctionArn" ], [ "/properties/Name" ] ],
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "ConnectionFunctionArn": {
-      "type": "string"
+    "Name" : {
+      "type" : "string"
     },
-    "ConnectionFunctionCode": {
-      "type": "string"
+    "ConnectionFunctionArn" : {
+      "type" : "string"
     },
-    "ConnectionFunctionConfig": {
-      "$ref": "#/definitions/ConnectionFunctionConfig"
+    "ConnectionFunctionCode" : {
+      "type" : "string"
     },
-    "CreatedTime": {
-      "format": "date-time",
-      "type": "string"
+    "ConnectionFunctionConfig" : {
+      "$ref" : "#/definitions/ConnectionFunctionConfig"
     },
-    "ETag": {
-      "type": "string"
+    "AutoPublish" : {
+      "type" : "boolean",
+      "default" : false
     },
-    "Id": {
-      "type": "string"
+    "Stage" : {
+      "type" : "string",
+      "enum" : [ "DEVELOPMENT", "LIVE" ]
     },
-    "LastModifiedTime": {
-      "format": "date-time",
-      "type": "string"
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "UNPUBLISHED", "DEPLOYED", "UNASSOCIATED", "PUBLISHING", "IN_PROGRESS" ]
     },
-    "Name": {
-      "type": "string"
+    "ETag" : {
+      "type" : "string"
     },
-    "Stage": {
-      "enum": [
-        "DEVELOPMENT",
-        "LIVE"
-      ],
-      "type": "string"
+    "CreatedTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "Status": {
-      "enum": [
-        "UNPUBLISHED",
-        "DEPLOYED",
-        "UNASSOCIATED",
-        "PUBLISHING",
-        "IN_PROGRESS"
-      ],
-      "type": "string"
+    "LastModifiedTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/ConnectionFunctionArn",
-    "/properties/Stage",
-    "/properties/Status",
-    "/properties/ETag",
-    "/properties/CreatedTime",
-    "/properties/LastModifiedTime"
-  ],
-  "required": [
-    "Name",
-    "ConnectionFunctionCode",
-    "ConnectionFunctionConfig"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "cloudfront:TagResource",
-      "cloudfront:UntagResource",
-      "cloudfront:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::CloudFront::ConnectionFunction",
-  "writeOnlyProperties": [
-    "/properties/AutoPublish"
-  ]
+  "createOnlyProperties" : [ "/properties/Name", "/properties/ConnectionFunctionConfig/Runtime" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/ConnectionFunctionArn", "/properties/Stage", "/properties/Status", "/properties/ETag", "/properties/CreatedTime", "/properties/LastModifiedTime" ],
+  "writeOnlyProperties" : [ "/properties/AutoPublish" ],
+  "required" : [ "Name", "ConnectionFunctionCode", "ConnectionFunctionConfig" ],
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "cloudfront:TagResource", "cloudfront:UntagResource", "cloudfront:ListTagsForResource" ]
+  }
 }

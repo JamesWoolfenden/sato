@@ -1,432 +1,367 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Email",
-    "/properties/Phone",
-    "/properties/ProfileId"
-  ],
-  "definitions": {
-    "CapabilityOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "InboundEdi": {
-          "$ref": "#/definitions/InboundEdiOptions"
+  "typeName" : "AWS::B2BI::Partnership",
+  "description" : "Definition of AWS::B2BI::Partnership Resource Type",
+  "definitions" : {
+    "CapabilityOptions" : {
+      "type" : "object",
+      "properties" : {
+        "OutboundEdi" : {
+          "$ref" : "#/definitions/OutboundEdiOptions"
         },
-        "OutboundEdi": {
-          "$ref": "#/definitions/OutboundEdiOptions"
+        "InboundEdi" : {
+          "$ref" : "#/definitions/InboundEdiOptions"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "InboundEdiOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "X12": {
-          "$ref": "#/definitions/X12InboundEdiOptions"
+    "InboundEdiOptions" : {
+      "type" : "object",
+      "properties" : {
+        "X12" : {
+          "$ref" : "#/definitions/X12InboundEdiOptions"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "LineTerminator": {
-      "enum": [
-        "CRLF",
-        "LF",
-        "CR"
-      ],
-      "type": "string"
+    "LineTerminator" : {
+      "type" : "string",
+      "enum" : [ "CRLF", "LF", "CR" ]
     },
-    "OutboundEdiOptions": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "X12": {
-              "$ref": "#/definitions/X12Envelope"
-            }
-          },
-          "required": [
-            "X12"
-          ],
-          "title": "X12",
-          "type": "object"
-        }
-      ]
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "OutboundEdiOptions" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "X12",
+        "properties" : {
+          "X12" : {
+            "$ref" : "#/definitions/X12Envelope"
+          }
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "required" : [ "X12" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
+        },
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "WrapFormat": {
-      "enum": [
-        "SEGMENT",
-        "ONE_LINE",
-        "LINE_LENGTH"
-      ],
-      "type": "string"
+    "WrapFormat" : {
+      "type" : "string",
+      "enum" : [ "SEGMENT", "ONE_LINE", "LINE_LENGTH" ]
     },
-    "WrapOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "LineLength": {
-          "minimum": 1,
-          "type": "number"
+    "WrapOptions" : {
+      "type" : "object",
+      "properties" : {
+        "WrapBy" : {
+          "$ref" : "#/definitions/WrapFormat"
         },
-        "LineTerminator": {
-          "$ref": "#/definitions/LineTerminator"
+        "LineTerminator" : {
+          "$ref" : "#/definitions/LineTerminator"
         },
-        "WrapBy": {
-          "$ref": "#/definitions/WrapFormat"
+        "LineLength" : {
+          "type" : "number",
+          "minimum" : 1
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12AcknowledgmentOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "FunctionalAcknowledgment": {
-          "$ref": "#/definitions/X12FunctionalAcknowledgment"
+    "X12AcknowledgmentOptions" : {
+      "type" : "object",
+      "properties" : {
+        "FunctionalAcknowledgment" : {
+          "$ref" : "#/definitions/X12FunctionalAcknowledgment"
         },
-        "TechnicalAcknowledgment": {
-          "$ref": "#/definitions/X12TechnicalAcknowledgment"
+        "TechnicalAcknowledgment" : {
+          "$ref" : "#/definitions/X12TechnicalAcknowledgment"
         }
       },
-      "required": [
-        "FunctionalAcknowledgment",
-        "TechnicalAcknowledgment"
-      ],
-      "type": "object"
+      "required" : [ "FunctionalAcknowledgment", "TechnicalAcknowledgment" ],
+      "additionalProperties" : false
     },
-    "X12ControlNumbers": {
-      "additionalProperties": false,
-      "properties": {
-        "StartingFunctionalGroupControlNumber": {
-          "maximum": 999999999,
-          "minimum": 1,
-          "type": "number"
+    "X12ControlNumbers" : {
+      "type" : "object",
+      "properties" : {
+        "StartingInterchangeControlNumber" : {
+          "type" : "number",
+          "maximum" : 999999999,
+          "minimum" : 1
         },
-        "StartingInterchangeControlNumber": {
-          "maximum": 999999999,
-          "minimum": 1,
-          "type": "number"
+        "StartingFunctionalGroupControlNumber" : {
+          "type" : "number",
+          "maximum" : 999999999,
+          "minimum" : 1
         },
-        "StartingTransactionSetControlNumber": {
-          "maximum": 999999999,
-          "minimum": 1,
-          "type": "number"
+        "StartingTransactionSetControlNumber" : {
+          "type" : "number",
+          "maximum" : 999999999,
+          "minimum" : 1
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12Delimiters": {
-      "additionalProperties": false,
-      "properties": {
-        "ComponentSeparator": {
-          "maxLength": 1,
-          "minLength": 1,
-          "pattern": "^[!&'()*+,\\-./:;?=%@\\[\\]_{}|<>~^`\"]$",
-          "type": "string"
+    "X12Delimiters" : {
+      "type" : "object",
+      "properties" : {
+        "ComponentSeparator" : {
+          "type" : "string",
+          "maxLength" : 1,
+          "minLength" : 1,
+          "pattern" : "^[!&'()*+,\\-./:;?=%@\\[\\]_{}|<>~^`\"]$"
         },
-        "DataElementSeparator": {
-          "maxLength": 1,
-          "minLength": 1,
-          "pattern": "^[!&'()*+,\\-./:;?=%@\\[\\]_{}|<>~^`\"]$",
-          "type": "string"
+        "DataElementSeparator" : {
+          "type" : "string",
+          "maxLength" : 1,
+          "minLength" : 1,
+          "pattern" : "^[!&'()*+,\\-./:;?=%@\\[\\]_{}|<>~^`\"]$"
         },
-        "SegmentTerminator": {
-          "maxLength": 1,
-          "minLength": 1,
-          "pattern": "^[!&'()*+,\\-./:;?=%@\\[\\]_{}|<>~^`\"]$",
-          "type": "string"
+        "SegmentTerminator" : {
+          "type" : "string",
+          "maxLength" : 1,
+          "minLength" : 1,
+          "pattern" : "^[!&'()*+,\\-./:;?=%@\\[\\]_{}|<>~^`\"]$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12Envelope": {
-      "additionalProperties": false,
-      "properties": {
-        "Common": {
-          "$ref": "#/definitions/X12OutboundEdiHeaders"
+    "X12Envelope" : {
+      "type" : "object",
+      "properties" : {
+        "Common" : {
+          "$ref" : "#/definitions/X12OutboundEdiHeaders"
         },
-        "WrapOptions": {
-          "$ref": "#/definitions/WrapOptions"
+        "WrapOptions" : {
+          "$ref" : "#/definitions/WrapOptions"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12FunctionalAcknowledgment": {
-      "enum": [
-        "DO_NOT_GENERATE",
-        "GENERATE_ALL_SEGMENTS",
-        "GENERATE_WITHOUT_TRANSACTION_SET_RESPONSE_LOOP"
-      ],
-      "type": "string"
+    "X12FunctionalAcknowledgment" : {
+      "type" : "string",
+      "enum" : [ "DO_NOT_GENERATE", "GENERATE_ALL_SEGMENTS", "GENERATE_WITHOUT_TRANSACTION_SET_RESPONSE_LOOP" ]
     },
-    "X12FunctionalGroupHeaders": {
-      "additionalProperties": false,
-      "properties": {
-        "ApplicationReceiverCode": {
-          "maxLength": 15,
-          "minLength": 2,
-          "pattern": "^[a-zA-Z0-9 ]*$",
-          "type": "string"
+    "X12FunctionalGroupHeaders" : {
+      "type" : "object",
+      "properties" : {
+        "ApplicationSenderCode" : {
+          "type" : "string",
+          "maxLength" : 15,
+          "minLength" : 2,
+          "pattern" : "^[a-zA-Z0-9 ]*$"
         },
-        "ApplicationSenderCode": {
-          "maxLength": 15,
-          "minLength": 2,
-          "pattern": "^[a-zA-Z0-9 ]*$",
-          "type": "string"
+        "ApplicationReceiverCode" : {
+          "type" : "string",
+          "maxLength" : 15,
+          "minLength" : 2,
+          "pattern" : "^[a-zA-Z0-9 ]*$"
         },
-        "ResponsibleAgencyCode": {
-          "maxLength": 2,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]*$",
-          "type": "string"
+        "ResponsibleAgencyCode" : {
+          "type" : "string",
+          "maxLength" : 2,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9]*$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12GS05TimeFormat": {
-      "enum": [
-        "HHMM",
-        "HHMMSS",
-        "HHMMSSDD"
-      ],
-      "type": "string"
+    "X12GS05TimeFormat" : {
+      "type" : "string",
+      "enum" : [ "HHMM", "HHMMSS", "HHMMSSDD" ]
     },
-    "X12InboundEdiOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "AcknowledgmentOptions": {
-          "$ref": "#/definitions/X12AcknowledgmentOptions"
+    "X12InboundEdiOptions" : {
+      "type" : "object",
+      "properties" : {
+        "AcknowledgmentOptions" : {
+          "$ref" : "#/definitions/X12AcknowledgmentOptions"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12InterchangeControlHeaders": {
-      "additionalProperties": false,
-      "properties": {
-        "AcknowledgmentRequestedCode": {
-          "maxLength": 1,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]*$",
-          "type": "string"
+    "X12InterchangeControlHeaders" : {
+      "type" : "object",
+      "properties" : {
+        "SenderIdQualifier" : {
+          "type" : "string",
+          "maxLength" : 2,
+          "minLength" : 2,
+          "pattern" : "^[a-zA-Z0-9]*$"
         },
-        "ReceiverId": {
-          "maxLength": 15,
-          "minLength": 15,
-          "pattern": "^[a-zA-Z0-9 ]*$",
-          "type": "string"
+        "SenderId" : {
+          "type" : "string",
+          "maxLength" : 15,
+          "minLength" : 15,
+          "pattern" : "^[a-zA-Z0-9 ]*$"
         },
-        "ReceiverIdQualifier": {
-          "maxLength": 2,
-          "minLength": 2,
-          "pattern": "^[a-zA-Z0-9]*$",
-          "type": "string"
+        "ReceiverIdQualifier" : {
+          "type" : "string",
+          "maxLength" : 2,
+          "minLength" : 2,
+          "pattern" : "^[a-zA-Z0-9]*$"
         },
-        "RepetitionSeparator": {
-          "maxLength": 1,
-          "minLength": 1,
-          "type": "string"
+        "ReceiverId" : {
+          "type" : "string",
+          "maxLength" : 15,
+          "minLength" : 15,
+          "pattern" : "^[a-zA-Z0-9 ]*$"
         },
-        "SenderId": {
-          "maxLength": 15,
-          "minLength": 15,
-          "pattern": "^[a-zA-Z0-9 ]*$",
-          "type": "string"
+        "RepetitionSeparator" : {
+          "type" : "string",
+          "maxLength" : 1,
+          "minLength" : 1
         },
-        "SenderIdQualifier": {
-          "maxLength": 2,
-          "minLength": 2,
-          "pattern": "^[a-zA-Z0-9]*$",
-          "type": "string"
+        "AcknowledgmentRequestedCode" : {
+          "type" : "string",
+          "maxLength" : 1,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9]*$"
         },
-        "UsageIndicatorCode": {
-          "maxLength": 1,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]*$",
-          "type": "string"
+        "UsageIndicatorCode" : {
+          "type" : "string",
+          "maxLength" : 1,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9]*$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12OutboundEdiHeaders": {
-      "additionalProperties": false,
-      "properties": {
-        "ControlNumbers": {
-          "$ref": "#/definitions/X12ControlNumbers"
+    "X12OutboundEdiHeaders" : {
+      "type" : "object",
+      "properties" : {
+        "InterchangeControlHeaders" : {
+          "$ref" : "#/definitions/X12InterchangeControlHeaders"
         },
-        "Delimiters": {
-          "$ref": "#/definitions/X12Delimiters"
+        "FunctionalGroupHeaders" : {
+          "$ref" : "#/definitions/X12FunctionalGroupHeaders"
         },
-        "FunctionalGroupHeaders": {
-          "$ref": "#/definitions/X12FunctionalGroupHeaders"
+        "Delimiters" : {
+          "$ref" : "#/definitions/X12Delimiters"
         },
-        "Gs05TimeFormat": {
-          "$ref": "#/definitions/X12GS05TimeFormat"
+        "ValidateEdi" : {
+          "type" : "boolean"
         },
-        "InterchangeControlHeaders": {
-          "$ref": "#/definitions/X12InterchangeControlHeaders"
+        "ControlNumbers" : {
+          "$ref" : "#/definitions/X12ControlNumbers"
         },
-        "ValidateEdi": {
-          "type": "boolean"
+        "Gs05TimeFormat" : {
+          "$ref" : "#/definitions/X12GS05TimeFormat"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "X12TechnicalAcknowledgment": {
-      "enum": [
-        "DO_NOT_GENERATE",
-        "GENERATE_ALL_SEGMENTS"
-      ],
-      "type": "string"
+    "X12TechnicalAcknowledgment" : {
+      "type" : "string",
+      "enum" : [ "DO_NOT_GENERATE", "GENERATE_ALL_SEGMENTS" ]
     }
   },
-  "description": "Definition of AWS::B2BI::Partnership Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "b2bi:CreatePartnership",
-        "b2bi:TagResource",
-        "s3:PutObject"
-      ]
+  "properties" : {
+    "Capabilities" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 64,
+        "minLength" : 1,
+        "pattern" : "^[a-zA-Z0-9_-]+$"
+      }
     },
-    "delete": {
-      "permissions": [
-        "b2bi:DeletePartnership"
-      ]
+    "CapabilityOptions" : {
+      "$ref" : "#/definitions/CapabilityOptions"
     },
-    "list": {
-      "permissions": [
-        "b2bi:ListPartnerships"
-      ]
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "read": {
-      "permissions": [
-        "b2bi:GetPartnership",
-        "b2bi:ListTagsForResource"
-      ]
+    "Email" : {
+      "type" : "string",
+      "maxLength" : 254,
+      "minLength" : 5,
+      "pattern" : "^[\\w\\.\\-]+@[\\w\\.\\-]+$"
     },
-    "update": {
-      "permissions": [
-        "b2bi:TagResource",
-        "b2bi:UntagResource",
-        "b2bi:UpdatePartnership"
-      ]
+    "ModifiedAt" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 254,
+      "minLength" : 1
+    },
+    "PartnershipArn" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1
+    },
+    "PartnershipId" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
+    },
+    "Phone" : {
+      "type" : "string",
+      "maxLength" : 22,
+      "minLength" : 7,
+      "pattern" : "^\\+?([0-9 \\t\\-()\\/]{7,})(?:\\s*(?:#|x\\.?|ext\\.?|extension) \\t*(\\d+))?$"
+    },
+    "ProfileId" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
+    },
+    "TradingPartnerId" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/PartnershipId"
-  ],
-  "properties": {
-    "Capabilities": {
-      "items": {
-        "maxLength": 64,
-        "minLength": 1,
-        "pattern": "^[a-zA-Z0-9_-]+$",
-        "type": "string"
-      },
-      "type": "array"
+  "required" : [ "Capabilities", "Email", "Name", "ProfileId" ],
+  "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/ModifiedAt", "/properties/PartnershipArn", "/properties/PartnershipId", "/properties/TradingPartnerId" ],
+  "createOnlyProperties" : [ "/properties/Email", "/properties/Phone", "/properties/ProfileId" ],
+  "primaryIdentifier" : [ "/properties/PartnershipId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "b2bi:CreatePartnership", "b2bi:TagResource", "s3:PutObject" ]
     },
-    "CapabilityOptions": {
-      "$ref": "#/definitions/CapabilityOptions"
+    "read" : {
+      "permissions" : [ "b2bi:GetPartnership", "b2bi:ListTagsForResource" ]
     },
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "b2bi:TagResource", "b2bi:UntagResource", "b2bi:UpdatePartnership" ]
     },
-    "Email": {
-      "maxLength": 254,
-      "minLength": 5,
-      "pattern": "^[\\w\\.\\-]+@[\\w\\.\\-]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "b2bi:DeletePartnership" ]
     },
-    "ModifiedAt": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 254,
-      "minLength": 1,
-      "type": "string"
-    },
-    "PartnershipArn": {
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "PartnershipId": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
-    },
-    "Phone": {
-      "maxLength": 22,
-      "minLength": 7,
-      "pattern": "^\\+?([0-9 \\t\\-()\\/]{7,})(?:\\s*(?:#|x\\.?|ext\\.?|extension) \\t*(\\d+))?$",
-      "type": "string"
-    },
-    "ProfileId": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
-    },
-    "TradingPartnerId": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "b2bi:ListPartnerships" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreatedAt",
-    "/properties/ModifiedAt",
-    "/properties/PartnershipArn",
-    "/properties/PartnershipId",
-    "/properties/TradingPartnerId"
-  ],
-  "required": [
-    "Capabilities",
-    "Email",
-    "Name",
-    "ProfileId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "b2bi:ListTagsForResource",
-      "b2bi:TagResource",
-      "b2bi:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "cloudFormationSystemTags" : true,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "b2bi:ListTagsForResource", "b2bi:TagResource", "b2bi:UntagResource" ]
   },
-  "typeName": "AWS::B2BI::Partnership"
+  "additionalProperties" : false
 }

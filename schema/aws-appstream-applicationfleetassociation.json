@@ -1,53 +1,36 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/FleetName",
-    "/properties/ApplicationArn"
-  ],
-  "definitions": {
-    "Arn": {
-      "type": "string"
+  "typeName" : "AWS::AppStream::ApplicationFleetAssociation",
+  "description" : "Resource Type definition for AWS::AppStream::ApplicationFleetAssociation",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
+  "definitions" : {
+    "Arn" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::AppStream::ApplicationFleetAssociation",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "appstream:AssociateApplicationFleet",
-        "appstream:DescribeApplicationFleetAssociations"
-      ]
+  "properties" : {
+    "FleetName" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "appstream:DisassociateApplicationFleet",
-        "appstream:DescribeApplicationFleetAssociations"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "appstream:DescribeApplicationFleetAssociations"
-      ]
+    "ApplicationArn" : {
+      "$ref" : "#/definitions/Arn"
     }
   },
-  "primaryIdentifier": [
-    "/properties/FleetName",
-    "/properties/ApplicationArn"
-  ],
-  "properties": {
-    "ApplicationArn": {
-      "$ref": "#/definitions/Arn"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  },
+  "required" : [ "FleetName", "ApplicationArn" ],
+  "createOnlyProperties" : [ "/properties/FleetName", "/properties/ApplicationArn" ],
+  "primaryIdentifier" : [ "/properties/FleetName", "/properties/ApplicationArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "appstream:AssociateApplicationFleet", "appstream:DescribeApplicationFleetAssociations" ]
     },
-    "FleetName": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "appstream:DescribeApplicationFleetAssociations" ]
+    },
+    "delete" : {
+      "permissions" : [ "appstream:DisassociateApplicationFleet", "appstream:DescribeApplicationFleetAssociations" ]
     }
-  },
-  "required": [
-    "FleetName",
-    "ApplicationArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-appstream.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::AppStream::ApplicationFleetAssociation"
+  }
 }

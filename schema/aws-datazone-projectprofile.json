@@ -1,290 +1,237 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainIdentifier"
-  ],
-  "definitions": {
-    "AwsAccount": {
-      "additionalProperties": false,
-      "properties": {
-        "AwsAccountId": {
-          "pattern": "^\\d{12}$",
-          "type": "string"
+  "typeName" : "AWS::DataZone::ProjectProfile",
+  "description" : "Definition of AWS::DataZone::ProjectProfile Resource Type",
+  "definitions" : {
+    "AwsAccount" : {
+      "type" : "object",
+      "properties" : {
+        "AwsAccountId" : {
+          "type" : "string",
+          "pattern" : "^\\d{12}$"
         }
       },
-      "required": [
-        "AwsAccountId"
-      ],
-      "type": "object"
+      "required" : [ "AwsAccountId" ],
+      "additionalProperties" : false
     },
-    "DeploymentMode": {
-      "enum": [
-        "ON_CREATE",
-        "ON_DEMAND"
-      ],
-      "type": "string"
+    "DeploymentMode" : {
+      "type" : "string",
+      "enum" : [ "ON_CREATE", "ON_DEMAND" ]
     },
-    "DesignationConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "DesignationId": {
-          "maxLength": 36,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_-]+$",
-          "type": "string"
+    "DesignationConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "DesignationId" : {
+          "type" : "string",
+          "maxLength" : 36,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9_-]+$"
         }
       },
-      "required": [
-        "DesignationId"
-      ],
-      "type": "object"
+      "required" : [ "DesignationId" ],
+      "additionalProperties" : false
     },
-    "EnvironmentConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AwsAccount": {
-          "$ref": "#/definitions/AwsAccount"
+    "EnvironmentConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1,
+          "pattern" : "^[\\w -]+$"
         },
-        "AwsRegion": {
-          "$ref": "#/definitions/Region"
+        "EnvironmentConfigurationId" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_-]{1,36}$"
         },
-        "ConfigurationParameters": {
-          "$ref": "#/definitions/EnvironmentConfigurationParametersDetails"
+        "EnvironmentBlueprintId" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_-]{1,36}$"
         },
-        "DeploymentMode": {
-          "$ref": "#/definitions/DeploymentMode"
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 2048
         },
-        "DeploymentOrder": {
-          "maximum": 16,
-          "minimum": 0,
-          "type": "number"
+        "DeploymentMode" : {
+          "$ref" : "#/definitions/DeploymentMode"
         },
-        "Description": {
-          "maxLength": 2048,
-          "type": "string"
+        "ConfigurationParameters" : {
+          "$ref" : "#/definitions/EnvironmentConfigurationParametersDetails"
         },
-        "EnvironmentBlueprintId": {
-          "pattern": "^[a-zA-Z0-9_-]{1,36}$",
-          "type": "string"
+        "AwsAccount" : {
+          "$ref" : "#/definitions/AwsAccount"
         },
-        "EnvironmentConfigurationId": {
-          "pattern": "^[a-zA-Z0-9_-]{1,36}$",
-          "type": "string"
+        "AwsRegion" : {
+          "$ref" : "#/definitions/Region"
         },
-        "Name": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[\\w -]+$",
-          "type": "string"
+        "DeploymentOrder" : {
+          "type" : "number",
+          "maximum" : 16,
+          "minimum" : 0
         }
       },
-      "required": [
-        "AwsRegion",
-        "EnvironmentBlueprintId",
-        "Name"
-      ],
-      "type": "object"
+      "required" : [ "AwsRegion", "EnvironmentBlueprintId", "Name" ],
+      "additionalProperties" : false
     },
-    "EnvironmentConfigurationParameter": {
-      "additionalProperties": false,
-      "properties": {
-        "IsEditable": {
-          "type": "boolean"
+    "EnvironmentConfigurationParameter" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z_][a-zA-Z0-9_]*$"
         },
-        "Name": {
-          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "IsEditable" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "EnvironmentConfigurationParametersDetails": {
-      "additionalProperties": false,
-      "properties": {
-        "ParameterOverrides": {
-          "items": {
-            "$ref": "#/definitions/EnvironmentConfigurationParameter"
-          },
-          "type": "array"
+    "EnvironmentConfigurationParametersDetails" : {
+      "type" : "object",
+      "properties" : {
+        "SsmPath" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1
         },
-        "ResolvedParameters": {
-          "items": {
-            "$ref": "#/definitions/EnvironmentConfigurationParameter"
-          },
-          "type": "array"
+        "ParameterOverrides" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EnvironmentConfigurationParameter"
+          }
         },
-        "SsmPath": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+        "ResolvedParameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EnvironmentConfigurationParameter"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ProjectScope": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[\\w -]+$",
-          "type": "string"
+    "ProjectScope" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1,
+          "pattern" : "^[\\w -]+$"
         },
-        "Policy": {
-          "type": "string"
+        "Policy" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "required" : [ "Name" ],
+      "additionalProperties" : false
     },
-    "Region": {
-      "additionalProperties": false,
-      "properties": {
-        "RegionName": {
-          "maxLength": 16,
-          "minLength": 4,
-          "pattern": "^[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]$",
-          "type": "string"
+    "Region" : {
+      "type" : "object",
+      "properties" : {
+        "RegionName" : {
+          "type" : "string",
+          "maxLength" : 16,
+          "minLength" : 4,
+          "pattern" : "^[a-z]{2}-?(iso|gov)?-{1}[a-z]*-{1}[0-9]$"
         }
       },
-      "required": [
-        "RegionName"
-      ],
-      "type": "object"
+      "required" : [ "RegionName" ],
+      "additionalProperties" : false
     },
-    "Status": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     }
   },
-  "description": "Definition of AWS::DataZone::ProjectProfile Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "datazone:CreateProjectProfile",
-        "datazone:GetProjectProfile",
-        "ssm:GetParameter"
-      ]
+  "properties" : {
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "delete": {
-      "permissions": [
-        "datazone:DeleteProjectProfile",
-        "datazone:GetProjectProfile"
-      ]
+    "CreatedBy" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "datazone:ListProjectProfiles"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 2048
     },
-    "read": {
-      "permissions": [
-        "datazone:GetProjectProfile",
-        "ssm:GetParameter"
-      ]
+    "DomainId" : {
+      "type" : "string",
+      "pattern" : "^dzd[_-][a-zA-Z0-9_-]{1,36}$"
     },
-    "update": {
-      "permissions": [
-        "datazone:UpdateProjectProfile",
-        "datazone:GetProjectProfile",
-        "ssm:GetParameter"
-      ]
+    "DomainIdentifier" : {
+      "type" : "string",
+      "pattern" : "^dzd[_-][a-zA-Z0-9_-]{1,36}$"
+    },
+    "DomainUnitId" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-z0-9_\\-]+$"
+    },
+    "DomainUnitIdentifier" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-z0-9_\\-]+$"
+    },
+    "EnvironmentConfigurations" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/EnvironmentConfiguration"
+      }
+    },
+    "Id" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]{1,36}$"
+    },
+    "Identifier" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]{1,36}$"
+    },
+    "LastUpdatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[\\w -]+$"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/Status"
     }
   },
-  "primaryIdentifier": [
-    "/properties/DomainIdentifier",
-    "/properties/Identifier"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/CreatedBy", "/properties/DomainId", "/properties/DomainUnitId", "/properties/Id", "/properties/Identifier", "/properties/LastUpdatedAt", "/properties/EnvironmentConfigurations/*/EnvironmentConfigurationId", "/properties/EnvironmentConfigurations/*/ConfigurationParameters/ResolvedParameters" ],
+  "writeOnlyProperties" : [ "/properties/DomainUnitIdentifier" ],
+  "createOnlyProperties" : [ "/properties/DomainIdentifier" ],
+  "primaryIdentifier" : [ "/properties/DomainIdentifier", "/properties/Identifier" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "datazone:CreateProjectProfile", "datazone:GetProjectProfile", "ssm:GetParameter" ]
     },
-    "CreatedBy": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "datazone:GetProjectProfile", "ssm:GetParameter" ]
     },
-    "Description": {
-      "maxLength": 2048,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "datazone:UpdateProjectProfile", "datazone:GetProjectProfile", "ssm:GetParameter" ]
     },
-    "DomainId": {
-      "pattern": "^dzd[_-][a-zA-Z0-9_-]{1,36}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "datazone:DeleteProjectProfile", "datazone:GetProjectProfile" ]
     },
-    "DomainIdentifier": {
-      "pattern": "^dzd[_-][a-zA-Z0-9_-]{1,36}$",
-      "type": "string"
-    },
-    "DomainUnitId": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-z0-9_\\-]+$",
-      "type": "string"
-    },
-    "DomainUnitIdentifier": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-z0-9_\\-]+$",
-      "type": "string"
-    },
-    "EnvironmentConfigurations": {
-      "items": {
-        "$ref": "#/definitions/EnvironmentConfiguration"
-      },
-      "type": "array"
-    },
-    "Id": {
-      "pattern": "^[a-zA-Z0-9_-]{1,36}$",
-      "type": "string"
-    },
-    "Identifier": {
-      "pattern": "^[a-zA-Z0-9_-]{1,36}$",
-      "type": "string"
-    },
-    "LastUpdatedAt": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[\\w -]+$",
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/Status"
+    "list" : {
+      "permissions" : [ "datazone:ListProjectProfiles" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreatedAt",
-    "/properties/CreatedBy",
-    "/properties/DomainId",
-    "/properties/DomainUnitId",
-    "/properties/Id",
-    "/properties/Identifier",
-    "/properties/LastUpdatedAt",
-    "/properties/EnvironmentConfigurations/*/EnvironmentConfigurationId",
-    "/properties/EnvironmentConfigurations/*/ConfigurationParameters/ResolvedParameters"
-  ],
-  "required": [
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::DataZone::ProjectProfile",
-  "writeOnlyProperties": [
-    "/properties/DomainUnitIdentifier"
-  ]
+  "additionalProperties" : false
 }

@@ -1,93 +1,71 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "KeyGroupConfig": {
-      "additionalProperties": false,
-      "description": "A key group configuration.\n A key group contains a list of public keys that you can use with [CloudFront signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html).",
-      "properties": {
-        "Comment": {
-          "description": "A comment to describe the key group. The comment cannot be longer than 128 characters.",
-          "type": "string"
+  "additionalProperties" : false,
+  "definitions" : {
+    "KeyGroupConfig" : {
+      "additionalProperties" : false,
+      "properties" : {
+        "Comment" : {
+          "type" : "string",
+          "description" : "A comment to describe the key group. The comment cannot be longer than 128 characters."
         },
-        "Items": {
-          "description": "A list of the identifiers of the public keys in the key group.",
-          "items": {
-            "type": "string"
+        "Items" : {
+          "items" : {
+            "type" : "string"
           },
-          "type": "array",
-          "uniqueItems": false
+          "type" : "array",
+          "uniqueItems" : false,
+          "description" : "A list of the identifiers of the public keys in the key group."
         },
-        "Name": {
-          "description": "A name to identify the key group.",
-          "type": "string"
+        "Name" : {
+          "type" : "string",
+          "description" : "A name to identify the key group."
         }
       },
-      "required": [
-        "Name",
-        "Items"
-      ],
-      "type": "object"
+      "required" : [ "Name", "Items" ],
+      "type" : "object",
+      "description" : "A key group configuration.\n A key group contains a list of public keys that you can use with [CloudFront signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)."
     }
   },
-  "description": "A key group.\n A key group contains a list of public keys that you can use with [CloudFront signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html).",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cloudfront:CreateKeyGroup"
-      ]
+  "description" : "A key group.\n A key group contains a list of public keys that you can use with [CloudFront signed URLs and signed cookies](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html).",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cloudfront:CreateKeyGroup" ]
     },
-    "delete": {
-      "permissions": [
-        "cloudfront:DeleteKeyGroup",
-        "cloudfront:GetKeyGroup"
-      ]
+    "delete" : {
+      "permissions" : [ "cloudfront:DeleteKeyGroup", "cloudfront:GetKeyGroup" ]
     },
-    "list": {
-      "permissions": [
-        "cloudfront:ListKeyGroups"
-      ]
+    "list" : {
+      "permissions" : [ "cloudfront:ListKeyGroups" ]
     },
-    "read": {
-      "permissions": [
-        "cloudfront:GetKeyGroup"
-      ]
+    "read" : {
+      "permissions" : [ "cloudfront:GetKeyGroup" ]
     },
-    "update": {
-      "permissions": [
-        "cloudfront:UpdateKeyGroup",
-        "cloudfront:GetKeyGroup"
-      ]
+    "update" : {
+      "permissions" : [ "cloudfront:UpdateKeyGroup", "cloudfront:GetKeyGroup" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "description": "",
-      "type": "string"
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "properties" : {
+    "Id" : {
+      "type" : "string",
+      "description" : ""
     },
-    "KeyGroupConfig": {
-      "$ref": "#/definitions/KeyGroupConfig",
-      "description": "The key group configuration."
+    "KeyGroupConfig" : {
+      "$ref" : "#/definitions/KeyGroupConfig",
+      "description" : "The key group configuration."
     },
-    "LastModifiedTime": {
-      "description": "",
-      "type": "string"
+    "LastModifiedTime" : {
+      "type" : "string",
+      "description" : ""
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/LastModifiedTime"
-  ],
-  "required": [
-    "KeyGroupConfig"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "readOnlyProperties" : [ "/properties/Id", "/properties/LastModifiedTime" ],
+  "required" : [ "KeyGroupConfig" ],
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "taggable" : false
   },
-  "typeName": "AWS::CloudFront::KeyGroup"
+  "typeName" : "AWS::CloudFront::KeyGroup"
 }

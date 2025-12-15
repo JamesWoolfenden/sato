@@ -1,168 +1,129 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "WebhookAuthConfiguration": {
-      "additionalProperties": false,
-      "description": "Properties that configure the authentication applied to incoming webhook trigger requests",
-      "properties": {
-        "AllowedIPRange": {
-          "description": "The property used to configure acceptance of webhooks in an IP address range. For IP, only the AllowedIPRange property must be set. This property must be set to a valid CIDR range.",
-          "maxLength": 100,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::CodePipeline::Webhook",
+  "description" : "Resource Type definition for AWS::CodePipeline::Webhook",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline-webhook",
+  "definitions" : {
+    "WebhookFilterRule" : {
+      "description" : "A list of rules applied to the body/payload sent in the POST request to a webhook URL. All defined rules must pass for the request to be accepted and the pipeline started.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "JsonPath" : {
+          "description" : "A JsonPath expression that is applied to the body/payload of the webhook. The value selected by the JsonPath expression must match the value specified in the MatchEquals field. Otherwise, the request is ignored.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 150
         },
-        "SecretToken": {
-          "description": "The property used to configure GitHub authentication. For GITHUB_HMAC, only the SecretToken property must be set.",
-          "maxLength": 100,
-          "minLength": 1,
-          "type": "string"
+        "MatchEquals" : {
+          "description" : "The value selected by the JsonPath expression must match what is supplied in the MatchEquals field. Otherwise, the request is ignored.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 150
         }
       },
-      "type": "object"
+      "required" : [ "JsonPath" ]
     },
-    "WebhookFilterRule": {
-      "additionalProperties": false,
-      "description": "A list of rules applied to the body/payload sent in the POST request to a webhook URL. All defined rules must pass for the request to be accepted and the pipeline started.",
-      "properties": {
-        "JsonPath": {
-          "description": "A JsonPath expression that is applied to the body/payload of the webhook. The value selected by the JsonPath expression must match the value specified in the MatchEquals field. Otherwise, the request is ignored.",
-          "maxLength": 150,
-          "minLength": 1,
-          "type": "string"
+    "WebhookAuthConfiguration" : {
+      "description" : "Properties that configure the authentication applied to incoming webhook trigger requests",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllowedIPRange" : {
+          "description" : "The property used to configure acceptance of webhooks in an IP address range. For IP, only the AllowedIPRange property must be set. This property must be set to a valid CIDR range.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 100
         },
-        "MatchEquals": {
-          "description": "The value selected by the JsonPath expression must match what is supplied in the MatchEquals field. Otherwise, the request is ignored.",
-          "maxLength": 150,
-          "minLength": 1,
-          "type": "string"
+        "SecretToken" : {
+          "description" : "The property used to configure GitHub authentication. For GITHUB_HMAC, only the SecretToken property must be set.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 100
         }
-      },
-      "required": [
-        "JsonPath"
-      ],
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::CodePipeline::Webhook",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "codepipeline:ListWebhooks",
-        "codepipeline:RegisterWebhookWithThirdParty",
-        "codepipeline:PutWebhook"
-      ]
+  "properties" : {
+    "AuthenticationConfiguration" : {
+      "description" : "Properties that configure the authentication applied to incoming webhook trigger requests",
+      "$ref" : "#/definitions/WebhookAuthConfiguration"
     },
-    "delete": {
-      "permissions": [
-        "codepipeline:ListWebhooks",
-        "codepipeline:DeleteWebhook",
-        "codepipeline:DeregisterWebhookWithThirdParty"
-      ]
+    "Filters" : {
+      "description" : "A list of rules applied to the body/payload sent in the POST request to a webhook URL",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/WebhookFilterRule"
+      }
     },
-    "list": {
-      "permissions": [
-        "codepipeline:ListWebhooks"
-      ]
+    "Authentication" : {
+      "description" : "Supported options are GITHUB_HMAC, IP, and UNAUTHENTICATED.",
+      "type" : "string",
+      "enum" : [ "GITHUB_HMAC", "IP", "UNAUTHENTICATED" ]
     },
-    "read": {
-      "permissions": [
-        "codepipeline:ListWebhooks"
-      ]
+    "TargetPipeline" : {
+      "description" : "The name of the pipeline you want to connect to the webhook.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100,
+      "pattern" : "[A-Za-z0-9.@\\-_]+"
     },
-    "update": {
-      "permissions": [
-        "codepipeline:ListWebhooks",
-        "codepipeline:RegisterWebhookWithThirdParty",
-        "codepipeline:PutWebhook",
-        "codepipeline:DeregisterWebhookWithThirdParty"
-      ]
+    "TargetAction" : {
+      "description" : "The name of the action in a pipeline you want to connect to the webhook.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100,
+      "pattern" : "[A-Za-z0-9.@\\-_]+"
+    },
+    "Id" : {
+      "description" : "logical id of the webhook",
+      "type" : "string"
+    },
+    "Url" : {
+      "description" : "The webhook URL generated by AWS CodePipeline",
+      "type" : "string"
+    },
+    "Name" : {
+      "description" : "The name of the webhook",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100,
+      "pattern" : "[A-Za-z0-9.@\\-_]+"
+    },
+    "TargetPipelineVersion" : {
+      "description" : "The version number of the pipeline to be connected to the trigger request.",
+      "type" : "integer"
+    },
+    "RegisterWithThirdParty" : {
+      "description" : "Configures a connection between the webhook that was created and the external tool with events to be detected.",
+      "type" : "boolean"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Authentication": {
-      "description": "Supported options are GITHUB_HMAC, IP, and UNAUTHENTICATED.",
-      "enum": [
-        "GITHUB_HMAC",
-        "IP",
-        "UNAUTHENTICATED"
-      ],
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "AuthenticationConfiguration", "Filters", "Authentication", "TargetPipeline", "TargetAction" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Url" ],
+  "writeOnlyProperties" : [ "/properties/TargetPipelineVersion", "/properties/RegisterWithThirdParty" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "codepipeline:ListWebhooks", "codepipeline:RegisterWebhookWithThirdParty", "codepipeline:PutWebhook" ]
     },
-    "AuthenticationConfiguration": {
-      "$ref": "#/definitions/WebhookAuthConfiguration",
-      "description": "Properties that configure the authentication applied to incoming webhook trigger requests"
+    "read" : {
+      "permissions" : [ "codepipeline:ListWebhooks" ]
     },
-    "Filters": {
-      "description": "A list of rules applied to the body/payload sent in the POST request to a webhook URL",
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/WebhookFilterRule"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "update" : {
+      "permissions" : [ "codepipeline:ListWebhooks", "codepipeline:RegisterWebhookWithThirdParty", "codepipeline:PutWebhook", "codepipeline:DeregisterWebhookWithThirdParty" ]
     },
-    "Id": {
-      "description": "logical id of the webhook",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "codepipeline:ListWebhooks", "codepipeline:DeleteWebhook", "codepipeline:DeregisterWebhookWithThirdParty" ]
     },
-    "Name": {
-      "description": "The name of the webhook",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "[A-Za-z0-9.@\\-_]+",
-      "type": "string"
-    },
-    "RegisterWithThirdParty": {
-      "description": "Configures a connection between the webhook that was created and the external tool with events to be detected.",
-      "type": "boolean"
-    },
-    "TargetAction": {
-      "description": "The name of the action in a pipeline you want to connect to the webhook.",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "[A-Za-z0-9.@\\-_]+",
-      "type": "string"
-    },
-    "TargetPipeline": {
-      "description": "The name of the pipeline you want to connect to the webhook.",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "[A-Za-z0-9.@\\-_]+",
-      "type": "string"
-    },
-    "TargetPipelineVersion": {
-      "description": "The version number of the pipeline to be connected to the trigger request.",
-      "type": "integer"
-    },
-    "Url": {
-      "description": "The webhook URL generated by AWS CodePipeline",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "codepipeline:ListWebhooks" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Url"
-  ],
-  "required": [
-    "AuthenticationConfiguration",
-    "Filters",
-    "Authentication",
-    "TargetPipeline",
-    "TargetAction"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-codepipeline-webhook",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::CodePipeline::Webhook",
-  "writeOnlyProperties": [
-    "/properties/TargetPipelineVersion",
-    "/properties/RegisterWithThirdParty"
-  ]
+  }
 }

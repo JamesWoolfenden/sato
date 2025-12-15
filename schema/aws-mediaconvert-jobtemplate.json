@@ -1,89 +1,78 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "AccelerationSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "Mode": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Mode"
-      ],
-      "type": "object"
+  "typeName" : "AWS::MediaConvert::JobTemplate",
+  "description" : "Resource Type definition for AWS::MediaConvert::JobTemplate",
+  "additionalProperties" : false,
+  "properties" : {
+    "Category" : {
+      "type" : "string"
     },
-    "HopDestination": {
-      "additionalProperties": false,
-      "properties": {
-        "Priority": {
-          "type": "integer"
-        },
-        "Queue": {
-          "type": "string"
-        },
-        "WaitMinutes": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "Description" : {
+      "type" : "string"
+    },
+    "AccelerationSettings" : {
+      "$ref" : "#/definitions/AccelerationSettings"
+    },
+    "Priority" : {
+      "type" : "integer"
+    },
+    "StatusUpdateInterval" : {
+      "type" : "string"
+    },
+    "SettingsJson" : {
+      "type" : "object"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Queue" : {
+      "type" : "string"
+    },
+    "HopDestinations" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/HopDestination"
+      }
+    },
+    "Tags" : {
+      "type" : "object"
+    },
+    "Name" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::MediaConvert::JobTemplate",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AccelerationSettings": {
-      "$ref": "#/definitions/AccelerationSettings"
-    },
-    "Arn": {
-      "type": "string"
-    },
-    "Category": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "HopDestinations": {
-      "items": {
-        "$ref": "#/definitions/HopDestination"
+  "definitions" : {
+    "AccelerationSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Mode" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Mode" ]
     },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Priority": {
-      "type": "integer"
-    },
-    "Queue": {
-      "type": "string"
-    },
-    "SettingsJson": {
-      "type": "object"
-    },
-    "StatusUpdateInterval": {
-      "type": "string"
-    },
-    "Tags": {
-      "type": "object"
+    "HopDestination" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "WaitMinutes" : {
+          "type" : "integer"
+        },
+        "Queue" : {
+          "type" : "string"
+        },
+        "Priority" : {
+          "type" : "integer"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "SettingsJson"
-  ],
-  "typeName": "AWS::MediaConvert::JobTemplate"
+  "required" : [ "SettingsJson" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
 }

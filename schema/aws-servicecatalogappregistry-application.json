@@ -1,128 +1,93 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Name"
-    ]
-  ],
-  "additionalProperties": false,
-  "definitions": {
-    "Tags": {
-      "additionalProperties": false,
-      "maxProperties": 50,
-      "patternProperties": {
-        "^[a-zA-Z+-=._:/]+$": {
-          "maxLength": 256,
-          "type": "string"
+  "typeName" : "AWS::ServiceCatalogAppRegistry::Application",
+  "description" : "Resource Schema for AWS::ServiceCatalogAppRegistry::Application",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry.git",
+  "documentationUrl" : "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-application.html",
+  "definitions" : {
+    "Tags" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^[a-zA-Z+-=._:/]+$" : {
+          "type" : "string",
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "maxProperties" : 50,
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Schema for AWS::ServiceCatalogAppRegistry::Application",
-  "documentationUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-servicecatalog-appregistry-application.html",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "servicecatalog:CreateApplication",
-        "servicecatalog:TagResource",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Id" : {
+      "type" : "string",
+      "pattern" : "[a-z0-9]{26}"
     },
-    "delete": {
-      "permissions": [
-        "servicecatalog:DeleteApplication"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/applications/[a-z0-9]+"
     },
-    "list": {
-      "permissions": [
-        "servicecatalog:ListApplications"
-      ]
+    "Name" : {
+      "type" : "string",
+      "description" : "The name of the application. ",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "\\w+"
     },
-    "read": {
-      "permissions": [
-        "servicecatalog:GetApplication"
-      ]
+    "Description" : {
+      "type" : "string",
+      "description" : "The description of the application. ",
+      "maxLength" : 1024
     },
-    "update": {
-      "permissions": [
-        "servicecatalog:GetApplication",
-        "servicecatalog:ListTagsForResource",
-        "servicecatalog:TagResource",
-        "servicecatalog:UntagResource",
-        "servicecatalog:UpdateApplication",
-        "iam:CreateServiceLinkedRole"
-      ]
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
+    },
+    "ApplicationTagKey" : {
+      "type" : "string",
+      "description" : "The key of the AWS application tag, which is awsApplication. Applications created before 11/13/2023 or applications without the AWS application tag resource group return no value.",
+      "maxLength" : 128,
+      "pattern" : "\\w+"
+    },
+    "ApplicationTagValue" : {
+      "type" : "string",
+      "description" : "The value of the AWS application tag, which is the identifier of an associated resource. Applications created before 11/13/2023 or applications without the AWS application tag resource group return no value. ",
+      "maxLength" : 256,
+      "pattern" : "\\[a-zA-Z0-9_-:/]+"
+    },
+    "ApplicationName" : {
+      "type" : "string",
+      "description" : "The name of the application. ",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "\\w+"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "ApplicationName": {
-      "description": "The name of the application. ",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "\\w+",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/ApplicationName", "/properties/ApplicationTagKey", "/properties/ApplicationTagValue" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalIdentifiers" : [ [ "/properties/Name" ] ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "servicecatalog:TagResource", "servicecatalog:UntagResource", "servicecatalog:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "servicecatalog:CreateApplication", "servicecatalog:TagResource", "iam:CreateServiceLinkedRole" ]
     },
-    "ApplicationTagKey": {
-      "description": "The key of the AWS application tag, which is awsApplication. Applications created before 11/13/2023 or applications without the AWS application tag resource group return no value.",
-      "maxLength": 128,
-      "pattern": "\\w+",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "servicecatalog:GetApplication" ]
     },
-    "ApplicationTagValue": {
-      "description": "The value of the AWS application tag, which is the identifier of an associated resource. Applications created before 11/13/2023 or applications without the AWS application tag resource group return no value. ",
-      "maxLength": 256,
-      "pattern": "\\[a-zA-Z0-9_-:/]+",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "servicecatalog:GetApplication", "servicecatalog:ListTagsForResource", "servicecatalog:TagResource", "servicecatalog:UntagResource", "servicecatalog:UpdateApplication", "iam:CreateServiceLinkedRole" ]
     },
-    "Arn": {
-      "pattern": "arn:aws[-a-z]*:servicecatalog:[a-z]{2}(-gov)?-[a-z]+-\\d:\\d{12}:/applications/[a-z0-9]+",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "servicecatalog:DeleteApplication" ]
     },
-    "Description": {
-      "description": "The description of the application. ",
-      "maxLength": 1024,
-      "type": "string"
-    },
-    "Id": {
-      "pattern": "[a-z0-9]{26}",
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the application. ",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "\\w+",
-      "type": "string"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
+    "list" : {
+      "permissions" : [ "servicecatalog:ListApplications" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/ApplicationName",
-    "/properties/ApplicationTagKey",
-    "/properties/ApplicationTagValue"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-servicecatalog-appregistry.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "servicecatalog:TagResource",
-      "servicecatalog:UntagResource",
-      "servicecatalog:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::ServiceCatalogAppRegistry::Application"
+  }
 }

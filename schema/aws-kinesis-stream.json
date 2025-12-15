@@ -1,272 +1,191 @@
 {
-  "$comment": "Do not set SystemTags to true without implementing a fail-open mechanism. It should not fail when adding systemTags for customers without AddTagsToStream Permission. Cloudformation will automatically add system tags even if customer does not have the AddTagsToStream permission. COE: https://www.coe.a2z.com/coe/236297/content",
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "EnhancedMetric": {
-      "additionalProperties": false,
-      "description": "Value of an enhanced metric",
-      "enum": [
-        "IncomingBytes",
-        "IncomingRecords",
-        "OutgoingBytes",
-        "OutgoingRecords",
-        "WriteProvisionedThroughputExceeded",
-        "ReadProvisionedThroughputExceeded",
-        "IteratorAgeMilliseconds",
-        "ALL"
-      ],
-      "type": "string"
+  "typeName" : "AWS::Kinesis::Stream",
+  "description" : "Resource Type definition for AWS::Kinesis::Stream",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
+  "definitions" : {
+    "EnhancedMetric" : {
+      "description" : "Value of an enhanced metric",
+      "type" : "string",
+      "additionalProperties" : false,
+      "enum" : [ "IncomingBytes", "IncomingRecords", "OutgoingBytes", "OutgoingRecords", "WriteProvisionedThroughputExceeded", "ReadProvisionedThroughputExceeded", "IteratorAgeMilliseconds", "ALL" ]
     },
-    "StreamEncryption": {
-      "additionalProperties": false,
-      "description": "When specified, enables or updates server-side encryption using an AWS KMS key for a specified stream. Removing this property from your stack template and updating your stack disables encryption.",
-      "properties": {
-        "EncryptionType": {
-          "description": "The encryption type to use. The only valid value is KMS. ",
-          "enum": [
-            "KMS"
-          ],
-          "type": "string"
+    "StreamModeDetails" : {
+      "description" : "When specified, enables or updates the mode of stream. Default is PROVISIONED.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StreamMode" : {
+          "description" : "The mode of the stream",
+          "type" : "string",
+          "enum" : [ "ON_DEMAND", "PROVISIONED" ]
+        }
+      },
+      "required" : [ "StreamMode" ]
+    },
+    "StreamEncryption" : {
+      "description" : "When specified, enables or updates server-side encryption using an AWS KMS key for a specified stream. Removing this property from your stack template and updating your stack disables encryption.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EncryptionType" : {
+          "description" : "The encryption type to use. The only valid value is KMS. ",
+          "type" : "string",
+          "enum" : [ "KMS" ]
         },
-        "KeyId": {
-          "anyOf": [
-            {
-              "relationshipRef": {
-                "propertyPath": "/properties/Arn",
-                "typeName": "AWS::KMS::Key"
-              }
-            },
-            {
-              "relationshipRef": {
-                "propertyPath": "/properties/KeyId",
-                "typeName": "AWS::KMS::Key"
-              }
+        "KeyId" : {
+          "description" : "The GUID for the customer-managed AWS KMS key to use for encryption. This value can be a globally unique identifier, a fully specified Amazon Resource Name (ARN) to either an alias or a key, or an alias name prefixed by \"alias/\".You can also use a master key owned by Kinesis Data Streams by specifying the alias aws/kinesis.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2048,
+          "anyOf" : [ {
+            "relationshipRef" : {
+              "typeName" : "AWS::KMS::Key",
+              "propertyPath" : "/properties/Arn"
             }
-          ],
-          "description": "The GUID for the customer-managed AWS KMS key to use for encryption. This value can be a globally unique identifier, a fully specified Amazon Resource Name (ARN) to either an alias or a key, or an alias name prefixed by \"alias/\".You can also use a master key owned by Kinesis Data Streams by specifying the alias aws/kinesis.",
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+          }, {
+            "relationshipRef" : {
+              "typeName" : "AWS::KMS::Key",
+              "propertyPath" : "/properties/KeyId"
+            }
+          } ]
         }
       },
-      "required": [
-        "EncryptionType",
-        "KeyId"
-      ],
-      "type": "object"
+      "required" : [ "EncryptionType", "KeyId" ]
     },
-    "StreamModeDetails": {
-      "additionalProperties": false,
-      "description": "When specified, enables or updates the mode of stream. Default is PROVISIONED.",
-      "properties": {
-        "StreamMode": {
-          "description": "The mode of the stream",
-          "enum": [
-            "ON_DEMAND",
-            "PROVISIONED"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "StreamMode"
-      ],
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "An arbitrary set of tags (key-value pairs) to associate with the Kinesis stream.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "description" : "An arbitrary set of tags (key-value pairs) to associate with the Kinesis stream.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 255,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "description" : "The value for the tag. You can specify a value that is 0 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     },
-    "WarmThroughputObject": {
-      "additionalProperties": false,
-      "description": "Warm throughput configuration details for the stream. Only present for ON_DEMAND streams.",
-      "properties": {
-        "CurrentMiBps": {
-          "description": "Current warm throughput in MiB/s",
-          "type": "integer"
+    "WarmThroughputObject" : {
+      "description" : "Warm throughput configuration details for the stream. Only present for ON_DEMAND streams.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TargetMiBps" : {
+          "description" : "Target warm throughput in MiB/s that a customer can write to a stream at any given time",
+          "type" : "integer"
         },
-        "TargetMiBps": {
-          "description": "Target warm throughput in MiB/s that a customer can write to a stream at any given time",
-          "type": "integer"
+        "CurrentMiBps" : {
+          "description" : "Current warm throughput in MiB/s",
+          "type" : "integer"
         }
-      },
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::Kinesis::Stream",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "kinesis:EnableEnhancedMonitoring",
-        "kinesis:DescribeStreamSummary",
-        "kinesis:CreateStream",
-        "kinesis:IncreaseStreamRetentionPeriod",
-        "kinesis:StartStreamEncryption",
-        "kinesis:AddTagsToStream",
-        "kinesis:ListTagsForStream",
-        "kinesis:ListTagsForResource",
-        "kinesis:UpdateMaxRecordSize",
-        "kinesis:UpdateStreamWarmThroughput"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "The Amazon resource name (ARN) of the Kinesis stream",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "kinesis:DescribeStreamSummary",
-        "kinesis:DeleteStream",
-        "kinesis:RemoveTagsFromStream",
-        "kinesis:UntagResource"
-      ]
+    "Name" : {
+      "description" : "The name of the Kinesis stream.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z0-9_.-]+$"
     },
-    "list": {
-      "permissions": [
-        "kinesis:ListStreams"
-      ]
+    "DesiredShardLevelMetrics" : {
+      "description" : "The final list of shard-level metrics",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "maxItems" : 7,
+      "items" : {
+        "$ref" : "#/definitions/EnhancedMetric"
+      }
     },
-    "read": {
-      "permissions": [
-        "kinesis:DescribeStreamSummary",
-        "kinesis:ListTagsForStream",
-        "kinesis:ListTagsForResource"
-      ]
+    "RetentionPeriodHours" : {
+      "description" : "The number of hours for the data records that are stored in shards to remain accessible.",
+      "type" : "integer",
+      "minimum" : 24
     },
-    "update": {
-      "permissions": [
-        "kinesis:EnableEnhancedMonitoring",
-        "kinesis:DisableEnhancedMonitoring",
-        "kinesis:DescribeStreamSummary",
-        "kinesis:UpdateShardCount",
-        "kinesis:UpdateStreamMode",
-        "kinesis:IncreaseStreamRetentionPeriod",
-        "kinesis:DecreaseStreamRetentionPeriod",
-        "kinesis:StartStreamEncryption",
-        "kinesis:StopStreamEncryption",
-        "kinesis:AddTagsToStream",
-        "kinesis:TagResource",
-        "kinesis:RemoveTagsFromStream",
-        "kinesis:UntagResource",
-        "kinesis:ListTagsForStream",
-        "kinesis:ListTagsForResource",
-        "kinesis:UpdateMaxRecordSize",
-        "kinesis:UpdateStreamWarmThroughput"
-      ],
-      "timeoutInMinutes": 240
+    "ShardCount" : {
+      "description" : "The number of shards that the stream uses. Required when StreamMode = PROVISIONED is passed.",
+      "type" : "integer",
+      "minimum" : 1
+    },
+    "StreamModeDetails" : {
+      "description" : "The mode in which the stream is running.",
+      "$ref" : "#/definitions/StreamModeDetails",
+      "default" : {
+        "StreamMode" : "PROVISIONED"
+      }
+    },
+    "StreamEncryption" : {
+      "description" : "When specified, enables or updates server-side encryption using an AWS KMS key for a specified stream.",
+      "$ref" : "#/definitions/StreamEncryption"
+    },
+    "Tags" : {
+      "description" : "An arbitrary set of tags (key-value pairs) to associate with the Kinesis stream.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "MaxRecordSizeInKiB" : {
+      "description" : "Maximum size of a data record in KiB allowed to be put into Kinesis stream.",
+      "type" : "integer",
+      "minimum" : 1024,
+      "maximum" : 10240
+    },
+    "WarmThroughputMiBps" : {
+      "description" : "Target warm throughput in MiB/s for the stream. This property can ONLY be set when StreamMode is ON_DEMAND.",
+      "type" : "integer"
+    },
+    "WarmThroughputObject" : {
+      "description" : "Warm throughput configuration details for the stream. Only present for ON_DEMAND streams.",
+      "$ref" : "#/definitions/WarmThroughputObject"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon resource name (ARN) of the Kinesis stream",
-      "type": "string"
+  "additionalProperties" : false,
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/WarmThroughputObject" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "writeOnlyProperties" : [ "/properties/WarmThroughputMiBps" ],
+  "$comment" : "Do not set SystemTags to true without implementing a fail-open mechanism. It should not fail when adding systemTags for customers without AddTagsToStream Permission. Cloudformation will automatically add system tags even if customer does not have the AddTagsToStream permission. COE: https://www.coe.a2z.com/coe/236297/content",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "kinesis:AddTagsToStream", "kinesis:TagResource", "kinesis:RemoveTagsFromStream", "kinesis:UntagResource", "kinesis:ListTagsForStream", "kinesis:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "kinesis:EnableEnhancedMonitoring", "kinesis:DescribeStreamSummary", "kinesis:CreateStream", "kinesis:IncreaseStreamRetentionPeriod", "kinesis:StartStreamEncryption", "kinesis:AddTagsToStream", "kinesis:ListTagsForStream", "kinesis:ListTagsForResource", "kinesis:UpdateMaxRecordSize", "kinesis:UpdateStreamWarmThroughput" ]
     },
-    "DesiredShardLevelMetrics": {
-      "description": "The final list of shard-level metrics",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/EnhancedMetric"
-      },
-      "maxItems": 7,
-      "type": "array",
-      "uniqueItems": true
+    "read" : {
+      "permissions" : [ "kinesis:DescribeStreamSummary", "kinesis:ListTagsForStream", "kinesis:ListTagsForResource" ]
     },
-    "MaxRecordSizeInKiB": {
-      "description": "Maximum size of a data record in KiB allowed to be put into Kinesis stream.",
-      "maximum": 10240,
-      "minimum": 1024,
-      "type": "integer"
+    "update" : {
+      "permissions" : [ "kinesis:EnableEnhancedMonitoring", "kinesis:DisableEnhancedMonitoring", "kinesis:DescribeStreamSummary", "kinesis:UpdateShardCount", "kinesis:UpdateStreamMode", "kinesis:IncreaseStreamRetentionPeriod", "kinesis:DecreaseStreamRetentionPeriod", "kinesis:StartStreamEncryption", "kinesis:StopStreamEncryption", "kinesis:AddTagsToStream", "kinesis:TagResource", "kinesis:RemoveTagsFromStream", "kinesis:UntagResource", "kinesis:ListTagsForStream", "kinesis:ListTagsForResource", "kinesis:UpdateMaxRecordSize", "kinesis:UpdateStreamWarmThroughput" ],
+      "timeoutInMinutes" : 240
     },
-    "Name": {
-      "description": "The name of the Kinesis stream.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_.-]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "kinesis:DescribeStreamSummary", "kinesis:DeleteStream", "kinesis:RemoveTagsFromStream", "kinesis:UntagResource" ]
     },
-    "RetentionPeriodHours": {
-      "description": "The number of hours for the data records that are stored in shards to remain accessible.",
-      "minimum": 24,
-      "type": "integer"
-    },
-    "ShardCount": {
-      "description": "The number of shards that the stream uses. Required when StreamMode = PROVISIONED is passed.",
-      "minimum": 1,
-      "type": "integer"
-    },
-    "StreamEncryption": {
-      "$ref": "#/definitions/StreamEncryption",
-      "description": "When specified, enables or updates server-side encryption using an AWS KMS key for a specified stream."
-    },
-    "StreamModeDetails": {
-      "$ref": "#/definitions/StreamModeDetails",
-      "default": {
-        "StreamMode": "PROVISIONED"
-      },
-      "description": "The mode in which the stream is running."
-    },
-    "Tags": {
-      "description": "An arbitrary set of tags (key-value pairs) to associate with the Kinesis stream.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": false
-    },
-    "WarmThroughputMiBps": {
-      "description": "Target warm throughput in MiB/s for the stream. This property can ONLY be set when StreamMode is ON_DEMAND.",
-      "type": "integer"
-    },
-    "WarmThroughputObject": {
-      "$ref": "#/definitions/WarmThroughputObject",
-      "description": "Warm throughput configuration details for the stream. Only present for ON_DEMAND streams."
+    "list" : {
+      "permissions" : [ "kinesis:ListStreams" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/WarmThroughputObject"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesis.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "kinesis:AddTagsToStream",
-      "kinesis:TagResource",
-      "kinesis:RemoveTagsFromStream",
-      "kinesis:UntagResource",
-      "kinesis:ListTagsForStream",
-      "kinesis:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Kinesis::Stream",
-  "writeOnlyProperties": [
-    "/properties/WarmThroughputMiBps"
-  ]
+  }
 }

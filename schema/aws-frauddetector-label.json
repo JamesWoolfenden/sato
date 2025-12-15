@@ -1,128 +1,91 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::FraudDetector::Label",
+  "description" : "An label for fraud detector.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "An label for fraud detector.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "frauddetector:GetLabels",
-        "frauddetector:PutLabel",
-        "frauddetector:ListTagsForResource",
-        "frauddetector:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the label.",
+      "type" : "string",
+      "pattern" : "^[0-9a-z_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "frauddetector:GetLabels",
-        "frauddetector:DeleteLabel"
-      ]
+    "Tags" : {
+      "description" : "Tags associated with this label.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "list": {
-      "permissions": [
-        "frauddetector:GetLabels",
-        "frauddetector:ListTagsForResource"
-      ]
+    "Description" : {
+      "description" : "The label description.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "read": {
-      "permissions": [
-        "frauddetector:GetLabels",
-        "frauddetector:ListTagsForResource"
-      ]
+    "Arn" : {
+      "description" : "The label ARN.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "frauddetector:GetLabels",
-        "frauddetector:PutLabel",
-        "frauddetector:ListTagsForResource",
-        "frauddetector:TagResource",
-        "frauddetector:UntagResource"
-      ]
+    "CreatedTime" : {
+      "description" : "The timestamp when the label was created.",
+      "type" : "string"
+    },
+    "LastUpdatedTime" : {
+      "description" : "The timestamp when the label was last updated.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The label ARN.",
-      "type": "string"
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedTime", "/properties/LastUpdatedTime" ],
+  "additionalProperties" : false,
+  "required" : [ "Name" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "frauddetector:GetLabels", "frauddetector:PutLabel", "frauddetector:ListTagsForResource", "frauddetector:TagResource" ]
     },
-    "CreatedTime": {
-      "description": "The timestamp when the label was created.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "frauddetector:GetLabels", "frauddetector:ListTagsForResource" ]
     },
-    "Description": {
-      "description": "The label description.",
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "frauddetector:GetLabels", "frauddetector:PutLabel", "frauddetector:ListTagsForResource", "frauddetector:TagResource", "frauddetector:UntagResource" ]
     },
-    "LastUpdatedTime": {
-      "description": "The timestamp when the label was last updated.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "frauddetector:GetLabels", "frauddetector:DeleteLabel" ]
     },
-    "Name": {
-      "description": "The name of the label.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[0-9a-z_-]+$",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "Tags associated with this label.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": false
+    "list" : {
+      "permissions" : [ "frauddetector:GetLabels", "frauddetector:ListTagsForResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedTime",
-    "/properties/LastUpdatedTime"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "frauddetector:ListTagsForResource",
-      "frauddetector:TagResource",
-      "frauddetector:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::FraudDetector::Label"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "frauddetector:ListTagsForResource", "frauddetector:TagResource", "frauddetector:UntagResource" ]
+  }
 }

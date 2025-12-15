@@ -1,204 +1,150 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ParentFolderArn",
-    "/properties/SharingModel",
-    "/properties/FolderType",
-    "/properties/FolderId",
-    "/properties/AwsAccountId"
-  ],
-  "definitions": {
-    "FolderType": {
-      "enum": [
-        "SHARED",
-        "RESTRICTED"
-      ],
-      "type": "string"
+  "typeName" : "AWS::QuickSight::Folder",
+  "description" : "Definition of the AWS::QuickSight::Folder Resource Type.",
+  "definitions" : {
+    "FolderType" : {
+      "type" : "string",
+      "enum" : [ "SHARED", "RESTRICTED" ]
     },
-    "ResourcePermission": {
-      "additionalProperties": false,
-      "description": "<p>Permission for the resource.</p>",
-      "properties": {
-        "Actions": {
-          "description": "<p>The IAM action to grant or revoke permissions on.</p>",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
+    "ResourcePermission" : {
+      "type" : "object",
+      "description" : "<p>Permission for the resource.</p>",
+      "properties" : {
+        "Principal" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "description" : "<p>The Amazon Resource Name (ARN) of the principal. This can be one of the\n            following:</p>\n         <ul>\n            <li>\n               <p>The ARN of an Amazon QuickSight user or group associated with a data source or dataset. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon QuickSight user, group, or namespace associated with an analysis, dashboard, template, or theme. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon Web Services account root: This is an IAM ARN rather than a QuickSight\n                    ARN. Use this option only to share resources (templates) across Amazon Web Services accounts.\n                    (This is less common.) </p>\n            </li>\n         </ul>",
+          "pattern" : "^arn:.*"
+        },
+        "Actions" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "maxItems": 20,
-          "minItems": 1,
-          "type": "array"
-        },
-        "Principal": {
-          "description": "<p>The Amazon Resource Name (ARN) of the principal. This can be one of the\n            following:</p>\n         <ul>\n            <li>\n               <p>The ARN of an Amazon QuickSight user or group associated with a data source or dataset. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon QuickSight user, group, or namespace associated with an analysis, dashboard, template, or theme. (This is common.)</p>\n            </li>\n            <li>\n               <p>The ARN of an Amazon Web Services account root: This is an IAM ARN rather than a QuickSight\n                    ARN. Use this option only to share resources (templates) across Amazon Web Services accounts.\n                    (This is less common.) </p>\n            </li>\n         </ul>",
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^arn:.*",
-          "type": "string"
+          "maxItems" : 20,
+          "minItems" : 1,
+          "description" : "<p>The IAM action to grant or revoke permissions on.</p>",
+          "insertionOrder" : false
         }
       },
-      "required": [
-        "Actions",
-        "Principal"
-      ],
-      "type": "object"
+      "required" : [ "Actions", "Principal" ],
+      "additionalProperties" : false
     },
-    "SharingModel": {
-      "enum": [
-        "ACCOUNT",
-        "NAMESPACE"
-      ],
-      "type": "string"
+    "SharingModel" : {
+      "type" : "string",
+      "enum" : [ "ACCOUNT", "NAMESPACE" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
-      "properties": {
-        "Key": {
-          "description": "<p>Tag key.</p>",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "description" : "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "description" : "<p>Tag key.</p>"
         },
-        "Value": {
-          "description": "<p>Tag value.</p>",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "description" : "<p>Tag value.</p>"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of the AWS::QuickSight::Folder Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "quicksight:CreateFolder",
-        "quicksight:DescribeFolder",
-        "quicksight:UpdateFolderPermissions",
-        "quicksight:DescribeFolderPermissions",
-        "quicksight:TagResource",
-        "quicksight:ListTagsForResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "<p>The Amazon Resource Name (ARN) for the folder.</p>",
+      "pattern" : "^arn:.*"
     },
-    "delete": {
-      "permissions": [
-        "quicksight:DeleteFolder"
-      ]
+    "AwsAccountId" : {
+      "type" : "string",
+      "maxLength" : 12,
+      "minLength" : 12,
+      "pattern" : "^[0-9]{12}$"
     },
-    "list": {
-      "permissions": [
-        "quicksight:ListFolders"
-      ]
+    "CreatedTime" : {
+      "type" : "string",
+      "description" : "<p>The time that the folder was created.</p>",
+      "format" : "date-time"
     },
-    "read": {
-      "permissions": [
-        "quicksight:DescribeFolder",
-        "quicksight:DescribeFolderPermissions",
-        "quicksight:ListTagsForResource"
-      ]
+    "FolderId" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^[\\w\\-]+$"
     },
-    "update": {
-      "permissions": [
-        "quicksight:DescribeFolder",
-        "quicksight:UpdateFolder",
-        "quicksight:DescribeFolderPermissions",
-        "quicksight:UpdateFolderPermissions",
-        "quicksight:ListTagsForResource",
-        "quicksight:TagResource",
-        "quicksight:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/AwsAccountId",
-    "/properties/FolderId"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "<p>The Amazon Resource Name (ARN) for the folder.</p>",
-      "pattern": "^arn:.*",
-      "type": "string"
+    "FolderType" : {
+      "$ref" : "#/definitions/FolderType"
     },
-    "AwsAccountId": {
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
+    "LastUpdatedTime" : {
+      "type" : "string",
+      "description" : "<p>The time that the folder was last updated.</p>",
+      "format" : "date-time"
     },
-    "CreatedTime": {
-      "description": "<p>The time that the folder was created.</p>",
-      "format": "date-time",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 1
     },
-    "FolderId": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[\\w\\-]+$",
-      "type": "string"
+    "ParentFolderArn" : {
+      "type" : "string"
     },
-    "FolderType": {
-      "$ref": "#/definitions/FolderType"
-    },
-    "LastUpdatedTime": {
-      "description": "<p>The time that the folder was last updated.</p>",
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 200,
-      "minLength": 1,
-      "type": "string"
-    },
-    "ParentFolderArn": {
-      "type": "string"
-    },
-    "Permissions": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ResourcePermission"
+    "Permissions" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ResourcePermission"
       },
-      "maxItems": 64,
-      "minItems": 1,
-      "type": "array"
+      "maxItems" : 64,
+      "minItems" : 1,
+      "insertionOrder" : false
     },
-    "SharingModel": {
-      "$ref": "#/definitions/SharingModel"
+    "SharingModel" : {
+      "$ref" : "#/definitions/SharingModel"
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 1,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 1,
+      "insertionOrder" : false
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedTime",
-    "/properties/LastUpdatedTime"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "quicksight:TagResource",
-      "quicksight:UntagResource",
-      "quicksight:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedTime", "/properties/LastUpdatedTime" ],
+  "writeOnlyProperties" : [ "/properties/ParentFolderArn" ],
+  "createOnlyProperties" : [ "/properties/ParentFolderArn", "/properties/SharingModel", "/properties/FolderType", "/properties/FolderId", "/properties/AwsAccountId" ],
+  "primaryIdentifier" : [ "/properties/AwsAccountId", "/properties/FolderId" ],
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "quicksight:DescribeFolder", "quicksight:DescribeFolderPermissions", "quicksight:ListTagsForResource" ]
+    },
+    "create" : {
+      "permissions" : [ "quicksight:CreateFolder", "quicksight:DescribeFolder", "quicksight:UpdateFolderPermissions", "quicksight:DescribeFolderPermissions", "quicksight:TagResource", "quicksight:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "quicksight:DescribeFolder", "quicksight:UpdateFolder", "quicksight:DescribeFolderPermissions", "quicksight:UpdateFolderPermissions", "quicksight:ListTagsForResource", "quicksight:TagResource", "quicksight:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "quicksight:DeleteFolder" ]
+    },
+    "list" : {
+      "permissions" : [ "quicksight:ListFolders" ]
+    }
   },
-  "typeName": "AWS::QuickSight::Folder",
-  "writeOnlyProperties": [
-    "/properties/ParentFolderArn"
-  ]
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "quicksight:TagResource", "quicksight:UntagResource", "quicksight:ListTagsForResource" ]
+  }
 }

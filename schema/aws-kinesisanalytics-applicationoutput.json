@@ -1,112 +1,92 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ApplicationName"
-  ],
-  "definitions": {
-    "DestinationSchema": {
-      "additionalProperties": false,
-      "properties": {
-        "RecordFormatType": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::KinesisAnalytics::ApplicationOutput",
+  "description" : "Resource Type definition for AWS::KinesisAnalytics::ApplicationOutput",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "KinesisFirehoseOutput": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceARN": {
-          "type": "string"
-        },
-        "RoleARN": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ResourceARN",
-        "RoleARN"
-      ],
-      "type": "object"
+    "ApplicationName" : {
+      "type" : "string"
     },
-    "KinesisStreamsOutput": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceARN": {
-          "type": "string"
-        },
-        "RoleARN": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ResourceARN",
-        "RoleARN"
-      ],
-      "type": "object"
-    },
-    "LambdaOutput": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceARN": {
-          "type": "string"
-        },
-        "RoleARN": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ResourceARN",
-        "RoleARN"
-      ],
-      "type": "object"
-    },
-    "Output": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationSchema": {
-          "$ref": "#/definitions/DestinationSchema"
-        },
-        "KinesisFirehoseOutput": {
-          "$ref": "#/definitions/KinesisFirehoseOutput"
-        },
-        "KinesisStreamsOutput": {
-          "$ref": "#/definitions/KinesisStreamsOutput"
-        },
-        "LambdaOutput": {
-          "$ref": "#/definitions/LambdaOutput"
-        },
-        "Name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "DestinationSchema"
-      ],
-      "type": "object"
+    "Output" : {
+      "$ref" : "#/definitions/Output"
     }
   },
-  "description": "Resource Type definition for AWS::KinesisAnalytics::ApplicationOutput",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "ApplicationName": {
-      "type": "string"
+  "definitions" : {
+    "Output" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DestinationSchema" : {
+          "$ref" : "#/definitions/DestinationSchema"
+        },
+        "LambdaOutput" : {
+          "$ref" : "#/definitions/LambdaOutput"
+        },
+        "KinesisFirehoseOutput" : {
+          "$ref" : "#/definitions/KinesisFirehoseOutput"
+        },
+        "KinesisStreamsOutput" : {
+          "$ref" : "#/definitions/KinesisStreamsOutput"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "DestinationSchema" ]
     },
-    "Id": {
-      "type": "string"
+    "KinesisStreamsOutput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResourceARN" : {
+          "type" : "string"
+        },
+        "RoleARN" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ResourceARN", "RoleARN" ]
     },
-    "Output": {
-      "$ref": "#/definitions/Output"
+    "KinesisFirehoseOutput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResourceARN" : {
+          "type" : "string"
+        },
+        "RoleARN" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ResourceARN", "RoleARN" ]
+    },
+    "LambdaOutput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResourceARN" : {
+          "type" : "string"
+        },
+        "RoleARN" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ResourceARN", "RoleARN" ]
+    },
+    "DestinationSchema" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RecordFormatType" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "ApplicationName",
-    "Output"
-  ],
-  "typeName": "AWS::KinesisAnalytics::ApplicationOutput"
+  "required" : [ "ApplicationName", "Output" ],
+  "createOnlyProperties" : [ "/properties/ApplicationName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

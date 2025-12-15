@@ -1,467 +1,346 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/WorkgroupName",
-    "/properties/NamespaceName"
-  ],
-  "definitions": {
-    "ConfigParameter": {
-      "additionalProperties": false,
-      "properties": {
-        "ParameterKey": {
-          "maxLength": 255,
-          "minLength": 0,
-          "type": "string"
+  "typeName" : "AWS::RedshiftServerless::Workgroup",
+  "description" : "Definition of AWS::RedshiftServerless::Workgroup Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
+  "definitions" : {
+    "ConfigParameter" : {
+      "type" : "object",
+      "properties" : {
+        "ParameterKey" : {
+          "type" : "string",
+          "maxLength" : 255,
+          "minLength" : 0
         },
-        "ParameterValue": {
-          "maxLength": 15000,
-          "minLength": 0,
-          "type": "string"
+        "ParameterValue" : {
+          "type" : "string",
+          "maxLength" : 15000,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Endpoint": {
-      "additionalProperties": false,
-      "properties": {
-        "Address": {
-          "type": "string"
+    "Endpoint" : {
+      "type" : "object",
+      "properties" : {
+        "Address" : {
+          "type" : "string"
         },
-        "Port": {
-          "type": "integer"
+        "Port" : {
+          "type" : "integer"
         },
-        "VpcEndpoints": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/VpcEndpoint"
+        "VpcEndpoints" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/VpcEndpoint"
           },
-          "type": "array"
+          "insertionOrder" : false
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NetworkInterface": {
-      "additionalProperties": false,
-      "properties": {
-        "AvailabilityZone": {
-          "type": "string"
+    "NetworkInterface" : {
+      "type" : "object",
+      "properties" : {
+        "NetworkInterfaceId" : {
+          "type" : "string"
         },
-        "NetworkInterfaceId": {
-          "type": "string"
+        "SubnetId" : {
+          "type" : "string"
         },
-        "PrivateIpAddress": {
-          "type": "string"
+        "PrivateIpAddress" : {
+          "type" : "string"
         },
-        "SubnetId": {
-          "type": "string"
+        "AvailabilityZone" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PerformanceTarget": {
-      "additionalProperties": false,
-      "properties": {
-        "Level": {
-          "maximum": 100,
-          "minimum": 1,
-          "type": "integer"
+    "PerformanceTarget" : {
+      "type" : "object",
+      "properties" : {
+        "Status" : {
+          "$ref" : "#/definitions/PerformanceTargetStatus"
         },
-        "Status": {
-          "$ref": "#/definitions/PerformanceTargetStatus"
+        "Level" : {
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 100
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "PerformanceTargetStatus": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "VpcEndpoint" : {
+      "type" : "object",
+      "properties" : {
+        "VpcEndpointId" : {
+          "type" : "string"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "VpcEndpoint": {
-      "additionalProperties": false,
-      "properties": {
-        "NetworkInterfaces": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/NetworkInterface"
+        "VpcId" : {
+          "type" : "string"
+        },
+        "NetworkInterfaces" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/NetworkInterface"
           },
-          "type": "array"
-        },
-        "VpcEndpointId": {
-          "type": "string"
-        },
-        "VpcId": {
-          "type": "string"
+          "insertionOrder" : false
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Workgroup": {
-      "additionalProperties": false,
-      "properties": {
-        "BaseCapacity": {
-          "type": "integer"
+    "Workgroup" : {
+      "type" : "object",
+      "properties" : {
+        "WorkgroupId" : {
+          "type" : "string"
         },
-        "ConfigParameters": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/ConfigParameter"
+        "WorkgroupArn" : {
+          "type" : "string"
+        },
+        "WorkgroupName" : {
+          "type" : "string",
+          "pattern" : "^[a-z0-9-]*$",
+          "maxLength" : 64,
+          "minLength" : 3
+        },
+        "NamespaceName" : {
+          "type" : "string",
+          "pattern" : "^[a-z0-9-]+$",
+          "maxLength" : 64,
+          "minLength" : 3
+        },
+        "BaseCapacity" : {
+          "type" : "integer"
+        },
+        "MaxCapacity" : {
+          "type" : "integer"
+        },
+        "EnhancedVpcRouting" : {
+          "type" : "boolean"
+        },
+        "ConfigParameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConfigParameter"
           },
-          "type": "array",
-          "uniqueItems": true
+          "uniqueItems" : true,
+          "insertionOrder" : false
         },
-        "CreationDate": {
-          "type": "string"
-        },
-        "Endpoint": {
-          "$ref": "#/definitions/Endpoint"
-        },
-        "EnhancedVpcRouting": {
-          "type": "boolean"
-        },
-        "MaxCapacity": {
-          "type": "integer"
-        },
-        "NamespaceName": {
-          "maxLength": 64,
-          "minLength": 3,
-          "pattern": "^[a-z0-9-]+$",
-          "type": "string"
-        },
-        "PricePerformanceTarget": {
-          "$ref": "#/definitions/PerformanceTarget"
-        },
-        "PubliclyAccessible": {
-          "type": "boolean"
-        },
-        "SecurityGroupIds": {
-          "insertionOrder": false,
-          "items": {
-            "maxLength": 255,
-            "minLength": 0,
-            "pattern": "^sg-[0-9a-fA-F]{8,}$",
-            "type": "string"
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^sg-[0-9a-fA-F]{8,}$",
+            "maxLength" : 255,
+            "minLength" : 0
           },
-          "type": "array"
+          "insertionOrder" : false
         },
-        "Status": {
-          "$ref": "#/definitions/WorkgroupStatus"
-        },
-        "SubnetIds": {
-          "insertionOrder": false,
-          "items": {
-            "maxLength": 255,
-            "minLength": 0,
-            "pattern": "^subnet-[0-9a-fA-F]{8,}$",
-            "type": "string"
+        "SubnetIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^subnet-[0-9a-fA-F]{8,}$",
+            "maxLength" : 255,
+            "minLength" : 0
           },
-          "type": "array"
+          "insertionOrder" : false
         },
-        "TrackName": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_]+$",
-          "type": "string"
+        "Status" : {
+          "$ref" : "#/definitions/WorkgroupStatus"
         },
-        "WorkgroupArn": {
-          "type": "string"
+        "Endpoint" : {
+          "$ref" : "#/definitions/Endpoint"
         },
-        "WorkgroupId": {
-          "type": "string"
+        "PubliclyAccessible" : {
+          "type" : "boolean"
         },
-        "WorkgroupName": {
-          "maxLength": 64,
-          "minLength": 3,
-          "pattern": "^[a-z0-9-]*$",
-          "type": "string"
+        "CreationDate" : {
+          "type" : "string"
+        },
+        "PricePerformanceTarget" : {
+          "$ref" : "#/definitions/PerformanceTarget"
+        },
+        "TrackName" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9_]+$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "WorkgroupStatus": {
-      "enum": [
-        "CREATING",
-        "AVAILABLE",
-        "MODIFYING",
-        "DELETING"
-      ],
-      "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
+        },
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
+    },
+    "WorkgroupStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "AVAILABLE", "MODIFYING", "DELETING" ]
+    },
+    "PerformanceTargetStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     }
   },
-  "description": "Definition of AWS::RedshiftServerless::Workgroup Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAvailabilityZones",
-        "redshift-serverless:CreateNamespace",
-        "redshift-serverless:CreateWorkgroup",
-        "redshift-serverless:GetWorkgroup",
-        "redshift-serverless:GetNamespace",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:TagResource",
-        "redshift-serverless:RestoreFromSnapshot",
-        "redshift-serverless:RestoreFromRecoveryPoint"
-      ]
+  "properties" : {
+    "WorkgroupName" : {
+      "description" : "The name of the workgroup.",
+      "type" : "string",
+      "pattern" : "^(?=^[a-z0-9-]+$).{3,64}$",
+      "maxLength" : 64,
+      "minLength" : 3
     },
-    "delete": {
-      "permissions": [
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAvailabilityZones",
-        "redshift-serverless:GetWorkgroup",
-        "redshift-serverless:GetNamespace",
-        "redshift-serverless:DeleteWorkgroup",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:UntagResource"
-      ]
+    "NamespaceName" : {
+      "description" : "The namespace the workgroup is associated with.",
+      "type" : "string",
+      "pattern" : "^(?=^[a-z0-9-]+$).{3,64}$",
+      "maxLength" : 64,
+      "minLength" : 3
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAvailabilityZones",
-        "redshift-serverless:ListWorkgroups",
-        "redshift-serverless:ListTagsForResource"
-      ]
+    "BaseCapacity" : {
+      "description" : "The base compute capacity of the workgroup in Redshift Processing Units (RPUs).",
+      "type" : "integer"
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAvailabilityZones",
-        "redshift-serverless:GetWorkgroup",
-        "redshift-serverless:ListTagsForResource"
-      ]
+    "MaxCapacity" : {
+      "description" : "The max compute capacity of the workgroup in Redshift Processing Units (RPUs).",
+      "type" : "integer"
     },
-    "update": {
-      "permissions": [
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeAddresses",
-        "ec2:DescribeInternetGateways",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAccountAttributes",
-        "ec2:DescribeAvailabilityZones",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:TagResource",
-        "redshift-serverless:UntagResource",
-        "redshift-serverless:GetWorkgroup",
-        "redshift-serverless:UpdateWorkgroup",
-        "redshift-serverless:ListTagsForResource",
-        "redshift-serverless:TagResource",
-        "redshift-serverless:UntagResource",
-        "redshift-serverless:RestoreFromSnapshot",
-        "redshift-serverless:RestoreFromRecoveryPoint"
-      ]
+    "EnhancedVpcRouting" : {
+      "description" : "The value that specifies whether to enable enhanced virtual private cloud (VPC) routing, which forces Amazon Redshift Serverless to route traffic through your VPC.",
+      "type" : "boolean",
+      "default" : false
+    },
+    "ConfigParameters" : {
+      "description" : "A list of parameters to set for finer control over a database. Available options are datestyle, enable_user_activity_logging, query_group, search_path, max_query_execution_time, and require_ssl.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/ConfigParameter"
+      },
+      "minItems" : 1
+    },
+    "SecurityGroupIds" : {
+      "description" : "A list of security group IDs to associate with the workgroup.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^sg-[0-9a-fA-F]{8,}$",
+        "maxLength" : 255,
+        "minLength" : 0
+      },
+      "maxItems" : 32,
+      "minItems" : 1
+    },
+    "SubnetIds" : {
+      "description" : "A list of subnet IDs the workgroup is associated with.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^subnet-[0-9a-fA-F]{8,}$",
+        "maxLength" : 255,
+        "minLength" : 0
+      },
+      "maxItems" : 32,
+      "minItems" : 1
+    },
+    "PubliclyAccessible" : {
+      "description" : "A value that specifies whether the workgroup can be accessible from a public network.",
+      "type" : "boolean",
+      "default" : false
+    },
+    "Port" : {
+      "description" : "The custom port to use when connecting to a workgroup. Valid port ranges are 5431-5455 and 8191-8215. The default is 5439.",
+      "type" : "integer"
+    },
+    "PricePerformanceTarget" : {
+      "description" : "A property that represents the price performance target settings for the workgroup.",
+      "type" : "object",
+      "$ref" : "#/definitions/PerformanceTarget"
+    },
+    "SnapshotArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the snapshot to restore from.",
+      "type" : "string"
+    },
+    "SnapshotName" : {
+      "description" : "The snapshot name to restore from.",
+      "type" : "string"
+    },
+    "SnapshotOwnerAccount" : {
+      "description" : "The Amazon Web Services account that owns the snapshot.",
+      "type" : "string"
+    },
+    "RecoveryPointId" : {
+      "description" : "The recovery point id to restore from.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "The map of the key-value pairs used to tag the workgroup.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
+    },
+    "TrackName" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_]+$"
+    },
+    "Workgroup" : {
+      "description" : "Definition for workgroup resource",
+      "$ref" : "#/definitions/Workgroup"
     }
   },
-  "primaryIdentifier": [
-    "/properties/WorkgroupName"
-  ],
-  "properties": {
-    "BaseCapacity": {
-      "description": "The base compute capacity of the workgroup in Redshift Processing Units (RPUs).",
-      "type": "integer"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "WorkgroupName" ],
+  "createOnlyProperties" : [ "/properties/WorkgroupName", "/properties/NamespaceName" ],
+  "readOnlyProperties" : [ "/properties/Workgroup/WorkgroupId", "/properties/Workgroup/WorkgroupArn", "/properties/Workgroup/WorkgroupName", "/properties/Workgroup/NamespaceName", "/properties/Workgroup/BaseCapacity", "/properties/Workgroup/MaxCapacity", "/properties/Workgroup/EnhancedVpcRouting", "/properties/Workgroup/ConfigParameters/*/ParameterKey", "/properties/Workgroup/ConfigParameters/*/ParameterValue", "/properties/Workgroup/SecurityGroupIds", "/properties/Workgroup/SubnetIds", "/properties/Workgroup/TrackName", "/properties/Workgroup/Status", "/properties/Workgroup/Endpoint/Address", "/properties/Workgroup/Endpoint/Port", "/properties/Workgroup/Endpoint/VpcEndpoints/*/VpcEndpointId", "/properties/Workgroup/Endpoint/VpcEndpoints/*/VpcId", "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/NetworkInterfaceId", "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/SubnetId", "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/PrivateIpAddress", "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/AvailabilityZone", "/properties/Workgroup/PubliclyAccessible", "/properties/Workgroup/CreationDate" ],
+  "writeOnlyProperties" : [ "/properties/ConfigParameters", "/properties/SecurityGroupIds", "/properties/SubnetIds", "/properties/SnapshotArn", "/properties/SnapshotName", "/properties/SnapshotOwnerAccount", "/properties/RecoveryPointId" ],
+  "primaryIdentifier" : [ "/properties/WorkgroupName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:DescribeVpcAttribute", "ec2:DescribeSecurityGroups", "ec2:DescribeAddresses", "ec2:DescribeInternetGateways", "ec2:DescribeSubnets", "ec2:DescribeAccountAttributes", "ec2:DescribeAvailabilityZones", "redshift-serverless:CreateNamespace", "redshift-serverless:CreateWorkgroup", "redshift-serverless:GetWorkgroup", "redshift-serverless:GetNamespace", "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:RestoreFromSnapshot", "redshift-serverless:RestoreFromRecoveryPoint" ]
     },
-    "ConfigParameters": {
-      "description": "A list of parameters to set for finer control over a database. Available options are datestyle, enable_user_activity_logging, query_group, search_path, max_query_execution_time, and require_ssl.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ConfigParameter"
-      },
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
+    "read" : {
+      "permissions" : [ "ec2:DescribeVpcAttribute", "ec2:DescribeSecurityGroups", "ec2:DescribeAddresses", "ec2:DescribeInternetGateways", "ec2:DescribeSubnets", "ec2:DescribeAccountAttributes", "ec2:DescribeAvailabilityZones", "redshift-serverless:GetWorkgroup", "redshift-serverless:ListTagsForResource" ]
     },
-    "EnhancedVpcRouting": {
-      "default": false,
-      "description": "The value that specifies whether to enable enhanced virtual private cloud (VPC) routing, which forces Amazon Redshift Serverless to route traffic through your VPC.",
-      "type": "boolean"
+    "update" : {
+      "permissions" : [ "ec2:DescribeVpcAttribute", "ec2:DescribeSecurityGroups", "ec2:DescribeAddresses", "ec2:DescribeInternetGateways", "ec2:DescribeSubnets", "ec2:DescribeAccountAttributes", "ec2:DescribeAvailabilityZones", "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:UntagResource", "redshift-serverless:GetWorkgroup", "redshift-serverless:UpdateWorkgroup", "redshift-serverless:ListTagsForResource", "redshift-serverless:TagResource", "redshift-serverless:UntagResource", "redshift-serverless:RestoreFromSnapshot", "redshift-serverless:RestoreFromRecoveryPoint" ]
     },
-    "MaxCapacity": {
-      "description": "The max compute capacity of the workgroup in Redshift Processing Units (RPUs).",
-      "type": "integer"
+    "delete" : {
+      "permissions" : [ "ec2:DescribeVpcAttribute", "ec2:DescribeSecurityGroups", "ec2:DescribeAddresses", "ec2:DescribeInternetGateways", "ec2:DescribeSubnets", "ec2:DescribeAccountAttributes", "ec2:DescribeAvailabilityZones", "redshift-serverless:GetWorkgroup", "redshift-serverless:GetNamespace", "redshift-serverless:DeleteWorkgroup", "redshift-serverless:ListTagsForResource", "redshift-serverless:UntagResource" ]
     },
-    "NamespaceName": {
-      "description": "The namespace the workgroup is associated with.",
-      "maxLength": 64,
-      "minLength": 3,
-      "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
-      "type": "string"
-    },
-    "Port": {
-      "description": "The custom port to use when connecting to a workgroup. Valid port ranges are 5431-5455 and 8191-8215. The default is 5439.",
-      "type": "integer"
-    },
-    "PricePerformanceTarget": {
-      "$ref": "#/definitions/PerformanceTarget",
-      "description": "A property that represents the price performance target settings for the workgroup.",
-      "type": "object"
-    },
-    "PubliclyAccessible": {
-      "default": false,
-      "description": "A value that specifies whether the workgroup can be accessible from a public network.",
-      "type": "boolean"
-    },
-    "RecoveryPointId": {
-      "description": "The recovery point id to restore from.",
-      "type": "string"
-    },
-    "SecurityGroupIds": {
-      "description": "A list of security group IDs to associate with the workgroup.",
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 255,
-        "minLength": 0,
-        "pattern": "^sg-[0-9a-fA-F]{8,}$",
-        "type": "string"
-      },
-      "maxItems": 32,
-      "minItems": 1,
-      "type": "array"
-    },
-    "SnapshotArn": {
-      "description": "The Amazon Resource Name (ARN) of the snapshot to restore from.",
-      "type": "string"
-    },
-    "SnapshotName": {
-      "description": "The snapshot name to restore from.",
-      "type": "string"
-    },
-    "SnapshotOwnerAccount": {
-      "description": "The Amazon Web Services account that owns the snapshot.",
-      "type": "string"
-    },
-    "SubnetIds": {
-      "description": "A list of subnet IDs the workgroup is associated with.",
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 255,
-        "minLength": 0,
-        "pattern": "^subnet-[0-9a-fA-F]{8,}$",
-        "type": "string"
-      },
-      "maxItems": 32,
-      "minItems": 1,
-      "type": "array"
-    },
-    "Tags": {
-      "description": "The map of the key-value pairs used to tag the workgroup.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
-    },
-    "TrackName": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_]+$",
-      "type": "string"
-    },
-    "Workgroup": {
-      "$ref": "#/definitions/Workgroup",
-      "description": "Definition for workgroup resource"
-    },
-    "WorkgroupName": {
-      "description": "The name of the workgroup.",
-      "maxLength": 64,
-      "minLength": 3,
-      "pattern": "^(?=^[a-z0-9-]+$).{3,64}$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "ec2:DescribeVpcAttribute", "ec2:DescribeSecurityGroups", "ec2:DescribeAddresses", "ec2:DescribeInternetGateways", "ec2:DescribeSubnets", "ec2:DescribeAccountAttributes", "ec2:DescribeAvailabilityZones", "redshift-serverless:ListWorkgroups", "redshift-serverless:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Workgroup/WorkgroupId",
-    "/properties/Workgroup/WorkgroupArn",
-    "/properties/Workgroup/WorkgroupName",
-    "/properties/Workgroup/NamespaceName",
-    "/properties/Workgroup/BaseCapacity",
-    "/properties/Workgroup/MaxCapacity",
-    "/properties/Workgroup/EnhancedVpcRouting",
-    "/properties/Workgroup/ConfigParameters/*/ParameterKey",
-    "/properties/Workgroup/ConfigParameters/*/ParameterValue",
-    "/properties/Workgroup/SecurityGroupIds",
-    "/properties/Workgroup/SubnetIds",
-    "/properties/Workgroup/TrackName",
-    "/properties/Workgroup/Status",
-    "/properties/Workgroup/Endpoint/Address",
-    "/properties/Workgroup/Endpoint/Port",
-    "/properties/Workgroup/Endpoint/VpcEndpoints/*/VpcEndpointId",
-    "/properties/Workgroup/Endpoint/VpcEndpoints/*/VpcId",
-    "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/NetworkInterfaceId",
-    "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/SubnetId",
-    "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/PrivateIpAddress",
-    "/properties/Workgroup/Endpoint/VpcEndpoints/*/NetworkInterfaces/*/AvailabilityZone",
-    "/properties/Workgroup/PubliclyAccessible",
-    "/properties/Workgroup/CreationDate"
-  ],
-  "required": [
-    "WorkgroupName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-redshift-serverless",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "redshift-serverless:ListTagsForResource",
-      "redshift-serverless:TagResource",
-      "redshift-serverless:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::RedshiftServerless::Workgroup",
-  "writeOnlyProperties": [
-    "/properties/ConfigParameters",
-    "/properties/SecurityGroupIds",
-    "/properties/SubnetIds",
-    "/properties/SnapshotArn",
-    "/properties/SnapshotName",
-    "/properties/SnapshotOwnerAccount",
-    "/properties/RecoveryPointId"
-  ]
+  }
 }

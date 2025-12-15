@@ -1,386 +1,302 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "AutomaticEncryptionKeyConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.",
-      "type": "object"
-    },
-    "DestinationConfiguration": {
-      "additionalProperties": false,
-      "description": "The definition of a media stream that is associated with the output.",
-      "properties": {
-        "DestinationIp": {
-          "description": "The IP address where contents of the media stream will be sent.",
-          "type": "string"
+  "typeName" : "AWS::MediaConnect::FlowOutput",
+  "description" : "Resource schema for AWS::MediaConnect::FlowOutput",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+  "definitions" : {
+    "Encryption" : {
+      "type" : "object",
+      "description" : "Information about the encryption of the flow.",
+      "properties" : {
+        "Algorithm" : {
+          "type" : "string",
+          "enum" : [ "aes128", "aes192", "aes256" ],
+          "description" : "The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256)."
         },
-        "DestinationPort": {
-          "description": "The port to use when the content of the media stream is distributed to the output.",
-          "type": "integer"
+        "KeyType" : {
+          "type" : "string",
+          "enum" : [ "static-key", "srt-password" ],
+          "description" : "The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).",
+          "default" : "static-key"
         },
-        "Interface": {
-          "$ref": "#/definitions/Interface",
-          "description": "The VPC interface that is used for the media stream associated with the output."
+        "RoleArn" : {
+          "type" : "string",
+          "description" : "The ARN of the role that you created during setup (when you set up AWS Elemental MediaConnect as a trusted entity)."
+        },
+        "SecretArn" : {
+          "type" : "string",
+          "description" : " The ARN of the secret that you created in AWS Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption."
         }
       },
-      "required": [
-        "DestinationIp",
-        "DestinationPort",
-        "Interface"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "RoleArn", "SecretArn" ]
     },
-    "EncodingParameters": {
-      "additionalProperties": false,
-      "description": "A collection of parameters that determine how MediaConnect will convert the content. These fields only apply to outputs on flows that have a CDI source.",
-      "properties": {
-        "CompressionFactor": {
-          "description": "A value that is used to calculate compression for an output. The bitrate of the output is calculated as follows: Output bitrate = (1 / compressionFactor) * (source bitrate) This property only applies to outputs that use the ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol. Valid values are in the range of 3.0 to 10.0, inclusive.",
-          "type": "number"
-        },
-        "EncoderProfile": {
-          "description": "A setting on the encoder that drives compression settings. This property only applies to video media streams associated with outputs that use the ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol.",
-          "enum": [
-            "main",
-            "high"
-          ],
-          "type": "string"
+    "VpcInterfaceAttachment" : {
+      "type" : "object",
+      "description" : "The settings for attaching a VPC interface to an output.",
+      "properties" : {
+        "VpcInterfaceName" : {
+          "type" : "string",
+          "description" : "The name of the VPC interface to use for this output."
         }
       },
-      "required": [
-        "CompressionFactor"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Encryption": {
-      "additionalProperties": false,
-      "description": "Information about the encryption of the flow.",
-      "properties": {
-        "Algorithm": {
-          "description": "The type of algorithm that is used for the encryption (such as aes128, aes192, or aes256).",
-          "enum": [
-            "aes128",
-            "aes192",
-            "aes256"
-          ],
-          "type": "string"
+    "MediaStreamOutputConfiguration" : {
+      "type" : "object",
+      "description" : "The media stream that is associated with the output, and the parameters for that association.",
+      "properties" : {
+        "EncodingName" : {
+          "type" : "string",
+          "description" : "The format that will be used to encode the data. For ancillary data streams, set the encoding name to smpte291. For audio streams, set the encoding name to pcm. For video streams on sources or outputs that use the CDI protocol, set the encoding name to raw. For video streams on sources or outputs that use the ST 2110 JPEG XS protocol, set the encoding name to jxsv.",
+          "enum" : [ "jxsv", "raw", "smpte291", "pcm" ]
         },
-        "KeyType": {
-          "default": "static-key",
-          "description": "The type of key that is used for the encryption. If no keyType is provided, the service will use the default setting (static-key).",
-          "enum": [
-            "static-key",
-            "srt-password"
-          ],
-          "type": "string"
+        "DestinationConfigurations" : {
+          "type" : "array",
+          "description" : "The media streams that you want to associate with the output.",
+          "items" : {
+            "$ref" : "#/definitions/DestinationConfiguration"
+          }
         },
-        "RoleArn": {
-          "description": "The ARN of the role that you created during setup (when you set up AWS Elemental MediaConnect as a trusted entity).",
-          "type": "string"
+        "MediaStreamName" : {
+          "type" : "string",
+          "description" : "A name that helps you distinguish one media stream from another."
         },
-        "SecretArn": {
-          "description": " The ARN of the secret that you created in AWS Secrets Manager to store the encryption key. This parameter is required for static key encryption and is not valid for SPEKE encryption.",
-          "type": "string"
+        "EncodingParameters" : {
+          "$ref" : "#/definitions/EncodingParameters",
+          "description" : "A collection of parameters that determine how MediaConnect will convert the content. These fields only apply to outputs on flows that have a CDI source."
         }
       },
-      "required": [
-        "RoleArn",
-        "SecretArn"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "EncodingName", "MediaStreamName" ]
     },
-    "FlowTransitEncryption": {
-      "additionalProperties": false,
-      "description": "The configuration that defines how content is encrypted during transit between the MediaConnect router and a MediaConnect flow.",
-      "properties": {
-        "EncryptionKeyConfiguration": {
-          "$ref": "#/definitions/FlowTransitEncryptionKeyConfiguration"
+    "DestinationConfiguration" : {
+      "type" : "object",
+      "description" : "The definition of a media stream that is associated with the output.",
+      "properties" : {
+        "DestinationIp" : {
+          "type" : "string",
+          "description" : "The IP address where contents of the media stream will be sent."
         },
-        "EncryptionKeyType": {
-          "$ref": "#/definitions/FlowTransitEncryptionKeyType"
+        "DestinationPort" : {
+          "type" : "integer",
+          "description" : "The port to use when the content of the media stream is distributed to the output."
+        },
+        "Interface" : {
+          "$ref" : "#/definitions/Interface",
+          "description" : "The VPC interface that is used for the media stream associated with the output."
         }
       },
-      "required": [
-        "EncryptionKeyConfiguration"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "DestinationIp", "DestinationPort", "Interface" ]
     },
-    "FlowTransitEncryptionKeyConfiguration": {
-      "description": "Configuration settings for flow transit encryption keys.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "SecretsManager": {
-              "$ref": "#/definitions/SecretsManagerEncryptionKeyConfiguration"
-            }
-          },
-          "required": [
-            "SecretsManager"
-          ],
-          "title": "SecretsManager",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Automatic": {
-              "$ref": "#/definitions/AutomaticEncryptionKeyConfiguration"
-            }
-          },
-          "required": [
-            "Automatic"
-          ],
-          "title": "Automatic",
-          "type": "object"
-        }
-      ]
-    },
-    "FlowTransitEncryptionKeyType": {
-      "enum": [
-        "SECRETS_MANAGER",
-        "AUTOMATIC"
-      ],
-      "type": "string"
-    },
-    "Interface": {
-      "additionalProperties": false,
-      "description": "The VPC interface that you want to use for the media stream associated with the output.",
-      "properties": {
-        "Name": {
-          "description": "The name of the VPC interface that you want to use for the media stream associated with the output.",
-          "type": "string"
+    "Interface" : {
+      "type" : "object",
+      "description" : "The VPC interface that you want to use for the media stream associated with the output.",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "description" : "The name of the VPC interface that you want to use for the media stream associated with the output."
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Name" ]
     },
-    "MediaStreamOutputConfiguration": {
-      "additionalProperties": false,
-      "description": "The media stream that is associated with the output, and the parameters for that association.",
-      "properties": {
-        "DestinationConfigurations": {
-          "description": "The media streams that you want to associate with the output.",
-          "items": {
-            "$ref": "#/definitions/DestinationConfiguration"
-          },
-          "type": "array"
+    "EncodingParameters" : {
+      "type" : "object",
+      "description" : "A collection of parameters that determine how MediaConnect will convert the content. These fields only apply to outputs on flows that have a CDI source.",
+      "properties" : {
+        "CompressionFactor" : {
+          "type" : "number",
+          "description" : "A value that is used to calculate compression for an output. The bitrate of the output is calculated as follows: Output bitrate = (1 / compressionFactor) * (source bitrate) This property only applies to outputs that use the ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol. Valid values are in the range of 3.0 to 10.0, inclusive."
         },
-        "EncodingName": {
-          "description": "The format that will be used to encode the data. For ancillary data streams, set the encoding name to smpte291. For audio streams, set the encoding name to pcm. For video streams on sources or outputs that use the CDI protocol, set the encoding name to raw. For video streams on sources or outputs that use the ST 2110 JPEG XS protocol, set the encoding name to jxsv.",
-          "enum": [
-            "jxsv",
-            "raw",
-            "smpte291",
-            "pcm"
-          ],
-          "type": "string"
-        },
-        "EncodingParameters": {
-          "$ref": "#/definitions/EncodingParameters",
-          "description": "A collection of parameters that determine how MediaConnect will convert the content. These fields only apply to outputs on flows that have a CDI source."
-        },
-        "MediaStreamName": {
-          "description": "A name that helps you distinguish one media stream from another.",
-          "type": "string"
+        "EncoderProfile" : {
+          "type" : "string",
+          "description" : "A setting on the encoder that drives compression settings. This property only applies to video media streams associated with outputs that use the ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol.",
+          "enum" : [ "main", "high" ]
         }
       },
-      "required": [
-        "EncodingName",
-        "MediaStreamName"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "CompressionFactor" ]
     },
-    "SecretsManagerEncryptionKeyConfiguration": {
-      "additionalProperties": false,
-      "description": "The configuration settings for transit encryption of a flow output using AWS Secrets Manager, including the secret ARN and role ARN.",
-      "properties": {
-        "RoleArn": {
-          "description": "The ARN of the IAM role used for transit encryption to the router input using AWS Secrets Manager.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
-          "type": "string"
+    "FlowTransitEncryption" : {
+      "type" : "object",
+      "description" : "The configuration that defines how content is encrypted during transit between the MediaConnect router and a MediaConnect flow.",
+      "properties" : {
+        "EncryptionKeyType" : {
+          "$ref" : "#/definitions/FlowTransitEncryptionKeyType"
         },
-        "SecretArn": {
-          "description": "The ARN of the AWS Secrets Manager secret used for transit encryption to the router input.",
-          "pattern": "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
-          "type": "string"
+        "EncryptionKeyConfiguration" : {
+          "$ref" : "#/definitions/FlowTransitEncryptionKeyConfiguration"
         }
       },
-      "required": [
-        "RoleArn",
-        "SecretArn"
-      ],
-      "type": "object"
+      "required" : [ "EncryptionKeyConfiguration" ],
+      "additionalProperties" : false
     },
-    "VpcInterfaceAttachment": {
-      "additionalProperties": false,
-      "description": "The settings for attaching a VPC interface to an output.",
-      "properties": {
-        "VpcInterfaceName": {
-          "description": "The name of the VPC interface to use for this output.",
-          "type": "string"
+    "FlowTransitEncryptionKeyConfiguration" : {
+      "description" : "Configuration settings for flow transit encryption keys.",
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "SecretsManager",
+        "properties" : {
+          "SecretsManager" : {
+            "$ref" : "#/definitions/SecretsManagerEncryptionKeyConfiguration"
+          }
+        },
+        "required" : [ "SecretsManager" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Automatic",
+        "properties" : {
+          "Automatic" : {
+            "$ref" : "#/definitions/AutomaticEncryptionKeyConfiguration"
+          }
+        },
+        "required" : [ "Automatic" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "FlowTransitEncryptionKeyType" : {
+      "type" : "string",
+      "enum" : [ "SECRETS_MANAGER", "AUTOMATIC" ]
+    },
+    "SecretsManagerEncryptionKeyConfiguration" : {
+      "type" : "object",
+      "description" : "The configuration settings for transit encryption of a flow output using AWS Secrets Manager, including the secret ARN and role ARN.",
+      "properties" : {
+        "SecretArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):secretsmanager:[a-z0-9-]+:[0-9]{12}:secret:[a-zA-Z0-9/_+=.@-]+$",
+          "description" : "The ARN of the AWS Secrets Manager secret used for transit encryption to the router input."
+        },
+        "RoleArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws[a-zA-Z-]*):iam::[0-9]{12}:role/[a-zA-Z0-9_+=,.@-]+$",
+          "description" : "The ARN of the IAM role used for transit encryption to the router input using AWS Secrets Manager."
         }
       },
-      "type": "object"
+      "required" : [ "RoleArn", "SecretArn" ],
+      "additionalProperties" : false
+    },
+    "AutomaticEncryptionKeyConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration settings for automatic encryption key management, where MediaConnect handles key creation and rotation.",
+      "additionalProperties" : false
     }
   },
-  "description": "Resource schema for AWS::MediaConnect::FlowOutput",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:PassRole",
-        "mediaconnect:AddFlowOutputs"
-      ]
+  "properties" : {
+    "FlowArn" : {
+      "description" : "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "mediaconnect:DescribeFlow",
-        "mediaconnect:RemoveFlowOutput"
-      ]
+    "OutputArn" : {
+      "description" : "The ARN of the output.",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "mediaconnect:DescribeFlow",
-        "mediaconnect:ListFlows"
-      ]
+    "CidrAllowList" : {
+      "type" : "array",
+      "description" : "The range of IP addresses that should be allowed to initiate output requests to this flow. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.",
+      "items" : {
+        "type" : "string"
+      }
     },
-    "read": {
-      "permissions": [
-        "mediaconnect:DescribeFlow"
-      ]
+    "Encryption" : {
+      "$ref" : "#/definitions/Encryption",
+      "description" : "The type of key used for the encryption. If no keyType is provided, the service will use the default setting (static-key)."
     },
-    "update": {
-      "permissions": [
-        "mediaconnect:DescribeFlow",
-        "mediaconnect:UpdateFlowOutput"
-      ]
+    "Description" : {
+      "type" : "string",
+      "description" : "A description of the output."
+    },
+    "Destination" : {
+      "type" : "string",
+      "description" : "The address where you want to send the output."
+    },
+    "MaxLatency" : {
+      "type" : "integer",
+      "description" : "The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams."
+    },
+    "MinLatency" : {
+      "type" : "integer",
+      "description" : "The minimum latency in milliseconds."
+    },
+    "Name" : {
+      "type" : "string",
+      "description" : "The name of the output. This value must be unique within the current flow."
+    },
+    "Port" : {
+      "type" : "integer",
+      "description" : "The port to use when content is distributed to this output."
+    },
+    "Protocol" : {
+      "type" : "string",
+      "enum" : [ "zixi-push", "rtp-fec", "rtp", "zixi-pull", "rist", "fujitsu-qos", "srt-listener", "srt-caller", "st2110-jpegxs", "cdi", "ndi-speed-hq" ],
+      "description" : "The protocol that is used by the source or output."
+    },
+    "RemoteId" : {
+      "type" : "string",
+      "description" : "The remote ID for the Zixi-pull stream."
+    },
+    "SmoothingLatency" : {
+      "type" : "integer",
+      "description" : "The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams."
+    },
+    "StreamId" : {
+      "type" : "string",
+      "description" : "The stream ID that you want to use for this transport. This parameter applies only to Zixi-based streams."
+    },
+    "VpcInterfaceAttachment" : {
+      "$ref" : "#/definitions/VpcInterfaceAttachment",
+      "description" : "The name of the VPC interface attachment to use for this output."
+    },
+    "MediaStreamOutputConfigurations" : {
+      "type" : "array",
+      "description" : "The definition for each media stream that is associated with the output.",
+      "items" : {
+        "$ref" : "#/definitions/MediaStreamOutputConfiguration"
+      }
+    },
+    "OutputStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ],
+      "description" : "An indication of whether the output should transmit data or not."
+    },
+    "NdiProgramName" : {
+      "type" : "string",
+      "description" : "A suffix for the names of the NDI sources that the flow creates. If a custom name isn't specified, MediaConnect uses the output name."
+    },
+    "NdiSpeedHqQuality" : {
+      "type" : "integer",
+      "description" : "A quality setting for the NDI Speed HQ encoder."
+    },
+    "RouterIntegrationState" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "RouterIntegrationTransitEncryption" : {
+      "$ref" : "#/definitions/FlowTransitEncryption"
     }
   },
-  "primaryIdentifier": [
-    "/properties/OutputArn"
-  ],
-  "properties": {
-    "CidrAllowList": {
-      "description": "The range of IP addresses that should be allowed to initiate output requests to this flow. These IP addresses should be in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
+  "additionalProperties" : false,
+  "required" : [ "FlowArn" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/OutputArn" ],
+  "primaryIdentifier" : [ "/properties/OutputArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:PassRole", "mediaconnect:AddFlowOutputs" ]
     },
-    "Description": {
-      "description": "A description of the output.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "mediaconnect:DescribeFlow" ]
     },
-    "Destination": {
-      "description": "The address where you want to send the output.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "mediaconnect:DescribeFlow", "mediaconnect:UpdateFlowOutput" ]
     },
-    "Encryption": {
-      "$ref": "#/definitions/Encryption",
-      "description": "The type of key used for the encryption. If no keyType is provided, the service will use the default setting (static-key)."
+    "delete" : {
+      "permissions" : [ "mediaconnect:DescribeFlow", "mediaconnect:RemoveFlowOutput" ]
     },
-    "FlowArn": {
-      "description": "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow.",
-      "type": "string"
-    },
-    "MaxLatency": {
-      "description": "The maximum latency in milliseconds. This parameter applies only to RIST-based and Zixi-based streams.",
-      "type": "integer"
-    },
-    "MediaStreamOutputConfigurations": {
-      "description": "The definition for each media stream that is associated with the output.",
-      "items": {
-        "$ref": "#/definitions/MediaStreamOutputConfiguration"
-      },
-      "type": "array"
-    },
-    "MinLatency": {
-      "description": "The minimum latency in milliseconds.",
-      "type": "integer"
-    },
-    "Name": {
-      "description": "The name of the output. This value must be unique within the current flow.",
-      "type": "string"
-    },
-    "NdiProgramName": {
-      "description": "A suffix for the names of the NDI sources that the flow creates. If a custom name isn't specified, MediaConnect uses the output name.",
-      "type": "string"
-    },
-    "NdiSpeedHqQuality": {
-      "description": "A quality setting for the NDI Speed HQ encoder.",
-      "type": "integer"
-    },
-    "OutputArn": {
-      "description": "The ARN of the output.",
-      "type": "string"
-    },
-    "OutputStatus": {
-      "description": "An indication of whether the output should transmit data or not.",
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "Port": {
-      "description": "The port to use when content is distributed to this output.",
-      "type": "integer"
-    },
-    "Protocol": {
-      "description": "The protocol that is used by the source or output.",
-      "enum": [
-        "zixi-push",
-        "rtp-fec",
-        "rtp",
-        "zixi-pull",
-        "rist",
-        "fujitsu-qos",
-        "srt-listener",
-        "srt-caller",
-        "st2110-jpegxs",
-        "cdi",
-        "ndi-speed-hq"
-      ],
-      "type": "string"
-    },
-    "RemoteId": {
-      "description": "The remote ID for the Zixi-pull stream.",
-      "type": "string"
-    },
-    "RouterIntegrationState": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "RouterIntegrationTransitEncryption": {
-      "$ref": "#/definitions/FlowTransitEncryption"
-    },
-    "SmoothingLatency": {
-      "description": "The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.",
-      "type": "integer"
-    },
-    "StreamId": {
-      "description": "The stream ID that you want to use for this transport. This parameter applies only to Zixi-based streams.",
-      "type": "string"
-    },
-    "VpcInterfaceAttachment": {
-      "$ref": "#/definitions/VpcInterfaceAttachment",
-      "description": "The name of the VPC interface attachment to use for this output."
+    "list" : {
+      "permissions" : [ "mediaconnect:DescribeFlow", "mediaconnect:ListFlows" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/OutputArn"
-  ],
-  "required": [
-    "FlowArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
-  "typeName": "AWS::MediaConnect::FlowOutput"
+  }
 }

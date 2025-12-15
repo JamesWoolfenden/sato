@@ -1,373 +1,283 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Version",
-    "/properties/ContainerType",
-    "/properties/TargetRepository",
-    "/properties/InstanceConfiguration",
-    "/properties/ParentImage",
-    "/properties/Description",
-    "/properties/DockerfileTemplateUri",
-    "/properties/DockerfileTemplateData",
-    "/properties/ImageOsVersionOverride",
-    "/properties/KmsKeyId",
-    "/properties/PlatformOverride",
-    "/properties/WorkingDirectory",
-    "/properties/Components"
-  ],
-  "definitions": {
-    "ComponentConfiguration": {
-      "additionalProperties": false,
-      "description": "Configuration details of the component.",
-      "properties": {
-        "ComponentArn": {
-          "description": "The Amazon Resource Name (ARN) of the component.",
-          "type": "string"
-        },
-        "Parameters": {
-          "description": "A group of parameter settings that are used to configure the component for a specific recipe.",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/ComponentParameter"
-          },
-          "type": "array"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::ImageBuilder::ContainerRecipe",
+  "description" : "Resource schema for AWS::ImageBuilder::ContainerRecipe",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
+  "properties" : {
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of the container recipe.",
+      "type" : "string"
     },
-    "ComponentParameter": {
-      "additionalProperties": false,
-      "description": "Contains a key/value pair that sets the named component parameter.",
-      "properties": {
-        "Name": {
-          "description": "The name of the component parameter to set.",
-          "type": "string"
-        },
-        "Value": {
-          "description": "Sets the value for the named component parameter.",
-          "insertionOrder": true,
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        }
-      },
-      "required": [
-        "Name",
-        "Value"
-      ],
-      "type": "object"
+    "Name" : {
+      "description" : "The name of the container recipe.",
+      "type" : "string"
     },
-    "EbsInstanceBlockDeviceSpecification": {
-      "additionalProperties": false,
-      "description": "Amazon EBS-specific block device mapping specifications. ",
-      "properties": {
-        "DeleteOnTermination": {
-          "description": "Use to configure delete on termination of the associated device.",
-          "type": "boolean"
-        },
-        "Encrypted": {
-          "description": "Use to configure device encryption.",
-          "type": "boolean"
-        },
-        "Iops": {
-          "description": "Use to configure device IOPS.",
-          "type": "integer"
-        },
-        "KmsKeyId": {
-          "description": "Use to configure the KMS key to use when encrypting the device.",
-          "type": "string"
-        },
-        "SnapshotId": {
-          "description": "The snapshot that defines the device contents.",
-          "type": "string"
-        },
-        "Throughput": {
-          "description": "For GP3 volumes only - The throughput in MiB/s that the volume supports.",
-          "type": "integer"
-        },
-        "VolumeSize": {
-          "description": "Use to override the device's volume size.",
-          "type": "integer"
-        },
-        "VolumeType": {
-          "description": "Use to override the device's volume type.",
-          "enum": [
-            "standard",
-            "io1",
-            "io2",
-            "gp2",
-            "gp3",
-            "sc1",
-            "st1"
-          ],
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Description" : {
+      "description" : "The description of the container recipe.",
+      "type" : "string"
     },
-    "InstanceBlockDeviceMapping": {
-      "additionalProperties": false,
-      "description": "Defines block device mappings for the instance used to configure your image. ",
-      "properties": {
-        "DeviceName": {
-          "description": "The device to which these mappings apply.",
-          "type": "string"
-        },
-        "Ebs": {
-          "$ref": "#/definitions/EbsInstanceBlockDeviceSpecification",
-          "description": "Use to manage Amazon EBS-specific configuration for this mapping."
-        },
-        "NoDevice": {
-          "description": "Use to remove a mapping from the parent image.",
-          "type": "string"
-        },
-        "VirtualName": {
-          "description": "Use to manage instance ephemeral devices.",
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Version" : {
+      "description" : "The semantic version of the container recipe (<major>.<minor>.<patch>).",
+      "type" : "string"
     },
-    "InstanceConfiguration": {
-      "additionalProperties": false,
-      "description": "A group of options that can be used to configure an instance for building and testing container images.",
-      "properties": {
-        "BlockDeviceMappings": {
-          "description": "Defines the block devices to attach for building an instance from this Image Builder AMI.",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/InstanceBlockDeviceMapping"
-          },
-          "type": "array"
-        },
-        "Image": {
-          "description": "The AMI ID to use as the base image for a container build and test instance. If not specified, Image Builder will use the appropriate ECS-optimized AMI as a base image.",
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Components" : {
+      "description" : "Components for build and test that are included in the container recipe.",
+      "type" : "array",
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/ComponentConfiguration"
+      }
     },
-    "LatestVersion": {
-      "additionalProperties": false,
-      "description": "The latest version references of the container recipe.",
-      "properties": {
-        "Arn": {
-          "description": "The latest version ARN of the created container recipe.",
-          "type": "string"
-        },
-        "Major": {
-          "description": "The latest version ARN of the created container recipe, with the same major version.",
-          "type": "string"
-        },
-        "Minor": {
-          "description": "The latest version ARN of the created container recipe, with the same minor version.",
-          "type": "string"
-        },
-        "Patch": {
-          "description": "The latest version ARN of the created container recipe, with the same patch version.",
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "InstanceConfiguration" : {
+      "additionalProperties" : false,
+      "description" : "A group of options that can be used to configure an instance for building and testing container images.",
+      "$ref" : "#/definitions/InstanceConfiguration"
     },
-    "TargetContainerRepository": {
-      "additionalProperties": false,
-      "description": "The container repository where the output container image is stored.",
-      "properties": {
-        "RepositoryName": {
-          "description": "The name of the container repository where the output container image is stored. This name is prefixed by the repository location.",
-          "type": "string"
-        },
-        "Service": {
-          "description": "Specifies the service in which this image was registered.",
-          "enum": [
-            "ECR"
-          ],
-          "type": "string"
+    "DockerfileTemplateData" : {
+      "description" : "Dockerfiles are text documents that are used to build Docker containers, and ensure that they contain all of the elements required by the application running inside. The template data consists of contextual variables where Image Builder places build information or scripts, based on your container image recipe.",
+      "type" : "string"
+    },
+    "DockerfileTemplateUri" : {
+      "description" : "The S3 URI for the Dockerfile that will be used to build your container image.",
+      "type" : "string"
+    },
+    "PlatformOverride" : {
+      "description" : "Specifies the operating system platform when you use a custom source image.",
+      "type" : "string",
+      "enum" : [ "Windows", "Linux" ]
+    },
+    "ContainerType" : {
+      "description" : "Specifies the type of container, such as Docker.",
+      "type" : "string",
+      "enum" : [ "DOCKER" ]
+    },
+    "ImageOsVersionOverride" : {
+      "description" : "Specifies the operating system version for the source image.",
+      "type" : "string"
+    },
+    "TargetRepository" : {
+      "description" : "The destination repository for the container image.",
+      "$ref" : "#/definitions/TargetContainerRepository"
+    },
+    "KmsKeyId" : {
+      "description" : "Identifies which KMS key is used to encrypt the container image.",
+      "type" : "string"
+    },
+    "ParentImage" : {
+      "description" : "The source image for the container recipe.",
+      "type" : "string"
+    },
+    "WorkingDirectory" : {
+      "description" : "The working directory to be used during build and test workflows.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "Tags that are attached to the container recipe.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        ".{1,}" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
+    },
+    "LatestVersion" : {
+      "description" : "The latest version references of the container recipe.",
+      "$ref" : "#/definitions/LatestVersion"
     }
   },
-  "description": "Resource schema for AWS::ImageBuilder::ContainerRecipe",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:CreateServiceLinkedRole",
-        "imagebuilder:GetComponent",
-        "imagebuilder:TagResource",
-        "imagebuilder:GetContainerRecipe",
-        "imagebuilder:CreateContainerRecipe",
-        "imagebuilder:GetImage",
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:ReEncryptFrom",
-        "kms:ReEncryptTo",
-        "kms:GenerateDataKey",
-        "kms:GenerateDataKeyPair",
-        "kms:GenerateDataKeyPairWithoutPlaintext",
-        "kms:GenerateDataKeyWithoutPlaintext",
-        "s3:GetObject",
-        "s3:ListBucket",
-        "ecr:DescribeRepositories",
-        "ec2:DescribeImages"
-      ]
+  "definitions" : {
+    "ComponentConfiguration" : {
+      "description" : "Configuration details of the component.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ComponentArn" : {
+          "description" : "The Amazon Resource Name (ARN) of the component.",
+          "type" : "string"
+        },
+        "Parameters" : {
+          "description" : "A group of parameter settings that are used to configure the component for a specific recipe.",
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/ComponentParameter"
+          }
+        }
+      }
     },
-    "delete": {
-      "permissions": [
-        "imagebuilder:UntagResource",
-        "imagebuilder:GetContainerRecipe",
-        "imagebuilder:DeleteContainerRecipe"
-      ]
+    "InstanceConfiguration" : {
+      "description" : "A group of options that can be used to configure an instance for building and testing container images.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Image" : {
+          "description" : "The AMI ID to use as the base image for a container build and test instance. If not specified, Image Builder will use the appropriate ECS-optimized AMI as a base image.",
+          "type" : "string"
+        },
+        "BlockDeviceMappings" : {
+          "description" : "Defines the block devices to attach for building an instance from this Image Builder AMI.",
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/InstanceBlockDeviceMapping"
+          }
+        }
+      }
     },
-    "list": {
-      "permissions": [
-        "imagebuilder:ListContainerRecipes"
-      ]
+    "InstanceBlockDeviceMapping" : {
+      "description" : "Defines block device mappings for the instance used to configure your image. ",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeviceName" : {
+          "description" : "The device to which these mappings apply.",
+          "type" : "string"
+        },
+        "VirtualName" : {
+          "description" : "Use to manage instance ephemeral devices.",
+          "type" : "string"
+        },
+        "NoDevice" : {
+          "description" : "Use to remove a mapping from the parent image.",
+          "type" : "string"
+        },
+        "Ebs" : {
+          "description" : "Use to manage Amazon EBS-specific configuration for this mapping.",
+          "$ref" : "#/definitions/EbsInstanceBlockDeviceSpecification"
+        }
+      }
     },
-    "read": {
-      "permissions": [
-        "imagebuilder:GetContainerRecipe",
-        "kms:Decrypt"
-      ]
+    "EbsInstanceBlockDeviceSpecification" : {
+      "additionalProperties" : false,
+      "description" : "Amazon EBS-specific block device mapping specifications. ",
+      "type" : "object",
+      "properties" : {
+        "Encrypted" : {
+          "description" : "Use to configure device encryption.",
+          "type" : "boolean"
+        },
+        "DeleteOnTermination" : {
+          "description" : "Use to configure delete on termination of the associated device.",
+          "type" : "boolean"
+        },
+        "Iops" : {
+          "description" : "Use to configure device IOPS.",
+          "type" : "integer"
+        },
+        "KmsKeyId" : {
+          "description" : "Use to configure the KMS key to use when encrypting the device.",
+          "type" : "string"
+        },
+        "SnapshotId" : {
+          "description" : "The snapshot that defines the device contents.",
+          "type" : "string"
+        },
+        "Throughput" : {
+          "description" : "For GP3 volumes only - The throughput in MiB/s that the volume supports.",
+          "type" : "integer"
+        },
+        "VolumeSize" : {
+          "description" : "Use to override the device's volume size.",
+          "type" : "integer"
+        },
+        "VolumeType" : {
+          "description" : "Use to override the device's volume type.",
+          "type" : "string",
+          "enum" : [ "standard", "io1", "io2", "gp2", "gp3", "sc1", "st1" ]
+        }
+      }
     },
-    "update": {
-      "permissions": [
-        "imagebuilder:TagResource",
-        "imagebuilder:UntagResource"
-      ]
-    }
-  },
-  "oneOf": [
-    {
-      "required": [
-        "Name",
-        "Version",
-        "ParentImage",
-        "TargetRepository",
-        "ContainerType"
-      ]
-    }
-  ],
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the container recipe.",
-      "type": "string"
+    "TargetContainerRepository" : {
+      "description" : "The container repository where the output container image is stored.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Service" : {
+          "description" : "Specifies the service in which this image was registered.",
+          "type" : "string",
+          "enum" : [ "ECR" ]
+        },
+        "RepositoryName" : {
+          "description" : "The name of the container repository where the output container image is stored. This name is prefixed by the repository location.",
+          "type" : "string"
+        }
+      }
     },
-    "Components": {
-      "description": "Components for build and test that are included in the container recipe.",
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/ComponentConfiguration"
-      },
-      "type": "array"
-    },
-    "ContainerType": {
-      "description": "Specifies the type of container, such as Docker.",
-      "enum": [
-        "DOCKER"
-      ],
-      "type": "string"
-    },
-    "Description": {
-      "description": "The description of the container recipe.",
-      "type": "string"
-    },
-    "DockerfileTemplateData": {
-      "description": "Dockerfiles are text documents that are used to build Docker containers, and ensure that they contain all of the elements required by the application running inside. The template data consists of contextual variables where Image Builder places build information or scripts, based on your container image recipe.",
-      "type": "string"
-    },
-    "DockerfileTemplateUri": {
-      "description": "The S3 URI for the Dockerfile that will be used to build your container image.",
-      "type": "string"
-    },
-    "ImageOsVersionOverride": {
-      "description": "Specifies the operating system version for the source image.",
-      "type": "string"
-    },
-    "InstanceConfiguration": {
-      "$ref": "#/definitions/InstanceConfiguration",
-      "additionalProperties": false,
-      "description": "A group of options that can be used to configure an instance for building and testing container images."
-    },
-    "KmsKeyId": {
-      "description": "Identifies which KMS key is used to encrypt the container image.",
-      "type": "string"
-    },
-    "LatestVersion": {
-      "$ref": "#/definitions/LatestVersion",
-      "description": "The latest version references of the container recipe."
-    },
-    "Name": {
-      "description": "The name of the container recipe.",
-      "type": "string"
-    },
-    "ParentImage": {
-      "description": "The source image for the container recipe.",
-      "type": "string"
-    },
-    "PlatformOverride": {
-      "description": "Specifies the operating system platform when you use a custom source image.",
-      "enum": [
-        "Windows",
-        "Linux"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "additionalProperties": false,
-      "description": "Tags that are attached to the container recipe.",
-      "patternProperties": {
-        ".{1,}": {
-          "type": "string"
+    "ComponentParameter" : {
+      "additionalProperties" : false,
+      "description" : "Contains a key/value pair that sets the named component parameter.",
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "description" : "The name of the component parameter to set.",
+          "type" : "string"
+        },
+        "Value" : {
+          "description" : "Sets the value for the named component parameter.",
+          "type" : "array",
+          "insertionOrder" : true,
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "required" : [ "Name", "Value" ]
     },
-    "TargetRepository": {
-      "$ref": "#/definitions/TargetContainerRepository",
-      "description": "The destination repository for the container image."
-    },
-    "Version": {
-      "description": "The semantic version of the container recipe (<major>.<minor>.<patch>).",
-      "type": "string"
-    },
-    "WorkingDirectory": {
-      "description": "The working directory to be used during build and test workflows.",
-      "type": "string"
+    "LatestVersion" : {
+      "description" : "The latest version references of the container recipe.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Arn" : {
+          "description" : "The latest version ARN of the created container recipe.",
+          "type" : "string"
+        },
+        "Major" : {
+          "description" : "The latest version ARN of the created container recipe, with the same major version.",
+          "type" : "string"
+        },
+        "Minor" : {
+          "description" : "The latest version ARN of the created container recipe, with the same minor version.",
+          "type" : "string"
+        },
+        "Patch" : {
+          "description" : "The latest version ARN of the created container recipe, with the same patch version.",
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/LatestVersion",
-    "/properties/LatestVersion/Arn",
-    "/properties/LatestVersion/Major",
-    "/properties/LatestVersion/Minor",
-    "/properties/LatestVersion/Patch"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-imagebuilder.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "imagebuilder:TagResource",
-      "imagebuilder:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "additionalProperties" : false,
+  "oneOf" : [ {
+    "required" : [ "Name", "Version", "ParentImage", "TargetRepository", "ContainerType" ]
+  } ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/LatestVersion", "/properties/LatestVersion/Arn", "/properties/LatestVersion/Major", "/properties/LatestVersion/Minor", "/properties/LatestVersion/Patch" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Version", "/properties/ContainerType", "/properties/TargetRepository", "/properties/InstanceConfiguration", "/properties/ParentImage", "/properties/Description", "/properties/DockerfileTemplateUri", "/properties/DockerfileTemplateData", "/properties/ImageOsVersionOverride", "/properties/KmsKeyId", "/properties/PlatformOverride", "/properties/WorkingDirectory", "/properties/Components" ],
+  "writeOnlyProperties" : [ "/properties/DockerfileTemplateData", "/properties/DockerfileTemplateUri", "/properties/ImageOsVersionOverride", "/properties/PlatformOverride" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "imagebuilder:TagResource", "imagebuilder:UntagResource" ]
   },
-  "typeName": "AWS::ImageBuilder::ContainerRecipe",
-  "writeOnlyProperties": [
-    "/properties/DockerfileTemplateData",
-    "/properties/DockerfileTemplateUri",
-    "/properties/ImageOsVersionOverride",
-    "/properties/PlatformOverride"
-  ]
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:GetRole", "iam:CreateServiceLinkedRole", "imagebuilder:GetComponent", "imagebuilder:TagResource", "imagebuilder:GetContainerRecipe", "imagebuilder:CreateContainerRecipe", "imagebuilder:GetImage", "kms:Encrypt", "kms:Decrypt", "kms:ReEncryptFrom", "kms:ReEncryptTo", "kms:GenerateDataKey", "kms:GenerateDataKeyPair", "kms:GenerateDataKeyPairWithoutPlaintext", "kms:GenerateDataKeyWithoutPlaintext", "s3:GetObject", "s3:ListBucket", "ecr:DescribeRepositories", "ec2:DescribeImages" ]
+    },
+    "read" : {
+      "permissions" : [ "imagebuilder:GetContainerRecipe", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "imagebuilder:TagResource", "imagebuilder:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "imagebuilder:UntagResource", "imagebuilder:GetContainerRecipe", "imagebuilder:DeleteContainerRecipe" ]
+    },
+    "list" : {
+      "permissions" : [ "imagebuilder:ListContainerRecipes" ]
+    }
+  }
 }

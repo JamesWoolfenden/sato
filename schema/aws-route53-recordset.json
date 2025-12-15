@@ -1,166 +1,146 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/HostedZoneName",
-    "/properties/Name",
-    "/properties/HostedZoneId"
-  ],
-  "definitions": {
-    "AliasTarget": {
-      "additionalProperties": false,
-      "properties": {
-        "DNSName": {
-          "type": "string"
-        },
-        "EvaluateTargetHealth": {
-          "type": "boolean"
-        },
-        "HostedZoneId": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "HostedZoneId",
-        "DNSName"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Route53::RecordSet",
+  "description" : "Resource Type definition for AWS::Route53::RecordSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "HealthCheckId" : {
+      "type" : "string"
     },
-    "CidrRoutingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "CollectionId": {
-          "type": "string"
-        },
-        "LocationName": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "CollectionId",
-        "LocationName"
-      ],
-      "type": "object"
+    "AliasTarget" : {
+      "$ref" : "#/definitions/AliasTarget"
     },
-    "Coordinates": {
-      "additionalProperties": false,
-      "properties": {
-        "Latitude": {
-          "type": "string"
-        },
-        "Longitude": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Latitude",
-        "Longitude"
-      ],
-      "type": "object"
+    "Comment" : {
+      "type" : "string"
     },
-    "GeoLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "ContinentCode": {
-          "type": "string"
-        },
-        "CountryCode": {
-          "type": "string"
-        },
-        "SubdivisionCode": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "HostedZoneName" : {
+      "type" : "string"
     },
-    "GeoProximityLocation": {
-      "additionalProperties": false,
-      "properties": {
-        "AWSRegion": {
-          "type": "string"
-        },
-        "Bias": {
-          "type": "integer"
-        },
-        "Coordinates": {
-          "$ref": "#/definitions/Coordinates"
-        },
-        "LocalZoneGroup": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "ResourceRecords" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "HostedZoneId" : {
+      "type" : "string"
+    },
+    "SetIdentifier" : {
+      "type" : "string"
+    },
+    "TTL" : {
+      "type" : "string"
+    },
+    "Weight" : {
+      "type" : "integer"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "Type" : {
+      "type" : "string"
+    },
+    "CidrRoutingConfig" : {
+      "$ref" : "#/definitions/CidrRoutingConfig"
+    },
+    "Failover" : {
+      "type" : "string"
+    },
+    "GeoProximityLocation" : {
+      "$ref" : "#/definitions/GeoProximityLocation"
+    },
+    "Region" : {
+      "type" : "string"
+    },
+    "GeoLocation" : {
+      "$ref" : "#/definitions/GeoLocation"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "MultiValueAnswer" : {
+      "type" : "boolean"
     }
   },
-  "description": "Resource Type definition for AWS::Route53::RecordSet",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AliasTarget": {
-      "$ref": "#/definitions/AliasTarget"
-    },
-    "CidrRoutingConfig": {
-      "$ref": "#/definitions/CidrRoutingConfig"
-    },
-    "Comment": {
-      "type": "string"
-    },
-    "Failover": {
-      "type": "string"
-    },
-    "GeoLocation": {
-      "$ref": "#/definitions/GeoLocation"
-    },
-    "GeoProximityLocation": {
-      "$ref": "#/definitions/GeoProximityLocation"
-    },
-    "HealthCheckId": {
-      "type": "string"
-    },
-    "HostedZoneId": {
-      "type": "string"
-    },
-    "HostedZoneName": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "MultiValueAnswer": {
-      "type": "boolean"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Region": {
-      "type": "string"
-    },
-    "ResourceRecords": {
-      "items": {
-        "type": "string"
+  "definitions" : {
+    "AliasTarget" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DNSName" : {
+          "type" : "string"
+        },
+        "HostedZoneId" : {
+          "type" : "string"
+        },
+        "EvaluateTargetHealth" : {
+          "type" : "boolean"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "HostedZoneId", "DNSName" ]
     },
-    "SetIdentifier": {
-      "type": "string"
+    "CidrRoutingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CollectionId" : {
+          "type" : "string"
+        },
+        "LocationName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "CollectionId", "LocationName" ]
     },
-    "TTL": {
-      "type": "string"
+    "GeoProximityLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AWSRegion" : {
+          "type" : "string"
+        },
+        "LocalZoneGroup" : {
+          "type" : "string"
+        },
+        "Bias" : {
+          "type" : "integer"
+        },
+        "Coordinates" : {
+          "$ref" : "#/definitions/Coordinates"
+        }
+      }
     },
-    "Type": {
-      "type": "string"
+    "Coordinates" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Longitude" : {
+          "type" : "string"
+        },
+        "Latitude" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Latitude", "Longitude" ]
     },
-    "Weight": {
-      "type": "integer"
+    "GeoLocation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContinentCode" : {
+          "type" : "string"
+        },
+        "CountryCode" : {
+          "type" : "string"
+        },
+        "SubdivisionCode" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Type",
-    "Name"
-  ],
-  "typeName": "AWS::Route53::RecordSet"
+  "required" : [ "Type", "Name" ],
+  "createOnlyProperties" : [ "/properties/HostedZoneName", "/properties/Name", "/properties/HostedZoneId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

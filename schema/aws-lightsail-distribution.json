@@ -1,315 +1,268 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DistributionName",
-    "/properties/IpAddressType"
-  ],
-  "definitions": {
-    "CacheBehavior": {
-      "additionalProperties": false,
-      "description": "Describes the default cache behavior of an Amazon Lightsail content delivery network (CDN) distribution.",
-      "properties": {
-        "Behavior": {
-          "description": "The cache behavior of the distribution.",
-          "type": "string"
+  "typeName" : "AWS::Lightsail::Distribution",
+  "description" : "Resource Type definition for AWS::Lightsail::Distribution",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "required" : [ "Key" ],
+      "additionalProperties" : false
     },
-    "CacheBehaviorPerPath": {
-      "additionalProperties": false,
-      "description": "Describes the per-path cache behavior of an Amazon Lightsail content delivery network (CDN) distribution.",
-      "properties": {
-        "Behavior": {
-          "description": "The cache behavior for the specified path.",
-          "type": "string"
+    "CacheBehaviorPerPath" : {
+      "description" : "Describes the per-path cache behavior of an Amazon Lightsail content delivery network (CDN) distribution.",
+      "type" : "object",
+      "properties" : {
+        "Behavior" : {
+          "type" : "string",
+          "description" : "The cache behavior for the specified path."
         },
-        "Path": {
-          "description": "The path to a directory or file to cached, or not cache. Use an asterisk symbol to specify wildcard directories (path/to/assets/*), and file types (*.html, *jpg, *js). Directories and file paths are case-sensitive.",
-          "type": "string"
+        "Path" : {
+          "type" : "string",
+          "description" : "The path to a directory or file to cached, or not cache. Use an asterisk symbol to specify wildcard directories (path/to/assets/*), and file types (*.html, *jpg, *js). Directories and file paths are case-sensitive."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CacheSettings": {
-      "additionalProperties": false,
-      "description": "Describes the cache settings of an Amazon Lightsail content delivery network (CDN) distribution.",
-      "properties": {
-        "AllowedHTTPMethods": {
-          "description": "The HTTP methods that are processed and forwarded to the distribution's origin.",
-          "type": "string"
+    "CookieObject" : {
+      "description" : "Describes whether an Amazon Lightsail content delivery network (CDN) distribution forwards cookies to the origin and, if so, which ones.",
+      "type" : "object",
+      "properties" : {
+        "CookiesAllowList" : {
+          "description" : "The specific cookies to forward to your distribution's origin.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "CachedHTTPMethods": {
-          "description": "The HTTP method responses that are cached by your distribution.",
-          "type": "string"
-        },
-        "DefaultTTL": {
-          "description": "The default amount of time that objects stay in the distribution's cache before the distribution forwards another request to the origin to determine whether the content has been updated.",
-          "format": "int64",
-          "type": "integer"
-        },
-        "ForwardedCookies": {
-          "$ref": "#/definitions/CookieObject",
-          "description": "An object that describes the cookies that are forwarded to the origin. Your content is cached based on the cookies that are forwarded."
-        },
-        "ForwardedHeaders": {
-          "$ref": "#/definitions/HeaderObject",
-          "description": "An object that describes the headers that are forwarded to the origin. Your content is cached based on the headers that are forwarded."
-        },
-        "ForwardedQueryStrings": {
-          "$ref": "#/definitions/QueryStringObject",
-          "description": "An object that describes the query strings that are forwarded to the origin. Your content is cached based on the query strings that are forwarded."
-        },
-        "MaximumTTL": {
-          "description": "The maximum amount of time that objects stay in the distribution's cache before the distribution forwards another request to the origin to determine whether the object has been updated.",
-          "format": "int64",
-          "type": "integer"
-        },
-        "MinimumTTL": {
-          "description": "The minimum amount of time that objects stay in the distribution's cache before the distribution forwards another request to the origin to determine whether the object has been updated.",
-          "format": "int64",
-          "type": "integer"
+        "Option" : {
+          "type" : "string",
+          "description" : "Specifies which cookies to forward to the distribution's origin for a cache behavior: all, none, or allow-list to forward only the cookies specified in the cookiesAllowList parameter."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CookieObject": {
-      "additionalProperties": false,
-      "description": "Describes whether an Amazon Lightsail content delivery network (CDN) distribution forwards cookies to the origin and, if so, which ones.",
-      "properties": {
-        "CookiesAllowList": {
-          "description": "The specific cookies to forward to your distribution's origin.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "HeaderObject" : {
+      "description" : "Describes the request headers that a Lightsail distribution bases caching on.",
+      "type" : "object",
+      "properties" : {
+        "HeadersAllowList" : {
+          "description" : "The specific headers to forward to your distribution's origin.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "Option": {
-          "description": "Specifies which cookies to forward to the distribution's origin for a cache behavior: all, none, or allow-list to forward only the cookies specified in the cookiesAllowList parameter.",
-          "type": "string"
+        "Option" : {
+          "type" : "string",
+          "description" : "The headers that you want your distribution to forward to your origin and base caching on."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "HeaderObject": {
-      "additionalProperties": false,
-      "description": "Describes the request headers that a Lightsail distribution bases caching on.",
-      "properties": {
-        "HeadersAllowList": {
-          "description": "The specific headers to forward to your distribution's origin.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "QueryStringObject" : {
+      "description" : "Describes the query string parameters that an Amazon Lightsail content delivery network (CDN) distribution to bases caching on.",
+      "type" : "object",
+      "properties" : {
+        "QueryStringsAllowList" : {
+          "description" : "The specific query strings that the distribution forwards to the origin.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "Option": {
-          "description": "The headers that you want your distribution to forward to your origin and base caching on.",
-          "type": "string"
+        "Option" : {
+          "type" : "boolean",
+          "description" : "Indicates whether the distribution forwards and caches based on query strings."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "InputOrigin": {
-      "additionalProperties": false,
-      "description": "Describes the origin resource of an Amazon Lightsail content delivery network (CDN) distribution.",
-      "properties": {
-        "Name": {
-          "description": "The name of the origin resource.",
-          "type": "string"
+    "CacheSettings" : {
+      "description" : "Describes the cache settings of an Amazon Lightsail content delivery network (CDN) distribution.",
+      "type" : "object",
+      "properties" : {
+        "AllowedHTTPMethods" : {
+          "type" : "string",
+          "description" : "The HTTP methods that are processed and forwarded to the distribution's origin."
         },
-        "ProtocolPolicy": {
-          "description": "The protocol that your Amazon Lightsail distribution uses when establishing a connection with your origin to pull content.",
-          "type": "string"
+        "CachedHTTPMethods" : {
+          "type" : "string",
+          "description" : "The HTTP method responses that are cached by your distribution."
         },
-        "RegionName": {
-          "description": "The AWS Region name of the origin resource.",
-          "type": "string"
+        "DefaultTTL" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "The default amount of time that objects stay in the distribution's cache before the distribution forwards another request to the origin to determine whether the content has been updated."
+        },
+        "MaximumTTL" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "The maximum amount of time that objects stay in the distribution's cache before the distribution forwards another request to the origin to determine whether the object has been updated."
+        },
+        "MinimumTTL" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "The minimum amount of time that objects stay in the distribution's cache before the distribution forwards another request to the origin to determine whether the object has been updated."
+        },
+        "ForwardedCookies" : {
+          "$ref" : "#/definitions/CookieObject",
+          "description" : "An object that describes the cookies that are forwarded to the origin. Your content is cached based on the cookies that are forwarded."
+        },
+        "ForwardedHeaders" : {
+          "$ref" : "#/definitions/HeaderObject",
+          "description" : "An object that describes the headers that are forwarded to the origin. Your content is cached based on the headers that are forwarded."
+        },
+        "ForwardedQueryStrings" : {
+          "$ref" : "#/definitions/QueryStringObject",
+          "description" : "An object that describes the query strings that are forwarded to the origin. Your content is cached based on the query strings that are forwarded."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "QueryStringObject": {
-      "additionalProperties": false,
-      "description": "Describes the query string parameters that an Amazon Lightsail content delivery network (CDN) distribution to bases caching on.",
-      "properties": {
-        "Option": {
-          "description": "Indicates whether the distribution forwards and caches based on query strings.",
-          "type": "boolean"
-        },
-        "QueryStringsAllowList": {
-          "description": "The specific query strings that the distribution forwards to the origin.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "CacheBehavior" : {
+      "description" : "Describes the default cache behavior of an Amazon Lightsail content delivery network (CDN) distribution.",
+      "type" : "object",
+      "properties" : {
+        "Behavior" : {
+          "type" : "string",
+          "description" : "The cache behavior of the distribution."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "InputOrigin" : {
+      "description" : "Describes the origin resource of an Amazon Lightsail content delivery network (CDN) distribution.",
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "description" : "The name of the origin resource."
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "ProtocolPolicy" : {
+          "type" : "string",
+          "description" : "The protocol that your Amazon Lightsail distribution uses when establishing a connection with your origin to pull content."
+        },
+        "RegionName" : {
+          "type" : "string",
+          "description" : "The AWS Region name of the origin resource."
         }
       },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Lightsail::Distribution",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lightsail:AttachCertificateToDistribution",
-        "lightsail:CreateDistribution",
-        "lightsail:DetachCertificateFromDistribution",
-        "lightsail:GetCertificates",
-        "lightsail:GetCertificateDetails",
-        "lightsail:GetDistributions",
-        "lightsail:TagResource",
-        "lightsail:UntagResource",
-        "lightsail:UpdateDistribution",
-        "lightsail:UpdateDistributionBundle"
-      ]
+  "properties" : {
+    "DistributionName" : {
+      "description" : "The name for the distribution.",
+      "type" : "string",
+      "pattern" : "\\w[\\w\\-]*\\w"
     },
-    "delete": {
-      "permissions": [
-        "lightsail:DeleteDistribution",
-        "lightsail:GetDistributions"
-      ]
+    "DistributionArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "lightsail:GetDistributions"
-      ]
+    "BundleId" : {
+      "description" : "The bundle ID to use for the distribution.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "lightsail:GetDistributions"
-      ]
+    "IpAddressType" : {
+      "description" : "The IP address type for the distribution.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "lightsail:AttachCertificateToDistribution",
-        "lightsail:DetachCertificateFromDistribution",
-        "lightsail:GetCertificates",
-        "lightsail:GetCertificateDetails",
-        "lightsail:GetDistributions",
-        "lightsail:TagResource",
-        "lightsail:UntagResource",
-        "lightsail:UpdateDistribution",
-        "lightsail:UpdateDistributionBundle"
-      ]
+    "CacheBehaviors" : {
+      "description" : "An array of objects that describe the per-path cache behavior for the distribution.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/CacheBehaviorPerPath"
+      }
+    },
+    "CacheBehaviorSettings" : {
+      "description" : "An object that describes the cache behavior settings for the distribution.",
+      "$ref" : "#/definitions/CacheSettings"
+    },
+    "DefaultCacheBehavior" : {
+      "description" : "An object that describes the default cache behavior for the distribution.",
+      "$ref" : "#/definitions/CacheBehavior"
+    },
+    "Origin" : {
+      "description" : "An object that describes the origin resource for the distribution, such as a Lightsail instance or load balancer.",
+      "$ref" : "#/definitions/InputOrigin"
+    },
+    "Status" : {
+      "description" : "The status of the distribution.",
+      "type" : "string"
+    },
+    "AbleToUpdateBundle" : {
+      "description" : "Indicates whether the bundle that is currently applied to your distribution, specified using the distributionName parameter, can be changed to another bundle.",
+      "type" : "boolean"
+    },
+    "IsEnabled" : {
+      "description" : "Indicates whether the distribution is enabled.",
+      "type" : "boolean"
+    },
+    "CertificateName" : {
+      "description" : "The certificate attached to the Distribution.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/DistributionName"
-  ],
-  "properties": {
-    "AbleToUpdateBundle": {
-      "description": "Indicates whether the bundle that is currently applied to your distribution, specified using the distributionName parameter, can be changed to another bundle.",
-      "type": "boolean"
+  "additionalProperties" : false,
+  "required" : [ "DistributionName", "BundleId", "DefaultCacheBehavior", "Origin" ],
+  "readOnlyProperties" : [ "/properties/DistributionArn", "/properties/Status", "/properties/AbleToUpdateBundle" ],
+  "primaryIdentifier" : [ "/properties/DistributionName" ],
+  "createOnlyProperties" : [ "/properties/DistributionName", "/properties/IpAddressType" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lightsail:AttachCertificateToDistribution", "lightsail:CreateDistribution", "lightsail:DetachCertificateFromDistribution", "lightsail:GetCertificates", "lightsail:GetCertificateDetails", "lightsail:GetDistributions", "lightsail:TagResource", "lightsail:UntagResource", "lightsail:UpdateDistribution", "lightsail:UpdateDistributionBundle" ]
     },
-    "BundleId": {
-      "description": "The bundle ID to use for the distribution.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "lightsail:GetDistributions" ]
     },
-    "CacheBehaviorSettings": {
-      "$ref": "#/definitions/CacheSettings",
-      "description": "An object that describes the cache behavior settings for the distribution."
+    "update" : {
+      "permissions" : [ "lightsail:AttachCertificateToDistribution", "lightsail:DetachCertificateFromDistribution", "lightsail:GetCertificates", "lightsail:GetCertificateDetails", "lightsail:GetDistributions", "lightsail:TagResource", "lightsail:UntagResource", "lightsail:UpdateDistribution", "lightsail:UpdateDistributionBundle" ]
     },
-    "CacheBehaviors": {
-      "description": "An array of objects that describe the per-path cache behavior for the distribution.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/CacheBehaviorPerPath"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "delete" : {
+      "permissions" : [ "lightsail:DeleteDistribution", "lightsail:GetDistributions" ]
     },
-    "CertificateName": {
-      "description": "The certificate attached to the Distribution.",
-      "type": "string"
-    },
-    "DefaultCacheBehavior": {
-      "$ref": "#/definitions/CacheBehavior",
-      "description": "An object that describes the default cache behavior for the distribution."
-    },
-    "DistributionArn": {
-      "type": "string"
-    },
-    "DistributionName": {
-      "description": "The name for the distribution.",
-      "pattern": "\\w[\\w\\-]*\\w",
-      "type": "string"
-    },
-    "IpAddressType": {
-      "description": "The IP address type for the distribution.",
-      "type": "string"
-    },
-    "IsEnabled": {
-      "description": "Indicates whether the distribution is enabled.",
-      "type": "boolean"
-    },
-    "Origin": {
-      "$ref": "#/definitions/InputOrigin",
-      "description": "An object that describes the origin resource for the distribution, such as a Lightsail instance or load balancer."
-    },
-    "Status": {
-      "description": "The status of the distribution.",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "lightsail:GetDistributions" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/DistributionArn",
-    "/properties/Status",
-    "/properties/AbleToUpdateBundle"
-  ],
-  "required": [
-    "DistributionName",
-    "BundleId",
-    "DefaultCacheBehavior",
-    "Origin"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-lightsail.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "lightsail:TagResource",
-      "lightsail:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Lightsail::Distribution"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "lightsail:TagResource", "lightsail:UntagResource" ]
+  }
 }

@@ -1,342 +1,229 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Id"
-    ],
-    [
-      "/properties/Name"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Type",
-    "/properties/Config/Port",
-    "/properties/Config/IpAddressType",
-    "/properties/Config/Protocol",
-    "/properties/Config/ProtocolVersion",
-    "/properties/Config/VpcIdentifier",
-    "/properties/Config/LambdaEventStructureVersion"
-  ],
-  "definitions": {
-    "HealthCheckConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
+  "typeName" : "AWS::VpcLattice::TargetGroup",
+  "description" : "A target group is a collection of targets, or compute resources, that run your application or service. A target group can only be used by a single service.",
+  "additionalProperties" : false,
+  "definitions" : {
+    "HealthCheckConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
         },
-        "HealthCheckIntervalSeconds": {
-          "maximum": 300,
-          "minimum": 5,
-          "type": "integer"
+        "Protocol" : {
+          "type" : "string",
+          "enum" : [ "HTTP", "HTTPS" ]
         },
-        "HealthCheckTimeoutSeconds": {
-          "maximum": 120,
-          "minimum": 1,
-          "type": "integer"
+        "ProtocolVersion" : {
+          "type" : "string",
+          "enum" : [ "HTTP1", "HTTP2" ]
         },
-        "HealthyThresholdCount": {
-          "maximum": 10,
-          "minimum": 2,
-          "type": "integer"
+        "Port" : {
+          "type" : "integer",
+          "maximum" : 65535,
+          "minimum" : 1
         },
-        "Matcher": {
-          "$ref": "#/definitions/Matcher"
+        "Path" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 0,
+          "pattern" : "(^/[a-zA-Z0-9@:%_+.~#?&/=-]*$|(^$))"
         },
-        "Path": {
-          "maxLength": 2048,
-          "minLength": 0,
-          "pattern": "(^/[a-zA-Z0-9@:%_+.~#?&/=-]*$|(^$))",
-          "type": "string"
+        "HealthCheckIntervalSeconds" : {
+          "type" : "integer",
+          "maximum" : 300,
+          "minimum" : 5
         },
-        "Port": {
-          "maximum": 65535,
-          "minimum": 1,
-          "type": "integer"
+        "HealthCheckTimeoutSeconds" : {
+          "type" : "integer",
+          "maximum" : 120,
+          "minimum" : 1
         },
-        "Protocol": {
-          "enum": [
-            "HTTP",
-            "HTTPS"
-          ],
-          "type": "string"
+        "HealthyThresholdCount" : {
+          "type" : "integer",
+          "maximum" : 10,
+          "minimum" : 2
         },
-        "ProtocolVersion": {
-          "enum": [
-            "HTTP1",
-            "HTTP2"
-          ],
-          "type": "string"
+        "UnhealthyThresholdCount" : {
+          "type" : "integer",
+          "maximum" : 10,
+          "minimum" : 2
         },
-        "UnhealthyThresholdCount": {
-          "maximum": 10,
-          "minimum": 2,
-          "type": "integer"
+        "Matcher" : {
+          "$ref" : "#/definitions/Matcher"
         }
-      },
-      "type": "object"
+      }
     },
-    "Matcher": {
-      "additionalProperties": false,
-      "properties": {
-        "HttpCode": {
-          "maxLength": 2000,
-          "minLength": 3,
-          "pattern": "^[0-9-,]+$",
-          "type": "string"
+    "Matcher" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HttpCode" : {
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 2000,
+          "pattern" : "^[0-9-,]+$"
         }
       },
-      "required": [
-        "HttpCode"
-      ],
-      "type": "object"
+      "required" : [ "HttpCode" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "TargetGroupConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Port" : {
+          "type" : "integer",
+          "maximum" : 65535,
+          "minimum" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Protocol" : {
+          "type" : "string",
+          "enum" : [ "HTTP", "HTTPS", "TCP" ]
+        },
+        "ProtocolVersion" : {
+          "type" : "string",
+          "default" : "HTTP1",
+          "enum" : [ "HTTP1", "HTTP2", "GRPC" ]
+        },
+        "IpAddressType" : {
+          "type" : "string",
+          "default" : "IPV4",
+          "enum" : [ "IPV4", "IPV6" ]
+        },
+        "LambdaEventStructureVersion" : {
+          "type" : "string",
+          "enum" : [ "V1", "V2" ]
+        },
+        "VpcIdentifier" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 5,
+          "pattern" : "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$"
+        },
+        "HealthCheck" : {
+          "$ref" : "#/definitions/HealthCheckConfig"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ ]
     },
-    "Target": {
-      "additionalProperties": false,
-      "properties": {
-        "Id": {
-          "type": "string"
+    "Target" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Id" : {
+          "type" : "string"
         },
-        "Port": {
-          "maximum": 65535,
-          "minimum": 1,
-          "type": "integer"
+        "Port" : {
+          "type" : "integer",
+          "maximum" : 65535,
+          "minimum" : 1
         }
       },
-      "required": [
-        "Id"
-      ],
-      "type": "object"
+      "required" : [ "Id" ]
     },
-    "TargetGroupConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "HealthCheck": {
-          "$ref": "#/definitions/HealthCheckConfig"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "IpAddressType": {
-          "default": "IPV4",
-          "enum": [
-            "IPV4",
-            "IPV6"
-          ],
-          "type": "string"
-        },
-        "LambdaEventStructureVersion": {
-          "enum": [
-            "V1",
-            "V2"
-          ],
-          "type": "string"
-        },
-        "Port": {
-          "maximum": 65535,
-          "minimum": 1,
-          "type": "integer"
-        },
-        "Protocol": {
-          "enum": [
-            "HTTP",
-            "HTTPS",
-            "TCP"
-          ],
-          "type": "string"
-        },
-        "ProtocolVersion": {
-          "default": "HTTP1",
-          "enum": [
-            "HTTP1",
-            "HTTP2",
-            "GRPC"
-          ],
-          "type": "string"
-        },
-        "VpcIdentifier": {
-          "maxLength": 2048,
-          "minLength": 5,
-          "pattern": "^vpc-(([0-9a-z]{8})|([0-9a-z]{17}))$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "A target group is a collection of targets, or compute resources, that run your application or service. A target group can only be used by a single service.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "vpc-lattice:CreateTargetGroup",
-        "vpc-lattice:GetTargetGroup",
-        "vpc-lattice:RegisterTargets",
-        "vpc-lattice:ListTargets",
-        "vpc-lattice:ListTagsForResource",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:UntagResource",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeInstances",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAvailabilityZoneMappings",
-        "lambda:Invoke",
-        "lambda:AddPermission",
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "iam:CreateServiceLinkedRole"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:targetgroup/tg-[0-9a-z]{17}$"
     },
-    "delete": {
-      "permissions": [
-        "vpc-lattice:DeleteTargetGroup",
-        "vpc-lattice:GetTargetGroup",
-        "vpc-lattice:DeregisterTargets",
-        "vpc-lattice:ListTargets",
-        "lambda:RemovePermission"
-      ]
+    "Config" : {
+      "$ref" : "#/definitions/TargetGroupConfig"
     },
-    "list": {
-      "permissions": [
-        "vpc-lattice:ListTargetGroups"
-      ]
+    "CreatedAt" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "vpc-lattice:GetTargetGroup",
-        "vpc-lattice:ListTargets",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 20,
+      "minLength" : 20,
+      "pattern" : "^tg-[0-9a-z]{17}$"
     },
-    "update": {
-      "permissions": [
-        "vpc-lattice:UpdateTargetGroup",
-        "vpc-lattice:GetTargetGroup",
-        "vpc-lattice:ListTargets",
-        "vpc-lattice:RegisterTargets",
-        "vpc-lattice:DeregisterTargets",
-        "ec2:DescribeVpcs",
-        "ec2:DescribeInstances",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeAvailabilityZoneMappings",
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "lambda:Invoke",
-        "lambda:RemovePermission",
-        "lambda:AddPermission",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:UntagResource",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "LastUpdatedAt" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 3,
+      "pattern" : "^(?!tg-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$"
+    },
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "CREATE_IN_PROGRESS", "ACTIVE", "DELETE_IN_PROGRESS", "CREATE_FAILED", "DELETE_FAILED" ]
+    },
+    "Type" : {
+      "type" : "string",
+      "enum" : [ "IP", "LAMBDA", "INSTANCE", "ALB" ]
+    },
+    "Targets" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "maxItems" : 100,
+      "default" : [ ],
+      "items" : {
+        "$ref" : "#/definitions/Target"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 0,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:targetgroup/tg-[0-9a-z]{17}$",
-      "type": "string"
+  "required" : [ "Type" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedAt", "/properties/Id", "/properties/LastUpdatedAt", "/properties/Status" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Type", "/properties/Config/Port", "/properties/Config/IpAddressType", "/properties/Config/Protocol", "/properties/Config/ProtocolVersion", "/properties/Config/VpcIdentifier", "/properties/Config/LambdaEventStructureVersion" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/Id" ], [ "/properties/Name" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "vpc-lattice:CreateTargetGroup", "vpc-lattice:GetTargetGroup", "vpc-lattice:RegisterTargets", "vpc-lattice:ListTargets", "vpc-lattice:ListTagsForResource", "vpc-lattice:TagResource", "vpc-lattice:UntagResource", "ec2:DescribeVpcs", "ec2:DescribeInstances", "ec2:DescribeSubnets", "ec2:DescribeAvailabilityZoneMappings", "lambda:Invoke", "lambda:AddPermission", "elasticloadbalancing:DescribeLoadBalancers", "iam:CreateServiceLinkedRole" ]
     },
-    "Config": {
-      "$ref": "#/definitions/TargetGroupConfig"
+    "read" : {
+      "permissions" : [ "vpc-lattice:GetTargetGroup", "vpc-lattice:ListTargets", "vpc-lattice:ListTagsForResource" ]
     },
-    "CreatedAt": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "vpc-lattice:UpdateTargetGroup", "vpc-lattice:GetTargetGroup", "vpc-lattice:ListTargets", "vpc-lattice:RegisterTargets", "vpc-lattice:DeregisterTargets", "ec2:DescribeVpcs", "ec2:DescribeInstances", "ec2:DescribeSubnets", "ec2:DescribeAvailabilityZoneMappings", "elasticloadbalancing:DescribeLoadBalancers", "lambda:Invoke", "lambda:RemovePermission", "lambda:AddPermission", "vpc-lattice:TagResource", "vpc-lattice:UntagResource", "vpc-lattice:ListTagsForResource" ]
     },
-    "Id": {
-      "maxLength": 20,
-      "minLength": 20,
-      "pattern": "^tg-[0-9a-z]{17}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "vpc-lattice:DeleteTargetGroup", "vpc-lattice:GetTargetGroup", "vpc-lattice:DeregisterTargets", "vpc-lattice:ListTargets", "lambda:RemovePermission" ]
     },
-    "LastUpdatedAt": {
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 128,
-      "minLength": 3,
-      "pattern": "^(?!tg-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
-      "type": "string"
-    },
-    "Status": {
-      "enum": [
-        "CREATE_IN_PROGRESS",
-        "ACTIVE",
-        "DELETE_IN_PROGRESS",
-        "CREATE_FAILED",
-        "DELETE_FAILED"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Targets": {
-      "default": [],
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Target"
-      },
-      "maxItems": 100,
-      "minItems": 0,
-      "type": "array"
-    },
-    "Type": {
-      "enum": [
-        "IP",
-        "LAMBDA",
-        "INSTANCE",
-        "ALB"
-      ],
-      "type": "string"
+    "list" : {
+      "permissions" : [ "vpc-lattice:ListTargetGroups" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedAt",
-    "/properties/Id",
-    "/properties/LastUpdatedAt",
-    "/properties/Status"
-  ],
-  "required": [
-    "Type"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "vpc-lattice:UntagResource",
-      "vpc-lattice:TagResource",
-      "vpc-lattice:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::VpcLattice::TargetGroup"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "vpc-lattice:UntagResource", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+  }
 }

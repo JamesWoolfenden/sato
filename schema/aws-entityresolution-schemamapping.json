@@ -1,230 +1,169 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SchemaName"
-  ],
-  "definitions": {
-    "AttributeName": {
-      "maxLength": 255,
-      "minLength": 0,
-      "pattern": "^[a-zA-Z_0-9- \\t]*$",
-      "type": "string"
+  "typeName" : "AWS::EntityResolution::SchemaMapping",
+  "description" : "SchemaMapping defined in AWS Entity Resolution service",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
+  "definitions" : {
+    "EntityName" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z_0-9-]*$",
+      "minLength" : 0,
+      "maxLength" : 255
     },
-    "CreatedAt": {
-      "description": "The time of this SchemaMapping got created",
-      "type": "string"
+    "Description" : {
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 255
     },
-    "Description": {
-      "maxLength": 255,
-      "minLength": 0,
-      "type": "string"
+    "AttributeName" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z_0-9- \\t]*$",
+      "minLength" : 0,
+      "maxLength" : 255
     },
-    "EntityName": {
-      "maxLength": 255,
-      "minLength": 0,
-      "pattern": "^[a-zA-Z_0-9-]*$",
-      "type": "string"
+    "SchemaAttributeType" : {
+      "type" : "string",
+      "enum" : [ "NAME", "NAME_FIRST", "NAME_MIDDLE", "NAME_LAST", "ADDRESS", "ADDRESS_STREET1", "ADDRESS_STREET2", "ADDRESS_STREET3", "ADDRESS_CITY", "ADDRESS_STATE", "ADDRESS_COUNTRY", "ADDRESS_POSTALCODE", "PHONE", "PHONE_NUMBER", "PHONE_COUNTRYCODE", "EMAIL_ADDRESS", "UNIQUE_ID", "DATE", "STRING", "PROVIDER_ID" ]
     },
-    "HasWorkflows": {
-      "description": "The boolean value that indicates whether or not a SchemaMapping has MatchingWorkflows that are associated with",
-      "type": "boolean"
-    },
-    "Hashed": {
-      "type": "boolean"
-    },
-    "MappedInputFields": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/SchemaInputAttribute"
+    "MappedInputFields" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/SchemaInputAttribute"
       },
-      "maxItems": 35,
-      "minItems": 2,
-      "type": "array"
+      "minItems" : 2,
+      "maxItems" : 35,
+      "insertionOrder" : false
     },
-    "SchemaAttributeType": {
-      "enum": [
-        "NAME",
-        "NAME_FIRST",
-        "NAME_MIDDLE",
-        "NAME_LAST",
-        "ADDRESS",
-        "ADDRESS_STREET1",
-        "ADDRESS_STREET2",
-        "ADDRESS_STREET3",
-        "ADDRESS_CITY",
-        "ADDRESS_STATE",
-        "ADDRESS_COUNTRY",
-        "ADDRESS_POSTALCODE",
-        "PHONE",
-        "PHONE_NUMBER",
-        "PHONE_COUNTRYCODE",
-        "EMAIL_ADDRESS",
-        "UNIQUE_ID",
-        "DATE",
-        "STRING",
-        "PROVIDER_ID"
-      ],
-      "type": "string"
+    "Hashed" : {
+      "type" : "boolean"
     },
-    "SchemaInputAttribute": {
-      "additionalProperties": false,
-      "properties": {
-        "FieldName": {
-          "$ref": "#/definitions/AttributeName"
+    "SchemaInputAttribute" : {
+      "type" : "object",
+      "properties" : {
+        "FieldName" : {
+          "$ref" : "#/definitions/AttributeName"
         },
-        "GroupName": {
-          "$ref": "#/definitions/AttributeName"
+        "Type" : {
+          "$ref" : "#/definitions/SchemaAttributeType"
         },
-        "Hashed": {
-          "$ref": "#/definitions/Hashed"
+        "SubType" : {
+          "type" : "string",
+          "description" : "The subtype of the Attribute. Would be required only when type is PROVIDER_ID"
         },
-        "MatchKey": {
-          "$ref": "#/definitions/AttributeName"
+        "GroupName" : {
+          "$ref" : "#/definitions/AttributeName"
         },
-        "SubType": {
-          "description": "The subtype of the Attribute. Would be required only when type is PROVIDER_ID",
-          "type": "string"
+        "MatchKey" : {
+          "$ref" : "#/definitions/AttributeName"
         },
-        "Type": {
-          "$ref": "#/definitions/SchemaAttributeType"
+        "Hashed" : {
+          "$ref" : "#/definitions/Hashed"
         }
       },
-      "required": [
-        "FieldName",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "FieldName", "Type" ],
+      "additionalProperties" : false
     },
-    "SchemaMappingArn": {
-      "description": "The SchemaMapping arn associated with the Schema",
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$",
-      "type": "string"
+    "SchemaMappingArn" : {
+      "description" : "The SchemaMapping arn associated with the Schema",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn):entityresolution:.*:[0-9]+:(schemamapping/.*)$"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "CreatedAt" : {
+      "description" : "The time of this SchemaMapping got created",
+      "type" : "string"
+    },
+    "UpdatedAt" : {
+      "description" : "The time of this SchemaMapping got last updated at",
+      "type" : "string"
+    },
+    "HasWorkflows" : {
+      "description" : "The boolean value that indicates whether or not a SchemaMapping has MatchingWorkflows that are associated with",
+      "type" : "boolean"
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "UpdatedAt": {
-      "description": "The time of this SchemaMapping got last updated at",
-      "type": "string"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "SchemaMapping defined in AWS Entity Resolution service",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "entityresolution:CreateSchemaMapping",
-        "entityresolution:GetSchemaMapping",
-        "entityresolution:TagResource"
-      ]
+  "properties" : {
+    "SchemaName" : {
+      "description" : "The name of the SchemaMapping",
+      "$ref" : "#/definitions/EntityName"
     },
-    "delete": {
-      "permissions": [
-        "entityresolution:DeleteSchemaMapping",
-        "entityresolution:GetSchemaMapping"
-      ]
+    "Description" : {
+      "description" : "The description of the SchemaMapping",
+      "$ref" : "#/definitions/Description"
     },
-    "list": {
-      "permissions": [
-        "entityresolution:ListSchemaMappings"
-      ]
+    "MappedInputFields" : {
+      "description" : "The SchemaMapping attributes input",
+      "$ref" : "#/definitions/MappedInputFields"
     },
-    "read": {
-      "permissions": [
-        "entityresolution:GetSchemaMapping",
-        "entityresolution:ListTagsForResource"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "update": {
-      "permissions": [
-        "entityresolution:GetSchemaMapping",
-        "entityresolution:UpdateSchemaMapping",
-        "entityresolution:ListTagsForResource",
-        "entityresolution:TagResource",
-        "entityresolution:UntagResource"
-      ]
+    "SchemaArn" : {
+      "$ref" : "#/definitions/SchemaMappingArn"
+    },
+    "CreatedAt" : {
+      "$ref" : "#/definitions/CreatedAt"
+    },
+    "UpdatedAt" : {
+      "$ref" : "#/definitions/UpdatedAt"
+    },
+    "HasWorkflows" : {
+      "$ref" : "#/definitions/HasWorkflows"
     }
   },
-  "primaryIdentifier": [
-    "/properties/SchemaName"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "$ref": "#/definitions/CreatedAt"
+  "createOnlyProperties" : [ "/properties/SchemaName" ],
+  "readOnlyProperties" : [ "/properties/SchemaArn", "/properties/CreatedAt", "/properties/UpdatedAt", "/properties/HasWorkflows" ],
+  "primaryIdentifier" : [ "/properties/SchemaName" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "entityresolution:TagResource", "entityresolution:UntagResource", "entityresolution:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "entityresolution:CreateSchemaMapping", "entityresolution:GetSchemaMapping", "entityresolution:TagResource" ]
     },
-    "Description": {
-      "$ref": "#/definitions/Description",
-      "description": "The description of the SchemaMapping"
+    "read" : {
+      "permissions" : [ "entityresolution:GetSchemaMapping", "entityresolution:ListTagsForResource" ]
     },
-    "HasWorkflows": {
-      "$ref": "#/definitions/HasWorkflows"
+    "delete" : {
+      "permissions" : [ "entityresolution:DeleteSchemaMapping", "entityresolution:GetSchemaMapping" ]
     },
-    "MappedInputFields": {
-      "$ref": "#/definitions/MappedInputFields",
-      "description": "The SchemaMapping attributes input"
+    "update" : {
+      "permissions" : [ "entityresolution:GetSchemaMapping", "entityresolution:UpdateSchemaMapping", "entityresolution:ListTagsForResource", "entityresolution:TagResource", "entityresolution:UntagResource" ]
     },
-    "SchemaArn": {
-      "$ref": "#/definitions/SchemaMappingArn"
-    },
-    "SchemaName": {
-      "$ref": "#/definitions/EntityName",
-      "description": "The name of the SchemaMapping"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "UpdatedAt": {
-      "$ref": "#/definitions/UpdatedAt"
+    "list" : {
+      "permissions" : [ "entityresolution:ListSchemaMappings" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/SchemaArn",
-    "/properties/CreatedAt",
-    "/properties/UpdatedAt",
-    "/properties/HasWorkflows"
-  ],
-  "required": [
-    "SchemaName",
-    "MappedInputFields"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-entity-resolution.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "entityresolution:TagResource",
-      "entityresolution:UntagResource",
-      "entityresolution:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EntityResolution::SchemaMapping"
+  "required" : [ "SchemaName", "MappedInputFields" ],
+  "additionalProperties" : false
 }

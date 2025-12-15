@@ -78,7 +78,7 @@ func Parse(file string, destination string) error {
 	// Open a cloudFormation from file (can be JSON or YAML)
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
-		return &filepathError{Path: file, err: err}
+		return &filepathError{Path: file, Err: err}
 	}
 
 	cloudFormation, err := goformation.Open(fileAbs)
@@ -271,26 +271,26 @@ func Write(output string, location string, name string) error {
 	if output != "" {
 		newPath, err := filepath.Abs(location)
 		if err != nil {
-			return &filepathError{Path: location, err: err}
+			return &filepathError{Path: location, Err: err}
 		}
 
 		err = os.MkdirAll(newPath, 0o750)
 		if err != nil {
-			return &makeDirError{err}
+			return &makeDirError{Err: err}
 		}
 
 		d1 := []byte(output)
 
 		destination, err := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
 		if err != nil {
-			return &filepathError{Path: fmt.Sprint(location, "/", name, ".tf"), err: err}
+			return &filepathError{Path: fmt.Sprint(location, "/", name, ".tf"), Err: err}
 		}
 
 		err = os.WriteFile(destination, d1, 0o600)
 		log.Info().Msgf("Created %s", destination)
 
 		if err != nil {
-			return &writeFileError{destination: destination, err: err}
+			return &writeFileError{Destination: destination, Err: err}
 		}
 	}
 

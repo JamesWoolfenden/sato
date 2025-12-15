@@ -1,226 +1,165 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Id"
-    ],
-    [
-      "/properties/ServiceNetworkIdentifier",
-      "/properties/ServiceIdentifier"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ServiceNetworkIdentifier",
-    "/properties/ServiceIdentifier"
-  ],
-  "definitions": {
-    "DnsEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "DomainName": {
-          "type": "string"
+  "typeName" : "AWS::VpcLattice::ServiceNetworkServiceAssociation",
+  "description" : "Associates a service with a service network.",
+  "additionalProperties" : false,
+  "definitions" : {
+    "DnsEntry" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DomainName" : {
+          "type" : "string"
         },
-        "HostedZoneId": {
-          "type": "string"
+        "HostedZoneId" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Associates a service with a service network.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "vpc-lattice:CreateServiceNetworkServiceAssociation",
-        "vpc-lattice:GetServiceNetworkServiceAssociation",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:ListTagsForResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkserviceassociation/snsa-[0-9a-z]{17}$"
     },
-    "delete": {
-      "permissions": [
-        "vpc-lattice:DeleteServiceNetworkServiceAssociation",
-        "vpc-lattice:GetServiceNetworkServiceAssociation",
-        "vpc-lattice:UntagResource"
-      ]
+    "CreatedAt" : {
+      "type" : "string"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "ServiceIdentifier": {
-            "maxLength": 2048,
-            "minLength": 20,
-            "pattern": "^((svc-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}))$",
-            "type": "string"
+    "DnsEntry" : {
+      "$ref" : "#/definitions/DnsEntry"
+    },
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 17,
+      "pattern" : "^snsa-[0-9a-z]{17}$"
+    },
+    "ServiceNetworkArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}$"
+    },
+    "ServiceNetworkId" : {
+      "type" : "string",
+      "maxLength" : 20,
+      "minLength" : 20,
+      "pattern" : "^sn-[0-9a-z]{17}$"
+    },
+    "ServiceNetworkIdentifier" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$"
+    },
+    "ServiceNetworkName" : {
+      "type" : "string",
+      "maxLength" : 63,
+      "minLength" : 3,
+      "pattern" : "^(?!servicenetwork-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$"
+    },
+    "ServiceArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}$"
+    },
+    "ServiceId" : {
+      "type" : "string",
+      "maxLength" : 21,
+      "minLength" : 21,
+      "pattern" : "^svc-[0-9a-z]{17}$"
+    },
+    "ServiceIdentifier" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^((svc-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}))$"
+    },
+    "ServiceName" : {
+      "type" : "string",
+      "maxLength" : 40,
+      "minLength" : 3,
+      "pattern" : "^(?!svc-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$"
+    },
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "CREATE_IN_PROGRESS", "ACTIVE", "DELETE_IN_PROGRESS", "CREATE_FAILED", "DELETE_FAILED" ]
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 0,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedAt", "/properties/DnsEntry/DomainName", "/properties/DnsEntry/HostedZoneId", "/properties/Id", "/properties/ServiceNetworkArn", "/properties/ServiceNetworkId", "/properties/ServiceNetworkName", "/properties/ServiceArn", "/properties/ServiceId", "/properties/ServiceName", "/properties/Status" ],
+  "writeOnlyProperties" : [ "/properties/ServiceNetworkIdentifier", "/properties/ServiceIdentifier" ],
+  "createOnlyProperties" : [ "/properties/ServiceNetworkIdentifier", "/properties/ServiceIdentifier" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/Id" ], [ "/properties/ServiceNetworkIdentifier", "/properties/ServiceIdentifier" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "vpc-lattice:CreateServiceNetworkServiceAssociation", "vpc-lattice:GetServiceNetworkServiceAssociation", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+    },
+    "read" : {
+      "permissions" : [ "vpc-lattice:GetServiceNetworkServiceAssociation", "vpc-lattice:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "vpc-lattice:TagResource", "vpc-lattice:UntagResource", "vpc-lattice:GetServiceNetworkServiceAssociation", "vpc-lattice:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "vpc-lattice:DeleteServiceNetworkServiceAssociation", "vpc-lattice:GetServiceNetworkServiceAssociation", "vpc-lattice:UntagResource" ]
+    },
+    "list" : {
+      "permissions" : [ "vpc-lattice:ListServiceNetworkServiceAssociations" ],
+      "handlerSchema" : {
+        "properties" : {
+          "ServiceNetworkIdentifier" : {
+            "type" : "string",
+            "maxLength" : 2048,
+            "minLength" : 20,
+            "pattern" : "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$"
           },
-          "ServiceNetworkIdentifier": {
-            "maxLength": 2048,
-            "minLength": 20,
-            "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
-            "type": "string"
+          "ServiceIdentifier" : {
+            "type" : "string",
+            "maxLength" : 2048,
+            "minLength" : 20,
+            "pattern" : "^((svc-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}))$"
           }
         },
-        "required": []
-      },
-      "permissions": [
-        "vpc-lattice:ListServiceNetworkServiceAssociations"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "vpc-lattice:GetServiceNetworkServiceAssociation",
-        "vpc-lattice:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "vpc-lattice:TagResource",
-        "vpc-lattice:UntagResource",
-        "vpc-lattice:GetServiceNetworkServiceAssociation",
-        "vpc-lattice:ListTagsForResource"
-      ]
+        "required" : [ ]
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetworkserviceassociation/snsa-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "CreatedAt": {
-      "type": "string"
-    },
-    "DnsEntry": {
-      "$ref": "#/definitions/DnsEntry"
-    },
-    "Id": {
-      "maxLength": 2048,
-      "minLength": 17,
-      "pattern": "^snsa-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "ServiceArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "ServiceId": {
-      "maxLength": 21,
-      "minLength": 21,
-      "pattern": "^svc-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "ServiceIdentifier": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^((svc-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:service/svc-[0-9a-z]{17}))$",
-      "type": "string"
-    },
-    "ServiceName": {
-      "maxLength": 40,
-      "minLength": 3,
-      "pattern": "^(?!svc-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
-      "type": "string"
-    },
-    "ServiceNetworkArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "ServiceNetworkId": {
-      "maxLength": 20,
-      "minLength": 20,
-      "pattern": "^sn-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "ServiceNetworkIdentifier": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^((sn-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:servicenetwork/sn-[0-9a-z]{17}))$",
-      "type": "string"
-    },
-    "ServiceNetworkName": {
-      "maxLength": 63,
-      "minLength": 3,
-      "pattern": "^(?!servicenetwork-)(?![-])(?!.*[-]$)(?!.*[-]{2})[a-z0-9-]+$",
-      "type": "string"
-    },
-    "Status": {
-      "enum": [
-        "CREATE_IN_PROGRESS",
-        "ACTIVE",
-        "DELETE_IN_PROGRESS",
-        "CREATE_FAILED",
-        "DELETE_FAILED"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedAt",
-    "/properties/DnsEntry/DomainName",
-    "/properties/DnsEntry/HostedZoneId",
-    "/properties/Id",
-    "/properties/ServiceNetworkArn",
-    "/properties/ServiceNetworkId",
-    "/properties/ServiceNetworkName",
-    "/properties/ServiceArn",
-    "/properties/ServiceId",
-    "/properties/ServiceName",
-    "/properties/Status"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "vpc-lattice:UntagResource",
-      "vpc-lattice:TagResource",
-      "vpc-lattice:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::VpcLattice::ServiceNetworkServiceAssociation",
-  "writeOnlyProperties": [
-    "/properties/ServiceNetworkIdentifier",
-    "/properties/ServiceIdentifier"
-  ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "vpc-lattice:UntagResource", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+  }
 }

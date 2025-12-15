@@ -1,59 +1,42 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "ResourceArn": {
-      "description": "A resource ARN.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "pattern": "^([^\\s]+)$",
-      "type": "string"
+  "typeName" : "AWS::FMS::NotificationChannel",
+  "description" : "Designates the IAM role and Amazon Simple Notification Service (SNS) topic that AWS Firewall Manager uses to record SNS logs.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fms.git",
+  "definitions" : {
+    "ResourceArn" : {
+      "description" : "A resource ARN.",
+      "type" : "string",
+      "pattern" : "^([^\\s]+)$",
+      "minLength" : 1,
+      "maxLength" : 1024
     }
   },
-  "description": "Designates the IAM role and Amazon Simple Notification Service (SNS) topic that AWS Firewall Manager uses to record SNS logs.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "fms:PutNotificationChannel",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "SnsRoleName" : {
+      "$ref" : "#/definitions/ResourceArn"
     },
-    "delete": {
-      "permissions": [
-        "fms:DeleteNotificationChannel"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "fms:GetNotificationChannel"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "fms:GetNotificationChannel"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "fms:PutNotificationChannel",
-        "iam:PassRole"
-      ]
+    "SnsTopicArn" : {
+      "$ref" : "#/definitions/ResourceArn"
     }
   },
-  "primaryIdentifier": [
-    "/properties/SnsTopicArn"
-  ],
-  "properties": {
-    "SnsRoleName": {
-      "$ref": "#/definitions/ResourceArn"
+  "required" : [ "SnsRoleName", "SnsTopicArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "fms:PutNotificationChannel", "iam:PassRole" ]
     },
-    "SnsTopicArn": {
-      "$ref": "#/definitions/ResourceArn"
+    "update" : {
+      "permissions" : [ "fms:PutNotificationChannel", "iam:PassRole" ]
+    },
+    "read" : {
+      "permissions" : [ "fms:GetNotificationChannel" ]
+    },
+    "delete" : {
+      "permissions" : [ "fms:DeleteNotificationChannel" ]
+    },
+    "list" : {
+      "permissions" : [ "fms:GetNotificationChannel" ]
     }
   },
-  "required": [
-    "SnsRoleName",
-    "SnsTopicArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-fms.git",
-  "typeName": "AWS::FMS::NotificationChannel"
+  "primaryIdentifier" : [ "/properties/SnsTopicArn" ],
+  "additionalProperties" : false
 }

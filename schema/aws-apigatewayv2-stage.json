@@ -1,95 +1,85 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/StageName",
-    "/properties/ApiId"
-  ],
-  "definitions": {
-    "AccessLogSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationArn": {
-          "type": "string"
-        },
-        "Format": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::ApiGatewayV2::Stage",
+  "description" : "Resource Type definition for AWS::ApiGatewayV2::Stage",
+  "additionalProperties" : false,
+  "properties" : {
+    "DeploymentId" : {
+      "type" : "string"
     },
-    "RouteSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "DataTraceEnabled": {
-          "type": "boolean"
-        },
-        "DetailedMetricsEnabled": {
-          "type": "boolean"
-        },
-        "LoggingLevel": {
-          "type": "string"
-        },
-        "ThrottlingBurstLimit": {
-          "type": "integer"
-        },
-        "ThrottlingRateLimit": {
-          "type": "number"
-        }
-      },
-      "type": "object"
+    "Description" : {
+      "type" : "string"
+    },
+    "AutoDeploy" : {
+      "type" : "boolean"
+    },
+    "RouteSettings" : {
+      "type" : "object"
+    },
+    "StageName" : {
+      "type" : "string"
+    },
+    "StageVariables" : {
+      "type" : "object"
+    },
+    "AccessPolicyId" : {
+      "type" : "string"
+    },
+    "ClientCertificateId" : {
+      "type" : "string"
+    },
+    "AccessLogSettings" : {
+      "$ref" : "#/definitions/AccessLogSettings"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "ApiId" : {
+      "type" : "string"
+    },
+    "DefaultRouteSettings" : {
+      "$ref" : "#/definitions/RouteSettings"
+    },
+    "Tags" : {
+      "type" : "object"
     }
   },
-  "description": "Resource Type definition for AWS::ApiGatewayV2::Stage",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AccessLogSettings": {
-      "$ref": "#/definitions/AccessLogSettings"
+  "definitions" : {
+    "AccessLogSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DestinationArn" : {
+          "type" : "string"
+        },
+        "Format" : {
+          "type" : "string"
+        }
+      }
     },
-    "AccessPolicyId": {
-      "type": "string"
-    },
-    "ApiId": {
-      "type": "string"
-    },
-    "AutoDeploy": {
-      "type": "boolean"
-    },
-    "ClientCertificateId": {
-      "type": "string"
-    },
-    "DefaultRouteSettings": {
-      "$ref": "#/definitions/RouteSettings"
-    },
-    "DeploymentId": {
-      "type": "string"
-    },
-    "Description": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "RouteSettings": {
-      "type": "object"
-    },
-    "StageName": {
-      "type": "string"
-    },
-    "StageVariables": {
-      "type": "object"
-    },
-    "Tags": {
-      "type": "object"
+    "RouteSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DetailedMetricsEnabled" : {
+          "type" : "boolean"
+        },
+        "LoggingLevel" : {
+          "type" : "string"
+        },
+        "DataTraceEnabled" : {
+          "type" : "boolean"
+        },
+        "ThrottlingBurstLimit" : {
+          "type" : "integer"
+        },
+        "ThrottlingRateLimit" : {
+          "type" : "number"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "StageName",
-    "ApiId"
-  ],
-  "typeName": "AWS::ApiGatewayV2::Stage"
+  "required" : [ "StageName", "ApiId" ],
+  "createOnlyProperties" : [ "/properties/StageName", "/properties/ApiId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

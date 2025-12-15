@@ -1,127 +1,85 @@
 {
-  "additionalProperties": false,
-  "conditionalCreateOnlyProperties": [
-    "/properties/Region"
-  ],
-  "createOnlyProperties": [
-    "/properties/Endpoint",
-    "/properties/Protocol",
-    "/properties/TopicArn"
-  ],
-  "description": "Resource Type definition for AWS::SNS::Subscription",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:PassRole",
-        "sns:Subscribe"
-      ]
+  "typeName" : "AWS::SNS::Subscription",
+  "description" : "Resource Type definition for AWS::SNS::Subscription",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sns",
+  "additionalProperties" : false,
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "Arn of the subscription"
     },
-    "delete": {
-      "permissions": [
-        "sns:Unsubscribe",
-        "sns:GetSubscriptionAttributes"
-      ]
+    "ReplayPolicy" : {
+      "type" : [ "object", "string" ],
+      "description" : "Specifies whether Amazon SNS resends the notification to the subscription when a message's attribute changes."
     },
-    "list": {
-      "permissions": [
-        "sns:ListSubscriptions"
-      ]
+    "RawMessageDelivery" : {
+      "type" : "boolean",
+      "description" : "When set to true, enables raw message delivery. Raw messages don't contain any JSON formatting and can be sent to Amazon SQS and HTTP/S endpoints."
     },
-    "read": {
-      "permissions": [
-        "sns:GetSubscriptionAttributes"
-      ]
+    "Endpoint" : {
+      "type" : "string",
+      "description" : "The subscription's endpoint. The endpoint value depends on the protocol that you specify. "
     },
-    "update": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:PassRole",
-        "sns:SetSubscriptionAttributes"
-      ]
+    "FilterPolicy" : {
+      "type" : [ "object", "string" ],
+      "description" : "The filter policy JSON assigned to the subscription. Enables the subscriber to filter out unwanted messages."
+    },
+    "TopicArn" : {
+      "type" : "string",
+      "description" : "The ARN of the topic to subscribe to."
+    },
+    "RedrivePolicy" : {
+      "type" : [ "object", "string" ],
+      "description" : "When specified, sends undeliverable messages to the specified Amazon SQS dead-letter queue. Messages that can't be delivered due to client errors are held in the dead-letter queue for further analysis or reprocessing."
+    },
+    "DeliveryPolicy" : {
+      "type" : [ "object", "string" ],
+      "description" : "The delivery policy JSON assigned to the subscription. Enables the subscriber to define the message delivery retry strategy in the case of an HTTP/S endpoint subscribed to the topic."
+    },
+    "Region" : {
+      "type" : "string",
+      "description" : "For cross-region subscriptions, the region in which the topic resides.If no region is specified, AWS CloudFormation uses the region of the caller as the default."
+    },
+    "SubscriptionRoleArn" : {
+      "type" : "string",
+      "description" : "This property applies only to Amazon Data Firehose delivery stream subscriptions."
+    },
+    "FilterPolicyScope" : {
+      "type" : "string",
+      "description" : "This attribute lets you choose the filtering scope by using one of the following string value types: MessageAttributes (default) and MessageBody."
+    },
+    "Protocol" : {
+      "type" : "string",
+      "description" : "The subscription's protocol."
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Arn of the subscription",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "required" : [ "TopicArn", "Protocol" ],
+  "createOnlyProperties" : [ "/properties/Endpoint", "/properties/Protocol", "/properties/TopicArn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "conditionalCreateOnlyProperties" : [ "/properties/Region" ],
+  "writeOnlyProperties" : [ "/properties/Region" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:GetRole", "iam:PassRole", "sns:Subscribe" ]
     },
-    "DeliveryPolicy": {
-      "description": "The delivery policy JSON assigned to the subscription. Enables the subscriber to define the message delivery retry strategy in the case of an HTTP/S endpoint subscribed to the topic.",
-      "type": [
-        "object",
-        "string"
-      ]
+    "read" : {
+      "permissions" : [ "sns:GetSubscriptionAttributes" ]
     },
-    "Endpoint": {
-      "description": "The subscription's endpoint. The endpoint value depends on the protocol that you specify. ",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iam:GetRole", "iam:PassRole", "sns:SetSubscriptionAttributes" ]
     },
-    "FilterPolicy": {
-      "description": "The filter policy JSON assigned to the subscription. Enables the subscriber to filter out unwanted messages.",
-      "type": [
-        "object",
-        "string"
-      ]
+    "delete" : {
+      "permissions" : [ "sns:Unsubscribe", "sns:GetSubscriptionAttributes" ]
     },
-    "FilterPolicyScope": {
-      "description": "This attribute lets you choose the filtering scope by using one of the following string value types: MessageAttributes (default) and MessageBody.",
-      "type": "string"
-    },
-    "Protocol": {
-      "description": "The subscription's protocol.",
-      "type": "string"
-    },
-    "RawMessageDelivery": {
-      "description": "When set to true, enables raw message delivery. Raw messages don't contain any JSON formatting and can be sent to Amazon SQS and HTTP/S endpoints.",
-      "type": "boolean"
-    },
-    "RedrivePolicy": {
-      "description": "When specified, sends undeliverable messages to the specified Amazon SQS dead-letter queue. Messages that can't be delivered due to client errors are held in the dead-letter queue for further analysis or reprocessing.",
-      "type": [
-        "object",
-        "string"
-      ]
-    },
-    "Region": {
-      "description": "For cross-region subscriptions, the region in which the topic resides.If no region is specified, AWS CloudFormation uses the region of the caller as the default.",
-      "type": "string"
-    },
-    "ReplayPolicy": {
-      "description": "Specifies whether Amazon SNS resends the notification to the subscription when a message's attribute changes.",
-      "type": [
-        "object",
-        "string"
-      ]
-    },
-    "SubscriptionRoleArn": {
-      "description": "This property applies only to Amazon Data Firehose delivery stream subscriptions.",
-      "type": "string"
-    },
-    "TopicArn": {
-      "description": "The ARN of the topic to subscribe to.",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "sns:ListSubscriptions" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "TopicArn",
-    "Protocol"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sns",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::SNS::Subscription",
-  "writeOnlyProperties": [
-    "/properties/Region"
-  ]
+  }
 }

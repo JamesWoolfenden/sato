@@ -1,210 +1,162 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Arn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "AppConfig": {
-      "additionalProperties": false,
-      "description": "A key-value pair of AppConfig",
-      "properties": {
-        "Key": {
-          "$ref": "#/definitions/AppConfigType",
-          "description": "The configuration key"
+  "typeName" : "AWS::OpenSearchService::Application",
+  "description" : "Amazon OpenSearchService application resource",
+  "definitions" : {
+    "AppConfigType" : {
+      "type" : "string",
+      "enum" : [ "opensearchDashboards.dashboardAdmin.users", "opensearchDashboards.dashboardAdmin.groups" ],
+      "description" : "AppConfig type values."
+    },
+    "Tag" : {
+      "type" : "object",
+      "description" : "A key-value pair metadata associated with resource",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "description" : "The key in the key-value pair"
         },
-        "Value": {
-          "description": "The configuration value.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "description" : "The value in the key-value pair"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "AppConfigType": {
-      "description": "AppConfig type values.",
-      "enum": [
-        "opensearchDashboards.dashboardAdmin.users",
-        "opensearchDashboards.dashboardAdmin.groups"
-      ],
-      "type": "string"
-    },
-    "DataSource": {
-      "additionalProperties": false,
-      "description": "Datasource arn and description",
-      "properties": {
-        "DataSourceArn": {
-          "$ref": "#/properties/Arn",
-          "description": "The ARN of the data source."
+    "AppConfig" : {
+      "type" : "object",
+      "description" : "A key-value pair of AppConfig",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/AppConfigType",
+          "description" : "The configuration key"
         },
-        "DataSourceDescription": {
-          "description": "Description of the data source.",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "description" : "The configuration value."
         }
       },
-      "required": [
-        "DataSourceArn"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair metadata associated with resource",
-      "properties": {
-        "Key": {
-          "description": "The key in the key-value pair",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "DataSource" : {
+      "type" : "object",
+      "description" : "Datasource arn and description",
+      "properties" : {
+        "DataSourceArn" : {
+          "$ref" : "#/properties/Arn",
+          "description" : "The ARN of the data source."
         },
-        "Value": {
-          "description": "The value in the key-value pair",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "DataSourceDescription" : {
+          "type" : "string",
+          "description" : "Description of the data source."
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "DataSourceArn" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Amazon OpenSearchService application resource",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "es:CreateApplication",
-        "es:GetApplication",
-        "es:AddTags",
-        "es:ListTags",
-        "iam:CreateServiceLinkedRole"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "es:GetApplication",
-        "es:DeleteApplication"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "es:ListApplications"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "es:GetApplication",
-        "es:ListTags"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "es:UpdateApplication",
-        "es:GetApplication",
-        "es:AddTags",
-        "es:RemoveTags",
-        "es:ListTags"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "AppConfigs": {
-      "description": "List of application configurations.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AppConfig"
-      },
-      "type": "array"
-    },
-    "Arn": {
-      "description": "Amazon Resource Name (ARN) format.",
-      "type": "string"
-    },
-    "DataSources": {
-      "description": "List of data sources.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/DataSource"
-      },
-      "type": "array"
-    },
-    "Endpoint": {
-      "description": "The endpoint for the application.",
-      "type": "string"
-    },
-    "IamIdentityCenterOptions": {
-      "additionalProperties": false,
-      "description": "Options for configuring IAM Identity Center",
-      "properties": {
-        "Enabled": {
-          "description": "Whether IAM Identity Center is enabled.",
-          "type": "boolean"
+  "properties" : {
+    "IamIdentityCenterOptions" : {
+      "type" : "object",
+      "description" : "Options for configuring IAM Identity Center",
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean",
+          "description" : "Whether IAM Identity Center is enabled."
         },
-        "IamIdentityCenterInstanceArn": {
-          "$ref": "#/properties/Arn",
-          "description": "The ARN of the IAM Identity Center instance."
+        "IamIdentityCenterInstanceArn" : {
+          "$ref" : "#/properties/Arn",
+          "description" : "The ARN of the IAM Identity Center instance."
         },
-        "IamRoleForIdentityCenterApplicationArn": {
-          "description": "The ARN of the IAM role for Identity Center application.",
-          "type": "string"
+        "IamRoleForIdentityCenterApplicationArn" : {
+          "type" : "string",
+          "description" : "The ARN of the IAM role for Identity Center application."
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Id": {
-      "description": "The identifier of the application.",
-      "maxLength": 40,
-      "minLength": 3,
-      "type": "string"
+    "Arn" : {
+      "type" : "string",
+      "description" : "Amazon Resource Name (ARN) format."
     },
-    "Name": {
-      "description": "The name of the application.",
-      "maxLength": 40,
-      "minLength": 3,
-      "pattern": "[a-z][a-z0-9\\-]+",
-      "type": "string"
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 40,
+      "minLength" : 3,
+      "description" : "The identifier of the application."
     },
-    "Tags": {
-      "description": "An arbitrary set of tags (key-value pairs) for this application.",
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Name" : {
+      "type" : "string",
+      "pattern" : "[a-z][a-z0-9\\-]+",
+      "minLength" : 3,
+      "maxLength" : 40,
+      "description" : "The name of the application."
+    },
+    "Endpoint" : {
+      "type" : "string",
+      "description" : "The endpoint for the application."
+    },
+    "AppConfigs" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/AppConfig"
       },
-      "type": "array",
-      "uniqueItems": true
+      "description" : "List of application configurations.",
+      "insertionOrder" : false
+    },
+    "DataSources" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/DataSource"
+      },
+      "description" : "List of data sources.",
+      "insertionOrder" : false
+    },
+    "Tags" : {
+      "description" : "An arbitrary set of tags (key-value pairs) for this application.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "type" : "array",
+      "uniqueItems" : true
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "es:AddTags",
-      "es:RemoveTags",
-      "es:ListTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "additionalIdentifiers" : [ [ "/properties/Arn" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "es:CreateApplication", "es:GetApplication", "es:AddTags", "es:ListTags", "iam:CreateServiceLinkedRole" ]
+    },
+    "read" : {
+      "permissions" : [ "es:GetApplication", "es:ListTags" ]
+    },
+    "update" : {
+      "permissions" : [ "es:UpdateApplication", "es:GetApplication", "es:AddTags", "es:RemoveTags", "es:ListTags" ]
+    },
+    "delete" : {
+      "permissions" : [ "es:GetApplication", "es:DeleteApplication" ]
+    },
+    "list" : {
+      "permissions" : [ "es:ListApplications" ]
+    }
   },
-  "typeName": "AWS::OpenSearchService::Application"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "es:AddTags", "es:RemoveTags", "es:ListTags" ]
+  },
+  "additionalProperties" : false
 }

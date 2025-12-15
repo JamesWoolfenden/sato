@@ -1,96 +1,69 @@
 {
-  "additionalProperties": false,
-  "description": "Resource schema for AWS::Organizations::Organization",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "organizations:CreateOrganization",
-        "organizations:DescribeOrganization",
-        "iam:CreateServiceLinkedRole",
-        "organizations:ListRoots"
-      ]
+  "typeName" : "AWS::Organizations::Organization",
+  "description" : "Resource schema for AWS::Organizations::Organization",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations.git",
+  "properties" : {
+    "Id" : {
+      "description" : "The unique identifier (ID) of an organization.",
+      "type" : "string",
+      "pattern" : "^o-[a-z0-9]{10,32}$"
     },
-    "delete": {
-      "permissions": [
-        "organizations:DeleteOrganization",
-        "organizations:DescribeOrganization"
-      ]
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of an organization.",
+      "type" : "string",
+      "pattern" : "^arn:aws.*:organizations::\\d{12}:organization\\/o-[a-z0-9]{10,32}"
     },
-    "list": {
-      "permissions": [
-        "organizations:DescribeOrganization"
-      ]
+    "FeatureSet" : {
+      "description" : "Specifies the feature set supported by the new organization. Each feature set supports different levels of functionality.",
+      "type" : "string",
+      "enum" : [ "ALL", "CONSOLIDATED_BILLING" ],
+      "default" : "ALL"
     },
-    "read": {
-      "permissions": [
-        "organizations:DescribeOrganization",
-        "organizations:ListRoots"
-      ]
+    "ManagementAccountArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the account that is designated as the management account for the organization.",
+      "type" : "string",
+      "pattern" : "^arn:aws.*:organizations::\\d{12}:account\\/o-[a-z0-9]{10,32}\\/\\d{12}"
     },
-    "update": {
-      "permissions": [
-        "organizations:DescribeOrganization"
-      ]
+    "ManagementAccountId" : {
+      "description" : "The unique identifier (ID) of the management account of an organization.",
+      "type" : "string",
+      "pattern" : "^\\d{12}$"
+    },
+    "ManagementAccountEmail" : {
+      "description" : "The email address that is associated with the AWS account that is designated as the management account for the organization.",
+      "type" : "string",
+      "pattern" : "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
+      "minLength" : 6,
+      "maxLength" : 64
+    },
+    "RootId" : {
+      "description" : "The unique identifier (ID) for the root.",
+      "type" : "string",
+      "pattern" : "^r-[0-9a-z]{4,32}$",
+      "maxLength" : 64
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of an organization.",
-      "pattern": "^arn:aws.*:organizations::\\d{12}:organization\\/o-[a-z0-9]{10,32}",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "organizations:CreateOrganization", "organizations:DescribeOrganization", "iam:CreateServiceLinkedRole", "organizations:ListRoots" ]
     },
-    "FeatureSet": {
-      "default": "ALL",
-      "description": "Specifies the feature set supported by the new organization. Each feature set supports different levels of functionality.",
-      "enum": [
-        "ALL",
-        "CONSOLIDATED_BILLING"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "organizations:DescribeOrganization", "organizations:ListRoots" ]
     },
-    "Id": {
-      "description": "The unique identifier (ID) of an organization.",
-      "pattern": "^o-[a-z0-9]{10,32}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "organizations:DeleteOrganization", "organizations:DescribeOrganization" ]
     },
-    "ManagementAccountArn": {
-      "description": "The Amazon Resource Name (ARN) of the account that is designated as the management account for the organization.",
-      "pattern": "^arn:aws.*:organizations::\\d{12}:account\\/o-[a-z0-9]{10,32}\\/\\d{12}",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "organizations:DescribeOrganization" ]
     },
-    "ManagementAccountEmail": {
-      "description": "The email address that is associated with the AWS account that is designated as the management account for the organization.",
-      "maxLength": 64,
-      "minLength": 6,
-      "pattern": "[^\\s@]+@[^\\s@]+\\.[^\\s@]+",
-      "type": "string"
-    },
-    "ManagementAccountId": {
-      "description": "The unique identifier (ID) of the management account of an organization.",
-      "pattern": "^\\d{12}$",
-      "type": "string"
-    },
-    "RootId": {
-      "description": "The unique identifier (ID) for the root.",
-      "maxLength": 64,
-      "pattern": "^r-[0-9a-z]{4,32}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "organizations:DescribeOrganization" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/ManagementAccountArn",
-    "/properties/ManagementAccountId",
-    "/properties/ManagementAccountEmail",
-    "/properties/RootId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-organizations.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Organizations::Organization"
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/ManagementAccountArn", "/properties/ManagementAccountId", "/properties/ManagementAccountEmail", "/properties/RootId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "additionalProperties" : false
 }

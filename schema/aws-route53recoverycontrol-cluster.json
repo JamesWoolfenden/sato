@@ -1,153 +1,111 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "ClusterEndpoint": {
-      "additionalProperties": false,
-      "properties": {
-        "Endpoint": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::Route53RecoveryControl::Cluster",
+  "description" : "AWS Route53 Recovery Control Cluster resource schema",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
+  "definitions" : {
+    "ClusterEndpoint" : {
+      "type" : "object",
+      "properties" : {
+        "Endpoint" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Region": {
-          "maxLength": 32,
-          "minLength": 1,
-          "type": "string"
+        "Region" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 32
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     }
   },
-  "description": "AWS Route53 Recovery Control Cluster resource schema",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "route53-recovery-control-config:CreateCluster",
-        "route53-recovery-control-config:DescribeCluster",
-        "route53-recovery-control-config:ListTagsForResource",
-        "route53-recovery-control-config:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of a Cluster. You can use any non-white space character in the name",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "route53-recovery-control-config:DescribeCluster",
-        "route53-recovery-control-config:DeleteCluster"
-      ]
+    "ClusterArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the cluster.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048,
+      "pattern" : "^[A-Za-z0-9:\\/_-]*$"
     },
-    "list": {
-      "permissions": [
-        "route53-recovery-control-config:ListClusters"
-      ]
+    "Status" : {
+      "description" : "Deployment status of a resource. Status can be one of the following: PENDING, DEPLOYED, PENDING_DELETION.",
+      "type" : "string",
+      "enum" : [ "PENDING", "DEPLOYED", "PENDING_DELETION" ]
     },
-    "read": {
-      "permissions": [
-        "route53-recovery-control-config:DescribeCluster",
-        "route53-recovery-control-config:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "route53-recovery-control-config:DescribeCluster",
-        "route53-recovery-control-config:ListTagsForResource",
-        "route53-recovery-control-config:UpdateCluster"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ClusterArn"
-  ],
-  "properties": {
-    "ClusterArn": {
-      "description": "The Amazon Resource Name (ARN) of the cluster.",
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[A-Za-z0-9:\\/_-]*$",
-      "type": "string"
-    },
-    "ClusterEndpoints": {
-      "description": "Endpoints for the cluster.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ClusterEndpoint"
+    "ClusterEndpoints" : {
+      "description" : "Endpoints for the cluster.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ClusterEndpoint"
       },
-      "type": "array"
+      "insertionOrder" : false
     },
-    "Name": {
-      "description": "Name of a Cluster. You can use any non-white space character in the name",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "NetworkType": {
-      "description": "Cluster supports IPv4 endpoints and Dual-stack IPv4 and IPv6 endpoints. NetworkType can be IPV4 or DUALSTACK.",
-      "enum": [
-        "IPV4",
-        "DUALSTACK"
-      ],
-      "type": "string"
-    },
-    "Status": {
-      "description": "Deployment status of a resource. Status can be one of the following: PENDING, DEPLOYED, PENDING_DELETION.",
-      "enum": [
-        "PENDING",
-        "DEPLOYED",
-        "PENDING_DELETION"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A collection of tags associated with a resource",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag",
-        "maxItems": 20
+    "Tags" : {
+      "description" : "A collection of tags associated with a resource",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag",
+        "maxItems" : 20
       },
-      "type": "array"
+      "insertionOrder" : false
+    },
+    "NetworkType" : {
+      "description" : "Cluster supports IPv4 endpoints and Dual-stack IPv4 and IPv6 endpoints. NetworkType can be IPV4 or DUALSTACK.",
+      "type" : "string",
+      "enum" : [ "IPV4", "DUALSTACK" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ClusterArn",
-    "/properties/ClusterEndpoints",
-    "/properties/Status"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-control.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "route53-recovery-control-config:TagResource",
-      "route53-recovery-control-config:UntagResource",
-      "route53-recovery-control-config:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
+  "required" : [ "Name" ],
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Tags" ],
+  "readOnlyProperties" : [ "/properties/ClusterArn", "/properties/ClusterEndpoints", "/properties/Status" ],
+  "primaryIdentifier" : [ "/properties/ClusterArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "route53-recovery-control-config:CreateCluster", "route53-recovery-control-config:DescribeCluster", "route53-recovery-control-config:ListTagsForResource", "route53-recovery-control-config:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "route53-recovery-control-config:DescribeCluster", "route53-recovery-control-config:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "route53-recovery-control-config:DescribeCluster", "route53-recovery-control-config:DeleteCluster" ]
+    },
+    "update" : {
+      "permissions" : [ "route53-recovery-control-config:DescribeCluster", "route53-recovery-control-config:ListTagsForResource", "route53-recovery-control-config:UpdateCluster" ]
+    },
+    "list" : {
+      "permissions" : [ "route53-recovery-control-config:ListClusters" ]
+    }
   },
-  "typeName": "AWS::Route53RecoveryControl::Cluster"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : false,
+    "permissions" : [ "route53-recovery-control-config:TagResource", "route53-recovery-control-config:UntagResource", "route53-recovery-control-config:ListTagsForResource" ]
+  }
 }

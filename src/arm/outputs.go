@@ -42,7 +42,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(outputFile))
 		if err != nil {
-			return templateNewError{err}
+			return &templateNewError{Err: err}
 		}
 
 		err = tmpl.Execute(&output, m{
@@ -51,7 +51,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		})
 
 		if err != nil {
-			return templateExecuteError{err: err}
+			return &templateExecuteError{Err: err}
 		}
 
 		All += output.String()
@@ -59,7 +59,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 
 	err := cf.Write(All, destination, "outputs")
 	if err != nil {
-		return writeFileError{destination: destination, err: err}
+		return &writeFileError{Destination: destination, Err: err}
 	}
 
 	return nil

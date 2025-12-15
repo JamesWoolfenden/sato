@@ -1,200 +1,154 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AvailabilityZones"
-  ],
-  "definitions": {
-    "MultiplexOutputDestination": {
-      "additionalProperties": false,
-      "description": "Multiplex MediaConnect output destination settings.",
-      "properties": {
-        "MultiplexMediaConnectOutputDestinationSettings": {
-          "additionalProperties": false,
-          "description": "Multiplex MediaConnect output destination settings.",
-          "properties": {
-            "EntitlementArn": {
-              "description": "The MediaConnect entitlement ARN available as a Flow source.",
-              "minLength": 1,
-              "type": "string"
+  "typeName" : "AWS::MediaLive::Multiplex",
+  "description" : "Resource schema for AWS::MediaLive::Multiplex",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialive.git",
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "The unique arn of the multiplex."
+    },
+    "AvailabilityZones" : {
+      "description" : "A list of availability zones for the multiplex.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Destinations" : {
+      "description" : "A list of the multiplex output destinations.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/MultiplexOutputDestination"
+      }
+    },
+    "Id" : {
+      "type" : "string",
+      "description" : "The unique id of the multiplex."
+    },
+    "MultiplexSettings" : {
+      "$ref" : "#/definitions/MultiplexSettings",
+      "description" : "Configuration for a multiplex event."
+    },
+    "Name" : {
+      "type" : "string",
+      "description" : "Name of multiplex."
+    },
+    "PipelinesRunningCount" : {
+      "type" : "integer",
+      "description" : "The number of currently healthy pipelines."
+    },
+    "ProgramCount" : {
+      "type" : "integer",
+      "description" : "The number of programs in the multiplex."
+    },
+    "State" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "CREATE_FAILED", "IDLE", "STARTING", "RUNNING", "RECOVERING", "STOPPING", "DELETING", "DELETED" ]
+    },
+    "Tags" : {
+      "description" : "A collection of key-value pairs.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tags"
+      }
+    }
+  },
+  "definitions" : {
+    "MultiplexOutputDestination" : {
+      "description" : "Multiplex MediaConnect output destination settings.",
+      "type" : "object",
+      "properties" : {
+        "MultiplexMediaConnectOutputDestinationSettings" : {
+          "description" : "Multiplex MediaConnect output destination settings.",
+          "properties" : {
+            "EntitlementArn" : {
+              "type" : "string",
+              "description" : "The MediaConnect entitlement ARN available as a Flow source.",
+              "minLength" : 1
             }
-          }
+          },
+          "additionalProperties" : false
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "MultiplexSettings": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "MaximumVideoBufferDelayMilliseconds": {
-          "description": "Maximum video buffer delay in milliseconds.",
-          "maximum": 3000,
-          "minimum": 800,
-          "type": "integer"
+    "MultiplexSettings" : {
+      "type" : "object",
+      "description" : "A key-value pair to associate with a resource.",
+      "properties" : {
+        "MaximumVideoBufferDelayMilliseconds" : {
+          "type" : "integer",
+          "description" : "Maximum video buffer delay in milliseconds.",
+          "minimum" : 800,
+          "maximum" : 3000
         },
-        "TransportStreamBitrate": {
-          "description": "Transport stream bit rate.",
-          "maximum": 100000000,
-          "minimum": 1000000,
-          "type": "integer"
+        "TransportStreamBitrate" : {
+          "type" : "integer",
+          "description" : "Transport stream bit rate.",
+          "minimum" : 1000000,
+          "maximum" : 100000000
         },
-        "TransportStreamId": {
-          "description": "Transport stream ID.",
-          "maximum": 65535,
-          "minimum": 0,
-          "type": "integer"
+        "TransportStreamId" : {
+          "type" : "integer",
+          "description" : "Transport stream ID.",
+          "minimum" : 0,
+          "maximum" : 65535
         },
-        "TransportStreamReservedBitrate": {
-          "description": "Transport stream reserved bit rate.",
-          "maximum": 100000000,
-          "minimum": 0,
-          "type": "integer"
+        "TransportStreamReservedBitrate" : {
+          "type" : "integer",
+          "description" : "Transport stream reserved bit rate.",
+          "minimum" : 0,
+          "maximum" : 100000000
         }
       },
-      "required": [
-        "TransportStreamBitrate",
-        "TransportStreamId"
-      ],
-      "type": "object"
+      "required" : [ "TransportStreamBitrate", "TransportStreamId" ],
+      "additionalProperties" : false
     },
-    "Tags": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "type": "string"
+    "Tags" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource schema for AWS::MediaLive::Multiplex",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "medialive:CreateMultiplex",
-        "medialive:DescribeMultiplex",
-        "medialive:CreateTags"
-      ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "medialive:CreateTags", "medialive:DeleteTags" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "AvailabilityZones", "MultiplexSettings", "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id", "/properties/PipelinesRunningCount", "/properties/ProgramCount", "/properties/State" ],
+  "createOnlyProperties" : [ "/properties/AvailabilityZones" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "medialive:CreateMultiplex", "medialive:DescribeMultiplex", "medialive:CreateTags" ]
     },
-    "delete": {
-      "permissions": [
-        "medialive:DeleteMultiplex",
-        "medialive:DescribeMultiplex"
-      ]
+    "read" : {
+      "permissions" : [ "medialive:DescribeMultiplex" ]
     },
-    "list": {
-      "permissions": [
-        "medialive:ListMultiplexes"
-      ]
+    "update" : {
+      "permissions" : [ "medialive:UpdateMultiplex", "medialive:DescribeMultiplex", "medialive:CreateTags", "medialive:DeleteTags" ]
     },
-    "read": {
-      "permissions": [
-        "medialive:DescribeMultiplex"
-      ]
+    "delete" : {
+      "permissions" : [ "medialive:DeleteMultiplex", "medialive:DescribeMultiplex" ]
     },
-    "update": {
-      "permissions": [
-        "medialive:UpdateMultiplex",
-        "medialive:DescribeMultiplex",
-        "medialive:CreateTags",
-        "medialive:DeleteTags"
-      ]
+    "list" : {
+      "permissions" : [ "medialive:ListMultiplexes" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The unique arn of the multiplex.",
-      "type": "string"
-    },
-    "AvailabilityZones": {
-      "description": "A list of availability zones for the multiplex.",
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Destinations": {
-      "description": "A list of the multiplex output destinations.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/MultiplexOutputDestination"
-      },
-      "type": "array"
-    },
-    "Id": {
-      "description": "The unique id of the multiplex.",
-      "type": "string"
-    },
-    "MultiplexSettings": {
-      "$ref": "#/definitions/MultiplexSettings",
-      "description": "Configuration for a multiplex event."
-    },
-    "Name": {
-      "description": "Name of multiplex.",
-      "type": "string"
-    },
-    "PipelinesRunningCount": {
-      "description": "The number of currently healthy pipelines.",
-      "type": "integer"
-    },
-    "ProgramCount": {
-      "description": "The number of programs in the multiplex.",
-      "type": "integer"
-    },
-    "State": {
-      "enum": [
-        "CREATING",
-        "CREATE_FAILED",
-        "IDLE",
-        "STARTING",
-        "RUNNING",
-        "RECOVERING",
-        "STOPPING",
-        "DELETING",
-        "DELETED"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A collection of key-value pairs.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tags"
-      },
-      "type": "array"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id",
-    "/properties/PipelinesRunningCount",
-    "/properties/ProgramCount",
-    "/properties/State"
-  ],
-  "required": [
-    "AvailabilityZones",
-    "MultiplexSettings",
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-medialive.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "medialive:CreateTags",
-      "medialive:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MediaLive::Multiplex"
+  }
 }

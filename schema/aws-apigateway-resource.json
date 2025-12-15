@@ -1,82 +1,56 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PathPart",
-    "/properties/ParentId",
-    "/properties/RestApiId"
-  ],
-  "description": "The ``AWS::ApiGateway::Resource`` resource creates a resource in an API.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "apigateway:POST"
-      ]
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "apigateway:GET" ]
     },
-    "delete": {
-      "permissions": [
-        "apigateway:DELETE"
-      ]
+    "create" : {
+      "permissions" : [ "apigateway:POST" ]
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "RestApiId": {
-            "$ref": "resource-schema.json#/properties/RestApiId"
+    "update" : {
+      "permissions" : [ "apigateway:GET", "apigateway:PATCH" ]
+    },
+    "list" : {
+      "permissions" : [ "apigateway:GET" ],
+      "handlerSchema" : {
+        "properties" : {
+          "RestApiId" : {
+            "$ref" : "resource-schema.json#/properties/RestApiId"
           }
         },
-        "required": [
-          "RestApiId"
-        ]
-      },
-      "permissions": [
-        "apigateway:GET"
-      ]
+        "required" : [ "RestApiId" ]
+      }
     },
-    "read": {
-      "permissions": [
-        "apigateway:GET"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "apigateway:GET",
-        "apigateway:PATCH"
-      ]
+    "delete" : {
+      "permissions" : [ "apigateway:DELETE" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/RestApiId",
-    "/properties/ResourceId"
-  ],
-  "properties": {
-    "ParentId": {
-      "description": "",
-      "type": "string"
+  "typeName" : "AWS::ApiGateway::Resource",
+  "readOnlyProperties" : [ "/properties/ResourceId" ],
+  "description" : "The ``AWS::ApiGateway::Resource`` resource creates a resource in an API.",
+  "createOnlyProperties" : [ "/properties/PathPart", "/properties/ParentId", "/properties/RestApiId" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/RestApiId", "/properties/ResourceId" ],
+  "properties" : {
+    "ParentId" : {
+      "description" : "",
+      "type" : "string"
     },
-    "PathPart": {
-      "description": "",
-      "type": "string"
+    "PathPart" : {
+      "description" : "",
+      "type" : "string"
     },
-    "ResourceId": {
-      "description": "",
-      "type": "string"
+    "ResourceId" : {
+      "description" : "",
+      "type" : "string"
     },
-    "RestApiId": {
-      "description": "",
-      "type": "string"
+    "RestApiId" : {
+      "description" : "",
+      "type" : "string"
     }
   },
-  "readOnlyProperties": [
-    "/properties/ResourceId"
-  ],
-  "required": [
-    "ParentId",
-    "PathPart",
-    "RestApiId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-apigateway",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ApiGateway::Resource"
+  "required" : [ "ParentId", "PathPart", "RestApiId" ]
 }

@@ -1,144 +1,111 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ApplicationName"
-  ],
-  "definitions": {
-    "ApplicationResourceLifecycleConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "ServiceRole": {
-          "description": "The ARN of an IAM service role that Elastic Beanstalk has permission to assume. The ServiceRole property is required the first time that you provide a ResourceLifecycleConfig for the application. After you provide it once, Elastic Beanstalk persists the Service Role with the application, and you don't need to specify it again. You can, however, specify it in subsequent updates to change the Service Role to another value.",
-          "type": "string"
-        },
-        "VersionLifecycleConfig": {
-          "$ref": "#/definitions/ApplicationVersionLifecycleConfig",
-          "description": "Defines lifecycle settings for application versions."
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::ElasticBeanstalk::Application",
+  "description" : "The AWS::ElasticBeanstalk::Application resource specifies an Elastic Beanstalk application.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticbeanstalk.git",
+  "properties" : {
+    "ApplicationName" : {
+      "description" : "A name for the Elastic Beanstalk application. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the application name.",
+      "type" : "string"
     },
-    "ApplicationVersionLifecycleConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "MaxAgeRule": {
-          "$ref": "#/definitions/MaxAgeRule",
-          "description": "Specify a max age rule to restrict the length of time that application versions are retained for an application."
-        },
-        "MaxCountRule": {
-          "$ref": "#/definitions/MaxCountRule",
-          "description": "Specify a max count rule to restrict the number of application versions that are retained for an application."
-        }
-      },
-      "type": "object"
+    "Description" : {
+      "description" : "Your description of the application.",
+      "type" : "string"
     },
-    "MaxAgeRule": {
-      "additionalProperties": false,
-      "properties": {
-        "DeleteSourceFromS3": {
-          "description": "Set to true to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.",
-          "type": "boolean"
-        },
-        "Enabled": {
-          "description": "Specify true to apply the rule, or false to disable it.",
-          "type": "boolean"
-        },
-        "MaxAgeInDays": {
-          "description": "Specify the number of days to retain an application versions.",
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "MaxCountRule": {
-      "additionalProperties": false,
-      "properties": {
-        "DeleteSourceFromS3": {
-          "description": "Set to true to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.",
-          "type": "boolean"
-        },
-        "Enabled": {
-          "description": "Specify true to apply the rule, or false to disable it.",
-          "type": "boolean"
-        },
-        "MaxCount": {
-          "description": "Specify the maximum number of application versions to retain.",
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "ResourceLifecycleConfig" : {
+      "description" : "Specifies an application resource lifecycle configuration to prevent your application from accumulating too many versions.",
+      "$ref" : "#/definitions/ApplicationResourceLifecycleConfig"
     }
   },
-  "description": "The AWS::ElasticBeanstalk::Application resource specifies an Elastic Beanstalk application.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "elasticbeanstalk:CreateApplication",
-        "elasticbeanstalk:DescribeApplications",
-        "s3:CreateBucket",
-        "s3:PutBucketAcl",
-        "s3:PutBucketObjectLockConfiguration",
-        "s3:PutBucketVersioning",
-        "s3:PutBucketOwnershipControls",
-        "s3:PutBucketPolicy",
-        "s3:PutBucketPublicAccessBlock",
-        "s3:PutObject",
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:GetBucketLocation",
-        "s3:GetBucketPolicy",
-        "iam:PassRole"
-      ]
+  "definitions" : {
+    "ApplicationResourceLifecycleConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ServiceRole" : {
+          "description" : "The ARN of an IAM service role that Elastic Beanstalk has permission to assume. The ServiceRole property is required the first time that you provide a ResourceLifecycleConfig for the application. After you provide it once, Elastic Beanstalk persists the Service Role with the application, and you don't need to specify it again. You can, however, specify it in subsequent updates to change the Service Role to another value.",
+          "type" : "string"
+        },
+        "VersionLifecycleConfig" : {
+          "description" : "Defines lifecycle settings for application versions.",
+          "$ref" : "#/definitions/ApplicationVersionLifecycleConfig"
+        }
+      }
     },
-    "delete": {
-      "permissions": [
-        "elasticbeanstalk:DeleteApplication",
-        "elasticbeanstalk:DescribeApplications",
-        "s3:ListBucket"
-      ]
+    "ApplicationVersionLifecycleConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MaxAgeRule" : {
+          "description" : "Specify a max age rule to restrict the length of time that application versions are retained for an application.",
+          "$ref" : "#/definitions/MaxAgeRule"
+        },
+        "MaxCountRule" : {
+          "description" : "Specify a max count rule to restrict the number of application versions that are retained for an application.",
+          "$ref" : "#/definitions/MaxCountRule"
+        }
+      }
     },
-    "list": {
-      "permissions": [
-        "elasticbeanstalk:DescribeApplications"
-      ]
+    "MaxAgeRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeleteSourceFromS3" : {
+          "description" : "Set to true to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.",
+          "type" : "boolean"
+        },
+        "Enabled" : {
+          "description" : "Specify true to apply the rule, or false to disable it.",
+          "type" : "boolean"
+        },
+        "MaxAgeInDays" : {
+          "description" : "Specify the number of days to retain an application versions.",
+          "type" : "integer"
+        }
+      }
     },
-    "read": {
-      "permissions": [
-        "elasticbeanstalk:DescribeApplications"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "elasticbeanstalk:UpdateApplication",
-        "elasticbeanstalk:UpdateApplicationResourceLifecycle",
-        "elasticbeanstalk:DescribeApplications",
-        "iam:PassRole"
-      ]
+    "MaxCountRule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeleteSourceFromS3" : {
+          "description" : "Set to true to delete a version's source bundle from Amazon S3 when Elastic Beanstalk deletes the application version.",
+          "type" : "boolean"
+        },
+        "Enabled" : {
+          "description" : "Specify true to apply the rule, or false to disable it.",
+          "type" : "boolean"
+        },
+        "MaxCount" : {
+          "description" : "Specify the maximum number of application versions to retain.",
+          "type" : "integer"
+        }
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/ApplicationName"
-  ],
-  "properties": {
-    "ApplicationName": {
-      "description": "A name for the Elastic Beanstalk application. If you don't specify a name, AWS CloudFormation generates a unique physical ID and uses that ID for the application name.",
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "createOnlyProperties" : [ "/properties/ApplicationName" ],
+  "primaryIdentifier" : [ "/properties/ApplicationName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "elasticbeanstalk:CreateApplication", "elasticbeanstalk:DescribeApplications", "s3:CreateBucket", "s3:PutBucketAcl", "s3:PutBucketObjectLockConfiguration", "s3:PutBucketVersioning", "s3:PutBucketOwnershipControls", "s3:PutBucketPolicy", "s3:PutBucketPublicAccessBlock", "s3:PutObject", "s3:ListBucket", "s3:GetObject", "s3:GetBucketLocation", "s3:GetBucketPolicy", "iam:PassRole" ]
     },
-    "Description": {
-      "description": "Your description of the application.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "elasticbeanstalk:DescribeApplications" ]
     },
-    "ResourceLifecycleConfig": {
-      "$ref": "#/definitions/ApplicationResourceLifecycleConfig",
-      "description": "Specifies an application resource lifecycle configuration to prevent your application from accumulating too many versions."
+    "update" : {
+      "permissions" : [ "elasticbeanstalk:UpdateApplication", "elasticbeanstalk:UpdateApplicationResourceLifecycle", "elasticbeanstalk:DescribeApplications", "iam:PassRole" ]
+    },
+    "delete" : {
+      "permissions" : [ "elasticbeanstalk:DeleteApplication", "elasticbeanstalk:DescribeApplications", "s3:ListBucket" ]
+    },
+    "list" : {
+      "permissions" : [ "elasticbeanstalk:DescribeApplications" ]
     }
-  },
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-elasticbeanstalk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::ElasticBeanstalk::Application"
+  }
 }

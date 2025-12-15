@@ -1,161 +1,107 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ModelPackageGroupName",
-    "/properties/ModelPackageGroupDescription"
-  ],
-  "definitions": {
-    "ModelPackageGroupArn": {
-      "description": "The Amazon Resource Name (ARN) of the model package group.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "arn:.*",
-      "type": "string"
+  "typeName" : "AWS::SageMaker::ModelPackageGroup",
+  "description" : "Resource Type definition for AWS::SageMaker::ModelPackageGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Tags" : {
+      "type" : "array",
+      "maxItems" : 50,
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "ModelPackageGroupDescription": {
-      "description": "The description of the model package group.",
-      "maxLength": 1024,
-      "pattern": "[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}]*",
-      "type": "string"
+    "ModelPackageGroupArn" : {
+      "$ref" : "#/definitions/ModelPackageGroupArn"
     },
-    "ModelPackageGroupName": {
-      "description": "The name of the model package group.",
-      "maxLength": 63,
-      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-      "type": "string"
+    "ModelPackageGroupName" : {
+      "$ref" : "#/definitions/ModelPackageGroupName"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+    "ModelPackageGroupDescription" : {
+      "$ref" : "#/definitions/ModelPackageGroupDescription"
+    },
+    "ModelPackageGroupPolicy" : {
+      "type" : [ "object", "string" ]
+    },
+    "CreationTime" : {
+      "description" : "The time at which the model package group was created.",
+      "type" : "string"
+    },
+    "ModelPackageGroupStatus" : {
+      "description" : "The status of a modelpackage group job.",
+      "type" : "string",
+      "enum" : [ "Pending", "InProgress", "Completed", "Failed", "Deleting", "DeleteFailed" ]
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 256,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "maxLength" : 256,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
+    },
+    "ModelPackageGroupDescription" : {
+      "type" : "string",
+      "description" : "The description of the model package group.",
+      "pattern" : "[\\p{L}\\p{M}\\p{Z}\\p{S}\\p{N}\\p{P}]*",
+      "maxLength" : 1024
+    },
+    "ModelPackageGroupName" : {
+      "type" : "string",
+      "description" : "The name of the model package group.",
+      "pattern" : "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+      "maxLength" : 63
+    },
+    "ModelPackageGroupArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the model package group.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "arn:.*"
     }
   },
-  "description": "Resource Type definition for AWS::SageMaker::ModelPackageGroup",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "sagemaker:CreateModelPackageGroup",
-        "sagemaker:DescribeModelPackageGroup",
-        "sagemaker:GetModelPackageGroupPolicy",
-        "sagemaker:PutModelPackageGroupPolicy",
-        "sagemaker:ListTags",
-        "sagemaker:AddTags"
-      ]
+  "required" : [ "ModelPackageGroupName" ],
+  "primaryIdentifier" : [ "/properties/ModelPackageGroupArn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "sagemaker:AddTags", "sagemaker:ListTags", "sagemaker:DeleteTags" ]
+  },
+  "readOnlyProperties" : [ "/properties/ModelPackageGroupArn", "/properties/CreationTime", "/properties/ModelPackageGroupStatus" ],
+  "createOnlyProperties" : [ "/properties/ModelPackageGroupName", "/properties/ModelPackageGroupDescription" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "sagemaker:CreateModelPackageGroup", "sagemaker:DescribeModelPackageGroup", "sagemaker:GetModelPackageGroupPolicy", "sagemaker:PutModelPackageGroupPolicy", "sagemaker:ListTags", "sagemaker:AddTags" ]
     },
-    "delete": {
-      "permissions": [
-        "sagemaker:DeleteModelPackageGroup",
-        "sagemaker:DescribeModelPackageGroup",
-        "sagemaker:GetModelPackageGroupPolicy",
-        "sagemaker:DeleteModelPackageGroupPolicy"
-      ]
+    "delete" : {
+      "permissions" : [ "sagemaker:DeleteModelPackageGroup", "sagemaker:DescribeModelPackageGroup", "sagemaker:GetModelPackageGroupPolicy", "sagemaker:DeleteModelPackageGroupPolicy" ]
     },
-    "list": {
-      "permissions": [
-        "sagemaker:ListModelPackageGroups"
-      ]
+    "list" : {
+      "permissions" : [ "sagemaker:ListModelPackageGroups" ]
     },
-    "read": {
-      "permissions": [
-        "sagemaker:DescribeModelPackageGroup",
-        "sagemaker:GetModelPackageGroupPolicy",
-        "sagemaker:ListTags"
-      ]
+    "read" : {
+      "permissions" : [ "sagemaker:DescribeModelPackageGroup", "sagemaker:GetModelPackageGroupPolicy", "sagemaker:ListTags" ]
     },
-    "update": {
-      "permissions": [
-        "sagemaker:DescribeModelPackageGroup",
-        "sagemaker:GetModelPackageGroupPolicy",
-        "sagemaker:DeleteModelPackageGroupPolicy",
-        "sagemaker:PutModelPackageGroupPolicy",
-        "sagemaker:ListTags",
-        "sagemaker:AddTags",
-        "sagemaker:DeleteTags"
-      ]
+    "update" : {
+      "permissions" : [ "sagemaker:DescribeModelPackageGroup", "sagemaker:GetModelPackageGroupPolicy", "sagemaker:DeleteModelPackageGroupPolicy", "sagemaker:PutModelPackageGroupPolicy", "sagemaker:ListTags", "sagemaker:AddTags", "sagemaker:DeleteTags" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/ModelPackageGroupArn"
-  ],
-  "properties": {
-    "CreationTime": {
-      "description": "The time at which the model package group was created.",
-      "type": "string"
-    },
-    "ModelPackageGroupArn": {
-      "$ref": "#/definitions/ModelPackageGroupArn"
-    },
-    "ModelPackageGroupDescription": {
-      "$ref": "#/definitions/ModelPackageGroupDescription"
-    },
-    "ModelPackageGroupName": {
-      "$ref": "#/definitions/ModelPackageGroupName"
-    },
-    "ModelPackageGroupPolicy": {
-      "type": [
-        "object",
-        "string"
-      ]
-    },
-    "ModelPackageGroupStatus": {
-      "description": "The status of a modelpackage group job.",
-      "enum": [
-        "Pending",
-        "InProgress",
-        "Completed",
-        "Failed",
-        "Deleting",
-        "DeleteFailed"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/ModelPackageGroupArn",
-    "/properties/CreationTime",
-    "/properties/ModelPackageGroupStatus"
-  ],
-  "required": [
-    "ModelPackageGroupName"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "sagemaker:AddTags",
-      "sagemaker:ListTags",
-      "sagemaker:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SageMaker::ModelPackageGroup"
+  }
 }

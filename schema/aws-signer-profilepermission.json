@@ -1,83 +1,58 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ProfileName",
-    "/properties/Action",
-    "/properties/Principal",
-    "/properties/StatementId",
-    "/properties/ProfileVersion"
-  ],
-  "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "signer:AddProfilePermission",
-        "signer:ListProfilePermissions"
-      ]
+  "typeName" : "AWS::Signer::ProfilePermission",
+  "description" : "An example resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "properties" : {
+    "ProfileName" : {
+      "type" : "string",
+      "pattern" : "^[0-9a-zA-Z_]{2,64}$"
     },
-    "delete": {
-      "permissions": [
-        "signer:RemoveProfilePermission",
-        "signer:ListProfilePermissions"
-      ]
+    "ProfileVersion" : {
+      "type" : "string",
+      "pattern" : "^[0-9a-zA-Z]{10}$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "ProfileName": {
-            "$ref": "resource-schema.json#/properties/ProfileName"
+    "Action" : {
+      "type" : "string"
+    },
+    "Principal" : {
+      "type" : "string"
+    },
+    "StatementId" : {
+      "type" : "string"
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "ProfileName", "Action", "Principal", "StatementId" ],
+  "createOnlyProperties" : [ "/properties/ProfileName", "/properties/Action", "/properties/Principal", "/properties/StatementId", "/properties/ProfileVersion" ],
+  "primaryIdentifier" : [ "/properties/StatementId", "/properties/ProfileName" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "signer:AddProfilePermission", "signer:ListProfilePermissions" ]
+    },
+    "read" : {
+      "permissions" : [ "signer:ListProfilePermissions" ]
+    },
+    "delete" : {
+      "permissions" : [ "signer:RemoveProfilePermission", "signer:ListProfilePermissions" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "ProfileName" : {
+            "$ref" : "resource-schema.json#/properties/ProfileName"
           },
-          "StatementId": {
-            "$ref": "resource-schema.json#/properties/StatementId"
+          "StatementId" : {
+            "$ref" : "resource-schema.json#/properties/StatementId"
           }
         }
       },
-      "permissions": [
-        "signer:ListProfilePermissions",
-        "signer:GetSigningProfile"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "signer:ListProfilePermissions"
-      ]
+      "permissions" : [ "signer:ListProfilePermissions", "signer:GetSigningProfile" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/StatementId",
-    "/properties/ProfileName"
-  ],
-  "properties": {
-    "Action": {
-      "type": "string"
-    },
-    "Principal": {
-      "type": "string"
-    },
-    "ProfileName": {
-      "pattern": "^[0-9a-zA-Z_]{2,64}$",
-      "type": "string"
-    },
-    "ProfileVersion": {
-      "pattern": "^[0-9a-zA-Z]{10}$",
-      "type": "string"
-    },
-    "StatementId": {
-      "type": "string"
-    }
-  },
-  "required": [
-    "ProfileName",
-    "Action",
-    "Principal",
-    "StatementId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Signer::ProfilePermission"
+  }
 }

@@ -1,93 +1,72 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "LogGroup": {
-      "maxLength": 512,
-      "minLength": 1,
-      "pattern": "[\\.\\-_/#A-Za-z0-9]+",
-      "type": "string"
+  "typeName" : "AWS::Logs::QueryDefinition",
+  "description" : "The resource schema for AWSLogs QueryDefinition",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+  "definitions" : {
+    "LogGroup" : {
+      "type" : "string",
+      "pattern" : "[\\.\\-_/#A-Za-z0-9]+",
+      "minLength" : 1,
+      "maxLength" : 512
     }
   },
-  "description": "The resource schema for AWSLogs QueryDefinition",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "logs:PutQueryDefinition"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "A name for the saved query definition",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "delete": {
-      "permissions": [
-        "logs:DeleteQueryDefinition"
-      ]
+    "QueryString" : {
+      "description" : "The query string to use for this definition",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 10000
     },
-    "list": {
-      "permissions": [
-        "logs:DescribeQueryDefinitions"
-      ]
+    "LogGroupNames" : {
+      "description" : "Optionally define specific log groups as part of your query definition",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "description" : "LogGroup name",
+        "$ref" : "#/definitions/LogGroup"
+      }
     },
-    "read": {
-      "permissions": [
-        "logs:DescribeQueryDefinitions"
-      ]
+    "QueryDefinitionId" : {
+      "description" : "Unique identifier of a query definition",
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 256
     },
-    "update": {
-      "permissions": [
-        "logs:PutQueryDefinition"
-      ]
+    "QueryLanguage" : {
+      "description" : "Query language of the query string. Possible values are CWLI, SQL, PPL, with CWLI being the default.",
+      "type" : "string",
+      "enum" : [ "CWLI", "SQL", "PPL" ],
+      "default" : "CWLI"
     }
   },
-  "primaryIdentifier": [
-    "/properties/QueryDefinitionId"
-  ],
-  "properties": {
-    "LogGroupNames": {
-      "description": "Optionally define specific log groups as part of your query definition",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/LogGroup",
-        "description": "LogGroup name"
-      },
-      "type": "array"
+  "required" : [ "Name", "QueryString" ],
+  "additionalProperties" : false,
+  "readOnlyProperties" : [ "/properties/QueryDefinitionId" ],
+  "primaryIdentifier" : [ "/properties/QueryDefinitionId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "logs:PutQueryDefinition" ]
     },
-    "Name": {
-      "description": "A name for the saved query definition",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "logs:DescribeQueryDefinitions" ]
     },
-    "QueryDefinitionId": {
-      "description": "Unique identifier of a query definition",
-      "maxLength": 256,
-      "minLength": 0,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "logs:PutQueryDefinition" ]
     },
-    "QueryLanguage": {
-      "default": "CWLI",
-      "description": "Query language of the query string. Possible values are CWLI, SQL, PPL, with CWLI being the default.",
-      "enum": [
-        "CWLI",
-        "SQL",
-        "PPL"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "logs:DeleteQueryDefinition" ]
     },
-    "QueryString": {
-      "description": "The query string to use for this definition",
-      "maxLength": 10000,
-      "minLength": 1,
-      "type": "string"
+    "list" : {
+      "permissions" : [ "logs:DescribeQueryDefinitions" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/QueryDefinitionId"
-  ],
-  "required": [
-    "Name",
-    "QueryString"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Logs::QueryDefinition"
+  "tagging" : {
+    "taggable" : false
+  }
 }

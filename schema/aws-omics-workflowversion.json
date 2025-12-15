@@ -1,417 +1,323 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/WorkflowId",
-    "/properties/VersionName",
-    "/properties/DefinitionUri",
-    "/properties/Engine",
-    "/properties/Main",
-    "/properties/ParameterTemplate",
-    "/properties/Accelerators",
-    "/properties/WorkflowBucketOwnerId",
-    "/properties/Accelerators",
-    "/properties/DefinitionRepository",
-    "/properties/ParameterTemplatePath",
-    "/properties/readmePath",
-    "/properties/readmeUri",
-    "/properties/ContainerRegistryMap",
-    "/properties/ContainerRegistryMapUri"
-  ],
-  "definitions": {
-    "Accelerators": {
-      "enum": [
-        "GPU"
-      ],
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
+  "typeName" : "AWS::Omics::WorkflowVersion",
+  "description" : "Definition of AWS::Omics::WorkflowVersion Resource Type.",
+  "definitions" : {
+    "TagMap" : {
+      "type" : "object",
+      "description" : "A map of resource tags",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "description" : "Resource tag value"
+        }
+      },
+      "additionalProperties" : false
     },
-    "ContainerRegistryMap": {
-      "additionalProperties": false,
-      "properties": {
-        "ImageMappings": {
-          "items": {
-            "$ref": "#/definitions/ImageMapping"
+    "WorkflowEngine" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "enum" : [ "WDL", "NEXTFLOW", "CWL" ]
+    },
+    "Accelerators" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "enum" : [ "GPU" ]
+    },
+    "WorkflowParameter" : {
+      "type" : "object",
+      "properties" : {
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+        },
+        "Optional" : {
+          "type" : "boolean"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "WorkflowParameterTemplate" : {
+      "type" : "object",
+      "maxProperties" : 1000,
+      "minProperties" : 1,
+      "patternProperties" : {
+        "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$" : {
+          "$ref" : "#/definitions/WorkflowParameter"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "WorkflowStatus" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "enum" : [ "CREATING", "ACTIVE", "UPDATING", "DELETED", "FAILED", "INACTIVE" ]
+    },
+    "WorkflowType" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "enum" : [ "PRIVATE", "READY2RUN" ]
+    },
+    "StorageType" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "enum" : [ "STATIC", "DYNAMIC" ]
+    },
+    "SourceReference" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "BRANCH", "TAG", "COMMIT" ]
+        },
+        "value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DefinitionRepository" : {
+      "type" : "object",
+      "properties" : {
+        "connectionArn" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256,
+          "pattern" : "^arn:aws(-[\\\\w]+)*:.+:.+:[0-9]{12}:.+$"
+        },
+        "fullRepositoryId" : {
+          "type" : "string",
+          "pattern" : ".+/.+"
+        },
+        "sourceReference" : {
+          "$ref" : "#/definitions/SourceReference"
+        },
+        "excludeFilePatterns" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
           },
-          "type": "array"
+          "minItems" : 1,
+          "maxItems" : 50
+        }
+      }
+    },
+    "ContainerRegistryMap" : {
+      "type" : "object",
+      "properties" : {
+        "RegistryMappings" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RegistryMapping"
+          }
         },
-        "RegistryMappings": {
-          "items": {
-            "$ref": "#/definitions/RegistryMapping"
-          },
-          "type": "array"
+        "ImageMappings" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ImageMapping"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "DefinitionRepository": {
-      "properties": {
-        "connectionArn": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^arn:aws(-[\\\\w]+)*:.+:.+:[0-9]{12}:.+$",
-          "type": "string"
+    "ImageMapping" : {
+      "type" : "object",
+      "properties" : {
+        "SourceImage" : {
+          "type" : "string",
+          "maxLength" : 750,
+          "minLength" : 1,
+          "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
         },
-        "excludeFilePatterns": {
-          "items": {
-            "type": "string"
-          },
-          "maxItems": 50,
-          "minItems": 1,
-          "type": "array"
-        },
-        "fullRepositoryId": {
-          "pattern": ".+/.+",
-          "type": "string"
-        },
-        "sourceReference": {
-          "$ref": "#/definitions/SourceReference"
+        "DestinationImage" : {
+          "type" : "string",
+          "maxLength" : 750,
+          "minLength" : 1,
+          "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ImageMapping": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationImage": {
-          "maxLength": 750,
-          "minLength": 1,
-          "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-          "type": "string"
+    "RegistryMapping" : {
+      "type" : "object",
+      "properties" : {
+        "UpstreamRegistryUrl" : {
+          "type" : "string",
+          "maxLength" : 750,
+          "minLength" : 1,
+          "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
         },
-        "SourceImage": {
-          "maxLength": 750,
-          "minLength": 1,
-          "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-          "type": "string"
+        "EcrRepositoryPrefix" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+        },
+        "UpstreamRepositoryPrefix" : {
+          "type" : "string",
+          "maxLength" : 30,
+          "minLength" : 2,
+          "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+        },
+        "EcrAccountId" : {
+          "type" : "string",
+          "maxLength" : 12,
+          "minLength" : 12,
+          "pattern" : "^[0-9]+$"
         }
       },
-      "type": "object"
-    },
-    "RegistryMapping": {
-      "additionalProperties": false,
-      "properties": {
-        "EcrAccountId": {
-          "maxLength": 12,
-          "minLength": 12,
-          "pattern": "^[0-9]+$",
-          "type": "string"
-        },
-        "EcrRepositoryPrefix": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-          "type": "string"
-        },
-        "UpstreamRegistryUrl": {
-          "maxLength": 750,
-          "minLength": 1,
-          "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-          "type": "string"
-        },
-        "UpstreamRepositoryPrefix": {
-          "maxLength": 30,
-          "minLength": 2,
-          "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "SourceReference": {
-      "properties": {
-        "type": {
-          "enum": [
-            "BRANCH",
-            "TAG",
-            "COMMIT"
-          ],
-          "type": "string"
-        },
-        "value": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "StorageType": {
-      "enum": [
-        "STATIC",
-        "DYNAMIC"
-      ],
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "TagMap": {
-      "additionalProperties": false,
-      "description": "A map of resource tags",
-      "patternProperties": {
-        ".+": {
-          "description": "Resource tag value",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "WorkflowEngine": {
-      "enum": [
-        "WDL",
-        "NEXTFLOW",
-        "CWL"
-      ],
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "WorkflowParameter": {
-      "additionalProperties": false,
-      "properties": {
-        "Description": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-          "type": "string"
-        },
-        "Optional": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "WorkflowParameterTemplate": {
-      "additionalProperties": false,
-      "maxProperties": 1000,
-      "minProperties": 1,
-      "patternProperties": {
-        "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$": {
-          "$ref": "#/definitions/WorkflowParameter"
-        }
-      },
-      "type": "object"
-    },
-    "WorkflowStatus": {
-      "enum": [
-        "CREATING",
-        "ACTIVE",
-        "UPDATING",
-        "DELETED",
-        "FAILED",
-        "INACTIVE"
-      ],
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "WorkflowType": {
-      "enum": [
-        "PRIVATE",
-        "READY2RUN"
-      ],
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::Omics::WorkflowVersion Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "omics:CreateWorkflow",
-        "omics:GetWorkflow",
-        "omics:CreateWorkflowVersion",
-        "omics:GetWorkflowVersion",
-        "omics:TagResource",
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:GetObjectAttributes",
-        "s3:HeadObject",
-        "s3:GetEncryptionConfiguration",
-        "kms:Decrypt",
-        "kms:GenerateDataKey",
-        "kms:GenerateDataKeyPair",
-        "kms:GenerateDataKeyPairWithoutPlaintext",
-        "kms:GenerateDataKeyWithoutPlaintext",
-        "codeconnections:UseConnection",
-        "codeconnections:GetConnection",
-        "codeconnections:GetHost"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "pattern" : "^arn:.+$"
     },
-    "delete": {
-      "permissions": [
-        "omics:DeleteWorkflowVersion",
-        "omics:GetWorkflowVersion"
-      ]
+    "WorkflowId" : {
+      "type" : "string",
+      "maxLength" : 18,
+      "minLength" : 1,
+      "pattern" : "^[0-9]+$"
     },
-    "list": {
-      "permissions": [
-        "omics:ListWorkflowVersions"
-      ]
+    "VersionName" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[A-Za-z0-9][A-Za-z0-9\\-\\._]*$"
     },
-    "read": {
-      "permissions": [
-        "omics:GetWorkflowVersion",
-        "omics:ListTagsForResource"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "update": {
-      "permissions": [
-        "omics:UpdateWorkflowVersion",
-        "omics:GetWorkflowVersion",
-        "omics:TagResource",
-        "omics:ListTagsForResource",
-        "omics:UntagResource"
-      ]
+    "DefinitionUri" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+    },
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+    },
+    "Engine" : {
+      "$ref" : "#/definitions/WorkflowEngine"
+    },
+    "Main" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+    },
+    "ParameterTemplate" : {
+      "$ref" : "#/definitions/WorkflowParameterTemplate"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/WorkflowStatus"
+    },
+    "Accelerators" : {
+      "$ref" : "#/definitions/Accelerators"
+    },
+    "StorageType" : {
+      "$ref" : "#/definitions/StorageType"
+    },
+    "StorageCapacity" : {
+      "type" : "number",
+      "maximum" : 100000,
+      "minimum" : 0
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
+    },
+    "Type" : {
+      "$ref" : "#/definitions/WorkflowType"
+    },
+    "Uuid" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 1,
+      "pattern" : "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "WorkflowBucketOwnerId" : {
+      "type" : "string",
+      "maxLength" : 12,
+      "minLength" : 1,
+      "pattern" : "^[0-9]{12}$"
+    },
+    "ParameterTemplatePath" : {
+      "type" : "string",
+      "description" : "Path to the primary workflow parameter template JSON file inside the repository",
+      "pattern" : "^[\\S]+$"
+    },
+    "DefinitionRepository" : {
+      "$ref" : "#/definitions/DefinitionRepository"
+    },
+    "readmePath" : {
+      "type" : "string",
+      "description" : "The path to the workflow README markdown file within the repository. This file provides documentation and usage information for the workflow. If not specified, the README.md file from the root directory of the repository will be used.",
+      "maxLength" : 128,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
+    },
+    "readmeUri" : {
+      "type" : "string",
+      "description" : "The S3 URI of the README file for the workflow. This file provides documentation and usage information for the workflow. The S3 URI must begin with s3://USER-OWNED-BUCKET/. The requester must have access to the S3 bucket and object. The max README content length is 500 KiB.",
+      "pattern" : "^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/((.{1,1024}))$"
+    },
+    "readmeMarkdown" : {
+      "type" : "string",
+      "description" : "The markdown content for the workflow's README file. This provides documentation and usage information for users of the workflow."
+    },
+    "ContainerRegistryMap" : {
+      "$ref" : "#/definitions/ContainerRegistryMap"
+    },
+    "ContainerRegistryMapUri" : {
+      "type" : "string",
+      "maxLength" : 750,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Accelerators": {
-      "$ref": "#/definitions/Accelerators"
+  "additionalProperties" : false,
+  "required" : [ "WorkflowId", "VersionName" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/Status", "/properties/Type", "/properties/Uuid" ],
+  "writeOnlyProperties" : [ "/properties/DefinitionUri", "/properties/ParameterTemplatePath", "/properties/DefinitionRepository", "/properties/readmeUri", "/properties/readmeMarkdown", "/properties/ContainerRegistryMapUri" ],
+  "createOnlyProperties" : [ "/properties/WorkflowId", "/properties/VersionName", "/properties/DefinitionUri", "/properties/Engine", "/properties/Main", "/properties/ParameterTemplate", "/properties/Accelerators", "/properties/WorkflowBucketOwnerId", "/properties/Accelerators", "/properties/DefinitionRepository", "/properties/ParameterTemplatePath", "/properties/readmePath", "/properties/readmeUri", "/properties/ContainerRegistryMap", "/properties/ContainerRegistryMapUri" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "omics:TagResource", "omics:UntagResource", "omics:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "omics:CreateWorkflow", "omics:GetWorkflow", "omics:CreateWorkflowVersion", "omics:GetWorkflowVersion", "omics:TagResource", "s3:PutObject", "s3:GetObject", "s3:GetObjectAttributes", "s3:HeadObject", "s3:GetEncryptionConfiguration", "kms:Decrypt", "kms:GenerateDataKey", "kms:GenerateDataKeyPair", "kms:GenerateDataKeyPairWithoutPlaintext", "kms:GenerateDataKeyWithoutPlaintext", "codeconnections:UseConnection", "codeconnections:GetConnection", "codeconnections:GetHost" ]
     },
-    "Arn": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^arn:.+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "omics:GetWorkflowVersion", "omics:ListTagsForResource" ]
     },
-    "ContainerRegistryMap": {
-      "$ref": "#/definitions/ContainerRegistryMap"
+    "update" : {
+      "permissions" : [ "omics:UpdateWorkflowVersion", "omics:GetWorkflowVersion", "omics:TagResource", "omics:ListTagsForResource", "omics:UntagResource" ]
     },
-    "ContainerRegistryMapUri": {
-      "maxLength": 750,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "omics:DeleteWorkflowVersion", "omics:GetWorkflowVersion" ]
     },
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "DefinitionRepository": {
-      "$ref": "#/definitions/DefinitionRepository"
-    },
-    "DefinitionUri": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "Description": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "Engine": {
-      "$ref": "#/definitions/WorkflowEngine"
-    },
-    "Main": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "ParameterTemplate": {
-      "$ref": "#/definitions/WorkflowParameterTemplate"
-    },
-    "ParameterTemplatePath": {
-      "description": "Path to the primary workflow parameter template JSON file inside the repository",
-      "pattern": "^[\\S]+$",
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/WorkflowStatus"
-    },
-    "StorageCapacity": {
-      "maximum": 100000,
-      "minimum": 0,
-      "type": "number"
-    },
-    "StorageType": {
-      "$ref": "#/definitions/StorageType"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
-    },
-    "Type": {
-      "$ref": "#/definitions/WorkflowType"
-    },
-    "Uuid": {
-      "maxLength": 36,
-      "minLength": 1,
-      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
-      "type": "string"
-    },
-    "VersionName": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9\\-\\._]*$",
-      "type": "string"
-    },
-    "WorkflowBucketOwnerId": {
-      "maxLength": 12,
-      "minLength": 1,
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
-    },
-    "WorkflowId": {
-      "maxLength": 18,
-      "minLength": 1,
-      "pattern": "^[0-9]+$",
-      "type": "string"
-    },
-    "readmeMarkdown": {
-      "description": "The markdown content for the workflow's README file. This provides documentation and usage information for users of the workflow.",
-      "type": "string"
-    },
-    "readmePath": {
-      "description": "The path to the workflow README markdown file within the repository. This file provides documentation and usage information for the workflow. If not specified, the README.md file from the root directory of the repository will be used.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "readmeUri": {
-      "description": "The S3 URI of the README file for the workflow. This file provides documentation and usage information for the workflow. The S3 URI must begin with s3://USER-OWNED-BUCKET/. The requester must have access to the S3 bucket and object. The max README content length is 500 KiB.",
-      "pattern": "^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/((.{1,1024}))$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "omics:ListWorkflowVersions" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/Status",
-    "/properties/Type",
-    "/properties/Uuid"
-  ],
-  "required": [
-    "WorkflowId",
-    "VersionName"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "omics:TagResource",
-      "omics:UntagResource",
-      "omics:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Omics::WorkflowVersion",
-  "writeOnlyProperties": [
-    "/properties/DefinitionUri",
-    "/properties/ParameterTemplatePath",
-    "/properties/DefinitionRepository",
-    "/properties/readmeUri",
-    "/properties/readmeMarkdown",
-    "/properties/ContainerRegistryMapUri"
-  ]
+  }
 }

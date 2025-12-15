@@ -1,94 +1,86 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "DeliveryOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "SendingPoolName": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::PinpointEmail::ConfigurationSet",
+  "description" : "Resource Type definition for AWS::PinpointEmail::ConfigurationSet",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "ReputationOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "ReputationMetricsEnabled": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
+    "SendingOptions" : {
+      "$ref" : "#/definitions/SendingOptions"
     },
-    "SendingOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "SendingEnabled": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
+    "TrackingOptions" : {
+      "$ref" : "#/definitions/TrackingOptions"
     },
-    "Tags": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "ReputationOptions" : {
+      "$ref" : "#/definitions/ReputationOptions"
+    },
+    "DeliveryOptions" : {
+      "$ref" : "#/definitions/DeliveryOptions"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tags"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "SendingOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SendingEnabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "TrackingOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomRedirectDomain" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ReputationOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ReputationMetricsEnabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "DeliveryOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SendingPoolName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Tags" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
-    },
-    "TrackingOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomRedirectDomain": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::PinpointEmail::ConfigurationSet",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "DeliveryOptions": {
-      "$ref": "#/definitions/DeliveryOptions"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "ReputationOptions": {
-      "$ref": "#/definitions/ReputationOptions"
-    },
-    "SendingOptions": {
-      "$ref": "#/definitions/SendingOptions"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tags"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "TrackingOptions": {
-      "$ref": "#/definitions/TrackingOptions"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Name"
-  ],
-  "typeName": "AWS::PinpointEmail::ConfigurationSet"
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

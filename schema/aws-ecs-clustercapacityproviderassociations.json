@@ -1,129 +1,98 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Cluster"
-  ],
-  "definitions": {
-    "CapacityProvider": {
-      "anyOf": [
-        {
-          "enum": [
-            "FARGATE",
-            "FARGATE_SPOT"
-          ],
-          "type": "string"
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging" : {
+    "tagOnCreate" : false,
+    "taggable" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ "ecs:DescribeClusters" ]
+    },
+    "create" : {
+      "permissions" : [ "ecs:DescribeClusters", "ecs:PutClusterCapacityProviders", "ecs:DescribeCapacityProviders" ]
+    },
+    "update" : {
+      "permissions" : [ "ecs:DescribeClusters", "ecs:DescribeCapacityProviders", "ecs:PutClusterCapacityProviders" ]
+    },
+    "list" : {
+      "permissions" : [ "ecs:DescribeClusters", "ecs:ListClusters" ]
+    },
+    "delete" : {
+      "permissions" : [ "ecs:PutClusterCapacityProviders", "ecs:DescribeClusters" ]
+    }
+  },
+  "typeName" : "AWS::ECS::ClusterCapacityProviderAssociations",
+  "description" : "Associate a set of ECS Capacity Providers with a specified ECS Cluster",
+  "createOnlyProperties" : [ "/properties/Cluster" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/Cluster" ],
+  "definitions" : {
+    "DefaultCapacityProviderStrategy" : {
+      "description" : "List of capacity providers to associate with the cluster",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/CapacityProviderStrategy"
+      }
+    },
+    "CapacityProvider" : {
+      "description" : "If using ec2 auto-scaling, the name of the associated capacity provider. Otherwise FARGATE, FARGATE_SPOT.",
+      "anyOf" : [ {
+        "type" : "string",
+        "enum" : [ "FARGATE", "FARGATE_SPOT" ]
+      }, {
+        "minLength" : 1,
+        "type" : "string",
+        "maxLength" : 2048
+      } ],
+      "type" : "string"
+    },
+    "CapacityProviders" : {
+      "uniqueItems" : true,
+      "description" : "List of capacity providers to associate with the cluster",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/CapacityProvider"
+      }
+    },
+    "Cluster" : {
+      "minLength" : 1,
+      "description" : "The name of the cluster",
+      "type" : "string",
+      "maxLength" : 2048
+    },
+    "CapacityProviderStrategy" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "CapacityProvider" : {
+          "$ref" : "#/definitions/CapacityProvider"
         },
-        {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+        "Base" : {
+          "maximum" : 100000,
+          "type" : "integer",
+          "minimum" : 0
+        },
+        "Weight" : {
+          "maximum" : 1000,
+          "type" : "integer",
+          "minimum" : 0
         }
-      ],
-      "description": "If using ec2 auto-scaling, the name of the associated capacity provider. Otherwise FARGATE, FARGATE_SPOT.",
-      "type": "string"
-    },
-    "CapacityProviderStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "Base": {
-          "maximum": 100000,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "CapacityProvider": {
-          "$ref": "#/definitions/CapacityProvider"
-        },
-        "Weight": {
-          "maximum": 1000,
-          "minimum": 0,
-          "type": "integer"
-        }
       },
-      "required": [
-        "CapacityProvider"
-      ],
-      "type": "object"
-    },
-    "CapacityProviders": {
-      "description": "List of capacity providers to associate with the cluster",
-      "items": {
-        "$ref": "#/definitions/CapacityProvider"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Cluster": {
-      "description": "The name of the cluster",
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "DefaultCapacityProviderStrategy": {
-      "description": "List of capacity providers to associate with the cluster",
-      "items": {
-        "$ref": "#/definitions/CapacityProviderStrategy"
-      },
-      "type": "array"
+      "required" : [ "CapacityProvider" ]
     }
   },
-  "description": "Associate a set of ECS Capacity Providers with a specified ECS Cluster",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ecs:DescribeClusters",
-        "ecs:PutClusterCapacityProviders",
-        "ecs:DescribeCapacityProviders"
-      ]
+  "properties" : {
+    "DefaultCapacityProviderStrategy" : {
+      "$ref" : "#/definitions/DefaultCapacityProviderStrategy"
     },
-    "delete": {
-      "permissions": [
-        "ecs:PutClusterCapacityProviders",
-        "ecs:DescribeClusters"
-      ]
+    "CapacityProviders" : {
+      "$ref" : "#/definitions/CapacityProviders"
     },
-    "list": {
-      "permissions": [
-        "ecs:DescribeClusters",
-        "ecs:ListClusters"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "ecs:DescribeClusters"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "ecs:DescribeClusters",
-        "ecs:DescribeCapacityProviders",
-        "ecs:PutClusterCapacityProviders"
-      ]
+    "Cluster" : {
+      "$ref" : "#/definitions/Cluster"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Cluster"
-  ],
-  "properties": {
-    "CapacityProviders": {
-      "$ref": "#/definitions/CapacityProviders"
-    },
-    "Cluster": {
-      "$ref": "#/definitions/Cluster"
-    },
-    "DefaultCapacityProviderStrategy": {
-      "$ref": "#/definitions/DefaultCapacityProviderStrategy"
-    }
-  },
-  "required": [
-    "Cluster",
-    "DefaultCapacityProviderStrategy"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::ECS::ClusterCapacityProviderAssociations"
+  "required" : [ "Cluster", "DefaultCapacityProviderStrategy" ]
 }

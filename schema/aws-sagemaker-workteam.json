@@ -1,124 +1,106 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/WorkteamName",
-    "/properties/WorkforceName"
-  ],
-  "definitions": {
-    "CognitoMemberDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "CognitoClientId": {
-          "type": "string"
-        },
-        "CognitoUserGroup": {
-          "type": "string"
-        },
-        "CognitoUserPool": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "CognitoUserPool",
-        "CognitoClientId",
-        "CognitoUserGroup"
-      ],
-      "type": "object"
+  "typeName" : "AWS::SageMaker::Workteam",
+  "description" : "Resource Type definition for AWS::SageMaker::Workteam",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
     },
-    "MemberDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "CognitoMemberDefinition": {
-          "$ref": "#/definitions/CognitoMemberDefinition"
-        },
-        "OidcMemberDefinition": {
-          "$ref": "#/definitions/OidcMemberDefinition"
-        }
-      },
-      "type": "object"
+    "NotificationConfiguration" : {
+      "$ref" : "#/definitions/NotificationConfiguration"
     },
-    "NotificationConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "NotificationTopicArn": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "NotificationTopicArn"
-      ],
-      "type": "object"
+    "WorkteamName" : {
+      "type" : "string"
     },
-    "OidcMemberDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "OidcGroups": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "OidcGroups"
-      ],
-      "type": "object"
+    "MemberDefinitions" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/MemberDefinition"
+      }
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
+    },
+    "WorkforceName" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::SageMaker::Workteam",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Description": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "MemberDefinitions": {
-      "items": {
-        "$ref": "#/definitions/MemberDefinition"
+  "definitions" : {
+    "OidcMemberDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OidcGroups" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "OidcGroups" ]
     },
-    "NotificationConfiguration": {
-      "$ref": "#/definitions/NotificationConfiguration"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "NotificationConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NotificationTopicArn" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "NotificationTopicArn" ]
     },
-    "WorkforceName": {
-      "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
     },
-    "WorkteamName": {
-      "type": "string"
+    "MemberDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CognitoMemberDefinition" : {
+          "$ref" : "#/definitions/CognitoMemberDefinition"
+        },
+        "OidcMemberDefinition" : {
+          "$ref" : "#/definitions/OidcMemberDefinition"
+        }
+      }
+    },
+    "CognitoMemberDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CognitoUserGroup" : {
+          "type" : "string"
+        },
+        "CognitoUserPool" : {
+          "type" : "string"
+        },
+        "CognitoClientId" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "CognitoUserPool", "CognitoClientId", "CognitoUserGroup" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "typeName": "AWS::SageMaker::Workteam"
+  "createOnlyProperties" : [ "/properties/WorkteamName", "/properties/WorkforceName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

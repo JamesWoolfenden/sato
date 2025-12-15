@@ -1,343 +1,272 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Alias"
-  ],
-  "definitions": {
-    "Action": {
-      "description": "Target actions are the type of operation hooks will be executed at.",
-      "enum": [
-        "CREATE",
-        "UPDATE",
-        "DELETE"
-      ],
-      "type": "string"
+  "typeName" : "AWS::CloudFormation::LambdaHook",
+  "description" : "This is a CloudFormation resource for the first-party AWS::Hooks::LambdaHook.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Role" : {
+      "description" : "IAM Role ARN",
+      "pattern" : "arn:.+:iam::[0-9]{12}:role/.+",
+      "type" : "string",
+      "maxLength" : 256
     },
-    "HookTarget": {
-      "additionalProperties": false,
-      "description": "Hook targets are the destination where hooks will be invoked against.",
-      "properties": {
-        "Action": {
-          "$ref": "#/definitions/Action"
+    "StackRole" : {
+      "description" : "IAM Stack Role ARN filter",
+      "type" : "string",
+      "maxLength" : 256,
+      "anyOf" : [ {
+        "pattern" : "arn:.+:iam::[0-9]{12}:role/.+"
+      }, {
+        "pattern" : "^(arn:.+:iam::((?!\\*|\\?)[0-9]{12}|(?=.*\\*)[0-9*?]{1,12}|[0-9?]{12}):role/.+|\\*)$"
+      } ]
+    },
+    "StackName" : {
+      "pattern" : "^[a-zA-Z*?][-a-zA-Z0-9*?]*$",
+      "description" : "CloudFormation Stack name",
+      "type" : "string",
+      "maxLength" : 128
+    },
+    "TargetOperation" : {
+      "description" : "Which operations should this Hook run against? Resource changes, stacks or change sets.",
+      "type" : "string",
+      "enum" : [ "RESOURCE", "STACK", "CHANGE_SET", "CLOUD_CONTROL" ]
+    },
+    "TargetName" : {
+      "description" : "Type name of hook target. Hook targets are the destination where hooks will be invoked against.",
+      "type" : "string",
+      "pattern" : "^(?!.*\\*\\?).*$",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "Action" : {
+      "description" : "Target actions are the type of operation hooks will be executed at.",
+      "type" : "string",
+      "enum" : [ "CREATE", "UPDATE", "DELETE" ]
+    },
+    "InvocationPoint" : {
+      "description" : "Invocation points are the point in provisioning workflow where hooks will be executed.",
+      "type" : "string",
+      "enum" : [ "PRE_PROVISION" ]
+    },
+    "HookTarget" : {
+      "description" : "Hook targets are the destination where hooks will be invoked against.",
+      "type" : "object",
+      "properties" : {
+        "TargetName" : {
+          "$ref" : "#/definitions/TargetName"
         },
-        "InvocationPoint": {
-          "$ref": "#/definitions/InvocationPoint"
+        "Action" : {
+          "$ref" : "#/definitions/Action"
         },
-        "TargetName": {
-          "$ref": "#/definitions/TargetName"
+        "InvocationPoint" : {
+          "$ref" : "#/definitions/InvocationPoint"
         }
       },
-      "required": [
-        "TargetName",
-        "Action",
-        "InvocationPoint"
-      ],
-      "type": "object"
-    },
-    "InvocationPoint": {
-      "description": "Invocation points are the point in provisioning workflow where hooks will be executed.",
-      "enum": [
-        "PRE_PROVISION"
-      ],
-      "type": "string"
-    },
-    "Role": {
-      "description": "IAM Role ARN",
-      "maxLength": 256,
-      "pattern": "arn:.+:iam::[0-9]{12}:role/.+",
-      "type": "string"
-    },
-    "StackName": {
-      "description": "CloudFormation Stack name",
-      "maxLength": 128,
-      "pattern": "^[a-zA-Z*?][-a-zA-Z0-9*?]*$",
-      "type": "string"
-    },
-    "StackRole": {
-      "anyOf": [
-        {
-          "pattern": "arn:.+:iam::[0-9]{12}:role/.+"
-        },
-        {
-          "pattern": "^(arn:.+:iam::((?!\\*|\\?)[0-9]{12}|(?=.*\\*)[0-9*?]{1,12}|[0-9?]{12}):role/.+|\\*)$"
-        }
-      ],
-      "description": "IAM Stack Role ARN filter",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "TargetName": {
-      "description": "Type name of hook target. Hook targets are the destination where hooks will be invoked against.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^(?!.*\\*\\?).*$",
-      "type": "string"
-    },
-    "TargetOperation": {
-      "description": "Which operations should this Hook run against? Resource changes, stacks or change sets.",
-      "enum": [
-        "RESOURCE",
-        "STACK",
-        "CHANGE_SET",
-        "CLOUD_CONTROL"
-      ],
-      "type": "string"
+      "additionalProperties" : false,
+      "required" : [ "TargetName", "Action", "InvocationPoint" ]
     }
   },
-  "description": "This is a CloudFormation resource for the first-party AWS::Hooks::LambdaHook.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cloudformation:ListTypes",
-        "cloudformation:ActivateType",
-        "cloudformation:BatchDescribeTypeConfigurations",
-        "cloudformation:DescribeType",
-        "cloudformation:SetTypeConfiguration",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "LambdaFunction" : {
+      "description" : "Amazon Resource Name (ARN), Partial ARN, name, version, or alias of the Lambda function to invoke with this hook.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 170,
+      "pattern" : "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
     },
-    "delete": {
-      "permissions": [
-        "cloudformation:BatchDescribeTypeConfigurations",
-        "cloudformation:DeactivateType",
-        "cloudformation:DescribeType",
-        "cloudformation:SetTypeConfiguration"
-      ]
+    "HookStatus" : {
+      "default" : "ENABLED",
+      "description" : "Attribute to specify which stacks this hook applies to or should get invoked for",
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "list": {
-      "permissions": [
-        "cloudformation:ListTypes",
-        "cloudformation:BatchDescribeTypeConfigurations",
-        "cloudformation:DescribeType"
-      ]
+    "TargetOperations" : {
+      "description" : "Which operations should this Hook run against? Resource changes, stacks or change sets.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/TargetOperation"
+      }
     },
-    "read": {
-      "permissions": [
-        "cloudformation:BatchDescribeTypeConfigurations",
-        "cloudformation:DescribeType"
-      ]
+    "FailureMode" : {
+      "description" : "Attribute to specify CloudFormation behavior on hook failure.",
+      "type" : "string",
+      "enum" : [ "FAIL", "WARN" ]
     },
-    "update": {
-      "permissions": [
-        "cloudformation:BatchDescribeTypeConfigurations",
-        "cloudformation:DescribeType",
-        "cloudformation:SetTypeConfiguration",
-        "iam:PassRole"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/HookArn"
-  ],
-  "properties": {
-    "Alias": {
-      "description": "The typename alias for the hook.",
-      "pattern": "^(?!(?i)aws)[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$",
-      "type": "string"
-    },
-    "ExecutionRole": {
-      "$ref": "#/definitions/Role",
-      "description": "The execution role ARN assumed by Hooks to invoke Lambda."
-    },
-    "FailureMode": {
-      "description": "Attribute to specify CloudFormation behavior on hook failure.",
-      "enum": [
-        "FAIL",
-        "WARN"
-      ],
-      "type": "string"
-    },
-    "HookArn": {
-      "description": "The Amazon Resource Name (ARN) of the activated hook",
-      "pattern": "^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$",
-      "type": "string"
-    },
-    "HookStatus": {
-      "default": "ENABLED",
-      "description": "Attribute to specify which stacks this hook applies to or should get invoked for",
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "LambdaFunction": {
-      "description": "Amazon Resource Name (ARN), Partial ARN, name, version, or alias of the Lambda function to invoke with this hook.",
-      "maxLength": 170,
-      "minLength": 1,
-      "pattern": "(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}(-gov)?(-iso([a-z])?)?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?",
-      "type": "string"
-    },
-    "StackFilters": {
-      "additionalProperties": false,
-      "description": "Filters to allow hooks to target specific stack attributes",
-      "properties": {
-        "FilteringCriteria": {
-          "default": "ALL",
-          "description": "Attribute to specify the filtering behavior. ANY will make the Hook pass if one filter matches. ALL will make the Hook pass if all filters match",
-          "enum": [
-            "ALL",
-            "ANY"
-          ],
-          "type": "string"
-        },
-        "StackNames": {
-          "additionalProperties": false,
-          "description": "List of stack names as filters",
-          "minProperties": 1,
-          "properties": {
-            "Exclude": {
-              "description": "List of stack names that the hook is going to be excluded from",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/StackName"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            },
-            "Include": {
-              "description": "List of stack names that the hook is going to target",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/StackName"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
+    "TargetFilters" : {
+      "description" : "Attribute to specify which targets should invoke the hook",
+      "type" : "object",
+      "oneOf" : [ {
+        "type" : "object",
+        "minProperties" : 1,
+        "properties" : {
+          "TargetNames" : {
+            "description" : "List of type names that the hook is going to target",
+            "type" : "array",
+            "minItems" : 1,
+            "maxItems" : 50,
+            "uniqueItems" : true,
+            "insertionOrder" : false,
+            "items" : {
+              "$ref" : "#/definitions/TargetName"
             }
           },
-          "type": "object"
-        },
-        "StackRoles": {
-          "additionalProperties": false,
-          "description": "List of stack roles that are performing the stack operations.",
-          "minProperties": 1,
-          "properties": {
-            "Exclude": {
-              "description": "List of stack roles that the hook is going to be excluded from",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/StackRole"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            },
-            "Include": {
-              "description": "List of stack roles that the hook is going to target",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/StackRole"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
+          "Actions" : {
+            "description" : "List of actions that the hook is going to target",
+            "type" : "array",
+            "minItems" : 1,
+            "maxItems" : 50,
+            "uniqueItems" : true,
+            "insertionOrder" : false,
+            "items" : {
+              "$ref" : "#/definitions/Action"
             }
           },
-          "type": "object"
+          "InvocationPoints" : {
+            "description" : "List of invocation points that the hook is going to target",
+            "type" : "array",
+            "minItems" : 1,
+            "maxItems" : 50,
+            "uniqueItems" : true,
+            "insertionOrder" : false,
+            "items" : {
+              "$ref" : "#/definitions/InvocationPoint"
+            }
+          }
+        },
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "properties" : {
+          "Targets" : {
+            "description" : "List of hook targets",
+            "type" : "array",
+            "minItems" : 1,
+            "maxItems" : 50,
+            "uniqueItems" : true,
+            "items" : {
+              "$ref" : "#/definitions/HookTarget"
+            }
+          }
+        },
+        "additionalProperties" : false,
+        "required" : [ "Targets" ]
+      } ]
+    },
+    "StackFilters" : {
+      "description" : "Filters to allow hooks to target specific stack attributes",
+      "type" : "object",
+      "properties" : {
+        "FilteringCriteria" : {
+          "description" : "Attribute to specify the filtering behavior. ANY will make the Hook pass if one filter matches. ALL will make the Hook pass if all filters match",
+          "type" : "string",
+          "default" : "ALL",
+          "enum" : [ "ALL", "ANY" ]
+        },
+        "StackNames" : {
+          "description" : "List of stack names as filters",
+          "type" : "object",
+          "additionalProperties" : false,
+          "minProperties" : 1,
+          "properties" : {
+            "Include" : {
+              "description" : "List of stack names that the hook is going to target",
+              "type" : "array",
+              "maxItems" : 50,
+              "minItems" : 1,
+              "uniqueItems" : true,
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/StackName"
+              }
+            },
+            "Exclude" : {
+              "description" : "List of stack names that the hook is going to be excluded from",
+              "type" : "array",
+              "maxItems" : 50,
+              "minItems" : 1,
+              "uniqueItems" : true,
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/StackName"
+              }
+            }
+          }
+        },
+        "StackRoles" : {
+          "description" : "List of stack roles that are performing the stack operations.",
+          "type" : "object",
+          "additionalProperties" : false,
+          "minProperties" : 1,
+          "properties" : {
+            "Include" : {
+              "description" : "List of stack roles that the hook is going to target",
+              "type" : "array",
+              "maxItems" : 50,
+              "minItems" : 1,
+              "uniqueItems" : true,
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/StackRole"
+              }
+            },
+            "Exclude" : {
+              "description" : "List of stack roles that the hook is going to be excluded from",
+              "type" : "array",
+              "maxItems" : 50,
+              "minItems" : 1,
+              "uniqueItems" : true,
+              "insertionOrder" : false,
+              "items" : {
+                "$ref" : "#/definitions/StackRole"
+              }
+            }
+          }
         }
       },
-      "required": [
-        "FilteringCriteria"
-      ],
-      "type": "object"
+      "required" : [ "FilteringCriteria" ],
+      "additionalProperties" : false
     },
-    "TargetFilters": {
-      "description": "Attribute to specify which targets should invoke the hook",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "minProperties": 1,
-          "properties": {
-            "Actions": {
-              "description": "List of actions that the hook is going to target",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/Action"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            },
-            "InvocationPoints": {
-              "description": "List of invocation points that the hook is going to target",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/InvocationPoint"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            },
-            "TargetNames": {
-              "description": "List of type names that the hook is going to target",
-              "insertionOrder": false,
-              "items": {
-                "$ref": "#/definitions/TargetName"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Targets": {
-              "description": "List of hook targets",
-              "items": {
-                "$ref": "#/definitions/HookTarget"
-              },
-              "maxItems": 50,
-              "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
-            }
-          },
-          "required": [
-            "Targets"
-          ],
-          "type": "object"
-        }
-      ],
-      "type": "object"
+    "Alias" : {
+      "description" : "The typename alias for the hook.",
+      "pattern" : "^(?!(?i)aws)[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}::[A-Za-z0-9]{2,64}$",
+      "type" : "string"
     },
-    "TargetOperations": {
-      "description": "Which operations should this Hook run against? Resource changes, stacks or change sets.",
-      "items": {
-        "$ref": "#/definitions/TargetOperation"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "HookArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the activated hook",
+      "pattern" : "^arn:aws[A-Za-z0-9-]{0,64}:cloudformation:[A-Za-z0-9-]{1,64}:([0-9]{12})?:type/hook/.+$",
+      "type" : "string"
+    },
+    "ExecutionRole" : {
+      "description" : "The execution role ARN assumed by Hooks to invoke Lambda.",
+      "$ref" : "#/definitions/Role"
     }
   },
-  "readOnlyProperties": [
-    "/properties/HookArn"
-  ],
-  "required": [
-    "LambdaFunction",
-    "FailureMode",
-    "Alias",
-    "ExecutionRole",
-    "TargetOperations",
-    "HookStatus"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "additionalProperties" : false,
+  "required" : [ "LambdaFunction", "FailureMode", "Alias", "ExecutionRole", "TargetOperations", "HookStatus" ],
+  "readOnlyProperties" : [ "/properties/HookArn" ],
+  "createOnlyProperties" : [ "/properties/Alias" ],
+  "primaryIdentifier" : [ "/properties/HookArn" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
   },
-  "typeName": "AWS::CloudFormation::LambdaHook"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cloudformation:ListTypes", "cloudformation:ActivateType", "cloudformation:BatchDescribeTypeConfigurations", "cloudformation:DescribeType", "cloudformation:SetTypeConfiguration", "iam:PassRole" ]
+    },
+    "read" : {
+      "permissions" : [ "cloudformation:BatchDescribeTypeConfigurations", "cloudformation:DescribeType" ]
+    },
+    "update" : {
+      "permissions" : [ "cloudformation:BatchDescribeTypeConfigurations", "cloudformation:DescribeType", "cloudformation:SetTypeConfiguration", "iam:PassRole" ]
+    },
+    "delete" : {
+      "permissions" : [ "cloudformation:BatchDescribeTypeConfigurations", "cloudformation:DeactivateType", "cloudformation:DescribeType", "cloudformation:SetTypeConfiguration" ]
+    },
+    "list" : {
+      "permissions" : [ "cloudformation:ListTypes", "cloudformation:BatchDescribeTypeConfigurations", "cloudformation:DescribeType" ]
+    }
+  }
 }

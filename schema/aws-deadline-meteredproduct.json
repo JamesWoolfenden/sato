@@ -1,89 +1,66 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/LicenseEndpointId",
-    "/properties/ProductId"
-  ],
-  "description": "Definition of AWS::Deadline::MeteredProduct Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "deadline:PutMeteredProduct",
-        "deadline:ListMeteredProducts"
-      ]
+  "typeName" : "AWS::Deadline::MeteredProduct",
+  "description" : "Definition of AWS::Deadline::MeteredProduct Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
+  "properties" : {
+    "LicenseEndpointId" : {
+      "type" : "string",
+      "pattern" : "^le-[0-9a-f]{32}$"
     },
-    "delete": {
-      "permissions": [
-        "deadline:DeleteMeteredProduct",
-        "deadline:ListMeteredProducts"
-      ]
+    "ProductId" : {
+      "type" : "string",
+      "pattern" : "^[0-9a-z]{1,32}-[.0-9a-z]{1,32}$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "LicenseEndpointId": {
-            "$ref": "resource-schema.json#/properties/LicenseEndpointId"
+    "Port" : {
+      "type" : "integer",
+      "minimum" : 1024,
+      "maximum" : 65535
+    },
+    "Family" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "Vendor" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]{12}:license-endpoint/le-[0-9a-z]{32}/metered-product/[0-9a-z]{1,32}-[.0-9a-z]{1,32}"
+    }
+  },
+  "createOnlyProperties" : [ "/properties/LicenseEndpointId", "/properties/ProductId" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Port", "/properties/Family", "/properties/Vendor" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "deadline:PutMeteredProduct", "deadline:ListMeteredProducts" ]
+    },
+    "read" : {
+      "permissions" : [ "deadline:GetMeteredProduct", "deadline:ListMeteredProducts" ]
+    },
+    "delete" : {
+      "permissions" : [ "deadline:DeleteMeteredProduct", "deadline:ListMeteredProducts" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "LicenseEndpointId" : {
+            "$ref" : "resource-schema.json#/properties/LicenseEndpointId"
           }
         },
-        "required": [
-          "LicenseEndpointId"
-        ]
+        "required" : [ "LicenseEndpointId" ]
       },
-      "permissions": [
-        "deadline:ListMeteredProducts"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "deadline:GetMeteredProduct",
-        "deadline:ListMeteredProducts"
-      ]
+      "permissions" : [ "deadline:ListMeteredProducts" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "pattern": "^arn:(aws[a-zA-Z-]*):deadline:[a-z0-9-]+:[0-9]{12}:license-endpoint/le-[0-9a-z]{32}/metered-product/[0-9a-z]{1,32}-[.0-9a-z]{1,32}",
-      "type": "string"
-    },
-    "Family": {
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "LicenseEndpointId": {
-      "pattern": "^le-[0-9a-f]{32}$",
-      "type": "string"
-    },
-    "Port": {
-      "maximum": 65535,
-      "minimum": 1024,
-      "type": "integer"
-    },
-    "ProductId": {
-      "pattern": "^[0-9a-z]{1,32}-[.0-9a-z]{1,32}$",
-      "type": "string"
-    },
-    "Vendor": {
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Port",
-    "/properties/Family",
-    "/properties/Vendor"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-deadline",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Deadline::MeteredProduct"
+  "additionalProperties" : false
 }

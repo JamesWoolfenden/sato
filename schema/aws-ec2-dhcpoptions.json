@@ -1,136 +1,102 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/NetbiosNameServers",
-    "/properties/NetbiosNodeType",
-    "/properties/NtpServers",
-    "/properties/DomainName",
-    "/properties/DomainNameServers",
-    "/properties/Ipv6AddressPreferredLeaseTime"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::EC2::DHCPOptions",
+  "description" : "Resource Type definition for AWS::EC2::DHCPOptions",
+  "additionalProperties" : false,
+  "properties" : {
+    "DhcpOptionsId" : {
+      "type" : "string"
+    },
+    "DomainName" : {
+      "type" : "string",
+      "description" : "This value is used to complete unqualified DNS hostnames."
+    },
+    "DomainNameServers" : {
+      "type" : "array",
+      "description" : "The IPv4 addresses of up to four domain name servers, or AmazonProvidedDNS.",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "NetbiosNameServers" : {
+      "type" : "array",
+      "description" : "The IPv4 addresses of up to four NetBIOS name servers.",
+      "uniqueItems" : true,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "NetbiosNodeType" : {
+      "type" : "integer",
+      "description" : "The NetBIOS node type (1, 2, 4, or 8)."
+    },
+    "NtpServers" : {
+      "type" : "array",
+      "description" : "The IPv4 addresses of up to four Network Time Protocol (NTP) servers.",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Ipv6AddressPreferredLeaseTime" : {
+      "type" : "integer",
+      "description" : "The preferred Lease Time for ipV6 address in seconds."
+    },
+    "Tags" : {
+      "type" : "array",
+      "description" : "Any tags assigned to the DHCP options set.",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::EC2::DHCPOptions",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateDhcpOptions",
-        "ec2:DescribeDhcpOptions",
-        "ec2:CreateTags"
-      ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ]
+  },
+  "createOnlyProperties" : [ "/properties/NetbiosNameServers", "/properties/NetbiosNodeType", "/properties/NtpServers", "/properties/DomainName", "/properties/DomainNameServers", "/properties/Ipv6AddressPreferredLeaseTime" ],
+  "readOnlyProperties" : [ "/properties/DhcpOptionsId" ],
+  "primaryIdentifier" : [ "/properties/DhcpOptionsId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateDhcpOptions", "ec2:DescribeDhcpOptions", "ec2:CreateTags" ]
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteDhcpOptions",
-        "ec2:DeleteTags",
-        "ec2:DescribeDhcpOptions"
-      ]
+    "read" : {
+      "permissions" : [ "ec2:DescribeDhcpOptions", "ec2:DescribeTags" ]
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeDhcpOptions"
-      ]
+    "update" : {
+      "permissions" : [ "ec2:CreateTags", "ec2:DescribeDhcpOptions", "ec2:DeleteTags" ]
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribeDhcpOptions",
-        "ec2:DescribeTags"
-      ]
+    "delete" : {
+      "permissions" : [ "ec2:DeleteDhcpOptions", "ec2:DeleteTags", "ec2:DescribeDhcpOptions" ]
     },
-    "update": {
-      "permissions": [
-        "ec2:CreateTags",
-        "ec2:DescribeDhcpOptions",
-        "ec2:DeleteTags"
-      ]
+    "list" : {
+      "permissions" : [ "ec2:DescribeDhcpOptions" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/DhcpOptionsId"
-  ],
-  "properties": {
-    "DhcpOptionsId": {
-      "type": "string"
-    },
-    "DomainName": {
-      "description": "This value is used to complete unqualified DNS hostnames.",
-      "type": "string"
-    },
-    "DomainNameServers": {
-      "description": "The IPv4 addresses of up to four domain name servers, or AmazonProvidedDNS.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Ipv6AddressPreferredLeaseTime": {
-      "description": "The preferred Lease Time for ipV6 address in seconds.",
-      "type": "integer"
-    },
-    "NetbiosNameServers": {
-      "description": "The IPv4 addresses of up to four NetBIOS name servers.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "NetbiosNodeType": {
-      "description": "The NetBIOS node type (1, 2, 4, or 8).",
-      "type": "integer"
-    },
-    "NtpServers": {
-      "description": "The IPv4 addresses of up to four Network Time Protocol (NTP) servers.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Tags": {
-      "description": "Any tags assigned to the DHCP options set.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/DhcpOptionsId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::DHCPOptions"
+  }
 }

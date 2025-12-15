@@ -1,85 +1,69 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DBClusterIdentifier",
-    "/properties/AvailabilityZone",
-    "/properties/DBInstanceIdentifier"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::DocDB::DBInstance",
+  "description" : "Resource Type definition for AWS::DocDB::DBInstance",
+  "additionalProperties" : false,
+  "properties" : {
+    "DBInstanceClass" : {
+      "type" : "string"
+    },
+    "Port" : {
+      "type" : "string"
+    },
+    "DBClusterIdentifier" : {
+      "type" : "string"
+    },
+    "AvailabilityZone" : {
+      "type" : "string"
+    },
+    "PreferredMaintenanceWindow" : {
+      "type" : "string"
+    },
+    "EnablePerformanceInsights" : {
+      "type" : "boolean"
+    },
+    "AutoMinorVersionUpgrade" : {
+      "type" : "boolean"
+    },
+    "DBInstanceIdentifier" : {
+      "type" : "string"
+    },
+    "CACertificateIdentifier" : {
+      "type" : "string"
+    },
+    "CertificateRotationRestart" : {
+      "type" : "boolean"
+    },
+    "Endpoint" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::DocDB::DBInstance",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AutoMinorVersionUpgrade": {
-      "type": "boolean"
-    },
-    "AvailabilityZone": {
-      "type": "string"
-    },
-    "CACertificateIdentifier": {
-      "type": "string"
-    },
-    "CertificateRotationRestart": {
-      "type": "boolean"
-    },
-    "DBClusterIdentifier": {
-      "type": "string"
-    },
-    "DBInstanceClass": {
-      "type": "string"
-    },
-    "DBInstanceIdentifier": {
-      "type": "string"
-    },
-    "EnablePerformanceInsights": {
-      "type": "boolean"
-    },
-    "Endpoint": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Port": {
-      "type": "string"
-    },
-    "PreferredMaintenanceWindow": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Port",
-    "/properties/Id",
-    "/properties/Endpoint"
-  ],
-  "required": [
-    "DBInstanceClass",
-    "DBClusterIdentifier"
-  ],
-  "typeName": "AWS::DocDB::DBInstance"
+  "required" : [ "DBInstanceClass", "DBClusterIdentifier" ],
+  "createOnlyProperties" : [ "/properties/DBClusterIdentifier", "/properties/AvailabilityZone", "/properties/DBInstanceIdentifier" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Port", "/properties/Id", "/properties/Endpoint" ]
 }

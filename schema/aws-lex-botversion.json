@@ -1,130 +1,100 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/BotId"
-  ],
-  "definitions": {
-    "BotVersion": {
-      "description": "The version of a bot.",
-      "maxLength": 5,
-      "minLength": 1,
-      "pattern": "^(DRAFT|[0-9]+)$",
-      "type": "string"
+  "typeName" : "AWS::Lex::BotVersion",
+  "description" : "Resource Type definition for bot versions, a numbered snapshot of your work that you can publish for use in different parts of your workflow, such as development, beta deployment, and production.",
+  "sourceUrl" : "https://docs.aws.amazon.com/lexv2/latest/dg/API_CreateBotVersion.html",
+  "definitions" : {
+    "Id" : {
+      "description" : "Unique ID of resource",
+      "type" : "string",
+      "minLength" : 10,
+      "maxLength" : 10,
+      "pattern" : "^[0-9a-zA-Z]+$"
     },
-    "BotVersionLocaleDetails": {
-      "additionalProperties": false,
-      "description": "The version of a bot used for a bot locale.",
-      "properties": {
-        "SourceBotVersion": {
-          "$ref": "#/definitions/BotVersion"
+    "Description" : {
+      "description" : "A description of the version. Use the description to help identify the version in lists.",
+      "type" : "string",
+      "maxLength" : 200
+    },
+    "LocaleId" : {
+      "description" : "The identifier of the language and locale that the bot will be used in.",
+      "type" : "string"
+    },
+    "BotVersion" : {
+      "description" : "The version of a bot.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 5,
+      "pattern" : "^(DRAFT|[0-9]+)$"
+    },
+    "BotVersionLocaleDetails" : {
+      "description" : "The version of a bot used for a bot locale.",
+      "type" : "object",
+      "properties" : {
+        "SourceBotVersion" : {
+          "$ref" : "#/definitions/BotVersion"
         }
       },
-      "required": [
-        "SourceBotVersion"
-      ],
-      "type": "object"
+      "required" : [ "SourceBotVersion" ],
+      "additionalProperties" : false
     },
-    "BotVersionLocaleSpecification": {
-      "additionalProperties": false,
-      "properties": {
-        "BotVersionLocaleDetails": {
-          "$ref": "#/definitions/BotVersionLocaleDetails"
+    "BotVersionLocaleSpecification" : {
+      "type" : "object",
+      "properties" : {
+        "LocaleId" : {
+          "$ref" : "#/definitions/LocaleId"
         },
-        "LocaleId": {
-          "$ref": "#/definitions/LocaleId"
+        "BotVersionLocaleDetails" : {
+          "$ref" : "#/definitions/BotVersionLocaleDetails"
         }
       },
-      "required": [
-        "LocaleId",
-        "BotVersionLocaleDetails"
-      ],
-      "type": "object"
+      "required" : [ "LocaleId", "BotVersionLocaleDetails" ],
+      "additionalProperties" : false
     },
-    "BotVersionLocaleSpecificationList": {
-      "description": "Specifies the locales that Amazon Lex adds to this version. You can choose the Draft version or any other previously published version for each locale.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/BotVersionLocaleSpecification"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
-    "Description": {
-      "description": "A description of the version. Use the description to help identify the version in lists.",
-      "maxLength": 200,
-      "type": "string"
-    },
-    "Id": {
-      "description": "Unique ID of resource",
-      "maxLength": 10,
-      "minLength": 10,
-      "pattern": "^[0-9a-zA-Z]+$",
-      "type": "string"
-    },
-    "LocaleId": {
-      "description": "The identifier of the language and locale that the bot will be used in.",
-      "type": "string"
+    "BotVersionLocaleSpecificationList" : {
+      "description" : "Specifies the locales that Amazon Lex adds to this version. You can choose the Draft version or any other previously published version for each locale.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "items" : {
+        "$ref" : "#/definitions/BotVersionLocaleSpecification"
+      }
     }
   },
-  "description": "Resource Type definition for bot versions, a numbered snapshot of your work that you can publish for use in different parts of your workflow, such as development, beta deployment, and production.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lex:CreateBotVersion",
-        "lex:DescribeBotVersion",
-        "lex:DescribeBot",
-        "lex:DescribeBotLocale",
-        "lex:BuildBotLocale"
-      ]
+  "properties" : {
+    "BotId" : {
+      "$ref" : "#/definitions/Id"
     },
-    "delete": {
-      "permissions": [
-        "lex:DeleteBotVersion",
-        "lex:DescribeBotVersion"
-      ]
+    "BotVersion" : {
+      "$ref" : "#/definitions/BotVersion"
     },
-    "list": {
-      "permissions": [
-        "lex:ListBotVersions"
-      ]
+    "Description" : {
+      "$ref" : "#/definitions/Description"
     },
-    "read": {
-      "permissions": [
-        "lex:DescribeBotVersion"
-      ]
+    "BotVersionLocaleSpecification" : {
+      "$ref" : "#/definitions/BotVersionLocaleSpecificationList"
     }
   },
-  "primaryIdentifier": [
-    "/properties/BotId",
-    "/properties/BotVersion"
-  ],
-  "properties": {
-    "BotId": {
-      "$ref": "#/definitions/Id"
+  "tagging" : {
+    "taggable" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "BotId", "BotVersionLocaleSpecification" ],
+  "readOnlyProperties" : [ "/properties/BotVersion" ],
+  "createOnlyProperties" : [ "/properties/BotId" ],
+  "writeOnlyProperties" : [ "/properties/BotVersionLocaleSpecification" ],
+  "primaryIdentifier" : [ "/properties/BotId", "/properties/BotVersion" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lex:CreateBotVersion", "lex:DescribeBotVersion", "lex:DescribeBot", "lex:DescribeBotLocale", "lex:BuildBotLocale" ]
     },
-    "BotVersion": {
-      "$ref": "#/definitions/BotVersion"
+    "read" : {
+      "permissions" : [ "lex:DescribeBotVersion" ]
     },
-    "BotVersionLocaleSpecification": {
-      "$ref": "#/definitions/BotVersionLocaleSpecificationList"
+    "delete" : {
+      "permissions" : [ "lex:DeleteBotVersion", "lex:DescribeBotVersion" ]
     },
-    "Description": {
-      "$ref": "#/definitions/Description"
+    "list" : {
+      "permissions" : [ "lex:ListBotVersions" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/BotVersion"
-  ],
-  "required": [
-    "BotId",
-    "BotVersionLocaleSpecification"
-  ],
-  "sourceUrl": "https://docs.aws.amazon.com/lexv2/latest/dg/API_CreateBotVersion.html",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Lex::BotVersion",
-  "writeOnlyProperties": [
-    "/properties/BotVersionLocaleSpecification"
-  ]
+  }
 }

@@ -1,158 +1,110 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Id"
-    ],
-    [
-      "/properties/DomainName"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::VpcLattice::DomainVerification",
+  "description" : "Creates a Lattice Domain Verification",
+  "additionalProperties" : false,
+  "definitions" : {
+    "TxtMethodConfig" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TxtMethodConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "name": {
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "required" : [ "Key" ]
     }
   },
-  "description": "Creates a Lattice Domain Verification",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "vpc-lattice:StartDomainVerification",
-        "vpc-lattice:GetDomainVerification",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:ListTagsForResource"
-      ]
+  "properties" : {
+    "DomainName" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 3
     },
-    "delete": {
-      "permissions": [
-        "vpc-lattice:DeleteDomainVerification",
-        "vpc-lattice:GetDomainVerification",
-        "vpc-lattice:UntagResource"
-      ]
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^((dv-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:domainverification/dv-[0-9a-z]{17}))$"
     },
-    "list": {
-      "permissions": [
-        "vpc-lattice:ListDomainVerifications"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:domainverification/dv-[0-9a-z]{17}$"
     },
-    "read": {
-      "permissions": [
-        "vpc-lattice:GetDomainVerification",
-        "vpc-lattice:ListTagsForResource"
-      ]
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "VERIFIED", "PENDING", "VERIFICATION_TIMED_OUT" ]
     },
-    "update": {
-      "permissions": [
-        "vpc-lattice:StartDomainVerification",
-        "vpc-lattice:GetDomainVerification",
-        "vpc-lattice:TagResource",
-        "vpc-lattice:UntagResource",
-        "vpc-lattice:ListTagsForResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:domainverification/dv-[0-9a-z]{17}$",
-      "type": "string"
-    },
-    "DomainName": {
-      "maxLength": 255,
-      "minLength": 3,
-      "type": "string"
-    },
-    "Id": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^((dv-[0-9a-z]{17})|(arn:[a-z0-9\\-]+:vpc-lattice:[a-zA-Z0-9\\-]+:\\d{12}:domainverification/dv-[0-9a-z]{17}))$",
-      "type": "string"
-    },
-    "Status": {
-      "enum": [
-        "VERIFIED",
-        "PENDING",
-        "VERIFICATION_TIMED_OUT"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "TxtMethodConfig": {
-      "properties": {
-        "name": {
-          "type": "string"
+    "TxtMethodConfig" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
         },
-        "value": {
-          "type": "string"
+        "value" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 0,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/TxtMethodConfig",
-    "/properties/Status",
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "DomainName"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "vpc-lattice:UntagResource",
-      "vpc-lattice:TagResource",
-      "vpc-lattice:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "DomainName" ],
+  "readOnlyProperties" : [ "/properties/TxtMethodConfig", "/properties/Status", "/properties/Id", "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/DomainName" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/Id" ], [ "/properties/DomainName" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "vpc-lattice:StartDomainVerification", "vpc-lattice:GetDomainVerification", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+    },
+    "read" : {
+      "permissions" : [ "vpc-lattice:GetDomainVerification", "vpc-lattice:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "vpc-lattice:StartDomainVerification", "vpc-lattice:GetDomainVerification", "vpc-lattice:TagResource", "vpc-lattice:UntagResource", "vpc-lattice:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "vpc-lattice:DeleteDomainVerification", "vpc-lattice:GetDomainVerification", "vpc-lattice:UntagResource" ]
+    },
+    "list" : {
+      "permissions" : [ "vpc-lattice:ListDomainVerifications" ]
+    }
   },
-  "typeName": "AWS::VpcLattice::DomainVerification"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "vpc-lattice:UntagResource", "vpc-lattice:TagResource", "vpc-lattice:ListTagsForResource" ]
+  }
 }

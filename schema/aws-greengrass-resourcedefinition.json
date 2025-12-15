@@ -1,220 +1,186 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/InitialVersion"
-  ],
-  "definitions": {
-    "GroupOwnerSetting": {
-      "additionalProperties": false,
-      "properties": {
-        "AutoAddGroupOwner": {
-          "type": "boolean"
-        },
-        "GroupOwner": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "AutoAddGroupOwner"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Greengrass::ResourceDefinition",
+  "description" : "Resource Type definition for AWS::Greengrass::ResourceDefinition",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "LocalDeviceResourceData": {
-      "additionalProperties": false,
-      "properties": {
-        "GroupOwnerSetting": {
-          "$ref": "#/definitions/GroupOwnerSetting"
-        },
-        "SourcePath": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "SourcePath"
-      ],
-      "type": "object"
+    "Arn" : {
+      "type" : "string"
     },
-    "LocalVolumeResourceData": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationPath": {
-          "type": "string"
-        },
-        "GroupOwnerSetting": {
-          "$ref": "#/definitions/GroupOwnerSetting"
-        },
-        "SourcePath": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "SourcePath",
-        "DestinationPath"
-      ],
-      "type": "object"
+    "LatestVersionArn" : {
+      "type" : "string"
     },
-    "ResourceDataContainer": {
-      "additionalProperties": false,
-      "properties": {
-        "LocalDeviceResourceData": {
-          "$ref": "#/definitions/LocalDeviceResourceData"
-        },
-        "LocalVolumeResourceData": {
-          "$ref": "#/definitions/LocalVolumeResourceData"
-        },
-        "S3MachineLearningModelResourceData": {
-          "$ref": "#/definitions/S3MachineLearningModelResourceData"
-        },
-        "SageMakerMachineLearningModelResourceData": {
-          "$ref": "#/definitions/SageMakerMachineLearningModelResourceData"
-        },
-        "SecretsManagerSecretResourceData": {
-          "$ref": "#/definitions/SecretsManagerSecretResourceData"
-        }
-      },
-      "type": "object"
+    "Tags" : {
+      "type" : "object"
     },
-    "ResourceDefinitionVersion": {
-      "additionalProperties": false,
-      "properties": {
-        "Resources": {
-          "items": {
-            "$ref": "#/definitions/ResourceInstance"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Resources"
-      ],
-      "type": "object"
+    "Name" : {
+      "type" : "string"
     },
-    "ResourceDownloadOwnerSetting": {
-      "additionalProperties": false,
-      "properties": {
-        "GroupOwner": {
-          "type": "string"
-        },
-        "GroupPermission": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "GroupOwner",
-        "GroupPermission"
-      ],
-      "type": "object"
-    },
-    "ResourceInstance": {
-      "additionalProperties": false,
-      "properties": {
-        "Id": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "ResourceDataContainer": {
-          "$ref": "#/definitions/ResourceDataContainer"
-        }
-      },
-      "required": [
-        "ResourceDataContainer",
-        "Id",
-        "Name"
-      ],
-      "type": "object"
-    },
-    "S3MachineLearningModelResourceData": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationPath": {
-          "type": "string"
-        },
-        "OwnerSetting": {
-          "$ref": "#/definitions/ResourceDownloadOwnerSetting"
-        },
-        "S3Uri": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "DestinationPath",
-        "S3Uri"
-      ],
-      "type": "object"
-    },
-    "SageMakerMachineLearningModelResourceData": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationPath": {
-          "type": "string"
-        },
-        "OwnerSetting": {
-          "$ref": "#/definitions/ResourceDownloadOwnerSetting"
-        },
-        "SageMakerJobArn": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "DestinationPath",
-        "SageMakerJobArn"
-      ],
-      "type": "object"
-    },
-    "SecretsManagerSecretResourceData": {
-      "additionalProperties": false,
-      "properties": {
-        "ARN": {
-          "type": "string"
-        },
-        "AdditionalStagingLabelsToDownload": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "ARN"
-      ],
-      "type": "object"
+    "InitialVersion" : {
+      "$ref" : "#/definitions/ResourceDefinitionVersion"
     }
   },
-  "description": "Resource Type definition for AWS::Greengrass::ResourceDefinition",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "definitions" : {
+    "SecretsManagerSecretResourceData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ARN" : {
+          "type" : "string"
+        },
+        "AdditionalStagingLabelsToDownload" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "ARN" ]
     },
-    "Id": {
-      "type": "string"
+    "ResourceDataContainer" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LocalVolumeResourceData" : {
+          "$ref" : "#/definitions/LocalVolumeResourceData"
+        },
+        "LocalDeviceResourceData" : {
+          "$ref" : "#/definitions/LocalDeviceResourceData"
+        },
+        "S3MachineLearningModelResourceData" : {
+          "$ref" : "#/definitions/S3MachineLearningModelResourceData"
+        },
+        "SecretsManagerSecretResourceData" : {
+          "$ref" : "#/definitions/SecretsManagerSecretResourceData"
+        },
+        "SageMakerMachineLearningModelResourceData" : {
+          "$ref" : "#/definitions/SageMakerMachineLearningModelResourceData"
+        }
+      }
     },
-    "InitialVersion": {
-      "$ref": "#/definitions/ResourceDefinitionVersion"
+    "SageMakerMachineLearningModelResourceData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OwnerSetting" : {
+          "$ref" : "#/definitions/ResourceDownloadOwnerSetting"
+        },
+        "SageMakerJobArn" : {
+          "type" : "string"
+        },
+        "DestinationPath" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "DestinationPath", "SageMakerJobArn" ]
     },
-    "LatestVersionArn": {
-      "type": "string"
+    "ResourceInstance" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResourceDataContainer" : {
+          "$ref" : "#/definitions/ResourceDataContainer"
+        },
+        "Id" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ResourceDataContainer", "Id", "Name" ]
     },
-    "Name": {
-      "type": "string"
+    "LocalVolumeResourceData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SourcePath" : {
+          "type" : "string"
+        },
+        "DestinationPath" : {
+          "type" : "string"
+        },
+        "GroupOwnerSetting" : {
+          "$ref" : "#/definitions/GroupOwnerSetting"
+        }
+      },
+      "required" : [ "SourcePath", "DestinationPath" ]
     },
-    "Tags": {
-      "type": "object"
+    "LocalDeviceResourceData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SourcePath" : {
+          "type" : "string"
+        },
+        "GroupOwnerSetting" : {
+          "$ref" : "#/definitions/GroupOwnerSetting"
+        }
+      },
+      "required" : [ "SourcePath" ]
+    },
+    "S3MachineLearningModelResourceData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "OwnerSetting" : {
+          "$ref" : "#/definitions/ResourceDownloadOwnerSetting"
+        },
+        "DestinationPath" : {
+          "type" : "string"
+        },
+        "S3Uri" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "DestinationPath", "S3Uri" ]
+    },
+    "ResourceDownloadOwnerSetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "GroupPermission" : {
+          "type" : "string"
+        },
+        "GroupOwner" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "GroupOwner", "GroupPermission" ]
+    },
+    "ResourceDefinitionVersion" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Resources" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ResourceInstance"
+          }
+        }
+      },
+      "required" : [ "Resources" ]
+    },
+    "GroupOwnerSetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AutoAddGroupOwner" : {
+          "type" : "boolean"
+        },
+        "GroupOwner" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "AutoAddGroupOwner" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/LatestVersionArn",
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "typeName": "AWS::Greengrass::ResourceDefinition"
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/InitialVersion" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/LatestVersionArn", "/properties/Id", "/properties/Arn" ]
 }

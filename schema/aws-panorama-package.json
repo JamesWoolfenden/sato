@@ -1,202 +1,140 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PackageName"
-  ],
-  "definitions": {
-    "NodePackageArn": {
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+  "typeName" : "AWS::Panorama::Package",
+  "description" : "Creates a package and storage location in an Amazon S3 access point.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "NodePackageName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z0-9\\-\\_]+$"
     },
-    "NodePackageId": {
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9\\-\\_\\/]+$",
-      "type": "string"
+    "NodePackageId" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255,
+      "pattern" : "^[a-zA-Z0-9\\-\\_\\/]+$"
     },
-    "NodePackageName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9\\-\\_]+$",
-      "type": "string"
+    "NodePackageArn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "StorageLocation": {
-      "additionalProperties": false,
-      "description": "A storage location.",
-      "properties": {
-        "BinaryPrefixLocation": {
-          "description": "The location's binary prefix.",
-          "type": "string"
+    "Timestamp" : {
+      "type" : "integer"
+    },
+    "StorageLocation" : {
+      "type" : "object",
+      "properties" : {
+        "Bucket" : {
+          "type" : "string",
+          "description" : "The location's bucket."
         },
-        "Bucket": {
-          "description": "The location's bucket.",
-          "type": "string"
+        "RepoPrefixLocation" : {
+          "type" : "string",
+          "description" : "The location's repo prefix."
         },
-        "GeneratedPrefixLocation": {
-          "description": "The location's generated prefix.",
-          "type": "string"
+        "GeneratedPrefixLocation" : {
+          "type" : "string",
+          "description" : "The location's generated prefix."
         },
-        "ManifestPrefixLocation": {
-          "description": "The location's manifest prefix.",
-          "type": "string"
+        "BinaryPrefixLocation" : {
+          "type" : "string",
+          "description" : "The location's binary prefix."
         },
-        "RepoPrefixLocation": {
-          "description": "The location's repo prefix.",
-          "type": "string"
+        "ManifestPrefixLocation" : {
+          "type" : "string",
+          "description" : "The location's manifest prefix."
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "description" : "A storage location."
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "",
-      "properties": {
-        "Key": {
-          "description": "",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^.+$",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^.+$",
+          "description" : ""
         },
-        "Value": {
-          "description": "",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^.+$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256,
+          "pattern" : "^.+$",
+          "description" : ""
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false,
+      "description" : ""
     },
-    "TagList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Timestamp": {
-      "type": "integer"
+    "TagList" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Creates a package and storage location in an Amazon S3 access point.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "panorama:CreatePackage",
-        "panorama:ListTagsForResource",
-        "panorama:TagResource",
-        "panorama:DescribePackage",
-        "s3:ListBucket",
-        "s3:PutObject",
-        "s3:GetObject",
-        "s3:GetObjectVersion"
-      ]
+  "properties" : {
+    "PackageName" : {
+      "$ref" : "#/definitions/NodePackageName",
+      "description" : "A name for the package."
     },
-    "delete": {
-      "permissions": [
-        "panorama:DeletePackage",
-        "panorama:DescribePackage",
-        "s3:DeleteObject",
-        "s3:DeleteObjectVersion",
-        "s3:DeleteObjectVersionTagging",
-        "s3:ListObjects",
-        "s3:ListObjectsV2",
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:GetObjectVersion"
-      ]
+    "PackageId" : {
+      "$ref" : "#/definitions/NodePackageId",
+      "description" : ""
     },
-    "list": {
-      "permissions": [
-        "panorama:ListPackages",
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:GetObjectVersion"
-      ]
+    "Arn" : {
+      "$ref" : "#/definitions/NodePackageArn",
+      "description" : ""
     },
-    "read": {
-      "permissions": [
-        "panorama:DescribePackage",
-        "panorama:ListTagsForResource",
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:GetObjectVersion"
-      ]
+    "StorageLocation" : {
+      "$ref" : "#/definitions/StorageLocation",
+      "description" : "A storage location."
     },
-    "update": {
-      "permissions": [
-        "panorama:DescribePackage",
-        "panorama:ListTagsForResource",
-        "panorama:TagResource",
-        "panorama:UntagResource",
-        "s3:PutObject",
-        "s3:ListBucket",
-        "s3:GetObject",
-        "s3:GetObjectVersion"
-      ]
+    "CreatedTime" : {
+      "$ref" : "#/definitions/Timestamp",
+      "description" : ""
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagList",
+      "description" : "Tags for the package."
     }
   },
-  "primaryIdentifier": [
-    "/properties/PackageId"
-  ],
-  "properties": {
-    "Arn": {
-      "$ref": "#/definitions/NodePackageArn",
-      "description": ""
+  "additionalProperties" : false,
+  "required" : [ "PackageName" ],
+  "readOnlyProperties" : [ "/properties/PackageId", "/properties/Arn", "/properties/CreatedTime", "/properties/StorageLocation/Bucket", "/properties/StorageLocation/RepoPrefixLocation", "/properties/StorageLocation/GeneratedPrefixLocation", "/properties/StorageLocation/BinaryPrefixLocation", "/properties/StorageLocation/ManifestPrefixLocation" ],
+  "createOnlyProperties" : [ "/properties/PackageName" ],
+  "primaryIdentifier" : [ "/properties/PackageId" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "panorama:ListTagsForResource", "panorama:TagResource", "panorama:UntagResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "panorama:CreatePackage", "panorama:ListTagsForResource", "panorama:TagResource", "panorama:DescribePackage", "s3:ListBucket", "s3:PutObject", "s3:GetObject", "s3:GetObjectVersion" ]
     },
-    "CreatedTime": {
-      "$ref": "#/definitions/Timestamp",
-      "description": ""
+    "read" : {
+      "permissions" : [ "panorama:DescribePackage", "panorama:ListTagsForResource", "s3:ListBucket", "s3:GetObject", "s3:GetObjectVersion" ]
     },
-    "PackageId": {
-      "$ref": "#/definitions/NodePackageId",
-      "description": ""
+    "update" : {
+      "permissions" : [ "panorama:DescribePackage", "panorama:ListTagsForResource", "panorama:TagResource", "panorama:UntagResource", "s3:PutObject", "s3:ListBucket", "s3:GetObject", "s3:GetObjectVersion" ]
     },
-    "PackageName": {
-      "$ref": "#/definitions/NodePackageName",
-      "description": "A name for the package."
+    "list" : {
+      "permissions" : [ "panorama:ListPackages", "s3:ListBucket", "s3:GetObject", "s3:GetObjectVersion" ]
     },
-    "StorageLocation": {
-      "$ref": "#/definitions/StorageLocation",
-      "description": "A storage location."
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagList",
-      "description": "Tags for the package."
+    "delete" : {
+      "permissions" : [ "panorama:DeletePackage", "panorama:DescribePackage", "s3:DeleteObject", "s3:DeleteObjectVersion", "s3:DeleteObjectVersionTagging", "s3:ListObjects", "s3:ListObjectsV2", "s3:ListBucket", "s3:GetObject", "s3:GetObjectVersion" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/PackageId",
-    "/properties/Arn",
-    "/properties/CreatedTime",
-    "/properties/StorageLocation/Bucket",
-    "/properties/StorageLocation/RepoPrefixLocation",
-    "/properties/StorageLocation/GeneratedPrefixLocation",
-    "/properties/StorageLocation/BinaryPrefixLocation",
-    "/properties/StorageLocation/ManifestPrefixLocation"
-  ],
-  "required": [
-    "PackageName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "panorama:ListTagsForResource",
-      "panorama:TagResource",
-      "panorama:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Panorama::Package"
+  }
 }

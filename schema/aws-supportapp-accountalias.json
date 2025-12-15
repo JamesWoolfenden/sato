@@ -1,61 +1,42 @@
 {
-  "additionalProperties": false,
-  "description": "An AWS Support App resource that creates, updates, reads, and deletes a customer's account alias.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "supportapp:PutAccountAlias",
-        "supportapp:GetAccountAlias"
-      ]
+  "typeName" : "AWS::SupportApp::AccountAlias",
+  "description" : "An AWS Support App resource that creates, updates, reads, and deletes a customer's account alias.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
+  "properties" : {
+    "AccountAlias" : {
+      "description" : "An account alias associated with a customer's account.",
+      "type" : "string",
+      "pattern" : "^[\\w\\- ]+$",
+      "minLength" : 1,
+      "maxLength" : 30
     },
-    "delete": {
-      "permissions": [
-        "supportapp:DeleteAccountAlias",
-        "supportapp:GetAccountAlias"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "supportapp:GetAccountAlias"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "supportapp:GetAccountAlias"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "supportapp:PutAccountAlias",
-        "supportapp:GetAccountAlias"
-      ]
+    "AccountAliasResourceId" : {
+      "description" : "Unique identifier representing an alias tied to an account",
+      "type" : "string",
+      "pattern" : "^[\\w\\- ]+$",
+      "minLength" : 29,
+      "maxLength" : 29
     }
   },
-  "primaryIdentifier": [
-    "/properties/AccountAliasResourceId"
-  ],
-  "properties": {
-    "AccountAlias": {
-      "description": "An account alias associated with a customer's account.",
-      "maxLength": 30,
-      "minLength": 1,
-      "pattern": "^[\\w\\- ]+$",
-      "type": "string"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/AccountAliasResourceId" ],
+  "required" : [ "AccountAlias" ],
+  "readOnlyProperties" : [ "/properties/AccountAliasResourceId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "supportapp:PutAccountAlias", "supportapp:GetAccountAlias" ]
     },
-    "AccountAliasResourceId": {
-      "description": "Unique identifier representing an alias tied to an account",
-      "maxLength": 29,
-      "minLength": 29,
-      "pattern": "^[\\w\\- ]+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "supportapp:GetAccountAlias" ]
+    },
+    "update" : {
+      "permissions" : [ "supportapp:PutAccountAlias", "supportapp:GetAccountAlias" ]
+    },
+    "delete" : {
+      "permissions" : [ "supportapp:DeleteAccountAlias", "supportapp:GetAccountAlias" ]
+    },
+    "list" : {
+      "permissions" : [ "supportapp:GetAccountAlias" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/AccountAliasResourceId"
-  ],
-  "required": [
-    "AccountAlias"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-supportapp.git",
-  "typeName": "AWS::SupportApp::AccountAlias"
+  }
 }

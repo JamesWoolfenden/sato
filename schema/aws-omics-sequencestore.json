@@ -1,232 +1,173 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ETagAlgorithmFamily",
-    "/properties/SseConfig"
-  ],
-  "definitions": {
-    "ETagAlgorithmFamily": {
-      "enum": [
-        "MD5up",
-        "SHA256up",
-        "SHA512up"
-      ],
-      "type": "string"
+  "typeName" : "AWS::Omics::SequenceStore",
+  "description" : "Resource Type definition for AWS::Omics::SequenceStore",
+  "definitions" : {
+    "ETagAlgorithmFamily" : {
+      "type" : "string",
+      "enum" : [ "MD5up", "SHA256up", "SHA512up" ]
     },
-    "EncryptionType": {
-      "enum": [
-        "KMS"
-      ],
-      "type": "string"
+    "EncryptionType" : {
+      "type" : "string",
+      "enum" : [ "KMS" ]
     },
-    "SequenceStoreStatus": {
-      "enum": [
-        "CREATING",
-        "ACTIVE",
-        "UPDATING",
-        "DELETING",
-        "FAILED"
-      ],
-      "type": "string"
+    "SequenceStoreStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "ACTIVE", "UPDATING", "DELETING", "FAILED" ]
     },
-    "SseConfig": {
-      "additionalProperties": false,
-      "description": "Server-side encryption (SSE) settings for a store.",
-      "properties": {
-        "KeyArn": {
-          "description": "An encryption key ARN.",
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
-          "type": "string"
+    "SseConfig" : {
+      "type" : "object",
+      "description" : "Server-side encryption (SSE) settings for a store.",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/EncryptionType"
         },
-        "Type": {
-          "$ref": "#/definitions/EncryptionType"
+        "KeyArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
+          "description" : "An encryption key ARN."
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Type" ],
+      "additionalProperties" : false
     },
-    "TagMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Omics::SequenceStore",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "omics:CreateSequenceStore",
-        "omics:GetSequenceStore",
-        "omics:GetS3AccessPolicy",
-        "omics:PutS3AccessPolicy",
-        "omics:ListTagsForResource",
-        "omics:TagResource",
-        "kms:DescribeKey"
-      ]
+  "properties" : {
+    "AccessLogLocation" : {
+      "type" : "string",
+      "pattern" : "^$|^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/?((.{1,800})/)?$",
+      "description" : "Location of the access logs."
     },
-    "delete": {
-      "permissions": [
-        "omics:DeleteSequenceStore"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 127,
+      "minLength" : 1,
+      "pattern" : "^arn:.+$",
+      "description" : "The store's ARN."
     },
-    "list": {
-      "permissions": [
-        "omics:ListSequenceStores"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "description" : "When the store was created.",
+      "format" : "date-time"
     },
-    "read": {
-      "permissions": [
-        "omics:GetS3AccessPolicy",
-        "omics:GetSequenceStore",
-        "omics:ListTagsForResource"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+      "description" : "A description for the store."
     },
-    "update": {
-      "permissions": [
-        "omics:UpdateSequenceStore",
-        "omics:GetSequenceStore",
-        "omics:TagResource",
-        "omics:UntagResource",
-        "omics:ListTagsForResource",
-        "omics:GetS3AccessPolicy",
-        "omics:DeleteS3AccessPolicy",
-        "omics:PutS3AccessPolicy"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/SequenceStoreId"
-  ],
-  "properties": {
-    "AccessLogLocation": {
-      "description": "Location of the access logs.",
-      "pattern": "^$|^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/?((.{1,800})/)?$",
-      "type": "string"
+    "ETagAlgorithmFamily" : {
+      "$ref" : "#/definitions/ETagAlgorithmFamily"
     },
-    "Arn": {
-      "description": "The store's ARN.",
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "^arn:.+$",
-      "type": "string"
+    "FallbackLocation" : {
+      "type" : "string",
+      "minLength" : 0,
+      "pattern" : "^$|^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/?((.{1,1024})/)?$",
+      "description" : "An S3 location that is used to store files that have failed a direct upload."
     },
-    "CreationTime": {
-      "description": "When the store was created.",
-      "format": "date-time",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 127,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+      "description" : "A name for the store."
     },
-    "Description": {
-      "description": "A description for the store.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "ETagAlgorithmFamily": {
-      "$ref": "#/definitions/ETagAlgorithmFamily"
-    },
-    "FallbackLocation": {
-      "description": "An S3 location that is used to store files that have failed a direct upload.",
-      "minLength": 0,
-      "pattern": "^$|^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/?((.{1,1024})/)?$",
-      "type": "string"
-    },
-    "Name": {
-      "description": "A name for the store.",
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "PropagatedSetLevelTags": {
-      "description": "The tags keys to propagate to the S3 objects associated with read sets in the sequence store.",
-      "items": {
-        "maxLength": 128,
-        "minLength": 1,
-        "type": "string"
+    "PropagatedSetLevelTags" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 128,
+        "minLength" : 1
       },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 50,
+      "minItems" : 0,
+      "description" : "The tags keys to propagate to the S3 objects associated with read sets in the sequence store."
     },
-    "S3AccessPointArn": {
-      "description": "This is ARN of the access point associated with the S3 bucket storing read sets.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "pattern": "^arn:[^:]*:s3:[^:]*:[^:]*:accesspoint/.*$",
-      "type": "string"
+    "S3AccessPointArn" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 1,
+      "pattern" : "^arn:[^:]*:s3:[^:]*:[^:]*:accesspoint/.*$",
+      "description" : "This is ARN of the access point associated with the S3 bucket storing read sets."
     },
-    "S3AccessPolicy": {
-      "description": "The resource policy that controls S3 access on the store",
-      "type": "object"
+    "S3AccessPolicy" : {
+      "description" : "The resource policy that controls S3 access on the store",
+      "type" : "object"
     },
-    "S3Uri": {
-      "description": "The S3 URI of the sequence store.",
-      "pattern": "^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/(.{1,1024})$",
-      "type": "string"
+    "S3Uri" : {
+      "type" : "string",
+      "pattern" : "^s3://([a-z0-9][a-z0-9-.]{1,61}[a-z0-9])/(.{1,1024})$",
+      "description" : "The S3 URI of the sequence store."
     },
-    "SequenceStoreId": {
-      "maxLength": 36,
-      "minLength": 10,
-      "pattern": "^[0-9]+$",
-      "type": "string"
+    "SequenceStoreId" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 10,
+      "pattern" : "^[0-9]+$"
     },
-    "SseConfig": {
-      "$ref": "#/definitions/SseConfig"
+    "SseConfig" : {
+      "$ref" : "#/definitions/SseConfig"
     },
-    "Status": {
-      "$ref": "#/definitions/SequenceStoreStatus"
+    "Status" : {
+      "$ref" : "#/definitions/SequenceStoreStatus"
     },
-    "StatusMessage": {
-      "description": "The status message of the sequence store.",
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
+    "StatusMessage" : {
+      "type" : "string",
+      "maxLength" : 127,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+      "description" : "The status message of the sequence store."
     },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     },
-    "UpdateTime": {
-      "description": "The last-updated time of the sequence store.",
-      "format": "date-time",
-      "type": "string"
+    "UpdateTime" : {
+      "type" : "string",
+      "description" : "The last-updated time of the sequence store.",
+      "format" : "date-time"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/S3AccessPointArn",
-    "/properties/S3Uri",
-    "/properties/SequenceStoreId",
-    "/properties/Status",
-    "/properties/StatusMessage",
-    "/properties/UpdateTime"
-  ],
-  "required": [
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "omics:TagResource",
-      "omics:ListTagsForResource",
-      "omics:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/S3AccessPointArn", "/properties/S3Uri", "/properties/SequenceStoreId", "/properties/Status", "/properties/StatusMessage", "/properties/UpdateTime" ],
+  "createOnlyProperties" : [ "/properties/ETagAlgorithmFamily", "/properties/SseConfig" ],
+  "primaryIdentifier" : [ "/properties/SequenceStoreId" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "omics:TagResource", "omics:ListTagsForResource", "omics:UntagResource" ]
   },
-  "typeName": "AWS::Omics::SequenceStore"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "omics:CreateSequenceStore", "omics:GetSequenceStore", "omics:GetS3AccessPolicy", "omics:PutS3AccessPolicy", "omics:ListTagsForResource", "omics:TagResource", "kms:DescribeKey" ]
+    },
+    "read" : {
+      "permissions" : [ "omics:GetS3AccessPolicy", "omics:GetSequenceStore", "omics:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "omics:UpdateSequenceStore", "omics:GetSequenceStore", "omics:TagResource", "omics:UntagResource", "omics:ListTagsForResource", "omics:GetS3AccessPolicy", "omics:DeleteS3AccessPolicy", "omics:PutS3AccessPolicy" ]
+    },
+    "delete" : {
+      "permissions" : [ "omics:DeleteSequenceStore" ]
+    },
+    "list" : {
+      "permissions" : [ "omics:ListSequenceStores" ]
+    }
+  },
+  "additionalProperties" : false
 }

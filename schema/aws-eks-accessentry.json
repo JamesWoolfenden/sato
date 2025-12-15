@@ -1,205 +1,155 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/PrincipalArn",
-    "/properties/ClusterName",
-    "/properties/Type"
-  ],
-  "definitions": {
-    "AccessPolicy": {
-      "additionalProperties": false,
-      "description": "An access policy to associate with the current access entry.",
-      "properties": {
-        "AccessScope": {
-          "$ref": "#/definitions/AccessScope"
+  "typeName" : "AWS::EKS::AccessEntry",
+  "description" : "An object representing an Amazon EKS AccessEntry.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "PolicyArn": {
-          "description": "The ARN of the access policy to add to the access entry.",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "PolicyArn",
-        "AccessScope"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "AccessScope": {
-      "additionalProperties": false,
-      "description": "The access scope of the access policy.",
-      "properties": {
-        "Namespaces": {
-          "description": "The namespaces to associate with the access scope. Only specify if Type is set to 'namespace'.",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "AccessPolicy" : {
+      "description" : "An access policy to associate with the current access entry.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PolicyArn" : {
+          "type" : "string",
+          "description" : "The ARN of the access policy to add to the access entry."
         },
-        "Type": {
-          "description": "The type of the access scope.",
-          "enum": [
-            "namespace",
-            "cluster"
-          ],
-          "type": "string"
+        "AccessScope" : {
+          "$ref" : "#/definitions/AccessScope"
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "PolicyArn", "AccessScope" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "AccessScope" : {
+      "description" : "The access scope of the access policy.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "description" : "The type of the access scope.",
+          "type" : "string",
+          "enum" : [ "namespace", "cluster" ]
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Namespaces" : {
+          "description" : "The namespaces to associate with the access scope. Only specify if Type is set to 'namespace'.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Type" ]
     }
   },
-  "description": "An object representing an Amazon EKS AccessEntry.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "eks:CreateAccessEntry",
-        "eks:DescribeAccessEntry",
-        "eks:AssociateAccessPolicy",
-        "eks:TagResource",
-        "eks:ListAssociatedAccessPolicies"
-      ]
+  "properties" : {
+    "ClusterName" : {
+      "description" : "The cluster that the access entry is created for.",
+      "type" : "string",
+      "minLength" : 1
     },
-    "delete": {
-      "permissions": [
-        "eks:DeleteAccessEntry",
-        "eks:DescribeAccessEntry"
-      ]
+    "PrincipalArn" : {
+      "description" : "The principal ARN that the access entry is created for.",
+      "type" : "string",
+      "minLength" : 1
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "ClusterName": {
-            "$ref": "resource-schema.json#/properties/ClusterName"
+    "Username" : {
+      "description" : "The Kubernetes user that the access entry is associated with.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "AccessEntryArn" : {
+      "description" : "The ARN of the access entry.",
+      "type" : "string"
+    },
+    "KubernetesGroups" : {
+      "description" : "The Kubernetes groups that the access entry is associated with.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "AccessPolicies" : {
+      "description" : "An array of access policies that are associated with the access entry.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/AccessPolicy"
+      },
+      "maxItems" : 20
+    },
+    "Type" : {
+      "description" : "The node type to associate with the access entry.",
+      "type" : "string"
+    }
+  },
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "eks:TagResource", "eks:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "PrincipalArn", "ClusterName" ],
+  "primaryIdentifier" : [ "/properties/PrincipalArn", "/properties/ClusterName" ],
+  "createOnlyProperties" : [ "/properties/PrincipalArn", "/properties/ClusterName", "/properties/Type" ],
+  "readOnlyProperties" : [ "/properties/AccessEntryArn" ],
+  "replacementStrategy" : "create_then_delete",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "eks:CreateAccessEntry", "eks:DescribeAccessEntry", "eks:AssociateAccessPolicy", "eks:TagResource", "eks:ListAssociatedAccessPolicies" ]
+    },
+    "read" : {
+      "permissions" : [ "eks:DescribeAccessEntry", "eks:ListAssociatedAccessPolicies" ]
+    },
+    "update" : {
+      "permissions" : [ "eks:DescribeAccessEntry", "eks:ListAssociatedAccessPolicies", "eks:UpdateAccessEntry", "eks:AssociateAccessPolicy", "eks:DisassociateAccessPolicy", "eks:TagResource", "eks:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "eks:DeleteAccessEntry", "eks:DescribeAccessEntry" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "ClusterName" : {
+            "$ref" : "resource-schema.json#/properties/ClusterName"
           }
         },
-        "required": [
-          "ClusterName"
-        ]
+        "required" : [ "ClusterName" ]
       },
-      "permissions": [
-        "eks:ListAccessEntries"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "eks:DescribeAccessEntry",
-        "eks:ListAssociatedAccessPolicies"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "eks:DescribeAccessEntry",
-        "eks:ListAssociatedAccessPolicies",
-        "eks:UpdateAccessEntry",
-        "eks:AssociateAccessPolicy",
-        "eks:DisassociateAccessPolicy",
-        "eks:TagResource",
-        "eks:UntagResource"
-      ]
+      "permissions" : [ "eks:ListAccessEntries" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/PrincipalArn",
-    "/properties/ClusterName"
-  ],
-  "properties": {
-    "AccessEntryArn": {
-      "description": "The ARN of the access entry.",
-      "type": "string"
-    },
-    "AccessPolicies": {
-      "description": "An array of access policies that are associated with the access entry.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AccessPolicy"
-      },
-      "maxItems": 20,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "ClusterName": {
-      "description": "The cluster that the access entry is created for.",
-      "minLength": 1,
-      "type": "string"
-    },
-    "KubernetesGroups": {
-      "description": "The Kubernetes groups that the access entry is associated with.",
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "PrincipalArn": {
-      "description": "The principal ARN that the access entry is created for.",
-      "minLength": 1,
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Type": {
-      "description": "The node type to associate with the access entry.",
-      "type": "string"
-    },
-    "Username": {
-      "description": "The Kubernetes user that the access entry is associated with.",
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/AccessEntryArn"
-  ],
-  "replacementStrategy": "create_then_delete",
-  "required": [
-    "PrincipalArn",
-    "ClusterName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-eks.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "eks:TagResource",
-      "eks:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EKS::AccessEntry"
+  }
 }

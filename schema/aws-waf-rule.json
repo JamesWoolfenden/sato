@@ -1,59 +1,45 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/MetricName",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Predicate": {
-      "additionalProperties": false,
-      "properties": {
-        "DataId": {
-          "type": "string"
+  "typeName" : "AWS::WAF::Rule",
+  "description" : "Resource Type definition for AWS::WAF::Rule",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "MetricName" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "Predicates" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Predicate"
+      }
+    }
+  },
+  "definitions" : {
+    "Predicate" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DataId" : {
+          "type" : "string"
         },
-        "Negated": {
-          "type": "boolean"
+        "Negated" : {
+          "type" : "boolean"
         },
-        "Type": {
-          "type": "string"
+        "Type" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Negated",
-        "Type",
-        "DataId"
-      ],
-      "type": "object"
+      "required" : [ "Negated", "Type", "DataId" ]
     }
   },
-  "description": "Resource Type definition for AWS::WAF::Rule",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "type": "string"
-    },
-    "MetricName": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Predicates": {
-      "items": {
-        "$ref": "#/definitions/Predicate"
-      },
-      "type": "array",
-      "uniqueItems": true
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "MetricName",
-    "Name"
-  ],
-  "typeName": "AWS::WAF::Rule"
+  "required" : [ "MetricName", "Name" ],
+  "createOnlyProperties" : [ "/properties/MetricName", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

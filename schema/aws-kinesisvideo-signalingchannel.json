@@ -1,124 +1,92 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. Specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. The following characters can be used: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::KinesisVideo::SignalingChannel",
+  "description" : "Resource Type Definition for AWS::KinesisVideo::SignalingChannel",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesisvideo.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. Specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. The following characters can be used: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. Specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.  The following characters can be used: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. Specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:.  The following characters can be used: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type Definition for AWS::KinesisVideo::SignalingChannel",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "kinesisvideo:CreateSignalingChannel",
-        "kinesisvideo:DescribeSignalingChannel",
-        "kinesisvideo:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of the Kinesis Video Signaling Channel.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "kinesisvideo:DeleteSignalingChannel",
-        "kinesisvideo:DescribeSignalingChannel"
-      ]
+    "Name" : {
+      "description" : "The name of the Kinesis Video Signaling Channel.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "[a-zA-Z0-9_.-]+"
     },
-    "list": {
-      "permissions": [
-        "kinesisvideo:ListSignalingChannels"
-      ]
+    "Type" : {
+      "description" : "The type of the Kinesis Video Signaling Channel to create. Currently, SINGLE_MASTER is the only supported channel type.",
+      "type" : "string",
+      "enum" : [ "SINGLE_MASTER" ]
     },
-    "read": {
-      "permissions": [
-        "kinesisvideo:DescribeSignalingChannel",
-        "kinesisvideo:ListTagsForResource"
-      ]
+    "MessageTtlSeconds" : {
+      "description" : "The period of time a signaling channel retains undelivered messages before they are discarded.",
+      "type" : "integer",
+      "minimum" : 5,
+      "maximum" : 120
     },
-    "update": {
-      "permissions": [
-        "kinesisvideo:UpdateSignalingChannel",
-        "kinesisvideo:DescribeSignalingChannel",
-        "kinesisvideo:TagResource",
-        "kinesisvideo:UntagResource",
-        "kinesisvideo:ListTagsForResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the Kinesis Video Signaling Channel.",
-      "type": "string"
-    },
-    "MessageTtlSeconds": {
-      "description": "The period of time a signaling channel retains undelivered messages before they are discarded.",
-      "maximum": 120,
-      "minimum": 5,
-      "type": "integer"
-    },
-    "Name": {
-      "description": "The name of the Kinesis Video Signaling Channel.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "[a-zA-Z0-9_.-]+",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 50,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Type": {
-      "description": "The type of the Kinesis Video Signaling Channel to create. Currently, SINGLE_MASTER is the only supported channel type.",
-      "enum": [
-        "SINGLE_MASTER"
-      ],
-      "type": "string"
+      "minItems" : 1,
+      "maxItems" : 50
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kinesisvideo.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "kinesisvideo:TagResource",
-      "kinesisvideo:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "additionalProperties" : false,
+  "required" : [ ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "kinesisvideo:TagResource", "kinesisvideo:UntagResource" ]
   },
-  "typeName": "AWS::KinesisVideo::SignalingChannel"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "kinesisvideo:CreateSignalingChannel", "kinesisvideo:DescribeSignalingChannel", "kinesisvideo:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "kinesisvideo:DescribeSignalingChannel", "kinesisvideo:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "kinesisvideo:UpdateSignalingChannel", "kinesisvideo:DescribeSignalingChannel", "kinesisvideo:TagResource", "kinesisvideo:UntagResource", "kinesisvideo:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "kinesisvideo:DeleteSignalingChannel", "kinesisvideo:DescribeSignalingChannel" ]
+    },
+    "list" : {
+      "permissions" : [ "kinesisvideo:ListSignalingChannels" ]
+    }
+  }
 }

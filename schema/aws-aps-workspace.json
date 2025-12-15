@@ -1,345 +1,257 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/KmsKeyArn"
-  ],
-  "definitions": {
-    "CloudWatchLogDestination": {
-      "additionalProperties": false,
-      "description": "Represents a cloudwatch logs destination for query logging",
-      "properties": {
-        "LogGroupArn": {
-          "description": "The ARN of the CloudWatch Logs log group",
-          "maxLength": 512,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "LogGroupArn"
-      ],
-      "type": "object"
-    },
-    "Label": {
-      "additionalProperties": false,
-      "description": "Series label",
-      "properties": {
-        "Name": {
-          "description": "Name of the label",
-          "minLength": 1,
-          "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
-          "type": "string"
+  "typeName" : "AWS::APS::Workspace",
+  "description" : "Resource Type definition for AWS::APS::Workspace",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "Value of the label",
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Name",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "LimitsPerLabelSet": {
-      "additionalProperties": false,
-      "description": "Label set and its associated limits",
-      "properties": {
-        "LabelSet": {
-          "description": "An array of series labels",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/Label"
+    "LoggingConfiguration" : {
+      "description" : "Logging configuration",
+      "type" : "object",
+      "properties" : {
+        "LogGroupArn" : {
+          "description" : "CloudWatch log group ARN",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 512
+        }
+      },
+      "additionalProperties" : false
+    },
+    "Label" : {
+      "description" : "Series label",
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z_][a-zA-Z0-9_]*$",
+          "description" : "Name of the label",
+          "minLength" : 1
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "Value of the label",
+          "minLength" : 1
+        }
+      },
+      "required" : [ "Name", "Value" ],
+      "additionalProperties" : false
+    },
+    "LimitsPerLabelSetEntry" : {
+      "description" : "Limits that can be applied to a label set",
+      "type" : "object",
+      "properties" : {
+        "MaxSeries" : {
+          "description" : "The maximum number of active series that can be ingested for this label set",
+          "type" : "integer",
+          "minimum" : 0
+        }
+      },
+      "additionalProperties" : false
+    },
+    "LimitsPerLabelSet" : {
+      "description" : "Label set and its associated limits",
+      "type" : "object",
+      "properties" : {
+        "Limits" : {
+          "$ref" : "#/definitions/LimitsPerLabelSetEntry"
+        },
+        "LabelSet" : {
+          "description" : "An array of series labels",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/Label"
           },
-          "minItems": 0,
-          "type": "array",
-          "uniqueItems": true
+          "minItems" : 0
+        }
+      },
+      "required" : [ "Limits", "LabelSet" ],
+      "additionalProperties" : false
+    },
+    "WorkspaceConfiguration" : {
+      "description" : "Workspace configuration",
+      "type" : "object",
+      "properties" : {
+        "RetentionPeriodInDays" : {
+          "description" : "How many days that metrics are retained in the workspace",
+          "type" : "integer",
+          "minimum" : 1
         },
-        "Limits": {
-          "$ref": "#/definitions/LimitsPerLabelSetEntry"
-        }
-      },
-      "required": [
-        "Limits",
-        "LabelSet"
-      ],
-      "type": "object"
-    },
-    "LimitsPerLabelSetEntry": {
-      "additionalProperties": false,
-      "description": "Limits that can be applied to a label set",
-      "properties": {
-        "MaxSeries": {
-          "description": "The maximum number of active series that can be ingested for this label set",
-          "minimum": 0,
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "LoggingConfiguration": {
-      "additionalProperties": false,
-      "description": "Logging configuration",
-      "properties": {
-        "LogGroupArn": {
-          "description": "CloudWatch log group ARN",
-          "maxLength": 512,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "LoggingDestination": {
-      "additionalProperties": false,
-      "description": "Destinations for query logging",
-      "properties": {
-        "CloudWatchLogs": {
-          "$ref": "#/definitions/CloudWatchLogDestination"
-        },
-        "Filters": {
-          "$ref": "#/definitions/LoggingFilter"
-        }
-      },
-      "required": [
-        "CloudWatchLogs",
-        "Filters"
-      ],
-      "type": "object"
-    },
-    "LoggingFilter": {
-      "additionalProperties": false,
-      "description": "Filters for logging",
-      "properties": {
-        "QspThreshold": {
-          "description": "Query logs with QSP above this limit are vended",
-          "minimum": 0,
-          "type": "integer"
-        }
-      },
-      "required": [
-        "QspThreshold"
-      ],
-      "type": "object"
-    },
-    "QueryLoggingConfiguration": {
-      "additionalProperties": false,
-      "description": "Query logging configuration",
-      "properties": {
-        "Destinations": {
-          "description": "The destinations configuration for query logging",
-          "items": {
-            "$ref": "#/definitions/LoggingDestination"
+        "LimitsPerLabelSets" : {
+          "description" : "An array of label set and associated limits",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/LimitsPerLabelSet"
           },
-          "maxItems": 1,
-          "minItems": 1,
-          "type": "array"
+          "minItems" : 0
         }
       },
-      "required": [
-        "Destinations"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "CloudWatchLogDestination" : {
+      "description" : "Represents a cloudwatch logs destination for query logging",
+      "type" : "object",
+      "properties" : {
+        "LogGroupArn" : {
+          "description" : "The ARN of the CloudWatch Logs log group",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 512
+        }
+      },
+      "required" : [ "LogGroupArn" ],
+      "additionalProperties" : false
+    },
+    "LoggingFilter" : {
+      "description" : "Filters for logging",
+      "type" : "object",
+      "properties" : {
+        "QspThreshold" : {
+          "description" : "Query logs with QSP above this limit are vended",
+          "type" : "integer",
+          "minimum" : 0
+        }
+      },
+      "required" : [ "QspThreshold" ],
+      "additionalProperties" : false
+    },
+    "LoggingDestination" : {
+      "description" : "Destinations for query logging",
+      "type" : "object",
+      "properties" : {
+        "CloudWatchLogs" : {
+          "$ref" : "#/definitions/CloudWatchLogDestination"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Filters" : {
+          "$ref" : "#/definitions/LoggingFilter"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "CloudWatchLogs", "Filters" ],
+      "additionalProperties" : false
     },
-    "WorkspaceConfiguration": {
-      "additionalProperties": false,
-      "description": "Workspace configuration",
-      "properties": {
-        "LimitsPerLabelSets": {
-          "description": "An array of label set and associated limits",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/LimitsPerLabelSet"
+    "QueryLoggingConfiguration" : {
+      "description" : "Query logging configuration",
+      "type" : "object",
+      "properties" : {
+        "Destinations" : {
+          "description" : "The destinations configuration for query logging",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/LoggingDestination"
           },
-          "minItems": 0,
-          "type": "array",
-          "uniqueItems": true
-        },
-        "RetentionPeriodInDays": {
-          "description": "How many days that metrics are retained in the workspace",
-          "minimum": 1,
-          "type": "integer"
+          "minItems" : 1,
+          "maxItems" : 1
         }
       },
-      "type": "object"
+      "required" : [ "Destinations" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::APS::Workspace",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "aps:CreateWorkspace",
-        "aps:DescribeWorkspace",
-        "aps:TagResource",
-        "aps:CreateAlertManagerDefinition",
-        "aps:DescribeAlertManagerDefinition",
-        "aps:CreateLoggingConfiguration",
-        "aps:CreateQueryLoggingConfiguration",
-        "aps:DescribeWorkspaceConfiguration",
-        "aps:UpdateWorkspaceConfiguration",
-        "logs:CreateLogDelivery",
-        "logs:GetLogDelivery",
-        "logs:ListLogDeliveries",
-        "logs:PutResourcePolicy",
-        "kms:CreateGrant",
-        "kms:Decrypt",
-        "kms:GenerateDataKey"
-      ]
+  "properties" : {
+    "WorkspaceId" : {
+      "description" : "Required to identify a specific APS Workspace.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}$",
+      "minLength" : 1,
+      "maxLength" : 100
     },
-    "delete": {
-      "permissions": [
-        "aps:DeleteWorkspace",
-        "aps:DescribeWorkspace",
-        "aps:DeleteAlertManagerDefinition",
-        "aps:DeleteLoggingConfiguration",
-        "aps:DeleteQueryLoggingConfiguration",
-        "logs:DeleteLogDelivery"
-      ]
+    "Alias" : {
+      "description" : "AMP Workspace alias.",
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 100
     },
-    "list": {
-      "permissions": [
-        "aps:ListWorkspaces",
-        "aps:ListTagsForResource"
-      ]
+    "Arn" : {
+      "description" : "Workspace arn.",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "read": {
-      "permissions": [
-        "aps:DescribeWorkspace",
-        "aps:ListTagsForResource",
-        "aps:DescribeAlertManagerDefinition",
-        "aps:DescribeLoggingConfiguration",
-        "aps:DescribeQueryLoggingConfiguration",
-        "aps:DescribeWorkspaceConfiguration"
-      ]
+    "AlertManagerDefinition" : {
+      "description" : "The AMP Workspace alert manager definition data",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "aps:UpdateWorkspaceAlias",
-        "aps:DescribeWorkspace",
-        "aps:TagResource",
-        "aps:UntagResource",
-        "aps:ListTagsForResource",
-        "aps:CreateAlertManagerDefinition",
-        "aps:PutAlertManagerDefinition",
-        "aps:DeleteAlertManagerDefinition",
-        "aps:CreateLoggingConfiguration",
-        "aps:DescribeLoggingConfiguration",
-        "aps:UpdateLoggingConfiguration",
-        "aps:DeleteLoggingConfiguration",
-        "aps:DescribeWorkspaceConfiguration",
-        "aps:UpdateWorkspaceConfiguration",
-        "aps:CreateQueryLoggingConfiguration",
-        "aps:UpdateQueryLoggingConfiguration",
-        "aps:DeleteQueryLoggingConfiguration",
-        "aps:DescribeQueryLoggingConfiguration",
-        "logs:CreateLogDelivery",
-        "logs:GetLogDelivery",
-        "logs:UpdateLogDelivery",
-        "logs:ListLogDeliveries",
-        "logs:DeleteLogDelivery",
-        "logs:PutResourcePolicy"
-      ]
+    "PrometheusEndpoint" : {
+      "description" : "AMP Workspace prometheus endpoint",
+      "type" : "string"
+    },
+    "LoggingConfiguration" : {
+      "$ref" : "#/definitions/LoggingConfiguration"
+    },
+    "WorkspaceConfiguration" : {
+      "$ref" : "#/definitions/WorkspaceConfiguration"
+    },
+    "QueryLoggingConfiguration" : {
+      "$ref" : "#/definitions/QueryLoggingConfiguration"
+    },
+    "KmsKeyArn" : {
+      "description" : "KMS Key ARN used to encrypt and decrypt AMP workspace data.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z]*:kms:[-a-z0-9]+:[0-9]{12}:key/.+$",
+      "minLength" : 20,
+      "maxLength" : 2048
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "AlertManagerDefinition": {
-      "description": "The AMP Workspace alert manager definition data",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ ],
+  "createOnlyProperties" : [ "/properties/KmsKeyArn" ],
+  "readOnlyProperties" : [ "/properties/WorkspaceId", "/properties/Arn", "/properties/PrometheusEndpoint" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "aps:TagResource", "aps:UntagResource" ]
+  },
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "aps:CreateWorkspace", "aps:DescribeWorkspace", "aps:TagResource", "aps:CreateAlertManagerDefinition", "aps:DescribeAlertManagerDefinition", "aps:CreateLoggingConfiguration", "aps:CreateQueryLoggingConfiguration", "aps:DescribeWorkspaceConfiguration", "aps:UpdateWorkspaceConfiguration", "logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:ListLogDeliveries", "logs:PutResourcePolicy", "kms:CreateGrant", "kms:Decrypt", "kms:GenerateDataKey" ]
     },
-    "Alias": {
-      "description": "AMP Workspace alias.",
-      "maxLength": 100,
-      "minLength": 0,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "aps:DescribeWorkspace", "aps:ListTagsForResource", "aps:DescribeAlertManagerDefinition", "aps:DescribeLoggingConfiguration", "aps:DescribeQueryLoggingConfiguration", "aps:DescribeWorkspaceConfiguration" ]
     },
-    "Arn": {
-      "description": "Workspace arn.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn):aps:[a-z0-9-]+:[0-9]+:workspace/[a-zA-Z0-9-]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "aps:UpdateWorkspaceAlias", "aps:DescribeWorkspace", "aps:TagResource", "aps:UntagResource", "aps:ListTagsForResource", "aps:CreateAlertManagerDefinition", "aps:PutAlertManagerDefinition", "aps:DeleteAlertManagerDefinition", "aps:CreateLoggingConfiguration", "aps:DescribeLoggingConfiguration", "aps:UpdateLoggingConfiguration", "aps:DeleteLoggingConfiguration", "aps:DescribeWorkspaceConfiguration", "aps:UpdateWorkspaceConfiguration", "aps:CreateQueryLoggingConfiguration", "aps:UpdateQueryLoggingConfiguration", "aps:DeleteQueryLoggingConfiguration", "aps:DescribeQueryLoggingConfiguration", "logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:UpdateLogDelivery", "logs:ListLogDeliveries", "logs:DeleteLogDelivery", "logs:PutResourcePolicy" ]
     },
-    "KmsKeyArn": {
-      "description": "KMS Key ARN used to encrypt and decrypt AMP workspace data.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:aws[-a-z]*:kms:[-a-z0-9]+:[0-9]{12}:key/.+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "aps:DeleteWorkspace", "aps:DescribeWorkspace", "aps:DeleteAlertManagerDefinition", "aps:DeleteLoggingConfiguration", "aps:DeleteQueryLoggingConfiguration", "logs:DeleteLogDelivery" ]
     },
-    "LoggingConfiguration": {
-      "$ref": "#/definitions/LoggingConfiguration"
-    },
-    "PrometheusEndpoint": {
-      "description": "AMP Workspace prometheus endpoint",
-      "type": "string"
-    },
-    "QueryLoggingConfiguration": {
-      "$ref": "#/definitions/QueryLoggingConfiguration"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "WorkspaceConfiguration": {
-      "$ref": "#/definitions/WorkspaceConfiguration"
-    },
-    "WorkspaceId": {
-      "description": "Required to identify a specific APS Workspace.",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9_-]{1,99}$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "aps:ListWorkspaces", "aps:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/WorkspaceId",
-    "/properties/Arn",
-    "/properties/PrometheusEndpoint"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "aps:TagResource",
-      "aps:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::APS::Workspace"
+  }
 }

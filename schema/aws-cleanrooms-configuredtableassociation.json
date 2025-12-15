@@ -1,322 +1,243 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ConfiguredTableIdentifier",
-    "/properties/Name",
-    "/properties/MembershipIdentifier"
-  ],
-  "definitions": {
-    "AllowedAdditionalAnalyses": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AllowedAdditionalAnalysis"
-      },
-      "maxItems": 25,
-      "minItems": 0,
-      "type": "array"
-    },
-    "AllowedAdditionalAnalysis": {
-      "maxLength": 256,
-      "type": "string"
-    },
-    "AllowedResultReceiver": {
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "\\d+",
-      "type": "string"
-    },
-    "AllowedResultReceivers": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/AllowedResultReceiver"
-      },
-      "minItems": 0,
-      "type": "array"
-    },
-    "ConfiguredTableAssociationAnalysisRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Policy": {
-          "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRulePolicy"
+  "typeName" : "AWS::CleanRooms::ConfiguredTableAssociation",
+  "description" : "Represents a table that can be queried within a collaboration",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Type": {
-          "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleType"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Type",
-        "Policy"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     },
-    "ConfiguredTableAssociationAnalysisRuleAggregation": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedAdditionalAnalyses": {
-          "$ref": "#/definitions/AllowedAdditionalAnalyses"
+    "ConfiguredTableAssociationAnalysisRuleType" : {
+      "type" : "string",
+      "enum" : [ "AGGREGATION", "LIST", "CUSTOM" ]
+    },
+    "AllowedResultReceiver" : {
+      "type" : "string",
+      "minLength" : 12,
+      "maxLength" : 12,
+      "pattern" : "\\d+"
+    },
+    "AllowedResultReceivers" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "items" : {
+        "$ref" : "#/definitions/AllowedResultReceiver"
+      }
+    },
+    "AllowedAdditionalAnalysis" : {
+      "type" : "string",
+      "maxLength" : 256
+    },
+    "AllowedAdditionalAnalyses" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "maxItems" : 25,
+      "items" : {
+        "$ref" : "#/definitions/AllowedAdditionalAnalysis"
+      }
+    },
+    "ConfiguredTableAssociationAnalysisRuleCustom" : {
+      "type" : "object",
+      "properties" : {
+        "AllowedResultReceivers" : {
+          "$ref" : "#/definitions/AllowedResultReceivers"
         },
-        "AllowedResultReceivers": {
-          "$ref": "#/definitions/AllowedResultReceivers"
+        "AllowedAdditionalAnalyses" : {
+          "$ref" : "#/definitions/AllowedAdditionalAnalyses"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ConfiguredTableAssociationAnalysisRuleCustom": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedAdditionalAnalyses": {
-          "$ref": "#/definitions/AllowedAdditionalAnalyses"
+    "ConfiguredTableAssociationAnalysisRuleAggregation" : {
+      "type" : "object",
+      "properties" : {
+        "AllowedResultReceivers" : {
+          "$ref" : "#/definitions/AllowedResultReceivers"
         },
-        "AllowedResultReceivers": {
-          "$ref": "#/definitions/AllowedResultReceivers"
+        "AllowedAdditionalAnalyses" : {
+          "$ref" : "#/definitions/AllowedAdditionalAnalyses"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ConfiguredTableAssociationAnalysisRuleList": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedAdditionalAnalyses": {
-          "$ref": "#/definitions/AllowedAdditionalAnalyses"
+    "ConfiguredTableAssociationAnalysisRuleList" : {
+      "type" : "object",
+      "properties" : {
+        "AllowedResultReceivers" : {
+          "$ref" : "#/definitions/AllowedResultReceivers"
         },
-        "AllowedResultReceivers": {
-          "$ref": "#/definitions/AllowedResultReceivers"
+        "AllowedAdditionalAnalyses" : {
+          "$ref" : "#/definitions/AllowedAdditionalAnalyses"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ConfiguredTableAssociationAnalysisRulePolicy": {
-      "additionalProperties": false,
-      "properties": {
-        "V1": {
-          "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRulePolicyV1"
-        }
-      },
-      "required": [
-        "V1"
-      ],
-      "title": "V1",
-      "type": "object"
-    },
-    "ConfiguredTableAssociationAnalysisRulePolicyV1": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "List": {
-              "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleList"
-            }
-          },
-          "required": [
-            "List"
-          ],
-          "title": "List",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Aggregation": {
-              "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleAggregation"
-            }
-          },
-          "required": [
-            "Aggregation"
-          ],
-          "title": "Aggregation",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Custom": {
-              "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRuleCustom"
-            }
-          },
-          "required": [
-            "Custom"
-          ],
-          "title": "Custom",
-          "type": "object"
-        }
-      ]
-    },
-    "ConfiguredTableAssociationAnalysisRuleType": {
-      "enum": [
-        "AGGREGATION",
-        "LIST",
-        "CUSTOM"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "Represents a table that can be queried within a collaboration",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cleanrooms:CreateConfiguredTableAssociation",
-        "iam:PassRole",
-        "cleanrooms:ListTagsForResource",
-        "cleanrooms:TagResource",
-        "cleanrooms:GetConfiguredTableAssociation",
-        "cleanrooms:ListConfiguredTableAssociations",
-        "cleanrooms:DeleteConfiguredTableAssociation",
-        "cleanrooms:DeleteConfiguredTableAssociationAnalysisRule",
-        "cleanrooms:CreateConfiguredTableAssociationAnalysisRule",
-        "cleanrooms:GetConfiguredTableAssociationAnalysisRule"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "cleanrooms:DeleteConfiguredTableAssociation",
-        "cleanrooms:GetConfiguredTableAssociation",
-        "cleanrooms:ListConfiguredTableAssociations",
-        "cleanrooms:ListTagsForResource",
-        "cleanrooms:UntagResource",
-        "cleanrooms:DeleteConfiguredTableAssociationAnalysisRule",
-        "cleanrooms:GetConfiguredTableAssociationAnalysisRule"
-      ]
-    },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "MembershipIdentifier": {
-            "$ref": "resource-schema.json#/properties/MembershipIdentifier"
+    "ConfiguredTableAssociationAnalysisRulePolicyV1" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "List",
+        "properties" : {
+          "List" : {
+            "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRuleList"
           }
         },
-        "required": [
-          "MembershipIdentifier"
-        ]
+        "required" : [ "List" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Aggregation",
+        "properties" : {
+          "Aggregation" : {
+            "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRuleAggregation"
+          }
+        },
+        "required" : [ "Aggregation" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Custom",
+        "properties" : {
+          "Custom" : {
+            "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRuleCustom"
+          }
+        },
+        "required" : [ "Custom" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "ConfiguredTableAssociationAnalysisRulePolicy" : {
+      "type" : "object",
+      "title" : "V1",
+      "properties" : {
+        "V1" : {
+          "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRulePolicyV1"
+        }
       },
-      "permissions": [
-        "cleanrooms:ListConfiguredTableAssociations"
-      ]
+      "required" : [ "V1" ],
+      "additionalProperties" : false
     },
-    "read": {
-      "permissions": [
-        "cleanrooms:GetConfiguredTableAssociation",
-        "cleanrooms:ListTagsForResource",
-        "cleanrooms:GetConfiguredTableAssociationAnalysisRule"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "cleanrooms:UpdateConfiguredTableAssociation",
-        "cleanrooms:GetConfiguredTableAssociation",
-        "iam:PassRole",
-        "cleanrooms:ListTagsForResource",
-        "cleanrooms:TagResource",
-        "cleanrooms:UntagResource",
-        "cleanrooms:DeleteConfiguredTableAssociationAnalysisRule",
-        "cleanrooms:CreateConfiguredTableAssociationAnalysisRule",
-        "cleanrooms:GetConfiguredTableAssociationAnalysisRule",
-        "cleanrooms:UpdateConfiguredTableAssociationAnalysisRule"
-      ]
+    "ConfiguredTableAssociationAnalysisRule" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRuleType"
+        },
+        "Policy" : {
+          "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRulePolicy"
+        }
+      },
+      "required" : [ "Type", "Policy" ],
+      "additionalProperties" : false
     }
   },
-  "primaryIdentifier": [
-    "/properties/ConfiguredTableAssociationIdentifier",
-    "/properties/MembershipIdentifier"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 256,
-      "type": "string"
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 256
     },
-    "ConfiguredTableAssociationAnalysisRules": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ConfiguredTableAssociationAnalysisRule"
+    "Tags" : {
+      "description" : "An arbitrary set of tags (key-value pairs) for this cleanrooms collaboration.",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 1,
-      "minItems": 1,
-      "type": "array"
+      "type" : "array"
     },
-    "ConfiguredTableAssociationIdentifier": {
-      "maxLength": 36,
-      "minLength": 36,
-      "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-      "type": "string"
+    "ConfiguredTableAssociationIdentifier" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 36,
+      "pattern" : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     },
-    "ConfiguredTableIdentifier": {
-      "maxLength": 36,
-      "minLength": 36,
-      "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-      "type": "string"
+    "ConfiguredTableIdentifier" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 36,
+      "pattern" : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     },
-    "Description": {
-      "maxLength": 255,
-      "pattern": "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$",
-      "type": "string"
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "pattern" : "^[\\u0020-\\uD7FF\\uE000-\\uFFFD\\uD800\\uDBFF-\\uDC00\\uDFFF\\t\\r\\n]*$"
     },
-    "MembershipIdentifier": {
-      "maxLength": 36,
-      "minLength": 36,
-      "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
-      "type": "string"
+    "MembershipIdentifier" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 36,
+      "pattern" : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
     },
-    "Name": {
-      "maxLength": 128,
-      "pattern": "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$",
-      "type": "string"
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z0-9_](([a-zA-Z0-9_ ]+-)*([a-zA-Z0-9_ ]+))?$"
     },
-    "RoleArn": {
-      "maxLength": 512,
-      "minLength": 32,
-      "type": "string"
+    "RoleArn" : {
+      "type" : "string",
+      "maxLength" : 512,
+      "minLength" : 32
     },
-    "Tags": {
-      "description": "An arbitrary set of tags (key-value pairs) for this cleanrooms collaboration.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "ConfiguredTableAssociationAnalysisRules" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/ConfiguredTableAssociationAnalysisRule"
       },
-      "type": "array"
+      "maxItems" : 1,
+      "minItems" : 1
     }
   },
-  "readOnlyProperties": [
-    "/properties/ConfiguredTableAssociationIdentifier",
-    "/properties/Arn"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "ConfiguredTableIdentifier",
-    "Name",
-    "RoleArn",
-    "MembershipIdentifier"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "cleanrooms:ListTagsForResource",
-      "cleanrooms:UntagResource",
-      "cleanrooms:TagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "ConfiguredTableIdentifier", "Name", "RoleArn", "MembershipIdentifier" ],
+  "readOnlyProperties" : [ "/properties/ConfiguredTableAssociationIdentifier", "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/ConfiguredTableIdentifier", "/properties/Name", "/properties/MembershipIdentifier" ],
+  "primaryIdentifier" : [ "/properties/ConfiguredTableAssociationIdentifier", "/properties/MembershipIdentifier" ],
+  "replacementStrategy" : "delete_then_create",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "cleanrooms:ListTagsForResource", "cleanrooms:UntagResource", "cleanrooms:TagResource" ]
   },
-  "typeName": "AWS::CleanRooms::ConfiguredTableAssociation"
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-cleanrooms",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cleanrooms:CreateConfiguredTableAssociation", "iam:PassRole", "cleanrooms:ListTagsForResource", "cleanrooms:TagResource", "cleanrooms:GetConfiguredTableAssociation", "cleanrooms:ListConfiguredTableAssociations", "cleanrooms:DeleteConfiguredTableAssociation", "cleanrooms:DeleteConfiguredTableAssociationAnalysisRule", "cleanrooms:CreateConfiguredTableAssociationAnalysisRule", "cleanrooms:GetConfiguredTableAssociationAnalysisRule" ]
+    },
+    "read" : {
+      "permissions" : [ "cleanrooms:GetConfiguredTableAssociation", "cleanrooms:ListTagsForResource", "cleanrooms:GetConfiguredTableAssociationAnalysisRule" ]
+    },
+    "update" : {
+      "permissions" : [ "cleanrooms:UpdateConfiguredTableAssociation", "cleanrooms:GetConfiguredTableAssociation", "iam:PassRole", "cleanrooms:ListTagsForResource", "cleanrooms:TagResource", "cleanrooms:UntagResource", "cleanrooms:DeleteConfiguredTableAssociationAnalysisRule", "cleanrooms:CreateConfiguredTableAssociationAnalysisRule", "cleanrooms:GetConfiguredTableAssociationAnalysisRule", "cleanrooms:UpdateConfiguredTableAssociationAnalysisRule" ]
+    },
+    "delete" : {
+      "permissions" : [ "cleanrooms:DeleteConfiguredTableAssociation", "cleanrooms:GetConfiguredTableAssociation", "cleanrooms:ListConfiguredTableAssociations", "cleanrooms:ListTagsForResource", "cleanrooms:UntagResource", "cleanrooms:DeleteConfiguredTableAssociationAnalysisRule", "cleanrooms:GetConfiguredTableAssociationAnalysisRule" ]
+    },
+    "list" : {
+      "permissions" : [ "cleanrooms:ListConfiguredTableAssociations" ],
+      "handlerSchema" : {
+        "properties" : {
+          "MembershipIdentifier" : {
+            "$ref" : "resource-schema.json#/properties/MembershipIdentifier"
+          }
+        },
+        "required" : [ "MembershipIdentifier" ]
+      }
+    }
+  },
+  "additionalProperties" : false
 }

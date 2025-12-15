@@ -1,108 +1,75 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "DefinitionParameter": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 1000,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::ServiceCatalog::ServiceAction",
+  "description" : "Resource Schema for AWS::ServiceCatalog::ServiceAction",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "DefinitionParameter" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1000
         },
-        "Value": {
-          "maxLength": 4096,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 4096
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Resource Schema for AWS::ServiceCatalog::ServiceAction",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "servicecatalog:CreateServiceAction",
-        "ssm:DescribeDocument",
-        "iam:GetRole"
-      ]
+  "properties" : {
+    "AcceptLanguage" : {
+      "type" : "string",
+      "enum" : [ "en", "jp", "zh" ]
     },
-    "delete": {
-      "permissions": [
-        "servicecatalog:DeleteServiceAction"
-      ]
+    "Name" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "list": {
-      "permissions": [
-        "servicecatalog:ListServiceActions"
-      ]
+    "DefinitionType" : {
+      "type" : "string",
+      "enum" : [ "SSM_AUTOMATION" ]
     },
-    "read": {
-      "permissions": [
-        "servicecatalog:DescribeServiceAction"
-      ]
+    "Definition" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/DefinitionParameter"
+      }
     },
-    "update": {
-      "permissions": [
-        "servicecatalog:UpdateServiceAction",
-        "iam:GetRole",
-        "ssm:DescribeDocument"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1024
+    },
+    "Id" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AcceptLanguage": {
-      "enum": [
-        "en",
-        "jp",
-        "zh"
-      ],
-      "type": "string"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "writeOnlyProperties" : [ "/properties/AcceptLanguage" ],
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "required" : [ "Name", "DefinitionType", "Definition" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "servicecatalog:CreateServiceAction", "ssm:DescribeDocument", "iam:GetRole" ]
     },
-    "Definition": {
-      "items": {
-        "$ref": "#/definitions/DefinitionParameter"
-      },
-      "type": "array"
+    "read" : {
+      "permissions" : [ "servicecatalog:DescribeServiceAction" ]
     },
-    "DefinitionType": {
-      "enum": [
-        "SSM_AUTOMATION"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "servicecatalog:UpdateServiceAction", "iam:GetRole", "ssm:DescribeDocument" ]
     },
-    "Description": {
-      "maxLength": 1024,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "servicecatalog:DeleteServiceAction" ]
     },
-    "Id": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
+    "list" : {
+      "permissions" : [ "servicecatalog:ListServiceActions" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Name",
-    "DefinitionType",
-    "Definition"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "typeName": "AWS::ServiceCatalog::ServiceAction",
-  "writeOnlyProperties": [
-    "/properties/AcceptLanguage"
-  ]
+  }
 }

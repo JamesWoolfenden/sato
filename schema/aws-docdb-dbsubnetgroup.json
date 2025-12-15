@@ -1,61 +1,49 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DBSubnetGroupName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::DocDB::DBSubnetGroup",
+  "description" : "Resource Type definition for AWS::DocDB::DBSubnetGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "DBSubnetGroupName" : {
+      "type" : "string"
+    },
+    "DBSubnetGroupDescription" : {
+      "type" : "string"
+    },
+    "SubnetIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::DocDB::DBSubnetGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "DBSubnetGroupDescription": {
-      "type": "string"
-    },
-    "DBSubnetGroupName": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "SubnetIds": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "DBSubnetGroupDescription",
-    "SubnetIds"
-  ],
-  "typeName": "AWS::DocDB::DBSubnetGroup"
+  "required" : [ "DBSubnetGroupDescription", "SubnetIds" ],
+  "createOnlyProperties" : [ "/properties/DBSubnetGroupName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

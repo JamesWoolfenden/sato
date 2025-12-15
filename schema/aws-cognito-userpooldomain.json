@@ -1,88 +1,62 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/UserPoolId",
-    "/properties/Domain"
-  ],
-  "definitions": {
-    "CustomDomainConfigType": {
-      "additionalProperties": false,
-      "properties": {
-        "CertificateArn": {
-          "type": "string"
+  "typeName" : "AWS::Cognito::UserPoolDomain",
+  "description" : "Resource Type definition for AWS::Cognito::UserPoolDomain",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "definitions" : {
+    "CustomDomainConfigType" : {
+      "type" : "object",
+      "properties" : {
+        "CertificateArn" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::Cognito::UserPoolDomain",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cognito-idp:CreateUserPoolDomain",
-        "cognito-idp:DescribeUserPoolDomain",
-        "cloudfront:updateDistribution"
-      ],
-      "timeoutInMinutes": 20
+  "properties" : {
+    "UserPoolId" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "cognito-idp:DeleteUserPoolDomain",
-        "cognito-idp:DescribeUserPoolDomain"
-      ],
-      "timeoutInMinutes": 25
+    "Domain" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "cognito-idp:DescribeUserPoolDomain"
-      ]
+    "CustomDomainConfig" : {
+      "$ref" : "#/definitions/CustomDomainConfigType"
     },
-    "update": {
-      "permissions": [
-        "cognito-idp:UpdateUserPoolDomain",
-        "cognito-idp:DescribeUserPoolDomain",
-        "cloudfront:updateDistribution"
-      ],
-      "timeoutInMinutes": 20
+    "CloudFrontDistribution" : {
+      "type" : "string"
+    },
+    "ManagedLoginVersion" : {
+      "type" : "integer"
     }
   },
-  "primaryIdentifier": [
-    "/properties/UserPoolId",
-    "/properties/Domain"
-  ],
-  "properties": {
-    "CloudFrontDistribution": {
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "UserPoolId", "Domain" ],
+  "readOnlyProperties" : [ "/properties/CloudFrontDistribution" ],
+  "primaryIdentifier" : [ "/properties/UserPoolId", "/properties/Domain" ],
+  "createOnlyProperties" : [ "/properties/UserPoolId", "/properties/Domain" ],
+  "writeOnlyProperties" : [ "/properties/ManagedLoginVersion" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cognito-idp:CreateUserPoolDomain", "cognito-idp:DescribeUserPoolDomain", "cloudfront:updateDistribution" ],
+      "timeoutInMinutes" : 20
     },
-    "CustomDomainConfig": {
-      "$ref": "#/definitions/CustomDomainConfigType"
+    "read" : {
+      "permissions" : [ "cognito-idp:DescribeUserPoolDomain" ]
     },
-    "Domain": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "cognito-idp:UpdateUserPoolDomain", "cognito-idp:DescribeUserPoolDomain", "cloudfront:updateDistribution" ],
+      "timeoutInMinutes" : 20
     },
-    "ManagedLoginVersion": {
-      "type": "integer"
-    },
-    "UserPoolId": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "cognito-idp:DeleteUserPoolDomain", "cognito-idp:DescribeUserPoolDomain" ],
+      "timeoutInMinutes" : 25
     }
-  },
-  "readOnlyProperties": [
-    "/properties/CloudFrontDistribution"
-  ],
-  "required": [
-    "UserPoolId",
-    "Domain"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Cognito::UserPoolDomain",
-  "writeOnlyProperties": [
-    "/properties/ManagedLoginVersion"
-  ]
+  }
 }

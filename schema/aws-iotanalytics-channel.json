@@ -1,151 +1,126 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ChannelName"
-  ],
-  "definitions": {
-    "ChannelStorage": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomerManagedS3": {
-          "$ref": "#/definitions/CustomerManagedS3"
-        },
-        "ServiceManagedS3": {
-          "$ref": "#/definitions/ServiceManagedS3"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::IoTAnalytics::Channel",
+  "description" : "Resource Type definition for AWS::IoTAnalytics::Channel",
+  "additionalProperties" : false,
+  "taggable" : true,
+  "properties" : {
+    "ChannelStorage" : {
+      "$ref" : "#/definitions/ChannelStorage"
     },
-    "CustomerManagedS3": {
-      "additionalProperties": false,
-      "properties": {
-        "Bucket": {
-          "maxLength": 255,
-          "minLength": 3,
-          "pattern": "^[a-zA-Z0-9.\\-_]*$",
-          "type": "string"
-        },
-        "KeyPrefix": {
-          "maxLength": 255,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9!_.*'()/{}:-]*/$",
-          "type": "string"
-        },
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Bucket",
-        "RoleArn"
-      ],
-      "type": "object"
+    "ChannelName" : {
+      "type" : "string",
+      "pattern" : "(^(?!_{2}))(^[a-zA-Z0-9_]+$)",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "RetentionPeriod": {
-      "additionalProperties": false,
-      "properties": {
-        "NumberOfDays": {
-          "maximum": 2147483647,
-          "minimum": 1,
-          "type": "integer"
-        },
-        "Unlimited": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "ServiceManagedS3": {
-      "additionalProperties": false,
-      "type": "object"
+    "RetentionPeriod" : {
+      "$ref" : "#/definitions/RetentionPeriod"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::IoTAnalytics::Channel",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotanalytics:CreateChannel"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "iotanalytics:DeleteChannel"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "iotanalytics:ListChannels"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "iotanalytics:DescribeChannel",
-        "iotanalytics:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "iotanalytics:UpdateChannel",
-        "iotanalytics:TagResource",
-        "iotanalytics:UntagResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/ChannelName"
-  ],
-  "properties": {
-    "ChannelName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "(^(?!_{2}))(^[a-zA-Z0-9_]+$)",
-      "type": "string"
-    },
-    "ChannelStorage": {
-      "$ref": "#/definitions/ChannelStorage"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "RetentionPeriod": {
-      "$ref": "#/definitions/RetentionPeriod"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+  "definitions" : {
+    "CustomerManagedS3" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Bucket" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9.\\-_]*$",
+          "minLength" : 3,
+          "maxLength" : 255
+        },
+        "RoleArn" : {
+          "type" : "string",
+          "minLength" : 20,
+          "maxLength" : 2048
+        },
+        "KeyPrefix" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9!_.*'()/{}:-]*/$",
+          "minLength" : 1,
+          "maxLength" : 255
+        }
       },
-      "maxItems": 50,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Bucket", "RoleArn" ]
+    },
+    "ServiceManagedS3" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "ChannelStorage" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ServiceManagedS3" : {
+          "$ref" : "#/definitions/ServiceManagedS3"
+        },
+        "CustomerManagedS3" : {
+          "$ref" : "#/definitions/CustomerManagedS3"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "RetentionPeriod" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NumberOfDays" : {
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 2147483647
+        },
+        "Unlimited" : {
+          "type" : "boolean"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "taggable": true,
-  "typeName": "AWS::IoTAnalytics::Channel"
+  "primaryIdentifier" : [ "/properties/ChannelName" ],
+  "createOnlyProperties" : [ "/properties/ChannelName" ],
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotanalytics:CreateChannel" ]
+    },
+    "read" : {
+      "permissions" : [ "iotanalytics:DescribeChannel", "iotanalytics:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "iotanalytics:UpdateChannel", "iotanalytics:TagResource", "iotanalytics:UntagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "iotanalytics:DeleteChannel" ]
+    },
+    "list" : {
+      "permissions" : [ "iotanalytics:ListChannels" ]
+    }
+  }
 }

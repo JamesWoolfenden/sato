@@ -1,199 +1,147 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "DeviceCreationFileList": {
-      "description": "sidewalk create device's file path",
-      "items": {
-        "maxLength": 1024,
-        "type": "string"
-      },
-      "type": "array"
+  "typeName" : "AWS::IoTWireless::WirelessDeviceImportTask",
+  "description" : "Wireless Device Import Tasks",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "DeviceCreationFileList" : {
+      "description" : "sidewalk create device's file path",
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 1024
+      }
     },
-    "Role": {
-      "description": "sidewalk role",
-      "maxLength": 2048,
-      "type": "string"
+    "Role" : {
+      "description" : "sidewalk role",
+      "type" : "string",
+      "maxLength" : 2048
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Wireless Device Import Tasks",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotwireless:StartWirelessDeviceImportTask",
-        "iotwireless:StartSingleWirelessDeviceImportTask",
-        "iotwireless:TagResource",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "Id" : {
+      "description" : "Id for Wireless Device Import Task, Returned upon successful start.",
+      "type" : "string",
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "iotwireless:DeleteWirelessDeviceImportTask"
-      ]
+    "Arn" : {
+      "description" : "Arn for Wireless Device Import Task, Returned upon successful start.",
+      "type" : "string",
+      "maxLength" : 128
     },
-    "list": {
-      "permissions": [
-        "iotwireless:ListWirelessDeviceImportTasks",
-        "iotwireless:ListTagsForResource"
-      ]
+    "DestinationName" : {
+      "description" : "Destination Name for import task",
+      "type" : "string",
+      "pattern" : "[a-zA-Z0-9-_]+",
+      "maxLength" : 128
     },
-    "read": {
-      "permissions": [
-        "iotwireless:GetWirelessDeviceImportTask",
-        "iotwireless:ListTagsForResource"
-      ]
+    "CreationDate" : {
+      "description" : "CreationDate for import task",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iotwireless:GetWirelessDeviceImportTask",
-        "iotwireless:UpdateWirelessDeviceImportTask",
-        "iotwireless:TagResource",
-        "iotwireless:UntagResource",
-        "iam:PassRole"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Arn for Wireless Device Import Task, Returned upon successful start.",
-      "maxLength": 128,
-      "type": "string"
-    },
-    "CreationDate": {
-      "description": "CreationDate for import task",
-      "type": "string"
-    },
-    "DestinationName": {
-      "description": "Destination Name for import task",
-      "maxLength": 128,
-      "pattern": "[a-zA-Z0-9-_]+",
-      "type": "string"
-    },
-    "FailedImportedDevicesCount": {
-      "description": "Failed Imported Devices Count",
-      "type": "integer"
-    },
-    "Id": {
-      "description": "Id for Wireless Device Import Task, Returned upon successful start.",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "InitializedImportedDevicesCount": {
-      "description": "Initialized Imported Devices Count",
-      "type": "integer"
-    },
-    "OnboardedImportedDevicesCount": {
-      "description": "Onboarded Imported Devices Count",
-      "type": "integer"
-    },
-    "PendingImportedDevicesCount": {
-      "description": "Pending Imported Devices Count",
-      "type": "integer"
-    },
-    "Sidewalk": {
-      "additionalProperties": false,
-      "description": "sidewalk contain file for created device and role",
-      "properties": {
-        "DeviceCreationFile": {
-          "maxLength": 1024,
-          "type": "string"
+    "Sidewalk" : {
+      "description" : "sidewalk contain file for created device and role",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SidewalkManufacturingSn" : {
+          "type" : "string",
+          "maxLength" : 64
         },
-        "DeviceCreationFileList": {
-          "$ref": "#/definitions/DeviceCreationFileList"
+        "DeviceCreationFile" : {
+          "type" : "string",
+          "maxLength" : 1024
         },
-        "Role": {
-          "$ref": "#/definitions/Role"
+        "DeviceCreationFileList" : {
+          "$ref" : "#/definitions/DeviceCreationFileList"
         },
-        "SidewalkManufacturingSn": {
-          "maxLength": 64,
-          "type": "string"
+        "Role" : {
+          "$ref" : "#/definitions/Role"
         }
-      },
-      "type": "object"
+      }
     },
-    "Status": {
-      "description": "Status for import task",
-      "enum": [
-        "INITIALIZING",
-        "INITIALIZED",
-        "PENDING",
-        "COMPLETE",
-        "FAILED",
-        "DELETING"
-      ],
-      "type": "string"
+    "Status" : {
+      "description" : "Status for import task",
+      "type" : "string",
+      "enum" : [ "INITIALIZING", "INITIALIZED", "PENDING", "COMPLETE", "FAILED", "DELETING" ]
     },
-    "StatusReason": {
-      "description": "StatusReason for import task",
-      "type": "string"
+    "StatusReason" : {
+      "description" : "StatusReason for import task",
+      "type" : "string"
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "InitializedImportedDevicesCount" : {
+      "description" : "Initialized Imported Devices Count",
+      "type" : "integer"
+    },
+    "PendingImportedDevicesCount" : {
+      "description" : "Pending Imported Devices Count",
+      "type" : "integer"
+    },
+    "OnboardedImportedDevicesCount" : {
+      "description" : "Onboarded Imported Devices Count",
+      "type" : "integer"
+    },
+    "FailedImportedDevicesCount" : {
+      "description" : "Failed Imported Devices Count",
+      "type" : "integer"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/CreationDate",
-    "/properties/Status",
-    "/properties/StatusReason",
-    "/properties/InitializedImportedDevicesCount",
-    "/properties/PendingImportedDevicesCount",
-    "/properties/OnboardedImportedDevicesCount",
-    "/properties/FailedImportedDevicesCount",
-    "/properties/Sidewalk/DeviceCreationFileList"
-  ],
-  "required": [
-    "DestinationName",
-    "Sidewalk"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotwireless:TagResource",
-      "iotwireless:UntagResource",
-      "iotwireless:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotwireless:TagResource", "iotwireless:UntagResource", "iotwireless:ListTagsForResource" ]
   },
-  "typeName": "AWS::IoTWireless::WirelessDeviceImportTask",
-  "writeOnlyProperties": [
-    "/properties/Sidewalk/DeviceCreationFile",
-    "/properties/Sidewalk/SidewalkManufacturingSn"
-  ]
+  "required" : [ "DestinationName", "Sidewalk" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/CreationDate", "/properties/Status", "/properties/StatusReason", "/properties/InitializedImportedDevicesCount", "/properties/PendingImportedDevicesCount", "/properties/OnboardedImportedDevicesCount", "/properties/FailedImportedDevicesCount", "/properties/Sidewalk/DeviceCreationFileList" ],
+  "writeOnlyProperties" : [ "/properties/Sidewalk/DeviceCreationFile", "/properties/Sidewalk/SidewalkManufacturingSn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotwireless:StartWirelessDeviceImportTask", "iotwireless:StartSingleWirelessDeviceImportTask", "iotwireless:TagResource", "iam:PassRole" ]
+    },
+    "read" : {
+      "permissions" : [ "iotwireless:GetWirelessDeviceImportTask", "iotwireless:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "iotwireless:GetWirelessDeviceImportTask", "iotwireless:UpdateWirelessDeviceImportTask", "iotwireless:TagResource", "iotwireless:UntagResource", "iam:PassRole" ]
+    },
+    "delete" : {
+      "permissions" : [ "iotwireless:DeleteWirelessDeviceImportTask" ]
+    },
+    "list" : {
+      "permissions" : [ "iotwireless:ListWirelessDeviceImportTasks", "iotwireless:ListTagsForResource" ]
+    }
+  }
 }

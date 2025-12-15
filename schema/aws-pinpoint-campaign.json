@@ -1,537 +1,522 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ApplicationId"
-  ],
-  "definitions": {
-    "CampaignCustomMessage": {
-      "additionalProperties": false,
-      "properties": {
-        "Data": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::Pinpoint::Campaign",
+  "description" : "Resource Type definition for AWS::Pinpoint::Campaign",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
     },
-    "CampaignEmailMessage": {
-      "additionalProperties": false,
-      "properties": {
-        "Body": {
-          "type": "string"
-        },
-        "FromAddress": {
-          "type": "string"
-        },
-        "HtmlBody": {
-          "type": "string"
-        },
-        "Title": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "SegmentId" : {
+      "type" : "string"
     },
-    "CampaignEventFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Dimensions": {
-          "$ref": "#/definitions/EventDimensions"
-        },
-        "FilterType": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Priority" : {
+      "type" : "integer"
     },
-    "CampaignHook": {
-      "additionalProperties": false,
-      "properties": {
-        "LambdaFunctionName": {
-          "type": "string"
-        },
-        "Mode": {
-          "type": "string"
-        },
-        "WebUrl": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "TemplateConfiguration" : {
+      "$ref" : "#/definitions/TemplateConfiguration"
     },
-    "CampaignInAppMessage": {
-      "additionalProperties": false,
-      "properties": {
-        "Content": {
-          "items": {
-            "$ref": "#/definitions/InAppMessageContent"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "CustomConfig": {
-          "type": "object"
-        },
-        "Layout": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "IsPaused" : {
+      "type" : "boolean"
     },
-    "CampaignSmsMessage": {
-      "additionalProperties": false,
-      "properties": {
-        "Body": {
-          "type": "string"
-        },
-        "EntityId": {
-          "type": "string"
-        },
-        "MessageType": {
-          "type": "string"
-        },
-        "OriginationNumber": {
-          "type": "string"
-        },
-        "SenderId": {
-          "type": "string"
-        },
-        "TemplateId": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "AdditionalTreatments" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/WriteTreatmentResource"
+      }
     },
-    "CustomDeliveryConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "DeliveryUri": {
-          "type": "string"
-        },
-        "EndpointTypes": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "Name" : {
+      "type" : "string"
     },
-    "DefaultButtonConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "BackgroundColor": {
-          "type": "string"
-        },
-        "BorderRadius": {
-          "type": "integer"
-        },
-        "ButtonAction": {
-          "type": "string"
-        },
-        "Link": {
-          "type": "string"
-        },
-        "Text": {
-          "type": "string"
-        },
-        "TextColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "SegmentVersion" : {
+      "type" : "integer"
     },
-    "EventDimensions": {
-      "additionalProperties": false,
-      "properties": {
-        "Attributes": {
-          "type": "object"
-        },
-        "EventType": {
-          "$ref": "#/definitions/SetDimension"
-        },
-        "Metrics": {
-          "type": "object"
-        }
-      },
-      "type": "object"
+    "TreatmentDescription" : {
+      "type" : "string"
     },
-    "InAppMessageBodyConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Alignment": {
-          "type": "string"
-        },
-        "Body": {
-          "type": "string"
-        },
-        "TextColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "MessageConfiguration" : {
+      "$ref" : "#/definitions/MessageConfiguration"
     },
-    "InAppMessageButton": {
-      "additionalProperties": false,
-      "properties": {
-        "Android": {
-          "$ref": "#/definitions/OverrideButtonConfiguration"
-        },
-        "DefaultConfig": {
-          "$ref": "#/definitions/DefaultButtonConfiguration"
-        },
-        "IOS": {
-          "$ref": "#/definitions/OverrideButtonConfiguration"
-        },
-        "Web": {
-          "$ref": "#/definitions/OverrideButtonConfiguration"
-        }
-      },
-      "type": "object"
+    "Limits" : {
+      "$ref" : "#/definitions/Limits"
     },
-    "InAppMessageContent": {
-      "additionalProperties": false,
-      "properties": {
-        "BackgroundColor": {
-          "type": "string"
-        },
-        "BodyConfig": {
-          "$ref": "#/definitions/InAppMessageBodyConfig"
-        },
-        "HeaderConfig": {
-          "$ref": "#/definitions/InAppMessageHeaderConfig"
-        },
-        "ImageUrl": {
-          "type": "string"
-        },
-        "PrimaryBtn": {
-          "$ref": "#/definitions/InAppMessageButton"
-        },
-        "SecondaryBtn": {
-          "$ref": "#/definitions/InAppMessageButton"
-        }
-      },
-      "type": "object"
+    "CampaignId" : {
+      "type" : "string"
     },
-    "InAppMessageHeaderConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Alignment": {
-          "type": "string"
-        },
-        "Header": {
-          "type": "string"
-        },
-        "TextColor": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "HoldoutPercent" : {
+      "type" : "integer"
     },
-    "Limits": {
-      "additionalProperties": false,
-      "properties": {
-        "Daily": {
-          "type": "integer"
-        },
-        "MaximumDuration": {
-          "type": "integer"
-        },
-        "MessagesPerSecond": {
-          "type": "integer"
-        },
-        "Session": {
-          "type": "integer"
-        },
-        "Total": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+    "Schedule" : {
+      "$ref" : "#/definitions/Schedule"
     },
-    "Message": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "type": "string"
-        },
-        "Body": {
-          "type": "string"
-        },
-        "ImageIconUrl": {
-          "type": "string"
-        },
-        "ImageSmallIconUrl": {
-          "type": "string"
-        },
-        "ImageUrl": {
-          "type": "string"
-        },
-        "JsonBody": {
-          "type": "string"
-        },
-        "MediaUrl": {
-          "type": "string"
-        },
-        "RawContent": {
-          "type": "string"
-        },
-        "SilentPush": {
-          "type": "boolean"
-        },
-        "TimeToLive": {
-          "type": "integer"
-        },
-        "Title": {
-          "type": "string"
-        },
-        "Url": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "CustomDeliveryConfiguration" : {
+      "$ref" : "#/definitions/CustomDeliveryConfiguration"
     },
-    "MessageConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ADMMessage": {
-          "$ref": "#/definitions/Message"
-        },
-        "APNSMessage": {
-          "$ref": "#/definitions/Message"
-        },
-        "BaiduMessage": {
-          "$ref": "#/definitions/Message"
-        },
-        "CustomMessage": {
-          "$ref": "#/definitions/CampaignCustomMessage"
-        },
-        "DefaultMessage": {
-          "$ref": "#/definitions/Message"
-        },
-        "EmailMessage": {
-          "$ref": "#/definitions/CampaignEmailMessage"
-        },
-        "GCMMessage": {
-          "$ref": "#/definitions/Message"
-        },
-        "InAppMessage": {
-          "$ref": "#/definitions/CampaignInAppMessage"
-        },
-        "SMSMessage": {
-          "$ref": "#/definitions/CampaignSmsMessage"
-        }
-      },
-      "type": "object"
+    "Arn" : {
+      "type" : "string"
     },
-    "OverrideButtonConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ButtonAction": {
-          "type": "string"
-        },
-        "Link": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "ApplicationId" : {
+      "type" : "string"
     },
-    "QuietTime": {
-      "additionalProperties": false,
-      "properties": {
-        "End": {
-          "type": "string"
-        },
-        "Start": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Start",
-        "End"
-      ],
-      "type": "object"
+    "CampaignHook" : {
+      "$ref" : "#/definitions/CampaignHook"
     },
-    "Schedule": {
-      "additionalProperties": false,
-      "properties": {
-        "EndTime": {
-          "type": "string"
-        },
-        "EventFilter": {
-          "$ref": "#/definitions/CampaignEventFilter"
-        },
-        "Frequency": {
-          "type": "string"
-        },
-        "IsLocalTime": {
-          "type": "boolean"
-        },
-        "QuietTime": {
-          "$ref": "#/definitions/QuietTime"
-        },
-        "StartTime": {
-          "type": "string"
-        },
-        "TimeZone": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "Tags" : {
+      "type" : "object"
     },
-    "SetDimension": {
-      "additionalProperties": false,
-      "properties": {
-        "DimensionType": {
-          "type": "string"
-        },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "Template": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
-        },
-        "Version": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "TemplateConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "EmailTemplate": {
-          "$ref": "#/definitions/Template"
-        },
-        "PushTemplate": {
-          "$ref": "#/definitions/Template"
-        },
-        "SMSTemplate": {
-          "$ref": "#/definitions/Template"
-        },
-        "VoiceTemplate": {
-          "$ref": "#/definitions/Template"
-        }
-      },
-      "type": "object"
-    },
-    "WriteTreatmentResource": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomDeliveryConfiguration": {
-          "$ref": "#/definitions/CustomDeliveryConfiguration"
-        },
-        "MessageConfiguration": {
-          "$ref": "#/definitions/MessageConfiguration"
-        },
-        "Schedule": {
-          "$ref": "#/definitions/Schedule"
-        },
-        "SizePercent": {
-          "type": "integer"
-        },
-        "TemplateConfiguration": {
-          "$ref": "#/definitions/TemplateConfiguration"
-        },
-        "TreatmentDescription": {
-          "type": "string"
-        },
-        "TreatmentName": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "TreatmentName" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::Pinpoint::Campaign",
-  "primaryIdentifier": [
-    "/properties/CampaignId"
-  ],
-  "properties": {
-    "AdditionalTreatments": {
-      "items": {
-        "$ref": "#/definitions/WriteTreatmentResource"
+  "definitions" : {
+    "QuietTime" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Start" : {
+          "type" : "string"
+        },
+        "End" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Start", "End" ]
     },
-    "ApplicationId": {
-      "type": "string"
+    "SetDimension" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "DimensionType" : {
+          "type" : "string"
+        }
+      }
     },
-    "Arn": {
-      "type": "string"
+    "Message" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Action" : {
+          "type" : "string"
+        },
+        "MediaUrl" : {
+          "type" : "string"
+        },
+        "TimeToLive" : {
+          "type" : "integer"
+        },
+        "ImageSmallIconUrl" : {
+          "type" : "string"
+        },
+        "ImageUrl" : {
+          "type" : "string"
+        },
+        "Title" : {
+          "type" : "string"
+        },
+        "Url" : {
+          "type" : "string"
+        },
+        "JsonBody" : {
+          "type" : "string"
+        },
+        "ImageIconUrl" : {
+          "type" : "string"
+        },
+        "SilentPush" : {
+          "type" : "boolean"
+        },
+        "Body" : {
+          "type" : "string"
+        },
+        "RawContent" : {
+          "type" : "string"
+        }
+      }
     },
-    "CampaignHook": {
-      "$ref": "#/definitions/CampaignHook"
+    "InAppMessageContent" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BodyConfig" : {
+          "$ref" : "#/definitions/InAppMessageBodyConfig"
+        },
+        "SecondaryBtn" : {
+          "$ref" : "#/definitions/InAppMessageButton"
+        },
+        "ImageUrl" : {
+          "type" : "string"
+        },
+        "PrimaryBtn" : {
+          "$ref" : "#/definitions/InAppMessageButton"
+        },
+        "HeaderConfig" : {
+          "$ref" : "#/definitions/InAppMessageHeaderConfig"
+        },
+        "BackgroundColor" : {
+          "type" : "string"
+        }
+      }
     },
-    "CampaignId": {
-      "type": "string"
+    "InAppMessageBodyConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Alignment" : {
+          "type" : "string"
+        },
+        "TextColor" : {
+          "type" : "string"
+        },
+        "Body" : {
+          "type" : "string"
+        }
+      }
     },
-    "CustomDeliveryConfiguration": {
-      "$ref": "#/definitions/CustomDeliveryConfiguration"
+    "CampaignEventFilter" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Dimensions" : {
+          "$ref" : "#/definitions/EventDimensions"
+        },
+        "FilterType" : {
+          "type" : "string"
+        }
+      }
     },
-    "Description": {
-      "type": "string"
+    "TemplateConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SMSTemplate" : {
+          "$ref" : "#/definitions/Template"
+        },
+        "EmailTemplate" : {
+          "$ref" : "#/definitions/Template"
+        },
+        "PushTemplate" : {
+          "$ref" : "#/definitions/Template"
+        },
+        "VoiceTemplate" : {
+          "$ref" : "#/definitions/Template"
+        }
+      }
     },
-    "HoldoutPercent": {
-      "type": "integer"
+    "CampaignCustomMessage" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Data" : {
+          "type" : "string"
+        }
+      }
     },
-    "IsPaused": {
-      "type": "boolean"
+    "EventDimensions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Attributes" : {
+          "type" : "object"
+        },
+        "Metrics" : {
+          "type" : "object"
+        },
+        "EventType" : {
+          "$ref" : "#/definitions/SetDimension"
+        }
+      }
     },
-    "Limits": {
-      "$ref": "#/definitions/Limits"
+    "Template" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Version" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
     },
-    "MessageConfiguration": {
-      "$ref": "#/definitions/MessageConfiguration"
+    "MessageConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "APNSMessage" : {
+          "$ref" : "#/definitions/Message"
+        },
+        "BaiduMessage" : {
+          "$ref" : "#/definitions/Message"
+        },
+        "DefaultMessage" : {
+          "$ref" : "#/definitions/Message"
+        },
+        "InAppMessage" : {
+          "$ref" : "#/definitions/CampaignInAppMessage"
+        },
+        "EmailMessage" : {
+          "$ref" : "#/definitions/CampaignEmailMessage"
+        },
+        "GCMMessage" : {
+          "$ref" : "#/definitions/Message"
+        },
+        "SMSMessage" : {
+          "$ref" : "#/definitions/CampaignSmsMessage"
+        },
+        "CustomMessage" : {
+          "$ref" : "#/definitions/CampaignCustomMessage"
+        },
+        "ADMMessage" : {
+          "$ref" : "#/definitions/Message"
+        }
+      }
     },
-    "Name": {
-      "type": "string"
+    "Limits" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MessagesPerSecond" : {
+          "type" : "integer"
+        },
+        "Daily" : {
+          "type" : "integer"
+        },
+        "MaximumDuration" : {
+          "type" : "integer"
+        },
+        "Total" : {
+          "type" : "integer"
+        },
+        "Session" : {
+          "type" : "integer"
+        }
+      }
     },
-    "Priority": {
-      "type": "integer"
+    "WriteTreatmentResource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TreatmentDescription" : {
+          "type" : "string"
+        },
+        "MessageConfiguration" : {
+          "$ref" : "#/definitions/MessageConfiguration"
+        },
+        "Schedule" : {
+          "$ref" : "#/definitions/Schedule"
+        },
+        "TemplateConfiguration" : {
+          "$ref" : "#/definitions/TemplateConfiguration"
+        },
+        "CustomDeliveryConfiguration" : {
+          "$ref" : "#/definitions/CustomDeliveryConfiguration"
+        },
+        "SizePercent" : {
+          "type" : "integer"
+        },
+        "TreatmentName" : {
+          "type" : "string"
+        }
+      }
     },
-    "Schedule": {
-      "$ref": "#/definitions/Schedule"
+    "CampaignInAppMessage" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomConfig" : {
+          "type" : "object"
+        },
+        "Layout" : {
+          "type" : "string"
+        },
+        "Content" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/InAppMessageContent"
+          }
+        }
+      }
     },
-    "SegmentId": {
-      "type": "string"
+    "CampaignEmailMessage" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Title" : {
+          "type" : "string"
+        },
+        "FromAddress" : {
+          "type" : "string"
+        },
+        "HtmlBody" : {
+          "type" : "string"
+        },
+        "Body" : {
+          "type" : "string"
+        }
+      }
     },
-    "SegmentVersion": {
-      "type": "integer"
+    "CampaignSmsMessage" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EntityId" : {
+          "type" : "string"
+        },
+        "OriginationNumber" : {
+          "type" : "string"
+        },
+        "SenderId" : {
+          "type" : "string"
+        },
+        "Body" : {
+          "type" : "string"
+        },
+        "MessageType" : {
+          "type" : "string"
+        },
+        "TemplateId" : {
+          "type" : "string"
+        }
+      }
     },
-    "Tags": {
-      "type": "object"
+    "Schedule" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TimeZone" : {
+          "type" : "string"
+        },
+        "QuietTime" : {
+          "$ref" : "#/definitions/QuietTime"
+        },
+        "EndTime" : {
+          "type" : "string"
+        },
+        "StartTime" : {
+          "type" : "string"
+        },
+        "Frequency" : {
+          "type" : "string"
+        },
+        "EventFilter" : {
+          "$ref" : "#/definitions/CampaignEventFilter"
+        },
+        "IsLocalTime" : {
+          "type" : "boolean"
+        }
+      }
     },
-    "TemplateConfiguration": {
-      "$ref": "#/definitions/TemplateConfiguration"
+    "DefaultButtonConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ButtonAction" : {
+          "type" : "string"
+        },
+        "BorderRadius" : {
+          "type" : "integer"
+        },
+        "Text" : {
+          "type" : "string"
+        },
+        "TextColor" : {
+          "type" : "string"
+        },
+        "Link" : {
+          "type" : "string"
+        },
+        "BackgroundColor" : {
+          "type" : "string"
+        }
+      }
     },
-    "TreatmentDescription": {
-      "type": "string"
+    "CustomDeliveryConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EndpointTypes" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "DeliveryUri" : {
+          "type" : "string"
+        }
+      }
     },
-    "TreatmentName": {
-      "type": "string"
+    "CampaignHook" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "WebUrl" : {
+          "type" : "string"
+        },
+        "LambdaFunctionName" : {
+          "type" : "string"
+        },
+        "Mode" : {
+          "type" : "string"
+        }
+      }
+    },
+    "InAppMessageButton" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IOS" : {
+          "$ref" : "#/definitions/OverrideButtonConfiguration"
+        },
+        "Web" : {
+          "$ref" : "#/definitions/OverrideButtonConfiguration"
+        },
+        "DefaultConfig" : {
+          "$ref" : "#/definitions/DefaultButtonConfiguration"
+        },
+        "Android" : {
+          "$ref" : "#/definitions/OverrideButtonConfiguration"
+        }
+      }
+    },
+    "InAppMessageHeaderConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Alignment" : {
+          "type" : "string"
+        },
+        "TextColor" : {
+          "type" : "string"
+        },
+        "Header" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OverrideButtonConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ButtonAction" : {
+          "type" : "string"
+        },
+        "Link" : {
+          "type" : "string"
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CampaignId"
-  ],
-  "required": [
-    "SegmentId",
-    "Schedule",
-    "ApplicationId",
-    "Name"
-  ],
-  "typeName": "AWS::Pinpoint::Campaign"
+  "required" : [ "SegmentId", "Schedule", "ApplicationId", "Name" ],
+  "createOnlyProperties" : [ "/properties/ApplicationId" ],
+  "primaryIdentifier" : [ "/properties/CampaignId" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CampaignId" ]
 }

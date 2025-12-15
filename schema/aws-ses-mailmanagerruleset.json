@@ -1,1074 +1,832 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "ActionFailurePolicy": {
-      "enum": [
-        "CONTINUE",
-        "DROP"
-      ],
-      "type": "string"
+  "typeName" : "AWS::SES::MailManagerRuleSet",
+  "description" : "Definition of AWS::SES::MailManagerRuleSet Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+  "definitions" : {
+    "ActionFailurePolicy" : {
+      "type" : "string",
+      "enum" : [ "CONTINUE", "DROP" ]
     },
-    "AddHeaderAction": {
-      "additionalProperties": false,
-      "properties": {
-        "HeaderName": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[xX]\\-[a-zA-Z0-9\\-]+$",
-          "type": "string"
+    "AddHeaderAction" : {
+      "type" : "object",
+      "properties" : {
+        "HeaderName" : {
+          "type" : "string",
+          "maxLength" : 64,
+          "minLength" : 1,
+          "pattern" : "^[xX]\\-[a-zA-Z0-9\\-]+$"
         },
-        "HeaderValue": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+        "HeaderValue" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         }
       },
-      "required": [
-        "HeaderName",
-        "HeaderValue"
-      ],
-      "type": "object"
+      "required" : [ "HeaderName", "HeaderValue" ],
+      "additionalProperties" : false
     },
-    "Analysis": {
-      "additionalProperties": false,
-      "properties": {
-        "Analyzer": {
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+    "Analysis" : {
+      "type" : "object",
+      "properties" : {
+        "Analyzer" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         },
-        "ResultField": {
-          "maxLength": 256,
-          "minLength": 1,
-          "pattern": "^(addon\\.)?[\\sa-zA-Z0-9_]+$",
-          "type": "string"
+        "ResultField" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "pattern" : "^(addon\\.)?[\\sa-zA-Z0-9_]+$"
         }
       },
-      "required": [
-        "Analyzer",
-        "ResultField"
-      ],
-      "type": "object"
+      "required" : [ "Analyzer", "ResultField" ],
+      "additionalProperties" : false
     },
-    "ArchiveAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
+    "RuleIsInAddressList" : {
+      "type" : "object",
+      "properties" : {
+        "Attribute" : {
+          "$ref" : "#/definitions/RuleAddressListEmailAttribute"
         },
-        "TargetArchive": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+        "AddressLists" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "maxItems" : 1,
+          "minItems" : 1,
+          "uniqueItems" : true
         }
       },
-      "required": [
-        "TargetArchive"
-      ],
-      "type": "object"
+      "required" : [ "Attribute", "AddressLists" ],
+      "additionalProperties" : false
     },
-    "DeliverToMailboxAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
+    "ArchiveAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
         },
-        "MailboxArn": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
-        },
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+        "TargetArchive" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         }
       },
-      "required": [
-        "MailboxArn",
-        "RoleArn"
-      ],
-      "type": "object"
+      "required" : [ "TargetArchive" ],
+      "additionalProperties" : false
     },
-    "DeliverToQBusinessAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
+    "DeliverToMailboxAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
         },
-        "ApplicationId": {
-          "maxLength": 36,
-          "minLength": 36,
-          "pattern": "^[a-z0-9-]+$",
-          "type": "string"
+        "MailboxArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         },
-        "IndexId": {
-          "maxLength": 36,
-          "minLength": 36,
-          "pattern": "^[a-z0-9-]+$",
-          "type": "string"
-        },
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         }
       },
-      "required": [
-        "ApplicationId",
-        "IndexId",
-        "RoleArn"
-      ],
-      "type": "object"
+      "required" : [ "MailboxArn", "RoleArn" ],
+      "additionalProperties" : false
     },
-    "DropAction": {
-      "additionalProperties": false,
-      "type": "object"
-    },
-    "MailFrom": {
-      "enum": [
-        "REPLACE",
-        "PRESERVE"
-      ],
-      "type": "string"
-    },
-    "RelayAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
+    "SnsAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
         },
-        "MailFrom": {
-          "$ref": "#/definitions/MailFrom"
+        "TopicArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^arn:(aws|aws-cn|aws-us-gov):sns:[a-z]{2}-[a-z]+-\\d{1}:\\d{12}:[\\w\\-]{1,256}$"
         },
-        "Relay": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
+        },
+        "Encoding" : {
+          "$ref" : "#/definitions/SnsNotificationEncoding"
+        },
+        "PayloadType" : {
+          "$ref" : "#/definitions/SnsNotificationPayloadType"
         }
       },
-      "required": [
-        "Relay"
-      ],
-      "type": "object"
+      "required" : [ "TopicArn", "RoleArn" ],
+      "additionalProperties" : false
     },
-    "ReplaceRecipientAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ReplaceWith": {
-          "items": {
-            "maxLength": 254,
-            "minLength": 0,
-            "pattern": "^[0-9A-Za-z@+.-]+$",
-            "type": "string"
-          },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+    "SnsNotificationEncoding" : {
+      "type" : "string",
+      "enum" : [ "UTF-8", "BASE64" ]
+    },
+    "SnsNotificationPayloadType" : {
+      "type" : "string",
+      "enum" : [ "CONTENT", "HEADERS" ]
+    },
+    "DeliverToQBusinessAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
+        },
+        "ApplicationId" : {
+          "type" : "string",
+          "maxLength" : 36,
+          "minLength" : 36,
+          "pattern" : "^[a-z0-9-]+$"
+        },
+        "IndexId" : {
+          "type" : "string",
+          "maxLength" : 36,
+          "minLength" : 36,
+          "pattern" : "^[a-z0-9-]+$"
+        },
+        "RoleArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         }
       },
-      "type": "object"
+      "required" : [ "ApplicationId", "IndexId", "RoleArn" ],
+      "additionalProperties" : false
     },
-    "Rule": {
-      "additionalProperties": false,
-      "properties": {
-        "Actions": {
-          "items": {
-            "$ref": "#/definitions/RuleAction"
-          },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
+    "DropAction" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "MailFrom" : {
+      "type" : "string",
+      "enum" : [ "REPLACE", "PRESERVE" ]
+    },
+    "RelayAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
         },
-        "Conditions": {
-          "items": {
-            "$ref": "#/definitions/RuleCondition"
-          },
-          "maxItems": 10,
-          "minItems": 0,
-          "type": "array"
+        "Relay" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         },
-        "Name": {
-          "maxLength": 32,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_.-]+$",
-          "type": "string"
-        },
-        "Unless": {
-          "items": {
-            "$ref": "#/definitions/RuleCondition"
-          },
-          "maxItems": 10,
-          "minItems": 0,
-          "type": "array"
+        "MailFrom" : {
+          "$ref" : "#/definitions/MailFrom"
         }
       },
-      "required": [
-        "Actions"
-      ],
-      "type": "object"
+      "required" : [ "Relay" ],
+      "additionalProperties" : false
     },
-    "RuleAction": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Drop": {
-              "$ref": "#/definitions/DropAction"
-            }
+    "ReplaceRecipientAction" : {
+      "type" : "object",
+      "properties" : {
+        "ReplaceWith" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 254,
+            "minLength" : 0,
+            "pattern" : "^[0-9A-Za-z@+.-]+$"
           },
-          "required": [
-            "Drop"
-          ],
-          "title": "Drop",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Relay": {
-              "$ref": "#/definitions/RelayAction"
-            }
-          },
-          "required": [
-            "Relay"
-          ],
-          "title": "Relay",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Archive": {
-              "$ref": "#/definitions/ArchiveAction"
-            }
-          },
-          "required": [
-            "Archive"
-          ],
-          "title": "Archive",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "WriteToS3": {
-              "$ref": "#/definitions/S3Action"
-            }
-          },
-          "required": [
-            "WriteToS3"
-          ],
-          "title": "WriteToS3",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Send": {
-              "$ref": "#/definitions/SendAction"
-            }
-          },
-          "required": [
-            "Send"
-          ],
-          "title": "Send",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "AddHeader": {
-              "$ref": "#/definitions/AddHeaderAction"
-            }
-          },
-          "required": [
-            "AddHeader"
-          ],
-          "title": "AddHeader",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "ReplaceRecipient": {
-              "$ref": "#/definitions/ReplaceRecipientAction"
-            }
-          },
-          "required": [
-            "ReplaceRecipient"
-          ],
-          "title": "ReplaceRecipient",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "DeliverToMailbox": {
-              "$ref": "#/definitions/DeliverToMailboxAction"
-            }
-          },
-          "required": [
-            "DeliverToMailbox"
-          ],
-          "title": "DeliverToMailbox",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "DeliverToQBusiness": {
-              "$ref": "#/definitions/DeliverToQBusinessAction"
-            }
-          },
-          "required": [
-            "DeliverToQBusiness"
-          ],
-          "title": "DeliverToQBusiness",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "PublishToSns": {
-              "$ref": "#/definitions/SnsAction"
-            }
-          },
-          "required": [
-            "PublishToSns"
-          ],
-          "title": "PublishToSns",
-          "type": "object"
-        }
-      ]
-    },
-    "RuleAddressListEmailAttribute": {
-      "enum": [
-        "RECIPIENT",
-        "MAIL_FROM",
-        "SENDER",
-        "FROM",
-        "TO",
-        "CC"
-      ],
-      "type": "string"
-    },
-    "RuleBooleanEmailAttribute": {
-      "enum": [
-        "READ_RECEIPT_REQUESTED",
-        "TLS",
-        "TLS_WRAPPED"
-      ],
-      "type": "string"
-    },
-    "RuleBooleanExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/RuleBooleanToEvaluate"
-        },
-        "Operator": {
-          "$ref": "#/definitions/RuleBooleanOperator"
+          "maxItems" : 100,
+          "minItems" : 1,
+          "uniqueItems" : true
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "RuleBooleanOperator": {
-      "enum": [
-        "IS_TRUE",
-        "IS_FALSE"
-      ],
-      "type": "string"
-    },
-    "RuleBooleanToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/RuleBooleanEmailAttribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
+    "Rule" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "maxLength" : 32,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9_.-]+$"
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Analysis": {
-              "$ref": "#/definitions/Analysis"
-            }
+        "Conditions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RuleCondition"
           },
-          "required": [
-            "Analysis"
-          ],
-          "title": "Analysis",
-          "type": "object"
+          "maxItems" : 10,
+          "minItems" : 0
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "IsInAddressList": {
-              "$ref": "#/definitions/RuleIsInAddressList"
-            }
+        "Unless" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RuleCondition"
           },
-          "required": [
-            "IsInAddressList"
-          ],
-          "title": "IsInAddressList",
-          "type": "object"
-        }
-      ]
-    },
-    "RuleCondition": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "BooleanExpression": {
-              "$ref": "#/definitions/RuleBooleanExpression"
-            }
-          },
-          "required": [
-            "BooleanExpression"
-          ],
-          "title": "BooleanExpression",
-          "type": "object"
+          "maxItems" : 10,
+          "minItems" : 0
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "StringExpression": {
-              "$ref": "#/definitions/RuleStringExpression"
-            }
+        "Actions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RuleAction"
           },
-          "required": [
-            "StringExpression"
-          ],
-          "title": "StringExpression",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "NumberExpression": {
-              "$ref": "#/definitions/RuleNumberExpression"
-            }
-          },
-          "required": [
-            "NumberExpression"
-          ],
-          "title": "NumberExpression",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "IpExpression": {
-              "$ref": "#/definitions/RuleIpExpression"
-            }
-          },
-          "required": [
-            "IpExpression"
-          ],
-          "title": "IpExpression",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "VerdictExpression": {
-              "$ref": "#/definitions/RuleVerdictExpression"
-            }
-          },
-          "required": [
-            "VerdictExpression"
-          ],
-          "title": "VerdictExpression",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "DmarcExpression": {
-              "$ref": "#/definitions/RuleDmarcExpression"
-            }
-          },
-          "required": [
-            "DmarcExpression"
-          ],
-          "title": "DmarcExpression",
-          "type": "object"
-        }
-      ]
-    },
-    "RuleDmarcExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Operator": {
-          "$ref": "#/definitions/RuleDmarcOperator"
-        },
-        "Values": {
-          "items": {
-            "$ref": "#/definitions/RuleDmarcPolicy"
-          },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 10,
+          "minItems" : 1
         }
       },
-      "required": [
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Actions" ],
+      "additionalProperties" : false
     },
-    "RuleDmarcOperator": {
-      "enum": [
-        "EQUALS",
-        "NOT_EQUALS"
-      ],
-      "type": "string"
-    },
-    "RuleDmarcPolicy": {
-      "enum": [
-        "NONE",
-        "QUARANTINE",
-        "REJECT"
-      ],
-      "type": "string"
-    },
-    "RuleIpEmailAttribute": {
-      "enum": [
-        "SOURCE_IP"
-      ],
-      "type": "string"
-    },
-    "RuleIpExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/RuleIpToEvaluate"
+    "RuleAction" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Drop",
+        "properties" : {
+          "Drop" : {
+            "$ref" : "#/definitions/DropAction"
+          }
         },
-        "Operator": {
-          "$ref": "#/definitions/RuleIpOperator"
+        "required" : [ "Drop" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Relay",
+        "properties" : {
+          "Relay" : {
+            "$ref" : "#/definitions/RelayAction"
+          }
         },
-        "Values": {
-          "items": {
-            "maxLength": 43,
-            "minLength": 1,
-            "pattern": "^(([0-9]|.|:|/)*)$",
-            "type": "string"
-          },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
+        "required" : [ "Relay" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Archive",
+        "properties" : {
+          "Archive" : {
+            "$ref" : "#/definitions/ArchiveAction"
+          }
+        },
+        "required" : [ "Archive" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "WriteToS3",
+        "properties" : {
+          "WriteToS3" : {
+            "$ref" : "#/definitions/S3Action"
+          }
+        },
+        "required" : [ "WriteToS3" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Send",
+        "properties" : {
+          "Send" : {
+            "$ref" : "#/definitions/SendAction"
+          }
+        },
+        "required" : [ "Send" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "AddHeader",
+        "properties" : {
+          "AddHeader" : {
+            "$ref" : "#/definitions/AddHeaderAction"
+          }
+        },
+        "required" : [ "AddHeader" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "ReplaceRecipient",
+        "properties" : {
+          "ReplaceRecipient" : {
+            "$ref" : "#/definitions/ReplaceRecipientAction"
+          }
+        },
+        "required" : [ "ReplaceRecipient" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "DeliverToMailbox",
+        "properties" : {
+          "DeliverToMailbox" : {
+            "$ref" : "#/definitions/DeliverToMailboxAction"
+          }
+        },
+        "required" : [ "DeliverToMailbox" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "DeliverToQBusiness",
+        "properties" : {
+          "DeliverToQBusiness" : {
+            "$ref" : "#/definitions/DeliverToQBusinessAction"
+          }
+        },
+        "required" : [ "DeliverToQBusiness" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "PublishToSns",
+        "properties" : {
+          "PublishToSns" : {
+            "$ref" : "#/definitions/SnsAction"
+          }
+        },
+        "required" : [ "PublishToSns" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RuleBooleanEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "READ_RECEIPT_REQUESTED", "TLS", "TLS_WRAPPED" ]
+    },
+    "RuleBooleanExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/RuleBooleanToEvaluate"
+        },
+        "Operator" : {
+          "$ref" : "#/definitions/RuleBooleanOperator"
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator" ],
+      "additionalProperties" : false
     },
-    "RuleIpOperator": {
-      "enum": [
-        "CIDR_MATCHES",
-        "NOT_CIDR_MATCHES"
-      ],
-      "type": "string"
+    "RuleBooleanOperator" : {
+      "type" : "string",
+      "enum" : [ "IS_TRUE", "IS_FALSE" ]
     },
-    "RuleIpToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/RuleIpEmailAttribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
-        }
-      ]
-    },
-    "RuleIsInAddressList": {
-      "additionalProperties": false,
-      "properties": {
-        "AddressLists": {
-          "items": {
-            "type": "string"
-          },
-          "maxItems": 1,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+    "RuleBooleanToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/RuleBooleanEmailAttribute"
+          }
         },
-        "Attribute": {
-          "$ref": "#/definitions/RuleAddressListEmailAttribute"
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Analysis",
+        "properties" : {
+          "Analysis" : {
+            "$ref" : "#/definitions/Analysis"
+          }
+        },
+        "required" : [ "Analysis" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "IsInAddressList",
+        "properties" : {
+          "IsInAddressList" : {
+            "$ref" : "#/definitions/RuleIsInAddressList"
+          }
+        },
+        "required" : [ "IsInAddressList" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RuleCondition" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "BooleanExpression",
+        "properties" : {
+          "BooleanExpression" : {
+            "$ref" : "#/definitions/RuleBooleanExpression"
+          }
+        },
+        "required" : [ "BooleanExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "StringExpression",
+        "properties" : {
+          "StringExpression" : {
+            "$ref" : "#/definitions/RuleStringExpression"
+          }
+        },
+        "required" : [ "StringExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "NumberExpression",
+        "properties" : {
+          "NumberExpression" : {
+            "$ref" : "#/definitions/RuleNumberExpression"
+          }
+        },
+        "required" : [ "NumberExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "IpExpression",
+        "properties" : {
+          "IpExpression" : {
+            "$ref" : "#/definitions/RuleIpExpression"
+          }
+        },
+        "required" : [ "IpExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "VerdictExpression",
+        "properties" : {
+          "VerdictExpression" : {
+            "$ref" : "#/definitions/RuleVerdictExpression"
+          }
+        },
+        "required" : [ "VerdictExpression" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "DmarcExpression",
+        "properties" : {
+          "DmarcExpression" : {
+            "$ref" : "#/definitions/RuleDmarcExpression"
+          }
+        },
+        "required" : [ "DmarcExpression" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RuleDmarcExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Operator" : {
+          "$ref" : "#/definitions/RuleDmarcOperator"
+        },
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RuleDmarcPolicy"
+          },
+          "maxItems" : 10,
+          "minItems" : 1
         }
       },
-      "required": [
-        "Attribute",
-        "AddressLists"
-      ],
-      "type": "object"
+      "required" : [ "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "RuleNumberEmailAttribute": {
-      "enum": [
-        "MESSAGE_SIZE"
-      ],
-      "type": "string"
+    "RuleDmarcOperator" : {
+      "type" : "string",
+      "enum" : [ "EQUALS", "NOT_EQUALS" ]
     },
-    "RuleNumberExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/RuleNumberToEvaluate"
+    "RuleDmarcPolicy" : {
+      "type" : "string",
+      "enum" : [ "NONE", "QUARANTINE", "REJECT" ]
+    },
+    "RuleIpEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "SOURCE_IP" ]
+    },
+    "RuleIpExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/RuleIpToEvaluate"
         },
-        "Operator": {
-          "$ref": "#/definitions/RuleNumberOperator"
+        "Operator" : {
+          "$ref" : "#/definitions/RuleIpOperator"
         },
-        "Value": {
-          "type": "number"
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 43,
+            "minLength" : 1,
+            "pattern" : "^(([0-9]|.|:|/)*)$"
+          },
+          "maxItems" : 10,
+          "minItems" : 1
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "RuleNumberOperator": {
-      "enum": [
-        "EQUALS",
-        "NOT_EQUALS",
-        "LESS_THAN",
-        "GREATER_THAN",
-        "LESS_THAN_OR_EQUAL",
-        "GREATER_THAN_OR_EQUAL"
-      ],
-      "type": "string"
+    "RuleIpOperator" : {
+      "type" : "string",
+      "enum" : [ "CIDR_MATCHES", "NOT_CIDR_MATCHES" ]
     },
-    "RuleNumberToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/RuleNumberEmailAttribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
-        }
-      ]
-    },
-    "RuleStringEmailAttribute": {
-      "enum": [
-        "MAIL_FROM",
-        "HELO",
-        "RECIPIENT",
-        "SENDER",
-        "FROM",
-        "SUBJECT",
-        "TO",
-        "CC"
-      ],
-      "type": "string"
-    },
-    "RuleStringExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/RuleStringToEvaluate"
+    "RuleIpToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/RuleIpEmailAttribute"
+          }
         },
-        "Operator": {
-          "$ref": "#/definitions/RuleStringOperator"
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RuleNumberEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "MESSAGE_SIZE" ]
+    },
+    "RuleNumberExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/RuleNumberToEvaluate"
         },
-        "Values": {
-          "items": {
-            "maxLength": 4096,
-            "minLength": 1,
-            "type": "string"
-          },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
+        "Operator" : {
+          "$ref" : "#/definitions/RuleNumberOperator"
+        },
+        "Value" : {
+          "type" : "number"
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Value" ],
+      "additionalProperties" : false
     },
-    "RuleStringOperator": {
-      "enum": [
-        "EQUALS",
-        "NOT_EQUALS",
-        "STARTS_WITH",
-        "ENDS_WITH",
-        "CONTAINS"
-      ],
-      "type": "string"
+    "RuleNumberOperator" : {
+      "type" : "string",
+      "enum" : [ "EQUALS", "NOT_EQUALS", "LESS_THAN", "GREATER_THAN", "LESS_THAN_OR_EQUAL", "GREATER_THAN_OR_EQUAL" ]
     },
-    "RuleStringToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/RuleStringEmailAttribute"
-            }
-          },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
+    "RuleAddressListEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "RECIPIENT", "MAIL_FROM", "SENDER", "FROM", "TO", "CC" ]
+    },
+    "RuleNumberToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/RuleNumberEmailAttribute"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "MimeHeaderAttribute": {
-              "pattern": "^X-[a-zA-Z0-9-]{1,256}$",
-              "type": "string"
-            }
-          },
-          "required": [
-            "MimeHeaderAttribute"
-          ],
-          "title": "MimeHeaderAttribute",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Analysis": {
-              "$ref": "#/definitions/Analysis"
-            }
-          },
-          "required": [
-            "Analysis"
-          ],
-          "title": "Analysis",
-          "type": "object"
-        }
-      ]
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      } ]
     },
-    "RuleVerdict": {
-      "enum": [
-        "PASS",
-        "FAIL",
-        "GRAY",
-        "PROCESSING_FAILED"
-      ],
-      "type": "string"
+    "RuleStringEmailAttribute" : {
+      "type" : "string",
+      "enum" : [ "MAIL_FROM", "HELO", "RECIPIENT", "SENDER", "FROM", "SUBJECT", "TO", "CC" ]
     },
-    "RuleVerdictAttribute": {
-      "enum": [
-        "SPF",
-        "DKIM"
-      ],
-      "type": "string"
-    },
-    "RuleVerdictExpression": {
-      "additionalProperties": false,
-      "properties": {
-        "Evaluate": {
-          "$ref": "#/definitions/RuleVerdictToEvaluate"
+    "RuleStringExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/RuleStringToEvaluate"
         },
-        "Operator": {
-          "$ref": "#/definitions/RuleVerdictOperator"
+        "Operator" : {
+          "$ref" : "#/definitions/RuleStringOperator"
         },
-        "Values": {
-          "items": {
-            "$ref": "#/definitions/RuleVerdict"
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 4096,
+            "minLength" : 1
           },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 10,
+          "minItems" : 1
         }
       },
-      "required": [
-        "Evaluate",
-        "Operator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "RuleVerdictOperator": {
-      "enum": [
-        "EQUALS",
-        "NOT_EQUALS"
-      ],
-      "type": "string"
+    "RuleStringOperator" : {
+      "type" : "string",
+      "enum" : [ "EQUALS", "NOT_EQUALS", "STARTS_WITH", "ENDS_WITH", "CONTAINS" ]
     },
-    "RuleVerdictToEvaluate": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/RuleVerdictAttribute"
-            }
+    "RuleStringToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/RuleStringEmailAttribute"
+          }
+        },
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "MimeHeaderAttribute",
+        "properties" : {
+          "MimeHeaderAttribute" : {
+            "type" : "string",
+            "pattern" : "^X-[a-zA-Z0-9-]{1,256}$"
+          }
+        },
+        "required" : [ "MimeHeaderAttribute" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Analysis",
+        "properties" : {
+          "Analysis" : {
+            "$ref" : "#/definitions/Analysis"
+          }
+        },
+        "required" : [ "Analysis" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "RuleVerdict" : {
+      "type" : "string",
+      "enum" : [ "PASS", "FAIL", "GRAY", "PROCESSING_FAILED" ]
+    },
+    "RuleVerdictAttribute" : {
+      "type" : "string",
+      "enum" : [ "SPF", "DKIM" ]
+    },
+    "RuleVerdictExpression" : {
+      "type" : "object",
+      "properties" : {
+        "Evaluate" : {
+          "$ref" : "#/definitions/RuleVerdictToEvaluate"
+        },
+        "Operator" : {
+          "$ref" : "#/definitions/RuleVerdictOperator"
+        },
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RuleVerdict"
           },
-          "required": [
-            "Attribute"
-          ],
-          "title": "Attribute",
-          "type": "object"
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Analysis": {
-              "$ref": "#/definitions/Analysis"
-            }
-          },
-          "required": [
-            "Analysis"
-          ],
-          "title": "Analysis",
-          "type": "object"
-        }
-      ]
-    },
-    "S3Action": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
-        },
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
-        },
-        "S3Bucket": {
-          "maxLength": 62,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9.-]+$",
-          "type": "string"
-        },
-        "S3Prefix": {
-          "maxLength": 62,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9!_.*'()/-]+$",
-          "type": "string"
-        },
-        "S3SseKmsKeyId": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^[a-zA-Z0-9-:/]+$",
-          "type": "string"
+          "maxItems" : 10,
+          "minItems" : 1
         }
       },
-      "required": [
-        "RoleArn",
-        "S3Bucket"
-      ],
-      "type": "object"
+      "required" : [ "Evaluate", "Operator", "Values" ],
+      "additionalProperties" : false
     },
-    "SendAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
+    "RuleVerdictOperator" : {
+      "type" : "string",
+      "enum" : [ "EQUALS", "NOT_EQUALS" ]
+    },
+    "RuleVerdictToEvaluate" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/RuleVerdictAttribute"
+          }
         },
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
+        "required" : [ "Attribute" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Analysis",
+        "properties" : {
+          "Analysis" : {
+            "$ref" : "#/definitions/Analysis"
+          }
+        },
+        "required" : [ "Analysis" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "S3Action" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
+        },
+        "RoleArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
+        },
+        "S3Bucket" : {
+          "type" : "string",
+          "maxLength" : 62,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9.-]+$"
+        },
+        "S3Prefix" : {
+          "type" : "string",
+          "maxLength" : 62,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9!_.*'()/-]+$"
+        },
+        "S3SseKmsKeyId" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^[a-zA-Z0-9-:/]+$"
         }
       },
-      "required": [
-        "RoleArn"
-      ],
-      "type": "object"
+      "required" : [ "RoleArn", "S3Bucket" ],
+      "additionalProperties" : false
     },
-    "SnsAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionFailurePolicy": {
-          "$ref": "#/definitions/ActionFailurePolicy"
+    "SendAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionFailurePolicy" : {
+          "$ref" : "#/definitions/ActionFailurePolicy"
         },
-        "Encoding": {
-          "$ref": "#/definitions/SnsNotificationEncoding"
-        },
-        "PayloadType": {
-          "$ref": "#/definitions/SnsNotificationPayloadType"
-        },
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^[a-zA-Z0-9:_/+=,@.#-]+$",
-          "type": "string"
-        },
-        "TopicArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "^arn:(aws|aws-cn|aws-us-gov):sns:[a-z]{2}-[a-z]+-\\d{1}:\\d{12}:[\\w\\-]{1,256}$",
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^[a-zA-Z0-9:_/+=,@.#-]+$"
         }
       },
-      "required": [
-        "TopicArn",
-        "RoleArn"
-      ],
-      "type": "object"
+      "required" : [ "RoleArn" ],
+      "additionalProperties" : false
     },
-    "SnsNotificationEncoding": {
-      "enum": [
-        "UTF-8",
-        "BASE64"
-      ],
-      "type": "string"
-    },
-    "SnsNotificationPayloadType": {
-      "enum": [
-        "CONTENT",
-        "HEADERS"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::SES::MailManagerRuleSet Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:ListTagsForResource",
-        "ses:GetRuleSet",
-        "ses:CreateRuleSet"
-      ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ses:TagResource", "ses:UntagResource" ]
+  },
+  "properties" : {
+    "RuleSetArn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ses:GetRuleSet",
-        "ses:DeleteRuleSet"
-      ]
+    "RuleSetId" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1
     },
-    "list": {
-      "permissions": [
-        "ses:ListRuleSets"
-      ]
+    "RuleSetName" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_.-]+$"
     },
-    "read": {
-      "permissions": [
-        "ses:ListTagsForResource",
-        "ses:GetRuleSet"
-      ]
+    "Rules" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Rule"
+      },
+      "maxItems" : 40,
+      "minItems" : 0
     },
-    "update": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:UntagResource",
-        "ses:ListTagsForResource",
-        "ses:GetRuleSet",
-        "ses:UpdateRuleSet"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "primaryIdentifier": [
-    "/properties/RuleSetId"
-  ],
-  "properties": {
-    "RuleSetArn": {
-      "type": "string"
+  "required" : [ "Rules" ],
+  "readOnlyProperties" : [ "/properties/RuleSetArn", "/properties/RuleSetId" ],
+  "primaryIdentifier" : [ "/properties/RuleSetId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ses:TagResource", "ses:ListTagsForResource", "ses:GetRuleSet", "ses:CreateRuleSet" ]
     },
-    "RuleSetId": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ses:ListTagsForResource", "ses:GetRuleSet" ]
     },
-    "RuleSetName": {
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_.-]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "ses:TagResource", "ses:UntagResource", "ses:ListTagsForResource", "ses:GetRuleSet", "ses:UpdateRuleSet" ]
     },
-    "Rules": {
-      "items": {
-        "$ref": "#/definitions/Rule"
-      },
-      "maxItems": 40,
-      "minItems": 0,
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "ses:GetRuleSet", "ses:DeleteRuleSet" ]
     },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+    "list" : {
+      "permissions" : [ "ses:ListRuleSets" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/RuleSetArn",
-    "/properties/RuleSetId"
-  ],
-  "required": [
-    "Rules"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ses:TagResource",
-      "ses:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SES::MailManagerRuleSet"
+  "additionalProperties" : false
 }

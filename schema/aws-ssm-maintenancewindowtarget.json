@@ -1,68 +1,55 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/WindowId"
-  ],
-  "definitions": {
-    "Targets": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::SSM::MaintenanceWindowTarget",
+  "description" : "Resource Type definition for AWS::SSM::MaintenanceWindowTarget",
+  "additionalProperties" : false,
+  "properties" : {
+    "OwnerInformation" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "WindowId" : {
+      "type" : "string"
+    },
+    "ResourceType" : {
+      "type" : "string"
+    },
+    "Targets" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Targets"
+      }
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Targets" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Values",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Values", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::SSM::MaintenanceWindowTarget",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Description": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "OwnerInformation": {
-      "type": "string"
-    },
-    "ResourceType": {
-      "type": "string"
-    },
-    "Targets": {
-      "items": {
-        "$ref": "#/definitions/Targets"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "WindowId": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "WindowId",
-    "ResourceType",
-    "Targets"
-  ],
-  "typeName": "AWS::SSM::MaintenanceWindowTarget"
+  "required" : [ "WindowId", "ResourceType", "Targets" ],
+  "createOnlyProperties" : [ "/properties/WindowId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

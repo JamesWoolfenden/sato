@@ -1,209 +1,167 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ActionName"
-  ],
-  "definitions": {
-    "CustomActionAttachment": {
-      "additionalProperties": false,
-      "properties": {
-        "ButtonText": {
-          "maxLength": 50,
-          "minLength": 1,
-          "pattern": "^[\\S\\s]+$",
-          "type": "string"
+  "typeName" : "AWS::Chatbot::CustomAction",
+  "description" : "Definition of AWS::Chatbot::CustomAction Resource Type",
+  "definitions" : {
+    "CustomActionAttachment" : {
+      "type" : "object",
+      "properties" : {
+        "NotificationType" : {
+          "type" : "string",
+          "maxLength" : 100,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9-]+$"
         },
-        "Criteria": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/CustomActionAttachmentCriteria"
+        "ButtonText" : {
+          "type" : "string",
+          "maxLength" : 50,
+          "minLength" : 1,
+          "pattern" : "^[\\S\\s]+$"
+        },
+        "Criteria" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/CustomActionAttachmentCriteria"
           },
-          "maxItems": 5,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 5,
+          "minItems" : 1
         },
-        "NotificationType": {
-          "maxLength": 100,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9-]+$",
-          "type": "string"
-        },
-        "Variables": {
-          "$ref": "#/definitions/CustomActionAttachmentVariables"
+        "Variables" : {
+          "$ref" : "#/definitions/CustomActionAttachmentVariables"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CustomActionAttachmentCriteria": {
-      "additionalProperties": false,
-      "properties": {
-        "Operator": {
-          "$ref": "#/definitions/CustomActionAttachmentCriteriaOperator"
+    "CustomActionAttachmentCriteria" : {
+      "type" : "object",
+      "properties" : {
+        "Operator" : {
+          "$ref" : "#/definitions/CustomActionAttachmentCriteriaOperator"
         },
-        "Value": {
-          "maxLength": 1024,
-          "minLength": 0,
-          "type": "string"
+        "VariableName" : {
+          "type" : "string"
         },
-        "VariableName": {
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 1024,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Operator",
-        "VariableName"
-      ],
-      "type": "object"
+      "required" : [ "Operator", "VariableName" ],
+      "additionalProperties" : false
     },
-    "CustomActionAttachmentCriteriaOperator": {
-      "enum": [
-        "HAS_VALUE",
-        "EQUALS"
-      ],
-      "type": "string"
+    "CustomActionAttachmentCriteriaOperator" : {
+      "type" : "string",
+      "enum" : [ "HAS_VALUE", "EQUALS" ]
     },
-    "CustomActionAttachmentVariables": {
-      "additionalProperties": false,
-      "maxProperties": 5,
-      "minProperties": 1,
-      "patternProperties": {
-        ".+": {
-          "type": "string"
+    "CustomActionAttachmentVariables" : {
+      "type" : "object",
+      "maxProperties" : 5,
+      "minProperties" : 1,
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "CustomActionDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "CommandText": {
-          "maxLength": 5000,
-          "minLength": 1,
-          "type": "string"
+    "CustomActionDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "CommandText" : {
+          "type" : "string",
+          "maxLength" : 5000,
+          "minLength" : 1
         }
       },
-      "required": [
-        "CommandText"
-      ],
-      "type": "object"
+      "required" : [ "CommandText" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::Chatbot::CustomAction Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "chatbot:CreateCustomAction",
-        "chatbot:GetCustomAction",
-        "chatbot:TagResource",
-        "chatbot:ListTagsForResource"
-      ]
+  "properties" : {
+    "ActionName" : {
+      "type" : "string",
+      "maxLength" : 64,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]{1,64}$"
     },
-    "delete": {
-      "permissions": [
-        "chatbot:DeleteCustomAction"
-      ]
+    "AliasName" : {
+      "type" : "string",
+      "maxLength" : 30,
+      "minLength" : 1,
+      "pattern" : "^[A-Za-z0-9-_]+$"
     },
-    "list": {
-      "permissions": [
-        "chatbot:ListCustomActions"
-      ]
+    "Attachments" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/CustomActionAttachment"
+      }
     },
-    "read": {
-      "permissions": [
-        "chatbot:GetCustomAction",
-        "chatbot:ListTagsForResource"
-      ]
+    "CustomActionArn" : {
+      "type" : "string",
+      "maxLength" : 1011,
+      "minLength" : 1,
+      "pattern" : "^arn:(aws[a-zA-Z-]*)?:chatbot:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:custom-action/[a-zA-Z0-9_-]{1,64}$"
     },
-    "update": {
-      "permissions": [
-        "chatbot:UpdateCustomAction",
-        "chatbot:GetCustomAction",
-        "chatbot:TagResource",
-        "chatbot:UntagResource",
-        "chatbot:ListTagsForResource"
-      ]
+    "Definition" : {
+      "$ref" : "#/definitions/CustomActionDefinition"
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "primaryIdentifier": [
-    "/properties/CustomActionArn"
-  ],
-  "properties": {
-    "ActionName": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]{1,64}$",
-      "type": "string"
+  "required" : [ "ActionName", "Definition" ],
+  "readOnlyProperties" : [ "/properties/CustomActionArn" ],
+  "createOnlyProperties" : [ "/properties/ActionName" ],
+  "primaryIdentifier" : [ "/properties/CustomActionArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "chatbot:CreateCustomAction", "chatbot:GetCustomAction", "chatbot:TagResource", "chatbot:ListTagsForResource" ]
     },
-    "AliasName": {
-      "maxLength": 30,
-      "minLength": 1,
-      "pattern": "^[A-Za-z0-9-_]+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "chatbot:GetCustomAction", "chatbot:ListTagsForResource" ]
     },
-    "Attachments": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/CustomActionAttachment"
-      },
-      "type": "array"
+    "update" : {
+      "permissions" : [ "chatbot:UpdateCustomAction", "chatbot:GetCustomAction", "chatbot:TagResource", "chatbot:UntagResource", "chatbot:ListTagsForResource" ]
     },
-    "CustomActionArn": {
-      "maxLength": 1011,
-      "minLength": 1,
-      "pattern": "^arn:(aws[a-zA-Z-]*)?:chatbot:[A-Za-z0-9_/.-]{0,63}:[A-Za-z0-9_/.-]{0,63}:custom-action/[a-zA-Z0-9_-]{1,64}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "chatbot:DeleteCustomAction" ]
     },
-    "Definition": {
-      "$ref": "#/definitions/CustomActionDefinition"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+    "list" : {
+      "permissions" : [ "chatbot:ListCustomActions" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CustomActionArn"
-  ],
-  "required": [
-    "ActionName",
-    "Definition"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "chatbot:TagResource",
-      "chatbot:ListTagsForResource",
-      "chatbot:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "chatbot:TagResource", "chatbot:ListTagsForResource", "chatbot:UntagResource" ]
   },
-  "typeName": "AWS::Chatbot::CustomAction"
+  "additionalProperties" : false
 }

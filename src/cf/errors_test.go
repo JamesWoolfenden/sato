@@ -13,22 +13,16 @@ func TestFilepathError(t *testing.T) {
 		expected string
 	}{
 		{
-			name:     "basic error",
-			path:     "/test/path",
+			name:     "valid_path",
+			path:     "/path/to/file",
 			err:      errors.New("test error"),
-			expected: "not implemented /test/path as raised test error",
+			expected: "filepath error for /path/to/file: test error",
 		},
 		{
-			name:     "empty path",
+			name:     "empty_path",
 			path:     "",
 			err:      errors.New("no path"),
-			expected: "not implemented  as raised no path",
-		},
-		{
-			name:     "nil error",
-			path:     "/some/path",
-			err:      nil,
-			expected: "not implemented /some/path as raised <nil>",
+			expected: "filepath error for : no path",
 		},
 	}
 
@@ -36,7 +30,7 @@ func TestFilepathError(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			fe := &filepathError{
 				Path: tt.path,
-				err:  tt.err,
+				Err:  tt.err,
 			}
 			if got := fe.Error(); got != tt.expected {
 				t.Errorf("filepathError.Error() = %v, want %v", got, tt.expected)
@@ -90,12 +84,12 @@ func TestParseVariablesError(t *testing.T) {
 		{
 			name:     "with error",
 			err:      errors.New("var parse failed"),
-			expected: "parse varriables failure var parse failed",
+			expected: "parse variables failure var parse failed",
 		},
 		{
 			name:     "nil error",
 			err:      nil,
-			expected: "parse varriables failure <nil>",
+			expected: "parse variables failure <nil>",
 		},
 	}
 

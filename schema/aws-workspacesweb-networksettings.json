@@ -1,147 +1,111 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+  "typeName" : "AWS::WorkSpacesWeb::NetworkSettings",
+  "description" : "Definition of AWS::WorkSpacesWeb::NetworkSettings Resource Type",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::WorkSpacesWeb::NetworkSettings Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "workspaces-web:CreateNetworkSettings",
-        "workspaces-web:GetNetworkSettings",
-        "workspaces-web:ListTagsForResource",
-        "workspaces-web:TagResource"
-      ]
+  "properties" : {
+    "AssociatedPortalArns" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048,
+        "minLength" : 20,
+        "pattern" : "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$"
+      },
+      "insertionOrder" : false
     },
-    "delete": {
-      "permissions": [
-        "workspaces-web:GetNetworkSettings",
-        "workspaces-web:DeleteNetworkSettings"
-      ]
+    "NetworkSettingsArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$"
     },
-    "list": {
-      "permissions": [
-        "workspaces-web:ListNetworkSettings"
-      ]
+    "SecurityGroupIds" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 128,
+        "minLength" : 1,
+        "pattern" : "^[\\w+\\-]+$"
+      },
+      "maxItems" : 5,
+      "minItems" : 1,
+      "insertionOrder" : false
     },
-    "read": {
-      "permissions": [
-        "workspaces-web:GetNetworkSettings",
-        "workspaces-web:ListTagsForResource"
-      ]
+    "SubnetIds" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 32,
+        "minLength" : 1,
+        "pattern" : "^subnet-([0-9a-f]{8}|[0-9a-f]{17})$"
+      },
+      "maxItems" : 3,
+      "minItems" : 2,
+      "insertionOrder" : false
     },
-    "update": {
-      "permissions": [
-        "workspaces-web:UpdateNetworkSettings",
-        "workspaces-web:UpdateResource",
-        "workspaces-web:TagResource",
-        "workspaces-web:UntagResource",
-        "workspaces-web:GetNetworkSettings",
-        "workspaces-web:ListTagsForResource"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 0,
+      "insertionOrder" : false
+    },
+    "VpcId" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^vpc-[0-9a-z]*$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/NetworkSettingsArn"
-  ],
-  "properties": {
-    "AssociatedPortalArns": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 2048,
-        "minLength": 20,
-        "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
-        "type": "string"
-      },
-      "type": "array"
+  "required" : [ "SecurityGroupIds", "SubnetIds", "VpcId" ],
+  "readOnlyProperties" : [ "/properties/AssociatedPortalArns", "/properties/NetworkSettingsArn" ],
+  "primaryIdentifier" : [ "/properties/NetworkSettingsArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "workspaces-web:CreateNetworkSettings", "workspaces-web:GetNetworkSettings", "workspaces-web:ListTagsForResource", "workspaces-web:TagResource" ]
     },
-    "NetworkSettingsArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "workspaces-web:GetNetworkSettings", "workspaces-web:ListTagsForResource" ]
     },
-    "SecurityGroupIds": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 128,
-        "minLength": 1,
-        "pattern": "^[\\w+\\-]+$",
-        "type": "string"
-      },
-      "maxItems": 5,
-      "minItems": 1,
-      "type": "array"
+    "update" : {
+      "permissions" : [ "workspaces-web:UpdateNetworkSettings", "workspaces-web:UpdateResource", "workspaces-web:TagResource", "workspaces-web:UntagResource", "workspaces-web:GetNetworkSettings", "workspaces-web:ListTagsForResource" ]
     },
-    "SubnetIds": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 32,
-        "minLength": 1,
-        "pattern": "^subnet-([0-9a-f]{8}|[0-9a-f]{17})$",
-        "type": "string"
-      },
-      "maxItems": 3,
-      "minItems": 2,
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "workspaces-web:GetNetworkSettings", "workspaces-web:DeleteNetworkSettings" ]
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
-    },
-    "VpcId": {
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^vpc-[0-9a-z]*$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "workspaces-web:ListNetworkSettings" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/AssociatedPortalArns",
-    "/properties/NetworkSettingsArn"
-  ],
-  "required": [
-    "SecurityGroupIds",
-    "SubnetIds",
-    "VpcId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "workspaces-web:UntagResource",
-      "workspaces-web:ListTagsForResource",
-      "workspaces-web:TagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "workspaces-web:UntagResource", "workspaces-web:ListTagsForResource", "workspaces-web:TagResource" ]
   },
-  "typeName": "AWS::WorkSpacesWeb::NetworkSettings"
+  "additionalProperties" : false
 }

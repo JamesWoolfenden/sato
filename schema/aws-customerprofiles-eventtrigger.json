@@ -1,372 +1,299 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainName",
-    "/properties/EventTriggerName"
-  ],
-  "definitions": {
-    "Description": {
-      "description": "The description of the event trigger.",
-      "maxLength": 1000,
-      "minLength": 1,
-      "type": "string"
+  "typeName" : "AWS::CustomerProfiles::EventTrigger",
+  "description" : "An event trigger resource of Amazon Connect Customer Profiles",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
+  "definitions" : {
+    "DomainName" : {
+      "description" : "The unique name of the domain.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "DomainName": {
-      "description": "The unique name of the domain.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "EventTriggerName" : {
+      "description" : "The unique name of the event trigger.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "EventExpiration": {
-      "description": "Specifies that an event will only trigger the destination if it is processed within a certain latency period.",
-      "format": "int64",
-      "type": "integer"
+    "ObjectTypeName" : {
+      "description" : "The unique name of the object type.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "EventTriggerCondition": {
-      "additionalProperties": false,
-      "description": "Specifies the circumstances under which the event should trigger the destination.",
-      "properties": {
-        "EventTriggerDimensions": {
-          "$ref": "#/definitions/EventTriggerDimensions"
+    "Description" : {
+      "description" : "The description of the event trigger.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1000
+    },
+    "EventTriggerConditions" : {
+      "description" : "A list of conditions that determine when an event should trigger the destination.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/EventTriggerCondition"
+      },
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "maxItems" : 5
+    },
+    "EventTriggerCondition" : {
+      "description" : "Specifies the circumstances under which the event should trigger the destination.",
+      "type" : "object",
+      "properties" : {
+        "EventTriggerDimensions" : {
+          "$ref" : "#/definitions/EventTriggerDimensions"
         },
-        "LogicalOperator": {
-          "$ref": "#/definitions/EventTriggerLogicalOperator"
+        "LogicalOperator" : {
+          "$ref" : "#/definitions/EventTriggerLogicalOperator"
         }
       },
-      "required": [
-        "EventTriggerDimensions",
-        "LogicalOperator"
-      ],
-      "type": "object"
+      "required" : [ "EventTriggerDimensions", "LogicalOperator" ],
+      "additionalProperties" : false
     },
-    "EventTriggerConditions": {
-      "description": "A list of conditions that determine when an event should trigger the destination.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/EventTriggerCondition"
+    "EventTriggerDimensions" : {
+      "description" : "A list of dimensions to be evaluated for the event.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/EventTriggerDimension"
       },
-      "maxItems": 5,
-      "minItems": 1,
-      "type": "array"
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "maxItems" : 10
     },
-    "EventTriggerDimension": {
-      "additionalProperties": false,
-      "description": "A specific event dimension to be assessed.",
-      "properties": {
-        "ObjectAttributes": {
-          "$ref": "#/definitions/ObjectAttributes"
+    "EventTriggerDimension" : {
+      "description" : "A specific event dimension to be assessed.",
+      "type" : "object",
+      "properties" : {
+        "ObjectAttributes" : {
+          "$ref" : "#/definitions/ObjectAttributes"
         }
       },
-      "required": [
-        "ObjectAttributes"
-      ],
-      "type": "object"
+      "required" : [ "ObjectAttributes" ],
+      "additionalProperties" : false
     },
-    "EventTriggerDimensions": {
-      "description": "A list of dimensions to be evaluated for the event.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/EventTriggerDimension"
+    "EventTriggerLogicalOperator" : {
+      "description" : "The operator used to combine multiple dimensions.",
+      "type" : "string",
+      "enum" : [ "ANY", "ALL", "NONE" ]
+    },
+    "ObjectAttributes" : {
+      "description" : "A list of object attributes to be evaluated.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ObjectAttribute"
       },
-      "maxItems": 10,
-      "minItems": 1,
-      "type": "array"
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "maxItems" : 10
     },
-    "EventTriggerLimits": {
-      "additionalProperties": false,
-      "description": "Defines limits controlling whether an event triggers the destination, based on ingestion latency and the number of invocations per profile over specific time periods.",
-      "properties": {
-        "EventExpiration": {
-          "$ref": "#/definitions/EventExpiration"
+    "ObjectAttribute" : {
+      "description" : "The criteria that a specific object attribute must meet to trigger the destination.",
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "description" : "An attribute contained within a source object.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1000
         },
-        "Periods": {
-          "$ref": "#/definitions/Periods"
-        }
-      },
-      "type": "object"
-    },
-    "EventTriggerLogicalOperator": {
-      "description": "The operator used to combine multiple dimensions.",
-      "enum": [
-        "ANY",
-        "ALL",
-        "NONE"
-      ],
-      "type": "string"
-    },
-    "EventTriggerName": {
-      "description": "The unique name of the event trigger.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
-    },
-    "ObjectAttribute": {
-      "additionalProperties": false,
-      "description": "The criteria that a specific object attribute must meet to trigger the destination.",
-      "properties": {
-        "ComparisonOperator": {
-          "description": "The operator used to compare an attribute against a list of values.",
-          "enum": [
-            "INCLUSIVE",
-            "EXCLUSIVE",
-            "CONTAINS",
-            "BEGINS_WITH",
-            "ENDS_WITH",
-            "GREATER_THAN",
-            "LESS_THAN",
-            "GREATER_THAN_OR_EQUAL",
-            "LESS_THAN_OR_EQUAL",
-            "EQUAL",
-            "BEFORE",
-            "AFTER",
-            "ON",
-            "BETWEEN",
-            "NOT_BETWEEN"
-          ],
-          "type": "string"
+        "FieldName" : {
+          "description" : "A field defined within an object type.",
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_.-]+$",
+          "minLength" : 1,
+          "maxLength" : 64
         },
-        "FieldName": {
-          "description": "A field defined within an object type.",
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_.-]+$",
-          "type": "string"
+        "ComparisonOperator" : {
+          "description" : "The operator used to compare an attribute against a list of values.",
+          "type" : "string",
+          "enum" : [ "INCLUSIVE", "EXCLUSIVE", "CONTAINS", "BEGINS_WITH", "ENDS_WITH", "GREATER_THAN", "LESS_THAN", "GREATER_THAN_OR_EQUAL", "LESS_THAN_OR_EQUAL", "EQUAL", "BEFORE", "AFTER", "ON", "BETWEEN", "NOT_BETWEEN" ]
         },
-        "Source": {
-          "description": "An attribute contained within a source object.",
-          "maxLength": 1000,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Values": {
-          "description": "A list of attribute values used for comparison.",
-          "insertionOrder": false,
-          "items": {
-            "maxLength": 255,
-            "minLength": 1,
-            "type": "string"
+        "Values" : {
+          "description" : "A list of attribute values used for comparison.",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 255
           },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
+          "insertionOrder" : false,
+          "minItems" : 1,
+          "maxItems" : 10
         }
       },
-      "required": [
-        "ComparisonOperator",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "ComparisonOperator", "Values" ],
+      "additionalProperties" : false
     },
-    "ObjectAttributes": {
-      "description": "A list of object attributes to be evaluated.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ObjectAttribute"
-      },
-      "maxItems": 10,
-      "minItems": 1,
-      "type": "array"
-    },
-    "ObjectTypeName": {
-      "description": "The unique name of the object type.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
-      "type": "string"
-    },
-    "Period": {
-      "additionalProperties": false,
-      "description": "Defines a limit and the time period during which it is enforced.",
-      "properties": {
-        "MaxInvocationsPerProfile": {
-          "description": "The maximum allowed number of destination invocations per profile.",
-          "maximum": 1000,
-          "minimum": 1,
-          "type": "integer"
+    "EventTriggerLimits" : {
+      "description" : "Defines limits controlling whether an event triggers the destination, based on ingestion latency and the number of invocations per profile over specific time periods.",
+      "type" : "object",
+      "properties" : {
+        "EventExpiration" : {
+          "$ref" : "#/definitions/EventExpiration"
         },
-        "Unit": {
-          "description": "The unit of time.",
-          "enum": [
-            "HOURS",
-            "DAYS",
-            "WEEKS",
-            "MONTHS"
-          ],
-          "type": "string"
-        },
-        "Unlimited": {
-          "description": "If set to true, there is no limit on the number of destination invocations per profile. The default is false.",
-          "type": "boolean"
-        },
-        "Value": {
-          "description": "The amount of time of the specified unit.",
-          "maximum": 24,
-          "minimum": 1,
-          "type": "integer"
+        "Periods" : {
+          "$ref" : "#/definitions/Periods"
         }
       },
-      "required": [
-        "Unit",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Periods": {
-      "description": "A list of time periods during which the limits apply.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Period"
+    "EventExpiration" : {
+      "description" : "Specifies that an event will only trigger the destination if it is processed within a certain latency period.",
+      "type" : "integer",
+      "format" : "int64"
+    },
+    "Periods" : {
+      "description" : "A list of time periods during which the limits apply.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Period"
       },
-      "maxItems": 4,
-      "minItems": 1,
-      "type": "array"
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "maxItems" : 4
     },
-    "SegmentFilter": {
-      "description": "The destination is triggered only for profiles that meet the criteria of a segment definition.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Period" : {
+      "description" : "Defines a limit and the time period during which it is enforced.",
+      "type" : "object",
+      "properties" : {
+        "Unit" : {
+          "description" : "The unit of time.",
+          "type" : "string",
+          "enum" : [ "HOURS", "DAYS", "WEEKS", "MONTHS" ]
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "description" : "The amount of time of the specified unit.",
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 24
+        },
+        "MaxInvocationsPerProfile" : {
+          "description" : "The maximum allowed number of destination invocations per profile.",
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 1000
+        },
+        "Unlimited" : {
+          "description" : "If set to true, there is no limit on the number of destination invocations per profile. The default is false.",
+          "type" : "boolean"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Unit", "Value" ],
+      "additionalProperties" : false
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "SegmentFilter" : {
+      "description" : "The destination is triggered only for profiles that meet the criteria of a segment definition.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
+        }
       },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "minItems" : 0,
+      "maxItems" : 50
     }
   },
-  "description": "An event trigger resource of Amazon Connect Customer Profiles",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "profile:CreateEventTrigger",
-        "profile:TagResource"
-      ]
+  "properties" : {
+    "DomainName" : {
+      "$ref" : "#/definitions/DomainName"
     },
-    "delete": {
-      "permissions": [
-        "profile:DeleteEventTrigger"
-      ]
+    "EventTriggerName" : {
+      "$ref" : "#/definitions/EventTriggerName"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "DomainName": {
-            "$ref": "resource-schema.json#/properties/DomainName"
+    "ObjectTypeName" : {
+      "$ref" : "#/definitions/ObjectTypeName"
+    },
+    "Description" : {
+      "$ref" : "#/definitions/Description"
+    },
+    "EventTriggerConditions" : {
+      "$ref" : "#/definitions/EventTriggerConditions"
+    },
+    "EventTriggerLimits" : {
+      "$ref" : "#/definitions/EventTriggerLimits"
+    },
+    "SegmentFilter" : {
+      "$ref" : "#/definitions/SegmentFilter"
+    },
+    "CreatedAt" : {
+      "description" : "The timestamp of when the event trigger was created.",
+      "type" : "string"
+    },
+    "LastUpdatedAt" : {
+      "description" : "The timestamp of when the event trigger was most recently updated.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
+    }
+  },
+  "additionalProperties" : false,
+  "required" : [ "DomainName", "EventTriggerName", "ObjectTypeName", "EventTriggerConditions" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "profile:TagResource", "profile:UntagResource", "profile:ListTagsForResource" ]
+  },
+  "createOnlyProperties" : [ "/properties/DomainName", "/properties/EventTriggerName" ],
+  "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/LastUpdatedAt" ],
+  "primaryIdentifier" : [ "/properties/DomainName", "/properties/EventTriggerName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "profile:CreateEventTrigger", "profile:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "profile:GetEventTrigger" ]
+    },
+    "update" : {
+      "permissions" : [ "profile:GetEventTrigger", "profile:UpdateEventTrigger", "profile:UntagResource", "profile:TagResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "profile:DeleteEventTrigger" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "DomainName" : {
+            "$ref" : "resource-schema.json#/properties/DomainName"
           }
         },
-        "required": [
-          "DomainName"
-        ]
+        "required" : [ "DomainName" ]
       },
-      "permissions": [
-        "profile:ListEventTriggers"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "profile:GetEventTrigger"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "profile:GetEventTrigger",
-        "profile:UpdateEventTrigger",
-        "profile:UntagResource",
-        "profile:TagResource"
-      ]
+      "permissions" : [ "profile:ListEventTriggers" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/DomainName",
-    "/properties/EventTriggerName"
-  ],
-  "properties": {
-    "CreatedAt": {
-      "description": "The timestamp of when the event trigger was created.",
-      "type": "string"
-    },
-    "Description": {
-      "$ref": "#/definitions/Description"
-    },
-    "DomainName": {
-      "$ref": "#/definitions/DomainName"
-    },
-    "EventTriggerConditions": {
-      "$ref": "#/definitions/EventTriggerConditions"
-    },
-    "EventTriggerLimits": {
-      "$ref": "#/definitions/EventTriggerLimits"
-    },
-    "EventTriggerName": {
-      "$ref": "#/definitions/EventTriggerName"
-    },
-    "LastUpdatedAt": {
-      "description": "The timestamp of when the event trigger was most recently updated.",
-      "type": "string"
-    },
-    "ObjectTypeName": {
-      "$ref": "#/definitions/ObjectTypeName"
-    },
-    "SegmentFilter": {
-      "$ref": "#/definitions/SegmentFilter"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/CreatedAt",
-    "/properties/LastUpdatedAt"
-  ],
-  "required": [
-    "DomainName",
-    "EventTriggerName",
-    "ObjectTypeName",
-    "EventTriggerConditions"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "profile:TagResource",
-      "profile:UntagResource",
-      "profile:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::CustomerProfiles::EventTrigger"
+  }
 }

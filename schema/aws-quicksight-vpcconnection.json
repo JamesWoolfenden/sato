@@ -1,266 +1,196 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AwsAccountId",
-    "/properties/VPCConnectionId"
-  ],
-  "definitions": {
-    "NetworkInterface": {
-      "additionalProperties": false,
-      "description": "<p>The structure that contains information about a network interface.</p>",
-      "properties": {
-        "AvailabilityZone": {
-          "description": "<p>The availability zone that the network interface resides in.</p>",
-          "type": "string"
+  "typeName" : "AWS::QuickSight::VPCConnection",
+  "description" : "Definition of the AWS::QuickSight::VPCConnection Resource Type.",
+  "definitions" : {
+    "NetworkInterface" : {
+      "type" : "object",
+      "description" : "<p>The structure that contains information about a network interface.</p>",
+      "properties" : {
+        "SubnetId" : {
+          "type" : "string",
+          "maxLength" : 255,
+          "minLength" : 1,
+          "pattern" : "^subnet-[0-9a-z]*$",
+          "description" : "<p>The subnet ID associated with the network interface.</p>"
         },
-        "ErrorMessage": {
-          "description": "<p>An error message.</p>",
-          "type": "string"
+        "AvailabilityZone" : {
+          "type" : "string",
+          "description" : "<p>The availability zone that the network interface resides in.</p>"
         },
-        "NetworkInterfaceId": {
-          "description": "<p>The network interface ID.</p>",
-          "maxLength": 255,
-          "minLength": 0,
-          "pattern": "^eni-[0-9a-z]*$",
-          "type": "string"
+        "ErrorMessage" : {
+          "type" : "string",
+          "description" : "<p>An error message.</p>"
         },
-        "Status": {
-          "$ref": "#/definitions/NetworkInterfaceStatus"
+        "Status" : {
+          "$ref" : "#/definitions/NetworkInterfaceStatus"
         },
-        "SubnetId": {
-          "description": "<p>The subnet ID associated with the network interface.</p>",
-          "maxLength": 255,
-          "minLength": 1,
-          "pattern": "^subnet-[0-9a-z]*$",
-          "type": "string"
+        "NetworkInterfaceId" : {
+          "type" : "string",
+          "maxLength" : 255,
+          "minLength" : 0,
+          "pattern" : "^eni-[0-9a-z]*$",
+          "description" : "<p>The network interface ID.</p>"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NetworkInterfaceStatus": {
-      "enum": [
-        "CREATING",
-        "AVAILABLE",
-        "CREATION_FAILED",
-        "UPDATING",
-        "UPDATE_FAILED",
-        "DELETING",
-        "DELETED",
-        "DELETION_FAILED",
-        "DELETION_SCHEDULED",
-        "ATTACHMENT_FAILED_ROLLBACK_FAILED"
-      ],
-      "type": "string"
+    "NetworkInterfaceStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "AVAILABLE", "CREATION_FAILED", "UPDATING", "UPDATE_FAILED", "DELETING", "DELETED", "DELETION_FAILED", "DELETION_SCHEDULED", "ATTACHMENT_FAILED_ROLLBACK_FAILED" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
-      "properties": {
-        "Key": {
-          "description": "<p>Tag key.</p>",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "description" : "<p>The key or keys of the key-value pairs for the resource tag or tags assigned to the\n            resource.</p>",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "description" : "<p>Tag key.</p>"
         },
-        "Value": {
-          "description": "<p>Tag value.</p>",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 1,
+          "description" : "<p>Tag value.</p>"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "VPCConnectionAvailabilityStatus": {
-      "enum": [
-        "AVAILABLE",
-        "UNAVAILABLE",
-        "PARTIALLY_AVAILABLE"
-      ],
-      "type": "string"
+    "VPCConnectionAvailabilityStatus" : {
+      "type" : "string",
+      "enum" : [ "AVAILABLE", "UNAVAILABLE", "PARTIALLY_AVAILABLE" ]
     },
-    "VPCConnectionResourceStatus": {
-      "enum": [
-        "CREATION_IN_PROGRESS",
-        "CREATION_SUCCESSFUL",
-        "CREATION_FAILED",
-        "UPDATE_IN_PROGRESS",
-        "UPDATE_SUCCESSFUL",
-        "UPDATE_FAILED",
-        "DELETION_IN_PROGRESS",
-        "DELETION_FAILED",
-        "DELETED"
-      ],
-      "type": "string"
+    "VPCConnectionResourceStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATION_IN_PROGRESS", "CREATION_SUCCESSFUL", "CREATION_FAILED", "UPDATE_IN_PROGRESS", "UPDATE_SUCCESSFUL", "UPDATE_FAILED", "DELETION_IN_PROGRESS", "DELETION_FAILED", "DELETED" ]
     }
   },
-  "description": "Definition of the AWS::QuickSight::VPCConnection Resource Type.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "quicksight:CreateVPCConnection",
-        "quicksight:DescribeVPCConnection",
-        "quicksight:ListTagsForResource",
-        "quicksight:TagResource",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "<p>The Amazon Resource Name (ARN) of the VPC connection.</p>"
     },
-    "delete": {
-      "permissions": [
-        "quicksight:DescribeVPCConnection",
-        "quicksight:DeleteVPCConnection",
-        "quicksight:ListTagsForResource",
-        "iam:PassRole"
-      ]
+    "AvailabilityStatus" : {
+      "$ref" : "#/definitions/VPCConnectionAvailabilityStatus"
     },
-    "list": {
-      "permissions": [
-        "quicksight:ListVPCConnections"
-      ]
+    "AwsAccountId" : {
+      "type" : "string",
+      "maxLength" : 12,
+      "minLength" : 12,
+      "pattern" : "^[0-9]{12}$"
     },
-    "read": {
-      "permissions": [
-        "quicksight:DescribeVPCConnection",
-        "quicksight:ListTagsForResource"
-      ]
+    "CreatedTime" : {
+      "type" : "string",
+      "description" : "<p>The time that the VPC connection was created.</p>",
+      "format" : "date-time"
     },
-    "update": {
-      "permissions": [
-        "quicksight:DescribeVPCConnection",
-        "quicksight:UpdateVPCConnection",
-        "quicksight:TagResource",
-        "quicksight:UntagResource",
-        "quicksight:ListTagsForResource",
-        "iam:PassRole"
-      ]
+    "DnsResolvers" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      },
+      "insertionOrder" : false
+    },
+    "LastUpdatedTime" : {
+      "type" : "string",
+      "description" : "<p>The time that the VPC connection was last updated.</p>",
+      "format" : "date-time"
+    },
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 1
+    },
+    "NetworkInterfaces" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/NetworkInterface"
+      },
+      "maxItems" : 15,
+      "minItems" : 0,
+      "description" : "<p>A list of network interfaces.</p>",
+      "insertionOrder" : false
+    },
+    "RoleArn" : {
+      "type" : "string"
+    },
+    "SecurityGroupIds" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 255,
+        "minLength" : 1,
+        "pattern" : "^sg-[0-9a-z]*$"
+      },
+      "maxItems" : 16,
+      "minItems" : 1,
+      "insertionOrder" : false
+    },
+    "Status" : {
+      "$ref" : "#/definitions/VPCConnectionResourceStatus"
+    },
+    "SubnetIds" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 255,
+        "minLength" : 1,
+        "pattern" : "^subnet-[0-9a-z]*$"
+      },
+      "maxItems" : 15,
+      "minItems" : 2,
+      "insertionOrder" : false
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 200,
+      "minItems" : 1,
+      "insertionOrder" : false
+    },
+    "VPCConnectionId" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 1,
+      "pattern" : "[\\w\\-]+"
+    },
+    "VPCId" : {
+      "type" : "string",
+      "description" : "<p>The Amazon EC2 VPC ID associated with the VPC connection.</p>"
     }
   },
-  "primaryIdentifier": [
-    "/properties/AwsAccountId",
-    "/properties/VPCConnectionId"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "<p>The Amazon Resource Name (ARN) of the VPC connection.</p>",
-      "type": "string"
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedTime", "/properties/LastUpdatedTime", "/properties/NetworkInterfaces", "/properties/Status", "/properties/VPCId" ],
+  "writeOnlyProperties" : [ "/properties/SubnetIds" ],
+  "createOnlyProperties" : [ "/properties/AwsAccountId", "/properties/VPCConnectionId" ],
+  "primaryIdentifier" : [ "/properties/AwsAccountId", "/properties/VPCConnectionId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "quicksight:CreateVPCConnection", "quicksight:DescribeVPCConnection", "quicksight:ListTagsForResource", "quicksight:TagResource", "iam:PassRole" ]
     },
-    "AvailabilityStatus": {
-      "$ref": "#/definitions/VPCConnectionAvailabilityStatus"
+    "read" : {
+      "permissions" : [ "quicksight:DescribeVPCConnection", "quicksight:ListTagsForResource" ]
     },
-    "AwsAccountId": {
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "quicksight:DescribeVPCConnection", "quicksight:UpdateVPCConnection", "quicksight:TagResource", "quicksight:UntagResource", "quicksight:ListTagsForResource", "iam:PassRole" ]
     },
-    "CreatedTime": {
-      "description": "<p>The time that the VPC connection was created.</p>",
-      "format": "date-time",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "quicksight:DescribeVPCConnection", "quicksight:DeleteVPCConnection", "quicksight:ListTagsForResource", "iam:PassRole" ]
     },
-    "DnsResolvers": {
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "LastUpdatedTime": {
-      "description": "<p>The time that the VPC connection was last updated.</p>",
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    },
-    "NetworkInterfaces": {
-      "description": "<p>A list of network interfaces.</p>",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/NetworkInterface"
-      },
-      "maxItems": 15,
-      "minItems": 0,
-      "type": "array"
-    },
-    "RoleArn": {
-      "type": "string"
-    },
-    "SecurityGroupIds": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 255,
-        "minLength": 1,
-        "pattern": "^sg-[0-9a-z]*$",
-        "type": "string"
-      },
-      "maxItems": 16,
-      "minItems": 1,
-      "type": "array"
-    },
-    "Status": {
-      "$ref": "#/definitions/VPCConnectionResourceStatus"
-    },
-    "SubnetIds": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 255,
-        "minLength": 1,
-        "pattern": "^subnet-[0-9a-z]*$",
-        "type": "string"
-      },
-      "maxItems": 15,
-      "minItems": 2,
-      "type": "array"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 1,
-      "type": "array"
-    },
-    "VPCConnectionId": {
-      "maxLength": 1000,
-      "minLength": 1,
-      "pattern": "[\\w\\-]+",
-      "type": "string"
-    },
-    "VPCId": {
-      "description": "<p>The Amazon EC2 VPC ID associated with the VPC connection.</p>",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "quicksight:ListVPCConnections" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedTime",
-    "/properties/LastUpdatedTime",
-    "/properties/NetworkInterfaces",
-    "/properties/Status",
-    "/properties/VPCId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "quicksight:TagResource",
-      "quicksight:UntagResource",
-      "quicksight:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::QuickSight::VPCConnection",
-  "writeOnlyProperties": [
-    "/properties/SubnetIds"
-  ]
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "quicksight:TagResource", "quicksight:UntagResource", "quicksight:ListTagsForResource" ]
+  }
 }

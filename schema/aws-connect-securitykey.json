@@ -1,85 +1,66 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/InstanceId",
-    "/properties/Key"
-  ],
-  "definitions": {
-    "AssociationId": {
-      "description": "An associationID is automatically generated when a storage config is associated with an instance",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[-a-z0-9]*$",
-      "type": "string"
+  "typeName" : "AWS::Connect::SecurityKey",
+  "description" : "Resource Type definition for AWS::Connect::SecurityKey",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+  "definitions" : {
+    "Key" : {
+      "description" : "A valid security key in PEM format.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024
     },
-    "InstanceId": {
-      "description": "Amazon Connect instance identifier",
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
-      "type": "string"
+    "InstanceId" : {
+      "description" : "Amazon Connect instance identifier",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
+      "minLength" : 1,
+      "maxLength" : 100
     },
-    "Key": {
-      "description": "A valid security key in PEM format.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "type": "string"
+    "AssociationId" : {
+      "description" : "An associationID is automatically generated when a storage config is associated with an instance",
+      "type" : "string",
+      "pattern" : "^[-a-z0-9]*$",
+      "minLength" : 1,
+      "maxLength" : 100
     }
   },
-  "description": "Resource Type definition for AWS::Connect::SecurityKey",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "connect:AssociateSecurityKey"
-      ]
+  "properties" : {
+    "Key" : {
+      "$ref" : "#/definitions/Key"
     },
-    "delete": {
-      "permissions": [
-        "connect:DisassociateSecurityKey"
-      ]
+    "InstanceId" : {
+      "$ref" : "#/definitions/InstanceId"
     },
-    "list": {
-      "permissions": [
-        "connect:ListSecurityKeys"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "connect:ListSecurityKeys"
-      ]
-    },
-    "update": {
-      "permissions": []
+    "AssociationId" : {
+      "$ref" : "#/definitions/AssociationId"
     }
   },
-  "primaryIdentifier": [
-    "/properties/InstanceId",
-    "/properties/AssociationId"
-  ],
-  "properties": {
-    "AssociationId": {
-      "$ref": "#/definitions/AssociationId"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "Key", "InstanceId" ],
+  "readOnlyProperties" : [ "/properties/AssociationId" ],
+  "createOnlyProperties" : [ "/properties/InstanceId", "/properties/Key" ],
+  "primaryIdentifier" : [ "/properties/InstanceId", "/properties/AssociationId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "connect:AssociateSecurityKey" ]
     },
-    "InstanceId": {
-      "$ref": "#/definitions/InstanceId"
+    "read" : {
+      "permissions" : [ "connect:ListSecurityKeys" ]
     },
-    "Key": {
-      "$ref": "#/definitions/Key"
+    "update" : {
+      "permissions" : [ ]
+    },
+    "delete" : {
+      "permissions" : [ "connect:DisassociateSecurityKey" ]
+    },
+    "list" : {
+      "permissions" : [ "connect:ListSecurityKeys" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/AssociationId"
-  ],
-  "required": [
-    "Key",
-    "InstanceId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Connect::SecurityKey"
+  }
 }

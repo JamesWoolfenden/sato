@@ -1,111 +1,78 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AddonName"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$",
-          "type": "string"
+  "typeName" : "AWS::SES::MailManagerAddonSubscription",
+  "description" : "Definition of AWS::SES::MailManagerAddonSubscription Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]+$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^[a-zA-Z0-9/_\\+=\\.:@\\-]*$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::SES::MailManagerAddonSubscription Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:ListTagsForResource",
-        "ses:GetAddonSubscription",
-        "ses:CreateAddonSubscription"
-      ]
+  "properties" : {
+    "AddonName" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ses:GetAddonSubscription",
-        "ses:DeleteAddonSubscription"
-      ]
+    "AddonSubscriptionArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "ses:ListAddonSubscriptions"
-      ]
+    "AddonSubscriptionId" : {
+      "type" : "string",
+      "maxLength" : 67,
+      "minLength" : 4,
+      "pattern" : "^as-[a-zA-Z0-9]{1,64}$"
     },
-    "read": {
-      "permissions": [
-        "ses:ListTagsForResource",
-        "ses:GetAddonSubscription"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "ses:TagResource",
-        "ses:UntagResource",
-        "ses:ListTagsForResource",
-        "ses:GetAddonSubscription"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/AddonSubscriptionId"
-  ],
-  "properties": {
-    "AddonName": {
-      "type": "string"
-    },
-    "AddonSubscriptionArn": {
-      "type": "string"
-    },
-    "AddonSubscriptionId": {
-      "maxLength": 67,
-      "minLength": 4,
-      "pattern": "^as-[a-zA-Z0-9]{1,64}$",
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/AddonSubscriptionArn",
-    "/properties/AddonSubscriptionId"
-  ],
-  "required": [
-    "AddonName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ses-mailmanager",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "ses:TagResource",
-      "ses:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "AddonName" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ses:TagResource", "ses:UntagResource" ]
   },
-  "typeName": "AWS::SES::MailManagerAddonSubscription"
+  "createOnlyProperties" : [ "/properties/AddonName" ],
+  "readOnlyProperties" : [ "/properties/AddonSubscriptionArn", "/properties/AddonSubscriptionId" ],
+  "primaryIdentifier" : [ "/properties/AddonSubscriptionId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ses:TagResource", "ses:ListTagsForResource", "ses:GetAddonSubscription", "ses:CreateAddonSubscription" ]
+    },
+    "read" : {
+      "permissions" : [ "ses:ListTagsForResource", "ses:GetAddonSubscription" ]
+    },
+    "update" : {
+      "permissions" : [ "ses:TagResource", "ses:UntagResource", "ses:ListTagsForResource", "ses:GetAddonSubscription" ]
+    },
+    "delete" : {
+      "permissions" : [ "ses:GetAddonSubscription", "ses:DeleteAddonSubscription" ]
+    },
+    "list" : {
+      "permissions" : [ "ses:ListAddonSubscriptions" ]
+    }
+  },
+  "additionalProperties" : false
 }

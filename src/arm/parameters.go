@@ -45,7 +45,7 @@ func parseParameters(
 
 		tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(variableFile))
 		if err != nil {
-			return "", nil, templateNewError{err: err}
+			return "", nil, &templateNewError{Err: err}
 		}
 
 		err = tmpl.Execute(&output, m{
@@ -53,7 +53,7 @@ func parseParameters(
 			"item":     name,
 		})
 		if err != nil {
-			return "", nil, templateExecuteError{err: err}
+			return "", nil, &templateExecuteError{Err: err}
 		}
 
 		all += output.String()

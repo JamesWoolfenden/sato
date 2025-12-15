@@ -1,158 +1,111 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "IpAddressType": {
-      "enum": [
-        "ipv4",
-        "ipv6"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::EC2::VPCEndpointService",
+  "description" : "Resource Type definition for AWS::EC2::VPCEndpointService",
+  "additionalProperties" : false,
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
+    },
+    "IpAddressType" : {
+      "type" : "string",
+      "enum" : [ "ipv4", "ipv6" ]
     }
   },
-  "description": "Resource Type definition for AWS::EC2::VPCEndpointService",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateVpcEndpointServiceConfiguration",
-        "ec2:ModifyVpcEndpointServicePayerResponsibility",
-        "cloudwatch:ListManagedInsightRules",
-        "cloudwatch:DeleteInsightRules",
-        "cloudwatch:PutManagedInsightRules",
-        "ec2:DescribeVpcEndpointServiceConfigurations",
-        "vpce:AllowMultiRegion",
-        "ec2:CreateTags"
-      ]
+  "properties" : {
+    "NetworkLoadBalancerArns" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string",
+        "relationshipRef" : {
+          "typeName" : "AWS::ElasticLoadBalancingV2::LoadBalancer",
+          "propertyPath" : "/properties/LoadBalancerArn"
+        }
+      }
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteVpcEndpointServiceConfigurations",
-        "ec2:DescribeVpcEndpointServiceConfigurations",
-        "cloudwatch:ListManagedInsightRules",
-        "cloudwatch:DeleteInsightRules",
-        "ec2:DeleteTags",
-        "vpce:AllowMultiRegion"
-      ]
+    "ContributorInsightsEnabled" : {
+      "type" : "boolean"
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeVpcEndpointServiceConfigurations",
-        "cloudwatch:ListManagedInsightRules"
-      ]
+    "PayerResponsibility" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribeVpcEndpointServiceConfigurations",
-        "cloudwatch:ListManagedInsightRules"
-      ]
+    "ServiceId" : {
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "ec2:ModifyVpcEndpointServiceConfiguration",
-        "ec2:DescribeVpcEndpointServiceConfigurations",
-        "ec2:ModifyVpcEndpointServicePayerResponsibility",
-        "cloudwatch:ListManagedInsightRules",
-        "cloudwatch:DeleteInsightRules",
-        "cloudwatch:PutManagedInsightRules",
-        "ec2:CreateTags",
-        "ec2:DeleteTags",
-        "vpce:AllowMultiRegion"
-      ]
+    "AcceptanceRequired" : {
+      "type" : "boolean"
+    },
+    "GatewayLoadBalancerArns" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "description" : "The tags to add to the VPC endpoint service.",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "SupportedIpAddressTypes" : {
+      "type" : "array",
+      "description" : "Specify which Ip Address types are supported for VPC endpoint service.",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/IpAddressType"
+      }
+    },
+    "SupportedRegions" : {
+      "type" : "array",
+      "description" : "The Regions from which service consumers can access the service.",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/ServiceId"
-  ],
-  "properties": {
-    "AcceptanceRequired": {
-      "type": "boolean"
+  "primaryIdentifier" : [ "/properties/ServiceId" ],
+  "readOnlyProperties" : [ "/properties/ServiceId" ],
+  "writeOnlyProperties" : [ "/properties/ContributorInsightsEnabled" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateVpcEndpointServiceConfiguration", "ec2:ModifyVpcEndpointServicePayerResponsibility", "cloudwatch:ListManagedInsightRules", "cloudwatch:DeleteInsightRules", "cloudwatch:PutManagedInsightRules", "ec2:DescribeVpcEndpointServiceConfigurations", "vpce:AllowMultiRegion", "ec2:CreateTags" ]
     },
-    "ContributorInsightsEnabled": {
-      "type": "boolean"
+    "update" : {
+      "permissions" : [ "ec2:ModifyVpcEndpointServiceConfiguration", "ec2:DescribeVpcEndpointServiceConfigurations", "ec2:ModifyVpcEndpointServicePayerResponsibility", "cloudwatch:ListManagedInsightRules", "cloudwatch:DeleteInsightRules", "cloudwatch:PutManagedInsightRules", "ec2:CreateTags", "ec2:DeleteTags", "vpce:AllowMultiRegion" ]
     },
-    "GatewayLoadBalancerArns": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "read" : {
+      "permissions" : [ "ec2:DescribeVpcEndpointServiceConfigurations", "cloudwatch:ListManagedInsightRules" ]
     },
-    "NetworkLoadBalancerArns": {
-      "items": {
-        "relationshipRef": {
-          "propertyPath": "/properties/LoadBalancerArn",
-          "typeName": "AWS::ElasticLoadBalancingV2::LoadBalancer"
-        },
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "delete" : {
+      "permissions" : [ "ec2:DeleteVpcEndpointServiceConfigurations", "ec2:DescribeVpcEndpointServiceConfigurations", "cloudwatch:ListManagedInsightRules", "cloudwatch:DeleteInsightRules", "ec2:DeleteTags", "vpce:AllowMultiRegion" ]
     },
-    "PayerResponsibility": {
-      "type": "string"
-    },
-    "ServiceId": {
-      "type": "string"
-    },
-    "SupportedIpAddressTypes": {
-      "description": "Specify which Ip Address types are supported for VPC endpoint service.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/IpAddressType"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "SupportedRegions": {
-      "description": "The Regions from which service consumers can access the service.",
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Tags": {
-      "description": "The tags to add to the VPC endpoint service.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "list" : {
+      "permissions" : [ "ec2:DescribeVpcEndpointServiceConfigurations", "cloudwatch:ListManagedInsightRules" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ServiceId"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::VPCEndpointService",
-  "writeOnlyProperties": [
-    "/properties/ContributorInsightsEnabled"
-  ]
+  }
 }

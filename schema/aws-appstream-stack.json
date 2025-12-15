@@ -1,184 +1,165 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "AccessEndpoint": {
-      "additionalProperties": false,
-      "properties": {
-        "EndpointType": {
-          "type": "string"
-        },
-        "VpceId": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "EndpointType",
-        "VpceId"
-      ],
-      "type": "object"
+  "typeName" : "AWS::AppStream::Stack",
+  "description" : "Resource Type definition for AWS::AppStream::Stack",
+  "additionalProperties" : false,
+  "properties" : {
+    "Description" : {
+      "type" : "string"
     },
-    "ApplicationSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "SettingsGroup": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Enabled"
-      ],
-      "type": "object"
+    "StorageConnectors" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/StorageConnector"
+      }
     },
-    "StorageConnector": {
-      "additionalProperties": false,
-      "properties": {
-        "ConnectorType": {
-          "type": "string"
-        },
-        "Domains": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "ResourceIdentifier": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ConnectorType"
-      ],
-      "type": "object"
+    "DeleteStorageConnectors" : {
+      "type" : "boolean"
     },
-    "StreamingExperienceSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "PreferredProtocol": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "EmbedHostDomains" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "UserSettings" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/UserSetting"
+      }
     },
-    "UserSetting": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "type": "string"
-        },
-        "MaximumLength": {
-          "type": "integer"
-        },
-        "Permission": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Action",
-        "Permission"
-      ],
-      "type": "object"
+    "AttributesToDelete" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "RedirectURL" : {
+      "type" : "string"
+    },
+    "StreamingExperienceSettings" : {
+      "$ref" : "#/definitions/StreamingExperienceSettings"
+    },
+    "Name" : {
+      "type" : "string"
+    },
+    "FeedbackURL" : {
+      "type" : "string"
+    },
+    "ApplicationSettings" : {
+      "$ref" : "#/definitions/ApplicationSettings"
+    },
+    "DisplayName" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "AccessEndpoints" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/AccessEndpoint"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::AppStream::Stack",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AccessEndpoints": {
-      "items": {
-        "$ref": "#/definitions/AccessEndpoint"
+  "definitions" : {
+    "StorageConnector" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Domains" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "ResourceIdentifier" : {
+          "type" : "string"
+        },
+        "ConnectorType" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "ConnectorType" ]
     },
-    "ApplicationSettings": {
-      "$ref": "#/definitions/ApplicationSettings"
-    },
-    "AttributesToDelete": {
-      "items": {
-        "type": "string"
+    "ApplicationSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SettingsGroup" : {
+          "type" : "string"
+        },
+        "Enabled" : {
+          "type" : "boolean"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Enabled" ]
     },
-    "DeleteStorageConnectors": {
-      "type": "boolean"
+    "StreamingExperienceSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PreferredProtocol" : {
+          "type" : "string"
+        }
+      }
     },
-    "Description": {
-      "type": "string"
-    },
-    "DisplayName": {
-      "type": "string"
-    },
-    "EmbedHostDomains": {
-      "items": {
-        "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Value", "Key" ]
     },
-    "FeedbackURL": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "RedirectURL": {
-      "type": "string"
-    },
-    "StorageConnectors": {
-      "items": {
-        "$ref": "#/definitions/StorageConnector"
+    "AccessEndpoint" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EndpointType" : {
+          "type" : "string"
+        },
+        "VpceId" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "EndpointType", "VpceId" ]
     },
-    "StreamingExperienceSettings": {
-      "$ref": "#/definitions/StreamingExperienceSettings"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "UserSetting" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Permission" : {
+          "type" : "string"
+        },
+        "Action" : {
+          "type" : "string"
+        },
+        "MaximumLength" : {
+          "type" : "integer"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "UserSettings": {
-      "items": {
-        "$ref": "#/definitions/UserSetting"
-      },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Action", "Permission" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "typeName": "AWS::AppStream::Stack"
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

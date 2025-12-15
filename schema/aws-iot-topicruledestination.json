@@ -1,123 +1,95 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/HttpUrlProperties",
-    "/properties/VpcProperties"
-  ],
-  "definitions": {
-    "HttpUrlDestinationSummary": {
-      "additionalProperties": false,
-      "properties": {
-        "ConfirmationUrl": {
-          "type": "string"
+  "typeName" : "AWS::IoT::TopicRuleDestination",
+  "description" : "Resource Type definition for AWS::IoT::TopicRuleDestination",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "TopicRuleDestinationStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "IN_PROGRESS", "DISABLED" ]
+    },
+    "HttpUrlDestinationSummary" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ConfirmationUrl" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
     },
-    "TopicRuleDestinationStatus": {
-      "enum": [
-        "ENABLED",
-        "IN_PROGRESS",
-        "DISABLED"
-      ],
-      "type": "string"
-    },
-    "VpcDestinationProperties": {
-      "additionalProperties": false,
-      "properties": {
-        "RoleArn": {
-          "type": "string"
+    "VpcDestinationProperties" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "SecurityGroups": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+        "SecurityGroups" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "SubnetIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
+        "VpcId" : {
+          "type" : "string"
         },
-        "VpcId": {
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string"
         }
-      },
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::IoT::TopicRuleDestination",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:PassRole",
-        "iot:CreateTopicRuleDestination",
-        "iot:GetTopicRuleDestination",
-        "iot:UpdateTopicRuleDestination"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "Amazon Resource Name (ARN).",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iot:GetTopicRuleDestination",
-        "iot:DeleteTopicRuleDestination"
-      ]
+    "Status" : {
+      "description" : "The status of the TopicRuleDestination.",
+      "$ref" : "#/definitions/TopicRuleDestinationStatus"
     },
-    "list": {
-      "permissions": [
-        "iot:ListTopicRuleDestinations"
-      ]
+    "HttpUrlProperties" : {
+      "description" : "HTTP URL destination properties.",
+      "$ref" : "#/definitions/HttpUrlDestinationSummary"
     },
-    "read": {
-      "permissions": [
-        "iot:GetTopicRuleDestination"
-      ]
+    "StatusReason" : {
+      "description" : "The reasoning for the current status of the TopicRuleDestination.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iam:PassRole",
-        "iot:GetTopicRuleDestination",
-        "iot:UpdateTopicRuleDestination"
-      ]
+    "VpcProperties" : {
+      "description" : "VPC destination properties.",
+      "$ref" : "#/definitions/VpcDestinationProperties"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Amazon Resource Name (ARN).",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : true
+  },
+  "additionalProperties" : false,
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/StatusReason" ],
+  "createOnlyProperties" : [ "/properties/HttpUrlProperties", "/properties/VpcProperties" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:PassRole", "iot:CreateTopicRuleDestination", "iot:GetTopicRuleDestination", "iot:UpdateTopicRuleDestination" ]
     },
-    "HttpUrlProperties": {
-      "$ref": "#/definitions/HttpUrlDestinationSummary",
-      "description": "HTTP URL destination properties."
+    "read" : {
+      "permissions" : [ "iot:GetTopicRuleDestination" ]
     },
-    "Status": {
-      "$ref": "#/definitions/TopicRuleDestinationStatus",
-      "description": "The status of the TopicRuleDestination."
+    "update" : {
+      "permissions" : [ "iam:PassRole", "iot:GetTopicRuleDestination", "iot:UpdateTopicRuleDestination" ]
     },
-    "StatusReason": {
-      "description": "The reasoning for the current status of the TopicRuleDestination.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:GetTopicRuleDestination", "iot:DeleteTopicRuleDestination" ]
     },
-    "VpcProperties": {
-      "$ref": "#/definitions/VpcDestinationProperties",
-      "description": "VPC destination properties."
+    "list" : {
+      "permissions" : [ "iot:ListTopicRuleDestinations" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/StatusReason"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::IoT::TopicRuleDestination"
+  }
 }

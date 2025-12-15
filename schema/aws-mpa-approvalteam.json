@@ -1,240 +1,177 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Policies",
-    "/properties/Policies/*/PolicyArn"
-  ],
-  "definitions": {
-    "ApprovalStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "MofN": {
-          "$ref": "#/definitions/MofNApprovalStrategy"
+  "typeName" : "AWS::MPA::ApprovalTeam",
+  "description" : "Resource Type definition for AWS::MPA::ApprovalTeam.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Timestamp" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "MofNApprovalStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "MinApprovalsRequired" : {
+          "type" : "integer"
         }
       },
-      "required": [
-        "MofN"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "MinApprovalsRequired" ]
     },
-    "Approver": {
-      "additionalProperties": false,
-      "properties": {
-        "ApproverId": {
-          "type": "string"
-        },
-        "PrimaryIdentityId": {
-          "type": "string"
-        },
-        "PrimaryIdentitySourceArn": {
-          "type": "string"
-        },
-        "PrimaryIdentityStatus": {
-          "type": "string"
-        },
-        "ResponseTime": {
-          "$ref": "#/definitions/Timestamp"
+    "ApprovalStrategy" : {
+      "type" : "object",
+      "properties" : {
+        "MofN" : {
+          "$ref" : "#/definitions/MofNApprovalStrategy"
         }
       },
-      "required": [
-        "PrimaryIdentityId",
-        "PrimaryIdentitySourceArn"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "MofN" ]
     },
-    "MofNApprovalStrategy": {
-      "additionalProperties": false,
-      "properties": {
-        "MinApprovalsRequired": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "MinApprovalsRequired"
-      ],
-      "type": "object"
-    },
-    "Policy": {
-      "additionalProperties": false,
-      "properties": {
-        "PolicyArn": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "PolicyArn"
-      ]
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "type": "string"
+    "Approver" : {
+      "type" : "object",
+      "properties" : {
+        "PrimaryIdentityId" : {
+          "type" : "string"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "type": "string"
+        "PrimaryIdentitySourceArn" : {
+          "type" : "string"
+        },
+        "ApproverId" : {
+          "type" : "string"
+        },
+        "ResponseTime" : {
+          "$ref" : "#/definitions/Timestamp"
+        },
+        "PrimaryIdentityStatus" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "PrimaryIdentityId", "PrimaryIdentitySourceArn" ]
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Policy" : {
+      "properties" : {
+        "PolicyArn" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": true
+      "additionalProperties" : false,
+      "required" : [ "PolicyArn" ]
     },
-    "Timestamp": {
-      "format": "date-time",
-      "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string"
+        },
+        "Value" : {
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::MPA::ApprovalTeam.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mpa:CreateApprovalTeam",
-        "mpa:TagResource",
-        "mpa:GetApprovalTeam",
-        "mpa:ListTagsForResource"
-      ],
-      "timeoutInMinutes": 2160
+  "properties" : {
+    "ApprovalStrategy" : {
+      "$ref" : "#/definitions/ApprovalStrategy"
     },
-    "delete": {
-      "permissions": [
-        "mpa:StartActiveApprovalTeamDeletion",
-        "mpa:DeleteInactiveApprovalTeamVersion",
-        "mpa:GetApprovalTeam",
-        "mpa:UntagResource"
-      ],
-      "timeoutInMinutes": 2160
+    "Approvers" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Approver"
+      },
+      "minItems" : 1,
+      "insertionOrder" : false,
+      "uniqueItems" : true
     },
-    "list": {
-      "permissions": [
-        "mpa:ListApprovalTeams",
-        "mpa:ListTagsForResource"
-      ]
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
     },
-    "read": {
-      "permissions": [
-        "mpa:GetApprovalTeam",
-        "mpa:ListTagsForResource"
-      ]
+    "Policies" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Policy"
+      },
+      "minItems" : 1,
+      "insertionOrder" : false,
+      "uniqueItems" : true
     },
-    "update": {
-      "permissions": [
-        "mpa:GetApprovalTeam",
-        "mpa:UpdateApprovalTeam",
-        "mpa:TagResource",
-        "mpa:ListTagsForResource",
-        "mpa:UntagResource"
-      ],
-      "timeoutInMinutes": 2160
+    "Name" : {
+      "type" : "string"
+    },
+    "Description" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "VersionId" : {
+      "type" : "string"
+    },
+    "UpdateSessionArn" : {
+      "type" : "string"
+    },
+    "CreationTime" : {
+      "$ref" : "#/definitions/Timestamp"
+    },
+    "LastUpdateTime" : {
+      "$ref" : "#/definitions/Timestamp"
+    },
+    "NumberOfApprovers" : {
+      "type" : "integer"
+    },
+    "Status" : {
+      "type" : "string"
+    },
+    "StatusCode" : {
+      "type" : "string"
+    },
+    "StatusMessage" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "ApprovalStrategy": {
-      "$ref": "#/definitions/ApprovalStrategy"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "mpa:TagResource", "mpa:ListTagsForResource", "mpa:UntagResource" ]
+  },
+  "required" : [ "ApprovalStrategy", "Approvers", "Policies", "Name", "Description" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/VersionId", "/properties/NumberOfApprovers", "/properties/Approvers/*/ApproverId", "/properties/Approvers/*/ResponseTime", "/properties/Approvers/*/PrimaryIdentityStatus", "/properties/UpdateSessionArn", "/properties/CreationTime", "/properties/LastUpdateTime", "/properties/Status", "/properties/StatusCode", "/properties/StatusMessage" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Policies", "/properties/Policies/*/PolicyArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mpa:CreateApprovalTeam", "mpa:TagResource", "mpa:GetApprovalTeam", "mpa:ListTagsForResource" ],
+      "timeoutInMinutes" : 2160
     },
-    "Approvers": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Approver"
-      },
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
+    "read" : {
+      "permissions" : [ "mpa:GetApprovalTeam", "mpa:ListTagsForResource" ]
     },
-    "Arn": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "mpa:GetApprovalTeam", "mpa:UpdateApprovalTeam", "mpa:TagResource", "mpa:ListTagsForResource", "mpa:UntagResource" ],
+      "timeoutInMinutes" : 2160
     },
-    "CreationTime": {
-      "$ref": "#/definitions/Timestamp"
+    "delete" : {
+      "permissions" : [ "mpa:StartActiveApprovalTeamDeletion", "mpa:DeleteInactiveApprovalTeamVersion", "mpa:GetApprovalTeam", "mpa:UntagResource" ],
+      "timeoutInMinutes" : 2160
     },
-    "Description": {
-      "type": "string"
-    },
-    "LastUpdateTime": {
-      "$ref": "#/definitions/Timestamp"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "NumberOfApprovers": {
-      "type": "integer"
-    },
-    "Policies": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Policy"
-      },
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Status": {
-      "type": "string"
-    },
-    "StatusCode": {
-      "type": "string"
-    },
-    "StatusMessage": {
-      "type": "string"
-    },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
-    },
-    "UpdateSessionArn": {
-      "type": "string"
-    },
-    "VersionId": {
-      "type": "string"
+    "list" : {
+      "permissions" : [ "mpa:ListApprovalTeams", "mpa:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/VersionId",
-    "/properties/NumberOfApprovers",
-    "/properties/Approvers/*/ApproverId",
-    "/properties/Approvers/*/ResponseTime",
-    "/properties/Approvers/*/PrimaryIdentityStatus",
-    "/properties/UpdateSessionArn",
-    "/properties/CreationTime",
-    "/properties/LastUpdateTime",
-    "/properties/Status",
-    "/properties/StatusCode",
-    "/properties/StatusMessage"
-  ],
-  "required": [
-    "ApprovalStrategy",
-    "Approvers",
-    "Policies",
-    "Name",
-    "Description"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "mpa:TagResource",
-      "mpa:ListTagsForResource",
-      "mpa:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MPA::ApprovalTeam"
+  }
 }

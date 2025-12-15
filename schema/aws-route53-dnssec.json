@@ -1,57 +1,32 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/HostedZoneId"
-  ],
-  "description": "Resource used to control (enable/disable) DNSSEC in a specific hosted zone.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "route53:GetDNSSEC",
-        "route53:EnableHostedZoneDNSSEC",
-        "kms:DescribeKey",
-        "kms:GetPublicKey",
-        "kms:Sign",
-        "kms:CreateGrant"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "route53:GetDNSSEC",
-        "route53:DisableHostedZoneDNSSEC",
-        "kms:DescribeKey",
-        "kms:GetPublicKey",
-        "kms:Sign",
-        "kms:CreateGrant"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "route53:GetDNSSEC",
-        "route53:ListHostedZones"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "route53:GetDNSSEC"
-      ]
+  "typeName" : "AWS::Route53::DNSSEC",
+  "description" : "Resource used to control (enable/disable) DNSSEC in a specific hosted zone.",
+  "properties" : {
+    "HostedZoneId" : {
+      "description" : "The unique string (ID) used to identify a hosted zone.",
+      "type" : "string",
+      "pattern" : "^[A-Z0-9]{1,32}$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/HostedZoneId"
-  ],
-  "properties": {
-    "HostedZoneId": {
-      "description": "The unique string (ID) used to identify a hosted zone.",
-      "pattern": "^[A-Z0-9]{1,32}$",
-      "type": "string"
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/HostedZoneId" ],
+  "required" : [ "HostedZoneId" ],
+  "primaryIdentifier" : [ "/properties/HostedZoneId" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "route53:GetDNSSEC", "route53:EnableHostedZoneDNSSEC", "kms:DescribeKey", "kms:GetPublicKey", "kms:Sign", "kms:CreateGrant" ]
+    },
+    "read" : {
+      "permissions" : [ "route53:GetDNSSEC" ]
+    },
+    "delete" : {
+      "permissions" : [ "route53:GetDNSSEC", "route53:DisableHostedZoneDNSSEC", "kms:DescribeKey", "kms:GetPublicKey", "kms:Sign", "kms:CreateGrant" ]
+    },
+    "list" : {
+      "permissions" : [ "route53:GetDNSSEC", "route53:ListHostedZones" ]
     }
-  },
-  "required": [
-    "HostedZoneId"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Route53::DNSSEC"
+  }
 }

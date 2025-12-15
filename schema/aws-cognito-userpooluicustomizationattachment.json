@@ -1,62 +1,43 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/UserPoolId",
-    "/properties/ClientId"
-  ],
-  "description": "Resource Type definition for AWS::Cognito::UserPoolUICustomizationAttachment",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "cognito-idp:SetUICustomization",
-        "cognito-idp:GetUICustomization"
-      ],
-      "timeoutInMinutes": 2
+  "typeName" : "AWS::Cognito::UserPoolUICustomizationAttachment",
+  "description" : "Resource Type definition for AWS::Cognito::UserPoolUICustomizationAttachment",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "properties" : {
+    "UserPoolId" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "cognito-idp:SetUICustomization",
-        "cognito-idp:GetUICustomization"
-      ],
-      "timeoutInMinutes": 2
+    "ClientId" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "cognito-idp:GetUICustomization"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "cognito-idp:SetUICustomization"
-      ],
-      "timeoutInMinutes": 2
+    "CSS" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/UserPoolId",
-    "/properties/ClientId"
-  ],
-  "properties": {
-    "CSS": {
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "UserPoolId", "ClientId" ],
+  "primaryIdentifier" : [ "/properties/UserPoolId", "/properties/ClientId" ],
+  "createOnlyProperties" : [ "/properties/UserPoolId", "/properties/ClientId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "cognito-idp:SetUICustomization", "cognito-idp:GetUICustomization" ],
+      "timeoutInMinutes" : 2
     },
-    "ClientId": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "cognito-idp:GetUICustomization" ]
     },
-    "UserPoolId": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "cognito-idp:SetUICustomization" ],
+      "timeoutInMinutes" : 2
+    },
+    "delete" : {
+      "permissions" : [ "cognito-idp:SetUICustomization", "cognito-idp:GetUICustomization" ],
+      "timeoutInMinutes" : 2
     }
-  },
-  "required": [
-    "UserPoolId",
-    "ClientId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Cognito::UserPoolUICustomizationAttachment"
+  }
 }

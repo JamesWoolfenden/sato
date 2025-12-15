@@ -1,141 +1,99 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "The metadata that you apply to the Identity Center (SSO) Instance to help you categorize and organize them.",
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "[\\w+=,.@-]+",
-          "type": "string"
+  "typeName" : "AWS::SSO::Instance",
+  "description" : "Resource Type definition for Identity Center (SSO) Instance",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-instance",
+  "definitions" : {
+    "Tag" : {
+      "description" : "The metadata that you apply to the Identity Center (SSO) Instance to help you categorize and organize them.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "[\\w+=,.@-]+",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "[\\w+=,.@-]+",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "pattern" : "[\\w+=,.@-]+",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for Identity Center (SSO) Instance",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "sso:CreateInstance",
-        "sso:DescribeInstance",
-        "sso:TagResource",
-        "iam:CreateServiceLinkedRole",
-        "sso:TagInstance",
-        "sso:ListTagsForResource",
-        "identitystore:CreateIdentityStore"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The name you want to assign to this Identity Center (SSO) Instance",
+      "type" : "string",
+      "pattern" : "^[\\w+=,.@-]+$",
+      "minLength" : 1,
+      "maxLength" : 32
     },
-    "delete": {
-      "permissions": [
-        "sso:DeleteInstance",
-        "identitystore:DeleteIdentityStore"
-      ]
+    "InstanceArn" : {
+      "description" : "The SSO Instance ARN that is returned upon creation of the Identity Center (SSO) Instance",
+      "type" : "string",
+      "pattern" : "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
+      "minLength" : 10,
+      "maxLength" : 1224
     },
-    "list": {
-      "permissions": [
-        "sso:ListInstances"
-      ]
+    "OwnerAccountId" : {
+      "description" : "The AWS accountId of the owner of the Identity Center (SSO) Instance",
+      "type" : "string",
+      "pattern" : "^\\d{12}?$",
+      "minLength" : 12,
+      "maxLength" : 12
     },
-    "read": {
-      "permissions": [
-        "sso:DescribeInstance",
-        "sso:ListTagsForResource"
-      ]
+    "IdentityStoreId" : {
+      "description" : "The ID of the identity store associated with the created Identity Center (SSO) Instance",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9-]*$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "update": {
-      "permissions": [
-        "sso:UpdateInstance",
-        "sso:TagResource",
-        "sso:UntagResource",
-        "sso:ListTagsForResource",
-        "sso:TagInstance",
-        "sso:DescribeInstance"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/InstanceArn"
-  ],
-  "properties": {
-    "IdentityStoreId": {
-      "description": "The ID of the identity store associated with the created Identity Center (SSO) Instance",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-]*$",
-      "type": "string"
+    "Status" : {
+      "description" : "The status of the Identity Center (SSO) Instance, create_in_progress/delete_in_progress/active",
+      "type" : "string",
+      "enum" : [ "CREATE_IN_PROGRESS", "DELETE_IN_PROGRESS", "ACTIVE" ]
     },
-    "InstanceArn": {
-      "description": "The SSO Instance ARN that is returned upon creation of the Identity Center (SSO) Instance",
-      "maxLength": 1224,
-      "minLength": 10,
-      "pattern": "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$",
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name you want to assign to this Identity Center (SSO) Instance",
-      "maxLength": 32,
-      "minLength": 1,
-      "pattern": "^[\\w+=,.@-]+$",
-      "type": "string"
-    },
-    "OwnerAccountId": {
-      "description": "The AWS accountId of the owner of the Identity Center (SSO) Instance",
-      "maxLength": 12,
-      "minLength": 12,
-      "pattern": "^\\d{12}?$",
-      "type": "string"
-    },
-    "Status": {
-      "description": "The status of the Identity Center (SSO) Instance, create_in_progress/delete_in_progress/active",
-      "enum": [
-        "CREATE_IN_PROGRESS",
-        "DELETE_IN_PROGRESS",
-        "ACTIVE"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 75,
-      "type": "array",
-      "uniqueItems": false
+      "maxItems" : 75
     }
   },
-  "readOnlyProperties": [
-    "/properties/InstanceArn",
-    "/properties/OwnerAccountId",
-    "/properties/IdentityStoreId",
-    "/properties/Status"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sso/aws-sso-instance",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "sso:TagInstance",
-      "sso:TagResource",
-      "sso:UntagResource",
-      "sso:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : true,
+    "permissions" : [ "sso:TagInstance", "sso:TagResource", "sso:UntagResource", "sso:ListTagsForResource" ]
   },
-  "typeName": "AWS::SSO::Instance"
+  "readOnlyProperties" : [ "/properties/InstanceArn", "/properties/OwnerAccountId", "/properties/IdentityStoreId", "/properties/Status" ],
+  "primaryIdentifier" : [ "/properties/InstanceArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "sso:CreateInstance", "sso:DescribeInstance", "sso:TagResource", "iam:CreateServiceLinkedRole", "sso:TagInstance", "sso:ListTagsForResource", "identitystore:CreateIdentityStore" ]
+    },
+    "read" : {
+      "permissions" : [ "sso:DescribeInstance", "sso:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "sso:UpdateInstance", "sso:TagResource", "sso:UntagResource", "sso:ListTagsForResource", "sso:TagInstance", "sso:DescribeInstance" ]
+    },
+    "delete" : {
+      "permissions" : [ "sso:DeleteInstance", "identitystore:DeleteIdentityStore" ]
+    },
+    "list" : {
+      "permissions" : [ "sso:ListInstances" ]
+    }
+  }
 }

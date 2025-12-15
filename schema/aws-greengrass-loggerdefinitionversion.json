@@ -1,63 +1,48 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/LoggerDefinitionId",
-    "/properties/Loggers"
-  ],
-  "definitions": {
-    "Logger": {
-      "additionalProperties": false,
-      "properties": {
-        "Component": {
-          "type": "string"
+  "typeName" : "AWS::Greengrass::LoggerDefinitionVersion",
+  "description" : "Resource Type definition for AWS::Greengrass::LoggerDefinitionVersion",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "LoggerDefinitionId" : {
+      "type" : "string"
+    },
+    "Loggers" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Logger"
+      }
+    }
+  },
+  "definitions" : {
+    "Logger" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Space" : {
+          "type" : "integer"
         },
-        "Id": {
-          "type": "string"
+        "Type" : {
+          "type" : "string"
         },
-        "Level": {
-          "type": "string"
+        "Level" : {
+          "type" : "string"
         },
-        "Space": {
-          "type": "integer"
+        "Id" : {
+          "type" : "string"
         },
-        "Type": {
-          "type": "string"
+        "Component" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Type",
-        "Level",
-        "Id",
-        "Component"
-      ],
-      "type": "object"
+      "required" : [ "Type", "Level", "Id", "Component" ]
     }
   },
-  "description": "Resource Type definition for AWS::Greengrass::LoggerDefinitionVersion",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "type": "string"
-    },
-    "LoggerDefinitionId": {
-      "type": "string"
-    },
-    "Loggers": {
-      "items": {
-        "$ref": "#/definitions/Logger"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Loggers",
-    "LoggerDefinitionId"
-  ],
-  "typeName": "AWS::Greengrass::LoggerDefinitionVersion"
+  "required" : [ "Loggers", "LoggerDefinitionId" ],
+  "createOnlyProperties" : [ "/properties/LoggerDefinitionId", "/properties/Loggers" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

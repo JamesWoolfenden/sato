@@ -1,68 +1,47 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Value",
-    "/properties/Key"
-  ],
-  "description": "Resource type definition for AWS::ServiceCatalog::TagOption",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "servicecatalog:CreateTagOption"
-      ]
+  "typeName" : "AWS::ServiceCatalog::TagOption",
+  "description" : "Resource type definition for AWS::ServiceCatalog::TagOption",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string",
+      "description" : "The TagOption identifier."
     },
-    "delete": {
-      "permissions": [
-        "servicecatalog:DeleteTagOption"
-      ]
+    "Active" : {
+      "type" : "boolean",
+      "description" : "The TagOption active state."
     },
-    "list": {
-      "permissions": [
-        "servicecatalog:ListTagOptions"
-      ]
+    "Value" : {
+      "type" : "string",
+      "description" : "The TagOption value."
     },
-    "read": {
-      "permissions": [
-        "servicecatalog:DescribeTagOption"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "servicecatalog:UpdateTagOption",
-        "servicecatalog:DescribeTagOption"
-      ]
+    "Key" : {
+      "type" : "string",
+      "description" : "The TagOption key."
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Active": {
-      "description": "The TagOption active state.",
-      "type": "boolean"
+  "tagging" : {
+    "taggable" : false
+  },
+  "required" : [ "Value", "Key" ],
+  "createOnlyProperties" : [ "/properties/Value", "/properties/Key" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "servicecatalog:CreateTagOption" ]
     },
-    "Id": {
-      "description": "The TagOption identifier.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "servicecatalog:DescribeTagOption" ]
     },
-    "Key": {
-      "description": "The TagOption key.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "servicecatalog:UpdateTagOption", "servicecatalog:DescribeTagOption" ]
     },
-    "Value": {
-      "description": "The TagOption value.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "servicecatalog:DeleteTagOption" ]
+    },
+    "list" : {
+      "permissions" : [ "servicecatalog:ListTagOptions" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Value",
-    "Key"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ServiceCatalog::TagOption"
+  }
 }

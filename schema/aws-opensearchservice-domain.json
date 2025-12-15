@@ -1,708 +1,641 @@
 {
-  "additionalProperties": false,
-  "conditionalCreateOnlyProperties": [
-    "/properties/EncryptionAtRestOptions/properties",
-    "/properties/AdvancedSecurityOptions/properties/Enabled"
-  ],
-  "createOnlyProperties": [
-    "/properties/DomainName"
-  ],
-  "definitions": {
-    "AIMLOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "S3VectorsEngine": {
-          "$ref": "#/definitions/S3VectorsEngine"
+  "typeName" : "AWS::OpenSearchService::Domain",
+  "description" : "An example resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "ZoneAwarenessConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AvailabilityZoneCount" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "NodeConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "Type" : {
+          "type" : "string"
+        },
+        "Count" : {
+          "type" : "integer"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "AdvancedSecurityOptionsInput": {
-      "additionalProperties": false,
-      "properties": {
-        "AnonymousAuthDisableDate": {
-          "type": "string"
+    "NodeOption" : {
+      "type" : "object",
+      "properties" : {
+        "NodeType" : {
+          "type" : "string",
+          "enum" : [ "coordinator" ]
         },
-        "AnonymousAuthEnabled": {
-          "type": "boolean"
-        },
-        "Enabled": {
-          "type": "boolean"
-        },
-        "IAMFederationOptions": {
-          "$ref": "#/definitions/IAMFederationOptions"
-        },
-        "InternalUserDatabaseEnabled": {
-          "type": "boolean"
-        },
-        "JWTOptions": {
-          "$ref": "#/definitions/JWTOptions"
-        },
-        "MasterUserOptions": {
-          "$ref": "#/definitions/MasterUserOptions"
-        },
-        "SAMLOptions": {
-          "$ref": "#/definitions/SAMLOptions"
+        "NodeConfig" : {
+          "$ref" : "#/definitions/NodeConfig"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ClusterConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "ColdStorageOptions": {
-          "$ref": "#/definitions/ColdStorageOptions"
+    "ClusterConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "InstanceCount" : {
+          "type" : "integer"
         },
-        "DedicatedMasterCount": {
-          "type": "integer"
+        "WarmEnabled" : {
+          "type" : "boolean"
         },
-        "DedicatedMasterEnabled": {
-          "type": "boolean"
+        "WarmCount" : {
+          "type" : "integer"
         },
-        "DedicatedMasterType": {
-          "type": "string"
+        "DedicatedMasterEnabled" : {
+          "type" : "boolean"
         },
-        "InstanceCount": {
-          "type": "integer"
+        "ZoneAwarenessConfig" : {
+          "$ref" : "#/definitions/ZoneAwarenessConfig"
         },
-        "InstanceType": {
-          "type": "string"
+        "DedicatedMasterCount" : {
+          "type" : "integer"
         },
-        "MultiAZWithStandbyEnabled": {
-          "type": "boolean"
+        "InstanceType" : {
+          "type" : "string"
         },
-        "NodeOptions": {
-          "items": {
-            "$ref": "#/definitions/NodeOption"
-          },
-          "type": "array"
+        "WarmType" : {
+          "type" : "string"
         },
-        "WarmCount": {
-          "type": "integer"
+        "ZoneAwarenessEnabled" : {
+          "type" : "boolean"
         },
-        "WarmEnabled": {
-          "type": "boolean"
+        "DedicatedMasterType" : {
+          "type" : "string"
         },
-        "WarmType": {
-          "type": "string"
+        "MultiAZWithStandbyEnabled" : {
+          "type" : "boolean"
         },
-        "ZoneAwarenessConfig": {
-          "$ref": "#/definitions/ZoneAwarenessConfig"
+        "ColdStorageOptions" : {
+          "$ref" : "#/definitions/ColdStorageOptions"
         },
-        "ZoneAwarenessEnabled": {
-          "type": "boolean"
+        "NodeOptions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/NodeOption"
+          }
+        }
+      }
+    },
+    "LogPublishingOption" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CloudWatchLogsLogGroupArn" : {
+          "type" : "string"
+        },
+        "Enabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "SnapshotOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AutomatedSnapshotStartHour" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "VPCOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "SubnetIds" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "NodeToNodeEncryptionOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "S3VectorsEngine" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean",
+          "description" : "Whether to enable S3 vectors engine."
         }
       },
-      "type": "object"
+      "required" : [ "Enabled" ]
     },
-    "CognitoOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
+    "AIMLOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3VectorsEngine" : {
+          "$ref" : "#/definitions/S3VectorsEngine"
+        }
+      }
+    },
+    "DomainEndpointOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomEndpointCertificateArn" : {
+          "type" : "string"
         },
-        "IdentityPoolId": {
-          "type": "string"
+        "CustomEndpointEnabled" : {
+          "type" : "boolean"
         },
-        "RoleArn": {
-          "type": "string"
+        "EnforceHTTPS" : {
+          "type" : "boolean"
         },
-        "UserPoolId": {
-          "type": "string"
+        "CustomEndpoint" : {
+          "type" : "string"
+        },
+        "TLSSecurityPolicy" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CognitoOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "IdentityPoolId" : {
+          "type" : "string"
+        },
+        "UserPoolId" : {
+          "type" : "string"
+        },
+        "RoleArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "MasterUserOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MasterUserPassword" : {
+          "type" : "string"
+        },
+        "MasterUserName" : {
+          "type" : "string"
+        },
+        "MasterUserARN" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Idp" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MetadataContent" : {
+          "type" : "string",
+          "maxLength" : 1048576,
+          "minLength" : 1
+        },
+        "EntityId" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "MetadataContent", "EntityId" ]
     },
-    "ColdStorageOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
+    "SAMLOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "Idp" : {
+          "$ref" : "#/definitions/Idp"
+        },
+        "MasterUserName" : {
+          "type" : "string"
+        },
+        "MasterBackendRole" : {
+          "type" : "string"
+        },
+        "SubjectKey" : {
+          "type" : "string"
+        },
+        "RolesKey" : {
+          "type" : "string"
+        },
+        "SessionTimeoutMinutes" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "JWTOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "PublicKey" : {
+          "type" : "string"
+        },
+        "SubjectKey" : {
+          "type" : "string"
+        },
+        "RolesKey" : {
+          "type" : "string"
+        }
+      }
+    },
+    "IAMFederationOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "RolesKey" : {
+          "type" : "string"
+        },
+        "SubjectKey" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AdvancedSecurityOptionsInput" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        },
+        "MasterUserOptions" : {
+          "$ref" : "#/definitions/MasterUserOptions"
+        },
+        "InternalUserDatabaseEnabled" : {
+          "type" : "boolean"
+        },
+        "AnonymousAuthEnabled" : {
+          "type" : "boolean"
+        },
+        "SAMLOptions" : {
+          "$ref" : "#/definitions/SAMLOptions"
+        },
+        "JWTOptions" : {
+          "$ref" : "#/definitions/JWTOptions"
+        },
+        "IAMFederationOptions" : {
+          "$ref" : "#/definitions/IAMFederationOptions"
+        },
+        "AnonymousAuthDisableDate" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EBSOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EBSEnabled" : {
+          "type" : "boolean"
+        },
+        "VolumeType" : {
+          "type" : "string"
+        },
+        "Iops" : {
+          "type" : "integer"
+        },
+        "VolumeSize" : {
+          "type" : "integer"
+        },
+        "Throughput" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "EncryptionAtRestOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "KmsKeyId" : {
+          "type" : "string"
+        },
+        "Enabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "description" : "The key of the tag.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
+        },
+        "Key" : {
+          "description" : "The value of the tag.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 128
         }
       },
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     },
-    "DomainEndpointOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomEndpoint": {
-          "type": "string"
+    "ServiceSoftwareOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CurrentVersion" : {
+          "type" : "string"
         },
-        "CustomEndpointCertificateArn": {
-          "type": "string"
+        "NewVersion" : {
+          "type" : "string"
         },
-        "CustomEndpointEnabled": {
-          "type": "boolean"
+        "UpdateAvailable" : {
+          "type" : "boolean"
         },
-        "EnforceHTTPS": {
-          "type": "boolean"
+        "Cancellable" : {
+          "type" : "boolean"
         },
-        "TLSSecurityPolicy": {
-          "type": "string"
+        "UpdateStatus" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "AutomatedUpdateDate" : {
+          "type" : "string"
+        },
+        "OptionalDeployment" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "WindowStartTime" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Hours" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 23
+        },
+        "Minutes" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 59
         }
       },
-      "type": "object"
+      "required" : [ "Hours", "Minutes" ]
     },
-    "EBSOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "EBSEnabled": {
-          "type": "boolean"
+    "OffPeakWindow" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "WindowStartTime" : {
+          "$ref" : "#/definitions/WindowStartTime"
+        }
+      }
+    },
+    "OffPeakWindowOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
         },
-        "Iops": {
-          "type": "integer"
+        "OffPeakWindow" : {
+          "$ref" : "#/definitions/OffPeakWindow"
+        }
+      }
+    },
+    "SoftwareUpdateOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AutoSoftwareUpdateEnabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "ColdStorageOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "SubjectKeyIdcType" : {
+      "type" : "string",
+      "enum" : [ "UserName", "UserId", "Email" ],
+      "description" : "Subject Key Idc type values."
+    },
+    "RolesKeyIdcType" : {
+      "type" : "string",
+      "enum" : [ "GroupName", "GroupId" ],
+      "description" : "Roles Key Idc type values."
+    },
+    "IdentityCenterOptions" : {
+      "type" : "object",
+      "description" : "Options for configuring Identity Center",
+      "properties" : {
+        "EnabledAPIAccess" : {
+          "type" : "boolean",
+          "description" : "Whether Identity Center is enabled."
         },
-        "Throughput": {
-          "type": "integer"
+        "IdentityCenterInstanceARN" : {
+          "type" : "string",
+          "description" : "The ARN of the Identity Center instance."
         },
-        "VolumeSize": {
-          "type": "integer"
+        "SubjectKey" : {
+          "$ref" : "#/definitions/SubjectKeyIdcType",
+          "description" : "The subject key for Identity Center options."
         },
-        "VolumeType": {
-          "type": "string"
+        "RolesKey" : {
+          "$ref" : "#/definitions/RolesKeyIdcType",
+          "description" : "The roles key for Identity Center options."
+        },
+        "IdentityCenterApplicationARN" : {
+          "type" : "string",
+          "description" : "The ARN of the Identity Center application."
+        },
+        "IdentityStoreId" : {
+          "type" : "string",
+          "description" : "The IdentityStoreId for Identity Center options."
         }
       },
-      "type": "object"
-    },
-    "EncryptionAtRestOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "KmsKeyId": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "IAMFederationOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "RolesKey": {
-          "type": "string"
-        },
-        "SubjectKey": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "IdentityCenterOptions": {
-      "additionalProperties": false,
-      "description": "Options for configuring Identity Center",
-      "properties": {
-        "EnabledAPIAccess": {
-          "description": "Whether Identity Center is enabled.",
-          "type": "boolean"
-        },
-        "IdentityCenterApplicationARN": {
-          "description": "The ARN of the Identity Center application.",
-          "type": "string"
-        },
-        "IdentityCenterInstanceARN": {
-          "description": "The ARN of the Identity Center instance.",
-          "type": "string"
-        },
-        "IdentityStoreId": {
-          "description": "The IdentityStoreId for Identity Center options.",
-          "type": "string"
-        },
-        "RolesKey": {
-          "$ref": "#/definitions/RolesKeyIdcType",
-          "description": "The roles key for Identity Center options."
-        },
-        "SubjectKey": {
-          "$ref": "#/definitions/SubjectKeyIdcType",
-          "description": "The subject key for Identity Center options."
-        }
-      },
-      "type": "object"
-    },
-    "Idp": {
-      "additionalProperties": false,
-      "properties": {
-        "EntityId": {
-          "type": "string"
-        },
-        "MetadataContent": {
-          "maxLength": 1048576,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "MetadataContent",
-        "EntityId"
-      ],
-      "type": "object"
-    },
-    "JWTOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "PublicKey": {
-          "type": "string"
-        },
-        "RolesKey": {
-          "type": "string"
-        },
-        "SubjectKey": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "LogPublishingOption": {
-      "additionalProperties": false,
-      "properties": {
-        "CloudWatchLogsLogGroupArn": {
-          "type": "string"
-        },
-        "Enabled": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "MasterUserOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "MasterUserARN": {
-          "type": "string"
-        },
-        "MasterUserName": {
-          "type": "string"
-        },
-        "MasterUserPassword": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "NodeConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Count": {
-          "type": "integer"
-        },
-        "Enabled": {
-          "type": "boolean"
-        },
-        "Type": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "NodeOption": {
-      "additionalProperties": false,
-      "properties": {
-        "NodeConfig": {
-          "$ref": "#/definitions/NodeConfig"
-        },
-        "NodeType": {
-          "enum": [
-            "coordinator"
-          ],
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "NodeToNodeEncryptionOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "OffPeakWindow": {
-      "additionalProperties": false,
-      "properties": {
-        "WindowStartTime": {
-          "$ref": "#/definitions/WindowStartTime"
-        }
-      },
-      "type": "object"
-    },
-    "OffPeakWindowOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "OffPeakWindow": {
-          "$ref": "#/definitions/OffPeakWindow"
-        }
-      },
-      "type": "object"
-    },
-    "RolesKeyIdcType": {
-      "description": "Roles Key Idc type values.",
-      "enum": [
-        "GroupName",
-        "GroupId"
-      ],
-      "type": "string"
-    },
-    "S3VectorsEngine": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "description": "Whether to enable S3 vectors engine.",
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "Enabled"
-      ],
-      "type": "object"
-    },
-    "SAMLOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "Enabled": {
-          "type": "boolean"
-        },
-        "Idp": {
-          "$ref": "#/definitions/Idp"
-        },
-        "MasterBackendRole": {
-          "type": "string"
-        },
-        "MasterUserName": {
-          "type": "string"
-        },
-        "RolesKey": {
-          "type": "string"
-        },
-        "SessionTimeoutMinutes": {
-          "type": "integer"
-        },
-        "SubjectKey": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "ServiceSoftwareOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "AutomatedUpdateDate": {
-          "type": "string"
-        },
-        "Cancellable": {
-          "type": "boolean"
-        },
-        "CurrentVersion": {
-          "type": "string"
-        },
-        "Description": {
-          "type": "string"
-        },
-        "NewVersion": {
-          "type": "string"
-        },
-        "OptionalDeployment": {
-          "type": "boolean"
-        },
-        "UpdateAvailable": {
-          "type": "boolean"
-        },
-        "UpdateStatus": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "SnapshotOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "AutomatedSnapshotStartHour": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
-    },
-    "SoftwareUpdateOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "AutoSoftwareUpdateEnabled": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "SubjectKeyIdcType": {
-      "description": "Subject Key Idc type values.",
-      "enum": [
-        "UserName",
-        "UserId",
-        "Email"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "The value of the tag.",
-          "maxLength": 128,
-          "minLength": 0,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The key of the tag.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
-    },
-    "VPCOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "SecurityGroupIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        },
-        "SubnetIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": true
-        }
-      },
-      "type": "object"
-    },
-    "WindowStartTime": {
-      "additionalProperties": false,
-      "properties": {
-        "Hours": {
-          "maximum": 23,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "Minutes": {
-          "maximum": 59,
-          "minimum": 0,
-          "type": "integer"
-        }
-      },
-      "required": [
-        "Hours",
-        "Minutes"
-      ],
-      "type": "object"
-    },
-    "ZoneAwarenessConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "AvailabilityZoneCount": {
-          "type": "integer"
-        }
-      },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "An example resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "es:CreateDomain",
-        "es:DescribeDomain",
-        "es:AddTags",
-        "es:ListTags",
-        "es:DescribeDomainChangeProgress"
-      ]
+  "properties" : {
+    "ClusterConfig" : {
+      "$ref" : "#/definitions/ClusterConfig"
     },
-    "delete": {
-      "permissions": [
-        "es:DeleteDomain",
-        "es:DescribeDomain"
-      ]
+    "DomainName" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "es:DescribeDomain",
-        "es:ListTags"
-      ]
+    "AccessPolicies" : {
+      "type" : "object"
     },
-    "update": {
-      "permissions": [
-        "es:UpdateDomain",
-        "es:UpgradeDomain",
-        "es:DescribeDomain",
-        "es:AddTags",
-        "es:RemoveTags",
-        "es:ListTags",
-        "es:DescribeDomainChangeProgress"
-      ],
-      "timeoutInMinutes": 2160
+    "IPAddressType" : {
+      "type" : "string"
+    },
+    "EngineVersion" : {
+      "type" : "string"
+    },
+    "AdvancedOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "type" : "string"
+        }
+      }
+    },
+    "LogPublishingOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        "[a-zA-Z0-9]+" : {
+          "$ref" : "#/definitions/LogPublishingOption"
+        }
+      }
+    },
+    "SnapshotOptions" : {
+      "$ref" : "#/definitions/SnapshotOptions"
+    },
+    "VPCOptions" : {
+      "$ref" : "#/definitions/VPCOptions"
+    },
+    "NodeToNodeEncryptionOptions" : {
+      "$ref" : "#/definitions/NodeToNodeEncryptionOptions"
+    },
+    "DomainEndpointOptions" : {
+      "$ref" : "#/definitions/DomainEndpointOptions"
+    },
+    "CognitoOptions" : {
+      "$ref" : "#/definitions/CognitoOptions"
+    },
+    "AdvancedSecurityOptions" : {
+      "$ref" : "#/definitions/AdvancedSecurityOptionsInput"
+    },
+    "DomainEndpoint" : {
+      "type" : "string"
+    },
+    "DomainEndpointV2" : {
+      "type" : "string"
+    },
+    "DomainEndpoints" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "patternProperties" : {
+        "^.*$" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EBSOptions" : {
+      "$ref" : "#/definitions/EBSOptions"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "DomainArn" : {
+      "type" : "string"
+    },
+    "EncryptionAtRestOptions" : {
+      "$ref" : "#/definitions/EncryptionAtRestOptions"
+    },
+    "Tags" : {
+      "description" : "An arbitrary set of tags (key-value pairs) for this Domain.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "type" : "array",
+      "uniqueItems" : true
+    },
+    "ServiceSoftwareOptions" : {
+      "$ref" : "#/definitions/ServiceSoftwareOptions"
+    },
+    "OffPeakWindowOptions" : {
+      "$ref" : "#/definitions/OffPeakWindowOptions"
+    },
+    "SoftwareUpdateOptions" : {
+      "$ref" : "#/definitions/SoftwareUpdateOptions"
+    },
+    "SkipShardMigrationWait" : {
+      "type" : "boolean"
+    },
+    "IdentityCenterOptions" : {
+      "$ref" : "#/definitions/IdentityCenterOptions"
+    },
+    "AIMLOptions" : {
+      "$ref" : "#/definitions/AIMLOptions"
     }
   },
-  "primaryIdentifier": [
-    "/properties/DomainName"
-  ],
-  "properties": {
-    "AIMLOptions": {
-      "$ref": "#/definitions/AIMLOptions"
+  "propertyTransform" : {
+    "/properties/EncryptionAtRestOptions/KmsKeyId" : "$split(EncryptionAtRestOptions.KmsKeyId, \"/\")[-1] $OR EncryptionAtRestOptions.KmsKeyId"
+  },
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "es:AddTags", "es:RemoveTags", "es:ListTags" ]
+  },
+  "additionalProperties" : false,
+  "createOnlyProperties" : [ "/properties/DomainName" ],
+  "conditionalCreateOnlyProperties" : [ "/properties/EncryptionAtRestOptions/properties", "/properties/AdvancedSecurityOptions/properties/Enabled" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn", "/properties/DomainArn", "/properties/DomainEndpoint", "/properties/DomainEndpointV2", "/properties/DomainEndpoints", "/properties/ServiceSoftwareOptions", "/properties/AdvancedSecurityOptions/AnonymousAuthDisableDate", "/properties/IdentityCenterOptions/IdentityCenterApplicationARN", "/properties/IdentityCenterOptions/IdentityStoreId" ],
+  "writeOnlyProperties" : [ "/properties/AdvancedSecurityOptions/MasterUserOptions", "/properties/AdvancedSecurityOptions/SAMLOptions/MasterUserName", "/properties/AdvancedSecurityOptions/SAMLOptions/MasterBackendRole", "/properties/AdvancedSecurityOptions/JWTOptions/PublicKey" ],
+  "primaryIdentifier" : [ "/properties/DomainName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "es:CreateDomain", "es:DescribeDomain", "es:AddTags", "es:ListTags", "es:DescribeDomainChangeProgress" ]
     },
-    "AccessPolicies": {
-      "type": "object"
+    "read" : {
+      "permissions" : [ "es:DescribeDomain", "es:ListTags" ]
     },
-    "AdvancedOptions": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "[a-zA-Z0-9]+": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "update" : {
+      "permissions" : [ "es:UpdateDomain", "es:UpgradeDomain", "es:DescribeDomain", "es:AddTags", "es:RemoveTags", "es:ListTags", "es:DescribeDomainChangeProgress" ],
+      "timeoutInMinutes" : 2160
     },
-    "AdvancedSecurityOptions": {
-      "$ref": "#/definitions/AdvancedSecurityOptionsInput"
-    },
-    "Arn": {
-      "type": "string"
-    },
-    "ClusterConfig": {
-      "$ref": "#/definitions/ClusterConfig"
-    },
-    "CognitoOptions": {
-      "$ref": "#/definitions/CognitoOptions"
-    },
-    "DomainArn": {
-      "type": "string"
-    },
-    "DomainEndpoint": {
-      "type": "string"
-    },
-    "DomainEndpointOptions": {
-      "$ref": "#/definitions/DomainEndpointOptions"
-    },
-    "DomainEndpointV2": {
-      "type": "string"
-    },
-    "DomainEndpoints": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^.*$": {
-          "type": "string"
-        }
-      },
-      "type": "object"
-    },
-    "DomainName": {
-      "type": "string"
-    },
-    "EBSOptions": {
-      "$ref": "#/definitions/EBSOptions"
-    },
-    "EncryptionAtRestOptions": {
-      "$ref": "#/definitions/EncryptionAtRestOptions"
-    },
-    "EngineVersion": {
-      "type": "string"
-    },
-    "IPAddressType": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "IdentityCenterOptions": {
-      "$ref": "#/definitions/IdentityCenterOptions"
-    },
-    "LogPublishingOptions": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "[a-zA-Z0-9]+": {
-          "$ref": "#/definitions/LogPublishingOption"
-        }
-      },
-      "type": "object"
-    },
-    "NodeToNodeEncryptionOptions": {
-      "$ref": "#/definitions/NodeToNodeEncryptionOptions"
-    },
-    "OffPeakWindowOptions": {
-      "$ref": "#/definitions/OffPeakWindowOptions"
-    },
-    "ServiceSoftwareOptions": {
-      "$ref": "#/definitions/ServiceSoftwareOptions"
-    },
-    "SkipShardMigrationWait": {
-      "type": "boolean"
-    },
-    "SnapshotOptions": {
-      "$ref": "#/definitions/SnapshotOptions"
-    },
-    "SoftwareUpdateOptions": {
-      "$ref": "#/definitions/SoftwareUpdateOptions"
-    },
-    "Tags": {
-      "description": "An arbitrary set of tags (key-value pairs) for this Domain.",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "VPCOptions": {
-      "$ref": "#/definitions/VPCOptions"
+    "delete" : {
+      "permissions" : [ "es:DeleteDomain", "es:DescribeDomain" ]
     }
-  },
-  "propertyTransform": {
-    "/properties/EncryptionAtRestOptions/KmsKeyId": "$split(EncryptionAtRestOptions.KmsKeyId, \"/\")[-1] $OR EncryptionAtRestOptions.KmsKeyId"
-  },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn",
-    "/properties/DomainArn",
-    "/properties/DomainEndpoint",
-    "/properties/DomainEndpointV2",
-    "/properties/DomainEndpoints",
-    "/properties/ServiceSoftwareOptions",
-    "/properties/AdvancedSecurityOptions/AnonymousAuthDisableDate",
-    "/properties/IdentityCenterOptions/IdentityCenterApplicationARN",
-    "/properties/IdentityCenterOptions/IdentityStoreId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "es:AddTags",
-      "es:RemoveTags",
-      "es:ListTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::OpenSearchService::Domain",
-  "writeOnlyProperties": [
-    "/properties/AdvancedSecurityOptions/MasterUserOptions",
-    "/properties/AdvancedSecurityOptions/SAMLOptions/MasterUserName",
-    "/properties/AdvancedSecurityOptions/SAMLOptions/MasterBackendRole",
-    "/properties/AdvancedSecurityOptions/JWTOptions/PublicKey"
-  ]
+  }
 }

@@ -1,184 +1,145 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/MetricName"
-  ],
-  "definitions": {
-    "AggregationType": {
-      "additionalProperties": false,
-      "description": "Aggregation types supported by Fleet Indexing",
-      "properties": {
-        "Name": {
-          "description": "Fleet Indexing aggregation type names such as Statistics, Percentiles and Cardinality",
-          "type": "string"
+  "typeName" : "AWS::IoT::FleetMetric",
+  "description" : "An aggregated metric of certain devices in your fleet",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource" ]
+  },
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The tag's key",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Values": {
-          "description": "Fleet Indexing aggregation type values",
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "Value" : {
+          "type" : "string",
+          "description" : "The tag's value",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Name",
-        "Values"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource",
-      "properties": {
-        "Key": {
-          "description": "The tag's key",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "AggregationType" : {
+      "description" : "Aggregation types supported by Fleet Indexing",
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "description" : "Fleet Indexing aggregation type names such as Statistics, Percentiles and Cardinality",
+          "type" : "string"
         },
-        "Value": {
-          "description": "The tag's value",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "Values" : {
+          "description" : "Fleet Indexing aggregation type values",
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Name", "Values" ],
+      "additionalProperties" : false
     },
-    "iso8601UTC": {
-      "description": "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
-      "pattern": "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$",
-      "type": "string"
+    "iso8601UTC" : {
+      "description" : "The datetime value in ISO 8601 format. The timezone is always UTC. (YYYY-MM-DDThh:mm:ss.sssZ)",
+      "type" : "string",
+      "pattern" : "^([0-2]\\d{3})-(0[0-9]|1[0-2])-([0-2]\\d|3[01])T([01]\\d|2[0-4]):([0-5]\\d):([0-6]\\d)((\\.\\d{3})?)Z$"
     }
   },
-  "description": "An aggregated metric of certain devices in your fleet",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreateFleetMetric",
-        "iot:DescribeFleetMetric",
-        "iot:TagResource"
-      ]
+  "properties" : {
+    "MetricName" : {
+      "description" : "The name of the fleet metric",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iot:DeleteFleetMetric",
-        "iot:DescribeFleetMetric"
-      ]
+    "Description" : {
+      "description" : "The description of a fleet metric",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iot:ListFleetMetrics"
-      ]
+    "QueryString" : {
+      "description" : "The Fleet Indexing query used by a fleet metric",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeFleetMetric",
-        "iot:ListTagsForResource"
-      ]
+    "Period" : {
+      "description" : "The period of metric emission in seconds",
+      "type" : "integer"
     },
-    "update": {
-      "permissions": [
-        "iot:UpdateFleetMetric",
-        "iot:DescribeFleetMetric",
-        "iot:ListTagsForResource",
-        "iot:UntagResource",
-        "iot:TagResource"
-      ]
+    "AggregationField" : {
+      "description" : "The aggregation field to perform aggregation and metric emission",
+      "type" : "string"
+    },
+    "QueryVersion" : {
+      "description" : "The version of a Fleet Indexing query used by a fleet metric",
+      "type" : "string"
+    },
+    "IndexName" : {
+      "description" : "The index name of a fleet metric",
+      "type" : "string"
+    },
+    "Unit" : {
+      "description" : "The unit of data points emitted by a fleet metric",
+      "type" : "string"
+    },
+    "AggregationType" : {
+      "$ref" : "#/definitions/AggregationType"
+    },
+    "MetricArn" : {
+      "description" : "The Amazon Resource Number (ARN) of a fleet metric metric",
+      "type" : "string"
+    },
+    "CreationDate" : {
+      "description" : "The creation date of a fleet metric",
+      "$ref" : "#/definitions/iso8601UTC"
+    },
+    "LastModifiedDate" : {
+      "description" : "The last modified date of a fleet metric",
+      "$ref" : "#/definitions/iso8601UTC"
+    },
+    "Version" : {
+      "description" : "The version of a fleet metric",
+      "type" : "number"
+    },
+    "Tags" : {
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "description" : "An array of key-value pairs to apply to this resource",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/MetricName"
-  ],
-  "properties": {
-    "AggregationField": {
-      "description": "The aggregation field to perform aggregation and metric emission",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "MetricName" ],
+  "readOnlyProperties" : [ "/properties/MetricArn", "/properties/CreationDate", "/properties/LastModifiedDate", "/properties/Version" ],
+  "createOnlyProperties" : [ "/properties/MetricName" ],
+  "primaryIdentifier" : [ "/properties/MetricName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreateFleetMetric", "iot:DescribeFleetMetric", "iot:TagResource" ]
     },
-    "AggregationType": {
-      "$ref": "#/definitions/AggregationType"
+    "read" : {
+      "permissions" : [ "iot:DescribeFleetMetric", "iot:ListTagsForResource" ]
     },
-    "CreationDate": {
-      "$ref": "#/definitions/iso8601UTC",
-      "description": "The creation date of a fleet metric"
+    "update" : {
+      "permissions" : [ "iot:UpdateFleetMetric", "iot:DescribeFleetMetric", "iot:ListTagsForResource", "iot:UntagResource", "iot:TagResource" ]
     },
-    "Description": {
-      "description": "The description of a fleet metric",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:DeleteFleetMetric", "iot:DescribeFleetMetric" ]
     },
-    "IndexName": {
-      "description": "The index name of a fleet metric",
-      "type": "string"
-    },
-    "LastModifiedDate": {
-      "$ref": "#/definitions/iso8601UTC",
-      "description": "The last modified date of a fleet metric"
-    },
-    "MetricArn": {
-      "description": "The Amazon Resource Number (ARN) of a fleet metric metric",
-      "type": "string"
-    },
-    "MetricName": {
-      "description": "The name of the fleet metric",
-      "type": "string"
-    },
-    "Period": {
-      "description": "The period of metric emission in seconds",
-      "type": "integer"
-    },
-    "QueryString": {
-      "description": "The Fleet Indexing query used by a fleet metric",
-      "type": "string"
-    },
-    "QueryVersion": {
-      "description": "The version of a Fleet Indexing query used by a fleet metric",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Unit": {
-      "description": "The unit of data points emitted by a fleet metric",
-      "type": "string"
-    },
-    "Version": {
-      "description": "The version of a fleet metric",
-      "type": "number"
+    "list" : {
+      "permissions" : [ "iot:ListFleetMetrics" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/MetricArn",
-    "/properties/CreationDate",
-    "/properties/LastModifiedDate",
-    "/properties/Version"
-  ],
-  "required": [
-    "MetricName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:TagResource",
-      "iot:UntagResource",
-      "iot:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::FleetMetric"
+  }
 }

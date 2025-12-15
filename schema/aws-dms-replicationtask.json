@@ -1,90 +1,72 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResourceIdentifier",
-    "/properties/TargetEndpointArn",
-    "/properties/ReplicationInstanceArn",
-    "/properties/SourceEndpointArn"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::DMS::ReplicationTask",
+  "description" : "Resource Type definition for AWS::DMS::ReplicationTask",
+  "additionalProperties" : false,
+  "properties" : {
+    "ReplicationTaskSettings" : {
+      "type" : "string"
+    },
+    "CdcStartPosition" : {
+      "type" : "string"
+    },
+    "CdcStopPosition" : {
+      "type" : "string"
+    },
+    "MigrationType" : {
+      "type" : "string"
+    },
+    "TargetEndpointArn" : {
+      "type" : "string"
+    },
+    "ReplicationInstanceArn" : {
+      "type" : "string"
+    },
+    "TaskData" : {
+      "type" : "string"
+    },
+    "CdcStartTime" : {
+      "type" : "number"
+    },
+    "ResourceIdentifier" : {
+      "type" : "string"
+    },
+    "TableMappings" : {
+      "type" : "string"
+    },
+    "ReplicationTaskIdentifier" : {
+      "type" : "string"
+    },
+    "SourceEndpointArn" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::DMS::ReplicationTask",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CdcStartPosition": {
-      "type": "string"
-    },
-    "CdcStartTime": {
-      "type": "number"
-    },
-    "CdcStopPosition": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "MigrationType": {
-      "type": "string"
-    },
-    "ReplicationInstanceArn": {
-      "type": "string"
-    },
-    "ReplicationTaskIdentifier": {
-      "type": "string"
-    },
-    "ReplicationTaskSettings": {
-      "type": "string"
-    },
-    "ResourceIdentifier": {
-      "type": "string"
-    },
-    "SourceEndpointArn": {
-      "type": "string"
-    },
-    "TableMappings": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "TargetEndpointArn": {
-      "type": "string"
-    },
-    "TaskData": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "TableMappings",
-    "SourceEndpointArn",
-    "MigrationType",
-    "TargetEndpointArn",
-    "ReplicationInstanceArn"
-  ],
-  "typeName": "AWS::DMS::ReplicationTask"
+  "required" : [ "TableMappings", "SourceEndpointArn", "MigrationType", "TargetEndpointArn", "ReplicationInstanceArn" ],
+  "createOnlyProperties" : [ "/properties/ResourceIdentifier", "/properties/TargetEndpointArn", "/properties/ReplicationInstanceArn", "/properties/SourceEndpointArn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

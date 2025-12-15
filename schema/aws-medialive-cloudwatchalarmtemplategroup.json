@@ -1,118 +1,87 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "TagMap": {
-      "additionalProperties": false,
-      "description": "Represents the tags associated with a resource.",
-      "patternProperties": {
-        ".+": {
-          "type": "string"
+  "typeName" : "AWS::MediaLive::CloudWatchAlarmTemplateGroup",
+  "description" : "Definition of AWS::MediaLive::CloudWatchAlarmTemplateGroup Resource Type",
+  "definitions" : {
+    "TagMap" : {
+      "type" : "object",
+      "description" : "Represents the tags associated with a resource.",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::MediaLive::CloudWatchAlarmTemplateGroup Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "medialive:CreateCloudWatchAlarmTemplateGroup",
-        "medialive:GetCloudWatchAlarmTemplateGroup",
-        "medialive:CreateTags"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "^arn:.+:medialive:.+:cloudwatch-alarm-template-group:.+$",
+      "description" : "A cloudwatch alarm template group's ARN (Amazon Resource Name)"
     },
-    "delete": {
-      "permissions": [
-        "medialive:DeleteCloudWatchAlarmTemplateGroup"
-      ]
+    "CreatedAt" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "list": {
-      "permissions": [
-        "medialive:ListCloudWatchAlarmTemplateGroups"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 0,
+      "description" : "A resource's optional description."
     },
-    "read": {
-      "permissions": [
-        "medialive:GetCloudWatchAlarmTemplateGroup"
-      ]
+    "Id" : {
+      "type" : "string",
+      "maxLength" : 11,
+      "minLength" : 7,
+      "pattern" : "^(aws-)?[0-9]{7}$",
+      "description" : "A cloudwatch alarm template group's id. AWS provided template groups have ids that start with `aws-`"
     },
-    "update": {
-      "permissions": [
-        "medialive:UpdateCloudWatchAlarmTemplateGroup",
-        "medialive:GetCloudWatchAlarmTemplateGroup",
-        "medialive:CreateTags",
-        "medialive:DeleteTags"
-      ]
+    "Identifier" : {
+      "type" : "string"
+    },
+    "ModifiedAt" : {
+      "type" : "string",
+      "format" : "date-time"
+    },
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^[^\\s]+$",
+      "description" : "A resource's name. Names must be unique within the scope of a resource type in a specific region."
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Identifier"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "A cloudwatch alarm template group's ARN (Amazon Resource Name)",
-      "pattern": "^arn:.+:medialive:.+:cloudwatch-alarm-template-group:.+$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "medialive:CreateTags", "medialive:DeleteTags" ]
+  },
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreatedAt", "/properties/Id", "/properties/Identifier", "/properties/ModifiedAt" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/Identifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "medialive:CreateCloudWatchAlarmTemplateGroup", "medialive:GetCloudWatchAlarmTemplateGroup", "medialive:CreateTags" ]
     },
-    "CreatedAt": {
-      "format": "date-time",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "medialive:GetCloudWatchAlarmTemplateGroup" ]
     },
-    "Description": {
-      "description": "A resource's optional description.",
-      "maxLength": 1024,
-      "minLength": 0,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "medialive:UpdateCloudWatchAlarmTemplateGroup", "medialive:GetCloudWatchAlarmTemplateGroup", "medialive:CreateTags", "medialive:DeleteTags" ]
     },
-    "Id": {
-      "description": "A cloudwatch alarm template group's id. AWS provided template groups have ids that start with `aws-`",
-      "maxLength": 11,
-      "minLength": 7,
-      "pattern": "^(aws-)?[0-9]{7}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "medialive:DeleteCloudWatchAlarmTemplateGroup" ]
     },
-    "Identifier": {
-      "type": "string"
-    },
-    "ModifiedAt": {
-      "format": "date-time",
-      "type": "string"
-    },
-    "Name": {
-      "description": "A resource's name. Names must be unique within the scope of a resource type in a specific region.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[^\\s]+$",
-      "type": "string"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "list" : {
+      "permissions" : [ "medialive:ListCloudWatchAlarmTemplateGroups" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreatedAt",
-    "/properties/Id",
-    "/properties/Identifier",
-    "/properties/ModifiedAt"
-  ],
-  "required": [
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "medialive:CreateTags",
-      "medialive:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MediaLive::CloudWatchAlarmTemplateGroup"
+  "additionalProperties" : false
 }

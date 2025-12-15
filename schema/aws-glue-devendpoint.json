@@ -1,75 +1,67 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/EndpointName"
-  ],
-  "description": "Resource Type definition for AWS::Glue::DevEndpoint",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arguments": {
-      "type": "object"
+  "typeName" : "AWS::Glue::DevEndpoint",
+  "description" : "Resource Type definition for AWS::Glue::DevEndpoint",
+  "additionalProperties" : false,
+  "properties" : {
+    "ExtraJarsS3Path" : {
+      "type" : "string"
     },
-    "EndpointName": {
-      "type": "string"
+    "PublicKey" : {
+      "type" : "string"
     },
-    "ExtraJarsS3Path": {
-      "type": "string"
+    "NumberOfNodes" : {
+      "type" : "integer"
     },
-    "ExtraPythonLibsS3Path": {
-      "type": "string"
+    "Arguments" : {
+      "type" : "object"
     },
-    "GlueVersion": {
-      "type": "string"
+    "SubnetId" : {
+      "type" : "string"
     },
-    "Id": {
-      "type": "string"
+    "PublicKeys" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "NumberOfNodes": {
-      "type": "integer"
+    "SecurityGroupIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
-    "NumberOfWorkers": {
-      "type": "integer"
+    "RoleArn" : {
+      "type" : "string"
     },
-    "PublicKey": {
-      "type": "string"
+    "WorkerType" : {
+      "type" : "string"
     },
-    "PublicKeys": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "EndpointName" : {
+      "type" : "string"
     },
-    "RoleArn": {
-      "type": "string"
+    "GlueVersion" : {
+      "type" : "string"
     },
-    "SecurityConfiguration": {
-      "type": "string"
+    "ExtraPythonLibsS3Path" : {
+      "type" : "string"
     },
-    "SecurityGroupIds": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "SecurityConfiguration" : {
+      "type" : "string"
     },
-    "SubnetId": {
-      "type": "string"
+    "Id" : {
+      "type" : "string"
     },
-    "Tags": {
-      "type": "object"
+    "NumberOfWorkers" : {
+      "type" : "integer"
     },
-    "WorkerType": {
-      "type": "string"
+    "Tags" : {
+      "type" : "object"
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "RoleArn"
-  ],
-  "typeName": "AWS::Glue::DevEndpoint"
+  "required" : [ "RoleArn" ],
+  "createOnlyProperties" : [ "/properties/EndpointName" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

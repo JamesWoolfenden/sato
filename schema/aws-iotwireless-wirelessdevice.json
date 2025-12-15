@@ -1,371 +1,295 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "AbpV10x": {
-      "additionalProperties": false,
-      "properties": {
-        "DevAddr": {
-          "pattern": "[a-fA-F0-9]{8}",
-          "type": "string"
+  "typeName" : "AWS::IoTWireless::WirelessDevice",
+  "description" : "Create and manage wireless gateways, including LoRa gateways.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "OtaaV10x" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AppKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         },
-        "SessionKeys": {
-          "$ref": "#/definitions/SessionKeysAbpV10x"
+        "AppEui" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{16}"
         }
       },
-      "required": [
-        "DevAddr",
-        "SessionKeys"
-      ],
-      "type": "object"
+      "required" : [ "AppKey", "AppEui" ]
     },
-    "AbpV11": {
-      "additionalProperties": false,
-      "properties": {
-        "DevAddr": {
-          "pattern": "[a-fA-F0-9]{8}",
-          "type": "string"
+    "OtaaV11" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AppKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         },
-        "SessionKeys": {
-          "$ref": "#/definitions/SessionKeysAbpV11"
+        "NwkKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
+        },
+        "JoinEui" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{16}"
         }
       },
-      "required": [
-        "DevAddr",
-        "SessionKeys"
-      ],
-      "type": "object"
+      "required" : [ "AppKey", "NwkKey", "JoinEui" ]
     },
-    "Application": {
-      "additionalProperties": false,
-      "description": "LoRaWAN application configuration, which can be used to perform geolocation.",
-      "properties": {
-        "DestinationName": {
-          "description": "The name of the position data destination that describes the AWS IoT rule that processes the device's position data for use by AWS IoT Core for LoRaWAN.",
-          "maxLength": 128,
-          "pattern": "[a-zA-Z0-9-_]+",
-          "type": "string"
+    "SessionKeysAbpV11" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FNwkSIntKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         },
-        "FPort": {
-          "description": "The Fport value.",
-          "maximum": 223,
-          "minimum": 1,
-          "type": "integer"
+        "SNwkSIntKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         },
-        "Type": {
-          "description": "Application type, which can be specified to obtain real-time position information of your LoRaWAN device.",
-          "enum": [
-            "SemtechGeolocation",
-            "SemtechGNSS",
-            "SemtechGNSSNG",
-            "SemtechWiFi"
-          ],
-          "type": "string"
+        "NwkSEncKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
+        },
+        "AppSKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         }
       },
-      "type": "object"
+      "required" : [ "FNwkSIntKey", "SNwkSIntKey", "NwkSEncKey", "AppSKey" ]
     },
-    "FPorts": {
-      "additionalProperties": false,
-      "properties": {
-        "Applications": {
-          "description": "A list of optional LoRaWAN application information, which can be used for geolocation.",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/Application"
-          },
-          "type": "array",
-          "uniqueItems": true
+    "AbpV11" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DevAddr" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{8}"
+        },
+        "SessionKeys" : {
+          "$ref" : "#/definitions/SessionKeysAbpV11"
         }
       },
-      "type": "object"
+      "required" : [ "DevAddr", "SessionKeys" ]
     },
-    "LoRaWANDevice": {
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "OtaaV11"
-          ]
+    "SessionKeysAbpV10x" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NwkSKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         },
-        {
-          "required": [
-            "OtaaV10x"
-          ]
-        },
-        {
-          "required": [
-            "AbpV11"
-          ]
-        },
-        {
-          "required": [
-            "AbpV10x"
-          ]
-        }
-      ],
-      "properties": {
-        "AbpV10x": {
-          "$ref": "#/definitions/AbpV10x"
-        },
-        "AbpV11": {
-          "$ref": "#/definitions/AbpV11"
-        },
-        "DevEui": {
-          "pattern": "[a-f0-9]{16}",
-          "type": "string"
-        },
-        "DeviceProfileId": {
-          "maxLength": 256,
-          "type": "string"
-        },
-        "FPorts": {
-          "$ref": "#/definitions/FPorts"
-        },
-        "OtaaV10x": {
-          "$ref": "#/definitions/OtaaV10x"
-        },
-        "OtaaV11": {
-          "$ref": "#/definitions/OtaaV11"
-        },
-        "ServiceProfileId": {
-          "maxLength": 256,
-          "type": "string"
+        "AppSKey" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{32}"
         }
       },
-      "type": "object"
+      "required" : [ "NwkSKey", "AppSKey" ]
     },
-    "OtaaV10x": {
-      "additionalProperties": false,
-      "properties": {
-        "AppEui": {
-          "pattern": "[a-fA-F0-9]{16}",
-          "type": "string"
+    "AbpV10x" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DevAddr" : {
+          "type" : "string",
+          "pattern" : "[a-fA-F0-9]{8}"
         },
-        "AppKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
+        "SessionKeys" : {
+          "$ref" : "#/definitions/SessionKeysAbpV10x"
         }
       },
-      "required": [
-        "AppKey",
-        "AppEui"
-      ],
-      "type": "object"
+      "required" : [ "DevAddr", "SessionKeys" ]
     },
-    "OtaaV11": {
-      "additionalProperties": false,
-      "properties": {
-        "AppKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
-        },
-        "JoinEui": {
-          "pattern": "[a-fA-F0-9]{16}",
-          "type": "string"
-        },
-        "NwkKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
+    "FPorts" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Applications" : {
+          "description" : "A list of optional LoRaWAN application information, which can be used for geolocation.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/Application"
+          }
         }
-      },
-      "required": [
-        "AppKey",
-        "NwkKey",
-        "JoinEui"
-      ],
-      "type": "object"
+      }
     },
-    "SessionKeysAbpV10x": {
-      "additionalProperties": false,
-      "properties": {
-        "AppSKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
+    "LoRaWANDevice" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DevEui" : {
+          "type" : "string",
+          "pattern" : "[a-f0-9]{16}"
         },
-        "NwkSKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
+        "DeviceProfileId" : {
+          "type" : "string",
+          "maxLength" : 256
+        },
+        "ServiceProfileId" : {
+          "type" : "string",
+          "maxLength" : 256
+        },
+        "OtaaV11" : {
+          "$ref" : "#/definitions/OtaaV11"
+        },
+        "OtaaV10x" : {
+          "$ref" : "#/definitions/OtaaV10x"
+        },
+        "AbpV11" : {
+          "$ref" : "#/definitions/AbpV11"
+        },
+        "AbpV10x" : {
+          "$ref" : "#/definitions/AbpV10x"
+        },
+        "FPorts" : {
+          "$ref" : "#/definitions/FPorts"
         }
       },
-      "required": [
-        "NwkSKey",
-        "AppSKey"
-      ],
-      "type": "object"
+      "oneOf" : [ {
+        "required" : [ "OtaaV11" ]
+      }, {
+        "required" : [ "OtaaV10x" ]
+      }, {
+        "required" : [ "AbpV11" ]
+      }, {
+        "required" : [ "AbpV10x" ]
+      } ]
     },
-    "SessionKeysAbpV11": {
-      "additionalProperties": false,
-      "properties": {
-        "AppSKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "FNwkSIntKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
-        },
-        "NwkSEncKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
-        },
-        "SNwkSIntKey": {
-          "pattern": "[a-fA-F0-9]{32}",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "FNwkSIntKey",
-        "SNwkSIntKey",
-        "NwkSEncKey",
-        "AppSKey"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Application" : {
+      "description" : "LoRaWAN application configuration, which can be used to perform geolocation.",
+      "type" : "object",
+      "properties" : {
+        "DestinationName" : {
+          "description" : "The name of the position data destination that describes the AWS IoT rule that processes the device's position data for use by AWS IoT Core for LoRaWAN.",
+          "type" : "string",
+          "pattern" : "[a-zA-Z0-9-_]+",
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "FPort" : {
+          "description" : "The Fport value.",
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 223
+        },
+        "Type" : {
+          "description" : "Application type, which can be specified to obtain real-time position information of your LoRaWAN device.",
+          "type" : "string",
+          "enum" : [ "SemtechGeolocation", "SemtechGNSS", "SemtechGNSSNG", "SemtechWiFi" ]
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Create and manage wireless gateways, including LoRa gateways.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotwireless:CreateWirelessDevice",
-        "iotwireless:TagResource"
-      ]
+  "properties" : {
+    "Type" : {
+      "description" : "Wireless device type, currently only Sidewalk and LoRa",
+      "type" : "string",
+      "enum" : [ "Sidewalk", "LoRaWAN" ]
     },
-    "delete": {
-      "permissions": [
-        "iotwireless:DeleteWirelessDevice",
-        "iotwireless:DisassociateWirelessDeviceFromThing"
-      ]
+    "Name" : {
+      "description" : "Wireless device name",
+      "type" : "string",
+      "maxLength" : 256
     },
-    "list": {
-      "permissions": [
-        "iotwireless:ListWirelessDevices",
-        "iotwireless:ListTagsForResource"
-      ]
+    "Description" : {
+      "description" : "Wireless device description",
+      "type" : "string",
+      "maxLength" : 2048
     },
-    "read": {
-      "permissions": [
-        "iotwireless:GetWirelessDevice",
-        "iotwireless:ListTagsForResource"
-      ]
+    "DestinationName" : {
+      "description" : "Wireless device destination name",
+      "type" : "string",
+      "maxLength" : 128
     },
-    "update": {
-      "permissions": [
-        "iotwireless:UpdateWirelessDevice",
-        "iotwireless:GetWirelessDevice",
-        "iotwireless:AssociateWirelessDeviceWithThing",
-        "iotwireless:TagResource",
-        "iotwireless:UntagResource"
-      ]
+    "LoRaWAN" : {
+      "description" : "The combination of Package, Station and Model which represents the version of the LoRaWAN Wireless Device.",
+      "$ref" : "#/definitions/LoRaWANDevice"
+    },
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the device. Currently not supported, will not create if tags are passed.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "maxItems" : 200,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Arn" : {
+      "description" : "Wireless device arn. Returned after successful create.",
+      "type" : "string"
+    },
+    "Id" : {
+      "description" : "Wireless device Id. Returned after successful create.",
+      "type" : "string",
+      "maxLength" : 256
+    },
+    "ThingArn" : {
+      "description" : "Thing arn. Passed into update to associate Thing with Wireless device.",
+      "type" : "string"
+    },
+    "ThingName" : {
+      "description" : "Thing Arn. If there is a Thing created, this can be returned with a Get call.",
+      "type" : "string"
+    },
+    "LastUplinkReceivedAt" : {
+      "description" : "The date and time when the most recent uplink was received.",
+      "type" : "string"
+    },
+    "Positioning" : {
+      "description" : "FPort values for the GNSS, stream, and ClockSync functions of the positioning information.",
+      "type" : "string",
+      "enum" : [ "Enabled", "Disabled" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Wireless device arn. Returned after successful create.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Type", "DestinationName" ],
+  "readOnlyProperties" : [ "/properties/ThingName", "/properties/Id", "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotwireless:TagResource", "iotwireless:UntagResource", "iotwireless:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotwireless:CreateWirelessDevice", "iotwireless:TagResource" ]
     },
-    "Description": {
-      "description": "Wireless device description",
-      "maxLength": 2048,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iotwireless:GetWirelessDevice", "iotwireless:ListTagsForResource" ]
     },
-    "DestinationName": {
-      "description": "Wireless device destination name",
-      "maxLength": 128,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iotwireless:UpdateWirelessDevice", "iotwireless:GetWirelessDevice", "iotwireless:AssociateWirelessDeviceWithThing", "iotwireless:TagResource", "iotwireless:UntagResource" ]
     },
-    "Id": {
-      "description": "Wireless device Id. Returned after successful create.",
-      "maxLength": 256,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotwireless:DeleteWirelessDevice", "iotwireless:DisassociateWirelessDeviceFromThing" ]
     },
-    "LastUplinkReceivedAt": {
-      "description": "The date and time when the most recent uplink was received.",
-      "type": "string"
-    },
-    "LoRaWAN": {
-      "$ref": "#/definitions/LoRaWANDevice",
-      "description": "The combination of Package, Station and Model which represents the version of the LoRaWAN Wireless Device."
-    },
-    "Name": {
-      "description": "Wireless device name",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "Positioning": {
-      "description": "FPort values for the GNSS, stream, and ClockSync functions of the positioning information.",
-      "enum": [
-        "Enabled",
-        "Disabled"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the device. Currently not supported, will not create if tags are passed.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "ThingArn": {
-      "description": "Thing arn. Passed into update to associate Thing with Wireless device.",
-      "type": "string"
-    },
-    "ThingName": {
-      "description": "Thing Arn. If there is a Thing created, this can be returned with a Get call.",
-      "type": "string"
-    },
-    "Type": {
-      "description": "Wireless device type, currently only Sidewalk and LoRa",
-      "enum": [
-        "Sidewalk",
-        "LoRaWAN"
-      ],
-      "type": "string"
+    "list" : {
+      "permissions" : [ "iotwireless:ListWirelessDevices", "iotwireless:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ThingName",
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Type",
-    "DestinationName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotwireless:TagResource",
-      "iotwireless:UntagResource",
-      "iotwireless:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTWireless::WirelessDevice"
+  }
 }

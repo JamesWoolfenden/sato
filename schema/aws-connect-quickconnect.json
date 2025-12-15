@@ -1,241 +1,191 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "ContactFlowArn": {
-      "description": "The identifier of the contact flow.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$",
-      "type": "string"
+  "typeName" : "AWS::Connect::QuickConnect",
+  "description" : "Resource Type definition for AWS::Connect::QuickConnect",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
+  "definitions" : {
+    "PhoneNumber" : {
+      "description" : "The phone number in E.164 format.",
+      "type" : "string",
+      "pattern" : "^\\+[1-9]\\d{1,14}$"
     },
-    "PhoneNumber": {
-      "description": "The phone number in E.164 format.",
-      "pattern": "^\\+[1-9]\\d{1,14}$",
-      "type": "string"
+    "ContactFlowArn" : {
+      "description" : "The identifier of the contact flow.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/contact-flow/[-a-zA-Z0-9]*$"
     },
-    "PhoneNumberQuickConnectConfig": {
-      "additionalProperties": false,
-      "description": "The phone configuration. This is required only if QuickConnectType is PHONE_NUMBER.",
-      "properties": {
-        "PhoneNumber": {
-          "$ref": "#/definitions/PhoneNumber"
+    "QueueArn" : {
+      "description" : "The identifier for the queue.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$"
+    },
+    "UserArn" : {
+      "description" : "The identifier of the user.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$"
+    },
+    "PhoneNumberQuickConnectConfig" : {
+      "description" : "The phone configuration. This is required only if QuickConnectType is PHONE_NUMBER.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PhoneNumber" : {
+          "$ref" : "#/definitions/PhoneNumber"
         }
       },
-      "required": [
-        "PhoneNumber"
-      ],
-      "type": "object"
+      "required" : [ "PhoneNumber" ]
     },
-    "QueueArn": {
-      "description": "The identifier for the queue.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/queue/[-a-zA-Z0-9]*$",
-      "type": "string"
-    },
-    "QueueQuickConnectConfig": {
-      "additionalProperties": false,
-      "description": "The queue configuration. This is required only if QuickConnectType is QUEUE.",
-      "properties": {
-        "ContactFlowArn": {
-          "$ref": "#/definitions/ContactFlowArn"
+    "QueueQuickConnectConfig" : {
+      "description" : "The queue configuration. This is required only if QuickConnectType is QUEUE.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContactFlowArn" : {
+          "$ref" : "#/definitions/ContactFlowArn"
         },
-        "QueueArn": {
-          "$ref": "#/definitions/QueueArn"
+        "QueueArn" : {
+          "$ref" : "#/definitions/QueueArn"
         }
       },
-      "required": [
-        "ContactFlowArn",
-        "QueueArn"
-      ],
-      "type": "object"
+      "required" : [ "ContactFlowArn", "QueueArn" ]
     },
-    "QuickConnectConfig": {
-      "additionalProperties": false,
-      "description": "Configuration settings for the quick connect.",
-      "properties": {
-        "PhoneConfig": {
-          "$ref": "#/definitions/PhoneNumberQuickConnectConfig"
+    "UserQuickConnectConfig" : {
+      "description" : "The user configuration. This is required only if QuickConnectType is USER.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContactFlowArn" : {
+          "$ref" : "#/definitions/ContactFlowArn"
         },
-        "QueueConfig": {
-          "$ref": "#/definitions/QueueQuickConnectConfig"
-        },
-        "QuickConnectType": {
-          "$ref": "#/definitions/QuickConnectType"
-        },
-        "UserConfig": {
-          "$ref": "#/definitions/UserQuickConnectConfig"
+        "UserArn" : {
+          "$ref" : "#/definitions/UserArn"
         }
       },
-      "required": [
-        "QuickConnectType"
-      ],
-      "type": "object"
+      "required" : [ "ContactFlowArn", "UserArn" ]
     },
-    "QuickConnectType": {
-      "description": "The type of quick connect. In the Amazon Connect console, when you create a quick connect, you are prompted to assign one of the following types: Agent (USER), External (PHONE_NUMBER), or Queue (QUEUE).",
-      "enum": [
-        "PHONE_NUMBER",
-        "QUEUE",
-        "USER"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
-          "type": "string"
+    "QuickConnectConfig" : {
+      "description" : "Configuration settings for the quick connect.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "QuickConnectType" : {
+          "$ref" : "#/definitions/QuickConnectType"
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 256,
-          "type": "string"
+        "PhoneConfig" : {
+          "$ref" : "#/definitions/PhoneNumberQuickConnectConfig"
+        },
+        "QueueConfig" : {
+          "$ref" : "#/definitions/QueueQuickConnectConfig"
+        },
+        "UserConfig" : {
+          "$ref" : "#/definitions/UserQuickConnectConfig"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "QuickConnectType" ]
     },
-    "UserArn": {
-      "description": "The identifier of the user.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/agent/[-a-zA-Z0-9]*$",
-      "type": "string"
+    "QuickConnectType" : {
+      "description" : "The type of quick connect. In the Amazon Connect console, when you create a quick connect, you are prompted to assign one of the following types: Agent (USER), External (PHONE_NUMBER), or Queue (QUEUE).",
+      "type" : "string",
+      "enum" : [ "PHONE_NUMBER", "QUEUE", "USER" ]
     },
-    "UserQuickConnectConfig": {
-      "additionalProperties": false,
-      "description": "The user configuration. This is required only if QuickConnectType is USER.",
-      "properties": {
-        "ContactFlowArn": {
-          "$ref": "#/definitions/ContactFlowArn"
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^(?!aws:)[a-zA-Z+-=._:/]+$"
         },
-        "UserArn": {
-          "$ref": "#/definitions/UserArn"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is maximum of 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "maxLength" : 256
         }
       },
-      "required": [
-        "ContactFlowArn",
-        "UserArn"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Resource Type definition for AWS::Connect::QuickConnect",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "connect:CreateQuickConnect",
-        "connect:TagResource"
-      ]
+  "properties" : {
+    "InstanceArn" : {
+      "description" : "The identifier of the Amazon Connect instance.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$"
     },
-    "delete": {
-      "permissions": [
-        "connect:DeleteQuickConnect",
-        "connect:UntagResource"
-      ]
+    "Name" : {
+      "description" : "The name of the quick connect.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 127
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "InstanceArn": {
-            "$ref": "resource-schema.json#/properties/InstanceArn"
+    "Description" : {
+      "description" : "The description of the quick connect.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 250
+    },
+    "QuickConnectConfig" : {
+      "description" : "Configuration settings for the quick connect.",
+      "$ref" : "#/definitions/QuickConnectConfig"
+    },
+    "QuickConnectArn" : {
+      "description" : "The Amazon Resource Name (ARN) for the quick connect.",
+      "type" : "string",
+      "pattern" : "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/transfer-destination/[-a-zA-Z0-9]*$"
+    },
+    "Tags" : {
+      "type" : "array",
+      "maxItems" : 200,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "description" : "One or more tags.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "QuickConnectType" : {
+      "description" : "The type of quick connect. In the Amazon Connect console, when you create a quick connect, you are prompted to assign one of the following types: Agent (USER), External (PHONE_NUMBER), or Queue (QUEUE).",
+      "type" : "string",
+      "enum" : [ "PHONE_NUMBER", "QUEUE", "USER" ]
+    }
+  },
+  "required" : [ "Name", "InstanceArn", "QuickConnectConfig" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "connect:CreateQuickConnect", "connect:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "connect:DescribeQuickConnect" ]
+    },
+    "delete" : {
+      "permissions" : [ "connect:DeleteQuickConnect", "connect:UntagResource" ]
+    },
+    "update" : {
+      "permissions" : [ "connect:UpdateQuickConnectName", "connect:UpdateQuickConnectConfig", "connect:TagResource", "connect:UntagResource" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "InstanceArn" : {
+            "$ref" : "resource-schema.json#/properties/InstanceArn"
           }
         },
-        "required": [
-          "InstanceArn"
-        ]
+        "required" : [ "InstanceArn" ]
       },
-      "permissions": [
-        "connect:ListQuickConnects"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "connect:DescribeQuickConnect"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "connect:UpdateQuickConnectName",
-        "connect:UpdateQuickConnectConfig",
-        "connect:TagResource",
-        "connect:UntagResource"
-      ]
+      "permissions" : [ "connect:ListQuickConnects" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/QuickConnectArn"
-  ],
-  "properties": {
-    "Description": {
-      "description": "The description of the quick connect.",
-      "maxLength": 250,
-      "minLength": 1,
-      "type": "string"
-    },
-    "InstanceArn": {
-      "description": "The identifier of the Amazon Connect instance.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*$",
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the quick connect.",
-      "maxLength": 127,
-      "minLength": 1,
-      "type": "string"
-    },
-    "QuickConnectArn": {
-      "description": "The Amazon Resource Name (ARN) for the quick connect.",
-      "pattern": "^arn:aws[-a-z0-9]*:connect:[-a-z0-9]*:[0-9]{12}:instance/[-a-zA-Z0-9]*/transfer-destination/[-a-zA-Z0-9]*$",
-      "type": "string"
-    },
-    "QuickConnectConfig": {
-      "$ref": "#/definitions/QuickConnectConfig",
-      "description": "Configuration settings for the quick connect."
-    },
-    "QuickConnectType": {
-      "description": "The type of quick connect. In the Amazon Connect console, when you create a quick connect, you are prompted to assign one of the following types: Agent (USER), External (PHONE_NUMBER), or Queue (QUEUE).",
-      "enum": [
-        "PHONE_NUMBER",
-        "QUEUE",
-        "USER"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "One or more tags.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/QuickConnectArn",
-    "/properties/QuickConnectType"
-  ],
-  "required": [
-    "Name",
-    "InstanceArn",
-    "QuickConnectConfig"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-connect",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "connect:TagResource",
-      "connect:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Connect::QuickConnect"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/QuickConnectArn" ],
+  "readOnlyProperties" : [ "/properties/QuickConnectArn", "/properties/QuickConnectType" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "connect:TagResource", "connect:UntagResource" ]
+  }
 }

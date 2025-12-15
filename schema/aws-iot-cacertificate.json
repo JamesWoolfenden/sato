@@ -1,189 +1,130 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/VerificationCertificatePem",
-    "/properties/CertificateMode",
-    "/properties/CACertificatePem"
-  ],
-  "definitions": {
-    "RegistrationConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "RoleArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
-          "type": "string"
+  "typeName" : "AWS::IoT::CACertificate",
+  "description" : "Registers a CA Certificate in IoT.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "RegistrationConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TemplateBody" : {
+          "type" : "string",
+          "pattern" : "[\\s\\S]*",
+          "minLength" : 0,
+          "maxLength" : 10240
         },
-        "TemplateBody": {
-          "maxLength": 10240,
-          "minLength": 0,
-          "pattern": "[\\s\\S]*",
-          "type": "string"
+        "RoleArn" : {
+          "type" : "string",
+          "pattern" : "arn:(aws[a-zA-Z-]*)?:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+",
+          "minLength" : 20,
+          "maxLength" : 2048
         },
-        "TemplateName": {
-          "maxLength": 36,
-          "minLength": 1,
-          "pattern": "^[0-9A-Za-z_-]+$",
-          "type": "string"
+        "TemplateName" : {
+          "type" : "string",
+          "pattern" : "^[0-9A-Za-z_-]+$",
+          "minLength" : 1,
+          "maxLength" : 36
+        }
+      }
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 127
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 255
         }
       },
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 127,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 255,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Registers a CA Certificate in IoT.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:PassRole",
-        "iot:RegisterCACertificate",
-        "iot:DescribeCACertificate",
-        "iot:TagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+  "properties" : {
+    "CACertificatePem" : {
+      "type" : "string",
+      "pattern" : "[\\s\\S]*",
+      "minLength" : 1,
+      "maxLength" : 65536
     },
-    "delete": {
-      "permissions": [
-        "iot:UpdateCACertificate",
-        "iot:DeleteCACertificate",
-        "iot:DescribeCACertificate",
-        "kms:Decrypt"
-      ]
+    "VerificationCertificatePem" : {
+      "type" : "string",
+      "description" : "The private key verification certificate.",
+      "pattern" : "[\\s\\S]*",
+      "minLength" : 1,
+      "maxLength" : 65536
     },
-    "list": {
-      "permissions": [
-        "iot:ListCACertificates"
-      ]
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE" ]
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeCACertificate",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "CertificateMode" : {
+      "type" : "string",
+      "enum" : [ "DEFAULT", "SNI_ONLY" ]
     },
-    "update": {
-      "permissions": [
-        "iam:GetRole",
-        "iam:PassRole",
-        "iot:UpdateCACertificate",
-        "iot:DescribeCACertificate",
-        "iot:TagResource",
-        "iot:UntagResource",
-        "iot:ListTagsForResource",
-        "kms:Decrypt"
-      ]
+    "AutoRegistrationStatus" : {
+      "type" : "string",
+      "enum" : [ "ENABLE", "DISABLE" ]
+    },
+    "RemoveAutoRegistration" : {
+      "type" : "boolean"
+    },
+    "RegistrationConfig" : {
+      "$ref" : "#/definitions/RegistrationConfig"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:ListTagsForResource", "iot:TagResource", "iot:UntagResource" ]
+  },
+  "additionalProperties" : false,
+  "required" : [ "CACertificatePem", "Status" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id" ],
+  "createOnlyProperties" : [ "/properties/VerificationCertificatePem", "/properties/CertificateMode", "/properties/CACertificatePem" ],
+  "writeOnlyProperties" : [ "/properties/VerificationCertificatePem", "/properties/RemoveAutoRegistration" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:GetRole", "iam:PassRole", "iot:RegisterCACertificate", "iot:DescribeCACertificate", "iot:TagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "AutoRegistrationStatus": {
-      "enum": [
-        "ENABLE",
-        "DISABLE"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iot:DescribeCACertificate", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "CACertificatePem": {
-      "maxLength": 65536,
-      "minLength": 1,
-      "pattern": "[\\s\\S]*",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iam:GetRole", "iam:PassRole", "iot:UpdateCACertificate", "iot:DescribeCACertificate", "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource", "kms:Decrypt" ]
     },
-    "CertificateMode": {
-      "enum": [
-        "DEFAULT",
-        "SNI_ONLY"
-      ],
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:UpdateCACertificate", "iot:DeleteCACertificate", "iot:DescribeCACertificate", "kms:Decrypt" ]
     },
-    "Id": {
-      "type": "string"
-    },
-    "RegistrationConfig": {
-      "$ref": "#/definitions/RegistrationConfig"
-    },
-    "RemoveAutoRegistration": {
-      "type": "boolean"
-    },
-    "Status": {
-      "enum": [
-        "ACTIVE",
-        "INACTIVE"
-      ],
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "VerificationCertificatePem": {
-      "description": "The private key verification certificate.",
-      "maxLength": 65536,
-      "minLength": 1,
-      "pattern": "[\\s\\S]*",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "iot:ListCACertificates" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [
-    "CACertificatePem",
-    "Status"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:ListTagsForResource",
-      "iot:TagResource",
-      "iot:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::CACertificate",
-  "writeOnlyProperties": [
-    "/properties/VerificationCertificatePem",
-    "/properties/RemoveAutoRegistration"
-  ]
+  }
 }

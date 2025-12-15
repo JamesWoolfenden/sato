@@ -1,97 +1,72 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Type",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "LifecyclePolicyType": {
-      "description": "The type of lifecycle policy",
-      "enum": [
-        "retention"
-      ],
-      "type": "string"
+  "typeName" : "AWS::OpenSearchServerless::LifecyclePolicy",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
+  "description" : "Amazon OpenSearchServerless lifecycle policy resource",
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "definitions" : {
+    "LifecyclePolicyType" : {
+      "type" : "string",
+      "description" : "The type of lifecycle policy",
+      "enum" : [ "retention" ]
     }
   },
-  "description": "Amazon OpenSearchServerless lifecycle policy resource",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "aoss:CreateLifecyclePolicy"
-      ]
+  "properties" : {
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 32,
+      "minLength" : 3,
+      "pattern" : "^[a-z][a-z0-9-]+$",
+      "description" : "The name of the policy"
     },
-    "delete": {
-      "permissions": [
-        "aoss:DeleteLifecyclePolicy"
-      ]
+    "Type" : {
+      "$ref" : "#/definitions/LifecyclePolicyType"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "Type": {
-            "$ref": "resource-schema.json#/properties/Type"
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 0,
+      "description" : "The description of the policy"
+    },
+    "Policy" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 20480,
+      "pattern" : "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]+",
+      "description" : "The JSON policy document that is the content for the policy"
+    }
+  },
+  "required" : [ "Type", "Name", "Policy" ],
+  "createOnlyProperties" : [ "/properties/Type", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Type", "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "aoss:CreateLifecyclePolicy" ]
+    },
+    "read" : {
+      "permissions" : [ "aoss:BatchGetLifecyclePolicy" ]
+    },
+    "update" : {
+      "permissions" : [ "aoss:UpdateLifecyclePolicy", "aoss:BatchGetLifecyclePolicy" ]
+    },
+    "delete" : {
+      "permissions" : [ "aoss:DeleteLifecyclePolicy" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "Type" : {
+            "$ref" : "resource-schema.json#/properties/Type"
           }
         },
-        "required": [
-          "Type"
-        ]
+        "required" : [ "Type" ]
       },
-      "permissions": [
-        "aoss:ListLifecyclePolicies"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "aoss:BatchGetLifecyclePolicy"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "aoss:UpdateLifecyclePolicy",
-        "aoss:BatchGetLifecyclePolicy"
-      ]
+      "permissions" : [ "aoss:ListLifecyclePolicies" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Type",
-    "/properties/Name"
-  ],
-  "properties": {
-    "Description": {
-      "description": "The description of the policy",
-      "maxLength": 1000,
-      "minLength": 0,
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the policy",
-      "maxLength": 32,
-      "minLength": 3,
-      "pattern": "^[a-z][a-z0-9-]+$",
-      "type": "string"
-    },
-    "Policy": {
-      "description": "The JSON policy document that is the content for the policy",
-      "maxLength": 20480,
-      "minLength": 1,
-      "pattern": "[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]+",
-      "type": "string"
-    },
-    "Type": {
-      "$ref": "#/definitions/LifecyclePolicyType"
-    }
-  },
-  "required": [
-    "Type",
-    "Name",
-    "Policy"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-opensearchserverless",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::OpenSearchServerless::LifecyclePolicy"
+  "additionalProperties" : false
 }

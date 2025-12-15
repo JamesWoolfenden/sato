@@ -1,310 +1,240 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DomainName",
-    "/properties/ObjectTypeName"
-  ],
-  "definitions": {
-    "FieldMap": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_-]+$",
-          "type": "string"
+  "typeName" : "AWS::CustomerProfiles::ObjectType",
+  "description" : "An ObjectType resource of Amazon Connect Customer Profiles",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "^(?!aws:)[a-zA-Z+-=._:/]+$",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "ObjectTypeField": {
-          "$ref": "#/definitions/ObjectTypeField"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     },
-    "KeyMap": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "maxLength": 64,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9_-]+$",
-          "type": "string"
+    "FieldMap" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_-]+$",
+          "minLength" : 1,
+          "maxLength" : 64
         },
-        "ObjectTypeKeyList": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/ObjectTypeKey"
-          },
-          "type": "array"
+        "ObjectTypeField" : {
+          "$ref" : "#/definitions/ObjectTypeField"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ObjectTypeField": {
-      "additionalProperties": false,
-      "description": "Represents a field in a ProfileObjectType.",
-      "properties": {
-        "ContentType": {
-          "description": "The content type of the field. Used for determining equality when searching.",
-          "enum": [
-            "STRING",
-            "NUMBER",
-            "PHONE_NUMBER",
-            "EMAIL_ADDRESS",
-            "NAME"
-          ],
-          "type": "string"
+    "ObjectTypeField" : {
+      "description" : "Represents a field in a ProfileObjectType.",
+      "type" : "object",
+      "properties" : {
+        "Source" : {
+          "description" : "A field of a ProfileObject. For example: _source.FirstName, where \"_source\" is a ProfileObjectType of a Zendesk user and \"FirstName\" is a field in that ObjectType.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1000
         },
-        "Source": {
-          "description": "A field of a ProfileObject. For example: _source.FirstName, where \"_source\" is a ProfileObjectType of a Zendesk user and \"FirstName\" is a field in that ObjectType.",
-          "maxLength": 1000,
-          "minLength": 1,
-          "type": "string"
+        "Target" : {
+          "description" : "The location of the data in the standard ProfileObject model. For example: _profile.Address.PostalCode.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1000
         },
-        "Target": {
-          "description": "The location of the data in the standard ProfileObject model. For example: _profile.Address.PostalCode.",
-          "maxLength": 1000,
-          "minLength": 1,
-          "type": "string"
+        "ContentType" : {
+          "description" : "The content type of the field. Used for determining equality when searching.",
+          "type" : "string",
+          "enum" : [ "STRING", "NUMBER", "PHONE_NUMBER", "EMAIL_ADDRESS", "NAME" ]
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ObjectTypeKey": {
-      "additionalProperties": false,
-      "description": "An object that defines the Key element of a ProfileObject. A Key is a special element that can be used to search for a customer profile.",
-      "properties": {
-        "FieldNames": {
-          "description": "The reference for the key name of the fields map. ",
-          "items": {
-            "maxLength": 64,
-            "minLength": 1,
-            "pattern": "^[a-zA-Z0-9_-]+$",
-            "type": "string"
-          },
-          "type": "array"
+    "KeyMap" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9_-]+$",
+          "minLength" : 1,
+          "maxLength" : 64
         },
-        "StandardIdentifiers": {
-          "description": "The types of keys that a ProfileObject can have. Each ProfileObject can have only 1 UNIQUE key but multiple PROFILE keys. PROFILE means that this key can be used to tie an object to a PROFILE. UNIQUE means that it can be used to uniquely identify an object. If a key a is marked as SECONDARY, it will be used to search for profiles after all other PROFILE keys have been searched. A LOOKUP_ONLY key is only used to match a profile but is not persisted to be used for searching of the profile. A NEW_ONLY key is only used if the profile does not already exist before the object is ingested, otherwise it is only used for matching objects to profiles.",
-          "items": {
-            "enum": [
-              "PROFILE",
-              "UNIQUE",
-              "SECONDARY",
-              "LOOKUP_ONLY",
-              "NEW_ONLY",
-              "ASSET",
-              "CASE",
-              "ORDER",
-              "AIR_PREFERENCE",
-              "AIR_BOOKING",
-              "AIR_SEGMENT",
-              "HOTEL_PREFERENCE",
-              "HOTEL_STAY_REVENUE",
-              "HOTEL_RESERVATION",
-              "LOYALTY",
-              "LOYALTY_TRANSACTION",
-              "LOYALTY_PROMOTION"
-            ],
-            "type": "string"
-          },
-          "type": "array"
+        "ObjectTypeKeyList" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/ObjectTypeKey"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    }
-  },
-  "description": "An ObjectType resource of Amazon Connect Customer Profiles",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "profile:GetProfileObjectType",
-        "profile:PutProfileObjectType",
-        "profile:TagResource",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "profile:DeleteProfileObjectType"
-      ]
-    },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "DomainName": {
-            "$ref": "resource-schema.json#/properties/DomainName"
+    "ObjectTypeKey" : {
+      "description" : "An object that defines the Key element of a ProfileObject. A Key is a special element that can be used to search for a customer profile.",
+      "type" : "object",
+      "properties" : {
+        "FieldNames" : {
+          "description" : "The reference for the key name of the fields map. ",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^[a-zA-Z0-9_-]+$",
+            "minLength" : 1,
+            "maxLength" : 64
           }
         },
-        "required": [
-          "DomainName"
-        ]
+        "StandardIdentifiers" : {
+          "description" : "The types of keys that a ProfileObject can have. Each ProfileObject can have only 1 UNIQUE key but multiple PROFILE keys. PROFILE means that this key can be used to tie an object to a PROFILE. UNIQUE means that it can be used to uniquely identify an object. If a key a is marked as SECONDARY, it will be used to search for profiles after all other PROFILE keys have been searched. A LOOKUP_ONLY key is only used to match a profile but is not persisted to be used for searching of the profile. A NEW_ONLY key is only used if the profile does not already exist before the object is ingested, otherwise it is only used for matching objects to profiles.",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "PROFILE", "UNIQUE", "SECONDARY", "LOOKUP_ONLY", "NEW_ONLY", "ASSET", "CASE", "ORDER", "AIR_PREFERENCE", "AIR_BOOKING", "AIR_SEGMENT", "HOTEL_PREFERENCE", "HOTEL_STAY_REVENUE", "HOTEL_RESERVATION", "LOYALTY", "LOYALTY_TRANSACTION", "LOYALTY_PROMOTION" ]
+          }
+        }
       },
-      "permissions": [
-        "profile:ListProfileObjectTypes",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "profile:GetProfileObjectType",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "profile:GetProfileObjectType",
-        "profile:PutProfileObjectType",
-        "profile:UntagResource",
-        "profile:TagResource",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
+      "additionalProperties" : false
     }
   },
-  "primaryIdentifier": [
-    "/properties/DomainName",
-    "/properties/ObjectTypeName"
-  ],
-  "properties": {
-    "AllowProfileCreation": {
-      "description": "Indicates whether a profile should be created when data is received.",
-      "type": "boolean"
+  "properties" : {
+    "DomainName" : {
+      "description" : "The unique name of the domain.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "CreatedAt": {
-      "description": "The time of this integration got created.",
-      "type": "string"
+    "ObjectTypeName" : {
+      "description" : "The name of the profile object type.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z_][a-zA-Z_0-9-]*$",
+      "minLength" : 1,
+      "maxLength" : 255
     },
-    "Description": {
-      "description": "Description of the profile object type.",
-      "maxLength": 10000,
-      "minLength": 1,
-      "type": "string"
+    "AllowProfileCreation" : {
+      "description" : "Indicates whether a profile should be created when data is received.",
+      "type" : "boolean"
     },
-    "DomainName": {
-      "description": "The unique name of the domain.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "Description" : {
+      "description" : "Description of the profile object type.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 10000
     },
-    "EncryptionKey": {
-      "description": "The default encryption key",
-      "maxLength": 255,
-      "minLength": 0,
-      "type": "string"
+    "EncryptionKey" : {
+      "description" : "The default encryption key",
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 255
     },
-    "ExpirationDays": {
-      "description": "The default number of days until the data within the domain expires.",
-      "maximum": 1098,
-      "minimum": 1,
-      "type": "integer"
+    "ExpirationDays" : {
+      "description" : "The default number of days until the data within the domain expires.",
+      "type" : "integer",
+      "minimum" : 1,
+      "maximum" : 1098
     },
-    "Fields": {
-      "description": "A list of the name and ObjectType field.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/FieldMap"
+    "Fields" : {
+      "description" : "A list of the name and ObjectType field.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/FieldMap"
+      }
+    },
+    "Keys" : {
+      "description" : "A list of unique keys that can be used to map data to the profile.",
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/KeyMap"
+      }
+    },
+    "CreatedAt" : {
+      "description" : "The time of this integration got created.",
+      "type" : "string"
+    },
+    "LastUpdatedAt" : {
+      "description" : "The time of this integration got last updated at.",
+      "type" : "string"
+    },
+    "SourceLastUpdatedTimestampFormat" : {
+      "description" : "The format of your sourceLastUpdatedTimestamp that was previously set up.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 255
+    },
+    "Tags" : {
+      "description" : "The tags (keys and values) associated with the integration.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "type": "array"
+      "minItems" : 0,
+      "maxItems" : 50
     },
-    "Keys": {
-      "description": "A list of unique keys that can be used to map data to the profile.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/KeyMap"
-      },
-      "type": "array"
+    "TemplateId" : {
+      "description" : "A unique identifier for the object template.",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9_-]+$",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "LastUpdatedAt": {
-      "description": "The time of this integration got last updated at.",
-      "type": "string"
+    "MaxProfileObjectCount" : {
+      "description" : "The maximum number of profile objects for this object type",
+      "type" : "integer",
+      "minimum" : 1
     },
-    "MaxAvailableProfileObjectCount": {
-      "description": "The maximum available number of profile objects",
-      "minimum": 0,
-      "type": "integer"
-    },
-    "MaxProfileObjectCount": {
-      "description": "The maximum number of profile objects for this object type",
-      "minimum": 1,
-      "type": "integer"
-    },
-    "ObjectTypeName": {
-      "description": "The name of the profile object type.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z_][a-zA-Z_0-9-]*$",
-      "type": "string"
-    },
-    "SourceLastUpdatedTimestampFormat": {
-      "description": "The format of your sourceLastUpdatedTimestamp that was previously set up.",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Tags": {
-      "description": "The tags (keys and values) associated with the integration.",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array"
-    },
-    "TemplateId": {
-      "description": "A unique identifier for the object template.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "MaxAvailableProfileObjectCount" : {
+      "description" : "The maximum available number of profile objects",
+      "type" : "integer",
+      "minimum" : 0
     }
   },
-  "readOnlyProperties": [
-    "/properties/LastUpdatedAt",
-    "/properties/CreatedAt",
-    "/properties/MaxAvailableProfileObjectCount"
-  ],
-  "required": [
-    "DomainName",
-    "ObjectTypeName",
-    "Description"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-customer-profiles.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "profile:TagResource",
-      "profile:UntagResource",
-      "profile:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "additionalProperties" : false,
+  "required" : [ "DomainName", "ObjectTypeName", "Description" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "profile:TagResource", "profile:UntagResource", "profile:ListTagsForResource" ]
   },
-  "typeName": "AWS::CustomerProfiles::ObjectType"
+  "createOnlyProperties" : [ "/properties/DomainName", "/properties/ObjectTypeName" ],
+  "readOnlyProperties" : [ "/properties/LastUpdatedAt", "/properties/CreatedAt", "/properties/MaxAvailableProfileObjectCount" ],
+  "primaryIdentifier" : [ "/properties/DomainName", "/properties/ObjectTypeName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "profile:GetProfileObjectType", "profile:PutProfileObjectType", "profile:TagResource", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "read" : {
+      "permissions" : [ "profile:GetProfileObjectType", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "profile:GetProfileObjectType", "profile:PutProfileObjectType", "profile:UntagResource", "profile:TagResource", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "delete" : {
+      "permissions" : [ "profile:DeleteProfileObjectType" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "DomainName" : {
+            "$ref" : "resource-schema.json#/properties/DomainName"
+          }
+        },
+        "required" : [ "DomainName" ]
+      },
+      "permissions" : [ "profile:ListProfileObjectTypes", "kms:GenerateDataKey", "kms:Decrypt" ]
+    }
+  }
 }

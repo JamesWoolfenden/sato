@@ -1,271 +1,207 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ActionName"
-  ],
-  "definitions": {
-    "ActionParams": {
-      "additionalProperties": false,
-      "description": "The set of parameters for this mitigation action. You can specify only one type of parameter (in other words, you can apply only one action for each defined mitigation action).",
-      "properties": {
-        "AddThingsToThingGroupParams": {
-          "$ref": "#/definitions/AddThingsToThingGroupParams"
+  "typeName" : "AWS::IoT::MitigationAction",
+  "description" : "Mitigation actions can be used to take actions to mitigate issues that were found in an Audit finding or Detect violation.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The tag's key.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "EnableIoTLoggingParams": {
-          "$ref": "#/definitions/EnableIoTLoggingParams"
-        },
-        "PublishFindingToSnsParams": {
-          "$ref": "#/definitions/PublishFindingToSnsParams"
-        },
-        "ReplaceDefaultPolicyVersionParams": {
-          "$ref": "#/definitions/ReplaceDefaultPolicyVersionParams"
-        },
-        "UpdateCACertificateParams": {
-          "$ref": "#/definitions/UpdateCACertificateParams"
-        },
-        "UpdateDeviceCertificateParams": {
-          "$ref": "#/definitions/UpdateDeviceCertificateParams"
+        "Value" : {
+          "type" : "string",
+          "description" : "The tag's value.",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     },
-    "AddThingsToThingGroupParams": {
-      "additionalProperties": false,
-      "description": "Parameters to define a mitigation action that moves devices associated with a certificate to one or more specified thing groups, typically for quarantine.",
-      "properties": {
-        "OverrideDynamicGroups": {
-          "description": "Specifies if this mitigation action can move the things that triggered the mitigation action out of one or more dynamic thing groups.",
-          "type": "boolean"
+    "ActionParams" : {
+      "type" : "object",
+      "description" : "The set of parameters for this mitigation action. You can specify only one type of parameter (in other words, you can apply only one action for each defined mitigation action).",
+      "properties" : {
+        "AddThingsToThingGroupParams" : {
+          "$ref" : "#/definitions/AddThingsToThingGroupParams"
         },
-        "ThingGroupNames": {
-          "description": "The list of groups to which you want to add the things that triggered the mitigation action.",
-          "insertionOrder": false,
-          "items": {
-            "maxLength": 128,
-            "minLength": 1,
-            "type": "string"
+        "EnableIoTLoggingParams" : {
+          "$ref" : "#/definitions/EnableIoTLoggingParams"
+        },
+        "PublishFindingToSnsParams" : {
+          "$ref" : "#/definitions/PublishFindingToSnsParams"
+        },
+        "ReplaceDefaultPolicyVersionParams" : {
+          "$ref" : "#/definitions/ReplaceDefaultPolicyVersionParams"
+        },
+        "UpdateCACertificateParams" : {
+          "$ref" : "#/definitions/UpdateCACertificateParams"
+        },
+        "UpdateDeviceCertificateParams" : {
+          "$ref" : "#/definitions/UpdateDeviceCertificateParams"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "AddThingsToThingGroupParams" : {
+      "description" : "Parameters to define a mitigation action that moves devices associated with a certificate to one or more specified thing groups, typically for quarantine.",
+      "type" : "object",
+      "properties" : {
+        "OverrideDynamicGroups" : {
+          "type" : "boolean",
+          "description" : "Specifies if this mitigation action can move the things that triggered the mitigation action out of one or more dynamic thing groups."
+        },
+        "ThingGroupNames" : {
+          "description" : "The list of groups to which you want to add the things that triggered the mitigation action.",
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 128
           },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+          "minItems" : 1,
+          "maxItems" : 10,
+          "insertionOrder" : false
         }
       },
-      "required": [
-        "ThingGroupNames"
-      ],
-      "type": "object"
+      "required" : [ "ThingGroupNames" ],
+      "additionalProperties" : false
     },
-    "EnableIoTLoggingParams": {
-      "additionalProperties": false,
-      "description": "Parameters to define a mitigation action that enables AWS IoT logging at a specified level of detail.",
-      "properties": {
-        "LogLevel": {
-          "description": " Specifies which types of information are logged.",
-          "enum": [
-            "DEBUG",
-            "INFO",
-            "ERROR",
-            "WARN",
-            "UNSET_VALUE"
-          ],
-          "type": "string"
+    "EnableIoTLoggingParams" : {
+      "description" : "Parameters to define a mitigation action that enables AWS IoT logging at a specified level of detail.",
+      "type" : "object",
+      "properties" : {
+        "LogLevel" : {
+          "type" : "string",
+          "enum" : [ "DEBUG", "INFO", "ERROR", "WARN", "UNSET_VALUE" ],
+          "description" : " Specifies which types of information are logged."
         },
-        "RoleArnForLogging": {
-          "description": " The ARN of the IAM role used for logging.",
-          "maxLength": 2048,
-          "minLength": 11,
-          "type": "string"
+        "RoleArnForLogging" : {
+          "description" : " The ARN of the IAM role used for logging.",
+          "type" : "string",
+          "minLength" : 11,
+          "maxLength" : 2048
         }
       },
-      "required": [
-        "LogLevel",
-        "RoleArnForLogging"
-      ],
-      "type": "object"
+      "required" : [ "LogLevel", "RoleArnForLogging" ],
+      "additionalProperties" : false
     },
-    "PublishFindingToSnsParams": {
-      "additionalProperties": false,
-      "description": "Parameters, to define a mitigation action that publishes findings to Amazon SNS. You can implement your own custom actions in response to the Amazon SNS messages.",
-      "properties": {
-        "TopicArn": {
-          "description": "The ARN of the topic to which you want to publish the findings.",
-          "maxLength": 2048,
-          "minLength": 11,
-          "type": "string"
+    "PublishFindingToSnsParams" : {
+      "type" : "object",
+      "description" : "Parameters, to define a mitigation action that publishes findings to Amazon SNS. You can implement your own custom actions in response to the Amazon SNS messages.",
+      "properties" : {
+        "TopicArn" : {
+          "type" : "string",
+          "description" : "The ARN of the topic to which you want to publish the findings.",
+          "minLength" : 11,
+          "maxLength" : 2048
         }
       },
-      "required": [
-        "TopicArn"
-      ],
-      "type": "object"
+      "required" : [ "TopicArn" ],
+      "additionalProperties" : false
     },
-    "ReplaceDefaultPolicyVersionParams": {
-      "additionalProperties": false,
-      "description": "Parameters to define a mitigation action that adds a blank policy to restrict permissions.",
-      "properties": {
-        "TemplateName": {
-          "enum": [
-            "BLANK_POLICY",
-            "UNSET_VALUE"
-          ],
-          "type": "string"
+    "ReplaceDefaultPolicyVersionParams" : {
+      "type" : "object",
+      "description" : "Parameters to define a mitigation action that adds a blank policy to restrict permissions.",
+      "properties" : {
+        "TemplateName" : {
+          "type" : "string",
+          "enum" : [ "BLANK_POLICY", "UNSET_VALUE" ]
         }
       },
-      "required": [
-        "TemplateName"
-      ],
-      "type": "object"
+      "required" : [ "TemplateName" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The tag's key.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The tag's value.",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+    "UpdateCACertificateParams" : {
+      "type" : "object",
+      "description" : "Parameters to define a mitigation action that changes the state of the CA certificate to inactive.",
+      "properties" : {
+        "Action" : {
+          "type" : "string",
+          "enum" : [ "DEACTIVATE", "UNSET_VALUE" ]
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Action" ],
+      "additionalProperties" : false
     },
-    "UpdateCACertificateParams": {
-      "additionalProperties": false,
-      "description": "Parameters to define a mitigation action that changes the state of the CA certificate to inactive.",
-      "properties": {
-        "Action": {
-          "enum": [
-            "DEACTIVATE",
-            "UNSET_VALUE"
-          ],
-          "type": "string"
+    "UpdateDeviceCertificateParams" : {
+      "type" : "object",
+      "description" : "Parameters to define a mitigation action that changes the state of the device certificate to inactive.",
+      "properties" : {
+        "Action" : {
+          "type" : "string",
+          "enum" : [ "DEACTIVATE", "UNSET_VALUE" ]
         }
       },
-      "required": [
-        "Action"
-      ],
-      "type": "object"
-    },
-    "UpdateDeviceCertificateParams": {
-      "additionalProperties": false,
-      "description": "Parameters to define a mitigation action that changes the state of the device certificate to inactive.",
-      "properties": {
-        "Action": {
-          "enum": [
-            "DEACTIVATE",
-            "UNSET_VALUE"
-          ],
-          "type": "string"
-        }
-      },
-      "required": [
-        "Action"
-      ],
-      "type": "object"
+      "required" : [ "Action" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Mitigation actions can be used to take actions to mitigate issues that were found in an Audit finding or Detect violation.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreateMitigationAction",
-        "iot:DescribeMitigationAction",
-        "iot:TagResource",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "ActionName" : {
+      "description" : "A unique identifier for the mitigation action.",
+      "type" : "string",
+      "pattern" : "[a-zA-Z0-9:_-]+",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "delete": {
-      "permissions": [
-        "iot:DescribeMitigationAction",
-        "iot:DeleteMitigationAction"
-      ]
+    "RoleArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iot:ListMitigationActions"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeMitigationAction",
-        "iot:ListTagsForResource"
-      ]
+    "ActionParams" : {
+      "$ref" : "#/definitions/ActionParams"
     },
-    "update": {
-      "permissions": [
-        "iot:UpdateMitigationAction",
-        "iot:ListTagsForResource",
-        "iot:UntagResource",
-        "iot:TagResource",
-        "iam:PassRole"
-      ]
+    "MitigationActionArn" : {
+      "type" : "string"
+    },
+    "MitigationActionId" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ActionName"
-  ],
-  "properties": {
-    "ActionName": {
-      "description": "A unique identifier for the mitigation action.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[a-zA-Z0-9:_-]+",
-      "type": "string"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/ActionName" ],
+  "required" : [ "RoleArn", "ActionParams" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iot:TagResource", "iot:UntagResource", "iot:ListTagsForResource" ]
+  },
+  "createOnlyProperties" : [ "/properties/ActionName" ],
+  "readOnlyProperties" : [ "/properties/MitigationActionArn", "/properties/MitigationActionId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreateMitigationAction", "iot:DescribeMitigationAction", "iot:TagResource", "iam:PassRole" ]
     },
-    "ActionParams": {
-      "$ref": "#/definitions/ActionParams"
+    "read" : {
+      "permissions" : [ "iot:DescribeMitigationAction", "iot:ListTagsForResource" ]
     },
-    "MitigationActionArn": {
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iot:UpdateMitigationAction", "iot:ListTagsForResource", "iot:UntagResource", "iot:TagResource", "iam:PassRole" ]
     },
-    "MitigationActionId": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:DescribeMitigationAction", "iot:DeleteMitigationAction" ]
     },
-    "RoleArn": {
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iot:ListMitigationActions" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/MitigationActionArn",
-    "/properties/MitigationActionId"
-  ],
-  "required": [
-    "RoleArn",
-    "ActionParams"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iot.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iot:TagResource",
-      "iot:UntagResource",
-      "iot:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoT::MitigationAction"
+  }
 }

@@ -1,92 +1,59 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResourceId",
-    "/properties/AutodefinedReverseFlag"
-  ],
-  "description": "Resource schema for AWS::Route53Resolver::ResolverConfig.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "route53resolver:UpdateResolverConfig",
-        "route53resolver:GetResolverConfig",
-        "ec2:DescribeVpcs"
-      ]
+  "typeName" : "AWS::Route53Resolver::ResolverConfig",
+  "description" : "Resource schema for AWS::Route53Resolver::ResolverConfig.",
+  "properties" : {
+    "Id" : {
+      "description" : "Id",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "delete": {
-      "permissions": [
-        "route53resolver:UpdateResolverConfig",
-        "route53resolver:ListResolverConfigs",
-        "ec2:DescribeVpcs"
-      ]
+    "OwnerId" : {
+      "description" : "AccountId",
+      "type" : "string",
+      "minLength" : 12,
+      "maxLength" : 32
     },
-    "list": {
-      "permissions": [
-        "route53resolver:ListResolverConfigs",
-        "ec2:DescribeVpcs"
-      ]
+    "ResourceId" : {
+      "description" : "ResourceId",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64
     },
-    "read": {
-      "permissions": [
-        "route53resolver:GetResolverConfig",
-        "ec2:DescribeVpcs"
-      ]
+    "AutodefinedReverse" : {
+      "description" : "ResolverAutodefinedReverseStatus, possible values are ENABLING, ENABLED, DISABLING AND DISABLED.",
+      "type" : "string",
+      "enum" : [ "ENABLING", "ENABLED", "DISABLING", "DISABLED" ]
+    },
+    "AutodefinedReverseFlag" : {
+      "description" : "Represents the desired status of AutodefinedReverse. The only supported value on creation is DISABLE. Deletion of this resource will return AutodefinedReverse to its default value (ENABLED).",
+      "type" : "string",
+      "enum" : [ "DISABLE" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/ResourceId"
-  ],
-  "properties": {
-    "AutodefinedReverse": {
-      "description": "ResolverAutodefinedReverseStatus, possible values are ENABLING, ENABLED, DISABLING AND DISABLED.",
-      "enum": [
-        "ENABLING",
-        "ENABLED",
-        "DISABLING",
-        "DISABLED"
-      ],
-      "type": "string"
+  "required" : [ "ResourceId", "AutodefinedReverseFlag" ],
+  "readOnlyProperties" : [ "/properties/OwnerId", "/properties/Id", "/properties/AutodefinedReverse" ],
+  "createOnlyProperties" : [ "/properties/ResourceId", "/properties/AutodefinedReverseFlag" ],
+  "primaryIdentifier" : [ "/properties/ResourceId" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "additionalProperties" : false,
+  "propertyTransform" : {
+    "/properties/AutodefinedReverseFlag" : "$join([AutodefinedReverseFlag, \"D\"])"
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "route53resolver:UpdateResolverConfig", "route53resolver:GetResolverConfig", "ec2:DescribeVpcs" ]
     },
-    "AutodefinedReverseFlag": {
-      "description": "Represents the desired status of AutodefinedReverse. The only supported value on creation is DISABLE. Deletion of this resource will return AutodefinedReverse to its default value (ENABLED).",
-      "enum": [
-        "DISABLE"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "route53resolver:GetResolverConfig", "ec2:DescribeVpcs" ]
     },
-    "Id": {
-      "description": "Id",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "route53resolver:UpdateResolverConfig", "route53resolver:ListResolverConfigs", "ec2:DescribeVpcs" ]
     },
-    "OwnerId": {
-      "description": "AccountId",
-      "maxLength": 32,
-      "minLength": 12,
-      "type": "string"
-    },
-    "ResourceId": {
-      "description": "ResourceId",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
+    "list" : {
+      "permissions" : [ "route53resolver:ListResolverConfigs", "ec2:DescribeVpcs" ]
     }
-  },
-  "propertyTransform": {
-    "/properties/AutodefinedReverseFlag": "$join([AutodefinedReverseFlag, \"D\"])"
-  },
-  "readOnlyProperties": [
-    "/properties/OwnerId",
-    "/properties/Id",
-    "/properties/AutodefinedReverse"
-  ],
-  "required": [
-    "ResourceId",
-    "AutodefinedReverseFlag"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Route53Resolver::ResolverConfig"
+  }
 }

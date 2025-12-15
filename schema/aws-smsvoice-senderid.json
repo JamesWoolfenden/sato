@@ -1,124 +1,86 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/IsoCountryCode",
-    "/properties/SenderId"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::SMSVOICE::SenderId",
+  "description" : "Resource Type definition for AWS::SMSVOICE::SenderId",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource Type definition for AWS::SMSVOICE::SenderId",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "sms-voice:RequestSenderId",
-        "sms-voice:DescribeSenderIds",
-        "sms-voice:UpdateSenderId",
-        "sms-voice:TagResource",
-        "sms-voice:ListTagsForResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) associated with the SenderId.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "sms-voice:ReleaseSenderId",
-        "sms-voice:DescribeSenderIds"
-      ]
+    "IsoCountryCode" : {
+      "description" : "The two-character code, in ISO 3166-1 alpha-2 format, for the country or region.",
+      "type" : "string",
+      "pattern" : "^[A-Z]{2}$"
     },
-    "list": {
-      "permissions": [
-        "sms-voice:DescribeSenderIds"
-      ]
+    "SenderId" : {
+      "description" : "The sender ID string to request.",
+      "type" : "string",
+      "pattern" : "^[A-Z0-9_-]+$"
     },
-    "read": {
-      "permissions": [
-        "sms-voice:DescribeSenderIds",
-        "sms-voice:ListTagsForResource"
-      ]
+    "DeletionProtectionEnabled" : {
+      "description" : "When set to true the sender ID can't be deleted. By default this is set to false.",
+      "type" : "boolean"
     },
-    "update": {
-      "permissions": [
-        "sms-voice:DescribeSenderIds",
-        "sms-voice:UpdateSenderId",
-        "sms-voice:UntagResource",
-        "sms-voice:TagResource",
-        "sms-voice:ListTagsForResource"
-      ]
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/IsoCountryCode",
-    "/properties/SenderId"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) associated with the SenderId.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "IsoCountryCode", "SenderId" ],
+  "primaryIdentifier" : [ "/properties/IsoCountryCode", "/properties/SenderId" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/IsoCountryCode", "/properties/SenderId" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "sms-voice:UntagResource", "sms-voice:TagResource", "sms-voice:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "sms-voice:RequestSenderId", "sms-voice:DescribeSenderIds", "sms-voice:UpdateSenderId", "sms-voice:TagResource", "sms-voice:ListTagsForResource" ]
     },
-    "DeletionProtectionEnabled": {
-      "description": "When set to true the sender ID can't be deleted. By default this is set to false.",
-      "type": "boolean"
+    "read" : {
+      "permissions" : [ "sms-voice:DescribeSenderIds", "sms-voice:ListTagsForResource" ]
     },
-    "IsoCountryCode": {
-      "description": "The two-character code, in ISO 3166-1 alpha-2 format, for the country or region.",
-      "pattern": "^[A-Z]{2}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "sms-voice:DescribeSenderIds", "sms-voice:UpdateSenderId", "sms-voice:UntagResource", "sms-voice:TagResource", "sms-voice:ListTagsForResource" ]
     },
-    "SenderId": {
-      "description": "The sender ID string to request.",
-      "pattern": "^[A-Z0-9_-]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "sms-voice:ReleaseSenderId", "sms-voice:DescribeSenderIds" ]
     },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "sms-voice:DescribeSenderIds" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "IsoCountryCode",
-    "SenderId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resoource-providers-smsvoice.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "sms-voice:UntagResource",
-      "sms-voice:TagResource",
-      "sms-voice:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SMSVOICE::SenderId"
+  }
 }

@@ -1,164 +1,127 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/EcrRepositoryPrefix",
-    "/properties/UpstreamRegistryUrl",
-    "/properties/CredentialArn",
-    "/properties/UpstreamRegistry",
-    "/properties/CustomRoleArn",
-    "/properties/UpstreamRepositoryPrefix"
-  ],
-  "definitions": {
-    "CredentialArn": {
-      "description": "The Amazon Resource Name (ARN) of the AWS Secrets Manager secret that identifies the credentials to authenticate to the upstream registry.",
-      "maxLength": 612,
-      "minLength": 50,
-      "pattern": "^arn:aws:secretsmanager:[a-zA-Z0-9-:]+:secret:ecr\\-pullthroughcache\\/[a-zA-Z0-9\\/_+=.@-]+$",
-      "type": "string"
-    },
-    "CustomRoleArn": {
-      "description": "The ARN of the IAM role to be assumed by Amazon ECR to authenticate to ECR upstream registry. This role must be in the same account as the registry that you are configuring.",
-      "maxLength": 2048,
-      "type": "string"
-    },
-    "EcrRepositoryPrefix": {
-      "description": "The ECRRepositoryPrefix is a custom alias for upstream registry url.",
-      "maxLength": 30,
-      "minLength": 2,
-      "pattern": "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$",
-      "type": "string"
-    },
-    "PullThroughCacheRule": {
-      "additionalProperties": false,
-      "description": "",
-      "maxItems": 50,
-      "minItems": 0,
-      "properties": {
-        "CredentialArn": {
-          "$ref": "#/definitions/CredentialArn"
+  "typeName" : "AWS::ECR::PullThroughCacheRule",
+  "description" : "The ``AWS::ECR::PullThroughCacheRule`` resource creates or updates a pull through cache rule. A pull through cache rule provides a way to cache images from an upstream registry in your Amazon ECR private registry.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
+  "definitions" : {
+    "PullThroughCacheRule" : {
+      "minItems" : 0,
+      "maxItems" : 50,
+      "type" : "object",
+      "properties" : {
+        "RegistryId" : {
+          "$ref" : "#/definitions/RegistryId"
         },
-        "CustomRoleArn": {
-          "$ref": "#/definitions/CustomRoleArn"
+        "EcrRepositoryPrefix" : {
+          "$ref" : "#/definitions/EcrRepositoryPrefix"
         },
-        "EcrRepositoryPrefix": {
-          "$ref": "#/definitions/EcrRepositoryPrefix"
+        "UpstreamRegistryUrl" : {
+          "$ref" : "#/definitions/UpstreamRegistryUrl"
         },
-        "RegistryId": {
-          "$ref": "#/definitions/RegistryId"
+        "CredentialArn" : {
+          "$ref" : "#/definitions/CredentialArn"
         },
-        "UpstreamRegistry": {
-          "$ref": "#/definitions/UpstreamRegistry"
+        "UpstreamRegistry" : {
+          "$ref" : "#/definitions/UpstreamRegistry"
         },
-        "UpstreamRegistryUrl": {
-          "$ref": "#/definitions/UpstreamRegistryUrl"
+        "CustomRoleArn" : {
+          "$ref" : "#/definitions/CustomRoleArn"
         },
-        "UpstreamRepositoryPrefix": {
-          "$ref": "#/definitions/UpstreamRepositoryPrefix"
+        "UpstreamRepositoryPrefix" : {
+          "$ref" : "#/definitions/UpstreamRepositoryPrefix"
         }
       },
-      "required": [
-        "EcrRepositoryPrefix",
-        "UpstreamRegistryUrl"
-      ],
-      "type": "object"
+      "required" : [ "EcrRepositoryPrefix", "UpstreamRegistryUrl" ],
+      "additionalProperties" : false,
+      "description" : ""
     },
-    "RegistryId": {
-      "description": "The account ID of the registry pull-through cache repository will be created in.",
-      "pattern": "^[0-9]{12}$",
-      "type": "string"
+    "RegistryId" : {
+      "type" : "string",
+      "description" : "The account ID of the registry pull-through cache repository will be created in.",
+      "pattern" : "^[0-9]{12}$"
     },
-    "UpstreamRegistry": {
-      "description": "The name of the upstream registry.",
-      "type": "string"
+    "EcrRepositoryPrefix" : {
+      "type" : "string",
+      "description" : "The ECRRepositoryPrefix is a custom alias for upstream registry url.",
+      "minLength" : 2,
+      "maxLength" : 30,
+      "pattern" : "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$"
     },
-    "UpstreamRegistryUrl": {
-      "description": "The upstreamRegistryUrl is the endpoint of upstream registry url of the public repository to be cached",
-      "type": "string"
+    "UpstreamRegistryUrl" : {
+      "type" : "string",
+      "description" : "The upstreamRegistryUrl is the endpoint of upstream registry url of the public repository to be cached"
     },
-    "UpstreamRepositoryPrefix": {
-      "description": "The repository name prefix of upstream registry to match with the upstream repository name. When this field isn't specified, Amazon ECR will use the `ROOT`.",
-      "maxLength": 30,
-      "minLength": 2,
-      "pattern": "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$",
-      "type": "string"
+    "CredentialArn" : {
+      "type" : "string",
+      "description" : "The Amazon Resource Name (ARN) of the AWS Secrets Manager secret that identifies the credentials to authenticate to the upstream registry.",
+      "minLength" : 50,
+      "maxLength" : 612,
+      "pattern" : "^arn:aws:secretsmanager:[a-zA-Z0-9-:]+:secret:ecr\\-pullthroughcache\\/[a-zA-Z0-9\\/_+=.@-]+$"
+    },
+    "UpstreamRegistry" : {
+      "type" : "string",
+      "description" : "The name of the upstream registry."
+    },
+    "CustomRoleArn" : {
+      "type" : "string",
+      "description" : "The ARN of the IAM role to be assumed by Amazon ECR to authenticate to ECR upstream registry. This role must be in the same account as the registry that you are configuring.",
+      "maxLength" : 2048
+    },
+    "UpstreamRepositoryPrefix" : {
+      "type" : "string",
+      "description" : "The repository name prefix of upstream registry to match with the upstream repository name. When this field isn't specified, Amazon ECR will use the `ROOT`.",
+      "minLength" : 2,
+      "maxLength" : 30,
+      "pattern" : "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$"
     }
   },
-  "description": "The ``AWS::ECR::PullThroughCacheRule`` resource creates or updates a pull through cache rule. A pull through cache rule provides a way to cache images from an upstream registry in your Amazon ECR private registry.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ecr:DescribePullThroughCacheRules",
-        "ecr:CreatePullThroughCacheRule",
-        "ecr:DeletePullThroughCacheRule",
-        "iam:CreateServiceLinkedRole",
-        "secretsmanager:GetSecretValue",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "EcrRepositoryPrefix" : {
+      "$ref" : "#/definitions/EcrRepositoryPrefix",
+      "description" : "The Amazon ECR repository prefix associated with the pull through cache rule."
     },
-    "delete": {
-      "permissions": [
-        "ecr:DescribePullThroughCacheRules",
-        "ecr:DeletePullThroughCacheRule"
-      ]
+    "UpstreamRegistryUrl" : {
+      "$ref" : "#/definitions/UpstreamRegistryUrl",
+      "description" : "The upstream registry URL associated with the pull through cache rule."
     },
-    "list": {
-      "permissions": [
-        "ecr:DescribePullThroughCacheRules"
-      ]
+    "CredentialArn" : {
+      "$ref" : "#/definitions/CredentialArn",
+      "description" : "The ARN of the Secrets Manager secret associated with the pull through cache rule."
     },
-    "read": {
-      "permissions": [
-        "ecr:DescribePullThroughCacheRules"
-      ]
+    "UpstreamRegistry" : {
+      "$ref" : "#/definitions/UpstreamRegistry",
+      "description" : "The name of the upstream source registry associated with the pull through cache rule."
     },
-    "update": {
-      "permissions": [
-        "ecr:DescribePullThroughCacheRules",
-        "ecr:CreatePullThroughCacheRule",
-        "ecr:DeletePullThroughCacheRule",
-        "iam:CreateServiceLinkedRole",
-        "secretsmanager:GetSecretValue",
-        "iam:PassRole"
-      ]
+    "CustomRoleArn" : {
+      "$ref" : "#/definitions/CustomRoleArn",
+      "description" : "The ARN of the IAM role associated with the pull through cache rule."
+    },
+    "UpstreamRepositoryPrefix" : {
+      "$ref" : "#/definitions/UpstreamRepositoryPrefix",
+      "description" : "The upstream repository prefix associated with the pull through cache rule."
     }
   },
-  "primaryIdentifier": [
-    "/properties/EcrRepositoryPrefix"
-  ],
-  "properties": {
-    "CredentialArn": {
-      "$ref": "#/definitions/CredentialArn",
-      "description": "The ARN of the Secrets Manager secret associated with the pull through cache rule."
+  "tagging" : {
+    "taggable" : false
+  },
+  "primaryIdentifier" : [ "/properties/EcrRepositoryPrefix" ],
+  "createOnlyProperties" : [ "/properties/EcrRepositoryPrefix", "/properties/UpstreamRegistryUrl", "/properties/CredentialArn", "/properties/UpstreamRegistry", "/properties/CustomRoleArn", "/properties/UpstreamRepositoryPrefix" ],
+  "writeOnlyProperties" : [ "/properties/CredentialArn", "/properties/UpstreamRegistry", "/properties/CustomRoleArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ecr:DescribePullThroughCacheRules", "ecr:CreatePullThroughCacheRule", "ecr:DeletePullThroughCacheRule", "iam:CreateServiceLinkedRole", "secretsmanager:GetSecretValue", "iam:PassRole" ]
     },
-    "CustomRoleArn": {
-      "$ref": "#/definitions/CustomRoleArn",
-      "description": "The ARN of the IAM role associated with the pull through cache rule."
+    "read" : {
+      "permissions" : [ "ecr:DescribePullThroughCacheRules" ]
     },
-    "EcrRepositoryPrefix": {
-      "$ref": "#/definitions/EcrRepositoryPrefix",
-      "description": "The Amazon ECR repository prefix associated with the pull through cache rule."
+    "update" : {
+      "permissions" : [ "ecr:DescribePullThroughCacheRules", "ecr:CreatePullThroughCacheRule", "ecr:DeletePullThroughCacheRule", "iam:CreateServiceLinkedRole", "secretsmanager:GetSecretValue", "iam:PassRole" ]
     },
-    "UpstreamRegistry": {
-      "$ref": "#/definitions/UpstreamRegistry",
-      "description": "The name of the upstream source registry associated with the pull through cache rule."
+    "delete" : {
+      "permissions" : [ "ecr:DescribePullThroughCacheRules", "ecr:DeletePullThroughCacheRule" ]
     },
-    "UpstreamRegistryUrl": {
-      "$ref": "#/definitions/UpstreamRegistryUrl",
-      "description": "The upstream registry URL associated with the pull through cache rule."
-    },
-    "UpstreamRepositoryPrefix": {
-      "$ref": "#/definitions/UpstreamRepositoryPrefix",
-      "description": "The upstream repository prefix associated with the pull through cache rule."
+    "list" : {
+      "permissions" : [ "ecr:DescribePullThroughCacheRules" ]
     }
   },
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecr.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::ECR::PullThroughCacheRule",
-  "writeOnlyProperties": [
-    "/properties/CredentialArn",
-    "/properties/UpstreamRegistry",
-    "/properties/CustomRoleArn"
-  ]
+  "additionalProperties" : false
 }

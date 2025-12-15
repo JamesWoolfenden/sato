@@ -1,236 +1,152 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/AdditionalEncryptionContext",
-    "/properties/CustomerManagedKey"
-  ],
-  "definitions": {
-    "Category": {
-      "enum": [
-        "Cults",
-        "Gambling",
-        "Nudity",
-        "Pornography",
-        "SexEducation",
-        "Tasteless",
-        "Violence",
-        "DownloadSites",
-        "ImageSharing",
-        "PeerToPeer",
-        "StreamingMediaAndDownloads",
-        "GenerativeAI",
-        "CriminalActivity",
-        "Hacking",
-        "HateAndIntolerance",
-        "IllegalDrug",
-        "IllegalSoftware",
-        "SchoolCheating",
-        "SelfHarm",
-        "Weapons",
-        "Chat",
-        "Games",
-        "InstantMessaging",
-        "ProfessionalNetwork",
-        "SocialNetworking",
-        "WebBasedEmail",
-        "ParkedDomains"
-      ],
-      "type": "string"
+  "typeName" : "AWS::WorkSpacesWeb::BrowserSettings",
+  "description" : "Definition of AWS::WorkSpacesWeb::BrowserSettings Resource Type",
+  "definitions" : {
+    "Category" : {
+      "type" : "string",
+      "enum" : [ "Cults", "Gambling", "Nudity", "Pornography", "SexEducation", "Tasteless", "Violence", "DownloadSites", "ImageSharing", "PeerToPeer", "StreamingMediaAndDownloads", "GenerativeAI", "CriminalActivity", "Hacking", "HateAndIntolerance", "IllegalDrug", "IllegalSoftware", "SchoolCheating", "SelfHarm", "Weapons", "Chat", "Games", "InstantMessaging", "ProfessionalNetwork", "SocialNetworking", "WebBasedEmail", "ParkedDomains" ]
     },
-    "EncryptionContextMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        "^[\\s\\S]*$": {
-          "maxLength": 131072,
-          "minLength": 0,
-          "pattern": "^[\\s\\S]*$",
-          "type": "string"
+    "EncryptionContextMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^[\\s\\S]*$" : {
+          "type" : "string",
+          "maxLength" : 131072,
+          "minLength" : 0,
+          "pattern" : "^[\\s\\S]*$"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0,
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "WebContentFilteringPolicy": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedUrls": {
-          "items": {
-            "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
-            "type": "string"
+    "WebContentFilteringPolicy" : {
+      "type" : "object",
+      "properties" : {
+        "BlockedCategories" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Category"
           },
-          "maxItems": 1000,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 100,
+          "minItems" : 1,
+          "uniqueItems" : true
         },
-        "BlockedCategories": {
-          "items": {
-            "$ref": "#/definitions/Category"
+        "AllowedUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$"
           },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+          "maxItems" : 1000,
+          "minItems" : 1
         },
-        "BlockedUrls": {
-          "items": {
-            "pattern": "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$",
-            "type": "string"
+        "BlockedUrls" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^((([a-zA-Z][a-zA-Z0-9+.-]*):\\/\\/(\\*|[\\w%._\\-\\+~#=@]+)?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?)|(\\*|[\\w%._\\-\\+~#=@]+\\.[\\w%._\\-\\+~#=@]+)(?::(\\d{1,5}))?(\\/[^@\\s]*)?(?:\\?([^*\\s]+(?:\\*?)))?|(([a-zA-Z][a-zA-Z0-9+.-]*):(\\/\\/)?\\*))$"
           },
-          "maxItems": 1000,
-          "minItems": 1,
-          "type": "array"
+          "maxItems" : 1000,
+          "minItems" : 1
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::WorkSpacesWeb::BrowserSettings Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "workspaces-web:CreateBrowserSettings",
-        "workspaces-web:GetBrowserSettings",
-        "workspaces-web:ListTagsForResource",
-        "workspaces-web:TagResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt",
-        "kms:GenerateDataKeyWithoutPlaintext",
-        "kms:ReEncryptTo",
-        "kms:ReEncryptFrom"
-      ]
+  "properties" : {
+    "AdditionalEncryptionContext" : {
+      "$ref" : "#/definitions/EncryptionContextMap"
     },
-    "delete": {
-      "permissions": [
-        "workspaces-web:GetBrowserSettings",
-        "workspaces-web:DeleteBrowserSettings",
-        "kms:CreateGrant",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    },
-    "list": {
-      "permissions": [
-        "workspaces-web:ListBrowserSettings",
-        "kms:Decrypt",
-        "kms:DescribeKey"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "workspaces-web:GetBrowserSettings",
-        "workspaces-web:ListBrowserSettings",
-        "workspaces-web:ListTagsForResource",
-        "kms:CreateGrant",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "workspaces-web:UpdateBrowserSettings",
-        "workspaces-web:TagResource",
-        "workspaces-web:UntagResource",
-        "workspaces-web:GetBrowserSettings",
-        "workspaces-web:ListBrowserSettings",
-        "workspaces-web:ListTagsForResource",
-        "kms:CreateGrant",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:Decrypt"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/BrowserSettingsArn"
-  ],
-  "properties": {
-    "AdditionalEncryptionContext": {
-      "$ref": "#/definitions/EncryptionContextMap"
-    },
-    "AssociatedPortalArns": {
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 2048,
-        "minLength": 20,
-        "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
-        "type": "string"
+    "AssociatedPortalArns" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048,
+        "minLength" : 20,
+        "pattern" : "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$"
       },
-      "type": "array"
+      "insertionOrder" : false
     },
-    "BrowserPolicy": {
-      "maxLength": 131072,
-      "minLength": 2,
-      "pattern": "^\\{[\\S\\s]*\\}\\s*$",
-      "type": "string"
+    "BrowserPolicy" : {
+      "type" : "string",
+      "maxLength" : 131072,
+      "minLength" : 2,
+      "pattern" : "^\\{[\\S\\s]*\\}\\s*$"
     },
-    "BrowserSettingsArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$",
-      "type": "string"
+    "BrowserSettingsArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[\\w+=\\/,.@-]+:[a-zA-Z0-9\\-]+:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:[a-zA-Z]+(\\/[a-fA-F0-9\\-]{36})+$"
     },
-    "CustomerManagedKey": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$",
-      "type": "string"
+    "CustomerManagedKey" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[\\w+=\\/,.@-]+:kms:[a-zA-Z0-9\\-]*:[a-zA-Z0-9]{1,12}:key\\/[a-zA-Z0-9-]+$"
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
       },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array"
+      "maxItems" : 200,
+      "minItems" : 0,
+      "insertionOrder" : false
     },
-    "WebContentFilteringPolicy": {
-      "$ref": "#/definitions/WebContentFilteringPolicy"
+    "WebContentFilteringPolicy" : {
+      "$ref" : "#/definitions/WebContentFilteringPolicy"
     }
   },
-  "readOnlyProperties": [
-    "/properties/AssociatedPortalArns",
-    "/properties/BrowserSettingsArn"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "workspaces-web:UntagResource",
-      "workspaces-web:ListTagsForResource",
-      "workspaces-web:TagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "readOnlyProperties" : [ "/properties/AssociatedPortalArns", "/properties/BrowserSettingsArn" ],
+  "createOnlyProperties" : [ "/properties/AdditionalEncryptionContext", "/properties/CustomerManagedKey" ],
+  "primaryIdentifier" : [ "/properties/BrowserSettingsArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "workspaces-web:CreateBrowserSettings", "workspaces-web:GetBrowserSettings", "workspaces-web:ListTagsForResource", "workspaces-web:TagResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptTo", "kms:ReEncryptFrom" ]
+    },
+    "read" : {
+      "permissions" : [ "workspaces-web:GetBrowserSettings", "workspaces-web:ListBrowserSettings", "workspaces-web:ListTagsForResource", "kms:CreateGrant", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "update" : {
+      "permissions" : [ "workspaces-web:UpdateBrowserSettings", "workspaces-web:TagResource", "workspaces-web:UntagResource", "workspaces-web:GetBrowserSettings", "workspaces-web:ListBrowserSettings", "workspaces-web:ListTagsForResource", "kms:CreateGrant", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "delete" : {
+      "permissions" : [ "workspaces-web:GetBrowserSettings", "workspaces-web:DeleteBrowserSettings", "kms:CreateGrant", "kms:DescribeKey", "kms:GenerateDataKey", "kms:Decrypt" ]
+    },
+    "list" : {
+      "permissions" : [ "workspaces-web:ListBrowserSettings", "kms:Decrypt", "kms:DescribeKey" ]
+    }
   },
-  "typeName": "AWS::WorkSpacesWeb::BrowserSettings"
+  "tagging" : {
+    "cloudFormationSystemTags" : false,
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true,
+    "permissions" : [ "workspaces-web:UntagResource", "workspaces-web:ListTagsForResource", "workspaces-web:TagResource" ]
+  },
+  "additionalProperties" : false
 }

@@ -1,229 +1,182 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ResourceSetName",
-    "/properties/ResourceSetType"
-  ],
-  "definitions": {
-    "DNSTargetResource": {
-      "additionalProperties": false,
-      "description": "A component for DNS/routing control readiness checks.",
-      "properties": {
-        "DomainName": {
-          "description": "The domain name that acts as an ingress point to a portion of the customer application.",
-          "type": "string"
+  "typeName" : "AWS::Route53RecoveryReadiness::ResourceSet",
+  "description" : "Schema for the AWS Route53 Recovery Readiness ResourceSet Resource and API.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-readiness.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "HostedZoneArn": {
-          "description": "The hosted zone Amazon Resource Name (ARN) that contains the DNS record with the provided name of the target resource.",
-          "type": "string"
-        },
-        "RecordSetId": {
-          "description": "The Route 53 record set ID that will uniquely identify a DNS record, given a name and a type.",
-          "type": "string"
-        },
-        "RecordType": {
-          "description": "The type of DNS record of the target resource.",
-          "type": "string"
-        },
-        "TargetResource": {
-          "$ref": "#/definitions/TargetResource"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     },
-    "NLBResource": {
-      "additionalProperties": false,
-      "description": "The Network Load Balancer resource that a DNS target resource points to.",
-      "properties": {
-        "Arn": {
-          "description": "A Network Load Balancer resource Amazon Resource Name (ARN).",
-          "type": "string"
+    "NLBResource" : {
+      "description" : "The Network Load Balancer resource that a DNS target resource points to.",
+      "type" : "object",
+      "properties" : {
+        "Arn" : {
+          "description" : "A Network Load Balancer resource Amazon Resource Name (ARN).",
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "R53ResourceRecord": {
-      "additionalProperties": false,
-      "description": "The Route 53 resource that a DNS target resource record points to.",
-      "properties": {
-        "DomainName": {
-          "description": "The DNS target domain name.",
-          "type": "string"
+    "R53ResourceRecord" : {
+      "description" : "The Route 53 resource that a DNS target resource record points to.",
+      "type" : "object",
+      "properties" : {
+        "DomainName" : {
+          "description" : "The DNS target domain name.",
+          "type" : "string"
         },
-        "RecordSetId": {
-          "description": "The Resource Record set id.",
-          "type": "string"
+        "RecordSetId" : {
+          "description" : "The Resource Record set id.",
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Resource": {
-      "additionalProperties": false,
-      "description": "The resource element of a ResourceSet",
-      "properties": {
-        "ComponentId": {
-          "description": "The component identifier of the resource, generated when DNS target resource is used.",
-          "type": "string"
+    "TargetResource" : {
+      "description" : "The target resource that the Route 53 record points to.",
+      "type" : "object",
+      "properties" : {
+        "NLBResource" : {
+          "$ref" : "#/definitions/NLBResource"
         },
-        "DnsTargetResource": {
-          "$ref": "#/definitions/DNSTargetResource"
+        "R53Resource" : {
+          "$ref" : "#/definitions/R53ResourceRecord"
+        }
+      },
+      "oneOf" : [ {
+        "required" : [ "NLBResource" ]
+      }, {
+        "required" : [ "R53Resource" ]
+      } ],
+      "additionalProperties" : false
+    },
+    "DNSTargetResource" : {
+      "description" : "A component for DNS/routing control readiness checks.",
+      "type" : "object",
+      "properties" : {
+        "DomainName" : {
+          "description" : "The domain name that acts as an ingress point to a portion of the customer application.",
+          "type" : "string"
         },
-        "ReadinessScopes": {
-          "description": "A list of recovery group Amazon Resource Names (ARNs) and cell ARNs that this resource is contained within.",
-          "insertionOrder": false,
-          "items": {
-            "maxItems": 5,
-            "type": "string"
+        "RecordSetId" : {
+          "description" : "The Route 53 record set ID that will uniquely identify a DNS record, given a name and a type.",
+          "type" : "string"
+        },
+        "HostedZoneArn" : {
+          "description" : "The hosted zone Amazon Resource Name (ARN) that contains the DNS record with the provided name of the target resource.",
+          "type" : "string"
+        },
+        "RecordType" : {
+          "description" : "The type of DNS record of the target resource.",
+          "type" : "string"
+        },
+        "TargetResource" : {
+          "$ref" : "#/definitions/TargetResource"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "Resource" : {
+      "description" : "The resource element of a ResourceSet",
+      "type" : "object",
+      "properties" : {
+        "ResourceArn" : {
+          "description" : "The Amazon Resource Name (ARN) of the AWS resource.",
+          "type" : "string"
+        },
+        "ComponentId" : {
+          "description" : "The component identifier of the resource, generated when DNS target resource is used.",
+          "type" : "string"
+        },
+        "DnsTargetResource" : {
+          "$ref" : "#/definitions/DNSTargetResource"
+        },
+        "ReadinessScopes" : {
+          "description" : "A list of recovery group Amazon Resource Names (ARNs) and cell ARNs that this resource is contained within.",
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxItems" : 5
           },
-          "type": "array"
-        },
-        "ResourceArn": {
-          "description": "The Amazon Resource Name (ARN) of the AWS resource.",
-          "type": "string"
+          "insertionOrder" : false
         }
       },
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
-    },
-    "TargetResource": {
-      "additionalProperties": false,
-      "description": "The target resource that the Route 53 record points to.",
-      "oneOf": [
-        {
-          "required": [
-            "NLBResource"
-          ]
-        },
-        {
-          "required": [
-            "R53Resource"
-          ]
-        }
-      ],
-      "properties": {
-        "NLBResource": {
-          "$ref": "#/definitions/NLBResource"
-        },
-        "R53Resource": {
-          "$ref": "#/definitions/R53ResourceRecord"
-        }
-      },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Schema for the AWS Route53 Recovery Readiness ResourceSet Resource and API.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "route53-recovery-readiness:CreateResourceSet",
-        "route53-recovery-readiness:GetResourceSet",
-        "route53-recovery-readiness:GetRecoveryGroup",
-        "route53-recovery-readiness:GetCell",
-        "route53-recovery-readiness:ListTagsForResources",
-        "route53-recovery-readiness:TagResource"
-      ]
+  "properties" : {
+    "ResourceSetName" : {
+      "description" : "The name of the resource set to create.",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "route53-recovery-readiness:DeleteResourceSet",
-        "route53-recovery-readiness:GetResourceSet"
-      ]
+    "Resources" : {
+      "description" : "A list of resource objects in the resource set.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Resource"
+      },
+      "minItems" : 1,
+      "maxItems" : 6,
+      "insertionOrder" : false
     },
-    "list": {
-      "permissions": [
-        "route53-recovery-readiness:ListResourceSets"
-      ]
+    "ResourceSetArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the resource set.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "read": {
-      "permissions": [
-        "route53-recovery-readiness:GetResourceSet",
-        "route53-recovery-readiness:ListTagsForResources"
-      ]
+    "ResourceSetType" : {
+      "description" : "The resource type of the resources in the resource set. Enter one of the following values for resource type: \n\nAWS: :AutoScaling: :AutoScalingGroup, AWS: :CloudWatch: :Alarm, AWS: :EC2: :CustomerGateway, AWS: :DynamoDB: :Table, AWS: :EC2: :Volume, AWS: :ElasticLoadBalancing: :LoadBalancer, AWS: :ElasticLoadBalancingV2: :LoadBalancer, AWS: :MSK: :Cluster, AWS: :RDS: :DBCluster, AWS: :Route53: :HealthCheck, AWS: :SQS: :Queue, AWS: :SNS: :Topic, AWS: :SNS: :Subscription, AWS: :EC2: :VPC, AWS: :EC2: :VPNConnection, AWS: :EC2: :VPNGateway, AWS::Route53RecoveryReadiness::DNSTargetResource",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "route53-recovery-readiness:UpdateResourceSet",
-        "route53-recovery-readiness:GetResourceSet",
-        "route53-recovery-readiness:GetRecoveryGroup",
-        "route53-recovery-readiness:GetCell",
-        "route53-recovery-readiness:ListTagsForResources",
-        "route53-recovery-readiness:TagResource",
-        "route53-recovery-readiness:UntagResource"
-      ]
+    "Tags" : {
+      "description" : "A tag to associate with the parameters for a resource set.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag",
+        "maxItems" : 20
+      },
+      "insertionOrder" : false
     }
   },
-  "primaryIdentifier": [
-    "/properties/ResourceSetName"
-  ],
-  "properties": {
-    "ResourceSetArn": {
-      "description": "The Amazon Resource Name (ARN) of the resource set.",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "ResourceSetType", "Resources" ],
+  "createOnlyProperties" : [ "/properties/ResourceSetName", "/properties/ResourceSetType" ],
+  "readOnlyProperties" : [ "/properties/ResourceSetArn" ],
+  "primaryIdentifier" : [ "/properties/ResourceSetName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "route53-recovery-readiness:CreateResourceSet", "route53-recovery-readiness:GetResourceSet", "route53-recovery-readiness:GetRecoveryGroup", "route53-recovery-readiness:GetCell", "route53-recovery-readiness:ListTagsForResources", "route53-recovery-readiness:TagResource" ]
     },
-    "ResourceSetName": {
-      "description": "The name of the resource set to create.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "route53-recovery-readiness:GetResourceSet", "route53-recovery-readiness:ListTagsForResources" ]
     },
-    "ResourceSetType": {
-      "description": "The resource type of the resources in the resource set. Enter one of the following values for resource type: \n\nAWS: :AutoScaling: :AutoScalingGroup, AWS: :CloudWatch: :Alarm, AWS: :EC2: :CustomerGateway, AWS: :DynamoDB: :Table, AWS: :EC2: :Volume, AWS: :ElasticLoadBalancing: :LoadBalancer, AWS: :ElasticLoadBalancingV2: :LoadBalancer, AWS: :MSK: :Cluster, AWS: :RDS: :DBCluster, AWS: :Route53: :HealthCheck, AWS: :SQS: :Queue, AWS: :SNS: :Topic, AWS: :SNS: :Subscription, AWS: :EC2: :VPC, AWS: :EC2: :VPNConnection, AWS: :EC2: :VPNGateway, AWS::Route53RecoveryReadiness::DNSTargetResource",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "route53-recovery-readiness:UpdateResourceSet", "route53-recovery-readiness:GetResourceSet", "route53-recovery-readiness:GetRecoveryGroup", "route53-recovery-readiness:GetCell", "route53-recovery-readiness:ListTagsForResources", "route53-recovery-readiness:TagResource", "route53-recovery-readiness:UntagResource" ]
     },
-    "Resources": {
-      "description": "A list of resource objects in the resource set.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Resource"
-      },
-      "maxItems": 6,
-      "minItems": 1,
-      "type": "array"
+    "delete" : {
+      "permissions" : [ "route53-recovery-readiness:DeleteResourceSet", "route53-recovery-readiness:GetResourceSet" ]
     },
-    "Tags": {
-      "description": "A tag to associate with the parameters for a resource set.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag",
-        "maxItems": 20
-      },
-      "type": "array"
+    "list" : {
+      "permissions" : [ "route53-recovery-readiness:ListResourceSets" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ResourceSetArn"
-  ],
-  "required": [
-    "ResourceSetType",
-    "Resources"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-route53-recovery-readiness.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "route53-recovery-readiness:TagResource",
-      "route53-recovery-readiness:UntagResource",
-      "route53-recovery-readiness:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Route53RecoveryReadiness::ResourceSet"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : false,
+    "permissions" : [ "route53-recovery-readiness:TagResource", "route53-recovery-readiness:UntagResource", "route53-recovery-readiness:ListTagsForResource" ]
+  }
 }

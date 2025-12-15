@@ -1,30 +1,23 @@
 {
-  "additionalProperties": false,
-  "description": "Resource Type definition for AWS::IAM::UserToGroupAddition",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "GroupName": {
-      "type": "string"
+  "typeName" : "AWS::IAM::UserToGroupAddition",
+  "description" : "Resource Type definition for AWS::IAM::UserToGroupAddition",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
     },
-    "Id": {
-      "type": "string"
+    "GroupName" : {
+      "type" : "string"
     },
-    "Users": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "Users" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "GroupName",
-    "Users"
-  ],
-  "typeName": "AWS::IAM::UserToGroupAddition"
+  "required" : [ "GroupName", "Users" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

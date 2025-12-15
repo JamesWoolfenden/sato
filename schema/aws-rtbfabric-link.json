@@ -1,536 +1,414 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/GatewayId",
-      "/properties/LinkId"
-    ]
-  ],
-  "additionalProperties": false,
-  "conditionalCreateOnlyProperties": [
-    "/properties/GatewayId",
-    "/properties/PeerGatewayId",
-    "/properties/LinkAttributes",
-    "/properties/HttpResponderAllowed"
-  ],
-  "definitions": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:aws:rtbfabric:[a-zA-Z0-9_-]+:[0-9]{12}:gateway/[a-zA-Z0-9-]+/link/[a-zA-Z0-9-]+$",
-      "type": "string"
+  "typeName" : "AWS::RTBFabric::Link",
+  "description" : "Resource Type definition for AWS::RTBFabric::Link Resource Type",
+  "definitions" : {
+    "LinkId" : {
+      "type" : "string",
+      "pattern" : "^link-[a-z0-9-]{1,25}$"
     },
-    "CreatedTimestamp": {
-      "type": "string"
+    "GatewayId" : {
+      "type" : "string",
+      "pattern" : "^rtb-gw-[a-z0-9-]{1,25}$"
     },
-    "Filter": {
-      "additionalProperties": false,
-      "properties": {
-        "Criteria": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/FilterCriterion"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Criteria"
-      ],
-      "type": "object"
+    "ResponderErrorMaskingLoggingType" : {
+      "type" : "string",
+      "enum" : [ "NONE", "METRIC", "RESPONSE" ]
     },
-    "FilterCriterion": {
-      "additionalProperties": false,
-      "properties": {
-        "Path": {
-          "type": "string"
+    "ResponderErrorMaskingForHttpCode" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HttpCode" : {
+          "type" : "string",
+          "pattern" : "^DEFAULT|4XX|5XX|\\d{3}$",
+          "maxLength" : 7,
+          "minLength" : 3
         },
-        "Values": {
-          "insertionOrder": false,
-          "items": {
-            "type": "string"
-          },
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Path",
-        "Values"
-      ],
-      "type": "object"
-    },
-    "GatewayId": {
-      "pattern": "^rtb-gw-[a-z0-9-]{1,25}$",
-      "type": "string"
-    },
-    "HeaderTagAction": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
+        "Action" : {
+          "type" : "string",
+          "enum" : [ "NO_BID", "PASSTHROUGH" ]
         },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Name",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "HttpResponderAllowed": {
-      "type": "boolean"
-    },
-    "LinkAttributes": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomerProvidedId": {
-          "type": "string"
-        },
-        "ResponderErrorMasking": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/ResponderErrorMaskingForHttpCode"
+        "LoggingTypes" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : true,
+          "items" : {
+            "$ref" : "#/definitions/ResponderErrorMaskingLoggingType"
           },
-          "maxItems": 200,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": false
+          "minItems" : 1,
+          "maxItems" : 2
+        },
+        "ResponseLoggingPercentage" : {
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
         }
       },
-      "type": "object"
+      "required" : [ "HttpCode", "Action", "LoggingTypes" ]
     },
-    "LinkDirection": {
-      "enum": [
-        "REQUEST",
-        "RESPONSE"
-      ],
-      "type": "string"
+    "LinkAttributes" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ResponderErrorMasking" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ResponderErrorMaskingForHttpCode"
+          },
+          "minItems" : 1,
+          "maxItems" : 200
+        },
+        "CustomerProvidedId" : {
+          "type" : "string"
+        }
+      }
     },
-    "LinkId": {
-      "pattern": "^link-[a-z0-9-]{1,25}$",
-      "type": "string"
+    "LinkStatus" : {
+      "type" : "string",
+      "enum" : [ "PENDING_CREATION", "PENDING_REQUEST", "REQUESTED", "ACCEPTED", "ACTIVE", "REJECTED", "FAILED", "PENDING_DELETION", "DELETED", "PENDING_UPDATE", "PENDING_ISOLATION", "ISOLATED", "PENDING_RESTORATION", "UNKNOWN_TO_SDK_VERSION" ]
     },
-    "LinkLogSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "ApplicationLogs": {
-          "additionalProperties": false,
-          "properties": {
-            "LinkApplicationLogSampling": {
-              "additionalProperties": false,
-              "properties": {
-                "ErrorLog": {
-                  "maximum": 100.0,
-                  "minimum": 0.0,
-                  "type": "number"
+    "CreatedTimestamp" : {
+      "type" : "string"
+    },
+    "UpdatedTimestamp" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:aws:rtbfabric:[a-zA-Z0-9_-]+:[0-9]{12}:gateway/[a-zA-Z0-9-]+/link/[a-zA-Z0-9-]+$"
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 0,
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Key" ]
+    },
+    "HttpResponderAllowed" : {
+      "type" : "boolean"
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "minItems" : 0,
+      "maxItems" : 50,
+      "description" : "Tags to assign to the Link."
+    },
+    "LinkDirection" : {
+      "type" : "string",
+      "enum" : [ "REQUEST", "RESPONSE" ]
+    },
+    "LinkLogSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ApplicationLogs" : {
+          "type" : "object",
+          "additionalProperties" : false,
+          "properties" : {
+            "LinkApplicationLogSampling" : {
+              "type" : "object",
+              "additionalProperties" : false,
+              "properties" : {
+                "ErrorLog" : {
+                  "type" : "number",
+                  "minimum" : 0.0,
+                  "maximum" : 100.0
                 },
-                "FilterLog": {
-                  "maximum": 100.0,
-                  "minimum": 0.0,
-                  "type": "number"
+                "FilterLog" : {
+                  "type" : "number",
+                  "minimum" : 0.0,
+                  "maximum" : 100.0
                 }
               },
-              "required": [
-                "ErrorLog",
-                "FilterLog"
-              ],
-              "type": "object"
+              "required" : [ "ErrorLog", "FilterLog" ]
             }
           },
-          "required": [
-            "LinkApplicationLogSampling"
-          ],
-          "type": "object"
+          "required" : [ "LinkApplicationLogSampling" ]
         }
       },
-      "required": [
-        "ApplicationLogs"
-      ],
-      "type": "object"
+      "required" : [ "ApplicationLogs" ]
     },
-    "LinkStatus": {
-      "enum": [
-        "PENDING_CREATION",
-        "PENDING_REQUEST",
-        "REQUESTED",
-        "ACCEPTED",
-        "ACTIVE",
-        "REJECTED",
-        "FAILED",
-        "PENDING_DELETION",
-        "DELETED",
-        "PENDING_UPDATE",
-        "PENDING_ISOLATION",
-        "ISOLATED",
-        "PENDING_RESTORATION",
-        "UNKNOWN_TO_SDK_VERSION"
-      ],
-      "type": "string"
+    "NoBidModuleParameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Reason" : {
+          "type" : "string",
+          "pattern" : "^[a-zA-Z0-9]*$",
+          "minLength" : 1,
+          "maxLength" : 50
+        },
+        "ReasonCode" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 10
+        },
+        "PassThroughPercentage" : {
+          "type" : "number",
+          "minimum" : 0.0,
+          "maximum" : 100.0
+        }
+      }
     },
-    "ModuleConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "DependsOn": {
-          "insertionOrder": false,
-          "items": {
-            "pattern": "^[A-Za-z0-9 -]+$",
-            "type": "string"
+    "FilterCriterion" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Path" : {
+          "type" : "string"
+        },
+        "Values" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
           },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "ModuleParameters": {
-          "$ref": "#/definitions/ModuleParameters"
-        },
-        "Name": {
-          "pattern": "^[A-Za-z0-9 -]+$",
-          "type": "string"
-        },
-        "Version": {
-          "pattern": "^[a-z0-9]{1,25}$",
-          "type": "string"
+          "minItems" : 1
         }
       },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
+      "required" : [ "Path", "Values" ]
     },
-    "ModuleConfigurationList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ModuleConfiguration"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "ModuleParameters": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "NoBid": {
-              "$ref": "#/definitions/NoBidModuleParameters"
-            }
-          },
-          "required": [
-            "NoBid"
-          ]
-        },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "OpenRtbAttribute": {
-              "$ref": "#/definitions/OpenRtbAttributeModuleParameters"
-            }
-          },
-          "required": [
-            "OpenRtbAttribute"
-          ]
-        }
-      ],
-      "type": "object"
-    },
-    "NoBidAction": {
-      "additionalProperties": false,
-      "properties": {
-        "NoBidReasonCode": {
-          "minimum": 0,
-          "type": "integer"
+    "Filter" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Criteria" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/FilterCriterion"
+          }
         }
       },
-      "type": "object"
+      "required" : [ "Criteria" ]
     },
-    "NoBidModuleParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "PassThroughPercentage": {
-          "maximum": 100.0,
-          "minimum": 0.0,
-          "type": "number"
+    "NoBidAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NoBidReasonCode" : {
+          "type" : "integer",
+          "minimum" : 0
+        }
+      }
+    },
+    "HeaderTagAction" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Name" : {
+          "type" : "string"
         },
-        "Reason": {
-          "maxLength": 50,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]*$",
-          "type": "string"
-        },
-        "ReasonCode": {
-          "maximum": 10,
-          "minimum": 0,
-          "type": "integer"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "Name", "Value" ]
     },
-    "OpenRtbAttributeModuleParameters": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "oneOf": [
-            {
-              "additionalProperties": false,
-              "properties": {
-                "NoBid": {
-                  "$ref": "#/definitions/NoBidAction"
-                }
-              },
-              "required": [
-                "NoBid"
-              ]
-            },
-            {
-              "additionalProperties": false,
-              "properties": {
-                "HeaderTag": {
-                  "$ref": "#/definitions/HeaderTagAction"
-                }
-              },
-              "required": [
-                "HeaderTag"
-              ]
-            }
-          ],
-          "type": "object"
+    "OpenRtbAttributeModuleParameters" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FilterType" : {
+          "type" : "string",
+          "enum" : [ "INCLUDE", "EXCLUDE" ]
         },
-        "FilterConfiguration": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/Filter"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "FilterType": {
-          "enum": [
-            "INCLUDE",
-            "EXCLUDE"
-          ],
-          "type": "string"
-        },
-        "HoldbackPercentage": {
-          "maximum": 100.0,
-          "minimum": 0.0,
-          "type": "number"
-        }
-      },
-      "required": [
-        "FilterType",
-        "FilterConfiguration",
-        "Action",
-        "HoldbackPercentage"
-      ],
-      "type": "object"
-    },
-    "ResponderErrorMaskingForHttpCode": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "enum": [
-            "NO_BID",
-            "PASSTHROUGH"
-          ],
-          "type": "string"
-        },
-        "HttpCode": {
-          "maxLength": 7,
-          "minLength": 3,
-          "pattern": "^DEFAULT|4XX|5XX|\\d{3}$",
-          "type": "string"
-        },
-        "LoggingTypes": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/ResponderErrorMaskingLoggingType"
-          },
-          "maxItems": 2,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
-        },
-        "ResponseLoggingPercentage": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
-        }
-      },
-      "required": [
-        "HttpCode",
-        "Action",
-        "LoggingTypes"
-      ],
-      "type": "object"
-    },
-    "ResponderErrorMaskingLoggingType": {
-      "enum": [
-        "NONE",
-        "METRIC",
-        "RESPONSE"
-      ],
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
-    },
-    "Tags": {
-      "description": "Tags to assign to the Link.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "UpdatedTimestamp": {
-      "type": "string"
-    }
-  },
-  "description": "Resource Type definition for AWS::RTBFabric::Link Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "rtbfabric:CreateLink",
-        "rtbfabric:GetLink",
-        "rtbfabric:TagResource",
-        "rtbfabric:ListTagsForResource",
-        "iam:CreateServiceLinkedRole"
-      ]
-    },
-    "delete": {
-      "permissions": [
-        "rtbfabric:DeleteLink",
-        "rtbfabric:GetLink"
-      ]
-    },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "GatewayId": {
-            "pattern": "^rtb-gw-[a-z0-9-]{1,25}$",
-            "type": "string"
+        "FilterConfiguration" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Filter"
           }
         },
-        "required": [
-          "GatewayId"
-        ]
+        "Action" : {
+          "type" : "object",
+          "oneOf" : [ {
+            "properties" : {
+              "NoBid" : {
+                "$ref" : "#/definitions/NoBidAction"
+              }
+            },
+            "required" : [ "NoBid" ],
+            "additionalProperties" : false
+          }, {
+            "properties" : {
+              "HeaderTag" : {
+                "$ref" : "#/definitions/HeaderTagAction"
+              }
+            },
+            "required" : [ "HeaderTag" ],
+            "additionalProperties" : false
+          } ]
+        },
+        "HoldbackPercentage" : {
+          "type" : "number",
+          "minimum" : 0.0,
+          "maximum" : 100.0
+        }
       },
-      "permissions": [
-        "rtbfabric:ListLinks"
-      ]
+      "required" : [ "FilterType", "FilterConfiguration", "Action", "HoldbackPercentage" ]
     },
-    "read": {
-      "permissions": [
-        "rtbfabric:GetLink",
-        "rtbfabric:ListTagsForResource"
-      ]
+    "ModuleParameters" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "properties" : {
+          "NoBid" : {
+            "$ref" : "#/definitions/NoBidModuleParameters"
+          }
+        },
+        "required" : [ "NoBid" ],
+        "additionalProperties" : false
+      }, {
+        "properties" : {
+          "OpenRtbAttribute" : {
+            "$ref" : "#/definitions/OpenRtbAttributeModuleParameters"
+          }
+        },
+        "required" : [ "OpenRtbAttribute" ],
+        "additionalProperties" : false
+      } ]
     },
-    "update": {
-      "permissions": [
-        "rtbfabric:UpdateLink",
-        "rtbfabric:GetLink",
-        "rtbfabric:TagResource",
-        "rtbfabric:UntagResource",
-        "rtbfabric:ListTagsForResource"
-      ]
+    "ModuleConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Version" : {
+          "type" : "string",
+          "pattern" : "^[a-z0-9]{1,25}$"
+        },
+        "Name" : {
+          "type" : "string",
+          "pattern" : "^[A-Za-z0-9 -]+$"
+        },
+        "DependsOn" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string",
+            "pattern" : "^[A-Za-z0-9 -]+$"
+          }
+        },
+        "ModuleParameters" : {
+          "$ref" : "#/definitions/ModuleParameters"
+        }
+      },
+      "required" : [ "Name" ]
+    },
+    "ModuleConfigurationList" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ModuleConfiguration"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "$ref": "#/definitions/Arn"
+  "properties" : {
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
     },
-    "CreatedTimestamp": {
-      "$ref": "#/definitions/CreatedTimestamp"
+    "LinkId" : {
+      "$ref" : "#/definitions/LinkId"
     },
-    "GatewayId": {
-      "$ref": "#/definitions/GatewayId"
+    "GatewayId" : {
+      "$ref" : "#/definitions/GatewayId"
     },
-    "HttpResponderAllowed": {
-      "$ref": "#/definitions/HttpResponderAllowed"
+    "PeerGatewayId" : {
+      "$ref" : "#/definitions/GatewayId"
     },
-    "LinkAttributes": {
-      "$ref": "#/definitions/LinkAttributes"
+    "LinkAttributes" : {
+      "$ref" : "#/definitions/LinkAttributes"
     },
-    "LinkDirection": {
-      "$ref": "#/definitions/LinkDirection"
+    "LinkStatus" : {
+      "$ref" : "#/definitions/LinkStatus"
     },
-    "LinkId": {
-      "$ref": "#/definitions/LinkId"
+    "CreatedTimestamp" : {
+      "$ref" : "#/definitions/CreatedTimestamp"
     },
-    "LinkLogSettings": {
-      "$ref": "#/definitions/LinkLogSettings"
+    "UpdatedTimestamp" : {
+      "$ref" : "#/definitions/UpdatedTimestamp"
     },
-    "LinkStatus": {
-      "$ref": "#/definitions/LinkStatus"
+    "Arn" : {
+      "$ref" : "#/definitions/Arn"
     },
-    "ModuleConfigurationList": {
-      "$ref": "#/definitions/ModuleConfigurationList"
+    "HttpResponderAllowed" : {
+      "$ref" : "#/definitions/HttpResponderAllowed"
     },
-    "PeerGatewayId": {
-      "$ref": "#/definitions/GatewayId"
+    "LinkDirection" : {
+      "$ref" : "#/definitions/LinkDirection"
     },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
+    "LinkLogSettings" : {
+      "$ref" : "#/definitions/LinkLogSettings"
     },
-    "UpdatedTimestamp": {
-      "$ref": "#/definitions/UpdatedTimestamp"
+    "ModuleConfigurationList" : {
+      "$ref" : "#/definitions/ModuleConfigurationList"
     }
   },
-  "readOnlyProperties": [
-    "/properties/LinkId",
-    "/properties/Arn",
-    "/properties/LinkStatus",
-    "/properties/CreatedTimestamp",
-    "/properties/UpdatedTimestamp",
-    "/properties/LinkDirection"
-  ],
-  "required": [
-    "GatewayId",
-    "PeerGatewayId",
-    "LinkLogSettings"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "rtbfabric:TagResource",
-      "rtbfabric:UntagResource",
-      "rtbfabric:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "required" : [ "GatewayId", "PeerGatewayId", "LinkLogSettings" ],
+  "readOnlyProperties" : [ "/properties/LinkId", "/properties/Arn", "/properties/LinkStatus", "/properties/CreatedTimestamp", "/properties/UpdatedTimestamp", "/properties/LinkDirection" ],
+  "conditionalCreateOnlyProperties" : [ "/properties/GatewayId", "/properties/PeerGatewayId", "/properties/LinkAttributes", "/properties/HttpResponderAllowed" ],
+  "writeOnlyProperties" : [ "/properties/HttpResponderAllowed", "/properties/ModuleConfigurationList" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/GatewayId", "/properties/LinkId" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "rtbfabric:CreateLink", "rtbfabric:GetLink", "rtbfabric:TagResource", "rtbfabric:ListTagsForResource", "iam:CreateServiceLinkedRole" ]
+    },
+    "read" : {
+      "permissions" : [ "rtbfabric:GetLink", "rtbfabric:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "rtbfabric:UpdateLink", "rtbfabric:GetLink", "rtbfabric:TagResource", "rtbfabric:UntagResource", "rtbfabric:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "rtbfabric:DeleteLink", "rtbfabric:GetLink" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "GatewayId" : {
+            "type" : "string",
+            "pattern" : "^rtb-gw-[a-z0-9-]{1,25}$"
+          }
+        },
+        "required" : [ "GatewayId" ]
+      },
+      "permissions" : [ "rtbfabric:ListLinks" ]
+    }
   },
-  "typeName": "AWS::RTBFabric::Link",
-  "writeOnlyProperties": [
-    "/properties/HttpResponderAllowed",
-    "/properties/ModuleConfigurationList"
-  ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "rtbfabric:TagResource", "rtbfabric:UntagResource", "rtbfabric:ListTagsForResource" ]
+  },
+  "additionalProperties" : false
 }

@@ -1,144 +1,96 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CertificateAuthorityArn",
-    "/properties/DirectoryId",
-    "/properties/VpcInformation"
-  ],
-  "definitions": {
-    "Tags": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "type": "string"
+  "typeName" : "AWS::PCAConnectorAD::Connector",
+  "description" : "Represents a Connector that connects AWS PrivateCA and your directory",
+  "definitions" : {
+    "Tags" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Unit": {
-      "additionalProperties": false,
-      "type": "object"
+    "Unit" : {
+      "type" : "object",
+      "additionalProperties" : false
     },
-    "VpcInformation": {
-      "additionalProperties": false,
-      "properties": {
-        "IpAddressType": {
-          "enum": [
-            "IPV4",
-            "DUALSTACK"
-          ],
-          "type": "string"
-        },
-        "SecurityGroupIds": {
-          "items": {
-            "maxLength": 20,
-            "minLength": 11,
-            "pattern": "^(?:sg-[0-9a-f]{8}|sg-[0-9a-f]{17})$",
-            "type": "string"
+    "VpcInformation" : {
+      "type" : "object",
+      "properties" : {
+        "SecurityGroupIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "maxLength" : 20,
+            "minLength" : 11,
+            "pattern" : "^(?:sg-[0-9a-f]{8}|sg-[0-9a-f]{17})$"
           },
-          "maxItems": 5,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+          "maxItems" : 5,
+          "minItems" : 1,
+          "uniqueItems" : true
+        },
+        "IpAddressType" : {
+          "type" : "string",
+          "enum" : [ "IPV4", "DUALSTACK" ]
         }
       },
-      "required": [
-        "SecurityGroupIds"
-      ],
-      "type": "object"
+      "required" : [ "SecurityGroupIds" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Represents a Connector that connects AWS PrivateCA and your directory",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "acm-pca:DescribeCertificateAuthority",
-        "acm-pca:GetCertificateAuthorityCertificate",
-        "acm-pca:GetCertificate",
-        "acm-pca:IssueCertificate",
-        "ds:DescribeDirectories",
-        "ec2:CreateTags",
-        "ec2:CreateVpcEndpoint",
-        "ec2:DescribeVpcEndpoints",
-        "pca-connector-ad:CreateConnector",
-        "pca-connector-ad:GetConnector",
-        "pca-connector-ad:TagResource"
-      ]
+  "properties" : {
+    "CertificateAuthorityArn" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 5,
+      "pattern" : "^arn:[\\w-]+:acm-pca:[\\w-]+:[0-9]+:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteVpcEndpoints",
-        "ec2:DescribeVpcEndpoints",
-        "pca-connector-ad:GetConnector",
-        "pca-connector-ad:DeleteConnector",
-        "pca-connector-ad:UntagResource"
-      ]
+    "ConnectorArn" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 5,
+      "pattern" : "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
     },
-    "list": {
-      "permissions": [
-        "pca-connector-ad:ListConnectors"
-      ]
+    "DirectoryId" : {
+      "type" : "string",
+      "pattern" : "^d-[0-9a-f]{10}$"
     },
-    "read": {
-      "permissions": [
-        "pca-connector-ad:ListTagsForResource",
-        "pca-connector-ad:GetConnector"
-      ]
+    "Tags" : {
+      "$ref" : "#/definitions/Tags"
     },
-    "update": {
-      "permissions": [
-        "pca-connector-ad:ListTagsForResource",
-        "pca-connector-ad:TagResource",
-        "pca-connector-ad:UntagResource"
-      ]
+    "VpcInformation" : {
+      "$ref" : "#/definitions/VpcInformation"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ConnectorArn"
-  ],
-  "properties": {
-    "CertificateAuthorityArn": {
-      "maxLength": 200,
-      "minLength": 5,
-      "pattern": "^arn:[\\w-]+:acm-pca:[\\w-]+:[0-9]+:certificate-authority\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
-      "type": "string"
+  "required" : [ "CertificateAuthorityArn", "DirectoryId", "VpcInformation" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "pca-connector-ad:ListTagsForResource", "pca-connector-ad:TagResource", "pca-connector-ad:UntagResource" ]
+  },
+  "readOnlyProperties" : [ "/properties/ConnectorArn" ],
+  "createOnlyProperties" : [ "/properties/CertificateAuthorityArn", "/properties/DirectoryId", "/properties/VpcInformation" ],
+  "primaryIdentifier" : [ "/properties/ConnectorArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "acm-pca:DescribeCertificateAuthority", "acm-pca:GetCertificateAuthorityCertificate", "acm-pca:GetCertificate", "acm-pca:IssueCertificate", "ds:DescribeDirectories", "ec2:CreateTags", "ec2:CreateVpcEndpoint", "ec2:DescribeVpcEndpoints", "pca-connector-ad:CreateConnector", "pca-connector-ad:GetConnector", "pca-connector-ad:TagResource" ]
     },
-    "ConnectorArn": {
-      "maxLength": 200,
-      "minLength": 5,
-      "pattern": "^arn:[\\w-]+:pca-connector-ad:[\\w-]+:[0-9]+:connector\\/[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "pca-connector-ad:ListTagsForResource", "pca-connector-ad:GetConnector" ]
     },
-    "DirectoryId": {
-      "pattern": "^d-[0-9a-f]{10}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ec2:DeleteVpcEndpoints", "ec2:DescribeVpcEndpoints", "pca-connector-ad:GetConnector", "pca-connector-ad:DeleteConnector", "pca-connector-ad:UntagResource" ]
     },
-    "Tags": {
-      "$ref": "#/definitions/Tags"
+    "list" : {
+      "permissions" : [ "pca-connector-ad:ListConnectors" ]
     },
-    "VpcInformation": {
-      "$ref": "#/definitions/VpcInformation"
+    "update" : {
+      "permissions" : [ "pca-connector-ad:ListTagsForResource", "pca-connector-ad:TagResource", "pca-connector-ad:UntagResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/ConnectorArn"
-  ],
-  "required": [
-    "CertificateAuthorityArn",
-    "DirectoryId",
-    "VpcInformation"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "pca-connector-ad:ListTagsForResource",
-      "pca-connector-ad:TagResource",
-      "pca-connector-ad:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::PCAConnectorAD::Connector"
+  "additionalProperties" : false
 }

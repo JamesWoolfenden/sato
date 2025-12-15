@@ -1,752 +1,611 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/RuleGroupName",
-    "/properties/Capacity",
-    "/properties/Type"
-  ],
-  "definitions": {
-    "ActionDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "PublishMetricAction": {
-          "$ref": "#/definitions/PublishMetricAction"
+  "typeName" : "AWS::NetworkFirewall::RuleGroup",
+  "description" : "Resource type definition for AWS::NetworkFirewall::RuleGroup",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+  "additionalProperties" : false,
+  "definitions" : {
+    "ResourceArn" : {
+      "description" : "A resource ARN.",
+      "type" : "string",
+      "pattern" : "^(arn:aws.*)$",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^.*$"
+        },
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 255,
+          "pattern" : "^.*$"
         }
       },
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "Address": {
-      "additionalProperties": false,
-      "properties": {
-        "AddressDefinition": {
-          "maxLength": 255,
-          "minLength": 1,
-          "pattern": "^([a-fA-F\\d:\\.]+/\\d{1,3})$",
-          "type": "string"
+    "RulesString" : {
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 1000000
+    },
+    "RuleGroup" : {
+      "type" : "object",
+      "properties" : {
+        "RuleVariables" : {
+          "$ref" : "#/definitions/RuleVariables"
+        },
+        "ReferenceSets" : {
+          "$ref" : "#/definitions/ReferenceSets"
+        },
+        "RulesSource" : {
+          "$ref" : "#/definitions/RulesSource"
+        },
+        "StatefulRuleOptions" : {
+          "$ref" : "#/definitions/StatefulRuleOptions"
         }
       },
-      "required": [
-        "AddressDefinition"
-      ],
-      "type": "object"
+      "required" : [ "RulesSource" ],
+      "additionalProperties" : false
     },
-    "CustomAction": {
-      "additionalProperties": false,
-      "properties": {
-        "ActionDefinition": {
-          "$ref": "#/definitions/ActionDefinition"
-        },
-        "ActionName": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9]+$",
-          "type": "string"
-        }
-      },
-      "required": [
-        "ActionName",
-        "ActionDefinition"
-      ],
-      "type": "object"
-    },
-    "Dimension": {
-      "additionalProperties": false,
-      "properties": {
-        "Value": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^[a-zA-Z0-9-_ ]+$",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value"
-      ],
-      "type": "object"
-    },
-    "GeneratedRulesType": {
-      "enum": [
-        "ALLOWLIST",
-        "DENYLIST",
-        "ALERTLIST",
-        "REJECTLIST"
-      ],
-      "type": "string"
-    },
-    "Header": {
-      "additionalProperties": false,
-      "properties": {
-        "Destination": {
-          "maxLength": 1024,
-          "minLength": 1,
-          "pattern": "^.*$",
-          "type": "string"
-        },
-        "DestinationPort": {
-          "$ref": "#/definitions/Port"
-        },
-        "Direction": {
-          "enum": [
-            "FORWARD",
-            "ANY"
-          ],
-          "type": "string"
-        },
-        "Protocol": {
-          "enum": [
-            "IP",
-            "TCP",
-            "UDP",
-            "ICMP",
-            "HTTP",
-            "FTP",
-            "TLS",
-            "SMB",
-            "DNS",
-            "DCERPC",
-            "SSH",
-            "SMTP",
-            "IMAP",
-            "MSN",
-            "KRB5",
-            "IKEV2",
-            "TFTP",
-            "NTP",
-            "DHCP"
-          ],
-          "type": "string"
-        },
-        "Source": {
-          "maxLength": 1024,
-          "minLength": 1,
-          "pattern": "^.*$",
-          "type": "string"
-        },
-        "SourcePort": {
-          "$ref": "#/definitions/Port"
-        }
-      },
-      "required": [
-        "Protocol",
-        "Source",
-        "SourcePort",
-        "Direction",
-        "Destination",
-        "DestinationPort"
-      ],
-      "type": "object"
-    },
-    "IPSet": {
-      "additionalProperties": false,
-      "properties": {
-        "Definition": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/VariableDefinition"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "IPSetReference": {
-      "additionalProperties": false,
-      "properties": {
-        "ReferenceArn": {
-          "$ref": "#/definitions/ResourceArn"
-        }
-      },
-      "type": "object"
-    },
-    "MatchAttributes": {
-      "additionalProperties": false,
-      "properties": {
-        "DestinationPorts": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/PortRange"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Destinations": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/Address"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Protocols": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/ProtocolNumber"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "SourcePorts": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/PortRange"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Sources": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/Address"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "TCPFlags": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/TCPFlagField"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "Port": {
-      "maxLength": 1024,
-      "minLength": 1,
-      "pattern": "^.*$",
-      "type": "string"
-    },
-    "PortRange": {
-      "additionalProperties": false,
-      "properties": {
-        "FromPort": {
-          "$ref": "#/definitions/PortRangeBound"
-        },
-        "ToPort": {
-          "$ref": "#/definitions/PortRangeBound"
-        }
-      },
-      "required": [
-        "FromPort",
-        "ToPort"
-      ],
-      "type": "object"
-    },
-    "PortRangeBound": {
-      "maximum": 65535,
-      "minimum": 0,
-      "type": "integer"
-    },
-    "PortSet": {
-      "additionalProperties": false,
-      "properties": {
-        "Definition": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/VariableDefinition"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "ProtocolNumber": {
-      "maximum": 255,
-      "minimum": 0,
-      "type": "integer"
-    },
-    "PublishMetricAction": {
-      "additionalProperties": false,
-      "properties": {
-        "Dimensions": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/Dimension"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Dimensions"
-      ],
-      "type": "object"
-    },
-    "ReferenceSets": {
-      "additionalProperties": false,
-      "properties": {
-        "IPSetReferences": {
-          "additionalProperties": false,
-          "patternProperties": {
-            "^[A-Za-z0-9_]{1,32}$": {
-              "$ref": "#/definitions/IPSetReference"
+    "RuleVariables" : {
+      "type" : "object",
+      "properties" : {
+        "IPSets" : {
+          "type" : "object",
+          "patternProperties" : {
+            "^[A-Za-z0-9_]{1,32}$" : {
+              "$ref" : "#/definitions/IPSet"
             }
           },
-          "type": "object"
-        }
-      },
-      "type": "object"
-    },
-    "ResourceArn": {
-      "description": "A resource ARN.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^(arn:aws.*)$",
-      "type": "string"
-    },
-    "RuleDefinition": {
-      "additionalProperties": false,
-      "properties": {
-        "Actions": {
-          "insertionOrder": true,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
+          "additionalProperties" : false
         },
-        "MatchAttributes": {
-          "$ref": "#/definitions/MatchAttributes"
-        }
-      },
-      "required": [
-        "MatchAttributes",
-        "Actions"
-      ],
-      "type": "object"
-    },
-    "RuleGroup": {
-      "additionalProperties": false,
-      "properties": {
-        "ReferenceSets": {
-          "$ref": "#/definitions/ReferenceSets"
-        },
-        "RuleVariables": {
-          "$ref": "#/definitions/RuleVariables"
-        },
-        "RulesSource": {
-          "$ref": "#/definitions/RulesSource"
-        },
-        "StatefulRuleOptions": {
-          "$ref": "#/definitions/StatefulRuleOptions"
-        }
-      },
-      "required": [
-        "RulesSource"
-      ],
-      "type": "object"
-    },
-    "RuleOption": {
-      "additionalProperties": false,
-      "properties": {
-        "Keyword": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^.*$",
-          "type": "string"
-        },
-        "Settings": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/Setting"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Keyword"
-      ],
-      "type": "object"
-    },
-    "RuleOrder": {
-      "enum": [
-        "DEFAULT_ACTION_ORDER",
-        "STRICT_ORDER"
-      ],
-      "type": "string"
-    },
-    "RuleVariables": {
-      "additionalProperties": false,
-      "properties": {
-        "IPSets": {
-          "additionalProperties": false,
-          "patternProperties": {
-            "^[A-Za-z0-9_]{1,32}$": {
-              "$ref": "#/definitions/IPSet"
+        "PortSets" : {
+          "type" : "object",
+          "patternProperties" : {
+            "^[A-Za-z0-9_]{1,32}$" : {
+              "$ref" : "#/definitions/PortSet"
             }
           },
-          "type": "object"
-        },
-        "PortSets": {
-          "additionalProperties": false,
-          "patternProperties": {
-            "^[A-Za-z0-9_]{1,32}$": {
-              "$ref": "#/definitions/PortSet"
+          "additionalProperties" : false
+        }
+      },
+      "additionalProperties" : false
+    },
+    "IPSet" : {
+      "type" : "object",
+      "properties" : {
+        "Definition" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/VariableDefinition"
+          }
+        }
+      },
+      "additionalProperties" : false
+    },
+    "PortSet" : {
+      "type" : "object",
+      "properties" : {
+        "Definition" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/VariableDefinition"
+          }
+        }
+      },
+      "additionalProperties" : false
+    },
+    "VariableDefinition" : {
+      "type" : "string",
+      "minLength" : 1,
+      "pattern" : "^.*$"
+    },
+    "ReferenceSets" : {
+      "type" : "object",
+      "properties" : {
+        "IPSetReferences" : {
+          "type" : "object",
+          "patternProperties" : {
+            "^[A-Za-z0-9_]{1,32}$" : {
+              "$ref" : "#/definitions/IPSetReference"
             }
           },
-          "type": "object"
+          "additionalProperties" : false
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "RulesSource": {
-      "additionalProperties": false,
-      "properties": {
-        "RulesSourceList": {
-          "$ref": "#/definitions/RulesSourceList"
-        },
-        "RulesString": {
-          "$ref": "#/definitions/RulesString"
-        },
-        "StatefulRules": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/StatefulRule"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "StatelessRulesAndCustomActions": {
-          "$ref": "#/definitions/StatelessRulesAndCustomActions"
+    "IPSetReference" : {
+      "type" : "object",
+      "properties" : {
+        "ReferenceArn" : {
+          "$ref" : "#/definitions/ResourceArn"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "RulesSourceList": {
-      "additionalProperties": false,
-      "properties": {
-        "GeneratedRulesType": {
-          "$ref": "#/definitions/GeneratedRulesType"
+    "RulesSource" : {
+      "type" : "object",
+      "properties" : {
+        "RulesString" : {
+          "$ref" : "#/definitions/RulesString"
         },
-        "TargetTypes": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/TargetType"
-          },
-          "type": "array",
-          "uniqueItems": false
+        "RulesSourceList" : {
+          "$ref" : "#/definitions/RulesSourceList"
         },
-        "Targets": {
-          "insertionOrder": true,
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
+        "StatefulRules" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/StatefulRule"
+          }
+        },
+        "StatelessRulesAndCustomActions" : {
+          "$ref" : "#/definitions/StatelessRulesAndCustomActions"
         }
       },
-      "required": [
-        "Targets",
-        "TargetTypes",
-        "GeneratedRulesType"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "RulesString": {
-      "maxLength": 1000000,
-      "minLength": 0,
-      "type": "string"
-    },
-    "Setting": {
-      "maxLength": 8192,
-      "minLength": 1,
-      "pattern": "^.*$",
-      "type": "string"
-    },
-    "StatefulRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Action": {
-          "enum": [
-            "PASS",
-            "DROP",
-            "ALERT",
-            "REJECT"
-          ],
-          "type": "string"
+    "RulesSourceList" : {
+      "type" : "object",
+      "properties" : {
+        "Targets" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
         },
-        "Header": {
-          "$ref": "#/definitions/Header"
+        "TargetTypes" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/TargetType"
+          }
         },
-        "RuleOptions": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/RuleOption"
-          },
-          "type": "array",
-          "uniqueItems": false
+        "GeneratedRulesType" : {
+          "$ref" : "#/definitions/GeneratedRulesType"
         }
       },
-      "required": [
-        "Action",
-        "Header",
-        "RuleOptions"
-      ],
-      "type": "object"
+      "required" : [ "Targets", "TargetTypes", "GeneratedRulesType" ],
+      "additionalProperties" : false
     },
-    "StatefulRuleOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "RuleOrder": {
-          "$ref": "#/definitions/RuleOrder"
-        }
-      },
-      "type": "object"
+    "TargetType" : {
+      "type" : "string",
+      "enum" : [ "TLS_SNI", "HTTP_HOST" ]
     },
-    "StatelessRule": {
-      "additionalProperties": false,
-      "properties": {
-        "Priority": {
-          "maximum": 65535,
-          "minimum": 1,
-          "type": "integer"
+    "SummaryRuleOption" : {
+      "type" : "string",
+      "enum" : [ "SID", "MSG", "METADATA" ]
+    },
+    "GeneratedRulesType" : {
+      "type" : "string",
+      "enum" : [ "ALLOWLIST", "DENYLIST", "ALERTLIST", "REJECTLIST" ]
+    },
+    "StatefulRule" : {
+      "type" : "object",
+      "properties" : {
+        "Action" : {
+          "type" : "string",
+          "enum" : [ "PASS", "DROP", "ALERT", "REJECT" ]
         },
-        "RuleDefinition": {
-          "$ref": "#/definitions/RuleDefinition"
-        }
-      },
-      "required": [
-        "RuleDefinition",
-        "Priority"
-      ],
-      "type": "object"
-    },
-    "StatelessRulesAndCustomActions": {
-      "additionalProperties": false,
-      "properties": {
-        "CustomActions": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/CustomAction"
-          },
-          "type": "array",
-          "uniqueItems": false
+        "Header" : {
+          "$ref" : "#/definitions/Header"
         },
-        "StatelessRules": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/StatelessRule"
-          },
-          "type": "array",
-          "uniqueItems": false
+        "RuleOptions" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/RuleOption"
+          }
         }
       },
-      "required": [
-        "StatelessRules"
-      ],
-      "type": "object"
+      "required" : [ "Action", "Header", "RuleOptions" ],
+      "additionalProperties" : false
     },
-    "SummaryRuleOption": {
-      "enum": [
-        "SID",
-        "MSG",
-        "METADATA"
-      ],
-      "type": "string"
-    },
-    "TCPFlag": {
-      "enum": [
-        "FIN",
-        "SYN",
-        "RST",
-        "PSH",
-        "ACK",
-        "URG",
-        "ECE",
-        "CWR"
-      ],
-      "type": "string"
-    },
-    "TCPFlagField": {
-      "additionalProperties": false,
-      "properties": {
-        "Flags": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/TCPFlag"
-          },
-          "type": "array",
-          "uniqueItems": false
+    "Header" : {
+      "type" : "object",
+      "properties" : {
+        "Protocol" : {
+          "type" : "string",
+          "enum" : [ "IP", "TCP", "UDP", "ICMP", "HTTP", "FTP", "TLS", "SMB", "DNS", "DCERPC", "SSH", "SMTP", "IMAP", "MSN", "KRB5", "IKEV2", "TFTP", "NTP", "DHCP" ]
         },
-        "Masks": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/TCPFlag"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Flags"
-      ],
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^.*$",
-          "type": "string"
+        "Source" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1024,
+          "pattern" : "^.*$"
         },
-        "Value": {
-          "maxLength": 255,
-          "minLength": 0,
-          "pattern": "^.*$",
-          "type": "string"
+        "SourcePort" : {
+          "$ref" : "#/definitions/Port"
+        },
+        "Direction" : {
+          "type" : "string",
+          "enum" : [ "FORWARD", "ANY" ]
+        },
+        "Destination" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1024,
+          "pattern" : "^.*$"
+        },
+        "DestinationPort" : {
+          "$ref" : "#/definitions/Port"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Protocol", "Source", "SourcePort", "Direction", "Destination", "DestinationPort" ],
+      "additionalProperties" : false
     },
-    "TargetType": {
-      "enum": [
-        "TLS_SNI",
-        "HTTP_HOST"
-      ],
-      "type": "string"
+    "RuleOption" : {
+      "type" : "object",
+      "properties" : {
+        "Keyword" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^.*$"
+        },
+        "Settings" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Setting"
+          }
+        }
+      },
+      "required" : [ "Keyword" ],
+      "additionalProperties" : false
     },
-    "VariableDefinition": {
-      "minLength": 1,
-      "pattern": "^.*$",
-      "type": "string"
+    "Setting" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 8192,
+      "pattern" : "^.*$"
+    },
+    "Port" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024,
+      "pattern" : "^.*$"
+    },
+    "StatelessRulesAndCustomActions" : {
+      "type" : "object",
+      "properties" : {
+        "StatelessRules" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/StatelessRule"
+          }
+        },
+        "CustomActions" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/CustomAction"
+          }
+        }
+      },
+      "required" : [ "StatelessRules" ],
+      "additionalProperties" : false
+    },
+    "StatelessRule" : {
+      "type" : "object",
+      "properties" : {
+        "RuleDefinition" : {
+          "$ref" : "#/definitions/RuleDefinition"
+        },
+        "Priority" : {
+          "type" : "integer",
+          "minimum" : 1,
+          "maximum" : 65535
+        }
+      },
+      "required" : [ "RuleDefinition", "Priority" ],
+      "additionalProperties" : false
+    },
+    "RuleDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "MatchAttributes" : {
+          "$ref" : "#/definitions/MatchAttributes"
+        },
+        "Actions" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "MatchAttributes", "Actions" ],
+      "additionalProperties" : false
+    },
+    "MatchAttributes" : {
+      "type" : "object",
+      "properties" : {
+        "Sources" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        },
+        "Destinations" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Address"
+          }
+        },
+        "SourcePorts" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/PortRange"
+          }
+        },
+        "DestinationPorts" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/PortRange"
+          }
+        },
+        "Protocols" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ProtocolNumber"
+          }
+        },
+        "TCPFlags" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/TCPFlagField"
+          }
+        }
+      },
+      "additionalProperties" : false
+    },
+    "Address" : {
+      "type" : "object",
+      "properties" : {
+        "AddressDefinition" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255,
+          "pattern" : "^([a-fA-F\\d:\\.]+/\\d{1,3})$"
+        }
+      },
+      "required" : [ "AddressDefinition" ],
+      "additionalProperties" : false
+    },
+    "PortRange" : {
+      "type" : "object",
+      "properties" : {
+        "FromPort" : {
+          "$ref" : "#/definitions/PortRangeBound"
+        },
+        "ToPort" : {
+          "$ref" : "#/definitions/PortRangeBound"
+        }
+      },
+      "required" : [ "FromPort", "ToPort" ],
+      "additionalProperties" : false
+    },
+    "PortRangeBound" : {
+      "type" : "integer",
+      "minimum" : 0,
+      "maximum" : 65535
+    },
+    "ProtocolNumber" : {
+      "type" : "integer",
+      "minimum" : 0,
+      "maximum" : 255
+    },
+    "TCPFlagField" : {
+      "type" : "object",
+      "properties" : {
+        "Flags" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/TCPFlag"
+          }
+        },
+        "Masks" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/TCPFlag"
+          }
+        }
+      },
+      "required" : [ "Flags" ],
+      "additionalProperties" : false
+    },
+    "TCPFlag" : {
+      "type" : "string",
+      "enum" : [ "FIN", "SYN", "RST", "PSH", "ACK", "URG", "ECE", "CWR" ]
+    },
+    "CustomAction" : {
+      "type" : "object",
+      "properties" : {
+        "ActionName" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^[a-zA-Z0-9]+$"
+        },
+        "ActionDefinition" : {
+          "$ref" : "#/definitions/ActionDefinition"
+        }
+      },
+      "required" : [ "ActionName", "ActionDefinition" ],
+      "additionalProperties" : false
+    },
+    "ActionDefinition" : {
+      "type" : "object",
+      "properties" : {
+        "PublishMetricAction" : {
+          "$ref" : "#/definitions/PublishMetricAction"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "PublishMetricAction" : {
+      "type" : "object",
+      "properties" : {
+        "Dimensions" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Dimension"
+          }
+        }
+      },
+      "required" : [ "Dimensions" ],
+      "additionalProperties" : false
+    },
+    "Dimension" : {
+      "type" : "object",
+      "properties" : {
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "^[a-zA-Z0-9-_ ]+$"
+        }
+      },
+      "required" : [ "Value" ],
+      "additionalProperties" : false
+    },
+    "StatefulRuleOptions" : {
+      "type" : "object",
+      "properties" : {
+        "RuleOrder" : {
+          "$ref" : "#/definitions/RuleOrder"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "RuleOrder" : {
+      "type" : "string",
+      "enum" : [ "DEFAULT_ACTION_ORDER", "STRICT_ORDER" ]
     }
   },
-  "description": "Resource type definition for AWS::NetworkFirewall::RuleGroup",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "network-firewall:CreateRuleGroup",
-        "network-firewall:DescribeRuleGroup",
-        "network-firewall:TagResource",
-        "network-firewall:ListRuleGroups",
-        "iam:CreateServiceLinkedRole",
-        "ec2:GetManagedPrefixListEntries",
-        "ec2:DescribeManagedPrefixLists"
-      ]
+  "properties" : {
+    "RuleGroupName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z0-9-]+$"
     },
-    "delete": {
-      "permissions": [
-        "network-firewall:DeleteRuleGroup",
-        "network-firewall:DescribeRuleGroup",
-        "network-firewall:UntagResource"
-      ]
+    "RuleGroupArn" : {
+      "$ref" : "#/definitions/ResourceArn"
     },
-    "list": {
-      "permissions": [
-        "network-firewall:ListRuleGroups"
-      ]
+    "RuleGroupId" : {
+      "type" : "string",
+      "minLength" : 36,
+      "maxLength" : 36,
+      "pattern" : "^([0-9a-f]{8})-([0-9a-f]{4}-){3}([0-9a-f]{12})$"
     },
-    "read": {
-      "permissions": [
-        "network-firewall:DescribeRuleGroup",
-        "network-firewall:ListTagsForResources"
-      ]
+    "RuleGroup" : {
+      "$ref" : "#/definitions/RuleGroup"
     },
-    "update": {
-      "permissions": [
-        "network-firewall:UpdateRuleGroup",
-        "network-firewall:DescribeRuleGroup",
-        "network-firewall:TagResource",
-        "network-firewall:UntagResource",
-        "iam:CreateServiceLinkedRole",
-        "ec2:GetManagedPrefixListEntries",
-        "ec2:DescribeManagedPrefixLists"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/RuleGroupArn"
-  ],
-  "properties": {
-    "Capacity": {
-      "type": "integer"
+    "Type" : {
+      "type" : "string",
+      "enum" : [ "STATELESS", "STATEFUL" ]
     },
-    "Description": {
-      "maxLength": 512,
-      "minLength": 1,
-      "pattern": "^.*$",
-      "type": "string"
+    "Capacity" : {
+      "type" : "integer"
     },
-    "RuleGroup": {
-      "$ref": "#/definitions/RuleGroup"
-    },
-    "RuleGroupArn": {
-      "$ref": "#/definitions/ResourceArn"
-    },
-    "RuleGroupId": {
-      "maxLength": 36,
-      "minLength": 36,
-      "pattern": "^([0-9a-f]{8})-([0-9a-f]{4}-){3}([0-9a-f]{12})$",
-      "type": "string"
-    },
-    "RuleGroupName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-]+$",
-      "type": "string"
-    },
-    "SummaryConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "RuleOptions": {
-          "insertionOrder": true,
-          "items": {
-            "$ref": "#/definitions/SummaryRuleOption"
-          },
-          "type": "array",
-          "uniqueItems": false
+    "SummaryConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "RuleOptions" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/SummaryRuleOption"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "Description" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 512,
+      "pattern" : "^.*$"
     },
-    "Type": {
-      "enum": [
-        "STATELESS",
-        "STATEFUL"
-      ],
-      "type": "string"
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/RuleGroupArn",
-    "/properties/RuleGroupId"
-  ],
-  "required": [
-    "Type",
-    "Capacity",
-    "RuleGroupName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "network-firewall:TagResource",
-      "network-firewall:UntagResource",
-      "network-firewall:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "network-firewall:TagResource", "network-firewall:UntagResource", "network-firewall:ListTagsForResource" ]
   },
-  "typeName": "AWS::NetworkFirewall::RuleGroup"
+  "required" : [ "Type", "Capacity", "RuleGroupName" ],
+  "readOnlyProperties" : [ "/properties/RuleGroupArn", "/properties/RuleGroupId" ],
+  "createOnlyProperties" : [ "/properties/RuleGroupName", "/properties/Capacity", "/properties/Type" ],
+  "primaryIdentifier" : [ "/properties/RuleGroupArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "network-firewall:CreateRuleGroup", "network-firewall:DescribeRuleGroup", "network-firewall:TagResource", "network-firewall:ListRuleGroups", "iam:CreateServiceLinkedRole", "ec2:GetManagedPrefixListEntries", "ec2:DescribeManagedPrefixLists" ]
+    },
+    "read" : {
+      "permissions" : [ "network-firewall:DescribeRuleGroup", "network-firewall:ListTagsForResources" ]
+    },
+    "update" : {
+      "permissions" : [ "network-firewall:UpdateRuleGroup", "network-firewall:DescribeRuleGroup", "network-firewall:TagResource", "network-firewall:UntagResource", "iam:CreateServiceLinkedRole", "ec2:GetManagedPrefixListEntries", "ec2:DescribeManagedPrefixLists" ]
+    },
+    "delete" : {
+      "permissions" : [ "network-firewall:DeleteRuleGroup", "network-firewall:DescribeRuleGroup", "network-firewall:UntagResource" ]
+    },
+    "list" : {
+      "permissions" : [ "network-firewall:ListRuleGroups" ]
+    }
+  }
 }

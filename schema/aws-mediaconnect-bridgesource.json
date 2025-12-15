@@ -1,147 +1,117 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/BridgeArn",
-    "/properties/Name"
-  ],
-  "definitions": {
-    "BridgeFlowSource": {
-      "additionalProperties": false,
-      "description": "The source of the bridge. A flow source originates in MediaConnect as an existing cloud flow.",
-      "properties": {
-        "FlowArn": {
-          "description": "The ARN of the cloud flow used as a source of this bridge.",
-          "type": "string"
+  "typeName" : "AWS::MediaConnect::BridgeSource",
+  "description" : "Resource schema for AWS::MediaConnect::BridgeSource",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+  "definitions" : {
+    "BridgeFlowSource" : {
+      "type" : "object",
+      "description" : "The source of the bridge. A flow source originates in MediaConnect as an existing cloud flow.",
+      "properties" : {
+        "FlowArn" : {
+          "description" : "The ARN of the cloud flow used as a source of this bridge.",
+          "type" : "string"
         },
-        "FlowVpcInterfaceAttachment": {
-          "$ref": "#/definitions/VpcInterfaceAttachment",
-          "description": "The name of the VPC interface attachment to use for this source."
+        "FlowVpcInterfaceAttachment" : {
+          "description" : "The name of the VPC interface attachment to use for this source.",
+          "$ref" : "#/definitions/VpcInterfaceAttachment"
         }
       },
-      "required": [
-        "FlowArn"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "FlowArn" ]
     },
-    "BridgeNetworkSource": {
-      "additionalProperties": false,
-      "description": "The source of the bridge. A network source originates at your premises.",
-      "properties": {
-        "MulticastIp": {
-          "description": "The network source multicast IP.",
-          "type": "string"
-        },
-        "MulticastSourceSettings": {
-          "$ref": "#/definitions/MulticastSourceSettings",
-          "description": "The settings related to the multicast source."
-        },
-        "NetworkName": {
-          "description": "The network source's gateway network name.",
-          "type": "string"
-        },
-        "Port": {
-          "description": "The network source port.",
-          "type": "integer"
-        },
-        "Protocol": {
-          "$ref": "#/definitions/ProtocolEnum",
-          "description": "The network source protocol."
+    "VpcInterfaceAttachment" : {
+      "type" : "object",
+      "description" : "The settings for attaching a VPC interface to an resource.",
+      "properties" : {
+        "VpcInterfaceName" : {
+          "description" : "The name of the VPC interface to use for this resource.",
+          "type" : "string"
         }
       },
-      "required": [
-        "Protocol",
-        "MulticastIp",
-        "Port",
-        "NetworkName"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "MulticastSourceSettings": {
-      "additionalProperties": false,
-      "description": "The settings related to the multicast source.",
-      "properties": {
-        "MulticastSourceIp": {
-          "description": "The IP address of the source for source-specific multicast (SSM).",
-          "type": "string"
+    "BridgeNetworkSource" : {
+      "type" : "object",
+      "description" : "The source of the bridge. A network source originates at your premises.",
+      "properties" : {
+        "Protocol" : {
+          "description" : "The network source protocol.",
+          "$ref" : "#/definitions/ProtocolEnum"
+        },
+        "MulticastIp" : {
+          "description" : "The network source multicast IP.",
+          "type" : "string"
+        },
+        "MulticastSourceSettings" : {
+          "description" : "The settings related to the multicast source.",
+          "$ref" : "#/definitions/MulticastSourceSettings"
+        },
+        "Port" : {
+          "description" : "The network source port.",
+          "type" : "integer"
+        },
+        "NetworkName" : {
+          "description" : "The network source's gateway network name.",
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "Protocol", "MulticastIp", "Port", "NetworkName" ],
+      "additionalProperties" : false
     },
-    "ProtocolEnum": {
-      "enum": [
-        "rtp-fec",
-        "rtp",
-        "udp"
-      ],
-      "type": "string"
-    },
-    "VpcInterfaceAttachment": {
-      "additionalProperties": false,
-      "description": "The settings for attaching a VPC interface to an resource.",
-      "properties": {
-        "VpcInterfaceName": {
-          "description": "The name of the VPC interface to use for this resource.",
-          "type": "string"
+    "MulticastSourceSettings" : {
+      "type" : "object",
+      "description" : "The settings related to the multicast source.",
+      "properties" : {
+        "MulticastSourceIp" : {
+          "description" : "The IP address of the source for source-specific multicast (SSM).",
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
+    },
+    "ProtocolEnum" : {
+      "type" : "string",
+      "enum" : [ "rtp-fec", "rtp", "udp" ]
     }
   },
-  "description": "Resource schema for AWS::MediaConnect::BridgeSource",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mediaconnect:AddBridgeSources",
-        "mediaconnect:DescribeBridge"
-      ]
+  "properties" : {
+    "Name" : {
+      "type" : "string",
+      "description" : "The name of the source."
     },
-    "delete": {
-      "permissions": [
-        "mediaconnect:RemoveBridgeSource"
-      ]
+    "BridgeArn" : {
+      "description" : "The Amazon Resource Number (ARN) of the bridge.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "mediaconnect:DescribeBridge"
-      ]
+    "FlowSource" : {
+      "$ref" : "#/definitions/BridgeFlowSource"
     },
-    "update": {
-      "permissions": [
-        "mediaconnect:DescribeBridge",
-        "mediaconnect:UpdateBridgeSource"
-      ]
+    "NetworkSource" : {
+      "$ref" : "#/definitions/BridgeNetworkSource"
     }
   },
-  "primaryIdentifier": [
-    "/properties/BridgeArn",
-    "/properties/Name"
-  ],
-  "properties": {
-    "BridgeArn": {
-      "description": "The Amazon Resource Number (ARN) of the bridge.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name", "BridgeArn" ],
+  "createOnlyProperties" : [ "/properties/BridgeArn", "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/BridgeArn", "/properties/Name" ],
+  "propertyTransform" : {
+    "/properties/Name" : "$join([\"Source:\",Name])"
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mediaconnect:AddBridgeSources", "mediaconnect:DescribeBridge" ]
     },
-    "FlowSource": {
-      "$ref": "#/definitions/BridgeFlowSource"
+    "read" : {
+      "permissions" : [ "mediaconnect:DescribeBridge" ]
     },
-    "Name": {
-      "description": "The name of the source.",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "mediaconnect:DescribeBridge", "mediaconnect:UpdateBridgeSource" ]
     },
-    "NetworkSource": {
-      "$ref": "#/definitions/BridgeNetworkSource"
+    "delete" : {
+      "permissions" : [ "mediaconnect:RemoveBridgeSource" ]
     }
   },
-  "propertyTransform": {
-    "/properties/Name": "$join([\"Source:\",Name])"
-  },
-  "required": [
-    "Name",
-    "BridgeArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::MediaConnect::BridgeSource"
+  "tagging" : {
+    "taggable" : false
+  }
 }

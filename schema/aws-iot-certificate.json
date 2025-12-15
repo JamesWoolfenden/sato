@@ -1,108 +1,64 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/CertificateSigningRequest",
-    "/properties/CACertificatePem",
-    "/properties/CertificatePem",
-    "/properties/CertificateMode"
-  ],
-  "definitions": {},
-  "description": "Use the AWS::IoT::Certificate resource to declare an AWS IoT X.509 certificate.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iot:CreateCertificateFromCsr",
-        "iot:RegisterCertificate",
-        "iot:RegisterCertificateWithoutCA",
-        "iot:DescribeCertificate",
-        "kms:Decrypt"
-      ]
+  "typeName" : "AWS::IoT::Certificate",
+  "description" : "Use the AWS::IoT::Certificate resource to declare an AWS IoT X.509 certificate.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : { },
+  "properties" : {
+    "CACertificatePem" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 65536
     },
-    "delete": {
-      "permissions": [
-        "iot:DeleteCertificate",
-        "iot:UpdateCertificate",
-        "iot:DescribeCertificate",
-        "kms:Decrypt"
-      ]
+    "CertificatePem" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 65536
     },
-    "list": {
-      "permissions": [
-        "iot:ListCertificates"
-      ]
+    "CertificateSigningRequest" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "iot:DescribeCertificate",
-        "kms:Decrypt"
-      ]
+    "CertificateMode" : {
+      "type" : "string",
+      "enum" : [ "DEFAULT", "SNI_ONLY" ]
     },
-    "update": {
-      "permissions": [
-        "iot:UpdateCertificate",
-        "iot:DescribeCertificate",
-        "kms:Decrypt"
-      ]
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "INACTIVE", "REVOKED", "PENDING_TRANSFER", "PENDING_ACTIVATION" ]
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "Status" ],
+  "createOnlyProperties" : [ "/properties/CertificateSigningRequest", "/properties/CACertificatePem", "/properties/CertificatePem", "/properties/CertificateMode" ],
+  "writeOnlyProperties" : [ "/properties/CertificateSigningRequest", "/properties/CACertificatePem" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iot:CreateCertificateFromCsr", "iot:RegisterCertificate", "iot:RegisterCertificateWithoutCA", "iot:DescribeCertificate", "kms:Decrypt" ]
     },
-    "CACertificatePem": {
-      "maxLength": 65536,
-      "minLength": 1,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iot:DescribeCertificate", "kms:Decrypt" ]
     },
-    "CertificateMode": {
-      "enum": [
-        "DEFAULT",
-        "SNI_ONLY"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iot:UpdateCertificate", "iot:DescribeCertificate", "kms:Decrypt" ]
     },
-    "CertificatePem": {
-      "maxLength": 65536,
-      "minLength": 1,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iot:DeleteCertificate", "iot:UpdateCertificate", "iot:DescribeCertificate", "kms:Decrypt" ]
     },
-    "CertificateSigningRequest": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Status": {
-      "enum": [
-        "ACTIVE",
-        "INACTIVE",
-        "REVOKED",
-        "PENDING_TRANSFER",
-        "PENDING_ACTIVATION"
-      ],
-      "type": "string"
+    "list" : {
+      "permissions" : [ "iot:ListCertificates" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [
-    "Status"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::IoT::Certificate",
-  "writeOnlyProperties": [
-    "/properties/CertificateSigningRequest",
-    "/properties/CACertificatePem"
-  ]
+  }
 }

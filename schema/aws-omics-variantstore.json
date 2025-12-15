@@ -1,189 +1,133 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Reference",
-    "/properties/SseConfig",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "EncryptionType": {
-      "enum": [
-        "KMS"
-      ],
-      "type": "string"
+  "typeName" : "AWS::Omics::VariantStore",
+  "description" : "Definition of AWS::Omics::VariantStore Resource Type",
+  "definitions" : {
+    "EncryptionType" : {
+      "type" : "string",
+      "enum" : [ "KMS" ]
     },
-    "ReferenceItem": {
-      "additionalProperties": false,
-      "properties": {
-        "ReferenceArn": {
-          "maxLength": 127,
-          "minLength": 1,
-          "pattern": "^arn:.+$",
-          "type": "string"
+    "ReferenceItem" : {
+      "type" : "object",
+      "properties" : {
+        "ReferenceArn" : {
+          "type" : "string",
+          "maxLength" : 127,
+          "minLength" : 1,
+          "pattern" : "^arn:.+$"
         }
       },
-      "required": [
-        "ReferenceArn"
-      ],
-      "type": "object"
+      "required" : [ "ReferenceArn" ],
+      "additionalProperties" : false
     },
-    "SseConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "KeyArn": {
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
-          "type": "string"
+    "SseConfig" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/EncryptionType"
         },
-        "Type": {
-          "$ref": "#/definitions/EncryptionType"
+        "KeyArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)"
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Type" ],
+      "additionalProperties" : false
     },
-    "StoreStatus": {
-      "enum": [
-        "CREATING",
-        "UPDATING",
-        "DELETING",
-        "ACTIVE",
-        "FAILED"
-      ],
-      "type": "string"
+    "StoreStatus" : {
+      "type" : "string",
+      "enum" : [ "CREATING", "UPDATING", "DELETING", "ACTIVE", "FAILED" ]
     },
-    "TagMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::Omics::VariantStore Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "omics:CreateVariantStore",
-        "omics:TagResource",
-        "kms:DescribeKey",
-        "kms:GenerateDataKey",
-        "kms:CreateGrant",
-        "ram:AcceptResourceShareInvitation",
-        "ram:GetResourceShareInvitations",
-        "omics:GetVariantStore"
-      ]
+  "properties" : {
+    "CreationTime" : {
+      "type" : "string",
+      "format" : "date-time"
     },
-    "delete": {
-      "permissions": [
-        "omics:DeleteVariantStore",
-        "omics:ListVariantStores"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 500,
+      "minLength" : 0
     },
-    "list": {
-      "permissions": [
-        "omics:ListVariantStores"
-      ]
+    "Id" : {
+      "type" : "string",
+      "pattern" : "^[a-f0-9]{12}$"
     },
-    "read": {
-      "permissions": [
-        "omics:GetVariantStore"
-      ]
+    "Name" : {
+      "type" : "string",
+      "pattern" : "^([a-z]){1}([a-z0-9_]){2,254}"
     },
-    "update": {
-      "permissions": [
-        "omics:UpdateVariantStore",
-        "omics:TagResource",
-        "omics:UntagResource",
-        "omics:ListTagsForResource",
-        "omics:GetVariantStore"
-      ]
+    "Reference" : {
+      "$ref" : "#/definitions/ReferenceItem"
+    },
+    "SseConfig" : {
+      "$ref" : "#/definitions/SseConfig"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/StoreStatus"
+    },
+    "StatusMessage" : {
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 0
+    },
+    "StoreArn" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)$"
+    },
+    "StoreSizeBytes" : {
+      "type" : "number"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
+    },
+    "UpdateTime" : {
+      "type" : "string",
+      "format" : "date-time"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+  "required" : [ "Name", "Reference" ],
+  "readOnlyProperties" : [ "/properties/CreationTime", "/properties/Id", "/properties/Status", "/properties/StatusMessage", "/properties/StoreArn", "/properties/StoreSizeBytes", "/properties/UpdateTime" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Reference", "/properties/SseConfig", "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "omics:TagResource", "omics:UntagResource", "omics:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "omics:CreateVariantStore", "omics:TagResource", "kms:DescribeKey", "kms:GenerateDataKey", "kms:CreateGrant", "ram:AcceptResourceShareInvitation", "ram:GetResourceShareInvitations", "omics:GetVariantStore" ]
     },
-    "Description": {
-      "maxLength": 500,
-      "minLength": 0,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "omics:GetVariantStore" ]
     },
-    "Id": {
-      "pattern": "^[a-f0-9]{12}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "omics:UpdateVariantStore", "omics:TagResource", "omics:UntagResource", "omics:ListTagsForResource", "omics:GetVariantStore" ]
     },
-    "Name": {
-      "pattern": "^([a-z]){1}([a-z0-9_]){2,254}",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "omics:DeleteVariantStore", "omics:ListVariantStores" ]
     },
-    "Reference": {
-      "$ref": "#/definitions/ReferenceItem"
-    },
-    "SseConfig": {
-      "$ref": "#/definitions/SseConfig"
-    },
-    "Status": {
-      "$ref": "#/definitions/StoreStatus"
-    },
-    "StatusMessage": {
-      "maxLength": 1000,
-      "minLength": 0,
-      "type": "string"
-    },
-    "StoreArn": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)$",
-      "type": "string"
-    },
-    "StoreSizeBytes": {
-      "type": "number"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
-    },
-    "UpdateTime": {
-      "format": "date-time",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "omics:ListVariantStores" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/CreationTime",
-    "/properties/Id",
-    "/properties/Status",
-    "/properties/StatusMessage",
-    "/properties/StoreArn",
-    "/properties/StoreSizeBytes",
-    "/properties/UpdateTime"
-  ],
-  "required": [
-    "Name",
-    "Reference"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "omics:TagResource",
-      "omics:UntagResource",
-      "omics:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Omics::VariantStore"
+  "additionalProperties" : false
 }

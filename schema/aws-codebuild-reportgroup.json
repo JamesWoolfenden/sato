@@ -1,107 +1,89 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Type"
-  ],
-  "definitions": {
-    "ReportExportConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "ExportConfigType": {
-          "type": "string"
-        },
-        "S3Destination": {
-          "$ref": "#/definitions/S3ReportExportConfig"
-        }
-      },
-      "required": [
-        "ExportConfigType"
-      ],
-      "type": "object"
+  "typeName" : "AWS::CodeBuild::ReportGroup",
+  "description" : "Resource Type definition for AWS::CodeBuild::ReportGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "Type" : {
+      "type" : "string"
     },
-    "S3ReportExportConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Bucket": {
-          "type": "string"
-        },
-        "BucketOwner": {
-          "type": "string"
-        },
-        "EncryptionDisabled": {
-          "type": "boolean"
-        },
-        "EncryptionKey": {
-          "type": "string"
-        },
-        "Packaging": {
-          "type": "string"
-        },
-        "Path": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Bucket"
-      ],
-      "type": "object"
+    "ExportConfig" : {
+      "$ref" : "#/definitions/ReportExportConfig"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "DeleteReports" : {
+      "type" : "boolean"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
     }
   },
-  "description": "Resource Type definition for AWS::CodeBuild::ReportGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "DeleteReports": {
-      "type": "boolean"
-    },
-    "ExportConfig": {
-      "$ref": "#/definitions/ReportExportConfig"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+  "definitions" : {
+    "S3ReportExportConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Path" : {
+          "type" : "string"
+        },
+        "Bucket" : {
+          "type" : "string"
+        },
+        "Packaging" : {
+          "type" : "string"
+        },
+        "EncryptionKey" : {
+          "type" : "string"
+        },
+        "BucketOwner" : {
+          "type" : "string"
+        },
+        "EncryptionDisabled" : {
+          "type" : "boolean"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Bucket" ]
     },
-    "Type": {
-      "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "ReportExportConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3Destination" : {
+          "$ref" : "#/definitions/S3ReportExportConfig"
+        },
+        "ExportConfigType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ExportConfigType" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Type",
-    "ExportConfig"
-  ],
-  "typeName": "AWS::CodeBuild::ReportGroup"
+  "required" : [ "Type", "ExportConfig" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Type" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ]
 }

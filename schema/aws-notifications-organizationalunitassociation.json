@@ -1,68 +1,46 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/NotificationConfigurationArn",
-    "/properties/OrganizationalUnitId"
-  ],
-  "description": "Resource Type definition for AWS::Notifications::OrganizationalUnitAssociation",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "notifications:AssociateOrganizationalUnit",
-        "notifications:GetNotificationConfiguration",
-        "notifications:ListOrganizationalUnits"
-      ]
+  "typeName" : "AWS::Notifications::OrganizationalUnitAssociation",
+  "description" : "Resource Type definition for AWS::Notifications::OrganizationalUnitAssociation",
+  "properties" : {
+    "NotificationConfigurationArn" : {
+      "description" : "ARN identifier of the NotificationConfiguration.\nExample: arn:aws:notifications::123456789012:configuration/a01jes88qxwkbj05xv9c967pgm1",
+      "type" : "string",
+      "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$"
     },
-    "delete": {
-      "permissions": [
-        "notifications:DisassociateOrganizationalUnit",
-        "notifications:ListOrganizationalUnits"
-      ]
+    "OrganizationalUnitId" : {
+      "description" : "The ID of the organizational unit.",
+      "type" : "string",
+      "pattern" : "^(r-[0-9a-z]{4,32})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$"
+    }
+  },
+  "required" : [ "NotificationConfigurationArn", "OrganizationalUnitId" ],
+  "primaryIdentifier" : [ "/properties/NotificationConfigurationArn", "/properties/OrganizationalUnitId" ],
+  "createOnlyProperties" : [ "/properties/NotificationConfigurationArn", "/properties/OrganizationalUnitId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "notifications:AssociateOrganizationalUnit", "notifications:GetNotificationConfiguration", "notifications:ListOrganizationalUnits" ]
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "NotificationConfigurationArn": {
-            "pattern": "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$",
-            "type": "string"
+    "read" : {
+      "permissions" : [ "notifications:ListOrganizationalUnits" ]
+    },
+    "delete" : {
+      "permissions" : [ "notifications:DisassociateOrganizationalUnit", "notifications:ListOrganizationalUnits" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "NotificationConfigurationArn" : {
+            "type" : "string",
+            "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$"
           }
         },
-        "required": [
-          "NotificationConfigurationArn"
-        ]
+        "required" : [ "NotificationConfigurationArn" ]
       },
-      "permissions": [
-        "notifications:ListOrganizationalUnits"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "notifications:ListOrganizationalUnits"
-      ]
+      "permissions" : [ "notifications:ListOrganizationalUnits" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/NotificationConfigurationArn",
-    "/properties/OrganizationalUnitId"
-  ],
-  "properties": {
-    "NotificationConfigurationArn": {
-      "description": "ARN identifier of the NotificationConfiguration.\nExample: arn:aws:notifications::123456789012:configuration/a01jes88qxwkbj05xv9c967pgm1",
-      "pattern": "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$",
-      "type": "string"
-    },
-    "OrganizationalUnitId": {
-      "description": "The ID of the organizational unit.",
-      "pattern": "^(r-[0-9a-z]{4,32})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})$",
-      "type": "string"
-    }
-  },
-  "required": [
-    "NotificationConfigurationArn",
-    "OrganizationalUnitId"
-  ],
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Notifications::OrganizationalUnitAssociation"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  }
 }

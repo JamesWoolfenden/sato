@@ -1,201 +1,147 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "DeletionMode": {
-      "default": "DISABLED",
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+  "typeName" : "AWS::VerifiedPermissions::PolicyStore",
+  "description" : "Represents a policy store that you can place schema, policies, and policy templates in to validate authorization requests",
+  "definitions" : {
+    "ValidationMode" : {
+      "type" : "string",
+      "enum" : [ "OFF", "STRICT" ]
     },
-    "DeletionProtection": {
-      "additionalProperties": false,
-      "properties": {
-        "Mode": {
-          "$ref": "#/definitions/DeletionMode"
+    "ValidationSettings" : {
+      "type" : "object",
+      "properties" : {
+        "Mode" : {
+          "$ref" : "#/definitions/ValidationMode"
         }
       },
-      "required": [
-        "Mode"
-      ],
-      "type": "object"
+      "required" : [ "Mode" ],
+      "additionalProperties" : false
     },
-    "SchemaCedarFormat": {
-      "type": "string"
+    "SchemaJson" : {
+      "type" : "string"
     },
-    "SchemaDefinition": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CedarJson": {
-              "$ref": "#/definitions/SchemaJson"
-            }
-          },
-          "required": [
-            "CedarJson"
-          ],
-          "title": "CedarJson",
-          "type": "object"
+    "SchemaCedarFormat" : {
+      "type" : "string"
+    },
+    "SchemaDefinition" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "CedarJson",
+        "properties" : {
+          "CedarJson" : {
+            "$ref" : "#/definitions/SchemaJson"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "CedarFormat": {
-              "$ref": "#/definitions/SchemaCedarFormat"
-            }
-          },
-          "required": [
-            "CedarFormat"
-          ],
-          "title": "CedarFormat",
-          "type": "object"
-        }
-      ]
-    },
-    "SchemaJson": {
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+        "required" : [ "CedarJson" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "CedarFormat",
+        "properties" : {
+          "CedarFormat" : {
+            "$ref" : "#/definitions/SchemaCedarFormat"
+          }
         },
-        "Value": {
-          "type": "string"
+        "required" : [ "CedarFormat" ],
+        "additionalProperties" : false
+      } ]
+    },
+    "DeletionMode" : {
+      "type" : "string",
+      "default" : "DISABLED",
+      "enum" : [ "ENABLED", "DISABLED" ]
+    },
+    "DeletionProtection" : {
+      "type" : "object",
+      "properties" : {
+        "Mode" : {
+          "$ref" : "#/definitions/DeletionMode"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Mode" ],
+      "additionalProperties" : false
     },
-    "ValidationMode": {
-      "enum": [
-        "OFF",
-        "STRICT"
-      ],
-      "type": "string"
-    },
-    "ValidationSettings": {
-      "additionalProperties": false,
-      "properties": {
-        "Mode": {
-          "$ref": "#/definitions/ValidationMode"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Mode"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "description": "Represents a policy store that you can place schema, policies, and policy templates in to validate authorization requests",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "verifiedpermissions:CreatePolicyStore",
-        "verifiedpermissions:TagResource",
-        "verifiedpermissions:GetPolicyStore",
-        "verifiedpermissions:PutSchema"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2500,
+      "minLength" : 1,
+      "pattern" : "^arn:[^:]*:[^:]*:[^:]*:[^:]*:.*$"
     },
-    "delete": {
-      "permissions": [
-        "verifiedpermissions:DeletePolicyStore",
-        "verifiedpermissions:GetPolicyStore"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 150,
+      "minLength" : 0
     },
-    "list": {
-      "permissions": [
-        "verifiedpermissions:ListPolicyStores",
-        "verifiedpermissions:GetPolicyStore",
-        "verifiedpermissions:GetSchema"
-      ]
+    "PolicyStoreId" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9-]*$"
     },
-    "read": {
-      "permissions": [
-        "verifiedpermissions:GetPolicyStore",
-        "verifiedpermissions:ListTagsForResource",
-        "verifiedpermissions:GetSchema"
-      ]
+    "ValidationSettings" : {
+      "$ref" : "#/definitions/ValidationSettings"
     },
-    "update": {
-      "permissions": [
-        "verifiedpermissions:UpdatePolicyStore",
-        "verifiedpermissions:GetPolicyStore",
-        "verifiedpermissions:TagResource",
-        "verifiedpermissions:UntagResource",
-        "verifiedpermissions:GetSchema",
-        "verifiedpermissions:PutSchema"
-      ]
+    "Schema" : {
+      "$ref" : "#/definitions/SchemaDefinition"
+    },
+    "DeletionProtection" : {
+      "$ref" : "#/definitions/DeletionProtection"
+    },
+    "Tags" : {
+      "description" : "The tags to add to the policy store",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/PolicyStoreId"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2500,
-      "minLength": 1,
-      "pattern": "^arn:[^:]*:[^:]*:[^:]*:[^:]*:.*$",
-      "type": "string"
+  "required" : [ "ValidationSettings" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/PolicyStoreId" ],
+  "primaryIdentifier" : [ "/properties/PolicyStoreId" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "verifiedpermissions:TagResource", "verifiedpermissions:ListTagsForResource", "verifiedpermissions:UntagResource" ]
+  },
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-avp",
+  "propertyTransform" : {
+    "/properties/Schema/CedarJson" : "$join([CedarJson, \"{}\"])"
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "verifiedpermissions:CreatePolicyStore", "verifiedpermissions:TagResource", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:PutSchema" ]
     },
-    "DeletionProtection": {
-      "$ref": "#/definitions/DeletionProtection"
+    "read" : {
+      "permissions" : [ "verifiedpermissions:GetPolicyStore", "verifiedpermissions:ListTagsForResource", "verifiedpermissions:GetSchema" ]
     },
-    "Description": {
-      "maxLength": 150,
-      "minLength": 0,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "verifiedpermissions:UpdatePolicyStore", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:TagResource", "verifiedpermissions:UntagResource", "verifiedpermissions:GetSchema", "verifiedpermissions:PutSchema" ]
     },
-    "PolicyStoreId": {
-      "maxLength": 200,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-]*$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "verifiedpermissions:DeletePolicyStore", "verifiedpermissions:GetPolicyStore" ]
     },
-    "Schema": {
-      "$ref": "#/definitions/SchemaDefinition"
-    },
-    "Tags": {
-      "description": "The tags to add to the policy store",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "ValidationSettings": {
-      "$ref": "#/definitions/ValidationSettings"
+    "list" : {
+      "permissions" : [ "verifiedpermissions:ListPolicyStores", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:GetSchema" ]
     }
   },
-  "propertyTransform": {
-    "/properties/Schema/CedarJson": "$join([CedarJson, \"{}\"])"
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/PolicyStoreId"
-  ],
-  "required": [
-    "ValidationSettings"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-avp",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "verifiedpermissions:TagResource",
-      "verifiedpermissions:ListTagsForResource",
-      "verifiedpermissions:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::VerifiedPermissions::PolicyStore"
+  "additionalProperties" : false
 }

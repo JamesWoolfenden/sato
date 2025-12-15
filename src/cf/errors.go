@@ -1,22 +1,24 @@
 package cf
 
-import "fmt"
+import (
+	"fmt"
+	"sato/src/satoerrors"
+)
 
-type filepathError struct {
-	Path string
-	err  error
-}
+// filepathError is an alias for the satoerrors error type.
+type filepathError = satoerrors.FilepathError
 
-// missingResourceError represents a resource lookup failure
-type missingResourceInputError struct {
-}
+// writeFileError is an alias for the satoerrors error type.
+type writeFileError = satoerrors.WriteFileError
+
+// makeDirError is an alias for the satoerrors error type.
+type makeDirError = satoerrors.MakeDirError
+
+// missingResourceError represents a resource lookup failure.
+type missingResourceInputError struct{}
 
 func (e *missingResourceInputError) Error() string {
 	return "invalid input parameters"
-}
-
-func (m *filepathError) Error() string {
-	return fmt.Sprintf("not implemented %s as raised %v", m.Path, m.err)
 }
 
 type goformationError struct {
@@ -32,7 +34,7 @@ type parseVariablesError struct {
 }
 
 func (m *parseVariablesError) Error() string {
-	return fmt.Sprintf("parse varriables failure %v", m.err)
+	return fmt.Sprintf("parse variables failure %v", m.err)
 }
 
 type parseResourcesError struct {
@@ -41,14 +43,6 @@ type parseResourcesError struct {
 
 func (m *parseResourcesError) Error() string {
 	return fmt.Sprintf("parse resources failure %v", m.err)
-}
-
-type makeDirError struct {
-	err error
-}
-
-func (e *makeDirError) Error() string {
-	return fmt.Sprintf("mkdir failed %v", e.err)
 }
 
 type writeError struct {
@@ -60,17 +54,8 @@ func (e *writeError) Error() string {
 	return fmt.Sprintf("write failed %s %v", e.destination, e.err)
 }
 
-type writeFileError struct {
-	destination string
-	err         error
-}
-
 type emptyPathsError struct{}
 
 func (e emptyPathsError) Error() string {
 	return "paths cannot be empty"
-}
-
-func (e *writeFileError) Error() string {
-	return fmt.Sprintf("write file failed %s %v", e.destination, e.err)
 }

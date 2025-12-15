@@ -1,118 +1,84 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "description": "A key to identify the tag.",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::Glue::Registry",
+  "description" : "This resource creates a Registry for authoring schemas as part of Glue Schema Registry.",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "glue:GetTags", "glue:TagResource", "glue:UntagResource" ]
+  },
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "description" : "A key to identify the tag.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "Corresponding tag value for the key.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "description" : "Corresponding tag value for the key.",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "This resource creates a Registry for authoring schemas as part of Glue Schema Registry.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "glue:CreateRegistry",
-        "glue:GetRegistry",
-        "glue:GetTags",
-        "glue:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "Amazon Resource Name for the created Registry.",
+      "type" : "string",
+      "pattern" : "arn:aws(-(cn|us-gov|iso(-[bef])?))?:glue:.*"
     },
-    "delete": {
-      "permissions": [
-        "glue:GetRegistry",
-        "glue:DeleteRegistry"
-      ]
+    "Name" : {
+      "description" : "Name of the registry to be created of max length of 255, and may only contain letters, numbers, hyphen, underscore, dollar sign, or hash mark.  No whitespace.",
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1
     },
-    "list": {
-      "permissions": [
-        "glue:ListRegistries"
-      ]
+    "Description" : {
+      "description" : "A description of the registry. If description is not provided, there will not be any default value for this.",
+      "type" : "string",
+      "maxLength" : 1000,
+      "minLength" : 0
     },
-    "read": {
-      "permissions": [
-        "glue:GetRegistry",
-        "glue:GetTags"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "glue:UpdateRegistry",
-        "glue:GetRegistry",
-        "glue:TagResource",
-        "glue:UntagResource",
-        "glue:GetTags"
-      ]
+    "Tags" : {
+      "description" : "List of tags to tag the Registry",
+      "type" : "array",
+      "minItems" : 0,
+      "maxItems" : 10,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Amazon Resource Name for the created Registry.",
-      "pattern": "arn:aws(-(cn|us-gov|iso(-[bef])?))?:glue:.*",
-      "type": "string"
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalProperties" : false,
+  "required" : [ "Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "glue:CreateRegistry", "glue:GetRegistry", "glue:GetTags", "glue:TagResource" ]
     },
-    "Description": {
-      "description": "A description of the registry. If description is not provided, there will not be any default value for this.",
-      "maxLength": 1000,
-      "minLength": 0,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "glue:GetRegistry", "glue:GetTags" ]
     },
-    "Name": {
-      "description": "Name of the registry to be created of max length of 255, and may only contain letters, numbers, hyphen, underscore, dollar sign, or hash mark.  No whitespace.",
-      "maxLength": 255,
-      "minLength": 1,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "glue:GetRegistry", "glue:DeleteRegistry" ]
     },
-    "Tags": {
-      "description": "List of tags to tag the Registry",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 10,
-      "minItems": 0,
-      "type": "array"
+    "update" : {
+      "permissions" : [ "glue:UpdateRegistry", "glue:GetRegistry", "glue:TagResource", "glue:UntagResource", "glue:GetTags" ]
+    },
+    "list" : {
+      "permissions" : [ "glue:ListRegistries" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-glue.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "glue:GetTags",
-      "glue:TagResource",
-      "glue:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Glue::Registry"
+  }
 }

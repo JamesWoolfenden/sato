@@ -1,155 +1,95 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/FirewallName",
-    "/properties/FirewallArn"
-  ],
-  "definitions": {
-    "LogDestinationConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "LogDestination": {
-          "additionalProperties": false,
-          "description": "A key-value pair to configure the logDestinations.",
-          "minProperties": 1,
-          "patternProperties": {
-            "^[0-9A-Za-z.\\-_@\\/]+$": {
-              "maxLength": 1024,
-              "minLength": 1,
-              "type": "string"
+  "typeName" : "AWS::NetworkFirewall::LoggingConfiguration",
+  "description" : "Resource type definition for AWS::NetworkFirewall::LoggingConfiguration",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
+  "additionalProperties" : false,
+  "definitions" : {
+    "ResourceArn" : {
+      "description" : "A resource ARN.",
+      "type" : "string",
+      "pattern" : "^arn:aws.*$",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "LoggingConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "LogDestinationConfigs" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "$ref" : "#/definitions/LogDestinationConfig"
+          },
+          "minItems" : 1
+        }
+      },
+      "required" : [ "LogDestinationConfigs" ],
+      "additionalProperties" : false
+    },
+    "LogDestinationConfig" : {
+      "type" : "object",
+      "properties" : {
+        "LogType" : {
+          "type" : "string",
+          "enum" : [ "ALERT", "FLOW", "TLS" ]
+        },
+        "LogDestinationType" : {
+          "type" : "string",
+          "enum" : [ "S3", "CloudWatchLogs", "KinesisDataFirehose" ]
+        },
+        "LogDestination" : {
+          "type" : "object",
+          "description" : "A key-value pair to configure the logDestinations.",
+          "patternProperties" : {
+            "^[0-9A-Za-z.\\-_@\\/]+$" : {
+              "type" : "string",
+              "minLength" : 1,
+              "maxLength" : 1024
             }
           },
-          "type": "object"
-        },
-        "LogDestinationType": {
-          "enum": [
-            "S3",
-            "CloudWatchLogs",
-            "KinesisDataFirehose"
-          ],
-          "type": "string"
-        },
-        "LogType": {
-          "enum": [
-            "ALERT",
-            "FLOW",
-            "TLS"
-          ],
-          "type": "string"
+          "minProperties" : 1,
+          "additionalProperties" : false
         }
       },
-      "required": [
-        "LogType",
-        "LogDestinationType",
-        "LogDestination"
-      ],
-      "type": "object"
-    },
-    "LoggingConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "LogDestinationConfigs": {
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/LogDestinationConfig"
-          },
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "required": [
-        "LogDestinationConfigs"
-      ],
-      "type": "object"
-    },
-    "ResourceArn": {
-      "description": "A resource ARN.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^arn:aws.*$",
-      "type": "string"
+      "required" : [ "LogType", "LogDestinationType", "LogDestination" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource type definition for AWS::NetworkFirewall::LoggingConfiguration",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "logs:CreateLogDelivery",
-        "logs:GetLogDelivery",
-        "logs:ListLogDeliveries",
-        "s3:PutBucketPolicy",
-        "s3:GetBucketPolicy",
-        "logs:PutResourcePolicy",
-        "logs:DescribeResourcePolicies",
-        "logs:DescribeLogGroups",
-        "iam:CreateServiceLinkedRole",
-        "firehose:TagDeliveryStream",
-        "network-firewall:UpdateLoggingConfiguration",
-        "network-firewall:DescribeLoggingConfiguration"
-      ]
+  "properties" : {
+    "FirewallName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "^[a-zA-Z0-9-]+$"
     },
-    "delete": {
-      "permissions": [
-        "logs:DeleteLogDelivery",
-        "logs:ListLogDeliveries",
-        "logs:GetLogDelivery",
-        "network-firewall:UpdateLoggingConfiguration",
-        "network-firewall:DescribeLoggingConfiguration"
-      ]
+    "FirewallArn" : {
+      "$ref" : "#/definitions/ResourceArn"
     },
-    "read": {
-      "permissions": [
-        "logs:GetLogDelivery",
-        "logs:ListLogDeliveries",
-        "network-firewall:DescribeLoggingConfiguration"
-      ]
+    "LoggingConfiguration" : {
+      "$ref" : "#/definitions/LoggingConfiguration"
     },
-    "update": {
-      "permissions": [
-        "logs:CreateLogDelivery",
-        "logs:DeleteLogDelivery",
-        "logs:GetLogDelivery",
-        "logs:UpdateLogDelivery",
-        "logs:ListLogDeliveries",
-        "s3:PutBucketPolicy",
-        "s3:GetBucketPolicy",
-        "logs:PutResourcePolicy",
-        "logs:DescribeResourcePolicies",
-        "logs:DescribeLogGroups",
-        "iam:CreateServiceLinkedRole",
-        "firehose:TagDeliveryStream",
-        "network-firewall:UpdateLoggingConfiguration",
-        "network-firewall:DescribeLoggingConfiguration"
-      ]
+    "EnableMonitoringDashboard" : {
+      "type" : "boolean"
     }
   },
-  "primaryIdentifier": [
-    "/properties/FirewallArn"
-  ],
-  "properties": {
-    "EnableMonitoringDashboard": {
-      "type": "boolean"
+  "tagging" : {
+    "taggable" : false
+  },
+  "required" : [ "FirewallArn", "LoggingConfiguration" ],
+  "createOnlyProperties" : [ "/properties/FirewallName", "/properties/FirewallArn" ],
+  "primaryIdentifier" : [ "/properties/FirewallArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:ListLogDeliveries", "s3:PutBucketPolicy", "s3:GetBucketPolicy", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:DescribeLogGroups", "iam:CreateServiceLinkedRole", "firehose:TagDeliveryStream", "network-firewall:UpdateLoggingConfiguration", "network-firewall:DescribeLoggingConfiguration" ]
     },
-    "FirewallArn": {
-      "$ref": "#/definitions/ResourceArn"
+    "read" : {
+      "permissions" : [ "logs:GetLogDelivery", "logs:ListLogDeliveries", "network-firewall:DescribeLoggingConfiguration" ]
     },
-    "FirewallName": {
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "logs:CreateLogDelivery", "logs:DeleteLogDelivery", "logs:GetLogDelivery", "logs:UpdateLogDelivery", "logs:ListLogDeliveries", "s3:PutBucketPolicy", "s3:GetBucketPolicy", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:DescribeLogGroups", "iam:CreateServiceLinkedRole", "firehose:TagDeliveryStream", "network-firewall:UpdateLoggingConfiguration", "network-firewall:DescribeLoggingConfiguration" ]
     },
-    "LoggingConfiguration": {
-      "$ref": "#/definitions/LoggingConfiguration"
+    "delete" : {
+      "permissions" : [ "logs:DeleteLogDelivery", "logs:ListLogDeliveries", "logs:GetLogDelivery", "network-firewall:UpdateLoggingConfiguration", "network-firewall:DescribeLoggingConfiguration" ]
     }
-  },
-  "required": [
-    "FirewallArn",
-    "LoggingConfiguration"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-networkfirewall.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::NetworkFirewall::LoggingConfiguration"
+  }
 }

@@ -1,108 +1,78 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Bucket",
-    "/properties/Name",
-    "/properties/VpcConfiguration"
-  ],
-  "definitions": {
-    "VpcConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "VpcId": {
-          "description": "Virtual Private Cloud (VPC) Id from which AccessPoint will allow requests.",
-          "maxLength": 1024,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::S3Outposts::AccessPoint",
+  "description" : "Resource Type Definition for AWS::S3Outposts::AccessPoint",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3outposts.git",
+  "definitions" : {
+    "VpcConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VpcId" : {
+          "description" : "Virtual Private Cloud (VPC) Id from which AccessPoint will allow requests.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 1024
         }
-      },
-      "type": "object"
+      }
     }
   },
-  "description": "Resource Type Definition for AWS::S3Outposts::AccessPoint",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "s3-outposts:CreateAccessPoint",
-        "s3-outposts:GetAccessPoint",
-        "s3-outposts:PutAccessPointPolicy",
-        "s3-outposts:GetAccessPointPolicy"
-      ]
+  "properties" : {
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) of the specified AccessPoint.",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/accesspoint\\/[^:]+$",
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "s3-outposts:DeleteAccessPoint",
-        "s3-outposts:DeleteAccessPointPolicy"
-      ]
+    "Bucket" : {
+      "description" : "The Amazon Resource Name (ARN) of the bucket you want to associate this AccessPoint with.",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/bucket\\/[^:]+$",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "s3-outposts:ListAccessPoints"
-      ]
+    "Name" : {
+      "description" : "A name for the AccessPoint.",
+      "maxLength" : 50,
+      "minLength" : 3,
+      "pattern" : "^[a-z0-9]([a-z0-9\\\\-]*[a-z0-9])?$",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "s3-outposts:GetAccessPoint",
-        "s3-outposts:GetAccessPointPolicy"
-      ]
+    "VpcConfiguration" : {
+      "description" : "Virtual Private Cloud (VPC) from which requests can be made to the AccessPoint.",
+      "$ref" : "#/definitions/VpcConfiguration"
     },
-    "update": {
-      "permissions": [
-        "s3-outposts:GetAccessPoint",
-        "s3-outposts:PutAccessPointPolicy",
-        "s3-outposts:GetAccessPointPolicy",
-        "s3-outposts:DeleteAccessPointPolicy"
-      ]
+    "Policy" : {
+      "description" : "The access point policy associated with this access point.",
+      "type" : "object"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the specified AccessPoint.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/accesspoint\\/[^:]+$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "Bucket", "Name", "VpcConfiguration" ],
+  "createOnlyProperties" : [ "/properties/Bucket", "/properties/Name", "/properties/VpcConfiguration" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "s3-outposts:CreateAccessPoint", "s3-outposts:GetAccessPoint", "s3-outposts:PutAccessPointPolicy", "s3-outposts:GetAccessPointPolicy" ]
     },
-    "Bucket": {
-      "description": "The Amazon Resource Name (ARN) of the bucket you want to associate this AccessPoint with.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:[^:]+:s3-outposts:[a-zA-Z0-9\\-]+:\\d{12}:outpost\\/[^:]+\\/bucket\\/[^:]+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "s3-outposts:GetAccessPoint", "s3-outposts:GetAccessPointPolicy" ]
     },
-    "Name": {
-      "description": "A name for the AccessPoint.",
-      "maxLength": 50,
-      "minLength": 3,
-      "pattern": "^[a-z0-9]([a-z0-9\\\\-]*[a-z0-9])?$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "s3-outposts:GetAccessPoint", "s3-outposts:PutAccessPointPolicy", "s3-outposts:GetAccessPointPolicy", "s3-outposts:DeleteAccessPointPolicy" ]
     },
-    "Policy": {
-      "description": "The access point policy associated with this access point.",
-      "type": "object"
+    "delete" : {
+      "permissions" : [ "s3-outposts:DeleteAccessPoint", "s3-outposts:DeleteAccessPointPolicy" ]
     },
-    "VpcConfiguration": {
-      "$ref": "#/definitions/VpcConfiguration",
-      "description": "Virtual Private Cloud (VPC) from which requests can be made to the AccessPoint."
+    "list" : {
+      "permissions" : [ "s3-outposts:ListAccessPoints" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Bucket",
-    "Name",
-    "VpcConfiguration"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-s3outposts.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::S3Outposts::AccessPoint"
+  }
 }

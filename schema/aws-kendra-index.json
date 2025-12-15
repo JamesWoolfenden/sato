@@ -1,464 +1,391 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Edition",
-    "/properties/ServerSideEncryptionConfiguration"
-  ],
-  "definitions": {
-    "Arn": {
-      "maxLength": 1000,
-      "type": "string"
-    },
-    "CapacityUnitsConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "QueryCapacityUnits": {
-          "$ref": "#/definitions/QueryCapacityUnits"
-        },
-        "StorageCapacityUnits": {
-          "$ref": "#/definitions/StorageCapacityUnits"
+  "typeName" : "AWS::Kendra::Index",
+  "description" : "A Kendra index",
+  "sourceUrl" : "https://docs.aws.amazon.com/kendra/latest/dg/hiw-index.html",
+  "definitions" : {
+    "ServerSideEncryptionConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "KmsKeyId" : {
+          "$ref" : "#/definitions/KmsKeyId"
         }
       },
-      "required": [
-        "StorageCapacityUnits",
-        "QueryCapacityUnits"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ClaimRegex": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 1000
     },
-    "Description": {
-      "maxLength": 1000,
-      "type": "string"
+    "KmsKeyId" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
     },
-    "DocumentAttributeValueType": {
-      "enum": [
-        "STRING_VALUE",
-        "STRING_LIST_VALUE",
-        "LONG_VALUE",
-        "DATE_VALUE"
-      ],
-      "type": "string"
-    },
-    "DocumentMetadataConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "$ref": "#/definitions/DocumentMetadataConfigurationName"
+    "Tag" : {
+      "description" : "A label for tagging Kendra resources",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "description" : "A string used to identify this tag",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Relevance": {
-          "$ref": "#/definitions/Relevance"
-        },
-        "Search": {
-          "$ref": "#/definitions/Search"
-        },
-        "Type": {
-          "$ref": "#/definitions/DocumentAttributeValueType"
+        "Value" : {
+          "description" : "A string containing the value for the tag",
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Name",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     },
-    "DocumentMetadataConfigurationList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/DocumentMetadataConfiguration"
-      },
-      "maxItems": 500,
-      "type": "array"
+    "TagList" : {
+      "description" : "List of tags",
+      "type" : "array",
+      "insertionOrder" : false,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "DocumentMetadataConfigurationName": {
-      "maxLength": 30,
-      "minLength": 1,
-      "type": "string"
+    "Importance" : {
+      "type" : "integer",
+      "minimum" : 1,
+      "maximum" : 10
     },
-    "Duration": {
-      "maxLength": 10,
-      "minLength": 1,
-      "pattern": "[0-9]+[s]",
-      "type": "string"
+    "Freshness" : {
+      "type" : "boolean"
     },
-    "Edition": {
-      "description": "Edition of index",
-      "enum": [
-        "DEVELOPER_EDITION",
-        "ENTERPRISE_EDITION",
-        "GEN_AI_ENTERPRISE_EDITION"
-      ],
-      "type": "string"
+    "Duration" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 10,
+      "pattern" : "[0-9]+[s]"
     },
-    "Freshness": {
-      "type": "boolean"
+    "Order" : {
+      "type" : "string",
+      "enum" : [ "ASCENDING", "DESCENDING" ]
     },
-    "GroupAttributeField": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Id": {
-      "description": "Unique ID of index",
-      "maxLength": 36,
-      "minLength": 36,
-      "type": "string"
-    },
-    "Importance": {
-      "maximum": 10,
-      "minimum": 1,
-      "type": "integer"
-    },
-    "Issuer": {
-      "maxLength": 65,
-      "minLength": 1,
-      "type": "string"
-    },
-    "JsonTokenTypeConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "GroupAttributeField": {
-          "$ref": "#/definitions/GroupAttributeField"
+    "Relevance" : {
+      "type" : "object",
+      "properties" : {
+        "Freshness" : {
+          "$ref" : "#/definitions/Freshness"
         },
-        "UserNameAttributeField": {
-          "$ref": "#/definitions/UserNameAttributeField"
+        "Importance" : {
+          "$ref" : "#/definitions/Importance"
+        },
+        "Duration" : {
+          "$ref" : "#/definitions/Duration"
+        },
+        "RankOrder" : {
+          "$ref" : "#/definitions/Order"
+        },
+        "ValueImportanceItems" : {
+          "$ref" : "#/definitions/ValueImportanceItems"
         }
       },
-      "required": [
-        "UserNameAttributeField",
-        "GroupAttributeField"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "JwtTokenTypeConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ClaimRegex": {
-          "$ref": "#/definitions/ClaimRegex"
+    "ValueImportanceItems" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/ValueImportanceItem"
+      }
+    },
+    "ValueImportanceItem" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/ValueImportanceItemKey"
         },
-        "GroupAttributeField": {
-          "$ref": "#/definitions/GroupAttributeField"
-        },
-        "Issuer": {
-          "$ref": "#/definitions/Issuer"
-        },
-        "KeyLocation": {
-          "$ref": "#/definitions/KeyLocation"
-        },
-        "SecretManagerArn": {
-          "$ref": "#/definitions/RoleArn"
-        },
-        "URL": {
-          "$ref": "#/definitions/Url"
-        },
-        "UserNameAttributeField": {
-          "$ref": "#/definitions/UserNameAttributeField"
+        "Value" : {
+          "$ref" : "#/definitions/Importance"
         }
       },
-      "required": [
-        "KeyLocation"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "KeyLocation": {
-      "enum": [
-        "URL",
-        "SECRET_MANAGER"
-      ],
-      "type": "string"
+    "ValueImportanceItemKey" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 50
     },
-    "KmsKeyId": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Name": {
-      "description": "Name of index",
-      "maxLength": 1000,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Order": {
-      "enum": [
-        "ASCENDING",
-        "DESCENDING"
-      ],
-      "type": "string"
-    },
-    "QueryCapacityUnits": {
-      "minimum": 0,
-      "type": "integer"
-    },
-    "Relevance": {
-      "additionalProperties": false,
-      "properties": {
-        "Duration": {
-          "$ref": "#/definitions/Duration"
+    "Search" : {
+      "type" : "object",
+      "properties" : {
+        "Facetable" : {
+          "type" : "boolean"
         },
-        "Freshness": {
-          "$ref": "#/definitions/Freshness"
+        "Searchable" : {
+          "type" : "boolean"
         },
-        "Importance": {
-          "$ref": "#/definitions/Importance"
+        "Displayable" : {
+          "type" : "boolean"
         },
-        "RankOrder": {
-          "$ref": "#/definitions/Order"
-        },
-        "ValueImportanceItems": {
-          "$ref": "#/definitions/ValueImportanceItems"
+        "Sortable" : {
+          "type" : "boolean"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "RoleArn": {
-      "description": "Role Arn",
-      "maxLength": 1284,
-      "minLength": 1,
-      "pattern": "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}",
-      "type": "string"
+    "DocumentMetadataConfigurationName" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 30
     },
-    "Search": {
-      "additionalProperties": false,
-      "properties": {
-        "Displayable": {
-          "type": "boolean"
+    "DocumentAttributeValueType" : {
+      "type" : "string",
+      "enum" : [ "STRING_VALUE", "STRING_LIST_VALUE", "LONG_VALUE", "DATE_VALUE" ]
+    },
+    "DocumentMetadataConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "$ref" : "#/definitions/DocumentMetadataConfigurationName"
         },
-        "Facetable": {
-          "type": "boolean"
+        "Type" : {
+          "$ref" : "#/definitions/DocumentAttributeValueType"
         },
-        "Searchable": {
-          "type": "boolean"
+        "Relevance" : {
+          "$ref" : "#/definitions/Relevance"
         },
-        "Sortable": {
-          "type": "boolean"
+        "Search" : {
+          "$ref" : "#/definitions/Search"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Name", "Type" ]
     },
-    "ServerSideEncryptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "KmsKeyId": {
-          "$ref": "#/definitions/KmsKeyId"
-        }
-      },
-      "type": "object"
+    "DocumentMetadataConfigurationList" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "maxItems" : 500,
+      "items" : {
+        "$ref" : "#/definitions/DocumentMetadataConfiguration"
+      }
     },
-    "StorageCapacityUnits": {
-      "minimum": 0,
-      "type": "integer"
+    "StorageCapacityUnits" : {
+      "type" : "integer",
+      "minimum" : 0
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A label for tagging Kendra resources",
-      "properties": {
-        "Key": {
-          "description": "A string used to identify this tag",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "QueryCapacityUnits" : {
+      "type" : "integer",
+      "minimum" : 0
+    },
+    "CapacityUnitsConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "StorageCapacityUnits" : {
+          "$ref" : "#/definitions/StorageCapacityUnits"
         },
-        "Value": {
-          "description": "A string containing the value for the tag",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "QueryCapacityUnits" : {
+          "$ref" : "#/definitions/QueryCapacityUnits"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "StorageCapacityUnits", "QueryCapacityUnits" ]
     },
-    "TagList": {
-      "description": "List of tags",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array"
+    "Edition" : {
+      "description" : "Edition of index",
+      "type" : "string",
+      "enum" : [ "DEVELOPER_EDITION", "ENTERPRISE_EDITION", "GEN_AI_ENTERPRISE_EDITION" ]
     },
-    "Url": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^(https?|ftp|file):\\/\\/([^\\s]*)",
-      "type": "string"
+    "Name" : {
+      "description" : "Name of index",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1000
     },
-    "UserContextPolicy": {
-      "enum": [
-        "ATTRIBUTE_FILTER",
-        "USER_TOKEN"
-      ],
-      "type": "string"
+    "RoleArn" : {
+      "description" : "Role Arn",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1284,
+      "pattern" : "arn:[a-z0-9-\\.]{1,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[a-z0-9-\\.]{0,63}:[^/].{0,1023}"
     },
-    "UserNameAttributeField": {
-      "maxLength": 100,
-      "minLength": 1,
-      "type": "string"
+    "Id" : {
+      "description" : "Unique ID of index",
+      "type" : "string",
+      "minLength" : 36,
+      "maxLength" : 36
     },
-    "UserTokenConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "JsonTokenTypeConfiguration": {
-          "$ref": "#/definitions/JsonTokenTypeConfiguration"
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 1000
+    },
+    "UserContextPolicy" : {
+      "type" : "string",
+      "enum" : [ "ATTRIBUTE_FILTER", "USER_TOKEN" ]
+    },
+    "UserNameAttributeField" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100
+    },
+    "GroupAttributeField" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100
+    },
+    "KeyLocation" : {
+      "type" : "string",
+      "enum" : [ "URL", "SECRET_MANAGER" ]
+    },
+    "Issuer" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 65
+    },
+    "ClaimRegex" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 100
+    },
+    "Url" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048,
+      "pattern" : "^(https?|ftp|file):\\/\\/([^\\s]*)"
+    },
+    "JsonTokenTypeConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "UserNameAttributeField" : {
+          "$ref" : "#/definitions/UserNameAttributeField"
         },
-        "JwtTokenTypeConfiguration": {
-          "$ref": "#/definitions/JwtTokenTypeConfiguration"
+        "GroupAttributeField" : {
+          "$ref" : "#/definitions/GroupAttributeField"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "UserNameAttributeField", "GroupAttributeField" ]
     },
-    "UserTokenConfigurationList": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/UserTokenConfiguration"
-      },
-      "maxItems": 1,
-      "type": "array"
-    },
-    "ValueImportanceItem": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "$ref": "#/definitions/ValueImportanceItemKey"
+    "JwtTokenTypeConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "KeyLocation" : {
+          "$ref" : "#/definitions/KeyLocation"
         },
-        "Value": {
-          "$ref": "#/definitions/Importance"
+        "URL" : {
+          "$ref" : "#/definitions/Url"
+        },
+        "SecretManagerArn" : {
+          "$ref" : "#/definitions/RoleArn"
+        },
+        "UserNameAttributeField" : {
+          "$ref" : "#/definitions/UserNameAttributeField"
+        },
+        "GroupAttributeField" : {
+          "$ref" : "#/definitions/GroupAttributeField"
+        },
+        "Issuer" : {
+          "$ref" : "#/definitions/Issuer"
+        },
+        "ClaimRegex" : {
+          "$ref" : "#/definitions/ClaimRegex"
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "KeyLocation" ]
     },
-    "ValueImportanceItemKey": {
-      "maxLength": 50,
-      "minLength": 1,
-      "type": "string"
-    },
-    "ValueImportanceItems": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/ValueImportanceItem"
+    "UserTokenConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "JwtTokenTypeConfiguration" : {
+          "$ref" : "#/definitions/JwtTokenTypeConfiguration"
+        },
+        "JsonTokenTypeConfiguration" : {
+          "$ref" : "#/definitions/JsonTokenTypeConfiguration"
+        }
       },
-      "type": "array"
+      "additionalProperties" : false
+    },
+    "UserTokenConfigurationList" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "maxItems" : 1,
+      "items" : {
+        "$ref" : "#/definitions/UserTokenConfiguration"
+      }
     }
   },
-  "description": "A Kendra index",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "kendra:CreateIndex",
-        "kendra:DescribeIndex",
-        "kendra:UpdateIndex",
-        "kendra:ListTagsForResource",
-        "iam:PassRole",
-        "kendra:TagResource",
-        "kms:DescribeKey",
-        "kms:CreateGrant"
-      ],
-      "timeoutInMinutes": 240
+  "properties" : {
+    "Id" : {
+      "$ref" : "#/definitions/Id"
     },
-    "delete": {
-      "permissions": [
-        "kendra:DescribeIndex",
-        "kendra:DeleteIndex",
-        "kms:RetireGrant"
-      ],
-      "timeoutInMinutes": 720
+    "Arn" : {
+      "$ref" : "#/definitions/Arn"
     },
-    "list": {
-      "permissions": [
-        "kendra:ListIndices"
-      ]
+    "Description" : {
+      "description" : "A description for the index",
+      "$ref" : "#/definitions/Description"
     },
-    "read": {
-      "permissions": [
-        "kendra:DescribeIndex",
-        "kendra:ListTagsForResource"
-      ]
+    "ServerSideEncryptionConfiguration" : {
+      "description" : "Server side encryption configuration",
+      "$ref" : "#/definitions/ServerSideEncryptionConfiguration"
     },
-    "update": {
-      "permissions": [
-        "kendra:DescribeIndex",
-        "kendra:UpdateIndex",
-        "kendra:ListTagsForResource",
-        "kendra:TagResource",
-        "kendra:UntagResource",
-        "iam:PassRole"
-      ],
-      "timeoutInMinutes": 240
+    "Tags" : {
+      "description" : "Tags for labeling the index",
+      "$ref" : "#/definitions/TagList"
+    },
+    "Name" : {
+      "$ref" : "#/definitions/Name"
+    },
+    "RoleArn" : {
+      "$ref" : "#/definitions/RoleArn"
+    },
+    "Edition" : {
+      "$ref" : "#/definitions/Edition"
+    },
+    "DocumentMetadataConfigurations" : {
+      "description" : "Document metadata configurations",
+      "$ref" : "#/definitions/DocumentMetadataConfigurationList"
+    },
+    "CapacityUnits" : {
+      "description" : "Capacity units",
+      "$ref" : "#/definitions/CapacityUnitsConfiguration"
+    },
+    "UserContextPolicy" : {
+      "$ref" : "#/definitions/UserContextPolicy"
+    },
+    "UserTokenConfigurations" : {
+      "$ref" : "#/definitions/UserTokenConfigurationList"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "$ref": "#/definitions/Arn"
+  "required" : [ "Name", "RoleArn", "Edition" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "kendra:CreateIndex", "kendra:DescribeIndex", "kendra:UpdateIndex", "kendra:ListTagsForResource", "iam:PassRole", "kendra:TagResource", "kms:DescribeKey", "kms:CreateGrant" ],
+      "timeoutInMinutes" : 240
     },
-    "CapacityUnits": {
-      "$ref": "#/definitions/CapacityUnitsConfiguration",
-      "description": "Capacity units"
+    "read" : {
+      "permissions" : [ "kendra:DescribeIndex", "kendra:ListTagsForResource" ]
     },
-    "Description": {
-      "$ref": "#/definitions/Description",
-      "description": "A description for the index"
+    "update" : {
+      "permissions" : [ "kendra:DescribeIndex", "kendra:UpdateIndex", "kendra:ListTagsForResource", "kendra:TagResource", "kendra:UntagResource", "iam:PassRole" ],
+      "timeoutInMinutes" : 240
     },
-    "DocumentMetadataConfigurations": {
-      "$ref": "#/definitions/DocumentMetadataConfigurationList",
-      "description": "Document metadata configurations"
+    "delete" : {
+      "permissions" : [ "kendra:DescribeIndex", "kendra:DeleteIndex", "kms:RetireGrant" ],
+      "timeoutInMinutes" : 720
     },
-    "Edition": {
-      "$ref": "#/definitions/Edition"
-    },
-    "Id": {
-      "$ref": "#/definitions/Id"
-    },
-    "Name": {
-      "$ref": "#/definitions/Name"
-    },
-    "RoleArn": {
-      "$ref": "#/definitions/RoleArn"
-    },
-    "ServerSideEncryptionConfiguration": {
-      "$ref": "#/definitions/ServerSideEncryptionConfiguration",
-      "description": "Server side encryption configuration"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagList",
-      "description": "Tags for labeling the index"
-    },
-    "UserContextPolicy": {
-      "$ref": "#/definitions/UserContextPolicy"
-    },
-    "UserTokenConfigurations": {
-      "$ref": "#/definitions/UserTokenConfigurationList"
+    "list" : {
+      "permissions" : [ "kendra:ListIndices" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name",
-    "RoleArn",
-    "Edition"
-  ],
-  "sourceUrl": "https://docs.aws.amazon.com/kendra/latest/dg/hiw-index.html",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "kendra:UntagResource",
-      "kendra:TagResource",
-      "kendra:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
+  "tagging" : {
+    "taggable" : true,
+    "tagUpdatable" : true,
+    "tagOnCreate" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "kendra:UntagResource", "kendra:TagResource", "kendra:ListTagsForResource" ]
   },
-  "typeName": "AWS::Kendra::Index"
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/Edition", "/properties/ServerSideEncryptionConfiguration" ]
 }

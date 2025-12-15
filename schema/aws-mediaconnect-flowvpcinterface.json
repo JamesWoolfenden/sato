@@ -1,88 +1,59 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/FlowArn",
-    "/properties/Name"
-  ],
-  "description": "Resource schema for AWS::MediaConnect::FlowVpcInterface",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:PassRole",
-        "mediaconnect:DescribeFlow",
-        "mediaconnect:AddFlowVpcInterfaces"
-      ]
+  "typeName" : "AWS::MediaConnect::FlowVpcInterface",
+  "description" : "Resource schema for AWS::MediaConnect::FlowVpcInterface",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
+  "properties" : {
+    "FlowArn" : {
+      "type" : "string",
+      "description" : "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow."
     },
-    "delete": {
-      "permissions": [
-        "mediaconnect:DescribeFlow",
-        "mediaconnect:RemoveFlowVpcInterface"
-      ]
+    "Name" : {
+      "type" : "string",
+      "description" : "Immutable and has to be a unique against other VpcInterfaces in this Flow."
     },
-    "list": {
-      "permissions": [
-        "mediaconnect:DescribeFlow"
-      ]
+    "RoleArn" : {
+      "type" : "string",
+      "description" : "Role Arn MediaConnect can assume to create ENIs in customer's account."
     },
-    "read": {
-      "permissions": [
-        "mediaconnect:DescribeFlow"
-      ]
+    "SecurityGroupIds" : {
+      "type" : "array",
+      "description" : "Security Group IDs to be used on ENI.",
+      "items" : {
+        "type" : "string"
+      }
     },
-    "update": {
-      "permissions": [
-        "mediaconnect:DescribeFlow",
-        "mediaconnect:AddFlowVpcInterfaces",
-        "mediaconnect:RemoveFlowVpcInterface"
-      ]
+    "SubnetId" : {
+      "type" : "string",
+      "description" : "Subnet must be in the AZ of the Flow"
+    },
+    "NetworkInterfaceIds" : {
+      "type" : "array",
+      "description" : "IDs of the network interfaces created in customer's account by MediaConnect.",
+      "items" : {
+        "type" : "string"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/FlowArn",
-    "/properties/Name"
-  ],
-  "properties": {
-    "FlowArn": {
-      "description": "The Amazon Resource Name (ARN), a unique identifier for any AWS resource, of the flow.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "FlowArn", "Name", "RoleArn", "SubnetId", "SecurityGroupIds" ],
+  "primaryIdentifier" : [ "/properties/FlowArn", "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/NetworkInterfaceIds" ],
+  "createOnlyProperties" : [ "/properties/FlowArn", "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:PassRole", "mediaconnect:DescribeFlow", "mediaconnect:AddFlowVpcInterfaces" ]
     },
-    "Name": {
-      "description": "Immutable and has to be a unique against other VpcInterfaces in this Flow.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "mediaconnect:DescribeFlow" ]
     },
-    "NetworkInterfaceIds": {
-      "description": "IDs of the network interfaces created in customer's account by MediaConnect.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
+    "update" : {
+      "permissions" : [ "mediaconnect:DescribeFlow", "mediaconnect:AddFlowVpcInterfaces", "mediaconnect:RemoveFlowVpcInterface" ]
     },
-    "RoleArn": {
-      "description": "Role Arn MediaConnect can assume to create ENIs in customer's account.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "mediaconnect:DescribeFlow", "mediaconnect:RemoveFlowVpcInterface" ]
     },
-    "SecurityGroupIds": {
-      "description": "Security Group IDs to be used on ENI.",
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "SubnetId": {
-      "description": "Subnet must be in the AZ of the Flow",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "mediaconnect:DescribeFlow" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/NetworkInterfaceIds"
-  ],
-  "required": [
-    "FlowArn",
-    "Name",
-    "RoleArn",
-    "SubnetId",
-    "SecurityGroupIds"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediaconnect.git",
-  "typeName": "AWS::MediaConnect::FlowVpcInterface"
+  }
 }

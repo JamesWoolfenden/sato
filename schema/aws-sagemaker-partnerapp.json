@@ -1,269 +1,205 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Type",
-    "/properties/ExecutionRoleArn",
-    "/properties/AuthType",
-    "/properties/KmsKeyId"
-  ],
-  "definitions": {
-    "PartnerAppAdminUserList": {
-      "additionalProperties": false,
-      "description": "A collection of AdminUsers for the PartnerApp",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
+  "typeName" : "AWS::SageMaker::PartnerApp",
+  "description" : "Resource Type definition for AWS::SageMaker::PartnerApp",
+  "additionalProperties" : false,
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "The Amazon Resource Name (ARN) of the created PartnerApp.",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:partner-app/app-[A-Z0-9]{12}$"
     },
-    "PartnerAppConfig": {
-      "additionalProperties": false,
-      "description": "A collection of configuration settings for the PartnerApp.",
-      "properties": {
-        "AdminUsers": {
-          "description": "A list of users with administrator privileges for the PartnerApp.",
-          "insertionOrder": false,
-          "items": {
-            "$ref": "#/definitions/PartnerAppAdminUserList"
-          },
-          "maxItems": 5,
-          "minItems": 0,
-          "type": "array",
-          "uniqueItems": true
+    "Name" : {
+      "type" : "string",
+      "description" : "A name for the PartnerApp.",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "^[a-zA-Z0-9]+"
+    },
+    "Type" : {
+      "type" : "string",
+      "description" : "The type of PartnerApp.",
+      "enum" : [ "lakera-guard", "comet", "deepchecks-llm-evaluation", "fiddler" ]
+    },
+    "ExecutionRoleArn" : {
+      "type" : "string",
+      "description" : "The execution role for the user.",
+      "minLength" : 20,
+      "maxLength" : 2048,
+      "pattern" : "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$"
+    },
+    "KmsKeyId" : {
+      "type" : "string",
+      "description" : "The AWS KMS customer managed key used to encrypt the data associated with the PartnerApp.",
+      "maxLength" : 2048,
+      "pattern" : ".*"
+    },
+    "Tier" : {
+      "type" : "string",
+      "description" : "The tier of the PartnerApp.",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "EnableIamSessionBasedIdentity" : {
+      "type" : "boolean",
+      "description" : "Enables IAM Session based Identity for PartnerApp."
+    },
+    "EnableAutoMinorVersionUpgrade" : {
+      "type" : "boolean",
+      "description" : "Enables automatic minor version upgrades for the PartnerApp."
+    },
+    "AppVersion" : {
+      "type" : "string",
+      "description" : "The version of the PartnerApp.",
+      "minLength" : 1,
+      "maxLength" : 64
+    },
+    "ApplicationConfig" : {
+      "$ref" : "#/definitions/PartnerAppConfig",
+      "description" : "A collection of settings that specify the maintenance schedule for the PartnerApp."
+    },
+    "AuthType" : {
+      "type" : "string",
+      "description" : "The Auth type of PartnerApp.",
+      "enum" : [ "IAM" ]
+    },
+    "BaseUrl" : {
+      "type" : "string",
+      "description" : "The AppServerUrl based on app and account-info.",
+      "maxLength" : 2048
+    },
+    "CurrentVersionEolDate" : {
+      "type" : "string",
+      "description" : "The end-of-life date for the current version of the PartnerApp."
+    },
+    "MaintenanceConfig" : {
+      "$ref" : "#/definitions/PartnerAppMaintenanceConfig",
+      "description" : "A collection of settings that specify the maintenance schedule for the PartnerApp."
+    },
+    "ClientToken" : {
+      "type" : "string",
+      "description" : "The client token for the PartnerApp.",
+      "minLength" : 1,
+      "maxLength" : 36,
+      "pattern" : "^[a-zA-Z0-9-]+$"
+    },
+    "Tags" : {
+      "type" : "array",
+      "description" : "A list of tags to apply to the PartnerApp.",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "maxItems" : 50,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "PartnerAppConfig" : {
+      "type" : "object",
+      "description" : "A collection of configuration settings for the PartnerApp.",
+      "additionalProperties" : false,
+      "properties" : {
+        "AdminUsers" : {
+          "type" : "array",
+          "description" : "A list of users with administrator privileges for the PartnerApp.",
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "minItems" : 0,
+          "maxItems" : 5,
+          "items" : {
+            "$ref" : "#/definitions/PartnerAppAdminUserList"
+          }
         },
-        "Arguments": {
-          "additionalProperties": false,
-          "description": "A list of arguments to pass to the PartnerApp.",
-          "maxProperties": 5,
-          "patternProperties": {
-            "^(?!\\s*$).{1,256}$": {
-              "maxLength": 1024,
-              "pattern": "^.{0,1024}$",
-              "type": "string"
+        "Arguments" : {
+          "description" : "A list of arguments to pass to the PartnerApp.",
+          "type" : "object",
+          "additionalProperties" : false,
+          "maxProperties" : 5,
+          "patternProperties" : {
+            "^(?!\\s*$).{1,256}$" : {
+              "type" : "string",
+              "pattern" : "^.{0,1024}$",
+              "maxLength" : 1024
             }
-          },
-          "type": "object"
+          }
+        }
+      }
+    },
+    "PartnerAppAdminUserList" : {
+      "type" : "string",
+      "description" : "A collection of AdminUsers for the PartnerApp",
+      "additionalProperties" : false,
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "PartnerAppMaintenanceConfig" : {
+      "type" : "object",
+      "description" : "A collection of settings that specify the maintenance schedule for the PartnerApp.",
+      "additionalProperties" : false,
+      "properties" : {
+        "MaintenanceWindowStart" : {
+          "type" : "string",
+          "description" : "The maintenance window start day and time for the PartnerApp.",
+          "maxLength" : 9,
+          "pattern" : "(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([01]\\d|2[0-3]):([0-5]\\d)"
         }
       },
-      "type": "object"
+      "required" : [ "MaintenanceWindowStart" ]
     },
-    "PartnerAppMaintenanceConfig": {
-      "additionalProperties": false,
-      "description": "A collection of settings that specify the maintenance schedule for the PartnerApp.",
-      "properties": {
-        "MaintenanceWindowStart": {
-          "description": "The maintenance window start day and time for the PartnerApp.",
-          "maxLength": 9,
-          "pattern": "(Mon|Tue|Wed|Thu|Fri|Sat|Sun):([01]\\d|2[0-3]):([0-5]\\d)",
-          "type": "string"
-        }
-      },
-      "required": [
-        "MaintenanceWindowStart"
-      ],
-      "type": "object"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ]
     }
   },
-  "deprecatedProperties": [
-    "/properties/ClientToken"
-  ],
-  "description": "Resource Type definition for AWS::SageMaker::PartnerApp",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "sagemaker:CreatePartnerApp",
-        "sagemaker:DescribePartnerApp",
-        "sagemaker:AddTags",
-        "sagemaker:ListTags",
-        "iam:PassRole",
-        "kms:CreateGrant",
-        "kms:DescribeKey"
-      ],
-      "timeoutInMinutes": 180
+  "required" : [ "Name", "Type", "AuthType", "ExecutionRoleArn", "Tier" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Type", "/properties/ExecutionRoleArn", "/properties/AuthType", "/properties/KmsKeyId" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/BaseUrl", "/properties/CurrentVersionEolDate" ],
+  "writeOnlyProperties" : [ "/properties/ClientToken" ],
+  "deprecatedProperties" : [ "/properties/ClientToken" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "replacementStrategy" : "delete_then_create",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "sagemaker:CreatePartnerApp", "sagemaker:DescribePartnerApp", "sagemaker:AddTags", "sagemaker:ListTags", "iam:PassRole", "kms:CreateGrant", "kms:DescribeKey" ],
+      "timeoutInMinutes" : 180
     },
-    "delete": {
-      "permissions": [
-        "sagemaker:DeletePartnerApp",
-        "sagemaker:DescribePartnerApp",
-        "sagemaker:DeleteTags"
-      ],
-      "timeoutInMinutes": 240
+    "read" : {
+      "permissions" : [ "sagemaker:DescribePartnerApp", "sagemaker:ListTags" ]
     },
-    "list": {
-      "permissions": [
-        "sagemaker:ListPartnerApps",
-        "sagemaker:DescribePartnerApp",
-        "sagemaker:ListTags"
-      ]
+    "update" : {
+      "permissions" : [ "sagemaker:UpdatePartnerApp", "sagemaker:DescribePartnerApp", "sagemaker:AddTags", "sagemaker:ListTags", "sagemaker:DeleteTags", "kms:DescribeKey" ],
+      "timeoutInMinutes" : 180
     },
-    "read": {
-      "permissions": [
-        "sagemaker:DescribePartnerApp",
-        "sagemaker:ListTags"
-      ]
+    "delete" : {
+      "permissions" : [ "sagemaker:DeletePartnerApp", "sagemaker:DescribePartnerApp", "sagemaker:DeleteTags" ],
+      "timeoutInMinutes" : 240
     },
-    "update": {
-      "permissions": [
-        "sagemaker:UpdatePartnerApp",
-        "sagemaker:DescribePartnerApp",
-        "sagemaker:AddTags",
-        "sagemaker:ListTags",
-        "sagemaker:DeleteTags",
-        "kms:DescribeKey"
-      ],
-      "timeoutInMinutes": 180
+    "list" : {
+      "permissions" : [ "sagemaker:ListPartnerApps", "sagemaker:DescribePartnerApp", "sagemaker:ListTags" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "AppVersion": {
-      "description": "The version of the PartnerApp.",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "ApplicationConfig": {
-      "$ref": "#/definitions/PartnerAppConfig",
-      "description": "A collection of settings that specify the maintenance schedule for the PartnerApp."
-    },
-    "Arn": {
-      "description": "The Amazon Resource Name (ARN) of the created PartnerApp.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "arn:aws[a-z\\-]*:sagemaker:[a-z0-9\\-]*:[0-9]{12}:partner-app/app-[A-Z0-9]{12}$",
-      "type": "string"
-    },
-    "AuthType": {
-      "description": "The Auth type of PartnerApp.",
-      "enum": [
-        "IAM"
-      ],
-      "type": "string"
-    },
-    "BaseUrl": {
-      "description": "The AppServerUrl based on app and account-info.",
-      "maxLength": 2048,
-      "type": "string"
-    },
-    "ClientToken": {
-      "description": "The client token for the PartnerApp.",
-      "maxLength": 36,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9-]+$",
-      "type": "string"
-    },
-    "CurrentVersionEolDate": {
-      "description": "The end-of-life date for the current version of the PartnerApp.",
-      "type": "string"
-    },
-    "EnableAutoMinorVersionUpgrade": {
-      "description": "Enables automatic minor version upgrades for the PartnerApp.",
-      "type": "boolean"
-    },
-    "EnableIamSessionBasedIdentity": {
-      "description": "Enables IAM Session based Identity for PartnerApp.",
-      "type": "boolean"
-    },
-    "ExecutionRoleArn": {
-      "description": "The execution role for the user.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:aws[a-z\\-]*:iam::\\d{12}:role/?[a-zA-Z_0-9+=,.@\\-_/]+$",
-      "type": "string"
-    },
-    "KmsKeyId": {
-      "description": "The AWS KMS customer managed key used to encrypt the data associated with the PartnerApp.",
-      "maxLength": 2048,
-      "pattern": ".*",
-      "type": "string"
-    },
-    "MaintenanceConfig": {
-      "$ref": "#/definitions/PartnerAppMaintenanceConfig",
-      "description": "A collection of settings that specify the maintenance schedule for the PartnerApp."
-    },
-    "Name": {
-      "description": "A name for the PartnerApp.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9]+",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A list of tags to apply to the PartnerApp.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Tier": {
-      "description": "The tier of the PartnerApp.",
-      "maxLength": 64,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Type": {
-      "description": "The type of PartnerApp.",
-      "enum": [
-        "lakera-guard",
-        "comet",
-        "deepchecks-llm-evaluation",
-        "fiddler"
-      ],
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/BaseUrl",
-    "/properties/CurrentVersionEolDate"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "Name",
-    "Type",
-    "AuthType",
-    "ExecutionRoleArn",
-    "Tier"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "sagemaker:AddTags",
-      "sagemaker:DeleteTags",
-      "sagemaker:ListTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SageMaker::PartnerApp",
-  "writeOnlyProperties": [
-    "/properties/ClientToken"
-  ]
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "sagemaker:AddTags", "sagemaker:DeleteTags", "sagemaker:ListTags" ]
+  }
 }

@@ -1,131 +1,90 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/Name"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Description",
-    "/properties/PropertiesFileContent"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::KafkaConnect::WorkerConfiguration",
+  "description" : "The configuration of the workers, which are the processes that run the connector logic.",
+  "additionalProperties" : false,
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kafkaconnect.git",
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the worker configuration.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
+    },
+    "Description" : {
+      "description" : "A summary description of the worker configuration.",
+      "type" : "string",
+      "maxLength" : 1024
+    },
+    "WorkerConfigurationArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the custom configuration.",
+      "type" : "string",
+      "pattern" : "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*"
+    },
+    "PropertiesFileContent" : {
+      "description" : "Base64 encoded contents of connect-distributed.properties file.",
+      "type" : "string"
+    },
+    "Revision" : {
+      "description" : "The description of a revision of the worker configuration.",
+      "type" : "integer",
+      "format" : "int64"
+    },
+    "Tags" : {
+      "description" : "A collection of tags associated with a resource",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "maxLength": 256,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ],
+      "additionalProperties" : false
     }
   },
-  "description": "The configuration of the workers, which are the processes that run the connector logic.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "kafkaconnect:DescribeWorkerConfiguration",
-        "kafkaconnect:CreateWorkerConfiguration",
-        "kafkaconnect:TagResource",
-        "kafkaconnect:ListTagsForResource"
-      ]
+  "required" : [ "Name", "PropertiesFileContent" ],
+  "primaryIdentifier" : [ "/properties/WorkerConfigurationArn" ],
+  "additionalIdentifiers" : [ [ "/properties/Name" ] ],
+  "readOnlyProperties" : [ "/properties/WorkerConfigurationArn", "/properties/Revision" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Description", "/properties/PropertiesFileContent" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "kafkaconnect:ListTagsForResource", "kafkaconnect:UntagResource", "kafkaconnect:TagResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "kafkaconnect:DescribeWorkerConfiguration", "kafkaconnect:CreateWorkerConfiguration", "kafkaconnect:TagResource", "kafkaconnect:ListTagsForResource" ]
     },
-    "delete": {
-      "permissions": [
-        "kafkaconnect:DescribeWorkerConfiguration",
-        "kafkaconnect:DeleteWorkerConfiguration"
-      ]
+    "read" : {
+      "permissions" : [ "kafkaconnect:DescribeWorkerConfiguration", "kafkaconnect:ListTagsForResource" ]
     },
-    "list": {
-      "permissions": [
-        "kafkaconnect:ListWorkerConfigurations"
-      ]
+    "update" : {
+      "permissions" : [ "kafkaconnect:DescribeWorkerConfiguration", "kafkaconnect:ListTagsForResource", "kafkaconnect:TagResource", "kafkaconnect:UntagResource" ]
     },
-    "read": {
-      "permissions": [
-        "kafkaconnect:DescribeWorkerConfiguration",
-        "kafkaconnect:ListTagsForResource"
-      ]
+    "delete" : {
+      "permissions" : [ "kafkaconnect:DescribeWorkerConfiguration", "kafkaconnect:DeleteWorkerConfiguration" ]
     },
-    "update": {
-      "permissions": [
-        "kafkaconnect:DescribeWorkerConfiguration",
-        "kafkaconnect:ListTagsForResource",
-        "kafkaconnect:TagResource",
-        "kafkaconnect:UntagResource"
-      ]
+    "list" : {
+      "permissions" : [ "kafkaconnect:ListWorkerConfigurations" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/WorkerConfigurationArn"
-  ],
-  "properties": {
-    "Description": {
-      "description": "A summary description of the worker configuration.",
-      "maxLength": 1024,
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the worker configuration.",
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    },
-    "PropertiesFileContent": {
-      "description": "Base64 encoded contents of connect-distributed.properties file.",
-      "type": "string"
-    },
-    "Revision": {
-      "description": "The description of a revision of the worker configuration.",
-      "format": "int64",
-      "type": "integer"
-    },
-    "Tags": {
-      "description": "A collection of tags associated with a resource",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "WorkerConfigurationArn": {
-      "description": "The Amazon Resource Name (ARN) of the custom configuration.",
-      "pattern": "arn:(aws|aws-us-gov|aws-cn):kafkaconnect:.*",
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/WorkerConfigurationArn",
-    "/properties/Revision"
-  ],
-  "required": [
-    "Name",
-    "PropertiesFileContent"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-kafkaconnect.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "kafkaconnect:ListTagsForResource",
-      "kafkaconnect:UntagResource",
-      "kafkaconnect:TagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::KafkaConnect::WorkerConfiguration"
+  }
 }

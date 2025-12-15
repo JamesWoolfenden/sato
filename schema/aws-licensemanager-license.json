@@ -1,241 +1,200 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Arn": {
-      "maxLength": 2048,
-      "type": "string"
-    },
-    "BorrowConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowEarlyCheckIn": {
-          "type": "boolean"
+  "typeName" : "AWS::LicenseManager::License",
+  "description" : "Resource Type definition for AWS::LicenseManager::License",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-licensemanager.git",
+  "definitions" : {
+    "ValidityDateFormat" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Begin" : {
+          "description" : "Validity begin date for the license.",
+          "type" : "string",
+          "format" : "date-time"
         },
-        "MaxTimeToLiveInMinutes": {
-          "type": "integer"
+        "End" : {
+          "description" : "Validity begin date for the license.",
+          "type" : "string",
+          "format" : "date-time"
         }
       },
-      "required": [
-        "MaxTimeToLiveInMinutes",
-        "AllowEarlyCheckIn"
-      ],
-      "type": "object"
+      "required" : [ "Begin", "End" ]
     },
-    "ConsumptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "BorrowConfiguration": {
-          "$ref": "#/definitions/BorrowConfiguration"
+    "IssuerData" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string"
         },
-        "ProvisionalConfiguration": {
-          "$ref": "#/definitions/ProvisionalConfiguration"
-        },
-        "RenewType": {
-          "type": "string"
+        "SignKey" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "required" : [ "Name" ],
+      "additionalProperties" : false
     },
-    "Entitlement": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowCheckIn": {
-          "type": "boolean"
+    "Entitlement" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string"
         },
-        "MaxCount": {
-          "type": "integer"
+        "Value" : {
+          "type" : "string"
         },
-        "Name": {
-          "type": "string"
+        "MaxCount" : {
+          "type" : "integer"
         },
-        "Overage": {
-          "type": "boolean"
+        "Overage" : {
+          "type" : "boolean"
         },
-        "Unit": {
-          "type": "string"
+        "Unit" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "AllowCheckIn" : {
+          "type" : "boolean"
         }
       },
-      "required": [
-        "Name",
-        "Unit"
-      ],
-      "type": "object"
+      "required" : [ "Name", "Unit" ],
+      "additionalProperties" : false
     },
-    "IssuerData": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
+    "ConsumptionConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "RenewType" : {
+          "type" : "string"
         },
-        "SignKey": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Name"
-      ],
-      "type": "object"
-    },
-    "LicenseStatus": {
-      "type": "string"
-    },
-    "Metadata": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
+        "ProvisionalConfiguration" : {
+          "$ref" : "#/definitions/ProvisionalConfiguration"
         },
-        "Value": {
-          "type": "string"
+        "BorrowConfiguration" : {
+          "$ref" : "#/definitions/BorrowConfiguration"
         }
       },
-      "required": [
-        "Name",
-        "Value"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ProvisionalConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "MaxTimeToLiveInMinutes": {
-          "type": "integer"
+    "ProvisionalConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "MaxTimeToLiveInMinutes" : {
+          "type" : "integer"
         }
       },
-      "required": [
-        "MaxTimeToLiveInMinutes"
-      ],
-      "type": "object"
+      "required" : [ "MaxTimeToLiveInMinutes" ],
+      "additionalProperties" : false
     },
-    "ValidityDateFormat": {
-      "additionalProperties": false,
-      "properties": {
-        "Begin": {
-          "description": "Validity begin date for the license.",
-          "format": "date-time",
-          "type": "string"
+    "BorrowConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "MaxTimeToLiveInMinutes" : {
+          "type" : "integer"
         },
-        "End": {
-          "description": "Validity begin date for the license.",
-          "format": "date-time",
-          "type": "string"
+        "AllowEarlyCheckIn" : {
+          "type" : "boolean"
         }
       },
-      "required": [
-        "Begin",
-        "End"
-      ],
-      "type": "object"
+      "required" : [ "MaxTimeToLiveInMinutes", "AllowEarlyCheckIn" ],
+      "additionalProperties" : false
+    },
+    "Metadata" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string"
+        },
+        "Value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Name", "Value" ],
+      "additionalProperties" : false
+    },
+    "LicenseStatus" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 2048
     }
   },
-  "description": "Resource Type definition for AWS::LicenseManager::License",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "license-manager:CreateLicense"
-      ]
+  "properties" : {
+    "ProductSKU" : {
+      "description" : "ProductSKU of the license.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024
     },
-    "delete": {
-      "permissions": [
-        "license-manager:DeleteLicense"
-      ]
+    "Issuer" : {
+      "$ref" : "#/definitions/IssuerData"
     },
-    "list": {
-      "permissions": [
-        "license-manager:ListLicenses"
-      ]
+    "LicenseName" : {
+      "description" : "Name for the created license.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "license-manager:GetLicense"
-      ]
+    "ProductName" : {
+      "description" : "Product name for the created license.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "license-manager:CreateLicenseVersion"
-      ]
+    "HomeRegion" : {
+      "description" : "Home region for the created license.",
+      "type" : "string"
+    },
+    "Validity" : {
+      "$ref" : "#/definitions/ValidityDateFormat"
+    },
+    "Entitlements" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Entitlement"
+      }
+    },
+    "Beneficiary" : {
+      "description" : "Beneficiary of the license.",
+      "type" : "string"
+    },
+    "ConsumptionConfiguration" : {
+      "$ref" : "#/definitions/ConsumptionConfiguration"
+    },
+    "LicenseMetadata" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Metadata"
+      }
+    },
+    "LicenseArn" : {
+      "description" : "Amazon Resource Name is a unique name for each resource.",
+      "$ref" : "#/definitions/Arn"
+    },
+    "Status" : {
+      "$ref" : "#/definitions/LicenseStatus"
+    },
+    "Version" : {
+      "description" : "The version of the license.",
+      "type" : "string"
     }
   },
-  "primaryIdentifier": [
-    "/properties/LicenseArn"
-  ],
-  "properties": {
-    "Beneficiary": {
-      "description": "Beneficiary of the license.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "LicenseName", "ProductName", "Issuer", "HomeRegion", "Validity", "ConsumptionConfiguration", "Entitlements" ],
+  "writeOnlyProperties" : [ "/properties/Status" ],
+  "readOnlyProperties" : [ "/properties/LicenseArn", "/properties/Version" ],
+  "primaryIdentifier" : [ "/properties/LicenseArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "license-manager:CreateLicense" ]
     },
-    "ConsumptionConfiguration": {
-      "$ref": "#/definitions/ConsumptionConfiguration"
+    "read" : {
+      "permissions" : [ "license-manager:GetLicense" ]
     },
-    "Entitlements": {
-      "items": {
-        "$ref": "#/definitions/Entitlement"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "update" : {
+      "permissions" : [ "license-manager:CreateLicenseVersion" ]
     },
-    "HomeRegion": {
-      "description": "Home region for the created license.",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "license-manager:DeleteLicense" ]
     },
-    "Issuer": {
-      "$ref": "#/definitions/IssuerData"
-    },
-    "LicenseArn": {
-      "$ref": "#/definitions/Arn",
-      "description": "Amazon Resource Name is a unique name for each resource."
-    },
-    "LicenseMetadata": {
-      "items": {
-        "$ref": "#/definitions/Metadata"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "LicenseName": {
-      "description": "Name for the created license.",
-      "type": "string"
-    },
-    "ProductName": {
-      "description": "Product name for the created license.",
-      "type": "string"
-    },
-    "ProductSKU": {
-      "description": "ProductSKU of the license.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Status": {
-      "$ref": "#/definitions/LicenseStatus"
-    },
-    "Validity": {
-      "$ref": "#/definitions/ValidityDateFormat"
-    },
-    "Version": {
-      "description": "The version of the license.",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "license-manager:ListLicenses" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/LicenseArn",
-    "/properties/Version"
-  ],
-  "required": [
-    "LicenseName",
-    "ProductName",
-    "Issuer",
-    "HomeRegion",
-    "Validity",
-    "ConsumptionConfiguration",
-    "Entitlements"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-licensemanager.git",
-  "typeName": "AWS::LicenseManager::License",
-  "writeOnlyProperties": [
-    "/properties/Status"
-  ]
+  }
 }

@@ -1,120 +1,98 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/MeshName",
-    "/properties/VirtualServiceName",
-    "/properties/MeshOwner"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+  "typeName" : "AWS::AppMesh::VirtualService",
+  "description" : "Resource Type definition for AWS::AppMesh::VirtualService",
+  "additionalProperties" : false,
+  "properties" : {
+    "Uid" : {
+      "type" : "string"
     },
-    "VirtualNodeServiceProvider": {
-      "additionalProperties": false,
-      "properties": {
-        "VirtualNodeName": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "VirtualNodeName"
-      ],
-      "type": "object"
+    "MeshName" : {
+      "type" : "string"
     },
-    "VirtualRouterServiceProvider": {
-      "additionalProperties": false,
-      "properties": {
-        "VirtualRouterName": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "VirtualRouterName"
-      ],
-      "type": "object"
+    "MeshOwner" : {
+      "type" : "string"
     },
-    "VirtualServiceProvider": {
-      "additionalProperties": false,
-      "properties": {
-        "VirtualNode": {
-          "$ref": "#/definitions/VirtualNodeServiceProvider"
-        },
-        "VirtualRouter": {
-          "$ref": "#/definitions/VirtualRouterServiceProvider"
-        }
-      },
-      "type": "object"
+    "ResourceOwner" : {
+      "type" : "string"
     },
-    "VirtualServiceSpec": {
-      "additionalProperties": false,
-      "properties": {
-        "Provider": {
-          "$ref": "#/definitions/VirtualServiceProvider"
-        }
-      },
-      "type": "object"
+    "Id" : {
+      "type" : "string"
+    },
+    "VirtualServiceName" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Spec" : {
+      "$ref" : "#/definitions/VirtualServiceSpec"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::AppMesh::VirtualService",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "MeshName": {
-      "type": "string"
-    },
-    "MeshOwner": {
-      "type": "string"
-    },
-    "ResourceOwner": {
-      "type": "string"
-    },
-    "Spec": {
-      "$ref": "#/definitions/VirtualServiceSpec"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+  "definitions" : {
+    "VirtualNodeServiceProvider" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VirtualNodeName" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "VirtualNodeName" ]
     },
-    "Uid": {
-      "type": "string"
+    "VirtualServiceProvider" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VirtualNode" : {
+          "$ref" : "#/definitions/VirtualNodeServiceProvider"
+        },
+        "VirtualRouter" : {
+          "$ref" : "#/definitions/VirtualRouterServiceProvider"
+        }
+      }
     },
-    "VirtualServiceName": {
-      "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "VirtualServiceSpec" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Provider" : {
+          "$ref" : "#/definitions/VirtualServiceProvider"
+        }
+      }
+    },
+    "VirtualRouterServiceProvider" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "VirtualRouterName" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "VirtualRouterName" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/ResourceOwner",
-    "/properties/Arn",
-    "/properties/Uid"
-  ],
-  "required": [
-    "MeshName",
-    "VirtualServiceName",
-    "Spec"
-  ],
-  "typeName": "AWS::AppMesh::VirtualService"
+  "required" : [ "MeshName", "VirtualServiceName", "Spec" ],
+  "createOnlyProperties" : [ "/properties/MeshName", "/properties/VirtualServiceName", "/properties/MeshOwner" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/ResourceOwner", "/properties/Arn", "/properties/Uid" ]
 }

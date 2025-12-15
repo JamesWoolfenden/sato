@@ -1,360 +1,330 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/NotificationsWithSubscribers"
-  ],
-  "definitions": {
-    "AutoAdjustData": {
-      "additionalProperties": false,
-      "properties": {
-        "AutoAdjustType": {
-          "type": "string"
-        },
-        "HistoricalOptions": {
-          "$ref": "#/definitions/HistoricalOptions"
-        }
-      },
-      "required": [
-        "AutoAdjustType"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Budgets::Budget",
+  "description" : "Resource Type definition for AWS::Budgets::Budget",
+  "additionalProperties" : false,
+  "properties" : {
+    "Budget" : {
+      "$ref" : "#/definitions/BudgetData"
     },
-    "BudgetData": {
-      "additionalProperties": false,
-      "properties": {
-        "AutoAdjustData": {
-          "$ref": "#/definitions/AutoAdjustData"
-        },
-        "BillingViewArn": {
-          "type": "string"
-        },
-        "BudgetLimit": {
-          "$ref": "#/definitions/Spend"
-        },
-        "BudgetName": {
-          "type": "string"
-        },
-        "BudgetType": {
-          "type": "string"
-        },
-        "CostFilters": {
-          "type": "object"
-        },
-        "CostTypes": {
-          "$ref": "#/definitions/CostTypes"
-        },
-        "FilterExpression": {
-          "$ref": "#/definitions/Expression"
-        },
-        "Metrics": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "PlannedBudgetLimits": {
-          "type": "object"
-        },
-        "TimePeriod": {
-          "$ref": "#/definitions/TimePeriod"
-        },
-        "TimeUnit": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "TimeUnit",
-        "BudgetType"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "CostCategoryValues": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "MatchOptions": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
+    "NotificationsWithSubscribers" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/NotificationWithSubscribers"
+      }
     },
-    "CostTypes": {
-      "additionalProperties": false,
-      "properties": {
-        "IncludeCredit": {
-          "type": "boolean"
-        },
-        "IncludeDiscount": {
-          "type": "boolean"
-        },
-        "IncludeOtherSubscription": {
-          "type": "boolean"
-        },
-        "IncludeRecurring": {
-          "type": "boolean"
-        },
-        "IncludeRefund": {
-          "type": "boolean"
-        },
-        "IncludeSubscription": {
-          "type": "boolean"
-        },
-        "IncludeSupport": {
-          "type": "boolean"
-        },
-        "IncludeTax": {
-          "type": "boolean"
-        },
-        "IncludeUpfront": {
-          "type": "boolean"
-        },
-        "UseAmortized": {
-          "type": "boolean"
-        },
-        "UseBlended": {
-          "type": "boolean"
-        }
-      },
-      "type": "object"
-    },
-    "Expression": {
-      "additionalProperties": false,
-      "properties": {
-        "And": {
-          "items": {
-            "$ref": "#/definitions/Expression"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "CostCategories": {
-          "$ref": "#/definitions/CostCategoryValues"
-        },
-        "Dimensions": {
-          "$ref": "#/definitions/ExpressionDimensionValues"
-        },
-        "Not": {
-          "$ref": "#/definitions/Expression"
-        },
-        "Or": {
-          "items": {
-            "$ref": "#/definitions/Expression"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Tags": {
-          "$ref": "#/definitions/TagValues"
-        }
-      },
-      "type": "object"
-    },
-    "ExpressionDimensionValues": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "MatchOptions": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "HistoricalOptions": {
-      "additionalProperties": false,
-      "properties": {
-        "BudgetAdjustmentPeriod": {
-          "type": "integer"
-        }
-      },
-      "required": [
-        "BudgetAdjustmentPeriod"
-      ],
-      "type": "object"
-    },
-    "Notification": {
-      "additionalProperties": false,
-      "properties": {
-        "ComparisonOperator": {
-          "type": "string"
-        },
-        "NotificationType": {
-          "type": "string"
-        },
-        "Threshold": {
-          "type": "number"
-        },
-        "ThresholdType": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "ComparisonOperator",
-        "NotificationType",
-        "Threshold"
-      ],
-      "type": "object"
-    },
-    "NotificationWithSubscribers": {
-      "additionalProperties": false,
-      "properties": {
-        "Notification": {
-          "$ref": "#/definitions/Notification"
-        },
-        "Subscribers": {
-          "items": {
-            "$ref": "#/definitions/Subscriber"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Subscribers",
-        "Notification"
-      ],
-      "type": "object"
-    },
-    "ResourceTag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
-    },
-    "Spend": {
-      "additionalProperties": false,
-      "properties": {
-        "Amount": {
-          "type": "number"
-        },
-        "Unit": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Amount",
-        "Unit"
-      ],
-      "type": "object"
-    },
-    "Subscriber": {
-      "additionalProperties": false,
-      "properties": {
-        "Address": {
-          "type": "string"
-        },
-        "SubscriptionType": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "SubscriptionType",
-        "Address"
-      ],
-      "type": "object"
-    },
-    "TagValues": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "MatchOptions": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "type": "object"
-    },
-    "TimePeriod": {
-      "additionalProperties": false,
-      "properties": {
-        "End": {
-          "type": "string"
-        },
-        "Start": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "ResourceTags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/ResourceTag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::Budgets::Budget",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Budget": {
-      "$ref": "#/definitions/BudgetData"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "NotificationsWithSubscribers": {
-      "items": {
-        "$ref": "#/definitions/NotificationWithSubscribers"
+  "definitions" : {
+    "HistoricalOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "BudgetAdjustmentPeriod" : {
+          "type" : "integer"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "BudgetAdjustmentPeriod" ]
     },
-    "ResourceTags": {
-      "items": {
-        "$ref": "#/definitions/ResourceTag"
+    "CostCategoryValues" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Key" : {
+          "type" : "string"
+        },
+        "MatchOptions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "BudgetData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "TimePeriod" : {
+          "$ref" : "#/definitions/TimePeriod"
+        },
+        "PlannedBudgetLimits" : {
+          "type" : "object"
+        },
+        "CostFilters" : {
+          "type" : "object"
+        },
+        "CostTypes" : {
+          "$ref" : "#/definitions/CostTypes"
+        },
+        "BudgetType" : {
+          "type" : "string"
+        },
+        "Metrics" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "BudgetLimit" : {
+          "$ref" : "#/definitions/Spend"
+        },
+        "BillingViewArn" : {
+          "type" : "string"
+        },
+        "AutoAdjustData" : {
+          "$ref" : "#/definitions/AutoAdjustData"
+        },
+        "TimeUnit" : {
+          "type" : "string"
+        },
+        "FilterExpression" : {
+          "$ref" : "#/definitions/Expression"
+        },
+        "BudgetName" : {
+          "type" : "string"
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "TimeUnit", "BudgetType" ]
+    },
+    "TimePeriod" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Start" : {
+          "type" : "string"
+        },
+        "End" : {
+          "type" : "string"
+        }
+      }
+    },
+    "NotificationWithSubscribers" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Subscribers" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Subscriber"
+          }
+        },
+        "Notification" : {
+          "$ref" : "#/definitions/Notification"
+        }
+      },
+      "required" : [ "Subscribers", "Notification" ]
+    },
+    "Notification" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ComparisonOperator" : {
+          "type" : "string"
+        },
+        "NotificationType" : {
+          "type" : "string"
+        },
+        "Threshold" : {
+          "type" : "number"
+        },
+        "ThresholdType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "ComparisonOperator", "NotificationType", "Threshold" ]
+    },
+    "CostTypes" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "IncludeSupport" : {
+          "type" : "boolean"
+        },
+        "IncludeOtherSubscription" : {
+          "type" : "boolean"
+        },
+        "IncludeTax" : {
+          "type" : "boolean"
+        },
+        "IncludeSubscription" : {
+          "type" : "boolean"
+        },
+        "UseBlended" : {
+          "type" : "boolean"
+        },
+        "IncludeUpfront" : {
+          "type" : "boolean"
+        },
+        "IncludeDiscount" : {
+          "type" : "boolean"
+        },
+        "IncludeCredit" : {
+          "type" : "boolean"
+        },
+        "IncludeRecurring" : {
+          "type" : "boolean"
+        },
+        "UseAmortized" : {
+          "type" : "boolean"
+        },
+        "IncludeRefund" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "TagValues" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Key" : {
+          "type" : "string"
+        },
+        "MatchOptions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ResourceTag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Key" ]
+    },
+    "Subscriber" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Address" : {
+          "type" : "string"
+        },
+        "SubscriptionType" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "SubscriptionType", "Address" ]
+    },
+    "Expression" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Not" : {
+          "$ref" : "#/definitions/Expression"
+        },
+        "Or" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Expression"
+          }
+        },
+        "And" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/Expression"
+          }
+        },
+        "Dimensions" : {
+          "$ref" : "#/definitions/ExpressionDimensionValues"
+        },
+        "CostCategories" : {
+          "$ref" : "#/definitions/CostCategoryValues"
+        },
+        "Tags" : {
+          "$ref" : "#/definitions/TagValues"
+        }
+      }
+    },
+    "Spend" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Unit" : {
+          "type" : "string"
+        },
+        "Amount" : {
+          "type" : "number"
+        }
+      },
+      "required" : [ "Amount", "Unit" ]
+    },
+    "AutoAdjustData" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AutoAdjustType" : {
+          "type" : "string"
+        },
+        "HistoricalOptions" : {
+          "$ref" : "#/definitions/HistoricalOptions"
+        }
+      },
+      "required" : [ "AutoAdjustType" ]
+    },
+    "ExpressionDimensionValues" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Values" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Key" : {
+          "type" : "string"
+        },
+        "MatchOptions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Budget"
-  ],
-  "typeName": "AWS::Budgets::Budget"
+  "required" : [ "Budget" ],
+  "createOnlyProperties" : [ "/properties/NotificationsWithSubscribers" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

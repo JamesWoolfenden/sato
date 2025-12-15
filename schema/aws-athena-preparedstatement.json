@@ -1,87 +1,63 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/StatementName",
-    "/properties/WorkGroup"
-  ],
-  "description": "Resource schema for AWS::Athena::PreparedStatement",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "athena:CreatePreparedStatement",
-        "athena:GetPreparedStatement"
-      ]
+  "typeName" : "AWS::Athena::PreparedStatement",
+  "description" : "Resource schema for AWS::Athena::PreparedStatement",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
+  "properties" : {
+    "StatementName" : {
+      "description" : "The name of the prepared statement.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "athena:DeletePreparedStatement",
-        "athena:GetPreparedStatement"
-      ]
+    "WorkGroup" : {
+      "description" : "The name of the workgroup to which the prepared statement belongs.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "WorkGroup": {
-            "$ref": "resource-schema.json#/properties/WorkGroup"
+    "Description" : {
+      "description" : "The description of the prepared statement.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1024
+    },
+    "QueryStatement" : {
+      "description" : "The query string for the prepared statement.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 262144
+    }
+  },
+  "required" : [ "StatementName", "WorkGroup", "QueryStatement" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "athena:CreatePreparedStatement", "athena:GetPreparedStatement" ]
+    },
+    "read" : {
+      "permissions" : [ "athena:GetPreparedStatement" ]
+    },
+    "update" : {
+      "permissions" : [ "athena:UpdatePreparedStatement" ]
+    },
+    "delete" : {
+      "permissions" : [ "athena:DeletePreparedStatement", "athena:GetPreparedStatement" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "WorkGroup" : {
+            "$ref" : "resource-schema.json#/properties/WorkGroup"
           }
         },
-        "required": [
-          "WorkGroup"
-        ]
+        "required" : [ "WorkGroup" ]
       },
-      "permissions": [
-        "athena:ListPreparedStatements"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "athena:GetPreparedStatement"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "athena:UpdatePreparedStatement"
-      ]
+      "permissions" : [ "athena:ListPreparedStatements" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/StatementName",
-    "/properties/WorkGroup"
-  ],
-  "properties": {
-    "Description": {
-      "description": "The description of the prepared statement.",
-      "maxLength": 1024,
-      "minLength": 1,
-      "type": "string"
-    },
-    "QueryStatement": {
-      "description": "The query string for the prepared statement.",
-      "maxLength": 262144,
-      "minLength": 1,
-      "type": "string"
-    },
-    "StatementName": {
-      "description": "The name of the prepared statement.",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
-    },
-    "WorkGroup": {
-      "description": "The name of the workgroup to which the prepared statement belongs.",
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    }
-  },
-  "required": [
-    "StatementName",
-    "WorkGroup",
-    "QueryStatement"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-athena.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::Athena::PreparedStatement"
+  "primaryIdentifier" : [ "/properties/StatementName", "/properties/WorkGroup" ],
+  "createOnlyProperties" : [ "/properties/StatementName", "/properties/WorkGroup" ],
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  }
 }

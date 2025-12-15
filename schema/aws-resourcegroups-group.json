@@ -1,214 +1,169 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Configuration": {
-      "items": {
-        "$ref": "#/definitions/ConfigurationItem"
-      },
-      "type": "array"
-    },
-    "ConfigurationItem": {
-      "additionalProperties": false,
-      "properties": {
-        "Parameters": {
-          "items": {
-            "$ref": "#/definitions/ConfigurationParameter"
-          },
-          "type": "array"
+  "typeName" : "AWS::ResourceGroups::Group",
+  "description" : "Schema for ResourceGroups::Group",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "ResourceQuery" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "TAG_FILTERS_1_0", "CLOUDFORMATION_STACK_1_0" ]
         },
-        "Type": {
-          "type": "string"
+        "Query" : {
+          "$ref" : "#/definitions/Query"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ConfigurationParameter": {
-      "additionalProperties": false,
-      "properties": {
-        "Name": {
-          "type": "string"
+    "Query" : {
+      "type" : "object",
+      "properties" : {
+        "ResourceTypeFilters" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "StackIdentifier" : {
+          "type" : "string"
+        },
+        "TagFilters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TagFilter"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Query": {
-      "additionalProperties": false,
-      "properties": {
-        "ResourceTypeFilters": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+    "TagFilter" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "StackIdentifier": {
-          "type": "string"
-        },
-        "TagFilters": {
-          "items": {
-            "$ref": "#/definitions/TagFilter"
-          },
-          "type": "array"
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "ResourceQuery": {
-      "additionalProperties": false,
-      "properties": {
-        "Query": {
-          "$ref": "#/definitions/Query"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "^(?!aws:).+"
         },
-        "Type": {
-          "enum": [
-            "TAG_FILTERS_1_0",
-            "CLOUDFORMATION_STACK_1_0"
-          ],
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "pattern": "^(?!aws:).+",
-          "type": "string"
+    "Configuration" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ConfigurationItem"
+      }
+    },
+    "ConfigurationItem" : {
+      "type" : "object",
+      "properties" : {
+        "Type" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Parameters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConfigurationParameter"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "TagFilter": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "ConfigurationParameter" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string"
         },
-        "Values": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
+        "Values" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Schema for ResourceGroups::Group",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "resource-groups:CreateGroup",
-        "resource-groups:Tag",
-        "cloudformation:DescribeStacks",
-        "cloudformation:ListStackResources",
-        "resource-groups:ListGroupResources",
-        "resource-groups:GroupResources"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "The name of the resource group",
+      "type" : "string",
+      "maxLength" : 128
     },
-    "delete": {
-      "permissions": [
-        "resource-groups:DeleteGroup",
-        "resource-groups:UnGroupResources"
-      ]
+    "Description" : {
+      "description" : "The description of the resource group",
+      "type" : "string",
+      "maxLength" : 512
     },
-    "list": {
-      "permissions": [
-        "resource-groups:ListGroups"
-      ]
+    "ResourceQuery" : {
+      "$ref" : "#/definitions/ResourceQuery"
     },
-    "read": {
-      "permissions": [
-        "resource-groups:GetGroup",
-        "resource-groups:GetGroupQuery",
-        "resource-groups:GetTags",
-        "resource-groups:GetGroupConfiguration",
-        "resource-groups:ListGroupResources"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "update": {
-      "permissions": [
-        "resource-groups:UpdateGroup",
-        "resource-groups:GetTags",
-        "resource-groups:GetGroupQuery",
-        "resource-groups:UpdateGroupQuery",
-        "resource-groups:Tag",
-        "resource-groups:Untag",
-        "resource-groups:PutGroupConfiguration",
-        "resource-groups:GetGroupConfiguration",
-        "resource-groups:ListGroupResources",
-        "resource-groups:GroupResources",
-        "resource-groups:UnGroupResources"
-      ]
+    "Arn" : {
+      "description" : "The Resource Group ARN.",
+      "type" : "string"
+    },
+    "Configuration" : {
+      "$ref" : "#/definitions/Configuration"
+    },
+    "Resources" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The Resource Group ARN.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "resource-groups:Tag", "resource-groups:Untag", "resource-groups:GetTags" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "resource-groups:CreateGroup", "resource-groups:Tag", "cloudformation:DescribeStacks", "cloudformation:ListStackResources", "resource-groups:ListGroupResources", "resource-groups:GroupResources" ]
     },
-    "Configuration": {
-      "$ref": "#/definitions/Configuration"
+    "read" : {
+      "permissions" : [ "resource-groups:GetGroup", "resource-groups:GetGroupQuery", "resource-groups:GetTags", "resource-groups:GetGroupConfiguration", "resource-groups:ListGroupResources" ]
     },
-    "Description": {
-      "description": "The description of the resource group",
-      "maxLength": 512,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "resource-groups:UpdateGroup", "resource-groups:GetTags", "resource-groups:GetGroupQuery", "resource-groups:UpdateGroupQuery", "resource-groups:Tag", "resource-groups:Untag", "resource-groups:PutGroupConfiguration", "resource-groups:GetGroupConfiguration", "resource-groups:ListGroupResources", "resource-groups:GroupResources", "resource-groups:UnGroupResources" ]
     },
-    "Name": {
-      "description": "The name of the resource group",
-      "maxLength": 128,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "resource-groups:DeleteGroup", "resource-groups:UnGroupResources" ]
     },
-    "ResourceQuery": {
-      "$ref": "#/definitions/ResourceQuery"
-    },
-    "Resources": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "list" : {
+      "permissions" : [ "resource-groups:ListGroups" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "resource-groups:Tag",
-      "resource-groups:Untag",
-      "resource-groups:GetTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::ResourceGroups::Group"
+  }
 }

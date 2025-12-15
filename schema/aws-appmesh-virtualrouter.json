@@ -1,118 +1,94 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/MeshName",
-    "/properties/VirtualRouterName",
-    "/properties/MeshOwner"
-  ],
-  "definitions": {
-    "PortMapping": {
-      "additionalProperties": false,
-      "properties": {
-        "Port": {
-          "type": "integer"
-        },
-        "Protocol": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Port",
-        "Protocol"
-      ],
-      "type": "object"
+  "typeName" : "AWS::AppMesh::VirtualRouter",
+  "description" : "Resource Type definition for AWS::AppMesh::VirtualRouter",
+  "additionalProperties" : false,
+  "properties" : {
+    "Uid" : {
+      "type" : "string"
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
-        },
-        "Value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "MeshName" : {
+      "type" : "string"
     },
-    "VirtualRouterListener": {
-      "additionalProperties": false,
-      "properties": {
-        "PortMapping": {
-          "$ref": "#/definitions/PortMapping"
-        }
-      },
-      "required": [
-        "PortMapping"
-      ],
-      "type": "object"
+    "VirtualRouterName" : {
+      "type" : "string"
     },
-    "VirtualRouterSpec": {
-      "additionalProperties": false,
-      "properties": {
-        "Listeners": {
-          "items": {
-            "$ref": "#/definitions/VirtualRouterListener"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "Listeners"
-      ],
-      "type": "object"
+    "MeshOwner" : {
+      "type" : "string"
+    },
+    "ResourceOwner" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "Arn" : {
+      "type" : "string"
+    },
+    "Spec" : {
+      "$ref" : "#/definitions/VirtualRouterSpec"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::AppMesh::VirtualRouter",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "MeshName": {
-      "type": "string"
-    },
-    "MeshOwner": {
-      "type": "string"
-    },
-    "ResourceOwner": {
-      "type": "string"
-    },
-    "Spec": {
-      "$ref": "#/definitions/VirtualRouterSpec"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
+  "definitions" : {
+    "VirtualRouterSpec" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Listeners" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/VirtualRouterListener"
+          }
+        }
       },
-      "type": "array",
-      "uniqueItems": false
+      "required" : [ "Listeners" ]
     },
-    "Uid": {
-      "type": "string"
+    "VirtualRouterListener" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PortMapping" : {
+          "$ref" : "#/definitions/PortMapping"
+        }
+      },
+      "required" : [ "PortMapping" ]
     },
-    "VirtualRouterName": {
-      "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
+    },
+    "PortMapping" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Protocol" : {
+          "type" : "string"
+        },
+        "Port" : {
+          "type" : "integer"
+        }
+      },
+      "required" : [ "Port", "Protocol" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id",
-    "/properties/ResourceOwner",
-    "/properties/Arn",
-    "/properties/Uid"
-  ],
-  "required": [
-    "MeshName",
-    "Spec"
-  ],
-  "typeName": "AWS::AppMesh::VirtualRouter"
+  "required" : [ "MeshName", "Spec" ],
+  "createOnlyProperties" : [ "/properties/MeshName", "/properties/VirtualRouterName", "/properties/MeshOwner" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id", "/properties/ResourceOwner", "/properties/Arn", "/properties/Uid" ]
 }

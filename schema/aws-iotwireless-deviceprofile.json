@@ -1,207 +1,180 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/LoRaWAN"
-  ],
-  "definitions": {
-    "FactoryPresetFreq": {
-      "maximum": 16700000,
-      "minimum": 1000000,
-      "type": "integer"
+  "typeName" : "AWS::IoTWireless::DeviceProfile",
+  "description" : "Device Profile's resource schema demonstrating some basic constructs and validation rules.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "LoRaWANDeviceProfile" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SupportsClassB" : {
+          "type" : "boolean"
+        },
+        "ClassBTimeout" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 1000
+        },
+        "PingSlotPeriod" : {
+          "type" : "integer",
+          "minimum" : 128,
+          "maximum" : 4096
+        },
+        "PingSlotDr" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 15
+        },
+        "PingSlotFreq" : {
+          "type" : "integer",
+          "minimum" : 1000000,
+          "maximum" : 16700000
+        },
+        "SupportsClassC" : {
+          "type" : "boolean"
+        },
+        "ClassCTimeout" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 1000
+        },
+        "MacVersion" : {
+          "type" : "string",
+          "maxLength" : 64
+        },
+        "RegParamsRevision" : {
+          "type" : "string",
+          "maxLength" : 64
+        },
+        "RxDelay1" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 15
+        },
+        "RxDrOffset1" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 7
+        },
+        "RxFreq2" : {
+          "type" : "integer",
+          "minimum" : 1000000,
+          "maximum" : 16700000
+        },
+        "RxDataRate2" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 15
+        },
+        "FactoryPresetFreqsList" : {
+          "type" : "array",
+          "maxItems" : 20,
+          "items" : {
+            "$ref" : "#/definitions/FactoryPresetFreq"
+          }
+        },
+        "MaxEirp" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 15
+        },
+        "MaxDutyCycle" : {
+          "type" : "integer",
+          "minimum" : 0,
+          "maximum" : 100
+        },
+        "SupportsJoin" : {
+          "type" : "boolean"
+        },
+        "RfRegion" : {
+          "type" : "string",
+          "maxLength" : 64
+        },
+        "Supports32BitFCnt" : {
+          "type" : "boolean"
+        }
+      }
     },
-    "LoRaWANDeviceProfile": {
-      "additionalProperties": false,
-      "properties": {
-        "ClassBTimeout": {
-          "maximum": 1000,
-          "minimum": 0,
-          "type": "integer"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "ClassCTimeout": {
-          "maximum": 1000,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "FactoryPresetFreqsList": {
-          "items": {
-            "$ref": "#/definitions/FactoryPresetFreq"
-          },
-          "maxItems": 20,
-          "type": "array"
-        },
-        "MacVersion": {
-          "maxLength": 64,
-          "type": "string"
-        },
-        "MaxDutyCycle": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "MaxEirp": {
-          "maximum": 15,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "PingSlotDr": {
-          "maximum": 15,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "PingSlotFreq": {
-          "maximum": 16700000,
-          "minimum": 1000000,
-          "type": "integer"
-        },
-        "PingSlotPeriod": {
-          "maximum": 4096,
-          "minimum": 128,
-          "type": "integer"
-        },
-        "RegParamsRevision": {
-          "maxLength": 64,
-          "type": "string"
-        },
-        "RfRegion": {
-          "maxLength": 64,
-          "type": "string"
-        },
-        "RxDataRate2": {
-          "maximum": 15,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "RxDelay1": {
-          "maximum": 15,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "RxDrOffset1": {
-          "maximum": 7,
-          "minimum": 0,
-          "type": "integer"
-        },
-        "RxFreq2": {
-          "maximum": 16700000,
-          "minimum": 1000000,
-          "type": "integer"
-        },
-        "Supports32BitFCnt": {
-          "type": "boolean"
-        },
-        "SupportsClassB": {
-          "type": "boolean"
-        },
-        "SupportsClassC": {
-          "type": "boolean"
-        },
-        "SupportsJoin": {
-          "type": "boolean"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "FactoryPresetFreq" : {
+      "type" : "integer",
+      "minimum" : 1000000,
+      "maximum" : 16700000
     }
   },
-  "description": "Device Profile's resource schema demonstrating some basic constructs and validation rules.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotwireless:CreateDeviceProfile",
-        "iotwireless:TagResource"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of service profile",
+      "type" : "string",
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "iotwireless:DeleteDeviceProfile"
-      ]
+    "LoRaWAN" : {
+      "description" : "LoRaWANDeviceProfile supports all LoRa specific attributes for service profile for CreateDeviceProfile operation",
+      "$ref" : "#/definitions/LoRaWANDeviceProfile"
     },
-    "list": {
-      "permissions": [
-        "iotwireless:ListDeviceProfiles",
-        "iotwireless:ListTagsForResource"
-      ]
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the device profile.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "maxItems" : 200,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     },
-    "read": {
-      "permissions": [
-        "iotwireless:GetDeviceProfile",
-        "iotwireless:ListTagsForResource"
-      ]
+    "Arn" : {
+      "description" : "Service profile Arn. Returned after successful create.",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iotwireless:GetDeviceProfile",
-        "iotwireless:TagResource",
-        "iotwireless:UntagResource"
-      ]
+    "Id" : {
+      "description" : "Service profile Id. Returned after successful create.",
+      "type" : "string",
+      "maxLength" : 256
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "Service profile Arn. Returned after successful create.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/LoRaWAN" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotwireless:TagResource", "iotwireless:UntagResource", "iotwireless:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotwireless:CreateDeviceProfile", "iotwireless:TagResource" ]
     },
-    "Id": {
-      "description": "Service profile Id. Returned after successful create.",
-      "maxLength": 256,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iotwireless:GetDeviceProfile", "iotwireless:TagResource", "iotwireless:UntagResource" ]
     },
-    "LoRaWAN": {
-      "$ref": "#/definitions/LoRaWANDeviceProfile",
-      "description": "LoRaWANDeviceProfile supports all LoRa specific attributes for service profile for CreateDeviceProfile operation"
+    "read" : {
+      "permissions" : [ "iotwireless:GetDeviceProfile", "iotwireless:ListTagsForResource" ]
     },
-    "Name": {
-      "description": "Name of service profile",
-      "maxLength": 256,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotwireless:DeleteDeviceProfile" ]
     },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the device profile.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iotwireless:ListDeviceProfiles", "iotwireless:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id"
-  ],
-  "required": [],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotwireless:TagResource",
-      "iotwireless:UntagResource",
-      "iotwireless:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTWireless::DeviceProfile"
+  }
 }

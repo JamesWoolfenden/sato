@@ -1,181 +1,141 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "LoRaWAN": {
-      "additionalProperties": false,
-      "properties": {
-        "RfRegion": {
-          "description": "FUOTA task LoRaWAN RF region",
-          "maxLength": 64,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::IoTWireless::FuotaTask",
+  "description" : "Create and manage FUOTA tasks.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotwireless:TagResource", "iotwireless:UntagResource", "iotwireless:ListTagsForResource" ]
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "StartTime": {
-          "description": "FUOTA task LoRaWAN start time",
-          "maxLength": 64,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "RfRegion"
-      ],
-      "type": "object"
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "LoRaWAN" : {
+      "type" : "object",
+      "properties" : {
+        "StartTime" : {
+          "description" : "FUOTA task LoRaWAN start time",
+          "type" : "string",
+          "maxLength" : 64
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "RfRegion" : {
+          "description" : "FUOTA task LoRaWAN RF region",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 64
         }
       },
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "RfRegion" ]
     }
   },
-  "description": "Create and manage FUOTA tasks.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotwireless:CreateFuotaTask",
-        "iotwireless:TagResource",
-        "iam:GetRole",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "Name" : {
+      "description" : "Name of FUOTA task",
+      "type" : "string",
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "iotwireless:DeleteFuotaTask"
-      ]
+    "Description" : {
+      "description" : "FUOTA task description",
+      "type" : "string",
+      "maxLength" : 2048
     },
-    "list": {
-      "permissions": [
-        "iotwireless:ListFuotaTasks",
-        "iotwireless:ListTagsForResource"
-      ]
+    "LoRaWAN" : {
+      "description" : "FUOTA task LoRaWAN",
+      "$ref" : "#/definitions/LoRaWAN"
     },
-    "read": {
-      "permissions": [
-        "iotwireless:GetFuotaTask",
-        "iotwireless:ListTagsForResource"
-      ]
+    "FirmwareUpdateImage" : {
+      "description" : "FUOTA task firmware update image binary S3 link",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
     },
-    "update": {
-      "permissions": [
-        "iam:PassRole",
-        "iotwireless:UpdateFuotaTask",
-        "iotwireless:GetFuotaTask",
-        "iotwireless:TagResource",
-        "iotwireless:UntagResource",
-        "iotwireless:AssociateMulticastGroupWithFuotaTask",
-        "iotwireless:DisassociateMulticastGroupFromFuotaTask",
-        "iotwireless:AssociateWirelessDeviceWithFuotaTask",
-        "iotwireless:DisassociateWirelessDeviceFromFuotaTask"
-      ]
+    "FirmwareUpdateRole" : {
+      "description" : "FUOTA task firmware IAM role for reading S3",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "Arn" : {
+      "description" : "FUOTA task arn. Returned after successful create.",
+      "type" : "string"
+    },
+    "Id" : {
+      "description" : "FUOTA task id. Returned after successful create.",
+      "type" : "string",
+      "maxLength" : 256
+    },
+    "Tags" : {
+      "description" : "A list of key-value pairs that contain metadata for the FUOTA task.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "maxItems" : 200,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "FuotaTaskStatus" : {
+      "description" : "FUOTA task status. Returned after successful read.",
+      "type" : "string"
+    },
+    "AssociateWirelessDevice" : {
+      "description" : "Wireless device to associate. Only for update request.",
+      "type" : "string",
+      "maxLength" : 256
+    },
+    "DisassociateWirelessDevice" : {
+      "description" : "Wireless device to disassociate. Only for update request.",
+      "type" : "string",
+      "maxLength" : 256
+    },
+    "AssociateMulticastGroup" : {
+      "description" : "Multicast group to associate. Only for update request.",
+      "type" : "string",
+      "maxLength" : 256
+    },
+    "DisassociateMulticastGroup" : {
+      "description" : "Multicast group to disassociate. Only for update request.",
+      "type" : "string",
+      "maxLength" : 256
     }
   },
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "FUOTA task arn. Returned after successful create.",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "LoRaWAN", "FirmwareUpdateImage", "FirmwareUpdateRole" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Id", "/properties/FuotaTaskStatus", "/properties/LoRaWAN/StartTime" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotwireless:CreateFuotaTask", "iotwireless:TagResource", "iam:GetRole", "iam:PassRole" ]
     },
-    "AssociateMulticastGroup": {
-      "description": "Multicast group to associate. Only for update request.",
-      "maxLength": 256,
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iotwireless:GetFuotaTask", "iotwireless:ListTagsForResource" ]
     },
-    "AssociateWirelessDevice": {
-      "description": "Wireless device to associate. Only for update request.",
-      "maxLength": 256,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iam:PassRole", "iotwireless:UpdateFuotaTask", "iotwireless:GetFuotaTask", "iotwireless:TagResource", "iotwireless:UntagResource", "iotwireless:AssociateMulticastGroupWithFuotaTask", "iotwireless:DisassociateMulticastGroupFromFuotaTask", "iotwireless:AssociateWirelessDeviceWithFuotaTask", "iotwireless:DisassociateWirelessDeviceFromFuotaTask" ]
     },
-    "Description": {
-      "description": "FUOTA task description",
-      "maxLength": 2048,
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotwireless:DeleteFuotaTask" ]
     },
-    "DisassociateMulticastGroup": {
-      "description": "Multicast group to disassociate. Only for update request.",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "DisassociateWirelessDevice": {
-      "description": "Wireless device to disassociate. Only for update request.",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "FirmwareUpdateImage": {
-      "description": "FUOTA task firmware update image binary S3 link",
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "FirmwareUpdateRole": {
-      "description": "FUOTA task firmware IAM role for reading S3",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
-    },
-    "FuotaTaskStatus": {
-      "description": "FUOTA task status. Returned after successful read.",
-      "type": "string"
-    },
-    "Id": {
-      "description": "FUOTA task id. Returned after successful create.",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "LoRaWAN": {
-      "$ref": "#/definitions/LoRaWAN",
-      "description": "FUOTA task LoRaWAN"
-    },
-    "Name": {
-      "description": "Name of FUOTA task",
-      "maxLength": 256,
-      "type": "string"
-    },
-    "Tags": {
-      "description": "A list of key-value pairs that contain metadata for the FUOTA task.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iotwireless:ListFuotaTasks", "iotwireless:ListTagsForResource" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Id",
-    "/properties/FuotaTaskStatus",
-    "/properties/LoRaWAN/StartTime"
-  ],
-  "required": [
-    "LoRaWAN",
-    "FirmwareUpdateImage",
-    "FirmwareUpdateRole"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotwireless:TagResource",
-      "iotwireless:UntagResource",
-      "iotwireless:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTWireless::FuotaTask"
+  }
 }

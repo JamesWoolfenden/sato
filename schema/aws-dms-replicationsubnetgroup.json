@@ -1,61 +1,49 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ReplicationSubnetGroupIdentifier"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::DMS::ReplicationSubnetGroup",
+  "description" : "Resource Type definition for AWS::DMS::ReplicationSubnetGroup",
+  "additionalProperties" : false,
+  "properties" : {
+    "ReplicationSubnetGroupDescription" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "ReplicationSubnetGroupIdentifier" : {
+      "type" : "string"
+    },
+    "SubnetIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::DMS::ReplicationSubnetGroup",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "Id": {
-      "type": "string"
-    },
-    "ReplicationSubnetGroupDescription": {
-      "type": "string"
-    },
-    "ReplicationSubnetGroupIdentifier": {
-      "type": "string"
-    },
-    "SubnetIds": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "ReplicationSubnetGroupDescription",
-    "SubnetIds"
-  ],
-  "typeName": "AWS::DMS::ReplicationSubnetGroup"
+  "required" : [ "ReplicationSubnetGroupDescription", "SubnetIds" ],
+  "createOnlyProperties" : [ "/properties/ReplicationSubnetGroupIdentifier" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

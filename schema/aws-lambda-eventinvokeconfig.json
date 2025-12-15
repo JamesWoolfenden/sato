@@ -1,137 +1,112 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/FunctionName",
-    "/properties/Qualifier"
-  ],
-  "definitions": {
-    "DestinationConfig": {
-      "additionalProperties": false,
-      "description": "A destination for events after they have been sent to a function for processing.",
-      "properties": {
-        "OnFailure": {
-          "$ref": "#/definitions/OnFailure"
+  "typeName" : "AWS::Lambda::EventInvokeConfig",
+  "description" : "The AWS::Lambda::EventInvokeConfig resource configures options for asynchronous invocation on a version or an alias.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "DestinationConfig" : {
+      "description" : "A destination for events after they have been sent to a function for processing.",
+      "type" : "object",
+      "properties" : {
+        "OnFailure" : {
+          "$ref" : "#/definitions/OnFailure"
         },
-        "OnSuccess": {
-          "$ref": "#/definitions/OnSuccess"
+        "OnSuccess" : {
+          "$ref" : "#/definitions/OnSuccess"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "OnFailure": {
-      "additionalProperties": false,
-      "description": "The destination configuration for failed invocations.",
-      "properties": {
-        "Destination": {
-          "description": "The Amazon Resource Name (ARN) of the destination resource.",
-          "maxLength": 350,
-          "minLength": 0,
-          "pattern": "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]+(-[a-z]+)+-\\d{1})?:(\\d{12})?:(.*)",
-          "type": "string"
+    "OnFailure" : {
+      "description" : "The destination configuration for failed invocations.",
+      "type" : "object",
+      "properties" : {
+        "Destination" : {
+          "description" : "The Amazon Resource Name (ARN) of the destination resource.",
+          "type" : "string",
+          "pattern" : "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]+(-[a-z]+)+-\\d{1})?:(\\d{12})?:(.*)",
+          "minLength" : 0,
+          "maxLength" : 350
         }
       },
-      "required": [
-        "Destination"
-      ],
-      "type": "object"
+      "required" : [ "Destination" ],
+      "additionalProperties" : false
     },
-    "OnSuccess": {
-      "additionalProperties": false,
-      "description": "The destination configuration for successful invocations.",
-      "properties": {
-        "Destination": {
-          "description": "The Amazon Resource Name (ARN) of the destination resource.",
-          "maxLength": 350,
-          "minLength": 0,
-          "pattern": "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]+(-[a-z]+)+-\\d{1})?:(\\d{12})?:(.*)",
-          "type": "string"
+    "OnSuccess" : {
+      "description" : "The destination configuration for successful invocations.",
+      "type" : "object",
+      "properties" : {
+        "Destination" : {
+          "description" : "The Amazon Resource Name (ARN) of the destination resource.",
+          "type" : "string",
+          "pattern" : "^$|arn:(aws[a-zA-Z0-9-]*):([a-zA-Z0-9\\-])+:([a-z]+(-[a-z]+)+-\\d{1})?:(\\d{12})?:(.*)",
+          "minLength" : 0,
+          "maxLength" : 350
         }
       },
-      "required": [
-        "Destination"
-      ],
-      "type": "object"
+      "required" : [ "Destination" ],
+      "additionalProperties" : false
     }
   },
-  "description": "The AWS::Lambda::EventInvokeConfig resource configures options for asynchronous invocation on a version or an alias.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "lambda:PutFunctionEventInvokeConfig"
-      ]
+  "properties" : {
+    "DestinationConfig" : {
+      "$ref" : "#/definitions/DestinationConfig"
     },
-    "delete": {
-      "permissions": [
-        "lambda:DeleteFunctionEventInvokeConfig"
-      ]
+    "FunctionName" : {
+      "description" : "The name of the Lambda function.",
+      "type" : "string",
+      "pattern" : "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]+(-[a-z]+)+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST(\\.PUBLISHED)?|[a-zA-Z0-9-_]+))?$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "FunctionName": {
-            "$ref": "resource-schema.json#/properties/FunctionName"
+    "MaximumEventAgeInSeconds" : {
+      "description" : "The maximum age of a request that Lambda sends to a function for processing.",
+      "type" : "integer",
+      "minimum" : 60,
+      "maximum" : 21600
+    },
+    "MaximumRetryAttempts" : {
+      "description" : "The maximum number of times to retry when the function returns an error.",
+      "type" : "integer",
+      "minimum" : 0,
+      "maximum" : 2
+    },
+    "Qualifier" : {
+      "description" : "The identifier of a version or alias.",
+      "type" : "string",
+      "pattern" : "^\\$(LATEST(\\.PUBLISHED)?)|[a-zA-Z0-9$_-]{1,129}$"
+    }
+  },
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "FunctionName", "Qualifier" ],
+  "primaryIdentifier" : [ "/properties/FunctionName", "/properties/Qualifier" ],
+  "createOnlyProperties" : [ "/properties/FunctionName", "/properties/Qualifier" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "lambda:PutFunctionEventInvokeConfig" ]
+    },
+    "read" : {
+      "permissions" : [ "lambda:GetFunctionEventInvokeConfig" ]
+    },
+    "update" : {
+      "permissions" : [ "lambda:UpdateFunctionEventInvokeConfig" ]
+    },
+    "delete" : {
+      "permissions" : [ "lambda:DeleteFunctionEventInvokeConfig" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "FunctionName" : {
+            "$ref" : "resource-schema.json#/properties/FunctionName"
           }
         },
-        "required": [
-          "FunctionName"
-        ]
+        "required" : [ "FunctionName" ]
       },
-      "permissions": [
-        "lambda:ListFunctionEventInvokeConfigs"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "lambda:GetFunctionEventInvokeConfig"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "lambda:UpdateFunctionEventInvokeConfig"
-      ]
+      "permissions" : [ "lambda:ListFunctionEventInvokeConfigs" ]
     }
-  },
-  "primaryIdentifier": [
-    "/properties/FunctionName",
-    "/properties/Qualifier"
-  ],
-  "properties": {
-    "DestinationConfig": {
-      "$ref": "#/definitions/DestinationConfig"
-    },
-    "FunctionName": {
-      "description": "The name of the Lambda function.",
-      "pattern": "^(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]+(-[a-z]+)+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST(\\.PUBLISHED)?|[a-zA-Z0-9-_]+))?$",
-      "type": "string"
-    },
-    "MaximumEventAgeInSeconds": {
-      "description": "The maximum age of a request that Lambda sends to a function for processing.",
-      "maximum": 21600,
-      "minimum": 60,
-      "type": "integer"
-    },
-    "MaximumRetryAttempts": {
-      "description": "The maximum number of times to retry when the function returns an error.",
-      "maximum": 2,
-      "minimum": 0,
-      "type": "integer"
-    },
-    "Qualifier": {
-      "description": "The identifier of a version or alias.",
-      "pattern": "^\\$(LATEST(\\.PUBLISHED)?)|[a-zA-Z0-9$_-]{1,129}$",
-      "type": "string"
-    }
-  },
-  "required": [
-    "FunctionName",
-    "Qualifier"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Lambda::EventInvokeConfig"
+  }
 }

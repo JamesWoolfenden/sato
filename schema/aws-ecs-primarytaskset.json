@@ -1,59 +1,43 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Cluster",
-    "/properties/Service"
-  ],
-  "description": "A pseudo-resource that manages which of your ECS task sets is primary.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ecs:DescribeTaskSets",
-        "ecs:UpdateServicePrimaryTaskSet"
-      ]
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecs.git",
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "handlers" : {
+    "read" : {
+      "permissions" : [ ]
     },
-    "delete": {
-      "permissions": []
+    "create" : {
+      "permissions" : [ "ecs:DescribeTaskSets", "ecs:UpdateServicePrimaryTaskSet" ]
     },
-    "read": {
-      "permissions": []
+    "update" : {
+      "permissions" : [ "ecs:DescribeTaskSets", "ecs:UpdateServicePrimaryTaskSet" ]
     },
-    "update": {
-      "permissions": [
-        "ecs:DescribeTaskSets",
-        "ecs:UpdateServicePrimaryTaskSet"
-      ]
+    "delete" : {
+      "permissions" : [ ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/Cluster",
-    "/properties/Service"
-  ],
-  "properties": {
-    "Cluster": {
-      "description": "The short name or full Amazon Resource Name (ARN) of the cluster that hosts the service to create the task set in.",
-      "type": "string"
+  "typeName" : "AWS::ECS::PrimaryTaskSet",
+  "description" : "A pseudo-resource that manages which of your ECS task sets is primary.",
+  "createOnlyProperties" : [ "/properties/Cluster", "/properties/Service" ],
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/Cluster", "/properties/Service" ],
+  "properties" : {
+    "TaskSetId" : {
+      "description" : "The ID or full Amazon Resource Name (ARN) of the task set.",
+      "type" : "string"
     },
-    "Service": {
-      "description": "The short name or full Amazon Resource Name (ARN) of the service to create the task set in.",
-      "type": "string"
+    "Cluster" : {
+      "description" : "The short name or full Amazon Resource Name (ARN) of the cluster that hosts the service to create the task set in.",
+      "type" : "string"
     },
-    "TaskSetId": {
-      "description": "The ID or full Amazon Resource Name (ARN) of the task set.",
-      "type": "string"
+    "Service" : {
+      "description" : "The short name or full Amazon Resource Name (ARN) of the service to create the task set in.",
+      "type" : "string"
     }
   },
-  "required": [
-    "Cluster",
-    "Service",
-    "TaskSetId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ecs.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::ECS::PrimaryTaskSet"
+  "required" : [ "Cluster", "Service", "TaskSetId" ]
 }

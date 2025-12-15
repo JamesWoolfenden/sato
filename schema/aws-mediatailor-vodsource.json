@@ -1,152 +1,109 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/SourceLocationName",
-    "/properties/VodSourceName"
-  ],
-  "definitions": {
-    "HttpPackageConfiguration": {
-      "additionalProperties": false,
-      "description": "<p>The HTTP package configuration properties for the requested VOD source.</p>",
-      "properties": {
-        "Path": {
-          "description": "<p>The relative path to the URL for this VOD source. This is combined with <code>SourceLocation::HttpConfiguration::BaseUrl</code> to form a valid URL.</p>",
-          "type": "string"
+  "typeName" : "AWS::MediaTailor::VodSource",
+  "description" : "Definition of AWS::MediaTailor::VodSource Resource Type",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor",
+  "definitions" : {
+    "HttpPackageConfiguration" : {
+      "type" : "object",
+      "description" : "<p>The HTTP package configuration properties for the requested VOD source.</p>",
+      "properties" : {
+        "Path" : {
+          "type" : "string",
+          "description" : "<p>The relative path to the URL for this VOD source. This is combined with <code>SourceLocation::HttpConfiguration::BaseUrl</code> to form a valid URL.</p>"
         },
-        "SourceGroup": {
-          "description": "<p>The name of the source group. This has to match one of the <code>Channel::Outputs::SourceGroup</code>.</p>",
-          "type": "string"
+        "SourceGroup" : {
+          "type" : "string",
+          "description" : "<p>The name of the source group. This has to match one of the <code>Channel::Outputs::SourceGroup</code>.</p>"
         },
-        "Type": {
-          "$ref": "#/definitions/Type"
+        "Type" : {
+          "$ref" : "#/definitions/Type"
         }
       },
-      "required": [
-        "Path",
-        "SourceGroup",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Path", "SourceGroup", "Type" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "Type" : {
+      "type" : "string",
+      "enum" : [ "DASH", "HLS" ]
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
-    },
-    "Type": {
-      "enum": [
-        "DASH",
-        "HLS"
-      ],
-      "type": "string"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Definition of AWS::MediaTailor::VodSource Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mediatailor:CreateVodSource",
-        "mediatailor:DescribeVodSource",
-        "mediatailor:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "description" : "<p>The ARN of the VOD source.</p>"
     },
-    "delete": {
-      "permissions": [
-        "mediatailor:DeleteVodSource",
-        "mediatailor:DescribeVodSource"
-      ]
+    "HttpPackageConfigurations" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/HttpPackageConfiguration"
+      },
+      "description" : "<p>A list of HTTP package configuration parameters for this VOD source.</p>"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "SourceLocationName": {
-            "$ref": "resource-schema.json#/properties/SourceLocationName"
+    "SourceLocationName" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "The tags to assign to the VOD source.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "VodSourceName" : {
+      "type" : "string"
+    }
+  },
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "mediatailor:TagResource", "mediatailor:UntagResource" ]
+  },
+  "required" : [ "HttpPackageConfigurations", "SourceLocationName", "VodSourceName" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/SourceLocationName", "/properties/VodSourceName" ],
+  "primaryIdentifier" : [ "/properties/SourceLocationName", "/properties/VodSourceName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mediatailor:CreateVodSource", "mediatailor:DescribeVodSource", "mediatailor:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "mediatailor:DescribeVodSource" ]
+    },
+    "update" : {
+      "permissions" : [ "mediatailor:DescribeVodSource", "mediatailor:TagResource", "mediatailor:UntagResource", "mediatailor:UpdateVodSource" ]
+    },
+    "delete" : {
+      "permissions" : [ "mediatailor:DeleteVodSource", "mediatailor:DescribeVodSource" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "SourceLocationName" : {
+            "$ref" : "resource-schema.json#/properties/SourceLocationName"
           }
         },
-        "required": [
-          "SourceLocationName"
-        ]
+        "required" : [ "SourceLocationName" ]
       },
-      "permissions": [
-        "mediatailor:ListVodSources"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "mediatailor:DescribeVodSource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "mediatailor:DescribeVodSource",
-        "mediatailor:TagResource",
-        "mediatailor:UntagResource",
-        "mediatailor:UpdateVodSource"
-      ]
+      "permissions" : [ "mediatailor:ListVodSources" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/SourceLocationName",
-    "/properties/VodSourceName"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "<p>The ARN of the VOD source.</p>",
-      "type": "string"
-    },
-    "HttpPackageConfigurations": {
-      "description": "<p>A list of HTTP package configuration parameters for this VOD source.</p>",
-      "items": {
-        "$ref": "#/definitions/HttpPackageConfiguration"
-      },
-      "type": "array"
-    },
-    "SourceLocationName": {
-      "type": "string"
-    },
-    "Tags": {
-      "description": "The tags to assign to the VOD source.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "VodSourceName": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "HttpPackageConfigurations",
-    "SourceLocationName",
-    "VodSourceName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediatailor",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "mediatailor:TagResource",
-      "mediatailor:UntagResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::MediaTailor::VodSource"
+  "additionalProperties" : false
 }

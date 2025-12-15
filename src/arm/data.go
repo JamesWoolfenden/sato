@@ -19,7 +19,7 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 
 	tmpl, err := tftemplate.New("test").Funcs(funcMap).Parse(string(dataFile))
 	if err != nil {
-		return &templateNewError{err: err}
+		return &templateNewError{Err: err}
 	}
 
 	err = tmpl.Execute(&output, m{
@@ -27,12 +27,12 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 	})
 
 	if err != nil {
-		return &templateExecuteError{err: err}
+		return &templateExecuteError{Err: err}
 	}
 
 	err = cf.Write(output.String(), destination, "data")
 	if err != nil {
-		return &writeFileError{destination: destination, err: err}
+		return &writeFileError{Destination: destination, Err: err}
 	}
 
 	return nil

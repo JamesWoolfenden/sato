@@ -1,250 +1,193 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/ServerId",
-      "/properties/UserName"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ServerId",
-    "/properties/UserName"
-  ],
-  "definitions": {
-    "HomeDirectoryMapEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "Entry": {
-          "maxLength": 1024,
-          "minLength": 0,
-          "pattern": "^/.*$",
-          "type": "string"
+  "typeName" : "AWS::Transfer::User",
+  "description" : "Definition of AWS::Transfer::User Resource Type",
+  "definitions" : {
+    "HomeDirectoryMapEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Entry" : {
+          "type" : "string",
+          "maxLength" : 1024,
+          "minLength" : 0,
+          "pattern" : "^/.*$"
         },
-        "Target": {
-          "maxLength": 1024,
-          "minLength": 0,
-          "pattern": "^/.*$",
-          "type": "string"
+        "Target" : {
+          "type" : "string",
+          "maxLength" : 1024,
+          "minLength" : 0,
+          "pattern" : "^/.*$"
         },
-        "Type": {
-          "$ref": "#/definitions/MapType"
+        "Type" : {
+          "$ref" : "#/definitions/MapType"
         }
       },
-      "required": [
-        "Entry",
-        "Target"
-      ],
-      "type": "object"
+      "required" : [ "Entry", "Target" ],
+      "additionalProperties" : false
     },
-    "HomeDirectoryType": {
-      "enum": [
-        "PATH",
-        "LOGICAL"
-      ],
-      "type": "string"
+    "HomeDirectoryType" : {
+      "type" : "string",
+      "enum" : [ "PATH", "LOGICAL" ]
     },
-    "MapType": {
-      "enum": [
-        "FILE",
-        "DIRECTORY"
-      ],
-      "type": "string"
+    "MapType" : {
+      "type" : "string",
+      "enum" : [ "FILE", "DIRECTORY" ]
     },
-    "PosixProfile": {
-      "additionalProperties": false,
-      "properties": {
-        "Gid": {
-          "maximum": 4294967295,
-          "minimum": 0,
-          "type": "number"
+    "PosixProfile" : {
+      "type" : "object",
+      "properties" : {
+        "Uid" : {
+          "type" : "number",
+          "maximum" : 4294967295,
+          "minimum" : 0
         },
-        "SecondaryGids": {
-          "insertionOrder": false,
-          "items": {
-            "maximum": 4294967295,
-            "minimum": 0,
-            "type": "number"
+        "Gid" : {
+          "type" : "number",
+          "maximum" : 4294967295,
+          "minimum" : 0
+        },
+        "SecondaryGids" : {
+          "type" : "array",
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "number",
+            "maximum" : 4294967295,
+            "minimum" : 0
           },
-          "maxItems": 16,
-          "minItems": 0,
-          "type": "array"
-        },
-        "Uid": {
-          "maximum": 4294967295,
-          "minimum": 0,
-          "type": "number"
+          "maxItems" : 16,
+          "minItems" : 0
         }
       },
-      "required": [
-        "Gid",
-        "Uid"
-      ],
-      "type": "object"
+      "required" : [ "Gid", "Uid" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 0,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 0
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::Transfer::User Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:PassRole",
-        "transfer:CreateUser",
-        "transfer:DescribeUser",
-        "transfer:ImportSshPublicKey",
-        "transfer:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 1600,
+      "minLength" : 20,
+      "pattern" : "^arn:\\S+$"
     },
-    "delete": {
-      "permissions": [
-        "transfer:DeleteUser"
-      ]
+    "HomeDirectory" : {
+      "type" : "string",
+      "maxLength" : 1024,
+      "minLength" : 0,
+      "pattern" : "^(|/.*)$"
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "ServerId": {
-            "$ref": "resource-schema.json#/properties/ServerId"
+    "HomeDirectoryMappings" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/HomeDirectoryMapEntry"
+      },
+      "maxItems" : 50000,
+      "minItems" : 1
+    },
+    "HomeDirectoryType" : {
+      "$ref" : "#/definitions/HomeDirectoryType"
+    },
+    "Policy" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 0
+    },
+    "PosixProfile" : {
+      "$ref" : "#/definitions/PosixProfile"
+    },
+    "Role" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 20,
+      "pattern" : "^arn:.*role/\\S+$"
+    },
+    "ServerId" : {
+      "type" : "string",
+      "maxLength" : 19,
+      "minLength" : 19,
+      "pattern" : "^s-([0-9a-f]{17})$"
+    },
+    "SshPublicKeys" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "maxLength" : 2048,
+        "minLength" : 0,
+        "pattern" : "^\\s*(ssh|ecdsa)-[a-z0-9-]+[ \\t]+(([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{1,3})?(={0,3})?)(\\s*|[ \\t]+[\\S \\t]*\\s*)$"
+      },
+      "description" : "This represents the SSH User Public Keys for CloudFormation resource"
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "maxItems" : 50,
+      "minItems" : 1
+    },
+    "UserName" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 3,
+      "pattern" : "^[\\w][\\w@.-]{2,99}$"
+    }
+  },
+  "required" : [ "Role", "ServerId", "UserName" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/ServerId", "/properties/UserName" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "additionalIdentifiers" : [ [ "/properties/ServerId", "/properties/UserName" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:PassRole", "transfer:CreateUser", "transfer:DescribeUser", "transfer:ImportSshPublicKey", "transfer:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "transfer:DescribeUser" ]
+    },
+    "update" : {
+      "permissions" : [ "iam:PassRole", "transfer:DeleteSshPublicKey", "transfer:DescribeUser", "transfer:ImportSshPublicKey", "transfer:TagResource", "transfer:UnTagResource", "transfer:UpdateUser" ]
+    },
+    "delete" : {
+      "permissions" : [ "transfer:DeleteUser" ]
+    },
+    "list" : {
+      "permissions" : [ "transfer:ListUsers" ],
+      "handlerSchema" : {
+        "properties" : {
+          "ServerId" : {
+            "$ref" : "resource-schema.json#/properties/ServerId"
           }
         },
-        "required": [
-          "ServerId"
-        ]
-      },
-      "permissions": [
-        "transfer:ListUsers"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "transfer:DescribeUser"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "iam:PassRole",
-        "transfer:DeleteSshPublicKey",
-        "transfer:DescribeUser",
-        "transfer:ImportSshPublicKey",
-        "transfer:TagResource",
-        "transfer:UnTagResource",
-        "transfer:UpdateUser"
-      ]
+        "required" : [ "ServerId" ]
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 1600,
-      "minLength": 20,
-      "pattern": "^arn:\\S+$",
-      "type": "string"
-    },
-    "HomeDirectory": {
-      "maxLength": 1024,
-      "minLength": 0,
-      "pattern": "^(|/.*)$",
-      "type": "string"
-    },
-    "HomeDirectoryMappings": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/HomeDirectoryMapEntry"
-      },
-      "maxItems": 50000,
-      "minItems": 1,
-      "type": "array"
-    },
-    "HomeDirectoryType": {
-      "$ref": "#/definitions/HomeDirectoryType"
-    },
-    "Policy": {
-      "maxLength": 2048,
-      "minLength": 0,
-      "type": "string"
-    },
-    "PosixProfile": {
-      "$ref": "#/definitions/PosixProfile"
-    },
-    "Role": {
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "^arn:.*role/\\S+$",
-      "type": "string"
-    },
-    "ServerId": {
-      "maxLength": 19,
-      "minLength": 19,
-      "pattern": "^s-([0-9a-f]{17})$",
-      "type": "string"
-    },
-    "SshPublicKeys": {
-      "description": "This represents the SSH User Public Keys for CloudFormation resource",
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 2048,
-        "minLength": 0,
-        "pattern": "^\\s*(ssh|ecdsa)-[a-z0-9-]+[ \\t]+(([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{1,3})?(={0,3})?)(\\s*|[ \\t]+[\\S \\t]*\\s*)$",
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 1,
-      "type": "array"
-    },
-    "UserName": {
-      "maxLength": 100,
-      "minLength": 3,
-      "pattern": "^[\\w][\\w@.-]{2,99}$",
-      "type": "string"
-    }
+  "tagging" : {
+    "cloudFormationSystemTags" : true,
+    "permissions" : [ "transfer:TagResource", "transfer:UnTagResource", "transfer:ListTagsForResource" ],
+    "tagOnCreate" : true,
+    "tagProperty" : "/properties/Tags",
+    "tagUpdatable" : true,
+    "taggable" : true
   },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Role",
-    "ServerId",
-    "UserName"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "transfer:TagResource",
-      "transfer:UnTagResource",
-      "transfer:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Transfer::User"
+  "additionalProperties" : false,
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-transfer"
 }

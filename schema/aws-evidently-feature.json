@@ -1,213 +1,162 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/Project"
-  ],
-  "definitions": {
-    "EntityOverride": {
-      "additionalProperties": false,
-      "properties": {
-        "EntityId": {
-          "type": "string"
-        },
-        "Variation": {
-          "maxLength": 127,
-          "minLength": 1,
-          "pattern": "[-a-zA-Z0-9._]*",
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::Evidently::Feature",
+  "description" : "Resource Type definition for AWS::Evidently::Feature.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "pattern" : "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*/feature/[-a-zA-Z0-9._]*",
+      "minLength" : 0,
+      "maxLength" : 2048
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "^(?!aws:)[a-zA-Z+-=._:/]+$",
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+    "Project" : {
+      "type" : "string",
+      "pattern" : "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)",
+      "minLength" : 0,
+      "maxLength" : 2048
     },
-    "VariationObject": {
-      "additionalProperties": false,
-      "oneOf": [
-        {
-          "required": [
-            "VariationName",
-            "StringValue"
-          ]
-        },
-        {
-          "required": [
-            "VariationName",
-            "BooleanValue"
-          ]
-        },
-        {
-          "required": [
-            "VariationName",
-            "LongValue"
-          ]
-        },
-        {
-          "required": [
-            "VariationName",
-            "DoubleValue"
-          ]
-        }
-      ],
-      "properties": {
-        "BooleanValue": {
-          "type": "boolean"
-        },
-        "DoubleValue": {
-          "type": "number"
-        },
-        "LongValue": {
-          "type": "number"
-        },
-        "StringValue": {
-          "maxLength": 512,
-          "minLength": 0,
-          "type": "string"
-        },
-        "VariationName": {
-          "maxLength": 127,
-          "minLength": 1,
-          "pattern": "[-a-zA-Z0-9._]*",
-          "type": "string"
-        }
+    "Name" : {
+      "type" : "string",
+      "pattern" : "[-a-zA-Z0-9._]*",
+      "minLength" : 1,
+      "maxLength" : 127
+    },
+    "Description" : {
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 160
+    },
+    "EvaluationStrategy" : {
+      "type" : "string",
+      "enum" : [ "ALL_RULES", "DEFAULT_VARIATION" ]
+    },
+    "Variations" : {
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/VariationObject"
       },
-      "type": "object"
+      "minItems" : 1,
+      "maxItems" : 5
+    },
+    "DefaultVariation" : {
+      "type" : "string",
+      "pattern" : "[-a-zA-Z0-9._]*",
+      "minLength" : 1,
+      "maxLength" : 127
+    },
+    "EntityOverrides" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/EntityOverride"
+      },
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "minItems" : 0,
+      "maxItems" : 2500
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::Evidently::Feature.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "evidently:CreateFeature",
-        "evidently:TagResource",
-        "evidently:GetFeature"
-      ]
+  "definitions" : {
+    "VariationObject" : {
+      "type" : "object",
+      "properties" : {
+        "VariationName" : {
+          "type" : "string",
+          "pattern" : "[-a-zA-Z0-9._]*",
+          "minLength" : 1,
+          "maxLength" : 127
+        },
+        "BooleanValue" : {
+          "type" : "boolean"
+        },
+        "StringValue" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 512
+        },
+        "LongValue" : {
+          "type" : "number"
+        },
+        "DoubleValue" : {
+          "type" : "number"
+        }
+      },
+      "oneOf" : [ {
+        "required" : [ "VariationName", "StringValue" ]
+      }, {
+        "required" : [ "VariationName", "BooleanValue" ]
+      }, {
+        "required" : [ "VariationName", "LongValue" ]
+      }, {
+        "required" : [ "VariationName", "DoubleValue" ]
+      } ],
+      "additionalProperties" : false
     },
-    "delete": {
-      "permissions": [
-        "evidently:DeleteFeature",
-        "evidently:UntagResource",
-        "evidently:GetFeature"
-      ]
+    "EntityOverride" : {
+      "type" : "object",
+      "properties" : {
+        "EntityId" : {
+          "type" : "string"
+        },
+        "Variation" : {
+          "type" : "string",
+          "pattern" : "[-a-zA-Z0-9._]*",
+          "minLength" : 1,
+          "maxLength" : 127
+        }
+      },
+      "additionalProperties" : false
     },
-    "read": {
-      "permissions": [
-        "evidently:GetFeature",
-        "evidently:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "evidently:UpdateFeature",
-        "evidently:ListTagsForResource",
-        "evidently:TagResource",
-        "evidently:UntagResource",
-        "evidently:GetFeature"
-      ]
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "^(?!aws:)[a-zA-Z+-=._:/]+$",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 0,
-      "pattern": "arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*/feature/[-a-zA-Z0-9._]*",
-      "type": "string"
+  "additionalProperties" : false,
+  "required" : [ "Name", "Project", "Variations" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/Project" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "evidently:CreateFeature", "evidently:TagResource", "evidently:GetFeature" ]
     },
-    "DefaultVariation": {
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "[-a-zA-Z0-9._]*",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "evidently:GetFeature", "evidently:ListTagsForResource" ]
     },
-    "Description": {
-      "maxLength": 160,
-      "minLength": 0,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "evidently:UpdateFeature", "evidently:ListTagsForResource", "evidently:TagResource", "evidently:UntagResource", "evidently:GetFeature" ]
     },
-    "EntityOverrides": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/EntityOverride"
-      },
-      "maxItems": 2500,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "EvaluationStrategy": {
-      "enum": [
-        "ALL_RULES",
-        "DEFAULT_VARIATION"
-      ],
-      "type": "string"
-    },
-    "Name": {
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "[-a-zA-Z0-9._]*",
-      "type": "string"
-    },
-    "Project": {
-      "maxLength": 2048,
-      "minLength": 0,
-      "pattern": "([-a-zA-Z0-9._]*)|(arn:[^:]*:[^:]*:[^:]*:[^:]*:project/[-a-zA-Z0-9._]*)",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Variations": {
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/VariationObject"
-      },
-      "maxItems": 5,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
+    "delete" : {
+      "permissions" : [ "evidently:DeleteFeature", "evidently:UntagResource", "evidently:GetFeature" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name",
-    "Project",
-    "Variations"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-evidently",
-  "taggable": true,
-  "typeName": "AWS::Evidently::Feature"
+  "taggable" : true
 }

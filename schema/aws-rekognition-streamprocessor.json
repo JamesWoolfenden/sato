@@ -1,406 +1,327 @@
 {
-  "$comment": "We explicitly specify the replacement strategy to be delete_then_create because we cannot create a new SP resource with the same name or same KVS input before deleting the old one",
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/KmsKeyId",
-    "/properties/RoleArn",
-    "/properties/KinesisVideoStream",
-    "/properties/ConnectedHomeSettings",
-    "/properties/FaceSearchSettings",
-    "/properties/KinesisDataStream",
-    "/properties/S3Destination",
-    "/properties/NotificationChannel",
-    "/properties/BoundingBoxRegionsOfInterest",
-    "/properties/PolygonRegionsOfInterest",
-    "/properties/DataSharingPreference"
-  ],
-  "definitions": {
-    "Arn": {
-      "description": "The ARN of the stream processor",
-      "maxLength": 2048,
-      "type": "string"
+  "typeName" : "AWS::Rekognition::StreamProcessor",
+  "description" : "The AWS::Rekognition::StreamProcessor type is used to create an Amazon Rekognition StreamProcessor that you can use to analyze streaming videos.\n\n",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
+  "definitions" : {
+    "Arn" : {
+      "description" : "The ARN of the stream processor",
+      "type" : "string",
+      "maxLength" : 2048
     },
-    "BoundingBox": {
-      "additionalProperties": false,
-      "description": "A bounding box denoting a region of interest in the frame to be analyzed.",
-      "properties": {
-        "Height": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
+    "KinesisVideoStream" : {
+      "description" : "The Kinesis Video Stream that streams the source video.",
+      "type" : "object",
+      "properties" : {
+        "Arn" : {
+          "description" : "ARN of the Kinesis Video Stream that streams the source video.",
+          "type" : "string",
+          "maxLength" : 2048,
+          "pattern" : "(^arn:([a-z\\d-]+):kinesisvideo:([a-z\\d-]+):\\d{12}:.+$)"
+        }
+      },
+      "required" : [ "Arn" ],
+      "additionalProperties" : false
+    },
+    "S3Destination" : {
+      "description" : "The S3 location in customer's account where inference output & artifacts are stored, as part of connected home feature.",
+      "type" : "object",
+      "properties" : {
+        "BucketName" : {
+          "description" : "Name of the S3 bucket.",
+          "type" : "string",
+          "maxLength" : 63
         },
-        "Left": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
+        "ObjectKeyPrefix" : {
+          "description" : "The object key prefix path where the results will be stored. Default is no prefix path",
+          "type" : "string",
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "BucketName" ],
+      "additionalProperties" : false
+    },
+    "KinesisDataStream" : {
+      "description" : "The Amazon Kinesis Data Stream stream to which the Amazon Rekognition stream processor streams the analysis results, as part of face search feature.",
+      "type" : "object",
+      "properties" : {
+        "Arn" : {
+          "description" : "ARN of the Kinesis Data Stream stream.",
+          "type" : "string",
+          "maxLength" : 2048,
+          "pattern" : "(^arn:([a-z\\d-]+):kinesis:([a-z\\d-]+):\\d{12}:.+$)"
+        }
+      },
+      "required" : [ "Arn" ],
+      "additionalProperties" : false
+    },
+    "Labels" : {
+      "description" : "List of labels that need to be detected in the video stream. Current supported values are PERSON, PET, PACKAGE, ALL.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "minItems" : 1,
+      "items" : {
+        "type" : "string",
+        "minLength" : 1,
+        "maxLength" : 128
+      }
+    },
+    "ConnectedHomeSettings" : {
+      "description" : "Connected home settings to use on a streaming video. Note that either ConnectedHomeSettings or FaceSearchSettings should be set. Not both",
+      "type" : "object",
+      "properties" : {
+        "Labels" : {
+          "$ref" : "#/definitions/Labels"
         },
-        "Top": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
+        "MinConfidence" : {
+          "description" : "Minimum object class match confidence score that must be met to return a result for a recognized object.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
+        }
+      },
+      "required" : [ "Labels" ],
+      "additionalProperties" : false
+    },
+    "FaceSearchSettings" : {
+      "description" : "Face search settings to use on a streaming video. Note that either FaceSearchSettings or ConnectedHomeSettings should be set. Not both",
+      "type" : "object",
+      "properties" : {
+        "CollectionId" : {
+          "description" : "The ID of a collection that contains faces that you want to search for.",
+          "type" : "string",
+          "maxLength" : 255,
+          "pattern" : "\\A[a-zA-Z0-9_\\.\\-]+$"
         },
-        "Width": {
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
+        "FaceMatchThreshold" : {
+          "description" : "Minimum face match confidence score percentage that must be met to return a result for a recognized face. The default is 80. 0 is the lowest confidence. 100 is the highest confidence. Values between 0 and 100 are accepted.",
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
         }
       },
-      "required": [
-        "Height",
-        "Width",
-        "Left",
-        "Top"
-      ],
-      "type": "object"
+      "required" : [ "CollectionId" ],
+      "additionalProperties" : false
     },
-    "ConnectedHomeSettings": {
-      "additionalProperties": false,
-      "description": "Connected home settings to use on a streaming video. Note that either ConnectedHomeSettings or FaceSearchSettings should be set. Not both",
-      "properties": {
-        "Labels": {
-          "$ref": "#/definitions/Labels"
+    "NotificationChannel" : {
+      "description" : "The ARN of the SNS notification channel where events of interests are published, as part of connected home feature.",
+      "type" : "object",
+      "properties" : {
+        "Arn" : {
+          "description" : "ARN of the SNS topic.",
+          "type" : "string",
+          "maxLength" : 2048
+        }
+      },
+      "required" : [ "Arn" ],
+      "additionalProperties" : false
+    },
+    "Point" : {
+      "description" : "An (X, Y) cartesian coordinate denoting a point on the frame",
+      "type" : "object",
+      "properties" : {
+        "X" : {
+          "description" : "The X coordinate of the point.",
+          "type" : "number"
         },
-        "MinConfidence": {
-          "description": "Minimum object class match confidence score that must be met to return a result for a recognized object.",
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
+        "Y" : {
+          "description" : "The Y coordinate of the point.",
+          "type" : "number"
         }
       },
-      "required": [
-        "Labels"
-      ],
-      "type": "object"
+      "required" : [ "X", "Y" ],
+      "additionalProperties" : false
     },
-    "DataSharingPreference": {
-      "additionalProperties": false,
-      "description": "Indicates whether Rekognition is allowed to store the video stream data for model-training.",
-      "properties": {
-        "OptIn": {
-          "description": "Flag to enable data-sharing",
-          "type": "boolean"
-        }
-      },
-      "required": [
-        "OptIn"
-      ],
-      "type": "object"
+    "Polygon" : {
+      "description" : "A polygon showing a region of interest. Note that the ordering of the Point entries matter in defining the polygon",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : true,
+      "minItems" : 3,
+      "items" : {
+        "$ref" : "#/definitions/Point"
+      }
     },
-    "FaceSearchSettings": {
-      "additionalProperties": false,
-      "description": "Face search settings to use on a streaming video. Note that either FaceSearchSettings or ConnectedHomeSettings should be set. Not both",
-      "properties": {
-        "CollectionId": {
-          "description": "The ID of a collection that contains faces that you want to search for.",
-          "maxLength": 255,
-          "pattern": "\\A[a-zA-Z0-9_\\.\\-]+$",
-          "type": "string"
+    "BoundingBox" : {
+      "description" : "A bounding box denoting a region of interest in the frame to be analyzed.",
+      "type" : "object",
+      "properties" : {
+        "Height" : {
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
         },
-        "FaceMatchThreshold": {
-          "description": "Minimum face match confidence score percentage that must be met to return a result for a recognized face. The default is 80. 0 is the lowest confidence. 100 is the highest confidence. Values between 0 and 100 are accepted.",
-          "maximum": 100,
-          "minimum": 0,
-          "type": "number"
-        }
-      },
-      "required": [
-        "CollectionId"
-      ],
-      "type": "object"
-    },
-    "KinesisDataStream": {
-      "additionalProperties": false,
-      "description": "The Amazon Kinesis Data Stream stream to which the Amazon Rekognition stream processor streams the analysis results, as part of face search feature.",
-      "properties": {
-        "Arn": {
-          "description": "ARN of the Kinesis Data Stream stream.",
-          "maxLength": 2048,
-          "pattern": "(^arn:([a-z\\d-]+):kinesis:([a-z\\d-]+):\\d{12}:.+$)",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Arn"
-      ],
-      "type": "object"
-    },
-    "KinesisVideoStream": {
-      "additionalProperties": false,
-      "description": "The Kinesis Video Stream that streams the source video.",
-      "properties": {
-        "Arn": {
-          "description": "ARN of the Kinesis Video Stream that streams the source video.",
-          "maxLength": 2048,
-          "pattern": "(^arn:([a-z\\d-]+):kinesisvideo:([a-z\\d-]+):\\d{12}:.+$)",
-          "type": "string"
-        }
-      },
-      "required": [
-        "Arn"
-      ],
-      "type": "object"
-    },
-    "Labels": {
-      "description": "List of labels that need to be detected in the video stream. Current supported values are PERSON, PET, PACKAGE, ALL.",
-      "insertionOrder": false,
-      "items": {
-        "maxLength": 128,
-        "minLength": 1,
-        "type": "string"
-      },
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "NotificationChannel": {
-      "additionalProperties": false,
-      "description": "The ARN of the SNS notification channel where events of interests are published, as part of connected home feature.",
-      "properties": {
-        "Arn": {
-          "description": "ARN of the SNS topic.",
-          "maxLength": 2048,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Arn"
-      ],
-      "type": "object"
-    },
-    "Point": {
-      "additionalProperties": false,
-      "description": "An (X, Y) cartesian coordinate denoting a point on the frame",
-      "properties": {
-        "X": {
-          "description": "The X coordinate of the point.",
-          "type": "number"
+        "Width" : {
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
         },
-        "Y": {
-          "description": "The Y coordinate of the point.",
-          "type": "number"
-        }
-      },
-      "required": [
-        "X",
-        "Y"
-      ],
-      "type": "object"
-    },
-    "Polygon": {
-      "description": "A polygon showing a region of interest. Note that the ordering of the Point entries matter in defining the polygon",
-      "insertionOrder": true,
-      "items": {
-        "$ref": "#/definitions/Point"
-      },
-      "minItems": 3,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "S3Destination": {
-      "additionalProperties": false,
-      "description": "The S3 location in customer's account where inference output & artifacts are stored, as part of connected home feature.",
-      "properties": {
-        "BucketName": {
-          "description": "Name of the S3 bucket.",
-          "maxLength": 63,
-          "type": "string"
+        "Left" : {
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
         },
-        "ObjectKeyPrefix": {
-          "description": "The object key prefix path where the results will be stored. Default is no prefix path",
-          "maxLength": 256,
-          "type": "string"
+        "Top" : {
+          "type" : "number",
+          "minimum" : 0,
+          "maximum" : 100
         }
       },
-      "required": [
-        "BucketName"
-      ],
-      "type": "object"
+      "required" : [ "Height", "Width", "Left", "Top" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 128,
-          "minLength": 1,
-          "pattern": "\\A(?!aws:)[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
-          "maxLength": 256,
-          "minLength": 0,
-          "pattern": "\\A[a-zA-Z0-9+\\-=\\._\\:\\/@]+$",
-          "type": "string"
+    "DataSharingPreference" : {
+      "description" : "Indicates whether Rekognition is allowed to store the video stream data for model-training.",
+      "properties" : {
+        "OptIn" : {
+          "description" : "Flag to enable data-sharing",
+          "type" : "boolean"
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "OptIn" ],
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 1,
+          "maxLength" : 128,
+          "pattern" : "\\A(?!aws:)[a-zA-Z0-9+\\-=\\._\\:\\/@]+$"
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -.",
+          "minLength" : 0,
+          "maxLength" : 256,
+          "pattern" : "\\A[a-zA-Z0-9+\\-=\\._\\:\\/@]+$"
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "The AWS::Rekognition::StreamProcessor type is used to create an Amazon Rekognition StreamProcessor that you can use to analyze streaming videos.\n\n",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "rekognition:CreateStreamProcessor",
-        "iam:PassRole",
-        "rekognition:DescribeStreamProcessor",
-        "rekognition:ListTagsForResource",
-        "rekognition:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "$ref" : "#/definitions/Arn"
     },
-    "delete": {
-      "permissions": [
-        "rekognition:DeleteStreamProcessor"
-      ]
+    "Name" : {
+      "description" : "Name of the stream processor. It's an identifier you assign to the stream processor. You can use it to manage the stream processor.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "[a-zA-Z0-9_.\\-]+"
     },
-    "list": {
-      "permissions": [
-        "rekognition:ListStreamProcessors"
-      ]
+    "KmsKeyId" : {
+      "description" : "The KMS key that is used by Rekognition to encrypt any intermediate customer metadata and store in the customer's S3 bucket.",
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "rekognition:DescribeStreamProcessor",
-        "rekognition:ListTagsForResource"
-      ]
+    "RoleArn" : {
+      "description" : "ARN of the IAM role that allows access to the stream processor, and provides Rekognition read permissions for KVS stream and write permissions to S3 bucket and SNS topic.",
+      "type" : "string",
+      "maxLength" : 2048,
+      "pattern" : "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*"
     },
-    "update": {
-      "permissions": [
-        "rekognition:TagResource",
-        "rekognition:UntagResource",
-        "rekognition:ListTagsForResource",
-        "rekognition:DescribeStreamProcessor"
-      ]
+    "KinesisVideoStream" : {
+      "$ref" : "#/definitions/KinesisVideoStream"
+    },
+    "FaceSearchSettings" : {
+      "$ref" : "#/definitions/FaceSearchSettings"
+    },
+    "ConnectedHomeSettings" : {
+      "$ref" : "#/definitions/ConnectedHomeSettings"
+    },
+    "KinesisDataStream" : {
+      "$ref" : "#/definitions/KinesisDataStream"
+    },
+    "S3Destination" : {
+      "$ref" : "#/definitions/S3Destination"
+    },
+    "NotificationChannel" : {
+      "$ref" : "#/definitions/NotificationChannel"
+    },
+    "DataSharingPreference" : {
+      "$ref" : "#/definitions/DataSharingPreference"
+    },
+    "PolygonRegionsOfInterest" : {
+      "description" : "The PolygonRegionsOfInterest specifies a set of polygon areas of interest in the video frames to analyze, as part of connected home feature. Each polygon is in turn, an ordered list of Point",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "items" : {
+        "$ref" : "#/definitions/Polygon"
+      }
+    },
+    "BoundingBoxRegionsOfInterest" : {
+      "description" : "The BoundingBoxRegionsOfInterest specifies an array of bounding boxes of interest in the video frames to analyze, as part of connected home feature. If an object is partially in a region of interest, Rekognition will tag it as detected if the overlap of the object with the region-of-interest is greater than 20%.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "items" : {
+        "$ref" : "#/definitions/BoundingBox"
+      }
+    },
+    "Status" : {
+      "description" : "Current status of the stream processor.",
+      "type" : "string"
+    },
+    "StatusMessage" : {
+      "description" : "Detailed status message about the stream processor.",
+      "type" : "string"
+    },
+    "Tags" : {
+      "description" : "An array of key-value pairs to apply to this resource.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "minItems" : 0,
+      "maxItems" : 200,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "oneOf": [
-    {
-      "required": [
-        "ConnectedHomeSettings",
-        "S3Destination",
-        "NotificationChannel"
-      ]
-    },
-    {
-      "required": [
-        "FaceSearchSettings",
-        "KinesisDataStream"
-      ]
-    }
-  ],
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "$ref": "#/definitions/Arn"
-    },
-    "BoundingBoxRegionsOfInterest": {
-      "description": "The BoundingBoxRegionsOfInterest specifies an array of bounding boxes of interest in the video frames to analyze, as part of connected home feature. If an object is partially in a region of interest, Rekognition will tag it as detected if the overlap of the object with the region-of-interest is greater than 20%.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/BoundingBox"
-      },
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "ConnectedHomeSettings": {
-      "$ref": "#/definitions/ConnectedHomeSettings"
-    },
-    "DataSharingPreference": {
-      "$ref": "#/definitions/DataSharingPreference"
-    },
-    "FaceSearchSettings": {
-      "$ref": "#/definitions/FaceSearchSettings"
-    },
-    "KinesisDataStream": {
-      "$ref": "#/definitions/KinesisDataStream"
-    },
-    "KinesisVideoStream": {
-      "$ref": "#/definitions/KinesisVideoStream"
-    },
-    "KmsKeyId": {
-      "description": "The KMS key that is used by Rekognition to encrypt any intermediate customer metadata and store in the customer's S3 bucket.",
-      "type": "string"
-    },
-    "Name": {
-      "description": "Name of the stream processor. It's an identifier you assign to the stream processor. You can use it to manage the stream processor.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[a-zA-Z0-9_.\\-]+",
-      "type": "string"
-    },
-    "NotificationChannel": {
-      "$ref": "#/definitions/NotificationChannel"
-    },
-    "PolygonRegionsOfInterest": {
-      "description": "The PolygonRegionsOfInterest specifies a set of polygon areas of interest in the video frames to analyze, as part of connected home feature. Each polygon is in turn, an ordered list of Point",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Polygon"
-      },
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "RoleArn": {
-      "description": "ARN of the IAM role that allows access to the stream processor, and provides Rekognition read permissions for KVS stream and write permissions to S3 bucket and SNS topic.",
-      "maxLength": 2048,
-      "pattern": "arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*",
-      "type": "string"
-    },
-    "S3Destination": {
-      "$ref": "#/definitions/S3Destination"
-    },
-    "Status": {
-      "description": "Current status of the stream processor.",
-      "type": "string"
-    },
-    "StatusMessage": {
-      "description": "Detailed status message about the stream processor.",
-      "type": "string"
-    },
-    "Tags": {
-      "description": "An array of key-value pairs to apply to this resource.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 200,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
-    }
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "tagProperty" : "/properties/Tags",
+    "cloudFormationSystemTags" : false,
+    "permissions" : [ "rekognition:TagResource", "rekognition:UntagResource", "rekognition:ListTagsForResource" ]
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/Status",
-    "/properties/StatusMessage"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "RoleArn",
-    "KinesisVideoStream"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-rpdk.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "rekognition:TagResource",
-      "rekognition:UntagResource",
-      "rekognition:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Rekognition::StreamProcessor"
+  "additionalProperties" : false,
+  "required" : [ "RoleArn", "KinesisVideoStream" ],
+  "oneOf" : [ {
+    "required" : [ "ConnectedHomeSettings", "S3Destination", "NotificationChannel" ]
+  }, {
+    "required" : [ "FaceSearchSettings", "KinesisDataStream" ]
+  } ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/Status", "/properties/StatusMessage" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/KmsKeyId", "/properties/RoleArn", "/properties/KinesisVideoStream", "/properties/ConnectedHomeSettings", "/properties/FaceSearchSettings", "/properties/KinesisDataStream", "/properties/S3Destination", "/properties/NotificationChannel", "/properties/BoundingBoxRegionsOfInterest", "/properties/PolygonRegionsOfInterest", "/properties/DataSharingPreference" ],
+  "$comment" : "We explicitly specify the replacement strategy to be delete_then_create because we cannot create a new SP resource with the same name or same KVS input before deleting the old one",
+  "replacementStrategy" : "delete_then_create",
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "rekognition:CreateStreamProcessor", "iam:PassRole", "rekognition:DescribeStreamProcessor", "rekognition:ListTagsForResource", "rekognition:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "rekognition:DescribeStreamProcessor", "rekognition:ListTagsForResource" ]
+    },
+    "update" : {
+      "permissions" : [ "rekognition:TagResource", "rekognition:UntagResource", "rekognition:ListTagsForResource", "rekognition:DescribeStreamProcessor" ]
+    },
+    "delete" : {
+      "permissions" : [ "rekognition:DeleteStreamProcessor" ]
+    },
+    "list" : {
+      "permissions" : [ "rekognition:ListStreamProcessors" ]
+    }
+  }
 }

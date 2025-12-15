@@ -1,122 +1,103 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/KmsKeyId",
-    "/properties/NotebookInstanceName",
-    "/properties/SecurityGroupIds",
-    "/properties/SubnetId",
-    "/properties/DirectInternetAccess",
-    "/properties/PlatformIdentifier"
-  ],
-  "definitions": {
-    "InstanceMetadataServiceConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "MinimumInstanceMetadataServiceVersion": {
-          "type": "string"
+  "typeName" : "AWS::SageMaker::NotebookInstance",
+  "description" : "Resource Type definition for AWS::SageMaker::NotebookInstance",
+  "additionalProperties" : false,
+  "properties" : {
+    "KmsKeyId" : {
+      "type" : "string"
+    },
+    "VolumeSizeInGB" : {
+      "type" : "integer"
+    },
+    "AdditionalCodeRepositories" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "DefaultCodeRepository" : {
+      "type" : "string"
+    },
+    "DirectInternetAccess" : {
+      "type" : "string"
+    },
+    "PlatformIdentifier" : {
+      "type" : "string"
+    },
+    "AcceleratorTypes" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "SubnetId" : {
+      "type" : "string"
+    },
+    "SecurityGroupIds" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "RoleArn" : {
+      "type" : "string"
+    },
+    "InstanceMetadataServiceConfiguration" : {
+      "$ref" : "#/definitions/InstanceMetadataServiceConfiguration"
+    },
+    "RootAccess" : {
+      "type" : "string"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "NotebookInstanceName" : {
+      "type" : "string"
+    },
+    "InstanceType" : {
+      "type" : "string"
+    },
+    "LifecycleConfigName" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    }
+  },
+  "definitions" : {
+    "InstanceMetadataServiceConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MinimumInstanceMetadataServiceVersion" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "MinimumInstanceMetadataServiceVersion"
-      ],
-      "type": "object"
+      "required" : [ "MinimumInstanceMetadataServiceVersion" ]
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::SageMaker::NotebookInstance",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AcceleratorTypes": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "AdditionalCodeRepositories": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "DefaultCodeRepository": {
-      "type": "string"
-    },
-    "DirectInternetAccess": {
-      "type": "string"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "InstanceMetadataServiceConfiguration": {
-      "$ref": "#/definitions/InstanceMetadataServiceConfiguration"
-    },
-    "InstanceType": {
-      "type": "string"
-    },
-    "KmsKeyId": {
-      "type": "string"
-    },
-    "LifecycleConfigName": {
-      "type": "string"
-    },
-    "NotebookInstanceName": {
-      "type": "string"
-    },
-    "PlatformIdentifier": {
-      "type": "string"
-    },
-    "RoleArn": {
-      "type": "string"
-    },
-    "RootAccess": {
-      "type": "string"
-    },
-    "SecurityGroupIds": {
-      "items": {
-        "type": "string"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "SubnetId": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "VolumeSizeInGB": {
-      "type": "integer"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "InstanceType",
-    "RoleArn"
-  ],
-  "typeName": "AWS::SageMaker::NotebookInstance"
+  "required" : [ "InstanceType", "RoleArn" ],
+  "createOnlyProperties" : [ "/properties/KmsKeyId", "/properties/NotebookInstanceName", "/properties/SecurityGroupIds", "/properties/SubnetId", "/properties/DirectInternetAccess", "/properties/PlatformIdentifier" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

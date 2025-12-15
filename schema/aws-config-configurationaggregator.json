@@ -1,173 +1,132 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ConfigurationAggregatorName"
-  ],
-  "definitions": {
-    "AccountAggregationSource": {
-      "additionalProperties": false,
-      "properties": {
-        "AccountIds": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "AllAwsRegions": {
-          "type": "boolean"
-        },
-        "AwsRegions": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        }
-      },
-      "required": [
-        "AccountIds"
-      ],
-      "type": "object"
+  "typeName" : "AWS::Config::ConfigurationAggregator",
+  "description" : "Resource Type definition for AWS::Config::ConfigurationAggregator",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
+  "additionalProperties" : false,
+  "properties" : {
+    "AccountAggregationSources" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/AccountAggregationSource"
+      }
     },
-    "OrganizationAggregationSource": {
-      "additionalProperties": false,
-      "properties": {
-        "AllAwsRegions": {
-          "type": "boolean"
-        },
-        "AwsRegions": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "RoleArn": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "RoleArn"
-      ],
-      "type": "object"
+    "ConfigurationAggregatorName" : {
+      "description" : "The name of the aggregator.",
+      "type" : "string",
+      "pattern" : "[\\w\\-]+",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+    "ConfigurationAggregatorArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the aggregator.",
+      "type" : "string"
+    },
+    "OrganizationAggregationSource" : {
+      "$ref" : "#/definitions/OrganizationAggregationSource"
+    },
+    "Tags" : {
+      "description" : "The tags for the configuration aggregator.",
+      "type" : "array",
+      "maxItems" : 50,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "description": "Resource Type definition for AWS::Config::ConfigurationAggregator",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "config:PutConfigurationAggregator",
-        "config:DescribeConfigurationAggregators",
-        "config:TagResource",
-        "iam:PassRole",
-        "organizations:EnableAWSServiceAccess",
-        "organizations:ListDelegatedAdministrators"
-      ]
+  "definitions" : {
+    "AccountAggregationSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllAwsRegions" : {
+          "type" : "boolean"
+        },
+        "AwsRegions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "AccountIds" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "AccountIds" ]
     },
-    "delete": {
-      "permissions": [
-        "config:DeleteConfigurationAggregator",
-        "config:UntagResource"
-      ]
+    "OrganizationAggregationSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AllAwsRegions" : {
+          "type" : "boolean"
+        },
+        "AwsRegions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "RoleArn" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RoleArn" ]
     },
-    "list": {
-      "permissions": [
-        "config:DescribeConfigurationAggregators"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "config:DescribeConfigurationAggregators",
-        "config:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "config:PutConfigurationAggregator",
-        "config:DescribeConfigurationAggregators",
-        "config:TagResource",
-        "config:UntagResource",
-        "config:ListTagsForResource",
-        "iam:PassRole",
-        "organizations:EnableAWSServiceAccess",
-        "organizations:ListDelegatedAdministrators"
-      ]
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+          "minLength" : 0,
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Value", "Key" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/ConfigurationAggregatorName"
-  ],
-  "properties": {
-    "AccountAggregationSources": {
-      "items": {
-        "$ref": "#/definitions/AccountAggregationSource"
-      },
-      "type": "array",
-      "uniqueItems": false
+  "readOnlyProperties" : [ "/properties/ConfigurationAggregatorArn" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "config:TagResource", "config:UntagResource", "config:ListTagsForResource" ]
+  },
+  "createOnlyProperties" : [ "/properties/ConfigurationAggregatorName" ],
+  "primaryIdentifier" : [ "/properties/ConfigurationAggregatorName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "config:PutConfigurationAggregator", "config:DescribeConfigurationAggregators", "config:TagResource", "iam:PassRole", "organizations:EnableAWSServiceAccess", "organizations:ListDelegatedAdministrators" ]
     },
-    "ConfigurationAggregatorArn": {
-      "description": "The Amazon Resource Name (ARN) of the aggregator.",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "config:DescribeConfigurationAggregators", "config:ListTagsForResource" ]
     },
-    "ConfigurationAggregatorName": {
-      "description": "The name of the aggregator.",
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "[\\w\\-]+",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "config:PutConfigurationAggregator", "config:DescribeConfigurationAggregators", "config:TagResource", "config:UntagResource", "config:ListTagsForResource", "iam:PassRole", "organizations:EnableAWSServiceAccess", "organizations:ListDelegatedAdministrators" ]
     },
-    "OrganizationAggregationSource": {
-      "$ref": "#/definitions/OrganizationAggregationSource"
+    "delete" : {
+      "permissions" : [ "config:DeleteConfigurationAggregator", "config:UntagResource" ]
     },
-    "Tags": {
-      "description": "The tags for the configuration aggregator.",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "config:DescribeConfigurationAggregators" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/ConfigurationAggregatorArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-config.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "config:TagResource",
-      "config:UntagResource",
-      "config:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Config::ConfigurationAggregator"
+  }
 }

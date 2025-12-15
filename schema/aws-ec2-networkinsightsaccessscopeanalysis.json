@@ -1,142 +1,89 @@
 {
-  "additionalIdentifiers": [
-    [
-      "/properties/NetworkInsightsAccessScopeAnalysisArn"
-    ]
-  ],
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/NetworkInsightsAccessScopeId"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::EC2::NetworkInsightsAccessScopeAnalysis",
+  "description" : "Resource schema for AWS::EC2::NetworkInsightsAccessScopeAnalysis",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Value" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Key" ]
     }
   },
-  "description": "Resource schema for AWS::EC2::NetworkInsightsAccessScopeAnalysis",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateTags",
-        "ec2:StartNetworkInsightsAccessScopeAnalysis",
-        "ec2:GetTransitGatewayRouteTablePropagations",
-        "ec2:Describe*",
-        "elasticloadbalancing:Describe*",
-        "directconnect:Describe*",
-        "tiros:CreateQuery",
-        "tiros:GetQueryAnswer",
-        "tiros:GetQueryExplanation"
-      ]
+  "properties" : {
+    "NetworkInsightsAccessScopeAnalysisId" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "ec2:DeleteNetworkInsightsAccessScopeAnalysis",
-        "ec2:DeleteTags"
-      ]
+    "NetworkInsightsAccessScopeAnalysisArn" : {
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "ec2:DescribeNetworkInsightsAccessScopeAnalyses"
-      ]
+    "NetworkInsightsAccessScopeId" : {
+      "type" : "string"
     },
-    "read": {
-      "permissions": [
-        "ec2:DescribeNetworkInsightsAccessScopeAnalyses"
-      ]
+    "Status" : {
+      "type" : "string",
+      "enum" : [ "running", "failed", "succeeded" ]
     },
-    "update": {
-      "permissions": [
-        "ec2:DescribeNetworkInsightsAccessScopeAnalyses",
-        "ec2:CreateTags",
-        "ec2:DeleteTags"
-      ]
+    "StatusMessage" : {
+      "type" : "string"
+    },
+    "StartDate" : {
+      "type" : "string"
+    },
+    "EndDate" : {
+      "type" : "string"
+    },
+    "FindingsFound" : {
+      "type" : "string",
+      "enum" : [ "true", "false", "unknown" ]
+    },
+    "AnalyzedEniCount" : {
+      "type" : "integer"
+    },
+    "Tags" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/NetworkInsightsAccessScopeAnalysisId"
-  ],
-  "properties": {
-    "AnalyzedEniCount": {
-      "type": "integer"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "ec2:CreateTags", "ec2:DeleteTags" ]
+  },
+  "required" : [ "NetworkInsightsAccessScopeId" ],
+  "readOnlyProperties" : [ "/properties/NetworkInsightsAccessScopeAnalysisId", "/properties/NetworkInsightsAccessScopeAnalysisArn", "/properties/Status", "/properties/StatusMessage", "/properties/StartDate", "/properties/EndDate", "/properties/FindingsFound", "/properties/AnalyzedEniCount" ],
+  "createOnlyProperties" : [ "/properties/NetworkInsightsAccessScopeId" ],
+  "primaryIdentifier" : [ "/properties/NetworkInsightsAccessScopeAnalysisId" ],
+  "additionalIdentifiers" : [ [ "/properties/NetworkInsightsAccessScopeAnalysisArn" ] ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateTags", "ec2:StartNetworkInsightsAccessScopeAnalysis", "ec2:GetTransitGatewayRouteTablePropagations", "ec2:Describe*", "elasticloadbalancing:Describe*", "directconnect:Describe*", "tiros:CreateQuery", "tiros:GetQueryAnswer", "tiros:GetQueryExplanation" ]
     },
-    "EndDate": {
-      "type": "string"
+    "read" : {
+      "permissions" : [ "ec2:DescribeNetworkInsightsAccessScopeAnalyses" ]
     },
-    "FindingsFound": {
-      "enum": [
-        "true",
-        "false",
-        "unknown"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "ec2:DescribeNetworkInsightsAccessScopeAnalyses", "ec2:CreateTags", "ec2:DeleteTags" ]
     },
-    "NetworkInsightsAccessScopeAnalysisArn": {
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "ec2:DeleteNetworkInsightsAccessScopeAnalysis", "ec2:DeleteTags" ]
     },
-    "NetworkInsightsAccessScopeAnalysisId": {
-      "type": "string"
-    },
-    "NetworkInsightsAccessScopeId": {
-      "type": "string"
-    },
-    "StartDate": {
-      "type": "string"
-    },
-    "Status": {
-      "enum": [
-        "running",
-        "failed",
-        "succeeded"
-      ],
-      "type": "string"
-    },
-    "StatusMessage": {
-      "type": "string"
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array"
+    "list" : {
+      "permissions" : [ "ec2:DescribeNetworkInsightsAccessScopeAnalyses" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/NetworkInsightsAccessScopeAnalysisId",
-    "/properties/NetworkInsightsAccessScopeAnalysisArn",
-    "/properties/Status",
-    "/properties/StatusMessage",
-    "/properties/StartDate",
-    "/properties/EndDate",
-    "/properties/FindingsFound",
-    "/properties/AnalyzedEniCount"
-  ],
-  "required": [
-    "NetworkInsightsAccessScopeId"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ec2-ni.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "ec2:CreateTags",
-      "ec2:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::EC2::NetworkInsightsAccessScopeAnalysis"
+  }
 }

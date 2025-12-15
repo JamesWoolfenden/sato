@@ -1,186 +1,145 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "DeploymentPreference": {
-      "additionalProperties": false,
-      "description": "The settings to enable gradual state machine deployments.",
-      "properties": {
-        "Alarms": {
-          "description": "A list of CloudWatch alarm names that will be monitored during the deployment. The deployment will fail and rollback if any alarms go into ALARM state.",
-          "insertionOrder": false,
-          "items": {
-            "maxLength": 256,
-            "minLength": 1,
-            "type": "string"
-          },
-          "maxItems": 100,
-          "minItems": 1,
-          "type": "array",
-          "uniqueItems": true
+  "typeName" : "AWS::StepFunctions::StateMachineAlias",
+  "description" : "Resource schema for StateMachineAlias",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
+  "definitions" : {
+    "RoutingConfigurationVersion" : {
+      "type" : "object",
+      "properties" : {
+        "StateMachineVersionArn" : {
+          "type" : "string",
+          "description" : "The Amazon Resource Name (ARN) that identifies one or two state machine versions defined in the routing configuration.",
+          "minLength" : 1,
+          "maxLength" : 2048
         },
-        "Interval": {
-          "description": "The time in minutes between each traffic shifting increment.",
-          "maximum": 2100,
-          "minimum": 1,
-          "type": "integer"
-        },
-        "Percentage": {
-          "description": "The percentage of traffic to shift to the new version in each increment.",
-          "maximum": 99,
-          "minimum": 1,
-          "type": "integer"
-        },
-        "StateMachineVersionArn": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Type": {
-          "description": "The type of deployment to perform.",
-          "enum": [
-            "LINEAR",
-            "ALL_AT_ONCE",
-            "CANARY"
-          ],
-          "type": "string"
+        "Weight" : {
+          "type" : "integer",
+          "description" : "The percentage of traffic you want to route to the state machine version. The sum of the weights in the routing configuration must be equal to 100.",
+          "minimum" : 0,
+          "maximum" : 100
         }
       },
-      "required": [
-        "StateMachineVersionArn",
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "StateMachineVersionArn", "Weight" ],
+      "additionalProperties" : false
     },
-    "RoutingConfiguration": {
-      "description": "The routing configuration of the alias. One or two versions can be mapped to an alias to split StartExecution requests of the same state machine.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/RoutingConfigurationVersion"
-      },
-      "maxItems": 2,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
+    "RoutingConfiguration" : {
+      "type" : "array",
+      "description" : "The routing configuration of the alias. One or two versions can be mapped to an alias to split StartExecution requests of the same state machine.",
+      "minItems" : 1,
+      "maxItems" : 2,
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/RoutingConfigurationVersion"
+      }
     },
-    "RoutingConfigurationVersion": {
-      "additionalProperties": false,
-      "properties": {
-        "StateMachineVersionArn": {
-          "description": "The Amazon Resource Name (ARN) that identifies one or two state machine versions defined in the routing configuration.",
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
+    "DeploymentPreference" : {
+      "type" : "object",
+      "description" : "The settings to enable gradual state machine deployments.",
+      "properties" : {
+        "StateMachineVersionArn" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2048
         },
-        "Weight": {
-          "description": "The percentage of traffic you want to route to the state machine version. The sum of the weights in the routing configuration must be equal to 100.",
-          "maximum": 100,
-          "minimum": 0,
-          "type": "integer"
+        "Type" : {
+          "type" : "string",
+          "description" : "The type of deployment to perform.",
+          "enum" : [ "LINEAR", "ALL_AT_ONCE", "CANARY" ]
+        },
+        "Percentage" : {
+          "type" : "integer",
+          "description" : "The percentage of traffic to shift to the new version in each increment.",
+          "minimum" : 1,
+          "maximum" : 99
+        },
+        "Interval" : {
+          "type" : "integer",
+          "description" : "The time in minutes between each traffic shifting increment.",
+          "minimum" : 1,
+          "maximum" : 2100
+        },
+        "Alarms" : {
+          "type" : "array",
+          "description" : "A list of CloudWatch alarm names that will be monitored during the deployment. The deployment will fail and rollback if any alarms go into ALARM state.",
+          "minItems" : 1,
+          "maxItems" : 100,
+          "uniqueItems" : true,
+          "insertionOrder" : false,
+          "items" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 256
+          }
         }
       },
-      "required": [
-        "StateMachineVersionArn",
-        "Weight"
-      ],
-      "type": "object"
+      "required" : [ "StateMachineVersionArn", "Type" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Resource schema for StateMachineAlias",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "states:CreateStateMachineAlias",
-        "states:DescribeStateMachineAlias"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048,
+      "description" : "The ARN of the alias."
     },
-    "delete": {
-      "permissions": [
-        "states:DescribeStateMachineAlias",
-        "states:DeleteStateMachineAlias"
-      ]
+    "Name" : {
+      "type" : "string",
+      "description" : "The alias name.",
+      "minLength" : 1,
+      "maxLength" : 80
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "RoutingConfiguration": {
-            "$ref": "resource-schema.json#/properties/RoutingConfiguration"
+    "Description" : {
+      "type" : "string",
+      "description" : "An optional description of the alias.",
+      "minLength" : 1,
+      "maxLength" : 256
+    },
+    "RoutingConfiguration" : {
+      "$ref" : "#/definitions/RoutingConfiguration"
+    },
+    "DeploymentPreference" : {
+      "$ref" : "#/definitions/DeploymentPreference"
+    }
+  },
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : false
+  },
+  "oneOf" : [ {
+    "required" : [ "RoutingConfiguration" ]
+  }, {
+    "required" : [ "DeploymentPreference" ]
+  } ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "writeOnlyProperties" : [ "/properties/DeploymentPreference" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "states:CreateStateMachineAlias", "states:DescribeStateMachineAlias" ]
+    },
+    "read" : {
+      "permissions" : [ "states:DescribeStateMachineAlias" ]
+    },
+    "update" : {
+      "permissions" : [ "cloudwatch:DescribeAlarms", "states:UpdateStateMachineAlias", "states:DescribeStateMachineAlias" ],
+      "timeoutInMinutes" : 2160
+    },
+    "delete" : {
+      "permissions" : [ "states:DescribeStateMachineAlias", "states:DeleteStateMachineAlias" ]
+    },
+    "list" : {
+      "permissions" : [ "states:ListStateMachineAliases" ],
+      "handlerSchema" : {
+        "properties" : {
+          "RoutingConfiguration" : {
+            "$ref" : "resource-schema.json#/properties/RoutingConfiguration"
           }
         },
-        "required": [
-          "RoutingConfiguration"
-        ]
-      },
-      "permissions": [
-        "states:ListStateMachineAliases"
-      ]
-    },
-    "read": {
-      "permissions": [
-        "states:DescribeStateMachineAlias"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "cloudwatch:DescribeAlarms",
-        "states:UpdateStateMachineAlias",
-        "states:DescribeStateMachineAlias"
-      ],
-      "timeoutInMinutes": 2160
+        "required" : [ "RoutingConfiguration" ]
+      }
     }
-  },
-  "oneOf": [
-    {
-      "required": [
-        "RoutingConfiguration"
-      ]
-    },
-    {
-      "required": [
-        "DeploymentPreference"
-      ]
-    }
-  ],
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The ARN of the alias.",
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
-    },
-    "DeploymentPreference": {
-      "$ref": "#/definitions/DeploymentPreference"
-    },
-    "Description": {
-      "description": "An optional description of the alias.",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Name": {
-      "description": "The alias name.",
-      "maxLength": 80,
-      "minLength": 1,
-      "type": "string"
-    },
-    "RoutingConfiguration": {
-      "$ref": "#/definitions/RoutingConfiguration"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::StepFunctions::StateMachineAlias",
-  "writeOnlyProperties": [
-    "/properties/DeploymentPreference"
-  ]
+  }
 }

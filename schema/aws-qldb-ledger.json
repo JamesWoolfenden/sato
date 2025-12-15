@@ -1,59 +1,48 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "type": "string"
+  "typeName" : "AWS::QLDB::Ledger",
+  "description" : "Resource Type definition for AWS::QLDB::Ledger",
+  "additionalProperties" : false,
+  "properties" : {
+    "PermissionsMode" : {
+      "type" : "string"
+    },
+    "DeletionProtection" : {
+      "type" : "boolean"
+    },
+    "Id" : {
+      "type" : "string"
+    },
+    "KmsKey" : {
+      "type" : "string"
+    },
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "Name" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
         },
-        "Value": {
-          "type": "string"
+        "Key" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "Value",
-        "Key"
-      ],
-      "type": "object"
+      "required" : [ "Value", "Key" ]
     }
   },
-  "description": "Resource Type definition for AWS::QLDB::Ledger",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "DeletionProtection": {
-      "type": "boolean"
-    },
-    "Id": {
-      "type": "string"
-    },
-    "KmsKey": {
-      "type": "string"
-    },
-    "Name": {
-      "type": "string"
-    },
-    "PermissionsMode": {
-      "type": "string"
-    },
-    "Tags": {
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": false
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "PermissionsMode"
-  ],
-  "typeName": "AWS::QLDB::Ledger"
+  "required" : [ "PermissionsMode" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

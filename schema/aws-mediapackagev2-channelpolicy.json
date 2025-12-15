@@ -1,70 +1,46 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/ChannelGroupName",
-    "/properties/ChannelName"
-  ],
-  "description": "<p>Represents a resource-based policy that allows or denies access to a channel.</p>",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "mediapackagev2:GetChannelPolicy",
-        "mediapackagev2:PutChannelPolicy"
-      ]
+  "typeName" : "AWS::MediaPackageV2::ChannelPolicy",
+  "description" : "<p>Represents a resource-based policy that allows or denies access to a channel.</p>",
+  "properties" : {
+    "ChannelGroupName" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
     },
-    "delete": {
-      "permissions": [
-        "mediapackagev2:GetChannelPolicy",
-        "mediapackagev2:DeleteChannelPolicy"
-      ]
+    "ChannelName" : {
+      "type" : "string",
+      "maxLength" : 256,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z0-9_-]+$"
     },
-    "read": {
-      "permissions": [
-        "mediapackagev2:GetChannelPolicy"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "mediapackagev2:GetChannelPolicy",
-        "mediapackagev2:PutChannelPolicy"
-      ]
+    "Policy" : {
+      "type" : [ "object", "string" ]
     }
   },
-  "primaryIdentifier": [
-    "/properties/ChannelGroupName",
-    "/properties/ChannelName"
-  ],
-  "properties": {
-    "ChannelGroupName": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+  "required" : [ "ChannelGroupName", "ChannelName", "Policy" ],
+  "createOnlyProperties" : [ "/properties/ChannelGroupName", "/properties/ChannelName" ],
+  "primaryIdentifier" : [ "/properties/ChannelGroupName", "/properties/ChannelName" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "mediapackagev2:GetChannelPolicy", "mediapackagev2:PutChannelPolicy" ]
     },
-    "ChannelName": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z0-9_-]+$",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "mediapackagev2:GetChannelPolicy" ]
     },
-    "Policy": {
-      "type": [
-        "object",
-        "string"
-      ]
+    "update" : {
+      "permissions" : [ "mediapackagev2:GetChannelPolicy", "mediapackagev2:PutChannelPolicy" ]
+    },
+    "delete" : {
+      "permissions" : [ "mediapackagev2:GetChannelPolicy", "mediapackagev2:DeleteChannelPolicy" ]
     }
   },
-  "required": [
-    "ChannelGroupName",
-    "ChannelName",
-    "Policy"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
   },
-  "typeName": "AWS::MediaPackageV2::ChannelPolicy"
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-mediapackagev2",
+  "additionalProperties" : false
 }

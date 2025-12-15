@@ -1,176 +1,133 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/DeliverySourceName",
-    "/properties/DeliveryDestinationArn"
-  ],
-  "definitions": {
-    "Arn": {
-      "description": "Amazon Resource Name (ARN) that uniquely identify AWS resource.",
-      "maxLength": 2048,
-      "minLength": 16,
-      "pattern": "[\\w#+=/:,.@-]*\\*?",
-      "type": "string"
-    },
-    "FieldHeader": {
-      "description": "A single record field to be delivered to the destination.",
-      "maxLength": 50,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+  "typeName" : "AWS::Logs::Delivery",
+  "description" : "This structure contains information about one delivery in your account.\n\nA delivery is a connection between a logical delivery source and a logical delivery destination.\n\nFor more information, see [CreateDelivery](https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateDelivery.html).",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
+  "definitions" : {
+    "Tag" : {
+      "description" : "A key-value pair to associate with a resource.",
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 128 Unicode",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 0 to 256 Unicode",
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 0 to 256 Unicode",
+          "minLength" : 0,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
+    },
+    "Arn" : {
+      "description" : "Amazon Resource Name (ARN) that uniquely identify AWS resource.",
+      "type" : "string",
+      "minLength" : 16,
+      "maxLength" : 2048,
+      "pattern" : "[\\w#+=/:,.@-]*\\*?"
+    },
+    "FieldHeader" : {
+      "description" : "A single record field to be delivered to the destination.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 50
     }
   },
-  "description": "This structure contains information about one delivery in your account.\n\nA delivery is a connection between a logical delivery source and a logical delivery destination.\n\nFor more information, see [CreateDelivery](https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_CreateDelivery.html).",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "logs:CreateDelivery",
-        "logs:GetDelivery",
-        "logs:DescribeDeliveries",
-        "logs:ListTagsForResource",
-        "logs:TagResource",
-        "logs:GetDeliverySource",
-        "logs:GetDeliveryDestination"
-      ]
+  "properties" : {
+    "DeliveryId" : {
+      "description" : "The unique ID that identifies this delivery in your account.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64,
+      "pattern" : "^[0-9A-Za-z]+$"
     },
-    "delete": {
-      "permissions": [
-        "logs:DeleteDelivery",
-        "logs:ListTagsForResource",
-        "logs:UntagResource"
-      ]
+    "Arn" : {
+      "description" : "The Amazon Resource Name (ARN) that uniquely identifies this delivery.",
+      "$ref" : "#/definitions/Arn"
     },
-    "list": {
-      "permissions": [
-        "logs:DescribeDeliveries",
-        "logs:ListTagsForResource"
-      ]
+    "DeliverySourceName" : {
+      "description" : "The name of the delivery source that is associated with this delivery.",
+      "type" : "string",
+      "pattern" : "[\\w-]*$",
+      "minLength" : 1,
+      "maxLength" : 60
     },
-    "read": {
-      "permissions": [
-        "logs:GetDelivery",
-        "logs:ListTagsForResource"
-      ]
+    "DeliveryDestinationArn" : {
+      "description" : "The ARN of the delivery destination that is associated with this delivery.",
+      "$ref" : "#/definitions/Arn"
     },
-    "update": {
-      "permissions": [
-        "logs:GetDelivery",
-        "logs:ListTagsForResource",
-        "logs:TagResource",
-        "logs:UntagResource",
-        "logs:UpdateDeliveryConfiguration"
-      ]
+    "DeliveryDestinationType" : {
+      "description" : "Displays whether the delivery destination associated with this delivery is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 12,
+      "pattern" : "^[0-9A-Za-z]+$"
+    },
+    "Tags" : {
+      "description" : "The tags that have been assigned to this delivery.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
+    },
+    "RecordFields" : {
+      "description" : "The list of record fields to be delivered to the destination, in order. If the delivery's log source has mandatory fields, they must be included in this list.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/FieldHeader"
+      }
+    },
+    "FieldDelimiter" : {
+      "description" : "The field delimiter to use between record fields when the final output format of a delivery is in Plain , W3C , or Raw format.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 5
+    },
+    "S3SuffixPath" : {
+      "description" : "This string allows re-configuring the S3 object prefix to contain either static or variable sections. The valid variables to use in the suffix path will vary by each log source. See ConfigurationTemplate$allowedSuffixPathFields for more info on what values are supported in the suffix path for each log source.",
+      "type" : "string",
+      "minLength" : 0,
+      "maxLength" : 256
+    },
+    "S3EnableHiveCompatiblePath" : {
+      "description" : "This parameter causes the S3 objects that contain delivered logs to use a prefix structure that allows for integration with Apache Hive.",
+      "type" : "boolean"
     }
   },
-  "primaryIdentifier": [
-    "/properties/DeliveryId"
-  ],
-  "properties": {
-    "Arn": {
-      "$ref": "#/definitions/Arn",
-      "description": "The Amazon Resource Name (ARN) that uniquely identifies this delivery."
+  "additionalProperties" : false,
+  "required" : [ "DeliverySourceName", "DeliveryDestinationArn" ],
+  "readOnlyProperties" : [ "/properties/DeliveryId", "/properties/Arn", "/properties/DeliveryDestinationType" ],
+  "createOnlyProperties" : [ "/properties/DeliverySourceName", "/properties/DeliveryDestinationArn" ],
+  "primaryIdentifier" : [ "/properties/DeliveryId" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "logs:CreateDelivery", "logs:GetDelivery", "logs:DescribeDeliveries", "logs:ListTagsForResource", "logs:TagResource", "logs:GetDeliverySource", "logs:GetDeliveryDestination" ]
     },
-    "DeliveryDestinationArn": {
-      "$ref": "#/definitions/Arn",
-      "description": "The ARN of the delivery destination that is associated with this delivery."
+    "read" : {
+      "permissions" : [ "logs:GetDelivery", "logs:ListTagsForResource" ]
     },
-    "DeliveryDestinationType": {
-      "description": "Displays whether the delivery destination associated with this delivery is CloudWatch Logs, Amazon S3, or Kinesis Data Firehose.",
-      "maxLength": 12,
-      "minLength": 1,
-      "pattern": "^[0-9A-Za-z]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "logs:GetDelivery", "logs:ListTagsForResource", "logs:TagResource", "logs:UntagResource", "logs:UpdateDeliveryConfiguration" ]
     },
-    "DeliveryId": {
-      "description": "The unique ID that identifies this delivery in your account.",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[0-9A-Za-z]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "logs:DeleteDelivery", "logs:ListTagsForResource", "logs:UntagResource" ]
     },
-    "DeliverySourceName": {
-      "description": "The name of the delivery source that is associated with this delivery.",
-      "maxLength": 60,
-      "minLength": 1,
-      "pattern": "[\\w-]*$",
-      "type": "string"
-    },
-    "FieldDelimiter": {
-      "description": "The field delimiter to use between record fields when the final output format of a delivery is in Plain , W3C , or Raw format.",
-      "maxLength": 5,
-      "minLength": 1,
-      "type": "string"
-    },
-    "RecordFields": {
-      "description": "The list of record fields to be delivered to the destination, in order. If the delivery's log source has mandatory fields, they must be included in this list.",
-      "items": {
-        "$ref": "#/definitions/FieldHeader"
-      },
-      "type": "array"
-    },
-    "S3EnableHiveCompatiblePath": {
-      "description": "This parameter causes the S3 objects that contain delivered logs to use a prefix structure that allows for integration with Apache Hive.",
-      "type": "boolean"
-    },
-    "S3SuffixPath": {
-      "description": "This string allows re-configuring the S3 object prefix to contain either static or variable sections. The valid variables to use in the suffix path will vary by each log source. See ConfigurationTemplate$allowedSuffixPathFields for more info on what values are supported in the suffix path for each log source.",
-      "maxLength": 256,
-      "minLength": 0,
-      "type": "string"
-    },
-    "Tags": {
-      "description": "The tags that have been assigned to this delivery.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "logs:DescribeDeliveries", "logs:ListTagsForResource" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/DeliveryId",
-    "/properties/Arn",
-    "/properties/DeliveryDestinationType"
-  ],
-  "required": [
-    "DeliverySourceName",
-    "DeliveryDestinationArn"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-logs.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "logs:TagResource",
-      "logs:UntagResource",
-      "logs:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::Logs::Delivery"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "logs:TagResource", "logs:UntagResource", "logs:ListTagsForResource" ]
+  }
 }

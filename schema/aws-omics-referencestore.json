@@ -1,137 +1,106 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Description",
-    "/properties/Name",
-    "/properties/SseConfig",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "EncryptionType": {
-      "enum": [
-        "KMS"
-      ],
-      "type": "string"
+  "typeName" : "AWS::Omics::ReferenceStore",
+  "description" : "Definition of AWS::Omics::ReferenceStore Resource Type",
+  "definitions" : {
+    "EncryptionType" : {
+      "type" : "string",
+      "enum" : [ "KMS" ]
     },
-    "SseConfig": {
-      "additionalProperties": false,
-      "description": "Server-side encryption (SSE) settings for a store.",
-      "properties": {
-        "KeyArn": {
-          "description": "An encryption key ARN.",
-          "maxLength": 2048,
-          "minLength": 20,
-          "pattern": "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
-          "type": "string"
+    "SseConfig" : {
+      "type" : "object",
+      "description" : "Server-side encryption (SSE) settings for a store.",
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/EncryptionType"
         },
-        "Type": {
-          "$ref": "#/definitions/EncryptionType"
+        "KeyArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "arn:([^:\n]*):([^:\n]*):([^:\n]*):([0-9]{12}):([^:\n]*)",
+          "description" : "An encryption key ARN."
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "required" : [ "Type" ],
+      "additionalProperties" : false
     },
-    "TagMap": {
-      "additionalProperties": false,
-      "patternProperties": {
-        ".+": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::Omics::ReferenceStore Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "omics:CreateReferenceStore",
-        "omics:TagResource",
-        "kms:DescribeKey"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "maxLength" : 127,
+      "minLength" : 1,
+      "pattern" : "^arn:.+$",
+      "description" : "The store's ARN."
     },
-    "delete": {
-      "permissions": [
-        "omics:DeleteReferenceStore"
-      ]
+    "CreationTime" : {
+      "type" : "string",
+      "description" : "When the store was created.",
+      "format" : "date-time"
     },
-    "list": {
-      "permissions": [
-        "omics:ListReferenceStores"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 255,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+      "description" : "A description for the store."
     },
-    "read": {
-      "permissions": [
-        "omics:GetReferenceStore",
-        "omics:ListTagsForResource"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 127,
+      "minLength" : 1,
+      "pattern" : "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
+      "description" : "A name for the store."
+    },
+    "ReferenceStoreId" : {
+      "type" : "string",
+      "maxLength" : 36,
+      "minLength" : 10,
+      "pattern" : "^[0-9]+$"
+    },
+    "SseConfig" : {
+      "$ref" : "#/definitions/SseConfig"
+    },
+    "Tags" : {
+      "$ref" : "#/definitions/TagMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/ReferenceStoreId"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The store's ARN.",
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "^arn:.+$",
-      "type": "string"
+  "required" : [ "Name" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/ReferenceStoreId" ],
+  "createOnlyProperties" : [ "/properties/Description", "/properties/Name", "/properties/SseConfig", "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/ReferenceStoreId" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "omics:TagResource", "omics:ListTagsForResource" ]
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "omics:CreateReferenceStore", "omics:TagResource", "kms:DescribeKey" ]
     },
-    "CreationTime": {
-      "description": "When the store was created.",
-      "format": "date-time",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "omics:GetReferenceStore", "omics:ListTagsForResource" ]
     },
-    "Description": {
-      "description": "A description for the store.",
-      "maxLength": 255,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "omics:DeleteReferenceStore" ]
     },
-    "Name": {
-      "description": "A name for the store.",
-      "maxLength": 127,
-      "minLength": 1,
-      "pattern": "^[\\p{L}||\\p{M}||\\p{Z}||\\p{S}||\\p{N}||\\p{P}]+$",
-      "type": "string"
-    },
-    "ReferenceStoreId": {
-      "maxLength": 36,
-      "minLength": 10,
-      "pattern": "^[0-9]+$",
-      "type": "string"
-    },
-    "SseConfig": {
-      "$ref": "#/definitions/SseConfig"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap"
+    "list" : {
+      "permissions" : [ "omics:ListReferenceStores" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/ReferenceStoreId"
-  ],
-  "required": [
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "omics:TagResource",
-      "omics:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
-  },
-  "typeName": "AWS::Omics::ReferenceStore"
+  "additionalProperties" : false
 }

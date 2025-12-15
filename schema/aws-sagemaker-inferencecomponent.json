@@ -1,466 +1,402 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "Alarm": {
-      "additionalProperties": false,
-      "properties": {
-        "AlarmName": {
-          "maxLength": 255,
-          "minLength": 1,
-          "pattern": "^(?!\\s*$).+",
-          "type": "string"
-        }
-      },
-      "required": [
-        "AlarmName"
-      ],
-      "type": "object"
+  "typeName" : "AWS::SageMaker::InferenceComponent",
+  "description" : "Resource Type definition for AWS::SageMaker::InferenceComponent",
+  "properties" : {
+    "InferenceComponentArn" : {
+      "$ref" : "#/definitions/InferenceComponentArn"
     },
-    "AutoRollbackConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "Alarms": {
-          "items": {
-            "$ref": "#/definitions/Alarm"
-          },
-          "maxItems": 10,
-          "minItems": 1,
-          "type": "array"
-        }
-      },
-      "required": [
-        "Alarms"
-      ],
-      "type": "object"
+    "InferenceComponentName" : {
+      "$ref" : "#/definitions/InferenceComponentName"
     },
-    "BaseInferenceComponentName": {
-      "description": "The name of the base inference component",
-      "maxLength": 63,
-      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-      "type": "string"
+    "EndpointArn" : {
+      "$ref" : "#/definitions/EndpointArn"
     },
-    "CapacitySizeValue": {
-      "description": "The number of copies for the inference component",
-      "type": "integer"
+    "EndpointName" : {
+      "$ref" : "#/definitions/EndpointName"
     },
-    "ContainerImage": {
-      "description": "The image to use for the container that will be materialized for the inference component",
-      "maxLength": 255,
-      "pattern": "[\\S]+",
-      "type": "string"
+    "VariantName" : {
+      "$ref" : "#/definitions/VariantName"
     },
-    "DeployedImage": {
-      "additionalProperties": false,
-      "description": "",
-      "properties": {
-        "ResolutionTime": {
-          "$ref": "#/definitions/Timestamp"
-        },
-        "ResolvedImage": {
-          "$ref": "#/definitions/ContainerImage"
-        },
-        "SpecifiedImage": {
-          "$ref": "#/definitions/ContainerImage"
-        }
-      },
-      "type": "object"
+    "FailureReason" : {
+      "$ref" : "#/definitions/FailureReason"
     },
-    "EndpointArn": {
-      "description": "The Amazon Resource Name (ARN) of the endpoint the inference component is associated with",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
+    "Specification" : {
+      "$ref" : "#/definitions/InferenceComponentSpecification"
     },
-    "EndpointName": {
-      "description": "The name of the endpoint the inference component is associated with",
-      "maxLength": 63,
-      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-      "type": "string"
+    "RuntimeConfig" : {
+      "$ref" : "#/definitions/InferenceComponentRuntimeConfig"
     },
-    "EnvironmentMap": {
-      "additionalProperties": false,
-      "description": "Environment variables to specify on the container",
-      "maxProperties": 16,
-      "patternProperties": {
-        "^[a-zA-Z_][a-zA-Z0-9_]{1,1024}$": {
-          "maxLength": 1024,
-          "pattern": "^[\\S\\s]*$",
-          "type": "string"
-        }
-      },
-      "type": "object"
+    "DeploymentConfig" : {
+      "$ref" : "#/definitions/InferenceComponentDeploymentConfig"
     },
-    "FailureReason": {
-      "description": "The failure reason if the inference component is in a failed state",
-      "maxLength": 63,
-      "type": "string"
+    "InferenceComponentStatus" : {
+      "$ref" : "#/definitions/InferenceComponentStatus"
     },
-    "InferenceComponentArn": {
-      "description": "The Amazon Resource Name (ARN) of the inference component",
-      "maxLength": 256,
-      "minLength": 1,
-      "type": "string"
+    "CreationTime" : {
+      "$ref" : "#/definitions/Timestamp"
     },
-    "InferenceComponentCapacitySize": {
-      "additionalProperties": false,
-      "description": "Capacity size configuration for the inference component",
-      "properties": {
-        "Type": {
-          "$ref": "#/definitions/InferenceComponentCapacitySizeType"
-        },
-        "Value": {
-          "$ref": "#/definitions/CapacitySizeValue"
-        }
-      },
-      "required": [
-        "Type",
-        "Value"
-      ],
-      "type": "object"
+    "LastModifiedTime" : {
+      "$ref" : "#/definitions/Timestamp"
     },
-    "InferenceComponentCapacitySizeType": {
-      "enum": [
-        "COPY_COUNT",
-        "CAPACITY_PERCENT"
-      ],
-      "type": "string"
-    },
-    "InferenceComponentComputeResourceRequirements": {
-      "additionalProperties": false,
-      "description": "",
-      "properties": {
-        "MaxMemoryRequiredInMb": {
-          "$ref": "#/definitions/MemoryInMb"
-        },
-        "MinMemoryRequiredInMb": {
-          "$ref": "#/definitions/MemoryInMb"
-        },
-        "NumberOfAcceleratorDevicesRequired": {
-          "$ref": "#/definitions/NumberOfAcceleratorDevices"
-        },
-        "NumberOfCpuCoresRequired": {
-          "$ref": "#/definitions/NumberOfCpuCores"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentContainerSpecification": {
-      "additionalProperties": false,
-      "description": "",
-      "properties": {
-        "ArtifactUrl": {
-          "$ref": "#/definitions/Url"
-        },
-        "DeployedImage": {
-          "$ref": "#/definitions/DeployedImage"
-        },
-        "Environment": {
-          "$ref": "#/definitions/EnvironmentMap"
-        },
-        "Image": {
-          "$ref": "#/definitions/ContainerImage"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentCopyCount": {
-      "description": "The number of copies for the inference component",
-      "minimum": 0,
-      "type": "integer"
-    },
-    "InferenceComponentDeploymentConfig": {
-      "additionalProperties": false,
-      "description": "The deployment config for the inference component",
-      "properties": {
-        "AutoRollbackConfiguration": {
-          "$ref": "#/definitions/AutoRollbackConfiguration"
-        },
-        "RollingUpdatePolicy": {
-          "$ref": "#/definitions/InferenceComponentRollingUpdatePolicy"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentName": {
-      "description": "The name of the inference component",
-      "maxLength": 63,
-      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-      "type": "string"
-    },
-    "InferenceComponentRollingUpdatePolicy": {
-      "additionalProperties": false,
-      "description": "The rolling update policy for the inference component",
-      "properties": {
-        "MaximumBatchSize": {
-          "$ref": "#/definitions/InferenceComponentCapacitySize"
-        },
-        "MaximumExecutionTimeoutInSeconds": {
-          "$ref": "#/definitions/MaximumExecutionTimeoutInSeconds"
-        },
-        "RollbackMaximumBatchSize": {
-          "$ref": "#/definitions/InferenceComponentCapacitySize"
-        },
-        "WaitIntervalInSeconds": {
-          "$ref": "#/definitions/WaitIntervalInSeconds"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentRuntimeConfig": {
-      "additionalProperties": false,
-      "description": "The runtime config for the inference component",
-      "properties": {
-        "CopyCount": {
-          "$ref": "#/definitions/InferenceComponentCopyCount"
-        },
-        "CurrentCopyCount": {
-          "$ref": "#/definitions/InferenceComponentCopyCount"
-        },
-        "DesiredCopyCount": {
-          "$ref": "#/definitions/InferenceComponentCopyCount"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentSpecification": {
-      "additionalProperties": false,
-      "description": "The specification for the inference component",
-      "properties": {
-        "BaseInferenceComponentName": {
-          "$ref": "#/definitions/BaseInferenceComponentName"
-        },
-        "ComputeResourceRequirements": {
-          "$ref": "#/definitions/InferenceComponentComputeResourceRequirements"
-        },
-        "Container": {
-          "$ref": "#/definitions/InferenceComponentContainerSpecification"
-        },
-        "ModelName": {
-          "$ref": "#/definitions/ModelName"
-        },
-        "StartupParameters": {
-          "$ref": "#/definitions/InferenceComponentStartupParameters"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentStartupParameters": {
-      "additionalProperties": false,
-      "description": "",
-      "properties": {
-        "ContainerStartupHealthCheckTimeoutInSeconds": {
-          "$ref": "#/definitions/StartupParameterTimeoutInSeconds"
-        },
-        "ModelDataDownloadTimeoutInSeconds": {
-          "$ref": "#/definitions/StartupParameterTimeoutInSeconds"
-        }
-      },
-      "type": "object"
-    },
-    "InferenceComponentStatus": {
-      "enum": [
-        "InService",
-        "Creating",
-        "Updating",
-        "Failed",
-        "Deleting"
-      ],
-      "type": "string"
-    },
-    "MaximumExecutionTimeoutInSeconds": {
-      "maximum": 28800,
-      "minimum": 600,
-      "type": "integer"
-    },
-    "MemoryInMb": {
-      "minimum": 128,
-      "type": "integer"
-    },
-    "ModelName": {
-      "description": "The name of the model to use with the inference component",
-      "maxLength": 63,
-      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-      "type": "string"
-    },
-    "NumberOfAcceleratorDevices": {
-      "minimum": 1,
-      "type": "number"
-    },
-    "NumberOfCpuCores": {
-      "minimum": 0.25,
-      "type": "number"
-    },
-    "StartupParameterTimeoutInSeconds": {
-      "maximum": 3600,
-      "minimum": 60,
-      "type": "integer"
-    },
-    "Tag": {
-      "additionalProperties": false,
-      "description": "A tag in the form of a key-value pair to associate with the resource",
-      "properties": {
-        "Key": {
-          "description": "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Value": {
-          "description": "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
-        }
-      },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
-    },
-    "TagList": {
-      "description": "An array of tags to apply to the resource",
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "type": "array"
-    },
-    "Timestamp": {
-      "type": "string"
-    },
-    "Url": {
-      "maxLength": 1024,
-      "pattern": "^(https|s3)://([^/]+)/?(.*)$",
-      "type": "string"
-    },
-    "VariantName": {
-      "description": "The name of the endpoint variant the inference component is associated with",
-      "maxLength": 63,
-      "pattern": "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
-      "type": "string"
-    },
-    "WaitIntervalInSeconds": {
-      "maximum": 3600,
-      "minimum": 0,
-      "type": "integer"
+    "Tags" : {
+      "$ref" : "#/definitions/TagList"
     }
   },
-  "description": "Resource Type definition for AWS::SageMaker::InferenceComponent",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "sagemaker:AddTags",
-        "sagemaker:ListTags",
-        "sagemaker:CreateInferenceComponent",
-        "sagemaker:DescribeInferenceComponent"
-      ]
+  "required" : [ "EndpointName", "Specification" ],
+  "additionalProperties" : false,
+  "definitions" : {
+    "InferenceComponentArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the inference component",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "delete": {
-      "permissions": [
-        "sagemaker:DescribeInferenceComponent",
-        "sagemaker:DeleteInferenceComponent",
-        "sagemaker:DeleteTags"
-      ]
+    "InferenceComponentName" : {
+      "description" : "The name of the inference component",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+      "maxLength" : 63
     },
-    "list": {
-      "permissions": [
-        "sagemaker:ListInferenceComponents",
-        "sagemaker:DescribeInferenceComponent",
-        "sagemaker:ListTags"
-      ]
+    "EndpointArn" : {
+      "description" : "The Amazon Resource Name (ARN) of the endpoint the inference component is associated with",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256
     },
-    "read": {
-      "permissions": [
-        "sagemaker:DescribeInferenceComponent",
-        "sagemaker:ListTags"
-      ]
+    "EndpointName" : {
+      "description" : "The name of the endpoint the inference component is associated with",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+      "maxLength" : 63
     },
-    "update": {
-      "permissions": [
-        "sagemaker:UpdateInferenceComponent",
-        "sagemaker:UpdateInferenceComponentRuntimeConfig",
-        "sagemaker:DescribeInferenceComponent",
-        "sagemaker:AddTags",
-        "sagemaker:ListTags",
-        "sagemaker:DeleteTags"
-      ]
+    "VariantName" : {
+      "description" : "The name of the endpoint variant the inference component is associated with",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+      "maxLength" : 63
+    },
+    "FailureReason" : {
+      "description" : "The failure reason if the inference component is in a failed state",
+      "type" : "string",
+      "maxLength" : 63
+    },
+    "ModelName" : {
+      "description" : "The name of the model to use with the inference component",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+      "maxLength" : 63
+    },
+    "Timestamp" : {
+      "type" : "string"
+    },
+    "ContainerImage" : {
+      "description" : "The image to use for the container that will be materialized for the inference component",
+      "type" : "string",
+      "pattern" : "[\\S]+",
+      "maxLength" : 255
+    },
+    "DeployedImage" : {
+      "description" : "",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SpecifiedImage" : {
+          "$ref" : "#/definitions/ContainerImage"
+        },
+        "ResolvedImage" : {
+          "$ref" : "#/definitions/ContainerImage"
+        },
+        "ResolutionTime" : {
+          "$ref" : "#/definitions/Timestamp"
+        }
+      }
+    },
+    "Url" : {
+      "type" : "string",
+      "pattern" : "^(https|s3)://([^/]+)/?(.*)$",
+      "maxLength" : 1024
+    },
+    "EnvironmentMap" : {
+      "description" : "Environment variables to specify on the container",
+      "type" : "object",
+      "additionalProperties" : false,
+      "maxProperties" : 16,
+      "patternProperties" : {
+        "^[a-zA-Z_][a-zA-Z0-9_]{1,1024}$" : {
+          "type" : "string",
+          "pattern" : "^[\\S\\s]*$",
+          "maxLength" : 1024
+        }
+      }
+    },
+    "InferenceComponentContainerSpecification" : {
+      "description" : "",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeployedImage" : {
+          "$ref" : "#/definitions/DeployedImage"
+        },
+        "Image" : {
+          "$ref" : "#/definitions/ContainerImage"
+        },
+        "ArtifactUrl" : {
+          "$ref" : "#/definitions/Url"
+        },
+        "Environment" : {
+          "$ref" : "#/definitions/EnvironmentMap"
+        }
+      }
+    },
+    "StartupParameterTimeoutInSeconds" : {
+      "type" : "integer",
+      "minimum" : 60,
+      "maximum" : 3600
+    },
+    "BaseInferenceComponentName" : {
+      "description" : "The name of the base inference component",
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9](-*[a-zA-Z0-9])*$",
+      "maxLength" : 63
+    },
+    "InferenceComponentStartupParameters" : {
+      "description" : "",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ModelDataDownloadTimeoutInSeconds" : {
+          "$ref" : "#/definitions/StartupParameterTimeoutInSeconds"
+        },
+        "ContainerStartupHealthCheckTimeoutInSeconds" : {
+          "$ref" : "#/definitions/StartupParameterTimeoutInSeconds"
+        }
+      }
+    },
+    "NumberOfCpuCores" : {
+      "type" : "number",
+      "minimum" : 0.25
+    },
+    "NumberOfAcceleratorDevices" : {
+      "type" : "number",
+      "minimum" : 1
+    },
+    "MemoryInMb" : {
+      "type" : "integer",
+      "minimum" : 128
+    },
+    "InferenceComponentComputeResourceRequirements" : {
+      "description" : "",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "NumberOfCpuCoresRequired" : {
+          "$ref" : "#/definitions/NumberOfCpuCores"
+        },
+        "NumberOfAcceleratorDevicesRequired" : {
+          "$ref" : "#/definitions/NumberOfAcceleratorDevices"
+        },
+        "MinMemoryRequiredInMb" : {
+          "$ref" : "#/definitions/MemoryInMb"
+        },
+        "MaxMemoryRequiredInMb" : {
+          "$ref" : "#/definitions/MemoryInMb"
+        }
+      }
+    },
+    "InferenceComponentSpecification" : {
+      "description" : "The specification for the inference component",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ModelName" : {
+          "$ref" : "#/definitions/ModelName"
+        },
+        "BaseInferenceComponentName" : {
+          "$ref" : "#/definitions/BaseInferenceComponentName"
+        },
+        "Container" : {
+          "$ref" : "#/definitions/InferenceComponentContainerSpecification"
+        },
+        "StartupParameters" : {
+          "$ref" : "#/definitions/InferenceComponentStartupParameters"
+        },
+        "ComputeResourceRequirements" : {
+          "$ref" : "#/definitions/InferenceComponentComputeResourceRequirements"
+        }
+      }
+    },
+    "InferenceComponentCopyCount" : {
+      "description" : "The number of copies for the inference component",
+      "type" : "integer",
+      "minimum" : 0
+    },
+    "InferenceComponentRuntimeConfig" : {
+      "description" : "The runtime config for the inference component",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CopyCount" : {
+          "$ref" : "#/definitions/InferenceComponentCopyCount"
+        },
+        "DesiredCopyCount" : {
+          "$ref" : "#/definitions/InferenceComponentCopyCount"
+        },
+        "CurrentCopyCount" : {
+          "$ref" : "#/definitions/InferenceComponentCopyCount"
+        }
+      }
+    },
+    "InferenceComponentDeploymentConfig" : {
+      "description" : "The deployment config for the inference component",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RollingUpdatePolicy" : {
+          "$ref" : "#/definitions/InferenceComponentRollingUpdatePolicy"
+        },
+        "AutoRollbackConfiguration" : {
+          "$ref" : "#/definitions/AutoRollbackConfiguration"
+        }
+      }
+    },
+    "AutoRollbackConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Alarms" : {
+          "type" : "array",
+          "minItems" : 1,
+          "maxItems" : 10,
+          "items" : {
+            "$ref" : "#/definitions/Alarm"
+          }
+        }
+      },
+      "required" : [ "Alarms" ]
+    },
+    "Alarm" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AlarmName" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 255,
+          "pattern" : "^(?!\\s*$).+"
+        }
+      },
+      "required" : [ "AlarmName" ]
+    },
+    "InferenceComponentRollingUpdatePolicy" : {
+      "description" : "The rolling update policy for the inference component",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MaximumBatchSize" : {
+          "$ref" : "#/definitions/InferenceComponentCapacitySize"
+        },
+        "WaitIntervalInSeconds" : {
+          "$ref" : "#/definitions/WaitIntervalInSeconds"
+        },
+        "RollbackMaximumBatchSize" : {
+          "$ref" : "#/definitions/InferenceComponentCapacitySize"
+        },
+        "MaximumExecutionTimeoutInSeconds" : {
+          "$ref" : "#/definitions/MaximumExecutionTimeoutInSeconds"
+        }
+      }
+    },
+    "WaitIntervalInSeconds" : {
+      "type" : "integer",
+      "minimum" : 0,
+      "maximum" : 3600
+    },
+    "MaximumExecutionTimeoutInSeconds" : {
+      "type" : "integer",
+      "minimum" : 600,
+      "maximum" : 28800
+    },
+    "InferenceComponentCapacitySize" : {
+      "type" : "object",
+      "description" : "Capacity size configuration for the inference component",
+      "required" : [ "Type", "Value" ],
+      "additionalProperties" : false,
+      "properties" : {
+        "Type" : {
+          "$ref" : "#/definitions/InferenceComponentCapacitySizeType"
+        },
+        "Value" : {
+          "$ref" : "#/definitions/CapacitySizeValue"
+        }
+      }
+    },
+    "InferenceComponentCapacitySizeType" : {
+      "type" : "string",
+      "enum" : [ "COPY_COUNT", "CAPACITY_PERCENT" ]
+    },
+    "CapacitySizeValue" : {
+      "description" : "The number of copies for the inference component",
+      "type" : "integer"
+    },
+    "InferenceComponentStatus" : {
+      "type" : "string",
+      "enum" : [ "InService", "Creating", "Updating", "Failed", "Deleting" ]
+    },
+    "Tag" : {
+      "description" : "A tag in the form of a key-value pair to associate with the resource",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "description" : "The key name of the tag. You can specify a value that is 1 to 127 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "type" : "string",
+          "description" : "The value for the tag. You can specify a value that is 1 to 255 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -",
+          "minLength" : 1,
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Key", "Value" ]
+    },
+    "TagList" : {
+      "type" : "array",
+      "maxItems" : 50,
+      "description" : "An array of tags to apply to the resource",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
-  "primaryIdentifier": [
-    "/properties/InferenceComponentArn"
-  ],
-  "properties": {
-    "CreationTime": {
-      "$ref": "#/definitions/Timestamp"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "sagemaker:AddTags", "sagemaker:ListTags", "sagemaker:DeleteTags" ]
+  },
+  "primaryIdentifier" : [ "/properties/InferenceComponentArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "sagemaker:AddTags", "sagemaker:ListTags", "sagemaker:CreateInferenceComponent", "sagemaker:DescribeInferenceComponent" ]
     },
-    "DeploymentConfig": {
-      "$ref": "#/definitions/InferenceComponentDeploymentConfig"
+    "update" : {
+      "permissions" : [ "sagemaker:UpdateInferenceComponent", "sagemaker:UpdateInferenceComponentRuntimeConfig", "sagemaker:DescribeInferenceComponent", "sagemaker:AddTags", "sagemaker:ListTags", "sagemaker:DeleteTags" ]
     },
-    "EndpointArn": {
-      "$ref": "#/definitions/EndpointArn"
+    "delete" : {
+      "permissions" : [ "sagemaker:DescribeInferenceComponent", "sagemaker:DeleteInferenceComponent", "sagemaker:DeleteTags" ]
     },
-    "EndpointName": {
-      "$ref": "#/definitions/EndpointName"
+    "read" : {
+      "permissions" : [ "sagemaker:DescribeInferenceComponent", "sagemaker:ListTags" ]
     },
-    "FailureReason": {
-      "$ref": "#/definitions/FailureReason"
-    },
-    "InferenceComponentArn": {
-      "$ref": "#/definitions/InferenceComponentArn"
-    },
-    "InferenceComponentName": {
-      "$ref": "#/definitions/InferenceComponentName"
-    },
-    "InferenceComponentStatus": {
-      "$ref": "#/definitions/InferenceComponentStatus"
-    },
-    "LastModifiedTime": {
-      "$ref": "#/definitions/Timestamp"
-    },
-    "RuntimeConfig": {
-      "$ref": "#/definitions/InferenceComponentRuntimeConfig"
-    },
-    "Specification": {
-      "$ref": "#/definitions/InferenceComponentSpecification"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagList"
-    },
-    "VariantName": {
-      "$ref": "#/definitions/VariantName"
+    "list" : {
+      "permissions" : [ "sagemaker:ListInferenceComponents", "sagemaker:DescribeInferenceComponent", "sagemaker:ListTags" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/InferenceComponentArn",
-    "/properties/Specification/Container/DeployedImage",
-    "/properties/RuntimeConfig/DesiredCopyCount",
-    "/properties/RuntimeConfig/CurrentCopyCount",
-    "/properties/CreationTime",
-    "/properties/LastModifiedTime",
-    "/properties/FailureReason",
-    "/properties/InferenceComponentStatus"
-  ],
-  "required": [
-    "EndpointName",
-    "Specification"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "sagemaker:AddTags",
-      "sagemaker:ListTags",
-      "sagemaker:DeleteTags"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::SageMaker::InferenceComponent",
-  "writeOnlyProperties": [
-    "/properties/Specification/Container/Image",
-    "/properties/RuntimeConfig/CopyCount",
-    "/properties/DeploymentConfig"
-  ]
+  "readOnlyProperties" : [ "/properties/InferenceComponentArn", "/properties/Specification/Container/DeployedImage", "/properties/RuntimeConfig/DesiredCopyCount", "/properties/RuntimeConfig/CurrentCopyCount", "/properties/CreationTime", "/properties/LastModifiedTime", "/properties/FailureReason", "/properties/InferenceComponentStatus" ],
+  "writeOnlyProperties" : [ "/properties/Specification/Container/Image", "/properties/RuntimeConfig/CopyCount", "/properties/DeploymentConfig" ]
 }

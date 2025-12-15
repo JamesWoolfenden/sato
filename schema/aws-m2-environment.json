@@ -1,299 +1,218 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Description",
-    "/properties/EngineType",
-    "/properties/KmsKeyId",
-    "/properties/Name",
-    "/properties/NetworkType",
-    "/properties/PubliclyAccessible",
-    "/properties/SecurityGroupIds",
-    "/properties/StorageConfigurations",
-    "/properties/SubnetIds"
-  ],
-  "definitions": {
-    "EfsStorageConfiguration": {
-      "additionalProperties": false,
-      "description": "Defines the storage configuration for an Amazon EFS file system.",
-      "properties": {
-        "FileSystemId": {
-          "description": "The file system identifier.",
-          "pattern": "^\\S{1,200}$",
-          "type": "string"
+  "typeName" : "AWS::M2::Environment",
+  "description" : "Represents a runtime environment that can run migrated mainframe applications.",
+  "definitions" : {
+    "EfsStorageConfiguration" : {
+      "type" : "object",
+      "description" : "Defines the storage configuration for an Amazon EFS file system.",
+      "properties" : {
+        "FileSystemId" : {
+          "type" : "string",
+          "description" : "The file system identifier.",
+          "pattern" : "^\\S{1,200}$"
         },
-        "MountPoint": {
-          "description": "The mount point for the file system.",
-          "pattern": "^\\S{1,200}$",
-          "type": "string"
+        "MountPoint" : {
+          "type" : "string",
+          "description" : "The mount point for the file system.",
+          "pattern" : "^\\S{1,200}$"
         }
       },
-      "required": [
-        "FileSystemId",
-        "MountPoint"
-      ],
-      "type": "object"
+      "required" : [ "FileSystemId", "MountPoint" ],
+      "additionalProperties" : false
     },
-    "EngineType": {
-      "description": "The target platform for the environment.",
-      "enum": [
-        "microfocus",
-        "bluage"
-      ],
-      "type": "string"
+    "EngineType" : {
+      "type" : "string",
+      "description" : "The target platform for the environment.",
+      "enum" : [ "microfocus", "bluage" ]
     },
-    "FsxStorageConfiguration": {
-      "additionalProperties": false,
-      "description": "Defines the storage configuration for an Amazon FSx file system.",
-      "properties": {
-        "FileSystemId": {
-          "description": "The file system identifier.",
-          "pattern": "^\\S{1,200}$",
-          "type": "string"
+    "FsxStorageConfiguration" : {
+      "type" : "object",
+      "description" : "Defines the storage configuration for an Amazon FSx file system.",
+      "properties" : {
+        "FileSystemId" : {
+          "type" : "string",
+          "description" : "The file system identifier.",
+          "pattern" : "^\\S{1,200}$"
         },
-        "MountPoint": {
-          "description": "The mount point for the file system.",
-          "pattern": "^\\S{1,200}$",
-          "type": "string"
+        "MountPoint" : {
+          "type" : "string",
+          "description" : "The mount point for the file system.",
+          "pattern" : "^\\S{1,200}$"
         }
       },
-      "required": [
-        "FileSystemId",
-        "MountPoint"
-      ],
-      "type": "object"
+      "required" : [ "FileSystemId", "MountPoint" ],
+      "additionalProperties" : false
     },
-    "HighAvailabilityConfig": {
-      "additionalProperties": false,
-      "description": "Defines the details of a high availability configuration.",
-      "properties": {
-        "DesiredCapacity": {
-          "maximum": 100,
-          "minimum": 1,
-          "type": "integer"
+    "HighAvailabilityConfig" : {
+      "type" : "object",
+      "description" : "Defines the details of a high availability configuration.",
+      "properties" : {
+        "DesiredCapacity" : {
+          "type" : "integer",
+          "maximum" : 100,
+          "minimum" : 1
         }
       },
-      "required": [
-        "DesiredCapacity"
-      ],
-      "type": "object"
+      "required" : [ "DesiredCapacity" ],
+      "additionalProperties" : false
     },
-    "NetworkType": {
-      "enum": [
-        "ipv4",
-        "dual"
-      ],
-      "type": "string"
+    "NetworkType" : {
+      "type" : "string",
+      "enum" : [ "ipv4", "dual" ]
     },
-    "StorageConfiguration": {
-      "description": "Defines the storage configuration for an environment.",
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Efs": {
-              "$ref": "#/definitions/EfsStorageConfiguration"
-            }
-          },
-          "required": [
-            "Efs"
-          ]
+    "StorageConfiguration" : {
+      "type" : "object",
+      "description" : "Defines the storage configuration for an environment.",
+      "oneOf" : [ {
+        "properties" : {
+          "Efs" : {
+            "$ref" : "#/definitions/EfsStorageConfiguration"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Fsx": {
-              "$ref": "#/definitions/FsxStorageConfiguration"
-            }
-          },
-          "required": [
-            "Fsx"
-          ]
-        }
-      ],
-      "type": "object"
+        "required" : [ "Efs" ],
+        "additionalProperties" : false
+      }, {
+        "properties" : {
+          "Fsx" : {
+            "$ref" : "#/definitions/FsxStorageConfiguration"
+          }
+        },
+        "required" : [ "Fsx" ],
+        "additionalProperties" : false
+      } ]
     },
-    "TagMap": {
-      "additionalProperties": false,
-      "description": "Defines tags associated to an environment.",
-      "maxProperties": 200,
-      "minProperties": 0,
-      "patternProperties": {
-        "^(?!aws:).+$": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+    "TagMap" : {
+      "type" : "object",
+      "description" : "Defines tags associated to an environment.",
+      "maxProperties" : 200,
+      "minProperties" : 0,
+      "patternProperties" : {
+        "^(?!aws:).+$" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     }
   },
-  "description": "Represents a runtime environment that can run migrated mainframe applications.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "ec2:CreateNetworkInterface",
-        "ec2:CreateNetworkInterfacePermission",
-        "ec2:DescribeNetworkInterfaces",
-        "ec2:DescribeSecurityGroups",
-        "ec2:DescribeSubnets",
-        "ec2:DescribeVpcAttribute",
-        "ec2:DescribeVpcs",
-        "ec2:ModifyNetworkInterfaceAttribute",
-        "elasticfilesystem:DescribeMountTargets",
-        "elasticloadbalancing:CreateLoadBalancer",
-        "elasticloadbalancing:DeleteLoadBalancer",
-        "elasticloadbalancing:AddTags",
-        "fsx:DescribeFileSystems",
-        "iam:CreateServiceLinkedRole",
-        "kms:DescribeKey",
-        "kms:CreateGrant",
-        "m2:CreateEnvironment",
-        "m2:GetEnvironment",
-        "m2:ListTagsForResource",
-        "m2:TagResource"
-      ],
-      "timeoutInMinutes": 120
+  "properties" : {
+    "Description" : {
+      "type" : "string",
+      "description" : "The description of the environment.",
+      "maxLength" : 500,
+      "minLength" : 0
     },
-    "delete": {
-      "permissions": [
-        "elasticloadbalancing:DeleteLoadBalancer",
-        "m2:DeleteEnvironment",
-        "m2:GetEnvironment"
-      ],
-      "timeoutInMinutes": 120
+    "EngineType" : {
+      "$ref" : "#/definitions/EngineType"
     },
-    "list": {
-      "permissions": [
-        "m2:ListEnvironments"
-      ]
+    "EngineVersion" : {
+      "type" : "string",
+      "description" : "The version of the runtime engine for the environment.",
+      "pattern" : "^\\S{1,10}$"
     },
-    "read": {
-      "permissions": [
-        "m2:ListTagsForResource",
-        "m2:GetEnvironment"
-      ]
+    "EnvironmentArn" : {
+      "type" : "string",
+      "description" : "The Amazon Resource Name (ARN) of the runtime environment.",
+      "pattern" : "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$"
     },
-    "update": {
-      "permissions": [
-        "m2:TagResource",
-        "m2:UntagResource",
-        "m2:ListTagsForResource",
-        "m2:GetEnvironment",
-        "m2:UpdateEnvironment",
-        "kms:DescribeKey"
-      ],
-      "timeoutInMinutes": 120
+    "EnvironmentId" : {
+      "type" : "string",
+      "description" : "The unique identifier of the environment.",
+      "pattern" : "^\\S{1,80}$"
+    },
+    "HighAvailabilityConfig" : {
+      "$ref" : "#/definitions/HighAvailabilityConfig"
+    },
+    "InstanceType" : {
+      "type" : "string",
+      "description" : "The type of instance underlying the environment.",
+      "pattern" : "^\\S{1,20}$"
+    },
+    "KmsKeyId" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "description" : "The ID or the Amazon Resource Name (ARN) of the customer managed KMS Key used for encrypting environment-related resources."
+    },
+    "Name" : {
+      "type" : "string",
+      "description" : "The name of the environment.",
+      "pattern" : "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$"
+    },
+    "NetworkType" : {
+      "$ref" : "#/definitions/NetworkType"
+    },
+    "PreferredMaintenanceWindow" : {
+      "type" : "string",
+      "description" : "Configures a desired maintenance window for the environment. If you do not provide a value, a random system-generated value will be assigned.",
+      "pattern" : "^\\S{1,50}$"
+    },
+    "PubliclyAccessible" : {
+      "type" : "boolean",
+      "description" : "Specifies whether the environment is publicly accessible."
+    },
+    "SecurityGroupIds" : {
+      "type" : "array",
+      "description" : "The list of security groups for the VPC associated with this environment.",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^\\S{1,50}$"
+      }
+    },
+    "StorageConfigurations" : {
+      "type" : "array",
+      "description" : "The storage configurations defined for the runtime environment.",
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/StorageConfiguration"
+      }
+    },
+    "SubnetIds" : {
+      "type" : "array",
+      "description" : "The unique identifiers of the subnets assigned to this runtime environment.",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string",
+        "pattern" : "^\\S{1,50}$"
+      }
+    },
+    "Tags" : {
+      "description" : "Tags associated to this environment.",
+      "$ref" : "#/definitions/TagMap"
     }
   },
-  "primaryIdentifier": [
-    "/properties/EnvironmentArn"
-  ],
-  "properties": {
-    "Description": {
-      "description": "The description of the environment.",
-      "maxLength": 500,
-      "minLength": 0,
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : false,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "m2:TagResource", "m2:UntagResource", "m2:ListTagsForResource" ]
+  },
+  "required" : [ "EngineType", "InstanceType", "Name" ],
+  "readOnlyProperties" : [ "/properties/EnvironmentArn", "/properties/EnvironmentId" ],
+  "createOnlyProperties" : [ "/properties/Description", "/properties/EngineType", "/properties/KmsKeyId", "/properties/Name", "/properties/NetworkType", "/properties/PubliclyAccessible", "/properties/SecurityGroupIds", "/properties/StorageConfigurations", "/properties/SubnetIds" ],
+  "primaryIdentifier" : [ "/properties/EnvironmentArn" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "ec2:CreateNetworkInterface", "ec2:CreateNetworkInterfacePermission", "ec2:DescribeNetworkInterfaces", "ec2:DescribeSecurityGroups", "ec2:DescribeSubnets", "ec2:DescribeVpcAttribute", "ec2:DescribeVpcs", "ec2:ModifyNetworkInterfaceAttribute", "elasticfilesystem:DescribeMountTargets", "elasticloadbalancing:CreateLoadBalancer", "elasticloadbalancing:DeleteLoadBalancer", "elasticloadbalancing:AddTags", "fsx:DescribeFileSystems", "iam:CreateServiceLinkedRole", "kms:DescribeKey", "kms:CreateGrant", "m2:CreateEnvironment", "m2:GetEnvironment", "m2:ListTagsForResource", "m2:TagResource" ],
+      "timeoutInMinutes" : 120
     },
-    "EngineType": {
-      "$ref": "#/definitions/EngineType"
+    "read" : {
+      "permissions" : [ "m2:ListTagsForResource", "m2:GetEnvironment" ]
     },
-    "EngineVersion": {
-      "description": "The version of the runtime engine for the environment.",
-      "pattern": "^\\S{1,10}$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "m2:TagResource", "m2:UntagResource", "m2:ListTagsForResource", "m2:GetEnvironment", "m2:UpdateEnvironment", "kms:DescribeKey" ],
+      "timeoutInMinutes" : 120
     },
-    "EnvironmentArn": {
-      "description": "The Amazon Resource Name (ARN) of the runtime environment.",
-      "pattern": "^arn:(aws|aws-cn|aws-iso|aws-iso-[a-z]{1}|aws-us-gov):[A-Za-z0-9][A-Za-z0-9_/.-]{0,62}:([a-z]{2}-((iso[a-z]{0,1}-)|(gov-)){0,1}[a-z]+-[0-9]):[0-9]{12}:[A-Za-z0-9/][A-Za-z0-9:_/+=,@.-]{0,1023}$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "elasticloadbalancing:DeleteLoadBalancer", "m2:DeleteEnvironment", "m2:GetEnvironment" ],
+      "timeoutInMinutes" : 120
     },
-    "EnvironmentId": {
-      "description": "The unique identifier of the environment.",
-      "pattern": "^\\S{1,80}$",
-      "type": "string"
-    },
-    "HighAvailabilityConfig": {
-      "$ref": "#/definitions/HighAvailabilityConfig"
-    },
-    "InstanceType": {
-      "description": "The type of instance underlying the environment.",
-      "pattern": "^\\S{1,20}$",
-      "type": "string"
-    },
-    "KmsKeyId": {
-      "description": "The ID or the Amazon Resource Name (ARN) of the customer managed KMS Key used for encrypting environment-related resources.",
-      "maxLength": 2048,
-      "type": "string"
-    },
-    "Name": {
-      "description": "The name of the environment.",
-      "pattern": "^[A-Za-z0-9][A-Za-z0-9_\\-]{1,59}$",
-      "type": "string"
-    },
-    "NetworkType": {
-      "$ref": "#/definitions/NetworkType"
-    },
-    "PreferredMaintenanceWindow": {
-      "description": "Configures a desired maintenance window for the environment. If you do not provide a value, a random system-generated value will be assigned.",
-      "pattern": "^\\S{1,50}$",
-      "type": "string"
-    },
-    "PubliclyAccessible": {
-      "description": "Specifies whether the environment is publicly accessible.",
-      "type": "boolean"
-    },
-    "SecurityGroupIds": {
-      "description": "The list of security groups for the VPC associated with this environment.",
-      "insertionOrder": false,
-      "items": {
-        "pattern": "^\\S{1,50}$",
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "StorageConfigurations": {
-      "description": "The storage configurations defined for the runtime environment.",
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/StorageConfiguration"
-      },
-      "type": "array"
-    },
-    "SubnetIds": {
-      "description": "The unique identifiers of the subnets assigned to this runtime environment.",
-      "insertionOrder": false,
-      "items": {
-        "pattern": "^\\S{1,50}$",
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "Tags": {
-      "$ref": "#/definitions/TagMap",
-      "description": "Tags associated to this environment."
+    "list" : {
+      "permissions" : [ "m2:ListEnvironments" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/EnvironmentArn",
-    "/properties/EnvironmentId"
-  ],
-  "required": [
-    "EngineType",
-    "InstanceType",
-    "Name"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "permissions": [
-      "m2:TagResource",
-      "m2:UntagResource",
-      "m2:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::M2::Environment"
+  "additionalProperties" : false
 }

@@ -1,146 +1,104 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/WorkspaceId",
-    "/properties/SyncSource",
-    "/properties/SyncRole",
-    "/properties/Tags"
-  ],
-  "definitions": {
-    "DateTimeFormat": {
-      "format": "date-time",
-      "type": "string"
+  "typeName" : "AWS::IoTTwinMaker::SyncJob",
+  "description" : "Resource schema for AWS::IoTTwinMaker::SyncJob",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iottwinmaker",
+  "definitions" : {
+    "DateTimeFormat" : {
+      "type" : "string",
+      "format" : "date-time"
     }
   },
-  "description": "Resource schema for AWS::IoTTwinMaker::SyncJob",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iam:PassRole",
-        "iottwinmaker:CreateSyncJob",
-        "iottwinmaker:GetSyncJob",
-        "iottwinmaker:GetWorkspace",
-        "iottwinmaker:ListTagsForResource",
-        "iottwinmaker:TagResource"
-      ]
+  "properties" : {
+    "WorkspaceId" : {
+      "description" : "The ID of the workspace.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+"
     },
-    "delete": {
-      "permissions": [
-        "iottwinmaker:DeleteSyncJob",
-        "iottwinmaker:GetSyncJob",
-        "iottwinmaker:GetWorkspace"
-      ]
+    "SyncSource" : {
+      "description" : "The source of the SyncJob.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128
     },
-    "list": {
-      "handlerSchema": {
-        "properties": {
-          "WorkspaceId": {
-            "$ref": "resource-schema.json#/properties/WorkspaceId",
-            "type": "string"
-          }
-        },
-        "required": [
-          "WorkspaceId"
-        ]
-      },
-      "permissions": [
-        "iottwinmaker:GetWorkspace",
-        "iottwinmaker:ListSyncJobs",
-        "iottwinmaker:ListTagsForResource"
-      ]
+    "SyncRole" : {
+      "description" : "The IAM Role that execute SyncJob.",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 2048,
+      "pattern" : "arn:((aws)|(aws-cn)|(aws-us-gov)):iam::[0-9]{12}:role/.*"
     },
-    "read": {
-      "permissions": [
-        "iottwinmaker:GetSyncJob",
-        "iottwinmaker:GetWorkspace",
-        "iottwinmaker:ListTagsForResource"
-      ]
-    }
-  },
-  "primaryIdentifier": [
-    "/properties/WorkspaceId",
-    "/properties/SyncSource"
-  ],
-  "properties": {
-    "Arn": {
-      "description": "The ARN of the SyncJob.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+",
-      "type": "string"
+    "CreationDateTime" : {
+      "description" : "The date and time when the sync job was created.",
+      "$ref" : "#/definitions/DateTimeFormat"
     },
-    "CreationDateTime": {
-      "$ref": "#/definitions/DateTimeFormat",
-      "description": "The date and time when the sync job was created."
+    "UpdateDateTime" : {
+      "description" : "The date and time when the sync job was updated.",
+      "$ref" : "#/definitions/DateTimeFormat"
     },
-    "State": {
-      "description": "The state of SyncJob.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[a-zA-Z_\\-0-9]+",
-      "type": "string"
+    "Arn" : {
+      "description" : "The ARN of the SyncJob.",
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 2048,
+      "pattern" : "arn:((aws)|(aws-cn)|(aws-us-gov)):iottwinmaker:[a-z0-9-]+:[0-9]{12}:[\\/a-zA-Z0-9_\\-\\.:]+"
     },
-    "SyncRole": {
-      "description": "The IAM Role that execute SyncJob.",
-      "maxLength": 2048,
-      "minLength": 20,
-      "pattern": "arn:((aws)|(aws-cn)|(aws-us-gov)):iam::[0-9]{12}:role/.*",
-      "type": "string"
+    "State" : {
+      "description" : "The state of SyncJob.",
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 128,
+      "pattern" : "[a-zA-Z_\\-0-9]+"
     },
-    "SyncSource": {
-      "description": "The source of the SyncJob.",
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    },
-    "Tags": {
-      "additionalProperties": false,
-      "description": "A key-value pair to associate with a resource.",
-      "patternProperties": {
-        "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+    "Tags" : {
+      "type" : "object",
+      "description" : "A key-value pair to associate with a resource.",
+      "patternProperties" : {
+        "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "type": "object"
-    },
-    "UpdateDateTime": {
-      "$ref": "#/definitions/DateTimeFormat",
-      "description": "The date and time when the sync job was updated."
-    },
-    "WorkspaceId": {
-      "description": "The ID of the workspace.",
-      "maxLength": 128,
-      "minLength": 1,
-      "pattern": "[a-zA-Z_0-9][a-zA-Z_\\-0-9]*[a-zA-Z0-9]+",
-      "type": "string"
+      "additionalProperties" : false
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationDateTime",
-    "/properties/UpdateDateTime",
-    "/properties/State"
-  ],
-  "replacementStrategy": "delete_then_create",
-  "required": [
-    "WorkspaceId",
-    "SyncSource",
-    "SyncRole"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-iottwinmaker",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iottwinmaker:TagResource",
-      "iottwinmaker:UntagResource",
-      "iottwinmaker:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": false,
-    "taggable": true
+  "additionalProperties" : false,
+  "required" : [ "WorkspaceId", "SyncSource", "SyncRole" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationDateTime", "/properties/UpdateDateTime", "/properties/State" ],
+  "createOnlyProperties" : [ "/properties/WorkspaceId", "/properties/SyncSource", "/properties/SyncRole", "/properties/Tags" ],
+  "primaryIdentifier" : [ "/properties/WorkspaceId", "/properties/SyncSource" ],
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iottwinmaker:TagResource", "iottwinmaker:UntagResource", "iottwinmaker:ListTagsForResource" ]
   },
-  "typeName": "AWS::IoTTwinMaker::SyncJob"
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:PassRole", "iottwinmaker:CreateSyncJob", "iottwinmaker:GetSyncJob", "iottwinmaker:GetWorkspace", "iottwinmaker:ListTagsForResource", "iottwinmaker:TagResource" ]
+    },
+    "read" : {
+      "permissions" : [ "iottwinmaker:GetSyncJob", "iottwinmaker:GetWorkspace", "iottwinmaker:ListTagsForResource" ]
+    },
+    "delete" : {
+      "permissions" : [ "iottwinmaker:DeleteSyncJob", "iottwinmaker:GetSyncJob", "iottwinmaker:GetWorkspace" ]
+    },
+    "list" : {
+      "handlerSchema" : {
+        "properties" : {
+          "WorkspaceId" : {
+            "type" : "string",
+            "$ref" : "resource-schema.json#/properties/WorkspaceId"
+          }
+        },
+        "required" : [ "WorkspaceId" ]
+      },
+      "permissions" : [ "iottwinmaker:GetWorkspace", "iottwinmaker:ListSyncJobs", "iottwinmaker:ListTagsForResource" ]
+    }
+  },
+  "replacementStrategy" : "delete_then_create"
 }

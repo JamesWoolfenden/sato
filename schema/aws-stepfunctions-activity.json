@@ -1,136 +1,98 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name",
-    "/properties/EncryptionConfiguration"
-  ],
-  "definitions": {
-    "EncryptionConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "KmsDataKeyReusePeriodSeconds": {
-          "maximum": 900,
-          "minimum": 60,
-          "type": "integer"
+  "typeName" : "AWS::StepFunctions::Activity",
+  "description" : "Resource schema for Activity",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
+  "definitions" : {
+    "TagsEntry" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
         },
-        "KmsKeyId": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "type": "string"
-        },
-        "Type": {
-          "enum": [
-            "CUSTOMER_MANAGED_KMS_KEY",
-            "AWS_OWNED_KEY"
-          ],
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 256
         }
       },
-      "required": [
-        "Type"
-      ],
-      "type": "object"
+      "additionalProperties" : false,
+      "required" : [ "Key", "Value" ]
     },
-    "TagsEntry": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "EncryptionConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "KmsKeyId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2048
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 1,
-          "type": "string"
+        "KmsDataKeyReusePeriodSeconds" : {
+          "type" : "integer",
+          "minimum" : 60,
+          "maximum" : 900
+        },
+        "Type" : {
+          "type" : "string",
+          "enum" : [ "CUSTOMER_MANAGED_KMS_KEY", "AWS_OWNED_KEY" ]
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Type" ]
     }
   },
-  "description": "Resource schema for Activity",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "states:CreateActivity",
-        "states:DescribeActivity",
-        "states:TagResource",
-        "kms:DescribeKey"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 2048
     },
-    "delete": {
-      "permissions": [
-        "states:DescribeActivity",
-        "states:DeleteActivity"
-      ]
+    "Name" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 80
     },
-    "list": {
-      "permissions": [
-        "states:ListActivities"
-      ]
+    "Tags" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/TagsEntry"
+      }
     },
-    "read": {
-      "permissions": [
-        "states:DescribeActivity",
-        "states:ListTagsForResource"
-      ]
-    },
-    "update": {
-      "permissions": [
-        "states:ListTagsForResource",
-        "states:TagResource",
-        "states:UntagResource"
-      ]
+    "EncryptionConfiguration" : {
+      "$ref" : "#/definitions/EncryptionConfiguration"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Arn"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "type": "string"
+  "additionalProperties" : false,
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "states:UntagResource", "states:TagResource", "states:ListTagsForResource" ]
+  },
+  "required" : [ "Name" ],
+  "primaryIdentifier" : [ "/properties/Arn" ],
+  "readOnlyProperties" : [ "/properties/Arn" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/EncryptionConfiguration" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "states:CreateActivity", "states:DescribeActivity", "states:TagResource", "kms:DescribeKey" ]
     },
-    "EncryptionConfiguration": {
-      "$ref": "#/definitions/EncryptionConfiguration"
+    "read" : {
+      "permissions" : [ "states:DescribeActivity", "states:ListTagsForResource" ]
     },
-    "Name": {
-      "maxLength": 80,
-      "minLength": 1,
-      "type": "string"
+    "update" : {
+      "permissions" : [ "states:ListTagsForResource", "states:TagResource", "states:UntagResource" ]
     },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/TagsEntry"
-      },
-      "type": "array",
-      "uniqueItems": false
+    "delete" : {
+      "permissions" : [ "states:DescribeActivity", "states:DeleteActivity" ]
+    },
+    "list" : {
+      "permissions" : [ "states:ListActivities" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn"
-  ],
-  "required": [
-    "Name"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-stepfunctions.git",
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "states:UntagResource",
-      "states:TagResource",
-      "states:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::StepFunctions::Activity"
+  }
 }

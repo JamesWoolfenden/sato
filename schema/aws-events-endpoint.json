@@ -1,238 +1,185 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "EndpointEventBus": {
-      "additionalProperties": false,
-      "properties": {
-        "EventBusArn": {
-          "$ref": "#/definitions/EventBusArn"
+  "typeName" : "AWS::Events::Endpoint",
+  "description" : "Resource Type definition for AWS::Events::Endpoint.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events.git",
+  "definitions" : {
+    "HealthCheck" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1600,
+      "pattern" : "^arn:aws([a-z]|\\-)*:route53:::healthcheck/[\\-a-z0-9]+$"
+    },
+    "Primary" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "HealthCheck" : {
+          "$ref" : "#/definitions/HealthCheck"
         }
       },
-      "required": [
-        "EventBusArn"
-      ],
-      "type": "object"
+      "required" : [ "HealthCheck" ]
     },
-    "EventBusArn": {
-      "maxLength": 512,
-      "minLength": 1,
-      "pattern": "^arn:aws[a-z-]*:events:[a-z]+-[a-z-]+-\\d+:\\d{12}:event-bus/[\\w.-]+$",
-      "type": "string"
+    "Route" : {
+      "type" : "string",
+      "minLength" : 9,
+      "maxLength" : 20,
+      "pattern" : "^[\\-a-z0-9]+$"
     },
-    "EventBuses": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/EndpointEventBus"
+    "Secondary" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Route" : {
+          "$ref" : "#/definitions/Route"
+        }
       },
-      "maxItems": 2,
-      "minItems": 2,
-      "type": "array"
+      "required" : [ "Route" ]
     },
-    "FailoverConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "Primary": {
-          "$ref": "#/definitions/Primary"
+    "FailoverConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Primary" : {
+          "$ref" : "#/definitions/Primary"
         },
-        "Secondary": {
-          "$ref": "#/definitions/Secondary"
+        "Secondary" : {
+          "$ref" : "#/definitions/Secondary"
         }
       },
-      "required": [
-        "Primary",
-        "Secondary"
-      ],
-      "type": "object"
+      "required" : [ "Primary", "Secondary" ]
     },
-    "HealthCheck": {
-      "maxLength": 1600,
-      "minLength": 1,
-      "pattern": "^arn:aws([a-z]|\\-)*:route53:::healthcheck/[\\-a-z0-9]+$",
-      "type": "string"
-    },
-    "Primary": {
-      "additionalProperties": false,
-      "properties": {
-        "HealthCheck": {
-          "$ref": "#/definitions/HealthCheck"
+    "RoutingConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FailoverConfig" : {
+          "$ref" : "#/definitions/FailoverConfig"
         }
       },
-      "required": [
-        "HealthCheck"
-      ],
-      "type": "object"
+      "required" : [ "FailoverConfig" ]
     },
-    "ReplicationConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "State": {
-          "$ref": "#/definitions/ReplicationState"
+    "EventBusArn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 512,
+      "pattern" : "^arn:aws[a-z-]*:events:[a-z]+-[a-z-]+-\\d+:\\d{12}:event-bus/[\\w.-]+$"
+    },
+    "EndpointEventBus" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "EventBusArn" : {
+          "$ref" : "#/definitions/EventBusArn"
         }
       },
-      "required": [
-        "State"
-      ],
-      "type": "object"
+      "required" : [ "EventBusArn" ]
     },
-    "ReplicationState": {
-      "enum": [
-        "ENABLED",
-        "DISABLED"
-      ],
-      "type": "string"
+    "EventBuses" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "minItems" : 2,
+      "maxItems" : 2,
+      "items" : {
+        "$ref" : "#/definitions/EndpointEventBus"
+      }
     },
-    "Route": {
-      "maxLength": 20,
-      "minLength": 9,
-      "pattern": "^[\\-a-z0-9]+$",
-      "type": "string"
+    "ReplicationState" : {
+      "type" : "string",
+      "enum" : [ "ENABLED", "DISABLED" ]
     },
-    "RoutingConfig": {
-      "additionalProperties": false,
-      "properties": {
-        "FailoverConfig": {
-          "$ref": "#/definitions/FailoverConfig"
+    "ReplicationConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "State" : {
+          "$ref" : "#/definitions/ReplicationState"
         }
       },
-      "required": [
-        "FailoverConfig"
-      ],
-      "type": "object"
-    },
-    "Secondary": {
-      "additionalProperties": false,
-      "properties": {
-        "Route": {
-          "$ref": "#/definitions/Route"
-        }
-      },
-      "required": [
-        "Route"
-      ],
-      "type": "object"
+      "required" : [ "State" ]
     }
   },
-  "description": "Resource Type definition for AWS::Events::Endpoint.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "events:CreateEndpoint",
-        "events:DescribeEndpoint",
-        "route53:GetHealthCheck",
-        "iam:PassRole"
-      ]
+  "properties" : {
+    "Name" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 64,
+      "pattern" : "^[\\.\\-_A-Za-z0-9]+$"
     },
-    "delete": {
-      "permissions": [
-        "events:DeleteEndpoint",
-        "events:DescribeEndpoint"
-      ]
+    "Arn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 1600,
+      "pattern" : "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:endpoint\\/[/\\.\\-_A-Za-z0-9]+$"
     },
-    "list": {
-      "permissions": [
-        "events:ListEndpoints"
-      ]
+    "RoleArn" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "^arn:aws[a-z-]*:iam::\\d{12}:role\\/[\\w+=,.@/-]+$"
     },
-    "read": {
-      "permissions": [
-        "events:DescribeEndpoint"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 512,
+      "pattern" : ".*"
     },
-    "update": {
-      "permissions": [
-        "events:DescribeEndpoint",
-        "events:UpdateEndpoint",
-        "route53:GetHealthCheck",
-        "iam:PassRole"
-      ]
+    "RoutingConfig" : {
+      "$ref" : "#/definitions/RoutingConfig"
+    },
+    "ReplicationConfig" : {
+      "$ref" : "#/definitions/ReplicationConfig"
+    },
+    "EventBuses" : {
+      "$ref" : "#/definitions/EventBuses"
+    },
+    "EndpointId" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 50,
+      "pattern" : "^[A-Za-z0-9\\-]+[\\.][A-Za-z0-9\\-]+$"
+    },
+    "EndpointUrl" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 256,
+      "pattern" : "^(https://)?[\\.\\-a-z0-9]+$"
+    },
+    "State" : {
+      "type" : "string",
+      "enum" : [ "ACTIVE", "CREATING", "UPDATING", "DELETING", "CREATE_FAILED", "UPDATE_FAILED" ]
+    },
+    "StateReason" : {
+      "type" : "string",
+      "minLength" : 1,
+      "maxLength" : 512,
+      "pattern" : "^.*$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "maxLength": 1600,
-      "minLength": 1,
-      "pattern": "^arn:aws([a-z]|\\-)*:events:([a-z]|\\d|\\-)*:([0-9]{12})?:endpoint\\/[/\\.\\-_A-Za-z0-9]+$",
-      "type": "string"
+  "tagging" : {
+    "taggable" : false,
+    "tagOnCreate" : false,
+    "tagUpdatable" : false,
+    "cloudFormationSystemTags" : false
+  },
+  "additionalProperties" : false,
+  "required" : [ "RoutingConfig", "EventBuses" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/EndpointId", "/properties/EndpointUrl", "/properties/State", "/properties/StateReason" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "events:CreateEndpoint", "events:DescribeEndpoint", "route53:GetHealthCheck", "iam:PassRole" ]
     },
-    "Description": {
-      "maxLength": 512,
-      "pattern": ".*",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "events:DescribeEndpoint" ]
     },
-    "EndpointId": {
-      "maxLength": 50,
-      "minLength": 1,
-      "pattern": "^[A-Za-z0-9\\-]+[\\.][A-Za-z0-9\\-]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "events:DescribeEndpoint", "events:UpdateEndpoint", "route53:GetHealthCheck", "iam:PassRole" ]
     },
-    "EndpointUrl": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^(https://)?[\\.\\-a-z0-9]+$",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "events:DeleteEndpoint", "events:DescribeEndpoint" ]
     },
-    "EventBuses": {
-      "$ref": "#/definitions/EventBuses"
-    },
-    "Name": {
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[\\.\\-_A-Za-z0-9]+$",
-      "type": "string"
-    },
-    "ReplicationConfig": {
-      "$ref": "#/definitions/ReplicationConfig"
-    },
-    "RoleArn": {
-      "maxLength": 256,
-      "minLength": 1,
-      "pattern": "^arn:aws[a-z-]*:iam::\\d{12}:role\\/[\\w+=,.@/-]+$",
-      "type": "string"
-    },
-    "RoutingConfig": {
-      "$ref": "#/definitions/RoutingConfig"
-    },
-    "State": {
-      "enum": [
-        "ACTIVE",
-        "CREATING",
-        "UPDATING",
-        "DELETING",
-        "CREATE_FAILED",
-        "UPDATE_FAILED"
-      ],
-      "type": "string"
-    },
-    "StateReason": {
-      "maxLength": 512,
-      "minLength": 1,
-      "pattern": "^.*$",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "events:ListEndpoints" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/EndpointId",
-    "/properties/EndpointUrl",
-    "/properties/State",
-    "/properties/StateReason"
-  ],
-  "required": [
-    "RoutingConfig",
-    "EventBuses"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-events.git",
-  "tagging": {
-    "cloudFormationSystemTags": false,
-    "tagOnCreate": false,
-    "tagUpdatable": false,
-    "taggable": false
-  },
-  "typeName": "AWS::Events::Endpoint"
+  }
 }

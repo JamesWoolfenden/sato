@@ -1,59 +1,45 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Cores",
-    "/properties/CoreDefinitionId"
-  ],
-  "definitions": {
-    "Core": {
-      "additionalProperties": false,
-      "properties": {
-        "CertificateArn": {
-          "type": "string"
+  "typeName" : "AWS::Greengrass::CoreDefinitionVersion",
+  "description" : "Resource Type definition for AWS::Greengrass::CoreDefinitionVersion",
+  "additionalProperties" : false,
+  "properties" : {
+    "Id" : {
+      "type" : "string"
+    },
+    "Cores" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Core"
+      }
+    },
+    "CoreDefinitionId" : {
+      "type" : "string"
+    }
+  },
+  "definitions" : {
+    "Core" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "SyncShadow" : {
+          "type" : "boolean"
         },
-        "Id": {
-          "type": "string"
+        "ThingArn" : {
+          "type" : "string"
         },
-        "SyncShadow": {
-          "type": "boolean"
+        "Id" : {
+          "type" : "string"
         },
-        "ThingArn": {
-          "type": "string"
+        "CertificateArn" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "ThingArn",
-        "Id",
-        "CertificateArn"
-      ],
-      "type": "object"
+      "required" : [ "ThingArn", "Id", "CertificateArn" ]
     }
   },
-  "description": "Resource Type definition for AWS::Greengrass::CoreDefinitionVersion",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CoreDefinitionId": {
-      "type": "string"
-    },
-    "Cores": {
-      "items": {
-        "$ref": "#/definitions/Core"
-      },
-      "type": "array",
-      "uniqueItems": false
-    },
-    "Id": {
-      "type": "string"
-    }
-  },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "Cores",
-    "CoreDefinitionId"
-  ],
-  "typeName": "AWS::Greengrass::CoreDefinitionVersion"
+  "required" : [ "Cores", "CoreDefinitionId" ],
+  "createOnlyProperties" : [ "/properties/Cores", "/properties/CoreDefinitionId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

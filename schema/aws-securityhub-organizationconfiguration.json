@@ -1,99 +1,63 @@
 {
-  "additionalProperties": false,
-  "description": "The AWS::SecurityHub::OrganizationConfiguration resource represents the configuration of your organization in Security Hub. Only the Security Hub administrator account can create Organization Configuration resource in each region and can opt-in to Central Configuration only in the aggregation region of FindingAggregator.",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "securityhub:UpdateOrganizationConfiguration",
-        "securityhub:DescribeOrganizationConfiguration",
-        "organizations:DescribeOrganization"
-      ]
+  "typeName" : "AWS::SecurityHub::OrganizationConfiguration",
+  "description" : "The AWS::SecurityHub::OrganizationConfiguration resource represents the configuration of your organization in Security Hub. Only the Security Hub administrator account can create Organization Configuration resource in each region and can opt-in to Central Configuration only in the aggregation region of FindingAggregator.",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
+  "properties" : {
+    "AutoEnable" : {
+      "description" : "Whether to automatically enable Security Hub in new member accounts when they join the organization.",
+      "type" : "boolean"
     },
-    "delete": {
-      "permissions": [
-        "securityhub:UpdateOrganizationConfiguration",
-        "securityhub:DescribeOrganizationConfiguration",
-        "securityhub:ListFindingAggregators",
-        "organizations:DescribeOrganization"
-      ]
+    "AutoEnableStandards" : {
+      "description" : "Whether to automatically enable Security Hub default standards in new member accounts when they join the organization.",
+      "type" : "string",
+      "enum" : [ "DEFAULT", "NONE" ]
     },
-    "list": {
-      "permissions": [
-        "securityhub:DescribeOrganizationConfiguration"
-      ]
+    "ConfigurationType" : {
+      "description" : "Indicates whether the organization uses local or central configuration.",
+      "type" : "string",
+      "enum" : [ "CENTRAL", "LOCAL" ]
     },
-    "read": {
-      "permissions": [
-        "securityhub:DescribeOrganizationConfiguration"
-      ]
+    "Status" : {
+      "description" : "Describes whether central configuration could be enabled as the ConfigurationType for the organization.",
+      "type" : "string",
+      "enum" : [ "PENDING", "ENABLED", "FAILED" ]
     },
-    "update": {
-      "permissions": [
-        "securityhub:UpdateOrganizationConfiguration",
-        "securityhub:DescribeOrganizationConfiguration",
-        "organizations:DescribeOrganization"
-      ]
+    "StatusMessage" : {
+      "description" : "Provides an explanation if the value of Status is equal to FAILED when ConfigurationType is equal to CENTRAL.",
+      "type" : "string"
+    },
+    "MemberAccountLimitReached" : {
+      "description" : "Whether the maximum number of allowed member accounts are already associated with the Security Hub administrator account.",
+      "type" : "boolean"
+    },
+    "OrganizationConfigurationIdentifier" : {
+      "description" : "The identifier of the OrganizationConfiguration being created and assigned as the unique identifier.",
+      "type" : "string",
+      "pattern" : "^[0-9]{12}/[a-zA-Z0-9-]{1,32}/securityhub-organization-configuration$"
     }
   },
-  "primaryIdentifier": [
-    "/properties/OrganizationConfigurationIdentifier"
-  ],
-  "properties": {
-    "AutoEnable": {
-      "description": "Whether to automatically enable Security Hub in new member accounts when they join the organization.",
-      "type": "boolean"
+  "additionalProperties" : false,
+  "required" : [ "AutoEnable" ],
+  "readOnlyProperties" : [ "/properties/OrganizationConfigurationIdentifier", "/properties/Status", "/properties/StatusMessage", "/properties/MemberAccountLimitReached" ],
+  "primaryIdentifier" : [ "/properties/OrganizationConfigurationIdentifier" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "securityhub:UpdateOrganizationConfiguration", "securityhub:DescribeOrganizationConfiguration", "organizations:DescribeOrganization" ]
     },
-    "AutoEnableStandards": {
-      "description": "Whether to automatically enable Security Hub default standards in new member accounts when they join the organization.",
-      "enum": [
-        "DEFAULT",
-        "NONE"
-      ],
-      "type": "string"
+    "read" : {
+      "permissions" : [ "securityhub:DescribeOrganizationConfiguration" ]
     },
-    "ConfigurationType": {
-      "description": "Indicates whether the organization uses local or central configuration.",
-      "enum": [
-        "CENTRAL",
-        "LOCAL"
-      ],
-      "type": "string"
+    "update" : {
+      "permissions" : [ "securityhub:UpdateOrganizationConfiguration", "securityhub:DescribeOrganizationConfiguration", "organizations:DescribeOrganization" ]
     },
-    "MemberAccountLimitReached": {
-      "description": "Whether the maximum number of allowed member accounts are already associated with the Security Hub administrator account.",
-      "type": "boolean"
+    "delete" : {
+      "permissions" : [ "securityhub:UpdateOrganizationConfiguration", "securityhub:DescribeOrganizationConfiguration", "securityhub:ListFindingAggregators", "organizations:DescribeOrganization" ]
     },
-    "OrganizationConfigurationIdentifier": {
-      "description": "The identifier of the OrganizationConfiguration being created and assigned as the unique identifier.",
-      "pattern": "^[0-9]{12}/[a-zA-Z0-9-]{1,32}/securityhub-organization-configuration$",
-      "type": "string"
-    },
-    "Status": {
-      "description": "Describes whether central configuration could be enabled as the ConfigurationType for the organization.",
-      "enum": [
-        "PENDING",
-        "ENABLED",
-        "FAILED"
-      ],
-      "type": "string"
-    },
-    "StatusMessage": {
-      "description": "Provides an explanation if the value of Status is equal to FAILED when ConfigurationType is equal to CENTRAL.",
-      "type": "string"
+    "list" : {
+      "permissions" : [ "securityhub:DescribeOrganizationConfiguration" ]
     }
-  },
-  "readOnlyProperties": [
-    "/properties/OrganizationConfigurationIdentifier",
-    "/properties/Status",
-    "/properties/StatusMessage",
-    "/properties/MemberAccountLimitReached"
-  ],
-  "required": [
-    "AutoEnable"
-  ],
-  "sourceUrl": "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-securityhub",
-  "tagging": {
-    "taggable": false
-  },
-  "typeName": "AWS::SecurityHub::OrganizationConfiguration"
+  }
 }

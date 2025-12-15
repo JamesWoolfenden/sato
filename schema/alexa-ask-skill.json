@@ -1,89 +1,72 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/VendorId"
-  ],
-  "definitions": {
-    "AuthenticationConfiguration": {
-      "additionalProperties": false,
-      "properties": {
-        "ClientId": {
-          "type": "string"
-        },
-        "ClientSecret": {
-          "type": "string"
-        },
-        "RefreshToken": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "RefreshToken",
-        "ClientSecret",
-        "ClientId"
-      ],
-      "type": "object"
+  "typeName" : "Alexa::ASK::Skill",
+  "description" : "Resource Type definition for Alexa::ASK::Skill",
+  "additionalProperties" : false,
+  "properties" : {
+    "AuthenticationConfiguration" : {
+      "$ref" : "#/definitions/AuthenticationConfiguration"
     },
-    "Overrides": {
-      "additionalProperties": false,
-      "properties": {
-        "Manifest": {
-          "type": "object"
-        }
-      },
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "SkillPackage": {
-      "additionalProperties": false,
-      "properties": {
-        "Overrides": {
-          "$ref": "#/definitions/Overrides"
-        },
-        "S3Bucket": {
-          "type": "string"
-        },
-        "S3BucketRole": {
-          "type": "string"
-        },
-        "S3Key": {
-          "type": "string"
-        },
-        "S3ObjectVersion": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "S3Bucket",
-        "S3Key"
-      ],
-      "type": "object"
+    "VendorId" : {
+      "type" : "string"
+    },
+    "SkillPackage" : {
+      "$ref" : "#/definitions/SkillPackage"
     }
   },
-  "description": "Resource Type definition for Alexa::ASK::Skill",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "AuthenticationConfiguration": {
-      "$ref": "#/definitions/AuthenticationConfiguration"
+  "definitions" : {
+    "AuthenticationConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ClientId" : {
+          "type" : "string"
+        },
+        "RefreshToken" : {
+          "type" : "string"
+        },
+        "ClientSecret" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RefreshToken", "ClientSecret", "ClientId" ]
     },
-    "Id": {
-      "type": "string"
+    "Overrides" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Manifest" : {
+          "type" : "object"
+        }
+      }
     },
-    "SkillPackage": {
-      "$ref": "#/definitions/SkillPackage"
-    },
-    "VendorId": {
-      "type": "string"
+    "SkillPackage" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "S3BucketRole" : {
+          "type" : "string"
+        },
+        "Overrides" : {
+          "$ref" : "#/definitions/Overrides"
+        },
+        "S3ObjectVersion" : {
+          "type" : "string"
+        },
+        "S3Bucket" : {
+          "type" : "string"
+        },
+        "S3Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "S3Bucket", "S3Key" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "required": [
-    "AuthenticationConfiguration",
-    "VendorId",
-    "SkillPackage"
-  ],
-  "typeName": "Alexa::ASK::Skill"
+  "required" : [ "AuthenticationConfiguration", "VendorId", "SkillPackage" ],
+  "createOnlyProperties" : [ "/properties/VendorId" ],
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }

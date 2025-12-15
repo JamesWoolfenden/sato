@@ -1,376 +1,290 @@
 {
-  "additionalProperties": false,
-  "createOnlyProperties": [
-    "/properties/Name"
-  ],
-  "definitions": {
-    "Actuator": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedValues": {
-          "$ref": "#/definitions/AllowedValues"
+  "typeName" : "AWS::IoTFleetWise::SignalCatalog",
+  "description" : "Definition of AWS::IoTFleetWise::SignalCatalog Resource Type",
+  "definitions" : {
+    "Actuator" : {
+      "type" : "object",
+      "properties" : {
+        "FullyQualifiedName" : {
+          "type" : "string"
         },
-        "AssignedValue": {
-          "type": "string"
+        "DataType" : {
+          "$ref" : "#/definitions/NodeDataType"
         },
-        "DataType": {
-          "$ref": "#/definitions/NodeDataType"
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
         },
-        "Description": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-          "type": "string"
+        "Unit" : {
+          "type" : "string"
         },
-        "FullyQualifiedName": {
-          "type": "string"
+        "AllowedValues" : {
+          "$ref" : "#/definitions/AllowedValues"
         },
-        "Max": {
-          "type": "number"
+        "Min" : {
+          "type" : "number"
         },
-        "Min": {
-          "type": "number"
+        "Max" : {
+          "type" : "number"
         },
-        "Unit": {
-          "type": "string"
+        "AssignedValue" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "DataType",
-        "FullyQualifiedName"
-      ],
-      "type": "object"
+      "required" : [ "DataType", "FullyQualifiedName" ],
+      "additionalProperties" : false
     },
-    "AllowedValues": {
-      "insertionOrder": false,
-      "items": {
-        "type": "string"
+    "AllowedValues" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
       },
-      "minItems": 1,
-      "type": "array"
+      "minItems" : 1
     },
-    "Attribute": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedValues": {
-          "$ref": "#/definitions/AllowedValues"
+    "Attribute" : {
+      "type" : "object",
+      "properties" : {
+        "FullyQualifiedName" : {
+          "type" : "string"
         },
-        "AssignedValue": {
-          "type": "string"
+        "DataType" : {
+          "$ref" : "#/definitions/NodeDataType"
         },
-        "DataType": {
-          "$ref": "#/definitions/NodeDataType"
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
         },
-        "DefaultValue": {
-          "type": "string"
+        "Unit" : {
+          "type" : "string"
         },
-        "Description": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-          "type": "string"
+        "AllowedValues" : {
+          "$ref" : "#/definitions/AllowedValues"
         },
-        "FullyQualifiedName": {
-          "type": "string"
+        "Min" : {
+          "type" : "number"
         },
-        "Max": {
-          "type": "number"
+        "Max" : {
+          "type" : "number"
         },
-        "Min": {
-          "type": "number"
+        "AssignedValue" : {
+          "type" : "string"
         },
-        "Unit": {
-          "type": "string"
+        "DefaultValue" : {
+          "type" : "string"
         }
       },
-      "required": [
-        "DataType",
-        "FullyQualifiedName"
-      ],
-      "type": "object"
+      "required" : [ "DataType", "FullyQualifiedName" ],
+      "additionalProperties" : false
     },
-    "Branch": {
-      "additionalProperties": false,
-      "properties": {
-        "Description": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-          "type": "string"
+    "Branch" : {
+      "type" : "object",
+      "properties" : {
+        "FullyQualifiedName" : {
+          "type" : "string"
         },
-        "FullyQualifiedName": {
-          "type": "string"
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
         }
       },
-      "required": [
-        "FullyQualifiedName"
-      ],
-      "type": "object"
+      "required" : [ "FullyQualifiedName" ],
+      "additionalProperties" : false
     },
-    "Node": {
-      "oneOf": [
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Branch": {
-              "$ref": "#/definitions/Branch"
-            }
-          },
-          "title": "Branch",
-          "type": "object"
+    "Node" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "Branch",
+        "properties" : {
+          "Branch" : {
+            "$ref" : "#/definitions/Branch"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Sensor": {
-              "$ref": "#/definitions/Sensor"
-            }
-          },
-          "title": "Sensor",
-          "type": "object"
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Sensor",
+        "properties" : {
+          "Sensor" : {
+            "$ref" : "#/definitions/Sensor"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Actuator": {
-              "$ref": "#/definitions/Actuator"
-            }
-          },
-          "title": "Actuator",
-          "type": "object"
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Actuator",
+        "properties" : {
+          "Actuator" : {
+            "$ref" : "#/definitions/Actuator"
+          }
         },
-        {
-          "additionalProperties": false,
-          "properties": {
-            "Attribute": {
-              "$ref": "#/definitions/Attribute"
-            }
-          },
-          "title": "Attribute",
-          "type": "object"
-        }
-      ]
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "Attribute",
+        "properties" : {
+          "Attribute" : {
+            "$ref" : "#/definitions/Attribute"
+          }
+        },
+        "additionalProperties" : false
+      } ]
     },
-    "NodeCounts": {
-      "additionalProperties": false,
-      "properties": {
-        "TotalActuators": {
-          "type": "number"
+    "NodeCounts" : {
+      "type" : "object",
+      "properties" : {
+        "TotalNodes" : {
+          "type" : "number"
         },
-        "TotalAttributes": {
-          "type": "number"
+        "TotalBranches" : {
+          "type" : "number"
         },
-        "TotalBranches": {
-          "type": "number"
+        "TotalSensors" : {
+          "type" : "number"
         },
-        "TotalNodes": {
-          "type": "number"
+        "TotalAttributes" : {
+          "type" : "number"
         },
-        "TotalSensors": {
-          "type": "number"
+        "TotalActuators" : {
+          "type" : "number"
         }
       },
-      "type": "object"
+      "additionalProperties" : false
     },
-    "NodeDataType": {
-      "enum": [
-        "INT8",
-        "UINT8",
-        "INT16",
-        "UINT16",
-        "INT32",
-        "UINT32",
-        "INT64",
-        "UINT64",
-        "BOOLEAN",
-        "FLOAT",
-        "DOUBLE",
-        "STRING",
-        "UNIX_TIMESTAMP",
-        "INT8_ARRAY",
-        "UINT8_ARRAY",
-        "INT16_ARRAY",
-        "UINT16_ARRAY",
-        "INT32_ARRAY",
-        "UINT32_ARRAY",
-        "INT64_ARRAY",
-        "UINT64_ARRAY",
-        "BOOLEAN_ARRAY",
-        "FLOAT_ARRAY",
-        "DOUBLE_ARRAY",
-        "STRING_ARRAY",
-        "UNIX_TIMESTAMP_ARRAY",
-        "UNKNOWN"
-      ],
-      "type": "string"
+    "NodeDataType" : {
+      "type" : "string",
+      "enum" : [ "INT8", "UINT8", "INT16", "UINT16", "INT32", "UINT32", "INT64", "UINT64", "BOOLEAN", "FLOAT", "DOUBLE", "STRING", "UNIX_TIMESTAMP", "INT8_ARRAY", "UINT8_ARRAY", "INT16_ARRAY", "UINT16_ARRAY", "INT32_ARRAY", "UINT32_ARRAY", "INT64_ARRAY", "UINT64_ARRAY", "BOOLEAN_ARRAY", "FLOAT_ARRAY", "DOUBLE_ARRAY", "STRING_ARRAY", "UNIX_TIMESTAMP_ARRAY", "UNKNOWN" ]
     },
-    "Sensor": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowedValues": {
-          "$ref": "#/definitions/AllowedValues"
+    "Sensor" : {
+      "type" : "object",
+      "properties" : {
+        "FullyQualifiedName" : {
+          "type" : "string"
         },
-        "DataType": {
-          "$ref": "#/definitions/NodeDataType"
+        "DataType" : {
+          "$ref" : "#/definitions/NodeDataType"
         },
-        "Description": {
-          "maxLength": 2048,
-          "minLength": 1,
-          "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-          "type": "string"
+        "Description" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
         },
-        "FullyQualifiedName": {
-          "type": "string"
+        "Unit" : {
+          "type" : "string"
         },
-        "Max": {
-          "type": "number"
+        "AllowedValues" : {
+          "$ref" : "#/definitions/AllowedValues"
         },
-        "Min": {
-          "type": "number"
+        "Min" : {
+          "type" : "number"
         },
-        "Unit": {
-          "type": "string"
+        "Max" : {
+          "type" : "number"
         }
       },
-      "required": [
-        "DataType",
-        "FullyQualifiedName"
-      ],
-      "type": "object"
+      "required" : [ "DataType", "FullyQualifiedName" ],
+      "additionalProperties" : false
     },
-    "Tag": {
-      "additionalProperties": false,
-      "properties": {
-        "Key": {
-          "maxLength": 128,
-          "minLength": 1,
-          "type": "string"
+    "Tag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "maxLength" : 128,
+          "minLength" : 1
         },
-        "Value": {
-          "maxLength": 256,
-          "minLength": 0,
-          "type": "string"
+        "Value" : {
+          "type" : "string",
+          "maxLength" : 256,
+          "minLength" : 0
         }
       },
-      "required": [
-        "Key",
-        "Value"
-      ],
-      "type": "object"
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
-  "description": "Definition of AWS::IoTFleetWise::SignalCatalog Resource Type",
-  "handlers": {
-    "create": {
-      "permissions": [
-        "iotfleetwise:GetSignalCatalog",
-        "iotfleetwise:CreateSignalCatalog",
-        "iotfleetwise:ListSignalCatalogNodes",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource"
-      ]
+  "properties" : {
+    "Arn" : {
+      "type" : "string"
     },
-    "delete": {
-      "permissions": [
-        "iotfleetwise:GetSignalCatalog",
-        "iotfleetwise:DeleteSignalCatalog"
-      ]
+    "CreationTime" : {
+      "format" : "date-time",
+      "type" : "string"
     },
-    "list": {
-      "permissions": [
-        "iotfleetwise:ListSignalCatalogs"
-      ]
+    "Description" : {
+      "type" : "string",
+      "maxLength" : 2048,
+      "minLength" : 1,
+      "pattern" : "^[^\\u0000-\\u001F\\u007F]+$"
     },
-    "read": {
-      "permissions": [
-        "iotfleetwise:GetSignalCatalog",
-        "iotfleetwise:ListSignalCatalogNodes",
-        "iotfleetwise:ListTagsForResource"
-      ]
+    "LastModificationTime" : {
+      "format" : "date-time",
+      "type" : "string"
     },
-    "update": {
-      "permissions": [
-        "iotfleetwise:GetSignalCatalog",
-        "iotfleetwise:UpdateSignalCatalog",
-        "iotfleetwise:ListSignalCatalogNodes",
-        "iotfleetwise:ListTagsForResource",
-        "iotfleetwise:TagResource",
-        "iotfleetwise:UntagResource"
-      ]
+    "Name" : {
+      "type" : "string",
+      "maxLength" : 100,
+      "minLength" : 1,
+      "pattern" : "^[a-zA-Z\\d\\-_:]+$"
+    },
+    "NodeCounts" : {
+      "$ref" : "#/definitions/NodeCounts"
+    },
+    "Nodes" : {
+      "type" : "array",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/Node"
+      },
+      "maxItems" : 5000,
+      "minItems" : 1
+    },
+    "Tags" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      },
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "maxItems" : 50,
+      "minItems" : 0
     }
   },
-  "primaryIdentifier": [
-    "/properties/Name"
-  ],
-  "properties": {
-    "Arn": {
-      "type": "string"
+  "tagging" : {
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "iotfleetwise:UntagResource", "iotfleetwise:TagResource", "iotfleetwise:ListTagsForResource" ]
+  },
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/CreationTime", "/properties/LastModificationTime", "/properties/NodeCounts/TotalNodes", "/properties/NodeCounts/TotalBranches", "/properties/NodeCounts/TotalSensors", "/properties/NodeCounts/TotalAttributes", "/properties/NodeCounts/TotalActuators" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "primaryIdentifier" : [ "/properties/Name" ],
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iotfleetwise:GetSignalCatalog", "iotfleetwise:CreateSignalCatalog", "iotfleetwise:ListSignalCatalogNodes", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource" ]
     },
-    "CreationTime": {
-      "format": "date-time",
-      "type": "string"
+    "read" : {
+      "permissions" : [ "iotfleetwise:GetSignalCatalog", "iotfleetwise:ListSignalCatalogNodes", "iotfleetwise:ListTagsForResource" ]
     },
-    "Description": {
-      "maxLength": 2048,
-      "minLength": 1,
-      "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
-      "type": "string"
+    "update" : {
+      "permissions" : [ "iotfleetwise:GetSignalCatalog", "iotfleetwise:UpdateSignalCatalog", "iotfleetwise:ListSignalCatalogNodes", "iotfleetwise:ListTagsForResource", "iotfleetwise:TagResource", "iotfleetwise:UntagResource" ]
     },
-    "LastModificationTime": {
-      "format": "date-time",
-      "type": "string"
+    "delete" : {
+      "permissions" : [ "iotfleetwise:GetSignalCatalog", "iotfleetwise:DeleteSignalCatalog" ]
     },
-    "Name": {
-      "maxLength": 100,
-      "minLength": 1,
-      "pattern": "^[a-zA-Z\\d\\-_:]+$",
-      "type": "string"
-    },
-    "NodeCounts": {
-      "$ref": "#/definitions/NodeCounts"
-    },
-    "Nodes": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Node"
-      },
-      "maxItems": 5000,
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "Tags": {
-      "insertionOrder": false,
-      "items": {
-        "$ref": "#/definitions/Tag"
-      },
-      "maxItems": 50,
-      "minItems": 0,
-      "type": "array",
-      "uniqueItems": true
+    "list" : {
+      "permissions" : [ "iotfleetwise:ListSignalCatalogs" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Arn",
-    "/properties/CreationTime",
-    "/properties/LastModificationTime",
-    "/properties/NodeCounts/TotalNodes",
-    "/properties/NodeCounts/TotalBranches",
-    "/properties/NodeCounts/TotalSensors",
-    "/properties/NodeCounts/TotalAttributes",
-    "/properties/NodeCounts/TotalActuators"
-  ],
-  "tagging": {
-    "cloudFormationSystemTags": true,
-    "permissions": [
-      "iotfleetwise:UntagResource",
-      "iotfleetwise:TagResource",
-      "iotfleetwise:ListTagsForResource"
-    ],
-    "tagOnCreate": true,
-    "tagProperty": "/properties/Tags",
-    "tagUpdatable": true,
-    "taggable": true
-  },
-  "typeName": "AWS::IoTFleetWise::SignalCatalog"
+  "additionalProperties" : false
 }

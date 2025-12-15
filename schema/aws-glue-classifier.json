@@ -1,127 +1,115 @@
 {
-  "additionalProperties": false,
-  "definitions": {
-    "CsvClassifier": {
-      "additionalProperties": false,
-      "properties": {
-        "AllowSingleColumn": {
-          "type": "boolean"
-        },
-        "ContainsCustomDatatype": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "ContainsHeader": {
-          "type": "string"
-        },
-        "CustomDatatypeConfigured": {
-          "type": "boolean"
-        },
-        "Delimiter": {
-          "type": "string"
-        },
-        "DisableValueTrimming": {
-          "type": "boolean"
-        },
-        "Header": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array",
-          "uniqueItems": false
-        },
-        "Name": {
-          "type": "string"
-        },
-        "QuoteSymbol": {
-          "type": "string"
-        }
-      },
-      "type": "object"
+  "typeName" : "AWS::Glue::Classifier",
+  "description" : "Resource Type definition for AWS::Glue::Classifier",
+  "additionalProperties" : false,
+  "properties" : {
+    "XMLClassifier" : {
+      "$ref" : "#/definitions/XMLClassifier"
     },
-    "GrokClassifier": {
-      "additionalProperties": false,
-      "properties": {
-        "Classification": {
-          "type": "string"
-        },
-        "CustomPatterns": {
-          "type": "string"
-        },
-        "GrokPattern": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "GrokPattern",
-        "Classification"
-      ],
-      "type": "object"
+    "CsvClassifier" : {
+      "$ref" : "#/definitions/CsvClassifier"
     },
-    "JsonClassifier": {
-      "additionalProperties": false,
-      "properties": {
-        "JsonPath": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "JsonPath"
-      ],
-      "type": "object"
+    "Id" : {
+      "type" : "string"
     },
-    "XMLClassifier": {
-      "additionalProperties": false,
-      "properties": {
-        "Classification": {
-          "type": "string"
-        },
-        "Name": {
-          "type": "string"
-        },
-        "RowTag": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "RowTag",
-        "Classification"
-      ],
-      "type": "object"
+    "GrokClassifier" : {
+      "$ref" : "#/definitions/GrokClassifier"
+    },
+    "JsonClassifier" : {
+      "$ref" : "#/definitions/JsonClassifier"
     }
   },
-  "description": "Resource Type definition for AWS::Glue::Classifier",
-  "primaryIdentifier": [
-    "/properties/Id"
-  ],
-  "properties": {
-    "CsvClassifier": {
-      "$ref": "#/definitions/CsvClassifier"
+  "definitions" : {
+    "XMLClassifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "RowTag" : {
+          "type" : "string"
+        },
+        "Classification" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "RowTag", "Classification" ]
     },
-    "GrokClassifier": {
-      "$ref": "#/definitions/GrokClassifier"
+    "JsonClassifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "JsonPath" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "JsonPath" ]
     },
-    "Id": {
-      "type": "string"
+    "CsvClassifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "ContainsCustomDatatype" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "QuoteSymbol" : {
+          "type" : "string"
+        },
+        "ContainsHeader" : {
+          "type" : "string"
+        },
+        "Delimiter" : {
+          "type" : "string"
+        },
+        "Header" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "AllowSingleColumn" : {
+          "type" : "boolean"
+        },
+        "CustomDatatypeConfigured" : {
+          "type" : "boolean"
+        },
+        "DisableValueTrimming" : {
+          "type" : "boolean"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      }
     },
-    "JsonClassifier": {
-      "$ref": "#/definitions/JsonClassifier"
-    },
-    "XMLClassifier": {
-      "$ref": "#/definitions/XMLClassifier"
+    "GrokClassifier" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomPatterns" : {
+          "type" : "string"
+        },
+        "GrokPattern" : {
+          "type" : "string"
+        },
+        "Classification" : {
+          "type" : "string"
+        },
+        "Name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "GrokPattern", "Classification" ]
     }
   },
-  "readOnlyProperties": [
-    "/properties/Id"
-  ],
-  "typeName": "AWS::Glue::Classifier"
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "readOnlyProperties" : [ "/properties/Id" ]
 }
