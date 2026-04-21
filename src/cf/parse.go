@@ -33,34 +33,11 @@ type (
 	Output = tfgen.Output
 )
 
-var funcMap = template.FuncMap{
-	"Array":        tfgen.Array,
-	"ArrayReplace": tfgen.ArrayReplace,
-	"Contains":     tfgen.Contains,
-	"Sprint":       tfgen.Sprint,
-	"Decode64":     tfgen.Decode64,
-	"Boolean":      tfgen.Boolean,
-	"Dequote":      tfgen.Dequote,
-	"Quote":        tfgen.Quote,
-	"Demap":        tfgen.Demap,
-	"ToUpper":      strings.ToUpper,
-	"ToLower":      tfgen.Lower,
-	"Deref":        func(str *string) string { return *str },
-	"Nil":          tfgen.Nill,
-	"Nild":         tfgen.Nild,
-	"Marshal":      tfgen.Marshal,
-	"Split":        tfgen.Split,
-	"SplitOn":      tfgen.SplitOn,
-	"Replace":      tfgen.Replace,
-	"Tags":         Tags,
-	"RandomString": tfgen.RandomString,
-	"Map":          tfgen.Map,
-	"Snake":        tfgen.Snake,
-	"Kebab":        tfgen.Kebab,
-	"ZipFile":      tfgen.Zipfile,
-	"TFJoin":       ParseJoin,  // CloudFormation !Join → Terraform join()
-	"TFSplit":      ParseSplit, // CloudFormation !Split → Terraform split()
-}
+var funcMap = tfgen.FuncMap(template.FuncMap{
+	"Tags":    Tags,
+	"TFJoin":  ParseJoin,
+	"TFSplit": ParseSplit,
+})
 
 // Parse turn CFN into Terraform.
 func Parse(file string, destination string) error {

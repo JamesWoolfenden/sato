@@ -1,8 +1,6 @@
 package arm_test
 
 import (
-	"encoding/json"
-	"strings"
 	"testing"
 	"text/template"
 
@@ -12,37 +10,13 @@ import (
 
 var badFunk template.FuncMap
 
-var funcMap = template.FuncMap{ //nolint:gochecknoglobals
-	"Array":        tfgen.Array,
-	"ArrayReplace": tfgen.ArrayReplace,
-	"Contains":     tfgen.Contains,
-	"Sprint":       tfgen.Sprint,
-	"Decode64":     tfgen.Decode64,
-	"Boolean":      tfgen.Boolean,
-	"Dequote":      tfgen.Dequote,
-	"Quote":        tfgen.Quote,
-	"Demap":        tfgen.Demap,
-	"ToUpper":      strings.ToUpper,
-	"ToLower":      tfgen.Lower,
-	"Deref":        func(str *string) string { return *str },
-	"Nil":          tfgen.Nill,
-	"Nild":         tfgen.Nild,
-	"Marshal": func(v interface{}) string {
-		a, _ := json.Marshal(v) //nolint:errchkjson
-
-		return string(a)
-	},
-	"Split":        tfgen.Split,
-	"SplitOn":      tfgen.SplitOn,
-	"Replace":      tfgen.Replace,
-	"Tags":         arm.Tags,
-	"RandomString": tfgen.RandomString,
-	"Map":          tfgen.Map,
-	"Snake":        tfgen.Snake,
-	"Kebab":        tfgen.Kebab,
-	"ZipFile":      tfgen.Zipfile,
-	"Uuid":         arm.UUID,
-}
+var funcMap = tfgen.FuncMap(template.FuncMap{
+	"Enabled": arm.Enabled,
+	"NotNil":  arm.NotNil,
+	"Set":     arm.ArrayToString,
+	"Tags":    arm.Tags,
+	"Uuid":    arm.UUID,
+})
 
 func Test_parseOutputs(t *testing.T) {
 	t.Parallel()

@@ -22,43 +22,13 @@ import (
 
 type m map[string]interface{}
 
-var funcMap = tftemplate.FuncMap{
-	"Array":        tfgen.Array,
-	"ArrayReplace": tfgen.ArrayReplace,
-	"Contains":     tfgen.Contains,
-	"Enabled":      Enabled,
-	"Sprint":       tfgen.Sprint,
-	"Decode64":     tfgen.Decode64,
-	"Boolean":      tfgen.Boolean,
-	"Dequote":      tfgen.Dequote,
-	"Quote":        tfgen.Quote,
-	"Demap":        tfgen.Demap,
-	"Tags":         Tags,
-	"ToUpper":      strings.ToUpper,
-	"ToLower":      tfgen.Lower,
-	"Deref":        func(str *string) string { return *str },
-	"Nil":          tfgen.Nill,
-	"Nild":         tfgen.Nild,
-	"Marshal": func(v interface{}) string {
-		a, err := json.Marshal(v)
-		if err != nil {
-			log.Error().Err(err).Msg("marshal failure")
-		}
-
-		return string(a)
-	},
-	"Set":          ArrayToString,
-	"Split":        tfgen.Split,
-	"SplitOn":      tfgen.SplitOn,
-	"Replace":      tfgen.Replace,
-	"RandomString": tfgen.RandomString,
-	"Map":          tfgen.Map,
-	"NotNil":       NotNil,
-	"Snake":        tfgen.Snake,
-	"Kebab":        tfgen.Kebab,
-	"ZipFile":      tfgen.Zipfile,
-	"Uuid":         UUID,
-}
+var funcMap = tfgen.FuncMap(tftemplate.FuncMap{
+	"Enabled": Enabled,
+	"NotNil":  NotNil,
+	"Set":     ArrayToString,
+	"Tags":    Tags,
+	"Uuid":    UUID,
+})
 
 type readFileError struct {
 	path string
