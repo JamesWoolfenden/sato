@@ -11,7 +11,7 @@ const none string = "none"
 
 var reverseMapping = reverseMap(lookupMapping)
 
-// missingResourceError represents a resource lookup failure
+// missingResourceError represents a resource lookup failure.
 type missingResourceError struct {
 	Resource string
 }

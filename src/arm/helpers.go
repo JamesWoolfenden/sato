@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rs/zerolog/log" //nolint:depguard
+	"github.com/rs/zerolog/log"
 )
 
 const (
@@ -244,17 +244,17 @@ func Tags(raw interface{}) string {
 	return tagged
 }
 
-// NotNil handles interfaces that are bools and their value being set
+// NotNil handles interfaces that are bools and their value being set.
 func NotNil(unknown interface{}) bool {
 	return unknown != nil
 }
 
-// Enabled cast from string to bool
+// Enabled cast from string to bool.
 func Enabled(status string) bool {
 	return strings.ToLower(status) == "enabled"
 }
 
-// LoseSQBrackets ditches square brackets
+// LoseSQBrackets ditches square brackets.
 func LoseSQBrackets(newAttribute string) string {
 	re := regexp.MustCompile(`^\[(.*)\]`) // format('{0}/{1}',
 	Matched := re.FindStringSubmatch(newAttribute)

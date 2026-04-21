@@ -22,7 +22,7 @@ func lookup(myType string) []byte {
 		"microsoft.keyvault/vaults":                                          azurermKeyVault,
 		"microsoft.managedidentity/userassignedidentities":                   azurermUserAssignedIdentity,
 		"microsoft.network/applicationgateways":                              azurermApplicationGateway,
-		"Microsoft.Network/applicationGateways/backendAddressPools":          azurermNetworkInterfaceApplicationGatewayBackendAddressPoolAssociation, //nolint:lll
+		"Microsoft.Network/applicationGateways/backendAddressPools":          azurermNetworkInterfaceApplicationGatewayBackendAddressPoolAssociation,
 		"microsoft.network/bastionhosts":                                     azurermBastionHost,
 		"microsoft.network/networkinterfaces":                                azurermNetworkInterface,
 		"microsoft.network/networksecuritygroups":                            azurermNetworkSecurityGroup,

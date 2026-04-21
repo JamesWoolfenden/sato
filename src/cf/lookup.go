@@ -62,7 +62,6 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 }
 
 //goland:noinspection GoLinter
-//nolint:funlen
 func lookup(myType string) []byte {
 
 	var myContent []byte

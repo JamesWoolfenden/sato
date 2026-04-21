@@ -222,7 +222,7 @@ func Test_parseList(t *testing.T) {
 		want    []interface{}
 		wantErr bool
 	}{
-		//{"pass", args{}},
+		// {"pass", args{}},
 	}
 
 	for _, tt := range tests {
@@ -288,7 +288,7 @@ func Test_preprocess(t *testing.T) {
 		args args
 		want map[string]interface{}
 	}{
-		//{},
+		// {},
 	}
 
 	for _, tt := range tests {
@@ -316,7 +316,7 @@ func Test_replaceResourceID(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		//{},
+		// {},
 	}
 
 	for _, tt := range tests {
@@ -348,7 +348,7 @@ func Test_setResourceNames(t *testing.T) {
 		args args
 		want []interface{}
 	}{
-		//{},
+		// {},
 	}
 
 	for _, tt := range tests {
@@ -376,7 +376,7 @@ func Test_splitResourceName(t *testing.T) {
 		want1   string
 		wantErr bool
 	}{
-		//{},
+		// {},
 	}
 
 	for _, tt := range tests {
@@ -417,14 +417,14 @@ func Test_parseLocals(t *testing.T) {
 		"vmSubnetNsgId": "azurerm_network_security_group.sato8",
 	}
 
-	var resources []interface{}
-	resource := map[string]interface{}{
-		"type":     "Microsoft.Network/networkSecurityGroups",
-		"name":     "[variables('vmSubnetNsgName')]",
-		"location": "[parameters('location')]",
-		"resource": "sato8",
+	resources := []interface{}{
+		map[string]interface{}{
+			"type":     "Microsoft.Network/networkSecurityGroups",
+			"name":     "[variables('vmSubnetNsgName')]",
+			"location": "[parameters('location')]",
+			"resource": "sato8",
+		},
 	}
-	resources = append(resources, resource)
 
 	result := make(map[string]interface{})
 
@@ -466,13 +466,13 @@ func Test_parseLocals(t *testing.T) {
 
 func Test_replace(t *testing.T) {
 	t.Parallel()
-	//matches := []string{
+	// matches := []string{
 	//	"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
 	//	"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
 	//	"concat", "subscription().tenantId", "uuid",
 	//}
 	//
-	//target := map[string]interface{}{
+	// target := map[string]interface{}{
 	//	"locals": map[string]interface{}{
 	//		"location": "[resourceGroup().location]",
 	//	},
@@ -484,7 +484,7 @@ func Test_replace(t *testing.T) {
 	//		},
 	//	},
 	//}
-	//result := target
+	// result := target
 
 	type args struct {
 		matches      []string
@@ -503,14 +503,14 @@ func Test_replace(t *testing.T) {
 		want  string
 		want1 map[string]interface{}
 	}{
-		//{"Pass",
+		// {"Pass",
 		//	args{matches, "[resourceId('Microsoft.Network/publicIPAddresses',variables('appGwPublicIpName'))]", &vars, target},
 		//	"azurerm_public_ip.sato0", result},
-		//{"resourceId",
+		// {"resourceId",
 		//	args{matches, "[resourceId('Microsoft.Network/publicIPAddresses',local.appGwPublicIpName)]", &resourceId, target},
 		//	"azurerm_public_ip.sato0", result},
-		//{"parameters", args{matches, "[parameters('wafMode')]", &params, target}, "local.wafMode", result},
-		//{"bodge",
+		// {"parameters", args{matches, "[parameters('wafMode')]", &params, target}, "local.wafMode", result},
+		// {"bodge",
 		//	args{
 		//		matches, "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('appGatewaySubnetName'))]",
 		//		&vars,
@@ -543,10 +543,10 @@ func Test_parseString(t *testing.T) {
 		result       map[string]interface{}
 	}
 
-	//want := "${var._artifactsLocation}artifacts/vm2.default.htm"
-	//target := map[string]interface{}{}
+	// want := "${var._artifactsLocation}artifacts/vm2.default.htm"
+	// target := map[string]interface{}{}
 	//
-	//result := map[string]interface{}{}
+	// result := map[string]interface{}{}
 
 	tests := []struct {
 		name  string
@@ -554,7 +554,7 @@ func Test_parseString(t *testing.T) {
 		want  *string
 		want1 map[string]interface{}
 	}{
-		//{"Pass", args{"vm2DefaultHtmFullPath", target}, &want, result},
+		// {"Pass", args{"vm2DefaultHtmFullPath", target}, &want, result},
 	}
 
 	for _, tt := range tests {

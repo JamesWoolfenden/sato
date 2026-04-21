@@ -30,7 +30,7 @@ func Add(
 	if myMap[myString] {
 		return myList, myMap
 	}
-	myList = append(myList, myString) //nolint:wsl
+	myList = append(myList, myString)
 	myMap[myString] = true
 
 	return myList, myMap

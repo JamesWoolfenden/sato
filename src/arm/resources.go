@@ -11,7 +11,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// ParseResources handles resources in ARM conversion
+// ParseResources handles resources in ARM conversion.
 func ParseResources(
 	result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
 	resources, ok := result["resources"].([]interface{})

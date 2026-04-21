@@ -149,8 +149,8 @@ func TestLookupAll(t *testing.T) {
 	totalCount := 0
 
 	for _, file := range files {
-		//has file extension JSON
-		//has lookup
+		// has file extension JSON
+		// has lookup
 		if strings.Contains(file.Name(), ".json") {
 			fileName := filepath.Join(directory, file.Name())
 			content, err := os.ReadFile(fileName)

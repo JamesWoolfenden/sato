@@ -45,8 +45,8 @@ func TestStringToMap(t *testing.T) {
 		param cloudformation.Parameter
 	}
 
-	//Description := "Enter t2.micro, m1.small, or m1.large. Default is t2.micro."
-	//result := Variable{
+	// Description := "Enter t2.micro, m1.small, or m1.large. Default is t2.micro."
+	// result := Variable{
 	//	Description: "",
 	//	Type:        "map(string)",
 	//	Default:     "{ \"t2.micro\" = }",
@@ -58,7 +58,7 @@ func TestStringToMap(t *testing.T) {
 		args args
 		want Variable
 	}{
-		//{name: "pass",
+		// {name: "pass",
 		//	args: args{
 		//		param: cloudformation.Parameter{
 		//			Type:          "String",
@@ -151,7 +151,7 @@ func TestParseVariables(t *testing.T) {
 		want    []Variable
 		wantErr bool
 	}{
-		//{},
+		// {},
 	}
 
 	for _, tt := range tests {

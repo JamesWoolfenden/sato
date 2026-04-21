@@ -176,31 +176,30 @@ func GetVariableType(
 
 // GetVariableDefault determines a variables default value.
 func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Variable {
-	//goland:noinspection GoLinter
-	switch param.Default.(type) {
+	switch v := param.Default.(type) {
 	case string:
-		_, err := strconv.Atoi(param.Default.(string))
+		_, err := strconv.Atoi(v)
 
 		if err == nil {
 			myVariable.Type = typeNumber
 
-			myVariable.Default = param.Default.(string)
+			myVariable.Default = v
 		} else {
 			if myVariable.Type == "bool" {
-				myVariable.Default = param.Default.(string)
+				myVariable.Default = v
 			} else {
-				if strings.Contains(param.Default.(string), "=") {
+				if strings.Contains(v, "=") {
 					myVariable = StringToMap(param)
 				} else {
-					myVariable.Default = "\"" + param.Default.(string) + "\""
+					myVariable.Default = "\"" + v + "\""
 				}
 			}
 		}
 	case float64:
 		myVariable.Type = typeNumber
-		myVariable.Default = fmt.Sprintf("%v", param.Default.(float64))
+		myVariable.Default = fmt.Sprintf("%v", v)
 	case bool:
-		myVariable.Default = strconv.FormatBool(param.Default.(bool))
+		myVariable.Default = strconv.FormatBool(v)
 	case interface{}:
 		myVariable.Default = "[]"
 	default:

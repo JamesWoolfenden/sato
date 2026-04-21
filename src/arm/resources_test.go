@@ -24,7 +24,7 @@ func Test_parseResources(t *testing.T) {
 	}{
 		{"Fail", args{}, nil, true},
 		{"Empty Cast", args{nil, nil, ""}, nil, true},
-		//{"minimal", args{result, nil, ""}, nil, false},
+		// {"minimal", args{result, nil, ""}, nil, false},
 	}
 
 	for _, tt := range tests {
