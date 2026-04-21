@@ -1,67 +1,60 @@
+// Package utils provides integration-test helpers for validating sato output
+// with OpenTofu.
 package utils
 
 import (
-	"context"
-	"fmt"
+	"bytes"
 	"os"
-
-	"github.com/go-git/go-git/v5"
-	"github.com/go-git/go-git/v5/plumbing"
-	"github.com/hashicorp/hc-install/product"
-	"github.com/hashicorp/hc-install/releases"
-	"github.com/hashicorp/terraform-exec/tfexec"
-	"github.com/rs/zerolog/log"
+	"os/exec"
+	"path/filepath"
+	"testing"
 )
 
-// CloneRepo test utility
-func CloneRepo(repoPath string, commitHash string) string {
-	dir, err := os.MkdirTemp("", "temp-repo")
+// TofuPath returns the path to the tofu binary, or skips the test if it is
+// not installed.
+func TofuPath(t *testing.T) string {
+	t.Helper()
+
+	p, err := exec.LookPath("tofu")
 	if err != nil {
-		log.Fatal().Err(err)
+		t.Skip("tofu not found on PATH; skipping validation")
 	}
 
-	// Clones the repository into the given dir, just as a normal git clone does
-	repo, err := git.PlainClone(dir, false, &git.CloneOptions{
-		URL: repoPath,
-	})
-	if err != nil {
-		log.Fatal().Err(err)
-	}
-
-	if commitHash != "" {
-		wt, _ := repo.Worktree()
-
-		commitRef := plumbing.NewHash(commitHash)
-		_ = wt.Checkout(&git.CheckoutOptions{Hash: commitRef})
-	}
-
-	if err != nil {
-		log.Fatal().Err(err)
-	}
-
-	return dir
+	return p
 }
 
-// TfInit supports checking the results of Sato parse
-func TfInit(workingDir string) error {
-	installer := &releases.LatestVersion{
-		Product: product.Terraform,
+func run(t *testing.T, tofu, dir string, args ...string) {
+	t.Helper()
+
+	cmd := exec.Command(tofu, args...)
+	cmd.Dir = dir
+	cmd.Env = append(os.Environ(), "TF_IN_AUTOMATION=1")
+
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &out
+
+	if err := cmd.Run(); err != nil {
+		t.Fatalf("tofu %v in %s failed: %v\n%s", args, dir, err, out.String())
+	}
+}
+
+// Init runs `tofu init -backend=false` in dir. It downloads providers, so a
+// plugin cache is configured under the user cache dir to keep repeat runs fast.
+func Init(t *testing.T, tofu, dir string) {
+	t.Helper()
+
+	if cache, err := os.UserCacheDir(); err == nil {
+		cacheDir := filepath.Join(cache, "sato-tofu-plugins")
+		_ = os.MkdirAll(cacheDir, 0o750)
+		t.Setenv("TF_PLUGIN_CACHE_DIR", cacheDir)
 	}
 
-	execPath, err := installer.Install(context.Background())
-	if err != nil {
-		return fmt.Errorf("failed to install terraform %w", err)
-	}
+	run(t, tofu, dir, "init", "-backend=false", "-input=false", "-no-color")
+}
 
-	tf, err := tfexec.NewTerraform(workingDir, execPath)
-	if err != nil {
-		return fmt.Errorf("failed to create terraform object %w", err)
-	}
-
-	err = tf.Init(context.Background(), tfexec.Upgrade(true))
-	if err != nil {
-		return fmt.Errorf("failed to init terraform %w", err)
-	}
-
-	return nil
+// Validate runs `tofu validate` in dir. Init must have been called first.
+func Validate(t *testing.T, tofu, dir string) {
+	t.Helper()
+	run(t, tofu, dir, "validate", "-no-color")
 }
