@@ -16,8 +16,11 @@ resource "aws_kinesis_firehose_delivery_stream" "{{.item}}" {
 
 {{- if .resource.ExtendedS3DestinationConfiguration  }}
     extended_s3_configuration {
-        role_arn   = aws_iam_role.firehose_role.arn
+        role_arn   = {{.resource.ExtendedS3DestinationConfiguration.RoleARN|Quote}}
         bucket_arn = {{ .resource.ExtendedS3DestinationConfiguration.BucketARN|Quote }}
+{{- if .resource.ExtendedS3DestinationConfiguration.Prefix}}
+        prefix     = {{.resource.ExtendedS3DestinationConfiguration.Prefix|Quote}}
+{{- end}}
 {{- if .resource.ExtendedS3DestinationConfiguration.BufferingHints.SizeInMBs}}
         buffering_size= {{ .resource.ExtendedS3DestinationConfiguration.BufferingHints.SizeInMBs}}
 {{- end }}
@@ -37,10 +40,10 @@ resource "aws_kinesis_firehose_delivery_stream" "{{.item}}" {
         }
 {{- end}}
 {{- if .resource.ExtendedS3DestinationConfiguration.CompressionFormat}}
-        compression_format = {{.resource.ExtendedS3DestinationConfiguration.CompressionFormat}}
+        compression_format = {{.resource.ExtendedS3DestinationConfiguration.CompressionFormat|Quote}}
 {{- end}}
 {{- if .resource.ExtendedS3DestinationConfiguration.CustomTimeZone}}
-        custom_timezone = {{.resource.ExtendedS3DestinationConfiguration.CustomTimeZone}}
+        custom_timezone = {{.resource.ExtendedS3DestinationConfiguration.CustomTimeZone|Quote}}
 {{- end }}
 {{- if .resource.ExtendedS3DestinationConfiguration.DataFormatConversionConfiguration}}
         data_format_conversion_configuration {
@@ -53,16 +56,13 @@ resource "aws_kinesis_firehose_delivery_stream" "{{.item}}" {
     {{- if .resource.ExtendedS3DestinationConfiguration.ErrorOutputPrefix}}
         error_output_prefix = {{.resource.ExtendedS3DestinationConfiguration.ErrorOutputPrefix|Quote}}
     {{- end }}
-{{- if .resource.ExtendedS3DestinationConfiguration.RoleARN}}
-    role_arn = {{.resource.ExtendedS3DestinationConfiguration.RoleARN|Quote}}
-{{- end}}
 {{- if  .resource.ExtendedS3DestinationConfiguration.ProcessingConfiguration }}
         processing_configuration {
             enabled = {{ Boolean .resource.ExtendedS3DestinationConfiguration.ProcessingConfiguration.Enabled}}
 
 {{- range $a, $i := .resource.ExtendedS3DestinationConfiguration.ProcessingConfiguration.Processors}}
             processors {
-                type = {{$i.Type}}
+                type = {{$i.Type|Quote}}
 
 {{- range $b, $j := $i.Parameters}}
                 parameters {
@@ -74,7 +74,7 @@ resource "aws_kinesis_firehose_delivery_stream" "{{.item}}" {
 {{- end}}
             }
 {{- if .resource.ExtendedS3DestinationConfiguration.S3BackupMode}}
-            s3_backup_mode = {{.resource.ExtendedS3DestinationConfiguration.S3BackupMode}}
+            s3_backup_mode = {{.resource.ExtendedS3DestinationConfiguration.S3BackupMode|Quote}}
 {{- end}}
 {{- if .resource.ExtendedS3DestinationConfiguration.S3BackupConfiguration}}
             s3_backup_configuration {

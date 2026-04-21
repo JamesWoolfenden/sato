@@ -38,7 +38,7 @@ resource "azurerm_virtual_machine" "{{.item}}" {
     caching      = {{$i.caching|Quote}}
 {{- end}}
     create_option= {{ $i.createOption|Quote}}
-    disk_size_gb = {{Nil $i.diskSizeGB|Quote}}
+    disk_size_gb = {{ $i.diskSizeGB }}
     lun          = {{ $i.lun }}
 {{- if $i.writeAcceleratorEnabled}}
     write_acclerator_enabled={{$i.writeAcceleratorEnabled|Quote}}

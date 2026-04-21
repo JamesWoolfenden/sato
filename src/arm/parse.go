@@ -147,7 +147,7 @@ func ParseString(attribute string, result map[string]interface{}) (string, map[s
 	matches := []string{
 		"parameters", "variables", "toLower", "resourceGroup().location", "resourceGroup().id",
 		"substring", "uniqueString", "reference", "resourceId", "listKeys", "format('", "SubscriptionResourceId",
-		"concat", "subscription().tenantId", "UUID", "uri(",
+		"concat", "subscription().tenantId", "uuid(", "uri(",
 	}
 
 	if what, found := Contains(matches, attribute); found {

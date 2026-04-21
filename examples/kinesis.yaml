@@ -1,4 +1,21 @@
 Resources:
+  S3Bucketsechubyashdatafirehose:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: aws-sechub-logs
+
+  kinesisFirehoseRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: aws-sechub-firehose-role
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: firehose.amazonaws.com
+            Action: sts:AssumeRole
+
   SecHubEventsFirehoseDeliveryStream:
     Type: AWS::KinesisFirehose::DeliveryStream
     Properties:
@@ -11,10 +28,6 @@ Resources:
         Prefix: !Sub "sechub_events/managementid=${AWS::AccountId}/!{timestamp:yyyy}/!{timestamp:MM}/!{timestamp:dd}/"
         ErrorOutputPrefix: "aws-sechub-logs-firehose-error/"
         RoleARN: !GetAtt kinesisFirehoseRole.Arn
-        CloudWatchLoggingOptions:
-          Enabled: true
-          LogGroupName: !Ref FirehoseLogGroup
-          LogStreamName: !Ref FirehoseLogStream
         BufferingHints:
           IntervalInSeconds: 900
           SizeInMBs: 30
@@ -25,7 +38,7 @@ Resources:
             - Type: Lambda
               Parameters:
                 - ParameterName: LambdaArn
-                  ParameterValue: !GetAtt LambdaFunctiontransformationsechub.Arn
+                  ParameterValue: arn:aws:lambda:eu-west-2:123456789012:function:aws-sechub-transform
                 - ParameterName: BufferIntervalInSeconds
                   ParameterValue: "600"
                 - ParameterName: BufferSizeInMBs

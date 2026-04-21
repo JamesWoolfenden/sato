@@ -26,8 +26,51 @@ var subResourceSuffix = map[string]string{
 	"microsoft.network/applicationgateways/sslcertificates":               "ssl_certificates",
 }
 
+// replaceReference rewrites reference(expr [, apiVersion [, 'Full']]) to just
+// expr, preserving any prefix/suffix around the call. ARM's reference() returns
+// a runtime object whose attributes map onto the terraform resource directly,
+// so the wrapper and its extra args are dropped.
+func replaceReference(attr string) string {
+	idx := strings.Index(attr, "reference(")
+	if idx < 0 {
+		return attr
+	}
+
+	prefix := attr[:idx]
+	rest := attr[idx+len("reference("):]
+
+	depth := 1
+	argEnd := -1
+
+	var i int
+	for i = 0; i < len(rest); i++ {
+		switch rest[i] {
+		case '(':
+			depth++
+		case ')':
+			depth--
+			if depth == 0 {
+				if argEnd < 0 {
+					argEnd = i
+				}
+				return prefix + rest[:argEnd] + rest[i+1:]
+			}
+		case ',':
+			if depth == 1 && argEnd < 0 {
+				argEnd = i
+			}
+		}
+	}
+
+	return attr
+}
+
 // replaceUUID handles the uuid ARM function conversion.
 func replaceUUID(newAttribute string, result map[string]interface{}) (string, map[string]interface{}) {
+	if !strings.Contains(newAttribute, "uuid()") {
+		return newAttribute, result
+	}
+
 	data := ensureDataMap(result)
 
 	if data["uuid"] != nil {
@@ -107,7 +150,7 @@ func Replace(
 		}
 	case "reference":
 		{
-			Attribute = Ditch(LoseSQBrackets(newAttribute), "reference")
+			Attribute = replaceReference(LoseSQBrackets(newAttribute))
 		}
 	case "resourceId":
 		{
@@ -122,12 +165,10 @@ func Replace(
 		}
 	case "uniqueString", "uniquestring":
 		{
-			target := "uniquestring\\((.*?)\\)"
-			re := regexp.MustCompile(target) // format('{0}/{1}',
-			Match := re.ReplaceAllString(strings.ToLower(newAttribute), "substr(uuid(), 0, 8)")
-			Attribute = Match
+			re := regexp.MustCompile(`(?i)uniquestring\((.*?)\)`)
+			Attribute = re.ReplaceAllString(newAttribute, "substr(uuid(), 0, 8)")
 		}
-	case "subscriptionResourceId":
+	case "SubscriptionResourceId", "subscriptionResourceId":
 		{
 			Attribute = Ditch(newAttribute, "subscriptionResourceId")
 		}
@@ -201,7 +242,7 @@ func Replace(
 			data["resource_group"] = true
 			result["data"] = data
 		}
-	case "uuid":
+	case "uuid(":
 		{
 			Attribute, result = replaceUUID(newAttribute, result)
 		}

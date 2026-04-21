@@ -21,7 +21,7 @@ type fixture struct {
 var fixtures = []fixture{
 	{name: "cf-template", source: "../../examples/template.yaml", parse: cf.Parse, validate: true},
 	{name: "cf-athena", source: "../../examples/athena.yaml", parse: cf.Parse, validate: true},
-	{name: "cf-kinesis", source: "../../examples/kinesis.yaml", parse: cf.Parse, validate: false},
+	{name: "cf-kinesis", source: "../../examples/kinesis.yaml", parse: cf.Parse, validate: true},
 	{name: "cf-aws-vpc", source: "../../examples/aws-vpc.template.yaml", parse: cf.Parse, validate: false},
 	{
 		name: "cf-linux-bastion", source: "../../examples/linux-bastion-master.template.yaml", parse: cf.Parse,
@@ -30,7 +30,6 @@ var fixtures = []fixture{
 	{
 		name:   "arm-vm-simple-windows",
 		source: "../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json", parse: arm.Parse,
-		skip: "reference() apiVersion arg leaks into HCL; toLower(format(...)) unparsed",
 	},
 }
 
