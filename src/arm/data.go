@@ -2,7 +2,7 @@ package arm
 
 import (
 	"bytes"
-	"sato/src/cf"
+	"sato/src/tfgen"
 	tftemplate "text/template"
 )
 
@@ -30,7 +30,7 @@ func ParseData(result map[string]interface{}, funcMap tftemplate.FuncMap, destin
 		return &templateExecuteError{Err: err}
 	}
 
-	err = cf.Write(output.String(), destination, "data")
+	err = tfgen.Write(output.String(), destination, "data")
 	if err != nil {
 		return &writeFileError{Destination: destination, Err: err}
 	}

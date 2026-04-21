@@ -6,6 +6,8 @@ import (
 	"strings"
 	tftemplate "text/template"
 
+	"sato/src/tfgen"
+
 	"github.com/awslabs/goformation/v7/cloudformation"
 	"github.com/rs/zerolog/log"
 )
@@ -50,7 +52,7 @@ func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncM
 			result = ReplaceStepFunctionsReferences(result, resources)
 		}
 
-		err = Write(result, destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
+		err = tfgen.Write(result, destination, fmt.Sprint(ToTFName(myType), ".", strings.ToLower(item)))
 		if err != nil {
 			return &writeError{destination: destination, err: err}
 		}

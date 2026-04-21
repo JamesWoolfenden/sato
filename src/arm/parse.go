@@ -9,8 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"sato/src/cf"
 	"sato/src/see"
+	"sato/src/tfgen"
 	"strconv"
 	"strings"
 	tftemplate "text/template"
@@ -23,22 +23,22 @@ import (
 type m map[string]interface{}
 
 var funcMap = tftemplate.FuncMap{
-	"Array":        cf.Array,
-	"ArrayReplace": cf.ArrayReplace,
-	"Contains":     cf.Contains,
+	"Array":        tfgen.Array,
+	"ArrayReplace": tfgen.ArrayReplace,
+	"Contains":     tfgen.Contains,
 	"Enabled":      Enabled,
-	"Sprint":       cf.Sprint,
-	"Decode64":     cf.Decode64,
-	"Boolean":      cf.Boolean,
-	"Dequote":      cf.Dequote,
-	"Quote":        cf.Quote,
-	"Demap":        cf.Demap,
+	"Sprint":       tfgen.Sprint,
+	"Decode64":     tfgen.Decode64,
+	"Boolean":      tfgen.Boolean,
+	"Dequote":      tfgen.Dequote,
+	"Quote":        tfgen.Quote,
+	"Demap":        tfgen.Demap,
 	"Tags":         Tags,
 	"ToUpper":      strings.ToUpper,
-	"ToLower":      cf.Lower,
+	"ToLower":      tfgen.Lower,
 	"Deref":        func(str *string) string { return *str },
-	"Nil":          cf.Nill,
-	"Nild":         cf.Nild,
+	"Nil":          tfgen.Nill,
+	"Nild":         tfgen.Nild,
 	"Marshal": func(v interface{}) string {
 		a, err := json.Marshal(v)
 		if err != nil {
@@ -48,15 +48,15 @@ var funcMap = tftemplate.FuncMap{
 		return string(a)
 	},
 	"Set":          ArrayToString,
-	"Split":        cf.Split,
-	"SplitOn":      cf.SplitOn,
-	"Replace":      cf.Replace,
-	"RandomString": cf.RandomString,
-	"Map":          cf.Map,
+	"Split":        tfgen.Split,
+	"SplitOn":      tfgen.SplitOn,
+	"Replace":      tfgen.Replace,
+	"RandomString": tfgen.RandomString,
+	"Map":          tfgen.Map,
 	"NotNil":       NotNil,
-	"Snake":        cf.Snake,
-	"Kebab":        cf.Kebab,
-	"ZipFile":      cf.Zipfile,
+	"Snake":        tfgen.Snake,
+	"Kebab":        tfgen.Kebab,
+	"ZipFile":      tfgen.Zipfile,
 	"Uuid":         UUID,
 }
 
@@ -69,6 +69,10 @@ func (r *readFileError) Error() string {
 	return fmt.Sprintf("failed to read file: %s %v", r.path, r.err)
 }
 
+func (r *readFileError) Unwrap() error {
+	return r.err
+}
+
 type openFileError struct {
 	path string
 	err  error
@@ -76,6 +80,10 @@ type openFileError struct {
 
 func (o *openFileError) Error() string {
 	return fmt.Sprintf("failed to open file: %s %v", o.path, o.err)
+}
+
+func (o *openFileError) Unwrap() error {
+	return o.err
 }
 
 type unmarshalError struct {
@@ -86,20 +94,8 @@ func (u *unmarshalError) Error() string {
 	return fmt.Sprintf("unmarshal failure %v", u.err)
 }
 
-type parseVariablesError struct {
-	err error
-}
-
-func (p *parseVariablesError) Error() string {
-	return fmt.Sprintf("parse varriables failure %v", p.err)
-}
-
-type parseResourcesError struct {
-	err error
-}
-
-func (p *parseResourcesError) Error() string {
-	return fmt.Sprintf("parse resources failure %v", p.err)
+func (u *unmarshalError) Unwrap() error {
+	return u.err
 }
 
 type parseDataError struct {
@@ -108,6 +104,10 @@ type parseDataError struct {
 
 func (p *parseDataError) Error() string {
 	return fmt.Sprintf("parse data failure %v", p.err)
+}
+
+func (p *parseDataError) Unwrap() error {
+	return p.err
 }
 
 // Parse turn ARM into Terraform.
@@ -145,7 +145,7 @@ func Parse(file string, destination string) error {
 	result, err = ParseVariables(result, funcMap, destination)
 
 	if err != nil {
-		return &parseVariablesError{err: err}
+		return &parseVariablesError{Err: err}
 	}
 
 	result, err = ParseResources(result, funcMap, destination)
@@ -155,7 +155,7 @@ func Parse(file string, destination string) error {
 
 	err = ParseOutputs(result, funcMap, destination)
 	if err != nil {
-		return &parseResourcesError{err: err}
+		return &parseResourcesError{Err: err}
 	}
 
 	err = ParseData(result, funcMap, destination)
@@ -647,7 +647,7 @@ func ReplaceResourceID(Match string, result map[string]interface{}) (string, err
 					}
 				}
 
-				resourceName, err = see.Lookup(cf.Dequote(arm), false)
+				resourceName, err = see.Lookup(tfgen.Dequote(arm), false)
 
 				if err != nil {
 					resourceName = toUnknownPointer()
@@ -724,7 +724,7 @@ func SplitResourceName(attribute string) (string, string, error) {
 			newAttribute := re.FindStringSubmatch(splitsy[1])
 
 			if len(newAttribute) <= 1 {
-				arm = cf.Dequote(splitsy[0])
+				arm = tfgen.Dequote(splitsy[0])
 				// check it's not an array
 				name = strings.TrimSpace(splitsy[1])
 				if strings.Contains(name, ",") {
@@ -756,7 +756,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 		return name, &inlineFormatError{Name: name}
 	}
 
-	name = cf.Dequote(name)
+	name = tfgen.Dequote(name)
 
 	var err error
 
@@ -990,7 +990,7 @@ func generateResourceName(resourceType string, resourceName string, index int) s
 	typeName := parts[len(parts)-1]
 
 	// Convert to snake case
-	typeName = cf.Snake(typeName)
+	typeName = tfgen.Snake(typeName)
 
 	// Clean up the resource name if it's a simple string
 	cleanName := strings.ToLower(resourceName)

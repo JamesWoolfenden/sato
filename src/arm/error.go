@@ -17,6 +17,12 @@ type templateNewError = satoerrors.TemplateNewError
 // templateExecuteError is an alias for the satoerrors error type.
 type templateExecuteError = satoerrors.TemplateExecuteError
 
+// parseVariablesError is an alias for the satoerrors error type.
+type parseVariablesError = satoerrors.ParseVariablesError
+
+// parseResourcesError is an alias for the satoerrors error type.
+type parseResourcesError = satoerrors.ParseResourcesError
+
 type splitResourceError struct {
 	match string
 }
@@ -37,6 +43,10 @@ type parseMapError struct {
 
 func (m *parseMapError) Error() string {
 	return fmt.Sprintf("parseMapError %v", m.Err)
+}
+
+func (m *parseMapError) Unwrap() error {
+	return m.Err
 }
 
 type emptyResourceError struct {

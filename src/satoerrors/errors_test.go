@@ -110,3 +110,31 @@ func TestTemplateExecuteError(t *testing.T) {
 		t.Errorf("TemplateExecuteError.Error() = %v, want %v", got, expected)
 	}
 }
+
+func TestParseVariablesError(t *testing.T) {
+	innerErr := errors.New("bad type")
+	pe := &ParseVariablesError{Err: innerErr}
+
+	expected := "parse variables failure: bad type"
+	if got := pe.Error(); got != expected {
+		t.Errorf("ParseVariablesError.Error() = %v, want %v", got, expected)
+	}
+
+	if !errors.Is(pe, innerErr) {
+		t.Errorf("errors.Is failed to unwrap inner error")
+	}
+}
+
+func TestParseResourcesError(t *testing.T) {
+	innerErr := errors.New("unknown resource")
+	pe := &ParseResourcesError{Err: innerErr}
+
+	expected := "parse resources failure: unknown resource"
+	if got := pe.Error(); got != expected {
+		t.Errorf("ParseResourcesError.Error() = %v, want %v", got, expected)
+	}
+
+	if !errors.Is(pe, innerErr) {
+		t.Errorf("errors.Is failed to unwrap inner error")
+	}
+}

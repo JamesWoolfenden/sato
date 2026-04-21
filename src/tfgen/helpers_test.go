@@ -1,4 +1,4 @@
-package cf
+package tfgen
 
 import (
 	"reflect"
@@ -205,9 +205,7 @@ func Test_sprint(t *testing.T) {
 
 	var sliceEmpty []interface{}
 
-	var sliceNotEmpty []interface{}
-
-	sliceNotEmpty = append(sliceNotEmpty, "SliceNotEmpty")
+	sliceNotEmpty := []interface{}{"SliceNotEmpty"}
 	notEmpty := "stuff"
 
 	tests := []struct {

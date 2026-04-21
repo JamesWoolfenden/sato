@@ -5,14 +5,11 @@ import (
 	"sato/src/satoerrors"
 )
 
-// filepathError is an alias for the satoerrors error type.
-type filepathError = satoerrors.FilepathError
-
-// writeFileError is an alias for the satoerrors error type.
-type writeFileError = satoerrors.WriteFileError
-
-// makeDirError is an alias for the satoerrors error type.
-type makeDirError = satoerrors.MakeDirError
+type (
+	filepathError       = satoerrors.FilepathError
+	parseVariablesError = satoerrors.ParseVariablesError
+	parseResourcesError = satoerrors.ParseResourcesError
+)
 
 // missingResourceError represents a resource lookup failure.
 type missingResourceInputError struct{}
@@ -29,20 +26,8 @@ func (m *goformationError) Error() string {
 	return fmt.Sprintf("goformation parse failure %v", m.err)
 }
 
-type parseVariablesError struct {
-	err error
-}
-
-func (m *parseVariablesError) Error() string {
-	return fmt.Sprintf("parse variables failure %v", m.err)
-}
-
-type parseResourcesError struct {
-	err error
-}
-
-func (m *parseResourcesError) Error() string {
-	return fmt.Sprintf("parse resources failure %v", m.err)
+func (m *goformationError) Unwrap() error {
+	return m.err
 }
 
 type writeError struct {
@@ -52,6 +37,10 @@ type writeError struct {
 
 func (e *writeError) Error() string {
 	return fmt.Sprintf("write failed %s %v", e.destination, e.err)
+}
+
+func (e *writeError) Unwrap() error {
+	return e.err
 }
 
 type emptyPathsError struct{}

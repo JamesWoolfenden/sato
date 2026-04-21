@@ -81,36 +81,6 @@ func TestStringToMap(t *testing.T) {
 }
 
 //goland:noinspection GoLinter
-func TestWrite(t *testing.T) {
-	t.Parallel()
-
-	type args struct {
-		output   string
-		location string
-		name     string
-	}
-
-	tests := []struct {
-		name    string
-		args    args
-		wantErr bool
-	}{
-		{"Pass", args{"gibberine", ".", "test"}, false},
-		//{"Fail", args{"gibberine", "/usr/bin/local", "test"}, true},
-	}
-
-	for _, tt := range tests {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			if err := Write(tt.args.output, tt.args.location, tt.args.name); (err != nil) != tt.wantErr {
-				t.Errorf("Write() error = %v, wantErr %v", err, tt.wantErr)
-			}
-		})
-	}
-}
-
-//goland:noinspection GoLinter
 func TestToTFName(t *testing.T) {
 	t.Parallel()
 

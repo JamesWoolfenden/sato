@@ -84,18 +84,18 @@ func TestParseVariablesError(t *testing.T) {
 		{
 			name:     "with error",
 			err:      errors.New("var parse failed"),
-			expected: "parse variables failure var parse failed",
+			expected: "parse variables failure: var parse failed",
 		},
 		{
 			name:     "nil error",
 			err:      nil,
-			expected: "parse variables failure <nil>",
+			expected: "parse variables failure: <nil>",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pe := &parseVariablesError{err: tt.err}
+			pe := &parseVariablesError{Err: tt.err}
 			if got := pe.Error(); got != tt.expected {
 				t.Errorf("parseVariablesError.Error() = %v, want %v", got, tt.expected)
 			}
@@ -112,18 +112,18 @@ func TestParseResourcesError(t *testing.T) {
 		{
 			name:     "with error",
 			err:      errors.New("resource parse failed"),
-			expected: "parse resources failure resource parse failed",
+			expected: "parse resources failure: resource parse failed",
 		},
 		{
 			name:     "nil error",
 			err:      nil,
-			expected: "parse resources failure <nil>",
+			expected: "parse resources failure: <nil>",
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			pe := &parseResourcesError{err: tt.err}
+			pe := &parseResourcesError{Err: tt.err}
 			if got := pe.Error(); got != tt.expected {
 				t.Errorf("parseResourcesError.Error() = %v, want %v", got, tt.expected)
 			}

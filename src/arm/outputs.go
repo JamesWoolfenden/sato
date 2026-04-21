@@ -2,7 +2,7 @@ package arm
 
 import (
 	"bytes"
-	"sato/src/cf"
+	"sato/src/tfgen"
 	tftemplate "text/template"
 
 	"github.com/rs/zerolog/log"
@@ -23,7 +23,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 	var All string
 
 	for name, value := range outputs {
-		var myVar cf.Output
+		var myVar tfgen.Output
 
 		var someString string
 
@@ -57,7 +57,7 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		All += output.String()
 	}
 
-	err := cf.Write(All, destination, "outputs")
+	err := tfgen.Write(All, destination, "outputs")
 	if err != nil {
 		return &writeFileError{Destination: destination, Err: err}
 	}

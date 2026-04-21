@@ -5,13 +5,13 @@ package cf
 import (
 	"bytes"
 	"fmt"
-	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
 	"text/template"
+
+	"sato/src/tfgen"
 
 	"github.com/awslabs/goformation/v7"
 	"github.com/awslabs/goformation/v7/cloudformation"
@@ -24,50 +24,40 @@ const (
 	typeString     = "string"
 )
 
-// M is a wrapper object to help pass in multiple objects to template.
-type M map[string]interface{}
-
-// Variable describes a terraform variable.
-type Variable struct {
-	Description string
-	Type        string
-	Default     string
-	Name        string
-}
-
-// Output describes Tf output type.
-type Output struct {
-	Description string
-	Type        string
-	Value       string
-	Name        string
-}
+type (
+	// M aliases tfgen.M for local use.
+	M = tfgen.M
+	// Variable aliases tfgen.Variable for local use.
+	Variable = tfgen.Variable
+	// Output aliases tfgen.Output for local use.
+	Output = tfgen.Output
+)
 
 var funcMap = template.FuncMap{
-	"Array":        Array,
-	"ArrayReplace": ArrayReplace,
-	"Contains":     Contains,
-	"Sprint":       Sprint,
-	"Decode64":     Decode64,
-	"Boolean":      Boolean,
-	"Dequote":      Dequote,
-	"Quote":        Quote,
-	"Demap":        Demap,
+	"Array":        tfgen.Array,
+	"ArrayReplace": tfgen.ArrayReplace,
+	"Contains":     tfgen.Contains,
+	"Sprint":       tfgen.Sprint,
+	"Decode64":     tfgen.Decode64,
+	"Boolean":      tfgen.Boolean,
+	"Dequote":      tfgen.Dequote,
+	"Quote":        tfgen.Quote,
+	"Demap":        tfgen.Demap,
 	"ToUpper":      strings.ToUpper,
-	"ToLower":      Lower,
+	"ToLower":      tfgen.Lower,
 	"Deref":        func(str *string) string { return *str },
-	"Nil":          Nill,
-	"Nild":         Nild,
-	"Marshal":      Marshal,
-	"Split":        Split,
-	"SplitOn":      SplitOn,
-	"Replace":      Replace,
+	"Nil":          tfgen.Nill,
+	"Nild":         tfgen.Nild,
+	"Marshal":      tfgen.Marshal,
+	"Split":        tfgen.Split,
+	"SplitOn":      tfgen.SplitOn,
+	"Replace":      tfgen.Replace,
 	"Tags":         Tags,
-	"RandomString": RandomString,
-	"Map":          Map,
-	"Snake":        Snake,
-	"Kebab":        Kebab,
-	"ZipFile":      Zipfile,
+	"RandomString": tfgen.RandomString,
+	"Map":          tfgen.Map,
+	"Snake":        tfgen.Snake,
+	"Kebab":        tfgen.Kebab,
+	"ZipFile":      tfgen.Zipfile,
 	"TFJoin":       ParseJoin,  // CloudFormation !Join → Terraform join()
 	"TFSplit":      ParseSplit, // CloudFormation !Split → Terraform split()
 }
@@ -92,12 +82,12 @@ func Parse(file string, destination string) error {
 	_, err = ParseVariables(cloudFormation, funcMap, destination)
 
 	if err != nil {
-		return &parseVariablesError{err: err}
+		return &parseVariablesError{Err: err}
 	}
 
 	err = parseResources(cloudFormation.Resources, funcMap, destination)
 	if err != nil {
-		return &parseResourcesError{err: err}
+		return &parseResourcesError{Err: err}
 	}
 
 	return nil
@@ -142,12 +132,12 @@ func ParseVariables(
 		myVariables = append(myVariables, myVariable)
 	}
 
-	err := Write(All, destination, "variables")
+	err := tfgen.Write(All, destination, "variables")
 	if err != nil {
 		return nil, &writeError{destination: destination, err: err}
 	}
 
-	err = Write(strings.Join(DataResources, "\n"), destination, "data")
+	err = tfgen.Write(strings.Join(DataResources, "\n"), destination, "data")
 	if err != nil {
 		return nil, &writeError{destination: destination, err: err}
 	}
@@ -176,24 +166,24 @@ func GetVariableType(
 		myVariable.Type = typeListString
 	case "List<AWS::EC2::AvailabilityZone::Name>":
 		myVariable.Type = typeListString
-		dataResources, myMap = Add(dataAvailabilityZone, dataResources, myMap)
+		dataResources, myMap = tfgen.Add(dataAvailabilityZone, dataResources, myMap)
 	case "AWS::EC2::Subnet::Id":
 		myVariable.Type = typeString
-		dataResources, myMap = Add(dataSubnet, dataResources, myMap)
+		dataResources, myMap = tfgen.Add(dataSubnet, dataResources, myMap)
 	case "AWS::EC2::KeyPair::KeyName":
 		myVariable.Type = typeString
-		dataResources, myMap = Add(dataKeyPair, dataResources, myMap)
+		dataResources, myMap = tfgen.Add(dataKeyPair, dataResources, myMap)
 	case "AWS::EC2::VPC::Id", "List<AWS::EC2::VPC::Id>":
 		myVariable.Type = typeString
-		dataResources, myMap = Add(dataVpc, dataResources, myMap)
+		dataResources, myMap = tfgen.Add(dataVpc, dataResources, myMap)
 	case "AWS::EC2::SecurityGroup::Id":
 		myVariable.Type = typeString
-		dataResources, myMap = Add(dataSecurityGroup, dataResources, myMap)
+		dataResources, myMap = tfgen.Add(dataSecurityGroup, dataResources, myMap)
 	case "AWS::EC2::Image::Id", "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>":
 		myVariable.Type = typeString
 	case "AWS::Region":
 		myVariable.Type = typeString
-		dataResources, myMap = Add(dataRegion, dataResources, myMap)
+		dataResources, myMap = tfgen.Add(dataRegion, dataResources, myMap)
 	case "List<AWS::EC2::Subnet::Id>":
 		myVariable.Type = typeListString
 	case "Number":
@@ -202,7 +192,7 @@ func GetVariableType(
 		log.Info().Msgf("Variable %s", param.Type)
 	}
 
-	dataResources, myMap = Add(provider, dataResources, myMap)
+	dataResources, myMap = tfgen.Add(provider, dataResources, myMap)
 
 	return dataResources, myVariable, myMap
 }
@@ -267,46 +257,6 @@ func StringToMap(param cloudformation.Parameter) Variable {
 	myVariable.Type = "map(string)"
 
 	return myVariable
-}
-
-// Write out Terraform.
-func Write(output string, location string, name string) error {
-	if output != "" {
-		newPath, err := filepath.Abs(location)
-		if err != nil {
-			return &filepathError{Path: location, Err: err}
-		}
-
-		err = os.MkdirAll(newPath, 0o750)
-		if err != nil {
-			return &makeDirError{Err: err}
-		}
-
-		d1 := []byte(output)
-
-		destination, err := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
-		if err != nil {
-			return &filepathError{Path: fmt.Sprint(location, "/", name, ".tf"), Err: err}
-		}
-
-		err = os.WriteFile(destination, d1, 0o600)
-		log.Info().Msgf("Created %s", destination)
-
-		if err != nil {
-			return &writeFileError{Destination: destination, Err: err}
-		}
-
-		// Format the generated Terraform file with tofu fmt
-		cmd := exec.Command("tofu", "fmt", destination) // #nosec G204 -- destination is validated filepath from Write function
-		if err := cmd.Run(); err != nil {
-			// If tofu is not available, log a warning but don't fail
-			log.Warn().Msgf("Could not format %s with tofu fmt: %v", destination, err)
-		} else {
-			log.Info().Msgf("Formatted %s with tofu fmt", destination)
-		}
-	}
-
-	return nil
 }
 
 // ToTFName creates a Terraform resource name from a CFN type (approximates).

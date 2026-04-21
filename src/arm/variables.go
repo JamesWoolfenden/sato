@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
-	"sato/src/cf"
+	"sato/src/tfgen"
 	"strings"
 	tftemplate "text/template"
 
@@ -44,7 +44,7 @@ func ParseVariables(
 
 	if locals != "" {
 		locals = "locals {\n" + locals + "}\n"
-		err = cf.Write(locals, destination, "locals")
+		err = tfgen.Write(locals, destination, "locals")
 
 		if err != nil {
 			return result, fmt.Errorf("failed to write locals %w", err)
@@ -113,7 +113,7 @@ func ParseVariables(
 		myVariables = append(myVariables, myItem)
 	}
 
-	err = cf.Write(All, destination, "variables")
+	err = tfgen.Write(All, destination, "variables")
 
 	if err != nil {
 		return result, fmt.Errorf("variable write fail %w", err)

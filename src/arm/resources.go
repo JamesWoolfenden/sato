@@ -3,8 +3,8 @@ package arm
 import (
 	"bytes"
 	"fmt"
-	"sato/src/cf"
 	"sato/src/see"
+	"sato/src/tfgen"
 	"strings"
 	tftemplate "text/template"
 
@@ -35,14 +35,24 @@ func ParseResources(
 		myType, ok := resource.(map[string]interface{})
 
 		if !ok {
-			log.Warn().Msg("resource is not map[string]interface{}")
+			log.Warn().Msg("resource is not map[string]interface{}, skipping")
+
+			continue
 		}
 
-		myContent := lookup(myType["type"].(string))
+		resourceType, ok := myType["type"].(string)
 
-		first, err := see.Lookup(myType["type"].(string), false)
+		if !ok {
+			log.Warn().Msg("resource type is not a string, skipping")
+
+			continue
+		}
+
+		myContent := lookup(resourceType)
+
+		first, err := see.Lookup(resourceType, false)
 		if err != nil {
-			log.Warn().Err(err)
+			log.Warn().Err(err).Msgf("no terraform mapping for %s, skipping", resourceType)
 
 			continue
 		}
@@ -50,7 +60,9 @@ func ParseResources(
 		temp, ok := myType["resource"].(string)
 
 		if !ok {
-			log.Warn().Msg("myType[\"resource\"] is not string")
+			log.Warn().Msgf("resource name for %s is not a string, skipping", resourceType)
+
+			continue
 		}
 
 		name = &temp
@@ -63,12 +75,12 @@ func ParseResources(
 			continue
 		}
 
-		_ = tmpl.Execute(&output, cf.M{
+		_ = tmpl.Execute(&output, tfgen.M{
 			"resource": resource,
 			"item":     name,
 		})
 
-		err = cf.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
+		err = tfgen.Write(output.String(), destination, *first+"."+strings.Replace(*name, "var.", "", 1))
 		if err != nil {
 			return nil, fmt.Errorf("write failure %w", err)
 		}

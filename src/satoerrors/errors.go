@@ -72,3 +72,29 @@ func (t *TemplateExecuteError) Error() string {
 func (t *TemplateExecuteError) Unwrap() error {
 	return t.Err
 }
+
+// ParseVariablesError represents a failure converting template parameters to Terraform variables.
+type ParseVariablesError struct {
+	Err error
+}
+
+func (p *ParseVariablesError) Error() string {
+	return fmt.Sprintf("parse variables failure: %v", p.Err)
+}
+
+func (p *ParseVariablesError) Unwrap() error {
+	return p.Err
+}
+
+// ParseResourcesError represents a failure converting template resources to Terraform resources.
+type ParseResourcesError struct {
+	Err error
+}
+
+func (p *ParseResourcesError) Error() string {
+	return fmt.Sprintf("parse resources failure: %v", p.Err)
+}
+
+func (p *ParseResourcesError) Unwrap() error {
+	return p.Err
+}

@@ -7,40 +7,40 @@ import (
 	"text/template"
 
 	"sato/src/arm"
-	"sato/src/cf"
+	"sato/src/tfgen"
 )
 
 var badFunk template.FuncMap
 
 var funcMap = template.FuncMap{ //nolint:gochecknoglobals
-	"Array":        cf.Array,
-	"ArrayReplace": cf.ArrayReplace,
-	"Contains":     cf.Contains,
-	"Sprint":       cf.Sprint,
-	"Decode64":     cf.Decode64,
-	"Boolean":      cf.Boolean,
-	"Dequote":      cf.Dequote,
-	"Quote":        cf.Quote,
-	"Demap":        cf.Demap,
+	"Array":        tfgen.Array,
+	"ArrayReplace": tfgen.ArrayReplace,
+	"Contains":     tfgen.Contains,
+	"Sprint":       tfgen.Sprint,
+	"Decode64":     tfgen.Decode64,
+	"Boolean":      tfgen.Boolean,
+	"Dequote":      tfgen.Dequote,
+	"Quote":        tfgen.Quote,
+	"Demap":        tfgen.Demap,
 	"ToUpper":      strings.ToUpper,
-	"ToLower":      cf.Lower,
+	"ToLower":      tfgen.Lower,
 	"Deref":        func(str *string) string { return *str },
-	"Nil":          cf.Nill,
-	"Nild":         cf.Nild,
+	"Nil":          tfgen.Nill,
+	"Nild":         tfgen.Nild,
 	"Marshal": func(v interface{}) string {
 		a, _ := json.Marshal(v) //nolint:errchkjson
 
 		return string(a)
 	},
-	"Split":        cf.Split,
-	"SplitOn":      cf.SplitOn,
-	"Replace":      cf.Replace,
-	"Tags":         cf.Tags,
-	"RandomString": cf.RandomString,
-	"Map":          cf.Map,
-	"Snake":        cf.Snake,
-	"Kebab":        cf.Kebab,
-	"ZipFile":      cf.Zipfile,
+	"Split":        tfgen.Split,
+	"SplitOn":      tfgen.SplitOn,
+	"Replace":      tfgen.Replace,
+	"Tags":         arm.Tags,
+	"RandomString": tfgen.RandomString,
+	"Map":          tfgen.Map,
+	"Snake":        tfgen.Snake,
+	"Kebab":        tfgen.Kebab,
+	"ZipFile":      tfgen.Zipfile,
 	"Uuid":         arm.UUID,
 }
 
