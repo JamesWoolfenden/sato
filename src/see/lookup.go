@@ -9,6 +9,8 @@ import (
 
 const none string = "none"
 
+var reverseMapping = reverseMap(lookupMapping)
+
 // missingResourceError represents a resource lookup failure
 type missingResourceError struct {
 	Resource string
@@ -29,8 +31,7 @@ func Lookup(resource string, reverse bool) (*string, error) {
 	var result string
 
 	if reverse {
-		Reversed := reverseMap(lookupMapping)
-		result = Reversed[resource]
+		result = reverseMapping[resource]
 	} else {
 		result = lookupMapping[strings.TrimSuffix(strings.ToLower(resource), "/")]
 	}
@@ -44,11 +45,12 @@ func Lookup(resource string, reverse bool) (*string, error) {
 	return &result, nil
 }
 
-// reverseMap creates a new map with keys and values swapped.
-// It assumes unique values in the input map to avoid conflicts.
 func reverseMap(m map[string]string) map[string]string {
 	n := make(map[string]string, len(m))
 	for k, v := range m {
+		if v == none {
+			continue
+		}
 		n[v] = k
 	}
 
