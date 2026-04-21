@@ -80,3 +80,53 @@ type matchValueError struct {
 func (m *matchValueError) Error() string {
 	return fmt.Sprintf("failed to match value %s", m.Name)
 }
+
+type readFileError struct {
+	path string
+	err  error
+}
+
+func (r *readFileError) Error() string {
+	return fmt.Sprintf("failed to read file: %s %v", r.path, r.err)
+}
+
+func (r *readFileError) Unwrap() error {
+	return r.err
+}
+
+type openFileError struct {
+	path string
+	err  error
+}
+
+func (o *openFileError) Error() string {
+	return fmt.Sprintf("failed to open file: %s %v", o.path, o.err)
+}
+
+func (o *openFileError) Unwrap() error {
+	return o.err
+}
+
+type unmarshalError struct {
+	err error
+}
+
+func (u *unmarshalError) Error() string {
+	return fmt.Sprintf("unmarshal failure %v", u.err)
+}
+
+func (u *unmarshalError) Unwrap() error {
+	return u.err
+}
+
+type parseDataError struct {
+	err error
+}
+
+func (p *parseDataError) Error() string {
+	return fmt.Sprintf("parse data failure %v", p.err)
+}
+
+func (p *parseDataError) Unwrap() error {
+	return p.err
+}
