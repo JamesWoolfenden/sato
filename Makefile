@@ -125,5 +125,10 @@ security-scan: ## Run security-focused checks
 	@echo "Security scan complete!"
 
 .PHONY: schema
-schema:
+schema: ## Download latest CloudFormation schemas and regenerate resource mappings
 	wget -qO /tmp/cloudformation-schema.zip https://schema.cloudformation.us-east-1.amazonaws.com/CloudformationSchema.zip && unzip -o /tmp/cloudformation-schema.zip -d ./schema && rm /tmp/cloudformation-schema.zip
+	@$(MAKE) mappings
+
+.PHONY: mappings
+mappings: ## Regenerate src/see/resource_mapping.go from schema/
+	go run ./src/see/gen
