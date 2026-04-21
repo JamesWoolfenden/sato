@@ -35,7 +35,7 @@
     }
   },
   "additionalIdentifiers" : [ [ "/properties/DomainIdentifier", "/properties/EnvironmentBlueprintIdentifier" ] ],
-  "writeOnlyProperties" : [ "/properties/DomainIdentifier", "/properties/EnvironmentBlueprintIdentifier", "/properties/EnvironmentRolePermissionBoundary", "/properties/ProvisioningConfigurations" ],
+  "writeOnlyProperties" : [ "/properties/DomainIdentifier", "/properties/EnvironmentBlueprintIdentifier", "/properties/EnvironmentRolePermissionBoundary", "/properties/GlobalParameters", "/properties/ProvisioningConfigurations" ],
   "additionalProperties" : false,
   "definitions" : {
     "ProvisioningConfiguration" : {
@@ -96,6 +96,16 @@
     }
   },
   "properties" : {
+    "GlobalParameters" : {
+      "patternProperties" : {
+        ".+" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Region-agnostic environment blueprint parameters.",
+      "additionalProperties" : false,
+      "type" : "object"
+    },
     "CreatedAt" : {
       "format" : "date-time",
       "type" : "string"

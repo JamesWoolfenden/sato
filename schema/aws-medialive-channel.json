@@ -13,6 +13,13 @@
     "InputSpecification" : {
       "$ref" : "#/definitions/InputSpecification"
     },
+    "ChannelSecurityGroups" : {
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
     "Destinations" : {
       "type" : "array",
       "uniqueItems" : false,
@@ -47,6 +54,9 @@
     "EncoderSettings" : {
       "$ref" : "#/definitions/EncoderSettings"
     },
+    "LinkedChannelSettings" : {
+      "$ref" : "#/definitions/LinkedChannelSettings"
+    },
     "AnywhereSettings" : {
       "$ref" : "#/definitions/AnywhereSettings"
     },
@@ -68,6 +78,9 @@
     },
     "Tags" : {
       "type" : "object"
+    },
+    "InferenceSettings" : {
+      "$ref" : "#/definitions/InferenceSettings"
     }
   },
   "definitions" : {
@@ -208,6 +221,12 @@
           "type" : "string"
         },
         "ChannelGroup" : {
+          "type" : "string"
+        },
+        "ChannelEndpointId" : {
+          "type" : "string"
+        },
+        "MediaPackageRegionName" : {
           "type" : "string"
         }
       }
@@ -389,6 +408,15 @@
         },
         "Strength" : {
           "type" : "string"
+        }
+      }
+    },
+    "MediaPackageAdditionalDestinations" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Destination" : {
+          "$ref" : "#/definitions/OutputLocationRef"
         }
       }
     },
@@ -599,7 +627,15 @@
     },
     "PipelineLockingSettings" : {
       "type" : "object",
-      "additionalProperties" : false
+      "additionalProperties" : false,
+      "properties" : {
+        "PipelineLockingMethod" : {
+          "type" : "string"
+        },
+        "CustomEpoch" : {
+          "type" : "string"
+        }
+      }
     },
     "FrameCaptureS3Settings" : {
       "type" : "object",
@@ -858,6 +894,18 @@
           "items" : {
             "$ref" : "#/definitions/MediaPackageOutputDestinationSettings"
           }
+        }
+      }
+    },
+    "LinkedChannelSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PrimaryChannelSettings" : {
+          "$ref" : "#/definitions/PrimaryChannelSettings"
+        },
+        "FollowerChannelSettings" : {
+          "$ref" : "#/definitions/FollowerChannelSettings"
         }
       }
     },
@@ -1722,6 +1770,12 @@
       "type" : "object",
       "additionalProperties" : false,
       "properties" : {
+        "ConnectionMode" : {
+          "type" : "string"
+        },
+        "ListenerPort" : {
+          "type" : "integer"
+        },
         "StreamId" : {
           "type" : "string"
         },
@@ -2116,6 +2170,15 @@
         }
       }
     },
+    "DisabledLockingSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "CustomEpoch" : {
+          "type" : "string"
+        }
+      }
+    },
     "MsSmoothOutputSettings" : {
       "type" : "object",
       "additionalProperties" : false,
@@ -2375,6 +2438,15 @@
         }
       }
     },
+    "PrimaryChannelSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "LinkedChannelType" : {
+          "type" : "string"
+        }
+      }
+    },
     "EpochLockingSettings" : {
       "type" : "object",
       "additionalProperties" : false,
@@ -2432,6 +2504,9 @@
         },
         "Hdr10Settings" : {
           "$ref" : "#/definitions/Hdr10Settings"
+        },
+        "Hlg2020Settings" : {
+          "$ref" : "#/definitions/Hlg2020Settings"
         }
       }
     },
@@ -2603,6 +2678,15 @@
         }
       }
     },
+    "InferenceSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FeedArn" : {
+          "type" : "string"
+        }
+      }
+    },
     "Scte27DestinationSettings" : {
       "type" : "object",
       "additionalProperties" : false
@@ -2728,6 +2812,13 @@
         },
         "TimedMetadataPassthrough" : {
           "type" : "string"
+        },
+        "AdditionalDestinations" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/MediaPackageAdditionalDestinations"
+          }
         },
         "NielsenId3Behavior" : {
           "type" : "string"
@@ -3038,6 +3129,9 @@
       "type" : "object",
       "additionalProperties" : false,
       "properties" : {
+        "DisabledLockingSettings" : {
+          "$ref" : "#/definitions/DisabledLockingSettings"
+        },
         "EpochLockingSettings" : {
           "$ref" : "#/definitions/EpochLockingSettings"
         },
@@ -3201,6 +3295,18 @@
       "type" : "object",
       "additionalProperties" : false
     },
+    "FollowerChannelSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PrimaryChannelArn" : {
+          "type" : "string"
+        },
+        "LinkedChannelType" : {
+          "type" : "string"
+        }
+      }
+    },
     "MultiplexOutputSettings" : {
       "type" : "object",
       "additionalProperties" : false,
@@ -3286,17 +3392,38 @@
         "TimecodeBurninSettings" : {
           "$ref" : "#/definitions/TimecodeBurninSettings"
         },
-        "ColorSpaceSettings" : {
-          "$ref" : "#/definitions/Av1ColorSpaceSettings"
-        },
-        "SpatialAq" : {
-          "type" : "string"
-        },
         "TemporalAq" : {
           "type" : "string"
         },
         "QvbrQualityLevel" : {
           "type" : "integer"
+        },
+        "FramerateNumerator" : {
+          "type" : "integer"
+        },
+        "BitDepth" : {
+          "type" : "string"
+        },
+        "MinBitrate" : {
+          "type" : "integer"
+        },
+        "MinIInterval" : {
+          "type" : "integer"
+        },
+        "SceneChangeDetect" : {
+          "type" : "string"
+        },
+        "FramerateDenominator" : {
+          "type" : "integer"
+        },
+        "GopSize" : {
+          "type" : "number"
+        },
+        "ColorSpaceSettings" : {
+          "$ref" : "#/definitions/Av1ColorSpaceSettings"
+        },
+        "SpatialAq" : {
+          "type" : "string"
         },
         "ParDenominator" : {
           "type" : "integer"
@@ -3306,9 +3433,6 @@
         },
         "GopSizeUnits" : {
           "type" : "string"
-        },
-        "FramerateNumerator" : {
-          "type" : "integer"
         },
         "AfdSignaling" : {
           "type" : "string"
@@ -3325,17 +3449,8 @@
         "BufSize" : {
           "type" : "integer"
         },
-        "MinBitrate" : {
-          "type" : "integer"
-        },
-        "MinIInterval" : {
-          "type" : "integer"
-        },
-        "SceneChangeDetect" : {
+        "TimecodeInsertion" : {
           "type" : "string"
-        },
-        "FramerateDenominator" : {
-          "type" : "integer"
         },
         "LookAheadRateControl" : {
           "type" : "string"
@@ -3345,9 +3460,6 @@
         },
         "MaxBitrate" : {
           "type" : "integer"
-        },
-        "GopSize" : {
-          "type" : "number"
         }
       }
     },

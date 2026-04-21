@@ -6,32 +6,38 @@
       "additionalProperties" : false,
       "properties" : {
         "Comment" : {
-          "type" : "string"
+          "type" : "string",
+          "description" : "A comment to describe the function."
         },
         "Runtime" : {
           "type" : "string",
-          "enum" : [ "cloudfront-js-2.0" ]
+          "enum" : [ "cloudfront-js-2.0" ],
+          "description" : "The function's runtime environment version."
         },
         "KeyValueStoreAssociations" : {
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/KeyValueStoreAssociation"
           },
-          "uniqueItems" : true
+          "uniqueItems" : true,
+          "description" : "The configuration for the key value store associations."
         }
       },
       "required" : [ "Comment", "Runtime" ],
-      "type" : "object"
+      "type" : "object",
+      "description" : "Contains configuration information about a CloudFront function."
     },
     "KeyValueStoreAssociation" : {
       "additionalProperties" : false,
       "properties" : {
         "KeyValueStoreARN" : {
-          "type" : "string"
+          "type" : "string",
+          "description" : "The Amazon Resource Name (ARN) of the key value store association."
         }
       },
       "required" : [ "KeyValueStoreARN" ],
-      "type" : "object"
+      "type" : "object",
+      "description" : "The key value store association."
     },
     "Tag" : {
       "additionalProperties" : false,
@@ -40,20 +46,23 @@
           "type" : "string",
           "maxLength" : 128,
           "minLength" : 1,
-          "pattern" : "^[a-zA-Z0-9 _.:/=+\\-@]{1,128}\\Z"
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+          "description" : "A string that contains ``Tag`` key.\n The string length should be between 1 and 128 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``."
         },
         "Value" : {
           "type" : "string",
           "maxLength" : 256,
           "minLength" : 0,
-          "pattern" : "^[a-zA-Z0-9 _.:/=+\\-@]{0,256}\\Z"
+          "pattern" : "^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$",
+          "description" : "A string that contains an optional ``Tag`` value.\n The string length should be between 0 and 256 characters. Valid characters include ``a-z``, ``A-Z``, ``0-9``, space, and the special characters ``_ - . : / = + @``."
         }
       },
       "required" : [ "Key", "Value" ],
-      "type" : "object"
+      "type" : "object",
+      "description" : "A complex type that contains ``Tag`` key and ``Tag`` value."
     }
   },
-  "description" : "Resource Type definition for AWS::CloudFront::ConnectionFunction",
+  "description" : "A connection function.",
   "handlers" : {
     "create" : {
       "permissions" : [ "cloudfront:CreateConnectionFunction", "cloudfront:DescribeConnectionFunction", "cloudfront:PublishConnectionFunction", "cloudfront:TagResource" ]
@@ -75,48 +84,60 @@
   "additionalIdentifiers" : [ [ "/properties/ConnectionFunctionArn" ], [ "/properties/Name" ] ],
   "properties" : {
     "Id" : {
-      "type" : "string"
+      "type" : "string",
+      "description" : ""
     },
     "Name" : {
-      "type" : "string"
+      "type" : "string",
+      "description" : "The connection function name."
     },
     "ConnectionFunctionArn" : {
-      "type" : "string"
+      "type" : "string",
+      "description" : ""
     },
     "ConnectionFunctionCode" : {
-      "type" : "string"
+      "type" : "string",
+      "description" : "The code for the connection function."
     },
     "ConnectionFunctionConfig" : {
-      "$ref" : "#/definitions/ConnectionFunctionConfig"
+      "$ref" : "#/definitions/ConnectionFunctionConfig",
+      "description" : "Contains configuration information about a CloudFront function."
     },
     "AutoPublish" : {
       "type" : "boolean",
-      "default" : false
+      "default" : false,
+      "description" : "A flag that determines whether to automatically publish the function to the ``LIVE`` stage when it’s created. To automatically publish to the ``LIVE`` stage, set this property to ``true``."
     },
     "Stage" : {
       "type" : "string",
-      "enum" : [ "DEVELOPMENT", "LIVE" ]
+      "enum" : [ "DEVELOPMENT", "LIVE" ],
+      "description" : ""
     },
     "Status" : {
       "type" : "string",
-      "enum" : [ "UNPUBLISHED", "DEPLOYED", "UNASSOCIATED", "PUBLISHING", "IN_PROGRESS" ]
+      "enum" : [ "UNPUBLISHED", "DEPLOYED", "UNASSOCIATED", "PUBLISHING", "IN_PROGRESS" ],
+      "description" : ""
     },
     "ETag" : {
-      "type" : "string"
+      "type" : "string",
+      "description" : ""
     },
     "CreatedTime" : {
       "type" : "string",
-      "format" : "date-time"
+      "format" : "date-time",
+      "description" : ""
     },
     "LastModifiedTime" : {
       "type" : "string",
-      "format" : "date-time"
+      "format" : "date-time",
+      "description" : ""
     },
     "Tags" : {
       "type" : "array",
       "items" : {
         "$ref" : "#/definitions/Tag"
-      }
+      },
+      "description" : "A complex type that contains zero or more ``Tag`` elements."
     }
   },
   "createOnlyProperties" : [ "/properties/Name", "/properties/ConnectionFunctionConfig/Runtime" ],

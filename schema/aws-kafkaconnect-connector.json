@@ -54,6 +54,11 @@
       "description" : "The version of Kafka Connect. It has to be compatible with both the Kafka cluster's version and the plugins.",
       "type" : "string"
     },
+    "NetworkType" : {
+      "description" : "The network type of the Connector.",
+      "type" : "string",
+      "enum" : [ "IPV4", "DUAL" ]
+    },
     "LogDelivery" : {
       "$ref" : "#/definitions/LogDelivery"
     },
@@ -124,6 +129,10 @@
           "description" : "Specifies how many MSK Connect Units (MCU) as the minimum scaling unit.",
           "type" : "integer",
           "enum" : [ 1, 2, 4, 8 ]
+        },
+        "MaxAutoscalingTaskCount" : {
+          "description" : "The maximum number of tasks allocated to the connector during autoscaling operations.",
+          "type" : "integer"
         }
       },
       "required" : [ "MaxWorkerCount", "MinWorkerCount", "ScaleInPolicy", "ScaleOutPolicy", "McuCount" ]
@@ -277,7 +286,7 @@
           "type" : "integer"
         }
       },
-      "required" : [ "WorkerCount" ]
+      "required" : [ "McuCount", "WorkerCount" ]
     },
     "S3LogDelivery" : {
       "description" : "Details about delivering logs to Amazon S3.",
@@ -411,7 +420,7 @@
   "additionalIdentifiers" : [ [ "/properties/ConnectorName" ] ],
   "readOnlyProperties" : [ "/properties/ConnectorArn" ],
   "replacementStrategy" : "delete_then_create",
-  "createOnlyProperties" : [ "/properties/ConnectorDescription", "/properties/ConnectorName", "/properties/KafkaCluster", "/properties/KafkaClusterClientAuthentication", "/properties/KafkaClusterEncryptionInTransit", "/properties/KafkaConnectVersion", "/properties/LogDelivery", "/properties/Plugins", "/properties/ServiceExecutionRoleArn", "/properties/WorkerConfiguration" ],
+  "createOnlyProperties" : [ "/properties/ConnectorDescription", "/properties/ConnectorName", "/properties/KafkaCluster", "/properties/KafkaClusterClientAuthentication", "/properties/KafkaClusterEncryptionInTransit", "/properties/KafkaConnectVersion", "/properties/LogDelivery", "/properties/Plugins", "/properties/ServiceExecutionRoleArn", "/properties/WorkerConfiguration", "/properties/NetworkType" ],
   "handlers" : {
     "create" : {
       "permissions" : [ "kafkaconnect:CreateConnector", "kafkaconnect:DescribeConnector", "kafkaconnect:TagResource", "kafkaconnect:ListTagsForResource", "iam:CreateServiceLinkedRole", "iam:PassRole", "ec2:CreateNetworkInterface", "ec2:DescribeSecurityGroups", "ec2:DescribeSubnets", "ec2:DescribeVpcs", "logs:CreateLogDelivery", "logs:GetLogDelivery", "logs:ListLogDeliveries", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:DescribeLogGroups", "s3:GetBucketPolicy", "s3:PutBucketPolicy", "firehose:TagDeliveryStream" ]

@@ -111,6 +111,13 @@
       "description" : "List of application configurations.",
       "insertionOrder" : false
     },
+    "KmsKeyArn" : {
+      "type" : "string",
+      "minLength" : 20,
+      "maxLength" : 2048,
+      "pattern" : "^arn:aws(-[a-z]+)*:kms:[a-z0-9-]+:\\d{12}:key/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$",
+      "description" : "The ARN of the KMS key used to encrypt the application."
+    },
     "DataSources" : {
       "type" : "array",
       "items" : {
@@ -130,7 +137,8 @@
   },
   "required" : [ "Name" ],
   "readOnlyProperties" : [ "/properties/Id", "/properties/Arn" ],
-  "createOnlyProperties" : [ "/properties/Name" ],
+  "createOnlyProperties" : [ "/properties/Name", "/properties/KmsKeyArn" ],
+  "writeOnlyProperties" : [ "/properties/KmsKeyArn" ],
   "primaryIdentifier" : [ "/properties/Name" ],
   "additionalIdentifiers" : [ [ "/properties/Arn" ] ],
   "handlers" : {

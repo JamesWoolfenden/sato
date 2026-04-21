@@ -99,6 +99,9 @@
         "PlacementGroup" : {
           "type" : "string"
         },
+        "ScalingPolicy" : {
+          "$ref" : "#/definitions/ComputeScalingPolicy"
+        },
         "SecurityGroupIds" : {
           "type" : "array",
           "uniqueItems" : false,
@@ -137,6 +140,15 @@
         }
       },
       "required" : [ "Subnets", "Type", "MaxvCpus" ]
+    },
+    "ComputeScalingPolicy" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MinScaleDownDelayMinutes" : {
+          "type" : "integer"
+        }
+      }
     },
     "Ec2ConfigurationObject" : {
       "type" : "object",
@@ -248,7 +260,7 @@
   },
   "required" : [ "Type" ],
   "createOnlyProperties" : [ "/properties/ComputeResources/SpotIamFleetRole", "/properties/ComputeEnvironmentName", "/properties/Tags", "/properties/Type", "/properties/EksConfiguration" ],
-  "conditionalCreateOnlyProperties" : [ "/properties/ComputeResources/AllocationStrategy", "/properties/ComputeResources/BidPercentage", "/properties/ComputeResources/Ec2Configuration", "/properties/ComputeResources/Ec2KeyPair", "/properties/ComputeResources/ImageId", "/properties/ComputeResources/InstanceRole", "/properties/ComputeResources/InstanceTypes", "/properties/ComputeResources/LaunchTemplate", "/properties/ComputeResources/PlacementGroup", "/properties/ComputeResources/SecurityGroupIds", "/properties/ComputeResources/Subnets", "/properties/ComputeResources/Tags", "/properties/ComputeResources/Type" ],
+  "conditionalCreateOnlyProperties" : [ "/properties/ComputeResources/AllocationStrategy", "/properties/ComputeResources/BidPercentage", "/properties/ComputeResources/Ec2Configuration", "/properties/ComputeResources/Ec2KeyPair", "/properties/ComputeResources/ImageId", "/properties/ComputeResources/InstanceRole", "/properties/ComputeResources/InstanceTypes", "/properties/ComputeResources/LaunchTemplate", "/properties/ComputeResources/PlacementGroup", "/properties/ComputeResources/ScalingPolicy", "/properties/ComputeResources/SecurityGroupIds", "/properties/ComputeResources/Subnets", "/properties/ComputeResources/Tags", "/properties/ComputeResources/Type" ],
   "writeOnlyProperties" : [ "/properties/ComputeResources/UpdateToLatestImageVersion", "/properties/ReplaceComputeEnvironment", "/properties/UpdatePolicy" ],
   "primaryIdentifier" : [ "/properties/ComputeEnvironmentArn" ],
   "readOnlyProperties" : [ "/properties/ComputeEnvironmentArn" ],

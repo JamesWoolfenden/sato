@@ -73,6 +73,25 @@
         }
       },
       "required" : [ "Key" ]
+    },
+    "IamRole" : {
+      "description" : "An AWS Identity and Access Management (IAM) service role associated with the Autonomous VM cluster.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AwsIntegration" : {
+          "description" : "The AWS integration configuration settings for the AWS Identity and Access Management (IAM) service role.",
+          "type" : "string"
+        },
+        "IamRoleArn" : {
+          "description" : "The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) service role.",
+          "type" : "string"
+        },
+        "Status" : {
+          "description" : "The current status of the AWS Identity and Access Management (IAM) service role.",
+          "type" : "string"
+        }
+      }
     }
   },
   "properties" : {
@@ -271,11 +290,20 @@
     "TotalContainerDatabases" : {
       "type" : "integer",
       "description" : "The total number of Autonomous Container Databases that can be created with the allocated local storage."
+    },
+    "IamRoles" : {
+      "type" : "array",
+      "description" : "The AWS Identity and Access Management (IAM) service roles associated with the Autonomous VM cluster.",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/IamRole"
+      }
     }
   },
   "additionalProperties" : false,
   "createOnlyProperties" : [ "/properties/OdbNetworkId", "/properties/CloudExadataInfrastructureId", "/properties/DbServers", "/properties/IsMtlsEnabledVmCluster", "/properties/MemoryPerOracleComputeUnitInGBs", "/properties/ScanListenerPortNonTls", "/properties/ScanListenerPortTls", "/properties/TimeZone", "/properties/AutonomousDataStorageSizeInTBs", "/properties/DisplayName", "/properties/CpuCoreCountPerNode", "/properties/Description", "/properties/LicenseModel", "/properties/MaintenanceWindow", "/properties/TotalContainerDatabases" ],
-  "readOnlyProperties" : [ "/properties/CloudAutonomousVmClusterId", "/properties/CloudAutonomousVmClusterArn", "/properties/OciResourceAnchorName", "/properties/AutonomousDataStoragePercentage", "/properties/AvailableAutonomousDataStorageSizeInTBs", "/properties/AvailableContainerDatabases", "/properties/AvailableCpus", "/properties/ComputeModel", "/properties/CpuCoreCount", "/properties/CpuPercentage", "/properties/DataStorageSizeInGBs", "/properties/DataStorageSizeInTBs", "/properties/DbNodeStorageSizeInGBs", "/properties/Domain", "/properties/ExadataStorageInTBsLowestScaledValue", "/properties/Hostname", "/properties/Ocid", "/properties/OciUrl", "/properties/MaxAcdsLowestScaledValue", "/properties/MemorySizeInGBs", "/properties/NodeCount", "/properties/NonProvisionableAutonomousContainerDatabases", "/properties/ProvisionableAutonomousContainerDatabases", "/properties/ProvisionedAutonomousContainerDatabases", "/properties/ProvisionedCpus", "/properties/ReclaimableCpus", "/properties/ReservedCpus", "/properties/Shape" ],
+  "readOnlyProperties" : [ "/properties/CloudAutonomousVmClusterId", "/properties/CloudAutonomousVmClusterArn", "/properties/OciResourceAnchorName", "/properties/AutonomousDataStoragePercentage", "/properties/AvailableAutonomousDataStorageSizeInTBs", "/properties/AvailableContainerDatabases", "/properties/AvailableCpus", "/properties/ComputeModel", "/properties/CpuCoreCount", "/properties/CpuPercentage", "/properties/DataStorageSizeInGBs", "/properties/DataStorageSizeInTBs", "/properties/DbNodeStorageSizeInGBs", "/properties/Domain", "/properties/ExadataStorageInTBsLowestScaledValue", "/properties/Hostname", "/properties/Ocid", "/properties/OciUrl", "/properties/MaxAcdsLowestScaledValue", "/properties/MemorySizeInGBs", "/properties/NodeCount", "/properties/NonProvisionableAutonomousContainerDatabases", "/properties/ProvisionableAutonomousContainerDatabases", "/properties/ProvisionedAutonomousContainerDatabases", "/properties/ProvisionedCpus", "/properties/ReclaimableCpus", "/properties/ReservedCpus", "/properties/Shape", "/properties/IamRoles/*/Status" ],
   "primaryIdentifier" : [ "/properties/CloudAutonomousVmClusterArn" ],
   "propertyTransform" : {
     "/properties/CloudExadataInfrastructureId" : "$split(CloudExadataInfrastructureId, \"cloud-exadata-infrastructure/\")[-1] $OR CloudExadataInfrastructureId",
@@ -283,14 +311,14 @@
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "ec2:DescribeAvailabilityZones", "iam:CreateServiceLinkedRole", "odb:CreateCloudAutonomousVmCluster", "odb:GetCloudAutonomousVmCluster", "odb:ListCloudAutonomousVmClusters", "odb:ListTagsForResource", "odb:TagResource", "sts:GetCallerIdentity" ],
+      "permissions" : [ "ec2:DescribeAvailabilityZones", "iam:CreateServiceLinkedRole", "iam:PassRole", "odb:CreateCloudAutonomousVmCluster", "odb:GetCloudAutonomousVmCluster", "odb:ListCloudAutonomousVmClusters", "odb:ListTagsForResource", "odb:TagResource", "odb:AssociateIamRoleToResource", "sts:GetCallerIdentity" ],
       "timeoutInMinutes" : 2160
     },
     "read" : {
       "permissions" : [ "odb:GetCloudAutonomousVmCluster", "odb:ListTagsForResource", "sts:GetCallerIdentity" ]
     },
     "update" : {
-      "permissions" : [ "odb:TagResource", "odb:UntagResource", "odb:GetCloudAutonomousVmCluster", "odb:ListCloudAutonomousVmClusters", "odb:ListTagsForResource", "sts:GetCallerIdentity" ]
+      "permissions" : [ "iam:PassRole", "odb:TagResource", "odb:UntagResource", "odb:GetCloudAutonomousVmCluster", "odb:ListCloudAutonomousVmClusters", "odb:ListTagsForResource", "odb:AssociateIamRoleToResource", "odb:DisassociateIamRoleFromResource", "sts:GetCallerIdentity" ]
     },
     "delete" : {
       "permissions" : [ "odb:DeleteCloudAutonomousVmCluster", "odb:GetCloudAutonomousVmCluster", "odb:ListCloudAutonomousVmClusters", "odb:ListTagsForResource", "sts:GetCallerIdentity" ],

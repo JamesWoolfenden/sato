@@ -57,6 +57,16 @@
       },
       "required" : [ "Host", "Port", "SqlEndpointPath" ]
     },
+    "S3TablesParameters" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "TableBucketArn" : {
+          "pattern" : "^(arn:aws[-a-z0-9]*:[a-z0-9]+:[-a-z0-9]*:[0-9]{12}:bucket/[a-zA-Z0-9-_]{3,63})$",
+          "type" : "string"
+        }
+      }
+    },
     "AuroraPostgreSqlParameters" : {
       "description" : "<p>Parameters for Amazon Aurora PostgreSQL-Compatible Edition.</p>",
       "additionalProperties" : false,
@@ -103,8 +113,34 @@
         },
         "CredentialPair" : {
           "$ref" : "#/definitions/CredentialPair"
+        },
+        "KeyPairCredentials" : {
+          "$ref" : "#/definitions/KeyPairCredentials"
         }
       }
+    },
+    "KeyPairCredentials" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "KeyPairUsername" : {
+          "minLength" : 1,
+          "type" : "string",
+          "maxLength" : 64
+        },
+        "PrivateKey" : {
+          "minLength" : 1600,
+          "pattern" : "^-{5}BEGIN (ENCRYPTED )?PRIVATE KEY-{5}\\u000D?\\u000A([A-Za-z0-9/+]{64}\\u000D?\\u000A)*[A-Za-z0-9/+]{1,64}={0,2}\\u000D?\\u000A-{5}END (ENCRYPTED )?PRIVATE KEY-{5}(\\u000D?\\u000A)?$",
+          "type" : "string",
+          "maxLength" : 8000
+        },
+        "PrivateKeyPassphrase" : {
+          "minLength" : 0,
+          "type" : "string",
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "KeyPairUsername", "PrivateKey" ]
     },
     "ManifestFileLocation" : {
       "description" : "<p>Amazon S3 manifest file location.</p>",
@@ -257,7 +293,7 @@
     },
     "DataSourceType" : {
       "type" : "string",
-      "enum" : [ "ADOBE_ANALYTICS", "AMAZON_ELASTICSEARCH", "AMAZON_OPENSEARCH", "ATHENA", "AURORA", "AURORA_POSTGRESQL", "AWS_IOT_ANALYTICS", "DATABRICKS", "DENODO", "DREMIO", "DYNAMODB", "SAPHANA", "DB2_AS400", "EXASOL", "FILE", "GITHUB", "INTERNATIONAL_DATA_CORPORATION", "JIRA", "MARIADB", "MYSQL", "ORACLE", "POSTGRESQL", "PRESTO", "QBUSINESS", "REDSHIFT", "S3", "S3_TABLES", "S3_KNOWLEDGE_BASE", "SALESFORCE", "SERVICENOW", "SNOWFLAKE", "SPARK", "SPICE", "SQLSERVER", "TERADATA", "TIMESTREAM", "TWITTER", "BIGQUERY", "GOOGLE_ANALYTICS", "TRINO", "STARBURST", "MONGO", "MONGO_ATLAS", "DOCUMENTDB", "APPFLOW", "IMPALA", "GLUE", "GOOGLE_DRIVE", "CONFLUENCE", "SHAREPOINT", "ONE_DRIVE", "WEB_CRAWLER" ]
+      "enum" : [ "ADOBE_ANALYTICS", "AMAZON_ELASTICSEARCH", "AMAZON_OPENSEARCH", "ATHENA", "AURORA", "AURORA_POSTGRESQL", "AWS_IOT_ANALYTICS", "DATABRICKS", "DENODO", "DREMIO", "DYNAMODB", "SAPHANA", "DB2_AS400", "EXASOL", "FILE", "GITHUB", "INTERNATIONAL_DATA_CORPORATION", "JIRA", "MARIADB", "MYSQL", "ORACLE", "POSTGRESQL", "PRESTO", "QBUSINESS", "REDSHIFT", "S3", "S3_TABLES", "S3_KNOWLEDGE_BASE", "SALESFORCE", "SERVICENOW", "SNOWFLAKE", "SPARK", "SPICE", "SQLSERVER", "TERADATA", "TIMESTREAM", "TWITTER", "BIGQUERY", "GOOGLE_ANALYTICS", "TRINO", "STARBURST", "MONGO", "MONGO_ATLAS", "DOCUMENTDB", "APPFLOW", "IMPALA", "GLUE", "GOOGLE_DRIVE", "CONFLUENCE", "SHAREPOINT", "ONE_DRIVE", "WEB_CRAWLER", "BOX" ]
     },
     "OAuthParameters" : {
       "additionalProperties" : false,
@@ -416,7 +452,7 @@
     },
     "AuthenticationType" : {
       "type" : "string",
-      "enum" : [ "PASSWORD", "TOKEN", "X509" ]
+      "enum" : [ "PASSWORD", "TOKEN", "X509", "KEYPAIR" ]
     },
     "DataSourceErrorInfo" : {
       "description" : "<p>Error information for the data source creation or update.</p>",
@@ -630,6 +666,9 @@
       "additionalProperties" : false,
       "type" : "object",
       "properties" : {
+        "S3TablesParameters" : {
+          "$ref" : "#/definitions/S3TablesParameters"
+        },
         "AuroraPostgreSqlParameters" : {
           "$ref" : "#/definitions/AuroraPostgreSqlParameters"
         },

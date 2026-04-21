@@ -1,6 +1,6 @@
 {
   "typeName" : "AWS::Deadline::Monitor",
-  "description" : "Definition of AWS::Deadline::Monitor Resource Type",
+  "description" : "Resource Type definition for AWS::Deadline::Monitor",
   "definitions" : {
     "Tag" : {
       "description" : "A key-value pair to associate with a resource.",
@@ -36,6 +36,13 @@
       "type" : "string",
       "pattern" : "^arn:(aws|aws-us-gov|aws-cn|aws-iso|aws-iso-b):sso:::instance/(sso)?ins-[a-zA-Z0-9-.]{16}$"
     },
+    "IdentityCenterRegion" : {
+      "type" : "string",
+      "description" : "The AWS region where IAM Identity Center is enabled. Required when Identity Center is in a different region than the monitor.",
+      "minLength" : 1,
+      "maxLength" : 25,
+      "pattern" : "^[a-z0-9-]+$"
+    },
     "MonitorId" : {
       "type" : "string",
       "pattern" : "^monitor-[0-9a-f]{32}$"
@@ -68,7 +75,7 @@
   },
   "required" : [ "DisplayName", "IdentityCenterInstanceArn", "RoleArn", "Subdomain" ],
   "readOnlyProperties" : [ "/properties/IdentityCenterApplicationArn", "/properties/MonitorId", "/properties/Url", "/properties/Arn" ],
-  "createOnlyProperties" : [ "/properties/IdentityCenterInstanceArn" ],
+  "createOnlyProperties" : [ "/properties/IdentityCenterInstanceArn", "/properties/IdentityCenterRegion" ],
   "primaryIdentifier" : [ "/properties/Arn" ],
   "tagging" : {
     "taggable" : true,

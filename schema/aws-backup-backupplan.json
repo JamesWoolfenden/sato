@@ -60,6 +60,14 @@
           "items" : {
             "$ref" : "#/definitions/BackupRuleResourceType"
           }
+        },
+        "ScanSettings" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ScanSettingResourceType"
+          }
         }
       },
       "required" : [ "BackupPlanName", "BackupPlanRule" ]
@@ -95,6 +103,14 @@
           "uniqueItems" : false,
           "items" : {
             "$ref" : "#/definitions/IndexActionsResourceType"
+          }
+        },
+        "ScanActions" : {
+          "type" : "array",
+          "insertionOrder" : true,
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/ScanActionResourceType"
           }
         },
         "RecoveryPointTags" : {
@@ -158,6 +174,41 @@
         }
       }
     },
+    "ScanSettingResourceType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MalwareScanner" : {
+          "$ref" : "#/definitions/MalwareScanner"
+        },
+        "ResourceTypes" : {
+          "$ref" : "#/definitions/ResourceTypes"
+        },
+        "ScannerRoleArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ScanActionResourceType" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MalwareScanner" : {
+          "$ref" : "#/definitions/MalwareScanner"
+        },
+        "ScanMode" : {
+          "$ref" : "#/definitions/ScanMode"
+        }
+      }
+    },
+    "ScanMode" : {
+      "type" : "string",
+      "enum" : [ "FULL_SCAN", "INCREMENTAL_SCAN" ]
+    },
+    "MalwareScanner" : {
+      "type" : "string",
+      "enum" : [ "GUARDDUTY" ]
+    },
     "ResourceTypes" : {
       "type" : "array",
       "insertionOrder" : true,
@@ -190,13 +241,13 @@
       "permissions" : [ "backup:GetBackupPlan", "backup:ListTags" ]
     },
     "create" : {
-      "permissions" : [ "backup:GetBackupPlan", "backup:TagResource", "backup:CreateBackupPlan" ]
+      "permissions" : [ "backup:GetBackupPlan", "backup:TagResource", "backup:CreateBackupPlan", "iam:PassRole" ]
     },
     "delete" : {
       "permissions" : [ "backup:GetBackupPlan", "backup:DeleteBackupPlan" ]
     },
     "update" : {
-      "permissions" : [ "backup:UpdateBackupPlan", "backup:ListTags", "backup:TagResource", "backup:UntagResource" ]
+      "permissions" : [ "backup:UpdateBackupPlan", "backup:ListTags", "backup:TagResource", "backup:UntagResource", "iam:PassRole" ]
     },
     "list" : {
       "permissions" : [ "backup:ListBackupPlans" ]

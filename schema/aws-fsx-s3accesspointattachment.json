@@ -26,6 +26,11 @@
     "S3AccessPoint" : {
       "description" : "The S3 access point configuration of the S3 access point attachment.",
       "$ref" : "#/definitions/S3AccessPoint"
+    },
+    "Lifecycle" : {
+      "description" : "The lifecycle status of the S3 access point attachment.",
+      "type" : "string",
+      "enum" : [ "AVAILABLE", "CREATING", "DELETING", "FAILED", "MISCONFIGURED", "UPDATING" ]
     }
   },
   "definitions" : {
@@ -227,7 +232,7 @@
     "required" : [ "OpenZFSConfiguration" ]
   } ],
   "createOnlyProperties" : [ "/properties/Name", "/properties/Type", "/properties/OntapConfiguration", "/properties/OpenZFSConfiguration", "/properties/S3AccessPoint" ],
-  "readOnlyProperties" : [ "/properties/S3AccessPoint/ResourceARN", "/properties/S3AccessPoint/Alias" ],
+  "readOnlyProperties" : [ "/properties/S3AccessPoint/ResourceARN", "/properties/S3AccessPoint/Alias", "/properties/Lifecycle" ],
   "writeOnlyProperties" : [ "/properties/S3AccessPoint/Policy" ],
   "primaryIdentifier" : [ "/properties/Name" ],
   "tagging" : {

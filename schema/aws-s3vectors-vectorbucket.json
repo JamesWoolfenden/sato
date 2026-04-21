@@ -37,6 +37,24 @@
         }
       },
       "additionalProperties" : false
+    },
+    "Tag" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Key" : {
+          "description" : "Tag key must be between 1 to 128 characters in length. Tag key cannot start with 'aws:' and can only contain alphanumeric characters, spaces, _, ., /, =, +, -, and @.",
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 128
+        },
+        "Value" : {
+          "description" : "Tag value must be between 0 to 256 characters in length. Tag value can only contain alphanumeric characters, spaces, _, ., /, =, +, -, and @.",
+          "type" : "string",
+          "maxLength" : 256
+        }
+      },
+      "required" : [ "Key", "Value" ]
     }
   },
   "properties" : {
@@ -51,6 +69,15 @@
     },
     "EncryptionConfiguration" : {
       "$ref" : "#/definitions/EncryptionConfiguration"
+    },
+    "Tags" : {
+      "description" : "User tags (key-value pairs) to associate with the vector bucket.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
   "additionalProperties" : false,
@@ -59,23 +86,28 @@
   "primaryIdentifier" : [ "/properties/VectorBucketArn" ],
   "additionalIdentifiers" : [ [ "/properties/VectorBucketName" ] ],
   "tagging" : {
-    "taggable" : false,
-    "tagOnCreate" : false,
-    "tagUpdatable" : false,
-    "cloudFormationSystemTags" : false
+    "taggable" : true,
+    "tagOnCreate" : true,
+    "tagUpdatable" : true,
+    "cloudFormationSystemTags" : true,
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "s3vectors:TagResource", "s3vectors:UntagResource", "s3vectors:ListTagsForResource" ]
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "s3vectors:GetVectorBucket", "s3vectors:CreateVectorBucket", "kms:GenerateDataKey" ]
+      "permissions" : [ "s3vectors:GetVectorBucket", "s3vectors:CreateVectorBucket", "s3vectors:TagResource", "kms:GenerateDataKey" ]
     },
     "read" : {
-      "permissions" : [ "s3vectors:GetVectorBucket", "kms:GenerateDataKey" ]
+      "permissions" : [ "s3vectors:GetVectorBucket", "s3vectors:ListTagsForResource" ]
     },
     "delete" : {
-      "permissions" : [ "s3vectors:GetVectorBucket", "s3vectors:DeleteVectorBucket", "kms:GenerateDataKey" ]
+      "permissions" : [ "s3vectors:GetVectorBucket", "s3vectors:DeleteVectorBucket" ]
+    },
+    "update" : {
+      "permissions" : [ "s3vectors:GetVectorBucket", "s3vectors:TagResource", "s3vectors:UntagResource", "s3vectors:ListTagsForResource" ]
     },
     "list" : {
-      "permissions" : [ "s3vectors:ListVectorBuckets", "kms:GenerateDataKey" ]
+      "permissions" : [ "s3vectors:ListVectorBuckets" ]
     }
   }
 }

@@ -36,7 +36,7 @@
   "properties" : {
     "Arn" : {
       "type" : "string",
-      "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}/rule/[a-z0-9]{27}$"
+      "pattern" : "^arn:[a-z-]{3,10}:notifications::[0-9]{12}:configuration/[a-z0-9]{27}/rule/[a-z0-9]{27}$"
     },
     "CreationTime" : {
       "type" : "string",
@@ -57,20 +57,19 @@
       "type" : "array",
       "items" : {
         "type" : "string",
-        "pattern" : "^arn:aws:events:[a-z-\\d]{2,25}:\\d{12}:rule\\/[a-zA-Z-\\d]{1,1024}$"
+        "pattern" : "^arn:[a-z-]{3,10}:events:[a-z-\\d]{2,25}:\\d{12}:rule\\/[a-zA-Z-\\d]{1,1024}$"
       }
     },
     "NotificationConfigurationArn" : {
       "type" : "string",
-      "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$"
+      "pattern" : "^arn:[a-z-]{3,10}:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$"
     },
     "Regions" : {
       "type" : "array",
       "items" : {
         "type" : "string",
         "maxLength" : 25,
-        "minLength" : 2,
-        "pattern" : "^([a-z]{1,2})-([a-z]{1,15}-)+([0-9])$"
+        "minLength" : 2
       },
       "minItems" : 1
     },
@@ -106,7 +105,7 @@
         "properties" : {
           "NotificationConfigurationArn" : {
             "type" : "string",
-            "pattern" : "^arn:aws:notifications::[0-9]{12}:configuration\\/[a-z0-9]{27}$"
+            "pattern" : "^arn:[a-z-]{3,10}:notifications::[0-9]{12}:configuration/[a-z0-9]{27}$"
           }
         },
         "required" : [ "NotificationConfigurationArn" ]

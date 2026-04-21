@@ -23,12 +23,59 @@
         "properties" : {
           "SecretArn" : {
             "type" : "string",
-            "pattern" : "^arn:(aws|aws-cn|aws-us-gov):secretsmanager:[a-z0-9-]+:\\d{12}:secret:[a-zA-Z0-9/_+=,.@-]+$"
+            "pattern" : "^arn:(aws|aws-cn|aws-us-gov|aws-eusc):secretsmanager:[a-z0-9-]+:\\d{12}:secret:[a-zA-Z0-9/_+=,.@-]+$"
           }
         },
         "required" : [ "SecretArn" ],
         "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "TlsAuthConfiguration",
+        "properties" : {
+          "TlsAuthConfiguration" : {
+            "$ref" : "#/definitions/TlsAuthConfiguration"
+          }
+        },
+        "required" : [ "TlsAuthConfiguration" ],
+        "additionalProperties" : false
       } ]
+    },
+    "TlsAuthConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "TrustStore" : {
+          "$ref" : "#/definitions/TrustStore"
+        }
+      },
+      "required" : [ "TrustStore" ],
+      "additionalProperties" : false
+    },
+    "TrustStore" : {
+      "type" : "object",
+      "properties" : {
+        "CAContent" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 500000,
+          "pattern" : "^[\\P{C}\\s]*$"
+        },
+        "CrlContent" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 500000,
+          "pattern" : "^[\\P{C}\\s]*$"
+        },
+        "KmsKeyArn" : {
+          "type" : "string",
+          "pattern" : "^arn:(aws|aws-cn|aws-us-gov|aws-eusc):kms:[a-z0-9-]+:\\d{12}:(key|alias)/[a-zA-Z0-9/_-]+$"
+        }
+      },
+      "required" : [ "CAContent" ],
+      "additionalProperties" : false
+    },
+    "TlsPolicy" : {
+      "type" : "string",
+      "enum" : [ "REQUIRED", "OPTIONAL", "FIPS" ]
     },
     "IngressPointStatus" : {
       "type" : "string",
@@ -40,7 +87,7 @@
     },
     "IngressPointType" : {
       "type" : "string",
-      "enum" : [ "OPEN", "AUTH" ]
+      "enum" : [ "OPEN", "AUTH", "MTLS" ]
     },
     "IpType" : {
       "type" : "string",
@@ -161,6 +208,9 @@
       },
       "maxItems" : 200,
       "minItems" : 0
+    },
+    "TlsPolicy" : {
+      "$ref" : "#/definitions/TlsPolicy"
     },
     "Type" : {
       "$ref" : "#/definitions/IngressPointType"

@@ -3501,16 +3501,38 @@
           "type" : "number",
           "minimum" : 0
         },
+        "BorderStyle" : {
+          "$ref" : "#/definitions/GridLayoutElementBorderStyle"
+        },
+        "BorderRadius" : {
+          "minLength" : 0,
+          "type" : "string",
+          "maxLength" : 50
+        },
         "RowSpan" : {
           "maximum" : 21,
           "type" : "number",
           "minimum" : 1
+        },
+        "Padding" : {
+          "minLength" : 0,
+          "type" : "string",
+          "maxLength" : 200
+        },
+        "LoadingAnimation" : {
+          "$ref" : "#/definitions/LoadingAnimation"
+        },
+        "BackgroundStyle" : {
+          "$ref" : "#/definitions/GridLayoutElementBackgroundStyle"
         },
         "ElementId" : {
           "minLength" : 1,
           "pattern" : "^[\\w\\-]+$",
           "type" : "string",
           "maxLength" : 512
+        },
+        "SelectedBorderStyle" : {
+          "$ref" : "#/definitions/GridLayoutElementBorderStyle"
         }
       },
       "required" : [ "ColumnSpan", "ElementId", "ElementType", "RowSpan" ]
@@ -3525,12 +3547,10 @@
         "BorderStyle" : {
           "$ref" : "#/definitions/FreeFormLayoutElementBorderStyle"
         },
-        "Height" : {
-          "description" : "String based length that is composed of value and unit in px",
-          "type" : "string"
-        },
-        "Visibility" : {
-          "$ref" : "#/definitions/Visibility"
+        "BorderRadius" : {
+          "minLength" : 0,
+          "type" : "string",
+          "maxLength" : 50
         },
         "RenderingRules" : {
           "minItems" : 0,
@@ -3544,6 +3564,25 @@
           "description" : "String based length that is composed of value and unit in px with Integer.MAX_VALUE as maximum value",
           "type" : "string"
         },
+        "BackgroundStyle" : {
+          "$ref" : "#/definitions/FreeFormLayoutElementBackgroundStyle"
+        },
+        "XAxisLocation" : {
+          "description" : "String based length that is composed of value and unit in px",
+          "type" : "string"
+        },
+        "Padding" : {
+          "minLength" : 0,
+          "type" : "string",
+          "maxLength" : 200
+        },
+        "Height" : {
+          "description" : "String based length that is composed of value and unit in px",
+          "type" : "string"
+        },
+        "Visibility" : {
+          "$ref" : "#/definitions/Visibility"
+        },
         "LoadingAnimation" : {
           "$ref" : "#/definitions/LoadingAnimation"
         },
@@ -3551,18 +3590,11 @@
           "description" : "String based length that is composed of value and unit in px",
           "type" : "string"
         },
-        "BackgroundStyle" : {
-          "$ref" : "#/definitions/FreeFormLayoutElementBackgroundStyle"
-        },
         "ElementId" : {
           "minLength" : 1,
           "pattern" : "^[\\w\\-]+$",
           "type" : "string",
           "maxLength" : 512
-        },
-        "XAxisLocation" : {
-          "description" : "String based length that is composed of value and unit in px",
-          "type" : "string"
         },
         "SelectedBorderStyle" : {
           "$ref" : "#/definitions/FreeFormLayoutElementBorderStyle"
@@ -4097,6 +4129,12 @@
         },
         "Visibility" : {
           "$ref" : "#/definitions/Visibility"
+        },
+        "Width" : {
+          "minLength" : 0,
+          "description" : "String to encapsulate the most generic way Width can be formatted with whatever units (px, em etc)",
+          "type" : "string",
+          "maxLength" : 50
         }
       }
     },
@@ -6174,7 +6212,7 @@
         },
         "ParameterDeclarations" : {
           "minItems" : 0,
-          "maxItems" : 200,
+          "maxItems" : 400,
           "type" : "array",
           "items" : {
             "$ref" : "#/definitions/ParameterDeclaration"
@@ -7097,6 +7135,25 @@
       "type" : "string",
       "enum" : [ "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY" ]
     },
+    "GridLayoutElementBorderStyle" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Color" : {
+          "pattern" : "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
+          "type" : "string"
+        },
+        "Visibility" : {
+          "$ref" : "#/definitions/Visibility"
+        },
+        "Width" : {
+          "minLength" : 0,
+          "description" : "String to encapsulate the most generic way Width can be formatted with whatever units (px, em etc)",
+          "type" : "string",
+          "maxLength" : 50
+        }
+      }
+    },
     "TopBottomRankedComputation" : {
       "additionalProperties" : false,
       "type" : "object",
@@ -7999,6 +8056,19 @@
         }
       },
       "required" : [ "VisualId" ]
+    },
+    "GridLayoutElementBackgroundStyle" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "Color" : {
+          "pattern" : "^#[A-F0-9]{6}(?:[A-F0-9]{2})?$",
+          "type" : "string"
+        },
+        "Visibility" : {
+          "$ref" : "#/definitions/Visibility"
+        }
+      }
     },
     "ComparisonConfiguration" : {
       "additionalProperties" : false,

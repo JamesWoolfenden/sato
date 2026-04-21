@@ -142,13 +142,16 @@
   },
   "additionalProperties" : false,
   "required" : [ "DBProxyName", "EngineFamily", "RoleArn", "VpcSubnetIds" ],
+  "propertyTransform" : {
+    "/properties/DBProxyName" : "$lowercase(DBProxyName)"
+  },
   "readOnlyProperties" : [ "/properties/DBProxyArn", "/properties/Endpoint", "/properties/VpcId" ],
   "createOnlyProperties" : [ "/properties/DBProxyName", "/properties/EngineFamily", "/properties/EndpointNetworkType", "/properties/TargetConnectionNetworkType", "/properties/VpcSubnetIds" ],
   "tagging" : {
     "taggable" : true,
     "tagOnCreate" : true,
     "tagUpdatable" : true,
-    "cloudFormationSystemTags" : false,
+    "cloudFormationSystemTags" : true,
     "tagProperty" : "/properties/Tags",
     "permissions" : [ "rds:AddTagsToResource", "rds:RemoveTagsFromResource", "rds:ListTagsForResource" ]
   },

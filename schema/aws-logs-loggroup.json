@@ -79,17 +79,27 @@
     "ResourcePolicyDocument" : {
       "description" : "Creates or updates a resource policy for the specified log group that allows other services to put log events to this account. A LogGroup can have 1 resource policy.",
       "type" : "object"
+    },
+    "DeletionProtectionEnabled" : {
+      "description" : "Indicates whether deletion protection is enabled for this log group. When enabled, deletion protection blocks all deletion operations until it is explicitly disabled.",
+      "type" : "boolean",
+      "default" : false
+    },
+    "BearerTokenAuthenticationEnabled" : {
+      "description" : "",
+      "type" : "boolean",
+      "default" : false
     }
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "logs:DescribeLogGroups", "logs:CreateLogGroup", "logs:PutRetentionPolicy", "logs:TagResource", "logs:GetDataProtectionPolicy", "logs:PutDataProtectionPolicy", "logs:CreateLogDelivery", "s3:REST.PUT.OBJECT", "firehose:TagDeliveryStream", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:PutIndexPolicy", "logs:DescribeIndexPolicies" ]
+      "permissions" : [ "logs:DescribeLogGroups", "logs:CreateLogGroup", "logs:PutRetentionPolicy", "logs:TagResource", "logs:GetDataProtectionPolicy", "logs:PutDataProtectionPolicy", "logs:CreateLogDelivery", "s3:REST.PUT.OBJECT", "firehose:TagDeliveryStream", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:PutIndexPolicy", "logs:DescribeIndexPolicies", "logs:PutBearerTokenAuthentication" ]
     },
     "read" : {
       "permissions" : [ "logs:DescribeLogGroups", "logs:ListTagsForResource", "logs:GetDataProtectionPolicy", "logs:DescribeIndexPolicies", "logs:DescribeResourcePolicies" ]
     },
     "update" : {
-      "permissions" : [ "logs:DescribeLogGroups", "logs:AssociateKmsKey", "logs:DisassociateKmsKey", "logs:PutRetentionPolicy", "logs:DeleteRetentionPolicy", "logs:TagResource", "logs:UntagResource", "logs:ListTagsForResource", "logs:GetDataProtectionPolicy", "logs:PutDataProtectionPolicy", "logs:CreateLogDelivery", "s3:REST.PUT.OBJECT", "firehose:TagDeliveryStream", "logs:PutIndexPolicy", "logs:DeleteIndexPolicy", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:DeleteResourcePolicy" ]
+      "permissions" : [ "logs:DescribeLogGroups", "logs:AssociateKmsKey", "logs:DisassociateKmsKey", "logs:PutRetentionPolicy", "logs:DeleteRetentionPolicy", "logs:TagResource", "logs:UntagResource", "logs:ListTagsForResource", "logs:GetDataProtectionPolicy", "logs:PutDataProtectionPolicy", "logs:CreateLogDelivery", "s3:REST.PUT.OBJECT", "firehose:TagDeliveryStream", "logs:PutIndexPolicy", "logs:DeleteIndexPolicy", "logs:PutResourcePolicy", "logs:DescribeResourcePolicies", "logs:DeleteResourcePolicy", "logs:PutLogGroupDeletionProtection", "logs:PutBearerTokenAuthentication" ]
     },
     "delete" : {
       "permissions" : [ "logs:DescribeLogGroups", "logs:DeleteLogGroup", "logs:DeleteDataProtectionPolicy" ]

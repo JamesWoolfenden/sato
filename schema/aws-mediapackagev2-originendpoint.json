@@ -297,6 +297,12 @@
           "minLength" : 1,
           "description" : "<p>Optionally specify one or more manifest filters for all of your manifest egress requests. When you include a manifest filter, note that you cannot use an identical manifest filter query parameter for this manifest's endpoint URL.</p>"
         },
+        "DrmSettings" : {
+          "type" : "string",
+          "maxLength" : 1024,
+          "minLength" : 1,
+          "description" : "<p>Optionally specify one or more DRM settings for all of your manifest egress requests. When you include a DRM setting, note that you cannot use an identical DRM setting query parameter for this manifest's endpoint URL.</p>"
+        },
         "Start" : {
           "type" : "string",
           "description" : "<p>Optionally specify the start time for all of your manifest egress requests. When you include start time, note that you cannot use start time query parameters for this manifest's endpoint URL.</p>",
@@ -567,6 +573,9 @@
           "maxItems" : 100,
           "minItems" : 0,
           "description" : "<p>The SCTE-35 message types that you want to be treated as ad markers in the output.</p>"
+        },
+        "ScteInSegments" : {
+          "$ref" : "#/definitions/ScteInSegments"
         }
       },
       "additionalProperties" : false
@@ -594,6 +603,10 @@
         }
       },
       "additionalProperties" : false
+    },
+    "ScteInSegments" : {
+      "type" : "string",
+      "enum" : [ "NONE", "ALL" ]
     },
     "Segment" : {
       "type" : "object",
@@ -667,6 +680,13 @@
           "maxLength" : 1024,
           "minLength" : 1,
           "description" : "<p>The URL of the API Gateway proxy that you set up to talk to your key server. The API Gateway proxy must reside in the same AWS Region as MediaPackage and must start with https://.</p> <p>The following example shows a URL: <code>https://1wm2dx1f33.execute-api.us-west-2.amazonaws.com/SpekeSample/copyProtection</code> </p>"
+        },
+        "CertificateArn" : {
+          "type" : "string",
+          "maxLength" : 2048,
+          "minLength" : 20,
+          "pattern" : "^arn:([^:\\n]+):acm:([^:\\n]+):([0-9]+):certificate/[a-zA-Z0-9-_]+$",
+          "description" : "<p>The ARN for the certificate that you imported to AWS Certificate Manager to add content key encryption to this endpoint. For this feature to work, your DRM key provider must support content key encryption.</p>"
         }
       },
       "required" : [ "DrmSystems", "EncryptionContractConfiguration", "ResourceId", "RoleArn", "Url" ],
@@ -825,13 +845,13 @@
   "primaryIdentifier" : [ "/properties/Arn" ],
   "handlers" : {
     "create" : {
-      "permissions" : [ "mediapackagev2:TagResource", "mediapackagev2:CreateOriginEndpoint", "iam:PassRole" ]
+      "permissions" : [ "mediapackagev2:TagResource", "mediapackagev2:CreateOriginEndpoint", "iam:PassRole", "acm:DescribeCertificate" ]
     },
     "read" : {
       "permissions" : [ "mediapackagev2:GetOriginEndpoint" ]
     },
     "update" : {
-      "permissions" : [ "mediapackagev2:TagResource", "mediapackagev2:UntagResource", "mediapackagev2:ListTagsForResource", "mediapackagev2:UpdateOriginEndpoint", "iam:PassRole" ]
+      "permissions" : [ "mediapackagev2:TagResource", "mediapackagev2:UntagResource", "mediapackagev2:ListTagsForResource", "mediapackagev2:UpdateOriginEndpoint", "iam:PassRole", "acm:DescribeCertificate" ]
     },
     "delete" : {
       "permissions" : [ "mediapackagev2:GetOriginEndpoint", "mediapackagev2:DeleteOriginEndpoint" ]

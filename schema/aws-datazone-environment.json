@@ -69,6 +69,18 @@
       "description" : "The identifier of the Amazon DataZone domain in which the environment would be created.",
       "pattern" : "^dzd[-_][a-zA-Z0-9_-]{1,36}$"
     },
+    "EnvironmentBlueprintIdentifier" : {
+      "type" : "string",
+      "description" : "The identifier of the environment blueprint."
+    },
+    "DeploymentOrder" : {
+      "type" : "integer",
+      "description" : "The deployment order for the environment."
+    },
+    "EnvironmentConfigurationId" : {
+      "type" : "string",
+      "description" : "The identifier of the environment configuration."
+    },
     "EnvironmentBlueprintId" : {
       "type" : "string",
       "description" : "The ID of the blueprint with which the Amazon DataZone environment was created.",
@@ -108,8 +120,7 @@
       "type" : "string",
       "description" : "The name of the environment.",
       "maxLength" : 64,
-      "minLength" : 1,
-      "pattern" : "^[\\w -]+$"
+      "minLength" : 1
     },
     "ProjectId" : {
       "type" : "string",
@@ -145,8 +156,8 @@
   },
   "required" : [ "Name", "ProjectIdentifier", "DomainIdentifier" ],
   "readOnlyProperties" : [ "/properties/AwsAccountId", "/properties/AwsAccountRegion", "/properties/CreatedAt", "/properties/CreatedBy", "/properties/DomainId", "/properties/EnvironmentBlueprintId", "/properties/EnvironmentProfileId", "/properties/Id", "/properties/ProjectId", "/properties/Provider", "/properties/Status", "/properties/UpdatedAt" ],
-  "writeOnlyProperties" : [ "/properties/EnvironmentProfileIdentifier", "/properties/ProjectIdentifier", "/properties/DomainIdentifier", "/properties/EnvironmentAccountIdentifier", "/properties/EnvironmentAccountRegion", "/properties/EnvironmentRoleArn" ],
-  "createOnlyProperties" : [ "/properties/DomainIdentifier", "/properties/EnvironmentProfileIdentifier", "/properties/ProjectIdentifier", "/properties/UserParameters", "/properties/EnvironmentAccountIdentifier", "/properties/EnvironmentAccountRegion" ],
+  "writeOnlyProperties" : [ "/properties/EnvironmentProfileIdentifier", "/properties/ProjectIdentifier", "/properties/DomainIdentifier", "/properties/EnvironmentAccountIdentifier", "/properties/EnvironmentAccountRegion", "/properties/EnvironmentRoleArn", "/properties/EnvironmentBlueprintIdentifier", "/properties/DeploymentOrder", "/properties/EnvironmentConfigurationId" ],
+  "createOnlyProperties" : [ "/properties/DomainIdentifier", "/properties/EnvironmentProfileIdentifier", "/properties/ProjectIdentifier", "/properties/UserParameters", "/properties/EnvironmentAccountIdentifier", "/properties/EnvironmentAccountRegion", "/properties/EnvironmentBlueprintIdentifier", "/properties/DeploymentOrder", "/properties/EnvironmentConfigurationId" ],
   "primaryIdentifier" : [ "/properties/DomainId", "/properties/Id" ],
   "additionalIdentifiers" : [ [ "/properties/DomainIdentifier" ] ],
   "tagging" : {

@@ -149,12 +149,25 @@
       },
       "required" : [ "Enabled" ]
     },
+    "ServerlessVectorAcceleration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Enabled" : {
+          "type" : "boolean",
+          "description" : "Whether to enable serverless vector acceleration."
+        }
+      }
+    },
     "AIMLOptions" : {
       "type" : "object",
       "additionalProperties" : false,
       "properties" : {
         "S3VectorsEngine" : {
           "$ref" : "#/definitions/S3VectorsEngine"
+        },
+        "ServerlessVectorAcceleration" : {
+          "$ref" : "#/definitions/ServerlessVectorAcceleration"
         }
       }
     },
@@ -446,6 +459,16 @@
         }
       }
     },
+    "DeploymentStrategyOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "DeploymentStrategy" : {
+          "type" : "string",
+          "enum" : [ "Default", "CapacityOptimized" ]
+        }
+      }
+    },
     "ColdStorageOptions" : {
       "type" : "object",
       "additionalProperties" : false,
@@ -604,6 +627,9 @@
     },
     "AIMLOptions" : {
       "$ref" : "#/definitions/AIMLOptions"
+    },
+    "DeploymentStrategyOptions" : {
+      "$ref" : "#/definitions/DeploymentStrategyOptions"
     }
   },
   "propertyTransform" : {

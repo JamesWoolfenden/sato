@@ -298,6 +298,12 @@
         },
         "Auth" : {
           "$ref" : "#/definitions/HttpAuthorization"
+        },
+        "EnableBatching" : {
+          "type" : "boolean"
+        },
+        "BatchConfig" : {
+          "$ref" : "#/definitions/BatchConfig"
         }
       },
       "required" : [ "Url" ]
@@ -339,6 +345,21 @@
         }
       },
       "required" : [ "ServiceName", "SigningRegion", "RoleArn" ]
+    },
+    "BatchConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "MaxBatchOpenMs" : {
+          "type" : "integer"
+        },
+        "MaxBatchSize" : {
+          "type" : "integer"
+        },
+        "MaxBatchSizeBytes" : {
+          "type" : "integer"
+        }
+      }
     },
     "IotAnalyticsAction" : {
       "type" : "object",
@@ -833,6 +854,7 @@
   "createOnlyProperties" : [ "/properties/RuleName" ],
   "primaryIdentifier" : [ "/properties/RuleName" ],
   "readOnlyProperties" : [ "/properties/Arn" ],
+  "deprecatedProperties" : [ "/properties/TopicRulePayload/ErrorAction/IotAnalytics", "/properties/TopicRulePayload/Actions/*/IotAnalytics" ],
   "handlers" : {
     "create" : {
       "permissions" : [ "iam:PassRole", "iot:CreateTopicRule", "iot:GetTopicRule", "iot:TagResource", "iot:ListTagsForResource" ]

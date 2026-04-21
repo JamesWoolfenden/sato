@@ -53,7 +53,7 @@
     "AppliedForItem" : {
       "type" : "string",
       "description" : "Enumerable Strings representing the repository creation scenarios that the template will apply towards.",
-      "enum" : [ "REPLICATION", "PULL_THROUGH_CACHE" ]
+      "enum" : [ "REPLICATION", "PULL_THROUGH_CACHE", "CREATE_ON_PUSH" ]
     },
     "ImageTagMutabilityExclusionFilter" : {
       "type" : "object",
@@ -80,7 +80,7 @@
     "Prefix" : {
       "description" : "The repository namespace prefix associated with the repository creation template.",
       "type" : "string",
-      "pattern" : "^((?:[a-z0-9]+(?:[._-][a-z0-9]+)*/)*[a-z0-9]+(?:[._-][a-z0-9]+)*/?|ROOT)$",
+      "pattern" : "^([a-z0-9]+((\\.|_|__|-+)[a-z0-9]+)*(\\/[a-z0-9]+((\\.|_|__|-+)[a-z0-9]+)*)*\\/?|ROOT)$",
       "minLength" : 1,
       "maxLength" : 256
     },
@@ -133,7 +133,7 @@
       "type" : "array",
       "uniqueItems" : true,
       "insertionOrder" : false,
-      "description" : "A list of enumerable Strings representing the repository creation scenarios that this template will apply towards. The two supported scenarios are PULL_THROUGH_CACHE and REPLICATION",
+      "description" : "A list of enumerable Strings representing the repository creation scenarios that this template will apply towards. The supported scenarios are PULL_THROUGH_CACHE, REPLICATION, and CREATE_ON_PUSH",
       "items" : {
         "$ref" : "#/definitions/AppliedForItem"
       }

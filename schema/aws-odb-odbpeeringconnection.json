@@ -24,6 +24,15 @@
     }
   },
   "properties" : {
+    "AdditionalPeerNetworkCidrs" : {
+      "description" : "The additional CIDR blocks for the ODB peering connection.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
     "DisplayName" : {
       "description" : "The name of the ODB peering connection.",
       "type" : "string",
@@ -54,12 +63,30 @@
       "description" : "The Amazon Resource Name (ARN) of the peer network.",
       "type" : "string"
     },
+    "PeerNetworkCidrs" : {
+      "description" : "The CIDR blocks for the ODB peering connection.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
+    },
     "PeerNetworkId" : {
       "description" : "The unique identifier of the peer network.",
       "type" : "string",
       "pattern" : "^(arn:(?:aws|aws-cn|aws-us-gov|aws-iso-{0,1}[a-z]{0,1}):[a-z0-9-]+:[a-z0-9-]*:[0-9]+:[a-z0-9-]+/[a-zA-Z0-9_~.-]{6,64}|[a-zA-Z0-9_~.-]{6,64})$",
       "minLength" : 6,
       "maxLength" : 2048
+    },
+    "PeerNetworkRouteTableIds" : {
+      "description" : "The unique identifier of the VPC route table for which a route to the ODB network is automatically created during peering connection establishment.",
+      "type" : "array",
+      "uniqueItems" : false,
+      "insertionOrder" : false,
+      "items" : {
+        "type" : "string"
+      }
     },
     "Tags" : {
       "type" : "array",
@@ -73,21 +100,21 @@
   },
   "additionalProperties" : false,
   "primaryIdentifier" : [ "/properties/OdbPeeringConnectionArn" ],
-  "readOnlyProperties" : [ "/properties/OdbPeeringConnectionArn", "/properties/OdbPeeringConnectionId", "/properties/OdbNetworkArn", "/properties/PeerNetworkArn" ],
-  "createOnlyProperties" : [ "/properties/OdbNetworkId", "/properties/PeerNetworkId", "/properties/DisplayName" ],
-  "writeOnlyProperties" : [ "/properties/OdbNetworkId", "/properties/PeerNetworkId" ],
+  "readOnlyProperties" : [ "/properties/OdbPeeringConnectionArn", "/properties/OdbPeeringConnectionId", "/properties/OdbNetworkArn", "/properties/PeerNetworkArn", "/properties/PeerNetworkCidrs" ],
+  "createOnlyProperties" : [ "/properties/OdbNetworkId", "/properties/PeerNetworkId", "/properties/PeerNetworkRouteTableIds" ],
+  "writeOnlyProperties" : [ "/properties/OdbNetworkId", "/properties/PeerNetworkId", "/properties/AdditionalPeerNetworkCidrs", "/properties/PeerNetworkRouteTableIds" ],
   "handlers" : {
     "create" : {
-      "permissions" : [ "odb:CreateOdbPeeringConnection", "odb:TagResource", "iam:CreateServiceLinkedRole", "ec2:DescribeVpcs", "ec2:CreateOdbNetworkPeering", "odb:GetOdbPeeringConnection", "odb:ListTagsForResource", "sts:GetCallerIdentity" ]
+      "permissions" : [ "odb:CreateOdbPeeringConnection", "odb:TagResource", "iam:CreateServiceLinkedRole", "ec2:DescribeVpcs", "ec2:CreateOdbNetworkPeering", "ec2:ModifyOdbNetworkPeering", "ec2:CreateRoute", "ec2:DescribeRouteTables", "odb:GetOdbPeeringConnection", "odb:ListTagsForResource", "sts:GetCallerIdentity" ]
     },
     "read" : {
       "permissions" : [ "odb:GetOdbPeeringConnection", "odb:ListTagsForResource" ]
     },
     "update" : {
-      "permissions" : [ "odb:GetOdbPeeringConnection", "odb:TagResource", "odb:UntagResource", "odb:ListTagsForResource" ]
+      "permissions" : [ "odb:UpdateOdbPeeringConnection", "odb:GetOdbPeeringConnection", "odb:TagResource", "odb:UntagResource", "odb:ListTagsForResource", "ec2:DescribeVpcs", "ec2:ModifyOdbNetworkPeering", "sts:GetCallerIdentity" ]
     },
     "delete" : {
-      "permissions" : [ "odb:DeleteOdbPeeringConnection", "ec2:DescribeVpcs", "ec2:DeleteOdbNetworkPeering", "odb:GetOdbPeeringConnection", "odb:UntagResource", "odb:ListTagsForResource", "sts:GetCallerIdentity" ]
+      "permissions" : [ "odb:DeleteOdbPeeringConnection", "ec2:DescribeVpcs", "ec2:DeleteOdbNetworkPeering", "ec2:DeleteRoute", "ec2:DescribeRouteTables", "odb:GetOdbPeeringConnection", "odb:UntagResource", "odb:ListTagsForResource", "sts:GetCallerIdentity" ]
     },
     "list" : {
       "permissions" : [ "odb:ListOdbPeeringConnections", "odb:ListTagsForResource" ]

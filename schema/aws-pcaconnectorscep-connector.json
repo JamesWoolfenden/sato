@@ -97,6 +97,11 @@
     },
     "Tags" : {
       "$ref" : "#/definitions/Tags"
+    },
+    "VpcEndpointId" : {
+      "type" : "string",
+      "maxLength" : 200,
+      "minLength" : 5
     }
   },
   "tagging" : {
@@ -109,7 +114,8 @@
   },
   "required" : [ "CertificateAuthorityArn" ],
   "readOnlyProperties" : [ "/properties/ConnectorArn", "/properties/Endpoint", "/properties/OpenIdConfiguration", "/properties/Type" ],
-  "createOnlyProperties" : [ "/properties/CertificateAuthorityArn", "/properties/MobileDeviceManagement" ],
+  "createOnlyProperties" : [ "/properties/CertificateAuthorityArn", "/properties/MobileDeviceManagement", "/properties/VpcEndpointId" ],
+  "writeOnlyProperties" : [ "/properties/VpcEndpointId" ],
   "primaryIdentifier" : [ "/properties/ConnectorArn" ],
   "handlers" : {
     "create" : {

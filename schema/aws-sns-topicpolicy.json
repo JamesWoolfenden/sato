@@ -1,36 +1,11 @@
 {
-  "typeName" : "AWS::SNS::TopicPolicy",
-  "description" : "The ``AWS::SNS::TopicPolicy`` resource associates SNS topics with a policy. For an example snippet, see [Declaring an policy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-iam.html#scenario-sns-policy) in the *User Guide*.",
   "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-sns.git",
-  "additionalProperties" : false,
-  "properties" : {
-    "Id" : {
-      "description" : "",
-      "type" : "string"
-    },
-    "PolicyDocument" : {
-      "description" : "A policy document that contains permissions to add to the specified SNS topics.",
-      "type" : [ "object", "string" ]
-    },
-    "Topics" : {
-      "description" : "The Amazon Resource Names (ARN) of the topics to which you want to add the policy. You can use the ``Ref`` function to specify an ``AWS::SNS::Topic`` resource.",
-      "type" : "array",
-      "uniqueItems" : false,
-      "insertionOrder" : false,
-      "items" : {
-        "type" : "string"
-      }
-    }
-  },
   "tagging" : {
     "taggable" : false,
     "tagOnCreate" : false,
     "tagUpdatable" : false,
     "cloudFormationSystemTags" : false
   },
-  "required" : [ "PolicyDocument", "Topics" ],
-  "primaryIdentifier" : [ "/properties/Id" ],
-  "readOnlyProperties" : [ "/properties/Id" ],
   "handlers" : {
     "create" : {
       "permissions" : [ "sns:SetTopicAttributes" ]
@@ -41,5 +16,30 @@
     "delete" : {
       "permissions" : [ "sns:SetTopicAttributes" ]
     }
-  }
+  },
+  "typeName" : "AWS::SNS::TopicPolicy",
+  "readOnlyProperties" : [ "/properties/Id" ],
+  "description" : "The ``AWS::SNS::TopicPolicy`` resource associates SNS topics with a policy. For an example snippet, see [Declaring an policy](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/quickref-iam.html#scenario-sns-policy) in the *User Guide*.",
+  "additionalProperties" : false,
+  "primaryIdentifier" : [ "/properties/Id" ],
+  "properties" : {
+    "Topics" : {
+      "uniqueItems" : false,
+      "description" : "The Amazon Resource Names (ARN) of the topics to which you want to add the policy. You can use the ``Ref`` function to specify an ``AWS::SNS::Topic`` resource.",
+      "insertionOrder" : false,
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "PolicyDocument" : {
+      "description" : "A policy document that contains permissions to add to the specified SNS topics.",
+      "type" : [ "object", "string" ]
+    },
+    "Id" : {
+      "description" : "",
+      "type" : "string"
+    }
+  },
+  "required" : [ "PolicyDocument", "Topics" ]
 }

@@ -1,58 +1,8 @@
 {
   "typeName" : "AWS::SSM::MaintenanceWindowTask",
   "description" : "Resource Type definition for AWS::SSM::MaintenanceWindowTask",
+  "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-resource-providers-ssm/tree/master/aws-ssm-maintenancewindowtask",
   "additionalProperties" : false,
-  "properties" : {
-    "MaxErrors" : {
-      "type" : "string"
-    },
-    "Description" : {
-      "type" : "string"
-    },
-    "ServiceRoleArn" : {
-      "type" : "string"
-    },
-    "Priority" : {
-      "type" : "integer"
-    },
-    "MaxConcurrency" : {
-      "type" : "string"
-    },
-    "Targets" : {
-      "type" : "array",
-      "uniqueItems" : false,
-      "items" : {
-        "$ref" : "#/definitions/Target"
-      }
-    },
-    "Name" : {
-      "type" : "string"
-    },
-    "TaskArn" : {
-      "type" : "string"
-    },
-    "TaskInvocationParameters" : {
-      "$ref" : "#/definitions/TaskInvocationParameters"
-    },
-    "WindowId" : {
-      "type" : "string"
-    },
-    "TaskParameters" : {
-      "type" : "object"
-    },
-    "TaskType" : {
-      "type" : "string"
-    },
-    "CutoffBehavior" : {
-      "type" : "string"
-    },
-    "Id" : {
-      "type" : "string"
-    },
-    "LoggingInfo" : {
-      "$ref" : "#/definitions/LoggingInfo"
-    }
-  },
   "definitions" : {
     "TaskInvocationParameters" : {
       "type" : "object",
@@ -94,10 +44,12 @@
       "additionalProperties" : false,
       "properties" : {
         "CloudWatchOutputEnabled" : {
-          "type" : "boolean"
+          "type" : "boolean",
+          "description" : "Enables Systems Manager to send command output to CloudWatch Logs."
         },
         "CloudWatchLogGroupName" : {
-          "type" : "string"
+          "type" : "string",
+          "description" : "The name of the CloudWatch log group where you want to send command output."
         }
       }
     },
@@ -214,10 +166,110 @@
           "type" : "string"
         }
       }
+    },
+    "ParameterValues" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    }
+  },
+  "properties" : {
+    "MaxErrors" : {
+      "type" : "string",
+      "description" : "The maximum number of errors allowed before this task stops being scheduled."
+    },
+    "Description" : {
+      "type" : "string",
+      "description" : "A description of the task."
+    },
+    "ServiceRoleArn" : {
+      "type" : "string",
+      "description" : "The Amazon Resource Name (ARN) of the IAM service role for AWS Systems Manager to assume when running a maintenance window task."
+    },
+    "Priority" : {
+      "type" : "integer",
+      "description" : "The priority of the task in the maintenance window. The lower the number, the higher the priority. Tasks that have the same priority are scheduled in parallel."
+    },
+    "MaxConcurrency" : {
+      "type" : "string",
+      "description" : "The maximum number of targets this task can be run for, in parallel."
+    },
+    "Targets" : {
+      "type" : "array",
+      "description" : "The targets (either instances or window target ids).",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Target"
+      }
+    },
+    "Name" : {
+      "type" : "string",
+      "description" : "The task name."
+    },
+    "TaskArn" : {
+      "type" : "string",
+      "description" : "The resource that the task uses during execution."
+    },
+    "TaskInvocationParameters" : {
+      "$ref" : "#/definitions/TaskInvocationParameters",
+      "description" : "The parameters to pass to the task when it runs. Populate only the fields that match the task type. All other fields should be empty."
+    },
+    "WindowId" : {
+      "type" : "string",
+      "description" : "The ID of the maintenance window where the task is registered."
+    },
+    "TaskParameters" : {
+      "type" : "object",
+      "description" : "The parameters to pass to the task when it runs."
+    },
+    "TaskType" : {
+      "type" : "string",
+      "description" : "The type of task."
+    },
+    "CutoffBehavior" : {
+      "type" : "string",
+      "description" : "The specification for whether tasks should continue to run after the cutoff time specified in the maintenance windows is reached."
+    },
+    "WindowTaskId" : {
+      "type" : "string",
+      "description" : "Unique identifier of the maintenance window task."
+    },
+    "LoggingInfo" : {
+      "$ref" : "#/definitions/LoggingInfo",
+      "description" : "Information about an Amazon S3 bucket to write Run Command task-level logs to."
     }
   },
   "required" : [ "WindowId", "Priority", "TaskType", "TaskArn" ],
   "createOnlyProperties" : [ "/properties/WindowId", "/properties/TaskType" ],
-  "primaryIdentifier" : [ "/properties/Id" ],
-  "readOnlyProperties" : [ "/properties/Id" ]
+  "readOnlyProperties" : [ "/properties/WindowTaskId" ],
+  "primaryIdentifier" : [ "/properties/WindowId", "/properties/WindowTaskId" ],
+  "tagging" : {
+    "taggable" : false
+  },
+  "handlers" : {
+    "create" : {
+      "permissions" : [ "iam:CreateServiceLinkedRole", "iam:PassRole", "ssm:GetMaintenanceWindowTask", "ssm:RegisterTaskWithMaintenanceWindow" ]
+    },
+    "read" : {
+      "permissions" : [ "ssm:GetMaintenanceWindowTask" ]
+    },
+    "update" : {
+      "permissions" : [ "iam:CreateServiceLinkedRole", "iam:PassRole", "ssm:UpdateMaintenanceWindowTask" ]
+    },
+    "delete" : {
+      "permissions" : [ "ssm:DeregisterTaskFromMaintenanceWindow", "ssm:GetMaintenanceWindowTask" ]
+    },
+    "list" : {
+      "permissions" : [ "ssm:DescribeMaintenanceWindowTasks" ],
+      "handlerSchema" : {
+        "properties" : {
+          "WindowId" : {
+            "$ref" : "resource-schema.json#/properties/WindowId"
+          }
+        },
+        "required" : [ "WindowId" ]
+      }
+    }
+  }
 }

@@ -92,5 +92,8 @@
       },
       "permissions" : [ "events:DescribeEventBus" ]
     }
+  },
+  "propertyTransform" : {
+    "/properties/Statement" : "$merge([{\"Sid\": StatementId}, Statement])"
   }
 }

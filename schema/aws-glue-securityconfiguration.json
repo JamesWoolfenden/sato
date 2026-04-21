@@ -14,16 +14,28 @@
     }
   },
   "definitions" : {
-    "S3Encryptions" : {
+    "S3Encryption" : {
       "type" : "object",
-      "additionalProperties" : false
+      "additionalProperties" : false,
+      "properties" : {
+        "KmsKeyArn" : {
+          "type" : "string"
+        },
+        "S3EncryptionMode" : {
+          "type" : "string"
+        }
+      }
     },
     "EncryptionConfiguration" : {
       "type" : "object",
       "additionalProperties" : false,
       "properties" : {
         "S3Encryptions" : {
-          "$ref" : "#/definitions/S3Encryptions"
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "$ref" : "#/definitions/S3Encryption"
+          }
         },
         "JobBookmarksEncryption" : {
           "$ref" : "#/definitions/JobBookmarksEncryption"

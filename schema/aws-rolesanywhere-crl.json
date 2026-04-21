@@ -75,5 +75,8 @@
       "permissions" : [ "rolesanywhere:ListCrls", "rolesanywhere:ListTagsForResource" ]
     }
   },
-  "additionalProperties" : false
+  "additionalProperties" : false,
+  "propertyTransform" : {
+    "/properties/CrlData" : "$replace(CrlData, /\\s+$/, '')"
+  }
 }

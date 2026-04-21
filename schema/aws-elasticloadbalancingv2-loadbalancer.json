@@ -191,13 +191,13 @@
     "taggable" : true,
     "tagOnCreate" : true,
     "tagUpdatable" : true,
-    "cloudFormationSystemTags" : false,
+    "cloudFormationSystemTags" : true,
     "tagProperty" : "/properties/Tags",
     "permissions" : [ "elasticloadbalancing:AddTags", "elasticloadbalancing:DescribeTags", "elasticloadbalancing:RemoveTags" ]
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "elasticloadbalancing:CreateLoadBalancer", "elasticloadbalancing:DescribeLoadBalancers", "elasticloadbalancing:ModifyLoadBalancerAttributes", "elasticloadbalancing:AddTags", "elasticloadbalancing:SetSecurityGroups", "ec2:DescribeIpamPools" ],
+      "permissions" : [ "elasticloadbalancing:CreateLoadBalancer", "elasticloadbalancing:DescribeLoadBalancers", "elasticloadbalancing:ModifyLoadBalancerAttributes", "elasticloadbalancing:ModifyCapacityReservation", "elasticloadbalancing:AddTags", "elasticloadbalancing:SetSecurityGroups", "ec2:DescribeIpamPools" ],
       "timeoutInMinutes" : 2160
     },
     "delete" : {

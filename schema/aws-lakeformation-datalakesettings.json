@@ -7,10 +7,18 @@
       "type" : "boolean"
     },
     "ExternalDataFilteringAllowList" : {
-      "$ref" : "#/definitions/ExternalDataFilteringAllowList"
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/DataLakePrincipal"
+      }
     },
     "CreateTableDefaultPermissions" : {
-      "$ref" : "#/definitions/CreateTableDefaultPermissions"
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/PrincipalPermissions"
+      }
     },
     "MutationType" : {
       "type" : "string"
@@ -19,16 +27,28 @@
       "type" : "object"
     },
     "ReadOnlyAdmins" : {
-      "$ref" : "#/definitions/ReadOnlyAdmins"
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/DataLakePrincipal"
+      }
     },
     "AllowFullTableExternalDataAccess" : {
       "type" : "boolean"
     },
     "Admins" : {
-      "$ref" : "#/definitions/Admins"
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/DataLakePrincipal"
+      }
     },
     "CreateDatabaseDefaultPermissions" : {
-      "$ref" : "#/definitions/CreateDatabaseDefaultPermissions"
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/PrincipalPermissions"
+      }
     },
     "Id" : {
       "type" : "string"
@@ -49,25 +69,32 @@
     }
   },
   "definitions" : {
-    "ExternalDataFilteringAllowList" : {
+    "DataLakePrincipal" : {
       "type" : "object",
-      "additionalProperties" : false
+      "additionalProperties" : false,
+      "properties" : {
+        "DataLakePrincipalIdentifier" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "DataLakePrincipalIdentifier" ]
     },
-    "CreateTableDefaultPermissions" : {
+    "PrincipalPermissions" : {
       "type" : "object",
-      "additionalProperties" : false
-    },
-    "ReadOnlyAdmins" : {
-      "type" : "object",
-      "additionalProperties" : false
-    },
-    "Admins" : {
-      "type" : "object",
-      "additionalProperties" : false
-    },
-    "CreateDatabaseDefaultPermissions" : {
-      "type" : "object",
-      "additionalProperties" : false
+      "additionalProperties" : false,
+      "properties" : {
+        "Permissions" : {
+          "type" : "array",
+          "uniqueItems" : false,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "Principal" : {
+          "$ref" : "#/definitions/DataLakePrincipal"
+        }
+      },
+      "required" : [ "Permissions", "Principal" ]
     }
   },
   "primaryIdentifier" : [ "/properties/Id" ],

@@ -124,6 +124,12 @@
       "minLength" : 1,
       "pattern" : "^[a-zA-Z0-9]?((?!-)([A-Za-z0-9-]*[A-Za-z0-9])\\.)+[a-zA-Z0-9]+$"
     },
+    "PortalCustomDomain" : {
+      "type" : "string",
+      "maxLength" : 128,
+      "minLength" : 0,
+      "pattern" : "^[a-zA-Z0-9]?((?!-)([A-Za-z0-9-]*[A-Za-z0-9])\\.)+[a-zA-Z0-9]+$"
+    },
     "PortalStatus" : {
       "$ref" : "#/definitions/PortalStatus"
     },
@@ -197,7 +203,7 @@
     }
   },
   "tagging" : {
-    "cloudFormationSystemTags" : false,
+    "cloudFormationSystemTags" : true,
     "tagOnCreate" : true,
     "tagProperty" : "/properties/Tags",
     "tagUpdatable" : true,

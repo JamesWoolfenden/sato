@@ -122,9 +122,46 @@
       "items" : {
         "$ref" : "#/definitions/Tag"
       }
+    },
+    "EvaluationCriteria" : {
+      "description" : "",
+      "$ref" : "#/definitions/EvaluationCriteria"
+    },
+    "EvaluationInterval" : {
+      "description" : "",
+      "type" : "integer"
     }
   },
   "definitions" : {
+    "EvaluationCriteria" : {
+      "description" : "",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "PromQLCriteria" : {
+          "$ref" : "#/definitions/AlarmPromQLCriteria"
+        }
+      }
+    },
+    "AlarmPromQLCriteria" : {
+      "description" : "",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Query" : {
+          "description" : "The PromQL query string.",
+          "type" : "string"
+        },
+        "PendingPeriod" : {
+          "description" : "The pending period for the alarm.",
+          "type" : "integer"
+        },
+        "RecoveryPeriod" : {
+          "description" : "The recovery period for the alarm.",
+          "type" : "integer"
+        }
+      }
+    },
     "MetricStat" : {
       "description" : "This structure defines the metric to be returned, along with the statistics, period, and units.\n ``MetricStat`` is a property of the [MetricDataQuery](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-cloudwatch-alarm-metricdataquery.html) property type.",
       "type" : "object",
@@ -246,7 +283,6 @@
       "required" : [ "Key", "Value" ]
     }
   },
-  "required" : [ "ComparisonOperator", "EvaluationPeriods" ],
   "handlers" : {
     "create" : {
       "permissions" : [ "cloudwatch:PutMetricAlarm", "cloudwatch:DescribeAlarms", "cloudwatch:TagResource" ]

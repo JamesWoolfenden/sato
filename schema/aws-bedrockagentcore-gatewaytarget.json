@@ -1,6 +1,6 @@
 {
   "typeName" : "AWS::BedrockAgentCore::GatewayTarget",
-  "description" : "Definition of AWS::BedrockAgentCore::GatewayTarget Resource Type",
+  "description" : "Resource Type definition for AWS::BedrockAgentCore::GatewayTarget",
   "definitions" : {
     "ApiKeyCredentialLocation" : {
       "type" : "string",
@@ -53,6 +53,80 @@
         "additionalProperties" : false
       } ]
     },
+    "ApiGatewayTargetConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "RestApiId" : {
+          "type" : "string"
+        },
+        "Stage" : {
+          "type" : "string"
+        },
+        "ApiGatewayToolConfiguration" : {
+          "$ref" : "#/definitions/ApiGatewayToolConfiguration"
+        }
+      },
+      "required" : [ "RestApiId", "Stage", "ApiGatewayToolConfiguration" ],
+      "additionalProperties" : false
+    },
+    "ApiGatewayToolConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ToolOverrides" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ApiGatewayToolOverride"
+          }
+        },
+        "ToolFilters" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ApiGatewayToolFilter"
+          }
+        }
+      },
+      "required" : [ "ToolFilters" ],
+      "additionalProperties" : false
+    },
+    "ApiGatewayToolOverride" : {
+      "type" : "object",
+      "properties" : {
+        "Name" : {
+          "type" : "string"
+        },
+        "Description" : {
+          "type" : "string"
+        },
+        "Path" : {
+          "type" : "string"
+        },
+        "Method" : {
+          "$ref" : "#/definitions/RestApiMethod"
+        }
+      },
+      "required" : [ "Name", "Path", "Method" ],
+      "additionalProperties" : false
+    },
+    "ApiGatewayToolFilter" : {
+      "type" : "object",
+      "properties" : {
+        "FilterPath" : {
+          "type" : "string"
+        },
+        "Methods" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RestApiMethod"
+          }
+        }
+      },
+      "required" : [ "FilterPath", "Methods" ],
+      "additionalProperties" : false
+    },
+    "RestApiMethod" : {
+      "type" : "string",
+      "enum" : [ "GET", "DELETE", "HEAD", "OPTIONS", "PATCH", "PUT", "POST" ]
+    },
     "CredentialProvider" : {
       "oneOf" : [ {
         "type" : "object",
@@ -74,7 +148,36 @@
         },
         "required" : [ "ApiKeyCredentialProvider" ],
         "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "IamCredentialProvider",
+        "properties" : {
+          "IamCredentialProvider" : {
+            "$ref" : "#/definitions/IamCredentialProvider"
+          }
+        },
+        "required" : [ "IamCredentialProvider" ],
+        "additionalProperties" : false
       } ]
+    },
+    "IamCredentialProvider" : {
+      "type" : "object",
+      "properties" : {
+        "Service" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 64,
+          "pattern" : "^[a-zA-Z0-9._-]+$"
+        },
+        "Region" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 32,
+          "pattern" : "^[a-zA-Z0-9-]+$"
+        }
+      },
+      "required" : [ "Service" ],
+      "additionalProperties" : false
     },
     "CredentialProviderConfiguration" : {
       "type" : "object",
@@ -161,6 +264,16 @@
         },
         "required" : [ "McpServer" ],
         "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "ApiGateway",
+        "properties" : {
+          "ApiGateway" : {
+            "$ref" : "#/definitions/ApiGatewayTargetConfiguration"
+          }
+        },
+        "required" : [ "ApiGateway" ],
+        "additionalProperties" : false
       } ]
     },
     "OAuthCredentialProvider" : {
@@ -181,6 +294,16 @@
         },
         "CustomParameters" : {
           "$ref" : "#/definitions/OAuthCustomParameters"
+        },
+        "GrantType" : {
+          "$ref" : "#/definitions/OAuthGrantType"
+        },
+        "DefaultReturnUrl" : {
+          "type" : "string",
+          "pattern" : "\\w+:(\\/?\\/?)[^\\s]+",
+          "maxLength" : 2048,
+          "minLength" : 1,
+          "description" : "Return URL for OAuth callback."
         }
       },
       "required" : [ "ProviderArn", "Scopes" ],
@@ -198,6 +321,10 @@
         }
       },
       "additionalProperties" : false
+    },
+    "OAuthGrantType" : {
+      "type" : "string",
+      "enum" : [ "AUTHORIZATION_CODE", "CLIENT_CREDENTIALS" ]
     },
     "S3Configuration" : {
       "type" : "object",
@@ -312,6 +439,30 @@
         "required" : [ "InlinePayload" ],
         "additionalProperties" : false
       } ]
+    },
+    "MetadataConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "AllowedRequestHeaders" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "AllowedQueryParameters" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "AllowedResponseHeaders" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "additionalProperties" : false
     }
   },
   "properties" : {
@@ -344,6 +495,9 @@
       "type" : "string",
       "format" : "date-time"
     },
+    "MetadataConfiguration" : {
+      "$ref" : "#/definitions/MetadataConfiguration"
+    },
     "Name" : {
       "type" : "string",
       "pattern" : "^([0-9a-zA-Z][-]?){1,100}$"
@@ -371,19 +525,19 @@
       "format" : "date-time"
     }
   },
-  "required" : [ "CredentialProviderConfigurations", "Name", "TargetConfiguration" ],
+  "required" : [ "Name", "TargetConfiguration" ],
   "createOnlyProperties" : [ "/properties/GatewayIdentifier" ],
   "readOnlyProperties" : [ "/properties/CreatedAt", "/properties/GatewayArn", "/properties/LastSynchronizedAt", "/properties/Status", "/properties/StatusReasons", "/properties/TargetId", "/properties/UpdatedAt" ],
   "primaryIdentifier" : [ "/properties/GatewayIdentifier", "/properties/TargetId" ],
   "handlers" : {
     "create" : {
-      "permissions" : [ "bedrock-agentcore:CreateGatewayTarget", "bedrock-agentcore:GetGatewayTarget", "bedrock-agentcore:GetResourceOauth2Token", "bedrock-agentcore:GetWorkloadAccessToken", "bedrock-agentcore:SynchronizeGatewayTargets", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants", "s3:GetObject", "secretsmanager:GetSecretValue" ]
+      "permissions" : [ "apigateway:GET", "bedrock-agentcore:CreateGatewayTarget", "bedrock-agentcore:GetGatewayTarget", "bedrock-agentcore:GetResourceOauth2Token", "bedrock-agentcore:GetWorkloadAccessToken", "bedrock-agentcore:SynchronizeGatewayTargets", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants", "s3:GetObject", "secretsmanager:GetSecretValue" ]
     },
     "read" : {
       "permissions" : [ "bedrock-agentcore:GetGatewayTarget" ]
     },
     "update" : {
-      "permissions" : [ "bedrock-agentcore:GetGatewayTarget", "bedrock-agentcore:GetResourceOauth2Token", "bedrock-agentcore:GetWorkloadAccessToken", "bedrock-agentcore:SynchronizeGatewayTargets", "bedrock-agentcore:UpdateGatewayTarget", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants", "s3:GetObject", "secretsmanager:GetSecretValue" ]
+      "permissions" : [ "apigateway:GET", "bedrock-agentcore:GetGatewayTarget", "bedrock-agentcore:GetResourceOauth2Token", "bedrock-agentcore:GetWorkloadAccessToken", "bedrock-agentcore:SynchronizeGatewayTargets", "bedrock-agentcore:UpdateGatewayTarget", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants", "s3:GetObject", "secretsmanager:GetSecretValue" ]
     },
     "delete" : {
       "permissions" : [ "bedrock-agentcore:DeleteGatewayTarget", "bedrock-agentcore:GetGatewayTarget", "kms:Decrypt", "kms:GenerateDataKey", "kms:ListGrants" ]

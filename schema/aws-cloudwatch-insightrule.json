@@ -22,13 +22,26 @@
       "type" : "string"
     },
     "Tags" : {
-      "$ref" : "#/definitions/Tags"
+      "type" : "array",
+      "uniqueItems" : false,
+      "items" : {
+        "$ref" : "#/definitions/Tag"
+      }
     }
   },
   "definitions" : {
-    "Tags" : {
+    "Tag" : {
       "type" : "object",
-      "additionalProperties" : false
+      "additionalProperties" : false,
+      "properties" : {
+        "Value" : {
+          "type" : "string"
+        },
+        "Key" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "Value", "Key" ]
     }
   },
   "required" : [ "RuleState", "RuleBody", "RuleName" ],

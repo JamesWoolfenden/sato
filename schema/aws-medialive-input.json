@@ -92,6 +92,33 @@
         }
       }
     },
+    "SrtListenerDecryptionRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Algorithm" : {
+          "type" : "string"
+        },
+        "PassphraseSecretArn" : {
+          "type" : "string"
+        }
+      }
+    },
+    "SrtListenerSettingsRequest" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "StreamId" : {
+          "type" : "string"
+        },
+        "MinimumLatency" : {
+          "type" : "integer"
+        },
+        "Decryption" : {
+          "$ref" : "#/definitions/SrtListenerDecryptionRequest"
+        }
+      }
+    },
     "SrtCallerDecryptionRequest" : {
       "type" : "object",
       "additionalProperties" : false,
@@ -127,6 +154,9 @@
           "items" : {
             "$ref" : "#/definitions/SrtCallerSourceRequest"
           }
+        },
+        "SrtListenerSettings" : {
+          "$ref" : "#/definitions/SrtListenerSettingsRequest"
         }
       }
     },

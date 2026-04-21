@@ -11,6 +11,9 @@
       "maxLength" : 1024
     }
   },
+  "tagging" : {
+    "taggable" : false
+  },
   "properties" : {
     "SnsRoleName" : {
       "$ref" : "#/definitions/ResourceArn"
@@ -22,21 +25,22 @@
   "required" : [ "SnsRoleName", "SnsTopicArn" ],
   "handlers" : {
     "create" : {
-      "permissions" : [ "fms:PutNotificationChannel", "iam:PassRole" ]
+      "permissions" : [ "fms:PutNotificationChannel", "iam:PassRole", "fms:GetNotificationChannel" ]
     },
     "update" : {
-      "permissions" : [ "fms:PutNotificationChannel", "iam:PassRole" ]
+      "permissions" : [ "fms:PutNotificationChannel", "iam:PassRole", "fms:GetNotificationChannel" ]
     },
     "read" : {
       "permissions" : [ "fms:GetNotificationChannel" ]
     },
     "delete" : {
-      "permissions" : [ "fms:DeleteNotificationChannel" ]
+      "permissions" : [ "fms:GetNotificationChannel", "fms:DeleteNotificationChannel" ]
     },
     "list" : {
       "permissions" : [ "fms:GetNotificationChannel" ]
     }
   },
+  "createOnlyProperties" : [ "/properties/SnsTopicArn" ],
   "primaryIdentifier" : [ "/properties/SnsTopicArn" ],
   "additionalProperties" : false
 }

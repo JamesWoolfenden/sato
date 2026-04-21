@@ -126,6 +126,25 @@
         }
       },
       "additionalProperties" : false
+    },
+    "ResourceTag" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "type" : "string",
+          "pattern" : "^[\\w \\.:/=+@-]+$",
+          "maxLength" : 128,
+          "minLength" : 1
+        },
+        "Value" : {
+          "type" : "string",
+          "pattern" : "^[\\w \\.:/=+@-]*$",
+          "maxLength" : 256,
+          "minLength" : 0
+        }
+      },
+      "required" : [ "Key", "Value" ],
+      "additionalProperties" : false
     }
   },
   "properties" : {
@@ -204,6 +223,13 @@
       "type" : "array",
       "items" : {
         "$ref" : "#/definitions/EnvironmentConfigurationUserParameter"
+      }
+    },
+    "ResourceTags" : {
+      "description" : "The resource tags of the project.",
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/ResourceTag"
       }
     }
   },

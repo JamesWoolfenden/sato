@@ -10,7 +10,7 @@
   "typeName" : "AWS::EC2::VPCPeeringConnection",
   "readOnlyProperties" : [ "/properties/Id" ],
   "description" : "Resource Type definition for AWS::EC2::VPCPeeringConnection",
-  "createOnlyProperties" : [ "/properties/PeerRegion", "/properties/PeerOwnerId", "/properties/PeerVpcId", "/properties/PeerRoleArn", "/properties/VpcId" ],
+  "createOnlyProperties" : [ "/properties/PeerRegion", "/properties/PeerOwnerId", "/properties/PeerVpcId", "/properties/PeerRoleArn", "/properties/AssumeRoleRegion", "/properties/VpcId" ],
   "primaryIdentifier" : [ "/properties/Id" ],
   "required" : [ "VpcId", "PeerVpcId" ],
   "sourceUrl" : "https://github.com/aws-cloudformation/aws-cloudformation-ec2-vpcpeering.git",
@@ -31,7 +31,7 @@
       "permissions" : [ "ec2:DeleteVpcPeeringConnection", "ec2:DescribeVpcPeeringConnections" ]
     }
   },
-  "writeOnlyProperties" : [ "/properties/PeerRoleArn" ],
+  "writeOnlyProperties" : [ "/properties/PeerRoleArn", "/properties/AssumeRoleRegion" ],
   "additionalProperties" : false,
   "definitions" : {
     "Tag" : {
@@ -62,6 +62,10 @@
     },
     "PeerVpcId" : {
       "description" : "The ID of the VPC with which you are creating the VPC peering connection. You must specify this parameter in the request.",
+      "type" : "string"
+    },
+    "AssumeRoleRegion" : {
+      "description" : "The Region code to use when calling Security Token Service (STS) to assume the PeerRoleArn, if provided.",
       "type" : "string"
     },
     "Id" : {

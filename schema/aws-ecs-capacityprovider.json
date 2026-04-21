@@ -1,7 +1,4 @@
 {
-  "propertyTransform" : {
-    "/properties/AutoScalingGroupProvider/AutoScalingGroupArn" : "$split(AutoScalingGroupProvider.AutoScalingGroupArn, \"autoScalingGroupName/\")[-1] $OR $split(AutoScalingGroupArn, \"autoScalingGroupName/\")[-1]"
-  },
   "tagging" : {
     "permissions" : [ "ecs:TagResource", "ecs:UntagResource", "ecs:ListTagsForResource" ],
     "taggable" : true,
@@ -9,6 +6,9 @@
     "tagUpdatable" : true,
     "tagProperty" : "/properties/Tags",
     "cloudFormationSystemTags" : true
+  },
+  "propertyTransform" : {
+    "/properties/AutoScalingGroupProvider/AutoScalingGroupArn" : "$split(AutoScalingGroupProvider.AutoScalingGroupArn, \"autoScalingGroupName/\")[-1] $OR $split(AutoScalingGroupArn, \"autoScalingGroupName/\")[-1]"
   },
   "handlers" : {
     "read" : {
@@ -29,10 +29,23 @@
   },
   "typeName" : "AWS::ECS::CapacityProvider",
   "description" : "Resource Type definition for AWS::ECS::CapacityProvider.",
-  "createOnlyProperties" : [ "/properties/AutoScalingGroupProvider/AutoScalingGroupArn", "/properties/Name", "/properties/ClusterName" ],
+  "createOnlyProperties" : [ "/properties/AutoScalingGroupProvider/AutoScalingGroupArn", "/properties/ManagedInstancesProvider/InstanceLaunchTemplate/FipsEnabled", "/properties/Name", "/properties/ClusterName" ],
   "additionalProperties" : false,
   "primaryIdentifier" : [ "/properties/Name" ],
   "definitions" : {
+    "CapacityReservationRequest" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "ReservationGroupArn" : {
+          "type" : "string"
+        },
+        "ReservationPreference" : {
+          "type" : "string",
+          "enum" : [ "RESERVATIONS_ONLY", "RESERVATIONS_FIRST", "RESERVATIONS_EXCLUDED" ]
+        }
+      }
+    },
     "AutoScalingGroupProvider" : {
       "additionalProperties" : false,
       "type" : "object",
@@ -95,7 +108,7 @@
           }
         }
       },
-      "required" : [ "Subnets" ]
+      "required" : [ "SecurityGroups", "Subnets" ]
     },
     "InstanceRequirementsRequest" : {
       "additionalProperties" : false,
@@ -324,6 +337,15 @@
         }
       }
     },
+    "ManagedInstancesLocalStorageConfiguration" : {
+      "additionalProperties" : false,
+      "type" : "object",
+      "properties" : {
+        "UseLocalStorage" : {
+          "type" : "boolean"
+        }
+      }
+    },
     "ManagedInstancesStorageConfiguration" : {
       "additionalProperties" : false,
       "type" : "object",
@@ -367,6 +389,16 @@
         "Ec2InstanceProfileArn" : {
           "type" : "string"
         },
+        "CapacityOptionType" : {
+          "type" : "string",
+          "enum" : [ "ON_DEMAND", "SPOT", "RESERVED" ]
+        },
+        "FipsEnabled" : {
+          "type" : "boolean"
+        },
+        "InstanceMetadataTagsPropagation" : {
+          "type" : "boolean"
+        },
         "StorageConfiguration" : {
           "$ref" : "#/definitions/ManagedInstancesStorageConfiguration"
         },
@@ -375,6 +407,12 @@
         },
         "InstanceRequirements" : {
           "$ref" : "#/definitions/InstanceRequirementsRequest"
+        },
+        "CapacityReservations" : {
+          "$ref" : "#/definitions/CapacityReservationRequest"
+        },
+        "LocalStorageConfiguration" : {
+          "$ref" : "#/definitions/ManagedInstancesLocalStorageConfiguration"
         },
         "Monitoring" : {
           "$ref" : "#/definitions/ManagedInstancesMonitoringOptions"
@@ -413,6 +451,7 @@
       "required" : [ "InfrastructureRoleArn", "InstanceLaunchTemplate" ]
     }
   },
+  "conditionalCreateOnlyProperties" : [ "/properties/ManagedInstancesProvider/InstanceLaunchTemplate/CapacityOptionType" ],
   "properties" : {
     "AutoScalingGroupProvider" : {
       "$ref" : "#/definitions/AutoScalingGroupProvider"
@@ -432,6 +471,5 @@
     "ManagedInstancesProvider" : {
       "$ref" : "#/definitions/ManagedInstancesProvider"
     }
-  },
-  "conditionalCreateOnlyProperties" : [ "/properties/ManagedInstancesProvider/InstanceLaunchTemplate/CapacityOptionType" ]
+  }
 }

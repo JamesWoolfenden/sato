@@ -42,6 +42,15 @@
       "items" : {
         "$ref" : "#/definitions/Tag"
       }
+    },
+    "MetricsConfigurations" : {
+      "description" : "Specifies the metrics configurations for the Amazon S3 Express bucket.",
+      "type" : "array",
+      "uniqueItems" : true,
+      "insertionOrder" : true,
+      "items" : {
+        "$ref" : "#/definitions/MetricsConfiguration"
+      }
     }
   },
   "definitions" : {
@@ -189,6 +198,25 @@
         }
       },
       "required" : [ "Key", "Value" ]
+    },
+    "MetricsConfiguration" : {
+      "description" : "Specifies a metrics configuration for the CloudWatch request metrics from an Amazon S3 Express bucket.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "Id" : {
+          "description" : "The ID used to identify the metrics configuration.",
+          "type" : "string"
+        },
+        "Prefix" : {
+          "description" : "The prefix used when evaluating a metrics filter.",
+          "type" : "string"
+        },
+        "AccessPointArn" : {
+          "description" : "The access point ARN used when evaluating a metrics filter.",
+          "type" : "string"
+        }
+      }
     }
   },
   "createOnlyProperties" : [ "/properties/BucketName", "/properties/LocationName", "/properties/DataRedundancy" ],
@@ -205,13 +233,13 @@
   "required" : [ "LocationName", "DataRedundancy" ],
   "handlers" : {
     "create" : {
-      "permissions" : [ "kms:GenerateDataKey", "kms:Decrypt", "s3express:CreateBucket", "s3express:ListAllMyDirectoryBuckets", "s3express:PutEncryptionConfiguration", "s3express:PutLifecycleConfiguration", "s3express:TagResource" ]
+      "permissions" : [ "kms:GenerateDataKey", "kms:Decrypt", "s3express:CreateBucket", "s3express:ListAllMyDirectoryBuckets", "s3express:PutEncryptionConfiguration", "s3express:PutLifecycleConfiguration", "s3express:PutMetricsConfiguration", "s3express:TagResource" ]
     },
     "read" : {
-      "permissions" : [ "s3express:ListAllMyDirectoryBuckets", "ec2:DescribeAvailabilityZones", "s3express:GetEncryptionConfiguration", "s3express:GetLifecycleConfiguration", "s3express:ListTagsForResource" ]
+      "permissions" : [ "s3express:ListAllMyDirectoryBuckets", "ec2:DescribeAvailabilityZones", "s3express:GetEncryptionConfiguration", "s3express:GetLifecycleConfiguration", "s3express:GetMetricsConfiguration", "s3express:ListTagsForResource" ]
     },
     "update" : {
-      "permissions" : [ "kms:GenerateDataKey", "kms:Decrypt", "s3express:PutEncryptionConfiguration", "s3express:PutLifecycleConfiguration", "s3express:TagResource", "s3express:UntagResource" ]
+      "permissions" : [ "kms:GenerateDataKey", "kms:Decrypt", "s3express:PutEncryptionConfiguration", "s3express:PutLifecycleConfiguration", "s3express:PutMetricsConfiguration", "s3express:TagResource", "s3express:UntagResource" ]
     },
     "delete" : {
       "permissions" : [ "s3express:DeleteBucket", "s3express:ListAllMyDirectoryBuckets" ]

@@ -19,31 +19,14 @@
     "SchemaJson" : {
       "type" : "string"
     },
-    "SchemaCedarFormat" : {
-      "type" : "string"
-    },
     "SchemaDefinition" : {
-      "oneOf" : [ {
-        "type" : "object",
-        "title" : "CedarJson",
-        "properties" : {
-          "CedarJson" : {
-            "$ref" : "#/definitions/SchemaJson"
-          }
-        },
-        "required" : [ "CedarJson" ],
-        "additionalProperties" : false
-      }, {
-        "type" : "object",
-        "title" : "CedarFormat",
-        "properties" : {
-          "CedarFormat" : {
-            "$ref" : "#/definitions/SchemaCedarFormat"
-          }
-        },
-        "required" : [ "CedarFormat" ],
-        "additionalProperties" : false
-      } ]
+      "type" : "object",
+      "properties" : {
+        "CedarJson" : {
+          "$ref" : "#/definitions/SchemaJson"
+        }
+      },
+      "additionalProperties" : false
     },
     "DeletionMode" : {
       "type" : "string",
@@ -72,6 +55,72 @@
         }
       },
       "required" : [ "Key", "Value" ]
+    },
+    "EncryptionSettings" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "type" : "object",
+        "required" : [ "KmsEncryptionSettings" ],
+        "properties" : {
+          "KmsEncryptionSettings" : {
+            "$ref" : "#/definitions/KmsEncryptionSettings"
+          }
+        },
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "required" : [ "Default" ],
+        "properties" : {
+          "Default" : {
+            "$ref" : "#/definitions/Default"
+          }
+        },
+        "additionalProperties" : false
+      } ]
+    },
+    "Default" : {
+      "type" : "object",
+      "additionalProperties" : false
+    },
+    "KmsEncryptionState" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/KmsKey"
+        },
+        "EncryptionContext" : {
+          "$ref" : "#/definitions/EncryptionContext"
+        }
+      },
+      "required" : [ "Key", "EncryptionContext" ],
+      "additionalProperties" : false
+    },
+    "KmsEncryptionSettings" : {
+      "type" : "object",
+      "properties" : {
+        "Key" : {
+          "$ref" : "#/definitions/KmsKey"
+        },
+        "EncryptionContext" : {
+          "$ref" : "#/definitions/EncryptionContext"
+        }
+      },
+      "required" : [ "Key" ],
+      "additionalProperties" : false
+    },
+    "KmsKey" : {
+      "type" : "string",
+      "pattern" : "^[a-zA-Z0-9:/_-]+$"
+    },
+    "EncryptionContext" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^.+$" : {
+          "type" : "string",
+          "minLength" : 1
+        }
+      },
+      "additionalProperties" : false
     }
   },
   "properties" : {
@@ -101,6 +150,9 @@
     "DeletionProtection" : {
       "$ref" : "#/definitions/DeletionProtection"
     },
+    "EncryptionSettings" : {
+      "$ref" : "#/definitions/EncryptionSettings"
+    },
     "Tags" : {
       "description" : "The tags to add to the policy store",
       "type" : "array",
@@ -109,10 +161,33 @@
       "items" : {
         "$ref" : "#/definitions/Tag"
       }
+    },
+    "EncryptionState" : {
+      "type" : "object",
+      "oneOf" : [ {
+        "type" : "object",
+        "required" : [ "KmsEncryptionState" ],
+        "properties" : {
+          "KmsEncryptionState" : {
+            "$ref" : "#/definitions/KmsEncryptionState"
+          }
+        },
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "required" : [ "Default" ],
+        "properties" : {
+          "Default" : {
+            "$ref" : "#/definitions/Default"
+          }
+        },
+        "additionalProperties" : false
+      } ]
     }
   },
   "required" : [ "ValidationSettings" ],
-  "readOnlyProperties" : [ "/properties/Arn", "/properties/PolicyStoreId" ],
+  "writeOnlyProperties" : [ "/properties/EncryptionSettings" ],
+  "readOnlyProperties" : [ "/properties/Arn", "/properties/PolicyStoreId", "/properties/EncryptionState" ],
   "primaryIdentifier" : [ "/properties/PolicyStoreId" ],
   "tagging" : {
     "taggable" : true,
@@ -128,13 +203,13 @@
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "verifiedpermissions:CreatePolicyStore", "verifiedpermissions:TagResource", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:PutSchema" ]
+      "permissions" : [ "verifiedpermissions:CreatePolicyStore", "verifiedpermissions:TagResource", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:PutSchema", "kms:Decrypt", "kms:DescribeKey", "kms:Encrypt", "kms:GenerateDataKeyWithoutPlaintext", "kms:ReEncryptFrom", "kms:ReEncryptTo" ]
     },
     "read" : {
       "permissions" : [ "verifiedpermissions:GetPolicyStore", "verifiedpermissions:ListTagsForResource", "verifiedpermissions:GetSchema" ]
     },
     "update" : {
-      "permissions" : [ "verifiedpermissions:UpdatePolicyStore", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:TagResource", "verifiedpermissions:UntagResource", "verifiedpermissions:GetSchema", "verifiedpermissions:PutSchema" ]
+      "permissions" : [ "verifiedpermissions:UpdatePolicyStore", "verifiedpermissions:GetPolicyStore", "verifiedpermissions:TagResource", "verifiedpermissions:UntagResource", "verifiedpermissions:GetSchema", "verifiedpermissions:PutSchema", "kms:Decrypt" ]
     },
     "delete" : {
       "permissions" : [ "verifiedpermissions:DeletePolicyStore", "verifiedpermissions:GetPolicyStore" ]

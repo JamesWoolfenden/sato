@@ -298,6 +298,9 @@
         "AutomaticBackupRetentionDays" : {
           "type" : "integer"
         },
+        "FsrmConfiguration" : {
+          "$ref" : "#/definitions/FsrmConfiguration"
+        },
         "PreferredSubnetId" : {
           "type" : "string"
         }
@@ -453,6 +456,19 @@
         }
       },
       "required" : [ "Value", "Key" ]
+    },
+    "FsrmConfiguration" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "FsrmServiceEnabled" : {
+          "type" : "boolean"
+        },
+        "EventLogDestination" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "FsrmServiceEnabled" ]
     },
     "UserAndGroupQuotas" : {
       "type" : "object",

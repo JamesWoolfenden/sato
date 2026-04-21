@@ -120,6 +120,63 @@
       "required" : [ "Lambdas", "RegionToRun", "RetryIntervalMinutes" ],
       "additionalProperties" : false
     },
+    "DocumentDbConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "TimeoutMinutes" : {
+          "type" : "number",
+          "default" : 60,
+          "minimum" : 1
+        },
+        "CrossAccountRole" : {
+          "type" : "string",
+          "pattern" : "^arn:aws[a-zA-Z0-9-]*:iam::[0-9]{12}:role/.+$"
+        },
+        "ExternalId" : {
+          "type" : "string"
+        },
+        "Behavior" : {
+          "allOf" : [ {
+            "$ref" : "#/definitions/DocumentDbDefaultBehavior"
+          }, {
+            "default" : "switchoverOnly"
+          } ]
+        },
+        "Ungraceful" : {
+          "$ref" : "#/definitions/DocumentDbUngraceful"
+        },
+        "GlobalClusterIdentifier" : {
+          "type" : "string",
+          "pattern" : "^[A-Za-z][0-9A-Za-z-:._]*$"
+        },
+        "DatabaseClusterArns" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "pattern" : "^arn:aws[a-zA-Z-]*:rds:[a-z0-9-]+:\\d{12}:cluster:[a-zA-Z0-9][a-zA-Z0-9-_]{0,99}$"
+          }
+        }
+      },
+      "required" : [ "Behavior", "DatabaseClusterArns", "GlobalClusterIdentifier" ],
+      "additionalProperties" : false
+    },
+    "DocumentDbDefaultBehavior" : {
+      "type" : "string",
+      "enum" : [ "switchoverOnly", "failover" ]
+    },
+    "DocumentDbUngraceful" : {
+      "type" : "object",
+      "properties" : {
+        "Ungraceful" : {
+          "$ref" : "#/definitions/DocumentDbUngracefulBehavior"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "DocumentDbUngracefulBehavior" : {
+      "type" : "string",
+      "enum" : [ "failover" ]
+    },
     "Ec2AsgCapacityIncreaseConfiguration" : {
       "type" : "object",
       "properties" : {
@@ -414,11 +471,41 @@
         },
         "required" : [ "Route53HealthCheckConfig" ],
         "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "DocumentDbConfig",
+        "properties" : {
+          "DocumentDbConfig" : {
+            "$ref" : "#/definitions/DocumentDbConfiguration"
+          }
+        },
+        "required" : [ "DocumentDbConfig" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "RdsPromoteReadReplicaConfig",
+        "properties" : {
+          "RdsPromoteReadReplicaConfig" : {
+            "$ref" : "#/definitions/RdsPromoteReadReplicaConfiguration"
+          }
+        },
+        "required" : [ "RdsPromoteReadReplicaConfig" ],
+        "additionalProperties" : false
+      }, {
+        "type" : "object",
+        "title" : "RdsCreateCrossRegionReadReplicaConfig",
+        "properties" : {
+          "RdsCreateCrossRegionReadReplicaConfig" : {
+            "$ref" : "#/definitions/RdsCreateCrossRegionReplicaConfiguration"
+          }
+        },
+        "required" : [ "RdsCreateCrossRegionReadReplicaConfig" ],
+        "additionalProperties" : false
       } ]
     },
     "ExecutionBlockType" : {
       "type" : "string",
-      "enum" : [ "CustomActionLambda", "ManualApproval", "AuroraGlobalDatabase", "EC2AutoScaling", "ARCRoutingControl", "ARCRegionSwitchPlan", "Parallel", "ECSServiceScaling", "EKSResourceScaling", "Route53HealthCheck" ]
+      "enum" : [ "CustomActionLambda", "ManualApproval", "AuroraGlobalDatabase", "EC2AutoScaling", "ARCRoutingControl", "ARCRegionSwitchPlan", "Parallel", "ECSServiceScaling", "EKSResourceScaling", "Route53HealthCheck", "DocumentDb", "RdsPromoteReadReplica", "RdsCreateCrossRegionReplica" ]
     },
     "GlobalAuroraConfiguration" : {
       "type" : "object",
@@ -560,6 +647,60 @@
       "required" : [ "Steps" ],
       "additionalProperties" : false
     },
+    "RdsCreateCrossRegionReplicaConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "TimeoutMinutes" : {
+          "type" : "number",
+          "default" : 60,
+          "minimum" : 1
+        },
+        "CrossAccountRole" : {
+          "type" : "string",
+          "pattern" : "^arn:aws[a-zA-Z0-9-]*:iam::[0-9]{12}:role/.+$"
+        },
+        "ExternalId" : {
+          "type" : "string"
+        },
+        "DbInstanceArnMap" : {
+          "$ref" : "#/definitions/RdsDbInstanceArnMap"
+        }
+      },
+      "required" : [ "DbInstanceArnMap" ],
+      "additionalProperties" : false
+    },
+    "RdsDbInstanceArnMap" : {
+      "type" : "object",
+      "patternProperties" : {
+        "^[a-z]{2}-[a-z-]+-\\d+$" : {
+          "type" : "string",
+          "pattern" : "^arn:aws[a-zA-Z-]*:rds:[a-z0-9-]+:\\d{12}:db:[a-zA-Z][a-zA-Z0-9]*(-[a-zA-Z0-9]+)*$"
+        }
+      },
+      "additionalProperties" : false
+    },
+    "RdsPromoteReadReplicaConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "TimeoutMinutes" : {
+          "type" : "number",
+          "default" : 60,
+          "minimum" : 1
+        },
+        "CrossAccountRole" : {
+          "type" : "string",
+          "pattern" : "^arn:aws[a-zA-Z0-9-]*:iam::[0-9]{12}:role/.+$"
+        },
+        "ExternalId" : {
+          "type" : "string"
+        },
+        "DbInstanceArnMap" : {
+          "$ref" : "#/definitions/RdsDbInstanceArnMap"
+        }
+      },
+      "required" : [ "DbInstanceArnMap" ],
+      "additionalProperties" : false
+    },
     "RecoveryApproach" : {
       "type" : "string",
       "enum" : [ "activeActive", "activePassive" ]
@@ -596,7 +737,7 @@
     },
     "RegionToRunIn" : {
       "type" : "string",
-      "enum" : [ "activatingRegion", "deactivatingRegion" ]
+      "enum" : [ "activatingRegion", "deactivatingRegion", "activeRegion", "inactiveRegion" ]
     },
     "RegionalScalingResource" : {
       "type" : "object",
@@ -606,6 +747,33 @@
         }
       },
       "additionalProperties" : false
+    },
+    "ReportConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "ReportOutput" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ReportOutputConfiguration"
+          },
+          "maxItems" : 1,
+          "minItems" : 1
+        }
+      },
+      "additionalProperties" : false
+    },
+    "ReportOutputConfiguration" : {
+      "oneOf" : [ {
+        "type" : "object",
+        "title" : "S3Configuration",
+        "properties" : {
+          "S3Configuration" : {
+            "$ref" : "#/definitions/S3ReportOutputConfiguration"
+          }
+        },
+        "required" : [ "S3Configuration" ],
+        "additionalProperties" : false
+      } ]
     },
     "Route53HealthCheckConfiguration" : {
       "type" : "object",
@@ -660,6 +828,22 @@
     "RoutingControlStateChange" : {
       "type" : "string",
       "enum" : [ "On", "Off" ]
+    },
+    "S3ReportOutputConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "BucketPath" : {
+          "type" : "string",
+          "maxLength" : 512,
+          "minLength" : 3,
+          "pattern" : "^(?:s3://)?[a-z0-9][a-z0-9-]{1,61}[a-z0-9](?:/[^/ ][^/]*)*/?$"
+        },
+        "BucketOwner" : {
+          "type" : "string",
+          "pattern" : "^\\d{12}$"
+        }
+      },
+      "additionalProperties" : false
     },
     "Service" : {
       "type" : "object",
@@ -780,7 +964,7 @@
     },
     "WorkflowTargetAction" : {
       "type" : "string",
-      "enum" : [ "activate", "deactivate" ]
+      "enum" : [ "activate", "deactivate", "postRecovery" ]
     },
     "HealthCheckState" : {
       "type" : "object",
@@ -872,6 +1056,9 @@
       },
       "maxItems" : 2,
       "minItems" : 2
+    },
+    "ReportConfiguration" : {
+      "$ref" : "#/definitions/ReportConfiguration"
     },
     "Tags" : {
       "$ref" : "#/definitions/Tags"

@@ -116,6 +116,25 @@
         }
       },
       "required" : [ "DbServerId" ]
+    },
+    "IamRole" : {
+      "description" : "An AWS Identity and Access Management (IAM) service role associated with the VM cluster.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "AwsIntegration" : {
+          "description" : "The AWS integration configuration settings for the AWS Identity and Access Management (IAM) service role.",
+          "type" : "string"
+        },
+        "IamRoleArn" : {
+          "description" : "The Amazon Resource Name (ARN) of the AWS Identity and Access Management (IAM) service role.",
+          "type" : "string"
+        },
+        "Status" : {
+          "description" : "The current status of the AWS Identity and Access Management (IAM) service role.",
+          "type" : "string"
+        }
+      }
     }
   },
   "properties" : {
@@ -309,12 +328,21 @@
       "items" : {
         "$ref" : "#/definitions/DbNode"
       }
+    },
+    "IamRoles" : {
+      "type" : "array",
+      "description" : "The AWS Identity and Access Management (IAM) service roles associated with the VM cluster.",
+      "insertionOrder" : false,
+      "uniqueItems" : true,
+      "items" : {
+        "$ref" : "#/definitions/IamRole"
+      }
     }
   },
   "additionalProperties" : false,
   "createOnlyProperties" : [ "/properties/CloudExadataInfrastructureId", "/properties/DataCollectionOptions", "/properties/DataStorageSizeInTBs", "/properties/DbNodeStorageSizeInGBs", "/properties/OdbNetworkId", "/properties/GiVersion", "/properties/ClusterName", "/properties/LicenseModel", "/properties/Hostname", "/properties/IsLocalBackupEnabled", "/properties/IsSparseDiskgroupEnabled", "/properties/SystemVersion", "/properties/TimeZone", "/properties/ScanListenerPortTcp", "/properties/SshPublicKeys", "/properties/CpuCoreCount", "/properties/DisplayName", "/properties/MemorySizeInGBs", "/properties/DbServers", "/properties/DbNodes/*/DbServerId" ],
   "conditionalCreateOnlyProperties" : [ "/properties/DbNodes" ],
-  "readOnlyProperties" : [ "/properties/CloudVmClusterArn", "/properties/CloudVmClusterId", "/properties/ComputeModel", "/properties/DiskRedundancy", "/properties/Domain", "/properties/ListenerPort", "/properties/NodeCount", "/properties/Ocid", "/properties/OciResourceAnchorName", "/properties/OciUrl", "/properties/ScanDnsName", "/properties/ScanIpIds", "/properties/Shape", "/properties/StorageSizeInGBs", "/properties/VipIds", "/properties/DbNodes/*/DbNodeId", "/properties/DbNodes/*/Status", "/properties/DbNodes/*/MemorySizeInGBs", "/properties/DbNodes/*/DbNodeStorageSizeInGBs", "/properties/DbNodes/*/CpuCoreCount", "/properties/DbNodes/*/Hostname", "/properties/DbNodes/*/DbNodeArn", "/properties/DbNodes/*/Ocid", "/properties/DbNodes/*/DbSystemId", "/properties/DbNodes/*/BackupIpId", "/properties/DbNodes/*/BackupVnic2Id", "/properties/DbNodes/*/VnicId", "/properties/DbNodes/*/Vnic2Id", "/properties/DbNodes/*/HostIpId" ],
+  "readOnlyProperties" : [ "/properties/CloudVmClusterArn", "/properties/CloudVmClusterId", "/properties/ComputeModel", "/properties/DiskRedundancy", "/properties/Domain", "/properties/ListenerPort", "/properties/NodeCount", "/properties/Ocid", "/properties/OciResourceAnchorName", "/properties/OciUrl", "/properties/ScanDnsName", "/properties/ScanIpIds", "/properties/Shape", "/properties/StorageSizeInGBs", "/properties/VipIds", "/properties/DbNodes/*/DbNodeId", "/properties/DbNodes/*/Status", "/properties/DbNodes/*/MemorySizeInGBs", "/properties/DbNodes/*/DbNodeStorageSizeInGBs", "/properties/DbNodes/*/CpuCoreCount", "/properties/DbNodes/*/Hostname", "/properties/DbNodes/*/DbNodeArn", "/properties/DbNodes/*/Ocid", "/properties/DbNodes/*/DbSystemId", "/properties/DbNodes/*/BackupIpId", "/properties/DbNodes/*/BackupVnic2Id", "/properties/DbNodes/*/VnicId", "/properties/DbNodes/*/Vnic2Id", "/properties/DbNodes/*/HostIpId", "/properties/IamRoles/*/Status" ],
   "writeOnlyProperties" : [ "/properties/ScanListenerPortTcp" ],
   "primaryIdentifier" : [ "/properties/CloudVmClusterArn" ],
   "propertyTransform" : {
@@ -323,14 +351,14 @@
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "odb:CreateCloudVmCluster", "odb:TagResource", "odb:GetCloudVmCluster", "odb:ListCloudVmClusters", "odb:ListTagsForResource", "sts:GetCallerIdentity", "ec2:DescribeAvailabilityZones", "odb:ListDbNodes", "odb:GetDbNode", "odb:CreateDbNode" ],
+      "permissions" : [ "iam:CreateServiceLinkedRole", "iam:PassRole", "odb:CreateCloudVmCluster", "odb:TagResource", "odb:GetCloudVmCluster", "odb:ListCloudVmClusters", "odb:ListTagsForResource", "sts:GetCallerIdentity", "ec2:DescribeAvailabilityZones", "odb:ListDbNodes", "odb:GetDbNode", "odb:CreateDbNode", "odb:AssociateIamRoleToResource" ],
       "timeoutInMinutes" : 2160
     },
     "read" : {
       "permissions" : [ "odb:GetCloudVmCluster", "odb:ListTagsForResource", "odb:ListDbNodes", "odb:GetDbNode", "sts:GetCallerIdentity" ]
     },
     "update" : {
-      "permissions" : [ "odb:TagResource", "odb:UntagResource", "odb:GetCloudVmCluster", "odb:ListCloudVmClusters", "odb:ListTagsForResource", "odb:ListDbNodes", "odb:GetDbNode", "sts:GetCallerIdentity" ]
+      "permissions" : [ "iam:PassRole", "odb:TagResource", "odb:UntagResource", "odb:GetCloudVmCluster", "odb:ListCloudVmClusters", "odb:ListTagsForResource", "odb:ListDbNodes", "odb:GetDbNode", "sts:GetCallerIdentity", "odb:AssociateIamRoleToResource", "odb:DisassociateIamRoleFromResource" ]
     },
     "delete" : {
       "permissions" : [ "odb:DeleteCloudVmCluster", "odb:GetCloudVmCluster", "odb:ListCloudVmClusters", "odb:ListTagsForResource", "sts:GetCallerIdentity", "odb:DeleteDbNode" ],

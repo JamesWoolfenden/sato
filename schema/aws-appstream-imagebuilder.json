@@ -52,6 +52,21 @@
       "items" : {
         "$ref" : "#/definitions/AccessEndpoint"
       }
+    },
+    "SoftwaresToInstall" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "SoftwaresToUninstall" : {
+      "type" : "array",
+      "items" : {
+        "type" : "string"
+      }
+    },
+    "RootVolumeConfig" : {
+      "$ref" : "#/definitions/VolumeConfig"
     }
   },
   "definitions" : {
@@ -112,30 +127,47 @@
         }
       },
       "required" : [ "EndpointType", "VpceId" ]
+    },
+    "VolumeConfig" : {
+      "type" : "object",
+      "properties" : {
+        "VolumeSizeInGb" : {
+          "type" : "integer"
+        }
+      },
+      "additionalProperties" : false
     }
   },
   "required" : [ "InstanceType", "Name" ],
   "primaryIdentifier" : [ "/properties/Name" ],
   "readOnlyProperties" : [ "/properties/StreamingUrl" ],
+  "createOnlyProperties" : [ "/properties/Name" ],
+  "writeOnlyProperties" : [ "/properties/SoftwaresToInstall", "/properties/SoftwaresToUninstall", "/properties/ImageName" ],
+  "oneOf" : [ {
+    "required" : [ "ImageName" ]
+  }, {
+    "required" : [ "ImageArn" ]
+  } ],
   "tagging" : {
     "taggable" : false,
     "tagOnCreate" : true,
     "tagUpdatable" : false,
     "cloudFormationSystemTags" : true,
-    "tagProperty" : "/properties/Tags"
+    "tagProperty" : "/properties/Tags",
+    "permissions" : [ "appstream:ListTagsForResource", "appstream:TagResource", "appstream:UntagResource" ]
   },
   "handlers" : {
     "create" : {
-      "permissions" : [ "appstream:CreateImageBuilder", "appstream:CreateImageBuilderStreamingURL", "appstream:CreateStreamingURL", "appstream:DeleteImageBuilder", "appstream:DescribeImageBuilders", "appstream:StartImageBuilder", "appstream:StopImageBuilder", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
+      "permissions" : [ "appstream:CreateImageBuilder", "appstream:CreateImageBuilderStreamingURL", "appstream:CreateStreamingURL", "appstream:DeleteImageBuilder", "appstream:DescribeImageBuilders", "appstream:StartImageBuilder", "appstream:StopImageBuilder", "appstream:TagResource", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus", "iam:PassRole" ]
     },
     "read" : {
-      "permissions" : [ "appstream:CreateImageBuilder", "appstream:CreateImageBuilderStreamingURL", "appstream:CreateStreamingURL", "appstream:DeleteImageBuilder", "appstream:DescribeImageBuilders", "appstream:StartImageBuilder", "appstream:StopImageBuilder", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
+      "permissions" : [ "appstream:CreateImageBuilderStreamingURL", "appstream:DescribeImageBuilders", "appstream:ListTagsForResource", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
     },
     "delete" : {
-      "permissions" : [ "appstream:CreateImageBuilder", "appstream:CreateImageBuilderStreamingURL", "appstream:CreateStreamingURL", "appstream:DeleteImageBuilder", "appstream:DescribeImageBuilders", "appstream:StartImageBuilder", "appstream:StopImageBuilder", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
+      "permissions" : [ "appstream:DeleteImageBuilder", "appstream:DescribeImageBuilders", "appstream:ListTagsForResource", "appstream:StartImageBuilder", "appstream:StopImageBuilder", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
     },
     "list" : {
-      "permissions" : [ "appstream:CreateImageBuilder", "appstream:CreateImageBuilderStreamingURL", "appstream:CreateStreamingURL", "appstream:DeleteImageBuilder", "appstream:DescribeImageBuilders", "appstream:StartImageBuilder", "appstream:StopImageBuilder", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
+      "permissions" : [ "appstream:DescribeImageBuilders", "appstream:ListTagsForResource", "iam:CreateServiceLinkedRole", "iam:DeleteServiceLinkedRole", "iam:GetServiceLinkedRoleDeletionStatus" ]
     }
   }
 }

@@ -87,12 +87,17 @@
           "minLength" : 1,
           "maxLength" : 2000
         },
+        "DataSourceSelectionCriteria" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 2000
+        },
         "EncryptedLogGroupStrategy" : {
           "type" : "string",
           "enum" : [ "ALLOW", "SKIP" ]
         }
       },
-      "required" : [ "LogGroupSelectionCriteria", "EncryptedLogGroupStrategy" ],
+      "required" : [ "EncryptedLogGroupStrategy" ],
       "additionalProperties" : false
     },
     "CentralizationRuleDestination" : {
@@ -119,6 +124,9 @@
         },
         "BackupConfiguration" : {
           "$ref" : "#/definitions/LogsBackupConfiguration"
+        },
+        "LogGroupNameConfiguration" : {
+          "$ref" : "#/definitions/LogGroupNameConfiguration"
         }
       },
       "additionalProperties" : false
@@ -152,6 +160,19 @@
         }
       },
       "required" : [ "Region" ],
+      "additionalProperties" : false
+    },
+    "LogGroupNameConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "LogGroupNamePattern" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 512,
+          "pattern" : "^(?:[\\._\\-/#A-Za-z0-9]+|\\$\\{[A-Za-z]+(?:\\.[A-Za-z]+){1,2}\\})+$"
+        }
+      },
+      "required" : [ "LogGroupNamePattern" ],
       "additionalProperties" : false
     }
   },
