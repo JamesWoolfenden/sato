@@ -1,9 +1,45 @@
 package ai
 
 import (
+	"context"
 	"strings"
 	"testing"
 )
+
+// Regression guard: constructing the client must not trigger Vertex ADC
+// discovery or any network I/O — that only happens on first Convert.
+func TestNewClaude_isLazy(t *testing.T) {
+	t.Parallel()
+
+	c := NewClaude()
+	if c.model != "" {
+		t.Fatalf("init ran eagerly: model already set to %q", c.model)
+	}
+}
+
+func TestClaude_init_envModel(t *testing.T) {
+	t.Setenv("ANTHROPIC_VERTEX_PROJECT_ID", "")
+	t.Setenv("ANTHROPIC_MODEL", "claude-opus-4-7")
+
+	c := NewClaude()
+	c.init(context.Background())
+
+	if c.model != "claude-opus-4-7" {
+		t.Errorf("model = %q, want override from ANTHROPIC_MODEL", c.model)
+	}
+}
+
+func TestClaude_init_defaultModel(t *testing.T) {
+	t.Setenv("ANTHROPIC_VERTEX_PROJECT_ID", "")
+	t.Setenv("ANTHROPIC_MODEL", "")
+
+	c := NewClaude()
+	c.init(context.Background())
+
+	if c.model != defaultModel {
+		t.Errorf("model = %q, want %q", c.model, defaultModel)
+	}
+}
 
 func Test_parseResponse(t *testing.T) {
 	t.Parallel()
