@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+  NightlyJob:
+    Type: AWS::Scheduler::Schedule
+    Properties:
+      Name: nightly-report
+      ScheduleExpression: "cron(0 2 * * ? *)"
+      FlexibleTimeWindow:
+        Mode: "OFF"
+      Target:
+        Arn: arn:aws:lambda:eu-west-2:123456789012:function:report
+        RoleArn: arn:aws:iam::123456789012:role/scheduler
+      State: ENABLED

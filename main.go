@@ -4,12 +4,15 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
+	"path/filepath"
 	"sato/src/ai"
 	"sato/src/arm"
 	"sato/src/cf"
+	"sato/src/promote"
 	"sato/src/see"
 	"sato/src/version"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -152,6 +155,31 @@ func main() {
 						Required:    false,
 						Destination: &flip,
 					},
+				},
+			},
+			{
+				Name:      "promote",
+				Usage:     "install an AI-drafted template into src/ (maintainers only; run from repo root)",
+				ArgsUsage: "<draft.template> <SourceType>",
+				Flags: []cli.Flag{
+					&cli.BoolFlag{Name: "pr", Usage: "open a GitHub PR via gh after editing"},
+				},
+				Action: func(c *cli.Context) error {
+					if c.NArg() != 2 {
+						return cli.Exit("usage: sato promote <draft.template> <SourceType>", 1)
+					}
+					draft, src := c.Args().Get(0), c.Args().Get(1)
+					if err := promote.Run(draft, src, "."); err != nil {
+						return err
+					}
+					log.Info().Msgf("promoted %s; run `go build ./...` to verify", filepath.Base(draft))
+					if c.Bool("pr") {
+						tfType := strings.TrimSuffix(filepath.Base(draft), ".template")
+
+						return promote.OpenPR(".", src, tfType)
+					}
+
+					return nil
 				},
 			},
 		},

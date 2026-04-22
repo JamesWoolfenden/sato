@@ -1,0 +1,78 @@
+resource "aws_scheduler_schedule" "{{.item}}" {
+  name                = {{Nild .resource.Name (.item)|Quote}}
+{{- if .resource.Description}}
+  description         = {{.resource.Description|Quote}}
+{{- end}}
+{{- if .resource.GroupName}}
+  group_name          = {{.resource.GroupName|Quote}}
+{{- end}}
+  schedule_expression = {{.resource.ScheduleExpression|Quote}}
+{{- if .resource.ScheduleExpressionTimezone}}
+  schedule_expression_timezone = {{.resource.ScheduleExpressionTimezone|Quote}}
+{{- end}}
+{{- if .resource.StartDate}}
+  start_date          = {{.resource.StartDate|Quote}}
+{{- end}}
+{{- if .resource.EndDate}}
+  end_date            = {{.resource.EndDate|Quote}}
+{{- end}}
+{{- if .resource.State}}
+  state               = {{.resource.State|Quote}}
+{{- end}}
+{{- if .resource.KmsKeyArn}}
+  kms_key_arn         = {{.resource.KmsKeyArn|Quote}}
+{{- end}}
+
+  flexible_time_window {
+    mode = {{.resource.FlexibleTimeWindow.Mode|Quote}}
+{{- if .resource.FlexibleTimeWindow.MaximumWindowInMinutes}}
+    maximum_window_in_minutes = {{.resource.FlexibleTimeWindow.MaximumWindowInMinutes}}
+{{- end}}
+  }
+
+  target {
+    arn      = {{.resource.Target.Arn|Quote}}
+    role_arn = {{.resource.Target.RoleArn|Quote}}
+{{- if .resource.Target.Input}}
+    input    = {{.resource.Target.Input|Quote}}
+{{- end}}
+{{- if .resource.Target.DeadLetterConfig}}
+
+    dead_letter_config {
+      arn = {{.resource.Target.DeadLetterConfig.Arn|Quote}}
+    }
+{{- end}}
+{{- if .resource.Target.RetryPolicy}}
+
+    retry_policy {
+{{- if .resource.Target.RetryPolicy.MaximumEventAgeInSeconds}}
+      maximum_event_age_in_seconds = {{.resource.Target.RetryPolicy.MaximumEventAgeInSeconds}}
+{{- end}}
+{{- if .resource.Target.RetryPolicy.MaximumRetryAttempts}}
+      maximum_retry_attempts       = {{.resource.Target.RetryPolicy.MaximumRetryAttempts}}
+{{- end}}
+    }
+{{- end}}
+{{- if .resource.Target.SqsParameters}}
+
+    sqs_parameters {
+{{- if .resource.Target.SqsParameters.MessageGroupId}}
+      message_group_id = {{.resource.Target.SqsParameters.MessageGroupId|Quote}}
+{{- end}}
+    }
+{{- end}}
+{{- if .resource.Target.KinesisParameters}}
+
+    kinesis_parameters {
+      partition_key = {{.resource.Target.KinesisParameters.PartitionKey|Quote}}
+    }
+{{- end}}
+{{- if .resource.Target.EventBridgeParameters}}
+
+    eventbridge_parameters {
+      detail_type = {{.resource.Target.EventBridgeParameters.DetailType|Quote}}
+      source      = {{.resource.Target.EventBridgeParameters.Source|Quote}}
+    }
+{{- end}}
+  }
+}

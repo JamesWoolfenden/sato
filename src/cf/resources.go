@@ -354,3 +354,6 @@ var awsAthenaNamedQuery []byte
 
 //go:embed resources/aws_kinesis_firehose_delivery_stream.template
 var awsKinesisFirehoseDeliveryStream []byte
+
+//go:embed resources/aws_scheduler_schedule.template
+var awsSchedulerSchedule []byte

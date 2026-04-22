@@ -119,4 +119,5 @@ var tfLookup = map[string]interface{}{
 	"AWS::WAFv2::WebACLAssociation":                    awsWAFv2WebACLAssociation,
 	"AWS::Athena::WorkGroup":                           awsAthenaWorkGroup,
 	"AWS::Athena::NamedQuery":                          awsAthenaNamedQuery,
+	"AWS::Scheduler::Schedule":                         awsSchedulerSchedule,
 }

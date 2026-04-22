@@ -4,10 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
 	"regexp"
 	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/anthropics/anthropic-sdk-go/option"
+	"github.com/anthropics/anthropic-sdk-go/vertex"
+	"github.com/rs/zerolog/log"
 )
 
 const defaultModel = "claude-sonnet-4-6"
@@ -45,9 +49,24 @@ type Claude struct {
 	model  string
 }
 
-// NewClaude builds a client that reads ANTHROPIC_API_KEY from the environment.
+// NewClaude builds a client. If ANTHROPIC_VERTEX_PROJECT_ID is set it routes via
+// Google Vertex AI (using CLOUD_ML_REGION and ADC); otherwise it reads
+// ANTHROPIC_API_KEY for the direct Anthropic API. ANTHROPIC_MODEL overrides the
+// default model in either mode.
 func NewClaude() *Claude {
-	return &Claude{client: anthropic.NewClient(), model: defaultModel}
+	model := defaultModel
+	if m := os.Getenv("ANTHROPIC_MODEL"); m != "" {
+		model = m
+	}
+
+	var opts []option.RequestOption
+	if project := os.Getenv("ANTHROPIC_VERTEX_PROJECT_ID"); project != "" {
+		region := os.Getenv("CLOUD_ML_REGION")
+		log.Info().Msgf("ai: using Vertex AI (project=%s region=%s)", project, region)
+		opts = append(opts, vertex.WithGoogleAuth(context.Background(), region, project))
+	}
+
+	return &Claude{client: anthropic.NewClient(opts...), model: model}
 }
 
 // Convert implements Converter.
