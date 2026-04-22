@@ -84,7 +84,7 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 								tempBuilder.WriteString("\t   ")
 								tempBuilder.WriteString(name)
 								tempBuilder.WriteString(" = \"")
-								tempBuilder.WriteString(value.(string))
+								fmt.Fprint(&tempBuilder, value)
 								tempBuilder.WriteString("\"\n")
 
 								tempTypesBuilder.WriteString("\t   ")
@@ -193,11 +193,16 @@ func FixType(myItem map[string]interface{}) (map[string]interface{}, error) {
 
 // EscapeQuote them quotes.
 func EscapeQuote(item interface{}) string {
-	if item != nil {
-		return strings.ReplaceAll(item.(string), "\"", "\\\"")
+	if item == nil {
+		return ""
 	}
 
-	return ""
+	s, ok := item.(string)
+	if !ok {
+		s = fmt.Sprint(item)
+	}
+
+	return strings.ReplaceAll(s, "\"", "\\\"")
 }
 
 // ArrayToString squashes slice into string.
@@ -206,9 +211,9 @@ func ArrayToString(defaultValue []interface{}) string {
 
 	for count, value := range defaultValue {
 		if count == len(defaultValue)-1 {
-			newValue += "\"" + EscapeQuote(value.(string)) + "\""
+			newValue += "\"" + EscapeQuote(value) + "\""
 		} else {
-			newValue += "\"" + EscapeQuote(value.(string)) + "\"" + ","
+			newValue += "\"" + EscapeQuote(value) + "\"" + ","
 		}
 	}
 
@@ -219,7 +224,8 @@ func ArrayToString(defaultValue []interface{}) string {
 func Tags(raw interface{}) string {
 	tags, ok := raw.(map[string]interface{})
 	if !ok {
-		return raw.(string)
+		s, _ := raw.(string)
+		return s
 	}
 
 	keys := make([]string, 0, len(tags))

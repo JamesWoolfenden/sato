@@ -73,14 +73,11 @@ func replaceUUID(newAttribute string, result map[string]interface{}) (string, ma
 
 	data := ensureDataMap(result)
 
-	if data["uuid"] != nil {
-		data["uuid"] = data["uuid"].(int) + 1
-	} else {
-		data["uuid"] = 0
-	}
-
+	count, _ := data["uuid"].(int)
+	data["uuid"] = count + 1
 	result["data"] = data
-	replacement := "random_uuid.sato" + strconv.Itoa(data["uuid"].(int)) + ".result"
+
+	replacement := "random_uuid.sato" + strconv.Itoa(count) + ".result"
 	return strings.Replace(newAttribute, "uuid()", replacement, 1), result
 }
 

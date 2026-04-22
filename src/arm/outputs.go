@@ -32,10 +32,17 @@ func ParseOutputs(result map[string]interface{}, funcMap tftemplate.FuncMap, des
 		temp, ok := value.(map[string]interface{})
 
 		if !ok {
-			log.Warn().Msg("fail to assert value to map[string]interface{}")
+			log.Warn().Msgf("output %q is not an object", name)
+			continue
 		}
 
-		someString, result = ParseString(temp["value"].(string), result)
+		raw, ok := temp["value"].(string)
+		if !ok {
+			log.Warn().Msgf("output %q has non-string value", name)
+			continue
+		}
+
+		someString, result = ParseString(raw, result)
 		myVar.Value = someString
 
 		var output bytes.Buffer

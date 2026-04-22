@@ -81,25 +81,25 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 			continue
 		}
 
-		temp := LoseSQBrackets(test["name"].(string))
+		resourceRef, _ := test["resource"].(string)
+		rawName, _ := test["name"].(string)
+		temp := LoseSQBrackets(rawName)
 
 		if name == temp {
-			return test["resource"].(string), nil
+			return resourceRef, nil
 		}
 
 		trimName := strings.Replace(name, "var.", "", 1)
 		trimTemp := strings.Replace(Ditch(temp, "variables"), "'", "", 2)
 
 		if trimTemp == trimName {
-			return test["resource"].(string), nil
+			return resourceRef, nil
 		}
 
 		if strings.Contains(name, "local") {
 			resourceName := strings.Split(name, ".")[1]
 			if strings.Contains(temp, resourceName) {
-				retrieved := test["resource"].(string)
-
-				return retrieved, nil
+				return resourceRef, nil
 			}
 		}
 
@@ -108,7 +108,7 @@ func FindResourceName(result map[string]interface{}, name string) (string, error
 
 		if len(splits) > 1 {
 			if trimName == strings.ReplaceAll(splits[1], "'", "") {
-				return test["resource"].(string), nil
+				return resourceRef, nil
 			}
 		}
 	}
@@ -153,12 +153,13 @@ func GetNameValue(result map[string]interface{}, name string) (string, error) {
 
 		rawName := rawNames[1]
 
-		if result["variables"] != nil {
-			variables := result["variables"].(map[string]interface{})
-
+		if variables, ok := result["variables"].(map[string]interface{}); ok {
 			for myVariable, value := range variables {
 				if rawName == myVariable {
-					return value.(string), nil
+					if s, ok := value.(string); ok {
+						return s, nil
+					}
+					return fmt.Sprint(value), nil
 				}
 			}
 		}
@@ -178,11 +179,10 @@ func FindResourceType(result map[string]interface{}, name string) bool {
 		for _, myResource := range resources {
 			test, ok := myResource.(map[string]interface{})
 			if ok {
-				if name == test["type"].(string) {
+				if t, ok := test["type"].(string); ok && name == t {
 					return true
 				}
 			}
-
 		}
 	}
 

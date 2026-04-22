@@ -211,7 +211,8 @@ func GetVariableDefault(param cloudformation.Parameter, myVariable Variable) Var
 
 // StringToMap converts maps in strings(for tags).
 func StringToMap(param cloudformation.Parameter) Variable {
-	temp := strings.Split(param.Default.(string), "=")
+	def, _ := param.Default.(string)
+	temp := strings.Split(def, "=")
 
 	var myVariable Variable
 

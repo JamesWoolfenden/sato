@@ -21,20 +21,22 @@ func processParameterType(item string, myResult map[string]interface{}, newLocal
 		return
 	}
 
-	myType := myResult["type"].(string)
+	myType, _ := myResult["type"].(string)
+	defaultValue := myResult["defaultValue"]
+
 	switch strings.ToLower(myType) {
 	case "string", "securestring":
-		defaultValue := myResult["defaultValue"].(string)
-		if strings.Contains(defaultValue, "[") {
-			newLocals[item] = defaultValue
+		s, _ := defaultValue.(string)
+		if strings.Contains(s, "[") {
+			newLocals[item] = s
 			return
 		}
 
-		myResult["default"] = myResult["defaultValue"].(string)
+		myResult["default"] = s
 		newParams[item] = myResult
 	case "int":
 		myResult["type"] = "number"
-		myResult["default"] = fmt.Sprintf("%v", myResult["defaultValue"].(float64))
+		myResult["default"] = fmt.Sprintf("%v", defaultValue)
 		newParams[item] = myResult
 	case "object", "list(string)":
 		// todo
@@ -43,7 +45,11 @@ func processParameterType(item string, myResult map[string]interface{}, newLocal
 		newParams[item] = myResult
 	case "array":
 		myResult["type"] = "list(string)"
-		myResult["default"] = ArrayToString(myResult["defaultValue"].([]interface{}))
+		if arr, ok := defaultValue.([]interface{}); ok {
+			myResult["default"] = ArrayToString(arr)
+		} else {
+			myResult["default"] = "[]"
+		}
 		newParams[item] = myResult
 	case "map[string]interface{}":
 		log.Debug().Msgf("handled %s", myType)
@@ -60,12 +66,7 @@ func Preprocess(results map[string]interface{}) map[string]interface{} {
 	results["resources"] = SetResourceNames(results)
 	locals := make(map[string]interface{})
 
-	// only satisfied if empty
-	_, ok := results["variables"].(map[string]interface{})
-
-	if !ok {
-		paraVariables := results["variables"].(map[string]interface{})
-
+	if paraVariables, ok := results["variables"].(map[string]interface{}); ok {
 		newVariables := make(map[string]interface{})
 
 		for item, result := range paraVariables {
@@ -89,14 +90,17 @@ func Preprocess(results map[string]interface{}) map[string]interface{} {
 		results["variables"] = newVariables
 	}
 
-	paraParameters := results["parameters"].(map[string]interface{})
-
 	newLocals := make(map[string]interface{})
 	newParams := make(map[string]interface{})
 
-	for item, result := range paraParameters {
-		myResult := result.(map[string]interface{})
-		processParameterType(item, myResult, newLocals, newParams)
+	if paraParameters, ok := results["parameters"].(map[string]interface{}); ok {
+		for item, result := range paraParameters {
+			myResult, ok := result.(map[string]interface{})
+			if !ok {
+				continue
+			}
+			processParameterType(item, myResult, newLocals, newParams)
+		}
 	}
 
 	results["parameters"] = newParams
@@ -140,13 +144,19 @@ func generateResourceName(resourceType string, resourceName string, index int) s
 
 // SetResourceNames gets resource names for results.
 func SetResourceNames(results map[string]interface{}) []interface{} {
-	resources := results["resources"].([]interface{})
+	resources, ok := results["resources"].([]interface{})
+	if !ok {
+		return nil
+	}
 
 	newResults := make([]interface{}, 0, len(resources))
 	nameCounter := make(map[string]int)
 
 	for item, result := range resources {
-		inside := result.(map[string]interface{})
+		inside, ok := result.(map[string]interface{})
+		if !ok {
+			continue
+		}
 
 		// Get resource type and name
 		resourceType, typeOk := inside["type"].(string)

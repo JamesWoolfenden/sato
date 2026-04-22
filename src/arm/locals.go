@@ -15,19 +15,24 @@ func ParseLocals(result map[string]interface{}) (string, map[string]interface{},
 	}
 
 	for item, value := range myLocals {
+		original, ok := value.(string)
+		if !ok {
+			continue
+		}
+
 		var (
 			theValue string
 			local    string
 		)
 
-		theValue, result = ParseString(value.(string), result)
+		theValue, result = ParseString(original, result)
 
 		myLocals[item] = theValue
 
 		if strings.Contains(theValue, "${") {
-			local = "\t" + item + " = \"" + theValue + "\" #" + value.(string) + "\n"
+			local = "\t" + item + " = \"" + theValue + "\" #" + original + "\n"
 		} else {
-			local = "\t" + item + " = " + theValue + " #" + value.(string) + "\n"
+			local = "\t" + item + " = " + theValue + " #" + original + "\n"
 		}
 
 		locals += strings.ReplaceAll(local, "'", "\"")
