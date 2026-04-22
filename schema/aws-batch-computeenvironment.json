@@ -162,6 +162,9 @@
         },
         "ImageKubernetesVersion" : {
           "type" : "string"
+        },
+        "BatchImageStatus" : {
+          "type" : "string"
         }
       },
       "required" : [ "ImageType" ]
@@ -263,7 +266,7 @@
   "conditionalCreateOnlyProperties" : [ "/properties/ComputeResources/AllocationStrategy", "/properties/ComputeResources/BidPercentage", "/properties/ComputeResources/Ec2Configuration", "/properties/ComputeResources/Ec2KeyPair", "/properties/ComputeResources/ImageId", "/properties/ComputeResources/InstanceRole", "/properties/ComputeResources/InstanceTypes", "/properties/ComputeResources/LaunchTemplate", "/properties/ComputeResources/PlacementGroup", "/properties/ComputeResources/ScalingPolicy", "/properties/ComputeResources/SecurityGroupIds", "/properties/ComputeResources/Subnets", "/properties/ComputeResources/Tags", "/properties/ComputeResources/Type" ],
   "writeOnlyProperties" : [ "/properties/ComputeResources/UpdateToLatestImageVersion", "/properties/ReplaceComputeEnvironment", "/properties/UpdatePolicy" ],
   "primaryIdentifier" : [ "/properties/ComputeEnvironmentArn" ],
-  "readOnlyProperties" : [ "/properties/ComputeEnvironmentArn" ],
+  "readOnlyProperties" : [ "/properties/ComputeEnvironmentArn", "/properties/ComputeResources/Ec2Configuration/*/BatchImageStatus" ],
   "additionalIdentifiers" : [ [ "/properties/ComputeEnvironmentName" ] ],
   "handlers" : {
     "create" : {
