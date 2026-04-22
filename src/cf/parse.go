@@ -40,7 +40,12 @@ var funcMap = tfgen.FuncMap(template.FuncMap{
 })
 
 // Parse turn CFN into Terraform.
-func Parse(file string, destination string) error {
+func Parse(file string, destination string, opts ...Option) error {
+	var o options
+	for _, opt := range opts {
+		opt(&o)
+	}
+
 	if file == "" || destination == "" {
 		return &emptyPathsError{}
 	}
@@ -62,7 +67,7 @@ func Parse(file string, destination string) error {
 		return &parseVariablesError{Err: err}
 	}
 
-	err = parseResources(cloudFormation.Resources, funcMap, destination)
+	err = parseResources(cloudFormation.Resources, funcMap, destination, o)
 	if err != nil {
 		return &parseResourcesError{Err: err}
 	}

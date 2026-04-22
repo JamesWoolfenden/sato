@@ -4,6 +4,7 @@ import (
 	_ "embed" // required for embed
 	"fmt"
 	"os"
+	"sato/src/ai"
 	"sato/src/arm"
 	"sato/src/cf"
 	"sato/src/see"
@@ -28,6 +29,14 @@ func main() {
 
 	var flip bool
 
+	var aiFallback bool
+
+	aiFlag := &cli.BoolFlag{
+		Name:        "ai-fallback",
+		Usage:       "use Claude for resource types with no template (needs ANTHROPIC_API_KEY)",
+		Destination: &aiFallback,
+	}
+
 	app := &cli.App{
 		EnableBashCompletion: true,
 		Flags:                []cli.Flag{},
@@ -36,7 +45,12 @@ func main() {
 				Name:  "parse",
 				Usage: "translate CFN to Terraform",
 				Action: func(*cli.Context) error {
-					err := cf.Parse(file, destination)
+					var opts []cf.Option
+					if aiFallback {
+						opts = append(opts, cf.WithAIFallback(ai.NewClaude()))
+					}
+
+					err := cf.Parse(file, destination, opts...)
 					if err != nil {
 						log.Info().Msgf("%v", err.Error())
 					}
@@ -58,6 +72,7 @@ func main() {
 						Value:       ".sato",
 						Destination: &destination,
 					},
+					aiFlag,
 				},
 			},
 			{
@@ -76,7 +91,12 @@ func main() {
 				Name:  "bisect",
 				Usage: "translate ARM to Terraform",
 				Action: func(*cli.Context) error {
-					err := arm.Parse(file, destination)
+					var opts []arm.Option
+					if aiFallback {
+						opts = append(opts, arm.WithAIFallback(ai.NewClaude()))
+					}
+
+					err := arm.Parse(file, destination, opts...)
 					if err != nil {
 						log.Info().Msgf("%v", err.Error())
 					}
@@ -98,6 +118,7 @@ func main() {
 						Value:       ".sato",
 						Destination: &destination,
 					},
+					aiFlag,
 				},
 			},
 			{

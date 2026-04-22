@@ -18,18 +18,21 @@ type fixture struct {
 	skip     string // non-empty: known gap, skip with this reason
 }
 
+func cfParse(file, dest string) error  { return cf.Parse(file, dest) }
+func armParse(file, dest string) error { return arm.Parse(file, dest) }
+
 var fixtures = []fixture{
-	{name: "cf-template", source: "../../examples/template.yaml", parse: cf.Parse, validate: true},
-	{name: "cf-athena", source: "../../examples/athena.yaml", parse: cf.Parse, validate: true},
-	{name: "cf-kinesis", source: "../../examples/kinesis.yaml", parse: cf.Parse, validate: true},
-	{name: "cf-aws-vpc", source: "../../examples/aws-vpc.template.yaml", parse: cf.Parse, validate: false},
+	{name: "cf-template", source: "../../examples/template.yaml", parse: cfParse, validate: true},
+	{name: "cf-athena", source: "../../examples/athena.yaml", parse: cfParse, validate: true},
+	{name: "cf-kinesis", source: "../../examples/kinesis.yaml", parse: cfParse, validate: true},
+	{name: "cf-aws-vpc", source: "../../examples/aws-vpc.template.yaml", parse: cfParse, validate: false},
 	{
-		name: "cf-linux-bastion", source: "../../examples/linux-bastion-master.template.yaml", parse: cf.Parse,
+		name: "cf-linux-bastion", source: "../../examples/linux-bastion-master.template.yaml", parse: cfParse,
 		skip: "goformation: cannot unmarshal number into Parameters string",
 	},
 	{
 		name:   "arm-vm-simple-windows",
-		source: "../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json", parse: arm.Parse,
+		source: "../../examples/arm/microsoft.compute/vm-simple-windows/azuredeploy.json", parse: armParse,
 	},
 }
 

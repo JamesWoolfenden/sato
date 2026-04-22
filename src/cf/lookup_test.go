@@ -43,7 +43,7 @@ func TestParseResources(t *testing.T) {
 			t.Parallel()
 
 			if err := parseResources(
-				tt.args.resources, tt.args.funcMap, tt.args.destination); (err != nil) != tt.wantErr {
+				tt.args.resources, tt.args.funcMap, tt.args.destination, options{}); (err != nil) != tt.wantErr {
 				t.Errorf("parseResources() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

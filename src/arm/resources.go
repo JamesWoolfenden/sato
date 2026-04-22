@@ -2,7 +2,9 @@ package arm
 
 import (
 	"bytes"
+	"context"
 	"fmt"
+	"sato/src/ai"
 	"sato/src/see"
 	"sato/src/tfgen"
 	"strings"
@@ -13,7 +15,13 @@ import (
 
 // ParseResources handles resources in ARM conversion.
 func ParseResources(
-	result map[string]interface{}, funcMap tftemplate.FuncMap, destination string) (map[string]interface{}, error) {
+	result map[string]interface{}, funcMap tftemplate.FuncMap, destination string, opts ...Option,
+) (map[string]interface{}, error) {
+	var o options
+	for _, opt := range opts {
+		opt(&o)
+	}
+
 	resources, ok := result["resources"].([]interface{})
 
 	if !ok {
@@ -50,22 +58,27 @@ func ParseResources(
 
 		myContent := lookup(resourceType)
 
-		first, err := see.Lookup(resourceType, false)
-		if err != nil {
-			log.Warn().Err(err).Msgf("no terraform mapping for %s, skipping", resourceType)
-
-			continue
-		}
+		first, seeErr := see.Lookup(resourceType, false)
 
 		temp, ok := myType["resource"].(string)
-
 		if !ok {
 			log.Warn().Msgf("resource name for %s is not a string, skipping", resourceType)
 
 			continue
 		}
-
 		name = &temp
+
+		if seeErr != nil || len(myContent) == 0 {
+			if o.fallback != nil {
+				if err := aiFallback(o.fallback, resourceType, first, *name, myType, destination); err != nil {
+					log.Warn().Err(err).Msgf("ai fallback failed for %s", resourceType)
+				}
+			} else {
+				log.Warn().Msgf("no terraform mapping for %s, skipping", resourceType)
+			}
+
+			continue
+		}
 
 		// needs to pivot on policy template from resource
 		tmpl, err := tftemplate.New("sato").Funcs(funcMap).Parse(string(myContent))
@@ -87,4 +100,30 @@ func ParseResources(
 	}
 
 	return result, nil
+}
+
+func aiFallback(conv ai.Converter, armType string, tfHint *string, name string, resource map[string]interface{}, destination string) error {
+	hint := ""
+	if tfHint != nil {
+		hint = *tfHint
+	}
+
+	res, err := conv.Convert(context.Background(), ai.Request{
+		SourceType: armType,
+		TFType:     hint,
+		Provider:   "azurerm",
+		Name:       name,
+		Resource:   resource,
+	})
+	if err != nil {
+		return err
+	}
+
+	log.Info().Msgf("AI-converted %s -> %s", armType, res.TFType)
+
+	if err := tfgen.Write(ai.Header+res.HCL, destination, res.TFType+"."+name); err != nil {
+		return err
+	}
+
+	return ai.WriteDraft(destination, res.TFType, res.Template)
 }

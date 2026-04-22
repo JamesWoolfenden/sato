@@ -24,7 +24,7 @@ var funcMap = tfgen.FuncMap(tftemplate.FuncMap{
 })
 
 // Parse turn ARM into Terraform.
-func Parse(file string, destination string) error {
+func Parse(file string, destination string, opts ...Option) error {
 	fileAbs, err := filepath.Abs(file)
 	if err != nil {
 		return &filepathError{Path: file}
@@ -61,7 +61,7 @@ func Parse(file string, destination string) error {
 		return &parseVariablesError{Err: err}
 	}
 
-	result, err = ParseResources(result, funcMap, destination)
+	result, err = ParseResources(result, funcMap, destination, opts...)
 	if err != nil {
 		return err
 	}
