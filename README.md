@@ -189,6 +189,43 @@ there's no one for one - ARM to Terraform, so the aim is to get you close to 100
 There needs to be a lot of work supporting resources and built-in functions/template as yet.
 If you want to use this, let me know so, then I'll know to do so, or even better send me a PR.
 
+### AI fallback
+
+Sato has ~120 built-in templates. When `parse` or `bisect` hits a resource type
+it doesn't know, pass `--ai-fallback` and it will hand that single resource to
+Claude, write the converted HCL (with a `# AI-generated` header so you know to
+review it), and drop a reusable Go template draft in `<destination>/_drafts/`.
+
+```bash
+$ sato parse -f examples/ai-fallback.yaml --ai-fallback
+3:13PM INF ai: using Vertex AI (project=... region=us-east5)
+3:13PM WRN AWS::Scheduler::Schedule not found
+3:13PM INF AI-converted AWS::Scheduler::Schedule -> aws_scheduler_schedule
+3:13PM INF Created .sato/aws_scheduler_schedule.nightlyjob.tf
+
+$ ls .sato/_drafts/
+aws_scheduler_schedule.template
+```
+
+Auth: set `ANTHROPIC_API_KEY` for the direct Anthropic API, or
+`ANTHROPIC_VERTEX_PROJECT_ID` + `CLOUD_ML_REGION` (with Google ADC) for Vertex.
+`ANTHROPIC_MODEL` overrides the default `claude-sonnet-4-6` in either mode. The
+client is lazy — no auth happens unless a fallback actually fires — and each
+call has a 60s timeout.
+
+### Promote
+
+Maintainer command: takes a reviewed `_drafts/` template and wires it into the
+source tree (copies the template, appends the `//go:embed` var, registers it in
+the lookup map and `see`). Run from a checkout, then `go build` to verify.
+
+```bash
+$ sato promote .sato/_drafts/aws_scheduler_schedule.template "AWS::Scheduler::Schedule"
+3:51PM INF promoted aws_scheduler_schedule.template; run `go build ./...` to verify
+```
+
+Add `--pr` to also branch, commit, push and open a GitHub PR via `gh`.
+
 ### Version
 
 ```bash
@@ -201,27 +238,28 @@ $sato version
 ```bash
 $ sato
 NAME:
-sato - Translate Cloudformation to Terraform
+   sato - Translate Cloudformation or ARM to Terraform
 
 USAGE:
-sato [global options] command [command options] [arguments...]
+   sato [global options] command [command options]
 
 VERSION:
-9.9.9
+   9.9.9
 
 AUTHOR:
-James Woolfenden <jim.wolf@duck.com>
+   James Woolfenden <jim.wolf@duck.com>
 
 COMMANDS:
-bisect      translate ARM to Terraform
-parse       translate CFN to Terraform
-see         shows equivalent Terraform resource
-version, v  Outputs the application version
-help, h     Shows a list of commands or help for one command
+   bisect      translate ARM to Terraform
+   parse       translate CFN to Terraform
+   promote     install an AI-drafted template into src/ (maintainers only; run from repo root)
+   see         shows equivalent Terraform resource or the reverse
+   version, v  Outputs the application version
+   help, h     Shows a list of commands or help for one command
 
 GLOBAL OPTIONS:
---help, -h     show help
---version, -v  print the version
+   --help, -h     show help
+   --version, -v  print the version
 ```
 
 ## Extra credit - <small>Pike</small>
