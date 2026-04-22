@@ -7,12 +7,16 @@ import (
 	"os"
 	"regexp"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/anthropics/anthropic-sdk-go/option"
 	"github.com/anthropics/anthropic-sdk-go/vertex"
 	"github.com/rs/zerolog/log"
 )
+
+const callTimeout = 60 * time.Second
 
 const defaultModel = "claude-sonnet-4-6"
 
@@ -45,32 +49,44 @@ resource "aws_sns_topic" "{{.item}}" {
 
 // Claude implements Converter using the Anthropic Messages API.
 type Claude struct {
+	once   sync.Once
 	client anthropic.Client
 	model  string
 }
 
-// NewClaude builds a client. If ANTHROPIC_VERTEX_PROJECT_ID is set it routes via
-// Google Vertex AI (using CLOUD_ML_REGION and ADC); otherwise it reads
-// ANTHROPIC_API_KEY for the direct Anthropic API. ANTHROPIC_MODEL overrides the
-// default model in either mode.
+// NewClaude returns a lazily-initialised client. If ANTHROPIC_VERTEX_PROJECT_ID
+// is set it routes via Google Vertex AI (using CLOUD_ML_REGION and ADC);
+// otherwise it reads ANTHROPIC_API_KEY for the direct Anthropic API.
+// ANTHROPIC_MODEL overrides the default model in either mode.
 func NewClaude() *Claude {
-	model := defaultModel
+	return &Claude{}
+}
+
+func (c *Claude) init(ctx context.Context) {
+	c.model = defaultModel
 	if m := os.Getenv("ANTHROPIC_MODEL"); m != "" {
-		model = m
+		c.model = m
 	}
 
 	var opts []option.RequestOption
 	if project := os.Getenv("ANTHROPIC_VERTEX_PROJECT_ID"); project != "" {
 		region := os.Getenv("CLOUD_ML_REGION")
-		log.Info().Msgf("ai: using Vertex AI (project=%s region=%s)", project, region)
-		opts = append(opts, vertex.WithGoogleAuth(context.Background(), region, project))
+		log.Info().Msgf("ai: using Vertex AI (project=%s region=%s model=%s)", project, region, c.model)
+		opts = append(opts, vertex.WithGoogleAuth(ctx, region, project))
+	} else {
+		log.Info().Msgf("ai: using Anthropic API (model=%s)", c.model)
 	}
 
-	return &Claude{client: anthropic.NewClient(opts...), model: model}
+	c.client = anthropic.NewClient(opts...)
 }
 
 // Convert implements Converter.
 func (c *Claude) Convert(ctx context.Context, req Request) (*Result, error) {
+	ctx, cancel := context.WithTimeout(ctx, callTimeout)
+	defer cancel()
+
+	c.once.Do(func() { c.init(ctx) })
+
 	msg, err := c.client.Messages.New(ctx, anthropic.MessageNewParams{
 		Model:     c.model,
 		MaxTokens: 4096,
