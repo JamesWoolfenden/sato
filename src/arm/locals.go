@@ -1,6 +1,7 @@
 package arm
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -30,7 +31,7 @@ func ParseLocals(result map[string]interface{}) (string, map[string]interface{},
 		myLocals[item] = theValue
 
 		if strings.Contains(theValue, "${") {
-			local = "\t" + item + " = \"" + theValue + "\" #" + original + "\n"
+			local = "\t" + item + " = " + strconv.Quote(theValue) + " #" + original + "\n"
 		} else {
 			local = "\t" + item + " = " + theValue + " #" + original + "\n"
 		}
