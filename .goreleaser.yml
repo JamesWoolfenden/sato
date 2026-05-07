@@ -8,7 +8,14 @@
 version: 2
 
 builds:
-  - goos:
+  - env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w -X sato/src/version.Version={{.Version}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+    goos:
       - darwin
       - linux
       - windows
@@ -21,32 +28,49 @@ builds:
     ignore:
       - goarch: "386"
         goos: darwin
-    ldflags:
-      - -X sato/src/version.Version={{.Version}}
+
 archives:
   - format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 
-brews:
+checksum:
+  name_template: checksums.txt
+  algorithm: sha256
+
+sboms:
+  - artifacts: archive
+
+signs:
+  - artifacts: checksum
+    stdin: "{{ .Env.PASSPHRASE }}"
+    args:
+      - "--batch"
+      - "--pinentry-mode"
+      - "loopback"
+      - "--passphrase-fd"
+      - "0"
+      - "-u"
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
+
+homebrew_casks:
   - name: sato
-
     repository:
       owner: JamesWoolfenden
       name: homebrew-tap
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-
-
     commit_author:
       name: "GitHub Action"
       email: action@github.com
-
     homepage: "https://github.com/JamesWoolfenden/sato#readme"
-
     description: "Sato is for converting Cloudformation to Terraform"
-
-    install: |
-      bin.install "sato"
-
-    test: |
-      system "#{bin}/sato", "--help"
+    hooks:
+      post:
+        install: |
+          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
+            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/sato"]
+          end
