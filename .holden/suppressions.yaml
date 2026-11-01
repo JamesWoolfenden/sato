@@ -1,0 +1,10 @@
+suppressions:
+  - policy_id: HLD_DF_003
+    resource_id: dockerfile.Dockerfile
+    reason: "Image is a GitHub Action container; the runner mounts the workspace owned by root/runner uid, so a non-root USER cannot read or write the checked-out files"
+    approved_by: JamesWoolfenden
+
+  - policy_id: HLD_DF_021
+    resource_id: dockerfile_run.Dockerfile.0
+    reason: "Base image is pinned by sha256 digest, so the apk repository snapshot and package versions are fixed per base image; exact apk pins would break on every base bump"
+    approved_by: JamesWoolfenden

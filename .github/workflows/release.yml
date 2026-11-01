@@ -7,6 +7,7 @@ on:
 permissions: read-all
 jobs:
   goreleaser:
+    timeout-minutes: 60
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -39,6 +40,7 @@ jobs:
           PASSPHRASE: ${{ secrets.PASSPHRASE }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
   publish-dockerhub:
+    timeout-minutes: 30
     permissions:
       contents: read
     runs-on: ubuntu-latest
@@ -53,6 +55,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
           tags: "latest,${{ github.ref_name }}"
+          buildargs: VERSION=${{ github.ref_name }}
       - name: Update Docker Hub README
         uses: peter-evans/dockerhub-description@1b9a80c056b620d92cedb9d9b5a223409c68ddfa # v5.0.0
         with:
@@ -62,6 +65,7 @@ jobs:
           short-description: ${{ github.event.repository.description }}
           readme-filepath: ./README.md
   update-scoop:
+    timeout-minutes: 30
     permissions:
       contents: read
     runs-on: ubuntu-latest

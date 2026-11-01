@@ -1,0 +1,67 @@
+{
+  "scan_date": "2026-11-01T00:00:00Z",
+  "scan_path": ".",
+  "category": "all",
+  "findings": [
+    {
+      "id": "HOLDEN_AI_001",
+      "status": "fixed",
+      "first_seen": "2026-11-01",
+      "last_seen": "2026-11-01",
+      "unresolved_since": null,
+      "suppression_reason": null,
+      "principle": "repeatability",
+      "severity": "LOW",
+      "confidence": "high",
+      "title": "Docker image build downloads releases/latest, not the release being published",
+      "file": "Dockerfile",
+      "line": 4,
+      "resource": "dockerfile.RUN[4]",
+      "related_resources": [
+        ".github/workflows/release.yml:publish-dockerhub"
+      ],
+      "explanation": "The image is built by fetching whatever GitHub currently reports as the latest sato release, with no version argument. The publish-dockerhub job tags the same build as both 'latest' and the pushed git tag, so a rebuild of an older tag, or a release published out of order, ships a different binary than the tag name says. Every build is non-deterministic and the tag-to-binary mapping can't be audited. Holden's existing HLD_DF_008/018 findings on this line cover the insecure download itself, not this.",
+      "remediation": "Add an ARG VERSION to the Dockerfile and download that exact release asset. Pass it from the workflow with build-args using github.ref_name. Prefer verifying the published checksum or GPG signature after download.",
+      "fixable": false
+    },
+    {
+      "id": "HOLDEN_AI_002",
+      "status": "fixed",
+      "first_seen": "2026-11-01",
+      "last_seen": "2026-11-01",
+      "unresolved_since": null,
+      "suppression_reason": null,
+      "principle": "identity-and-access",
+      "severity": "LOW",
+      "confidence": "high",
+      "title": "Stale workflow grants contents: write that actions/stale does not use",
+      "file": ".github/workflows/stale.yml",
+      "line": 9,
+      "resource": "gha_job.stale",
+      "explanation": "The job requests contents: write alongside issues and pull-requests write. actions/stale only needs contents: write to delete branches, and this workflow does not set delete-branch. The token can therefore push to the repo from a job that runs daily on a schedule with a third-party action, with no benefit. Holden has no rule for this because it needs knowledge of what the action actually requires.",
+      "remediation": "Remove the contents: write permission from the stale job and keep issues: write and pull-requests: write.",
+      "fixable": true,
+      "fix": "permissions:\n  issues: write\n  pull-requests: write"
+    },
+    {
+      "id": "HOLDEN_AI_003",
+      "status": "fixed",
+      "first_seen": "2026-11-01",
+      "last_seen": "2026-11-01",
+      "unresolved_since": null,
+      "suppression_reason": null,
+      "principle": "maintainability",
+      "severity": "INFO",
+      "confidence": "high",
+      "title": "PR workflow 'docs' job checks out and installs Go but runs nothing",
+      "file": ".github/workflows/pr.yml",
+      "line": 47,
+      "resource": "gha_job.docs",
+      "explanation": "The docs job has only checkout and setup-go steps and no step that generates or verifies docs. It always passes, spends a runner on every pull request and reads as though docs are being checked when they are not.",
+      "remediation": "Add the intended docs generation or check step, or delete the job.",
+      "fixable": false
+    }
+  ],
+  "suggested_policies": [],
+  "suggested_suppressions": []
+}

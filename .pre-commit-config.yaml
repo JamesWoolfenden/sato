@@ -1,8 +1,6 @@
 #file: noinspection SpellCheckingInspection, SpellCheckingInspection
 ---
 # yamllint disable rule:line-length
-default_language_version:
-  python: python3.11
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # v6.0.0
@@ -58,11 +56,6 @@ repos:
     rev: 9aa24e94ceb7d1a8ccbde81e7424629467299a7e # v2.12.1
     hooks:
       - id: golangci-lint
-  - repo: https://github.com/bridgecrewio/checkov
-    rev: e52a901a3829d818d20c9b75e544845c8b756968 # 3.2.526
-    hooks:
-      - id: checkov
-        language_version: python3.11
   - repo: https://github.com/jameswoolfenden/ghat
     rev: 783f1adff1b67e121f0a3af745979b0ccab69e11 # v0.1.31
     hooks:
@@ -80,3 +73,11 @@ repos:
       - id: validate-toml
       - id: no-go-testing
       - id: go-mod-tidy
+  - repo: local
+    hooks:      
+      - id: holden
+        name: holden
+        entry: holden scan
+        language: system
+        pass_filenames: false
+        always_run: true
