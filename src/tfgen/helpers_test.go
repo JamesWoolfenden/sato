@@ -1,6 +1,8 @@
 package tfgen
 
 import (
+	"os"
+	"path/filepath"
 	"reflect"
 	"testing"
 )
@@ -643,5 +645,28 @@ func TestSplitOn1(t *testing.T) {
 				t.Errorf("SplitOn() = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func Test_zipfile_rejectsTraversal(t *testing.T) {
+	t.Parallel()
+
+	root := t.TempDir()
+	dest := filepath.Join(root, "out", "sub")
+
+	if err := os.MkdirAll(dest, 0o750); err != nil {
+		t.Fatal(err)
+	}
+
+	for _, name := range []string{"../../conftest", "../x", "a/b"} {
+		if got := Zipfile("print(1)", name, "python3.9", dest); got != "" {
+			t.Errorf("Zipfile(%q) = %q, want empty", name, got)
+		}
+	}
+
+	for _, escaped := range []string{"conftest.py", "conftest.zip", filepath.Join("out", "x.py")} {
+		if _, err := os.Stat(filepath.Join(root, escaped)); err == nil {
+			t.Errorf("file written outside destination: %s", escaped)
+		}
 	}
 }

@@ -98,3 +98,12 @@ func (p *ParseResourcesError) Error() string {
 func (p *ParseResourcesError) Unwrap() error {
 	return p.Err
 }
+
+// UnsafePathError is returned when a name from an input template would write outside the destination directory.
+type UnsafePathError struct {
+	Name string
+}
+
+func (u *UnsafePathError) Error() string {
+	return fmt.Sprintf("unsafe name %q: must be a plain file name that stays inside the destination", u.Name)
+}

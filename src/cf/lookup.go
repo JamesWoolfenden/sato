@@ -4,16 +4,21 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
 	tftemplate "text/template"
 
 	"sato/src/ai"
+	"sato/src/satoerrors"
 	"sato/src/see"
 	"sato/src/tfgen"
 
 	"github.com/awslabs/goformation/v7/cloudformation"
 	"github.com/rs/zerolog/log"
 )
+
+// logicalIDPattern is the CloudFormation rule for logical IDs.
+var logicalIDPattern = regexp.MustCompile(`^[A-Za-z0-9]+$`)
 
 type templateNewError struct {
 	Err error
@@ -27,6 +32,13 @@ func (e *templateNewError) Error() string {
 func parseResources(resources cloudformation.Resources, funcMap tftemplate.FuncMap, destination string, o options) error {
 	if resources == nil || funcMap == nil || destination == "" {
 		return &missingResourceInputError{}
+	}
+
+	// Reject logical IDs up front: they name output files, and AWS only allows alphanumerics.
+	for item := range resources {
+		if !logicalIDPattern.MatchString(item) {
+			return &satoerrors.UnsafePathError{Name: item}
+		}
 	}
 
 	for item, resource := range resources {

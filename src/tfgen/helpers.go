@@ -8,9 +8,10 @@ import (
 	"io"
 	"math/rand"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
+
+	"sato/src/safepath"
 
 	"github.com/gobeam/stringy"
 	"github.com/rs/zerolog/log"
@@ -195,10 +196,22 @@ func Zipfile(code string, filename string, runtime string, destination ...string
 		destDir = "."
 	}
 
+	// filename is a CloudFormation logical ID from an untrusted template; keep it inside destDir.
 	codeFileName := filename + extension
-	codeFile := filepath.Join(destDir, codeFileName)
+
+	codeFile, err := safepath.Join(destDir, codeFileName)
+	if err != nil {
+		log.Error().Err(err).Msgf("refusing to write code file for %q", filename)
+		return ""
+	}
+
 	zipFileName := filename + ".zip"
-	output := filepath.Join(destDir, zipFileName)
+
+	output, err := safepath.Join(destDir, zipFileName)
+	if err != nil {
+		log.Error().Err(err).Msgf("refusing to write zip archive for %q", filename)
+		return ""
+	}
 
 	d1 := []byte(code)
 	if err := os.WriteFile(codeFile, d1, 0o600); err != nil {

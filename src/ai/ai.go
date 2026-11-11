@@ -8,6 +8,8 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+
+	"sato/src/safepath"
 )
 
 // Request describes a single resource that the deterministic path could not
@@ -52,11 +54,17 @@ func WriteDraft(dir, tfType, template string) error {
 		return nil
 	}
 
+	// tfType can be model output steered by the input template, so it must stay a plain file name.
 	draftDir := filepath.Join(dir, "_drafts")
+
+	path, err := safepath.Join(draftDir, tfType+".template")
+	if err != nil {
+		return err
+	}
+
 	if err := os.MkdirAll(draftDir, 0o750); err != nil {
 		return err
 	}
 
-	path := filepath.Join(draftDir, tfType+".template")
 	return os.WriteFile(path, []byte(template), 0o600)
 }

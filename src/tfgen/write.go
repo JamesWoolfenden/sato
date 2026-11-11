@@ -1,11 +1,11 @@
 package tfgen
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 
+	"sato/src/safepath"
 	"sato/src/satoerrors"
 
 	"github.com/rs/zerolog/log"
@@ -26,9 +26,10 @@ func Write(output string, location string, name string) error {
 		return &satoerrors.MakeDirError{Err: err}
 	}
 
-	destination, err := filepath.Abs(fmt.Sprint(location, "/", name, ".tf"))
+	// name can come from an untrusted template's resource ID; it must stay a plain file name.
+	destination, err := safepath.Join(newPath, name+".tf")
 	if err != nil {
-		return &satoerrors.FilepathError{Path: fmt.Sprint(location, "/", name, ".tf"), Err: err}
+		return err
 	}
 
 	if err := os.WriteFile(destination, []byte(output), 0o600); err != nil {
